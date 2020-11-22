@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/divider_post"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.CalendarActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <TextView
+        android:id="@+id/tvMonthYear"
+        android:layout_width="match_parent"
+        android:layout_below="@id/topbar"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:padding="@dimen/padding_10dp"
+        android:layout_height="wrap_content" />
+
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView
+        android:layout_below="@+id/tvMonthYear"
+        android:id="@+id/compactcalendar_view"
+        android:layout_width="match_parent"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_height="250dp"
+        app:compactCalendarTargetHeight="260dp"
+        app:compactCalendarTextSize="12sp"
+        app:compactCalendarBackgroundColor="@color/colorPrimary"
+        app:compactCalendarTextColor="#fff"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
+        app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+        app:compactCalendarMultiEventIndicatorColor="#fff" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEvents"
+        android:layout_below="@id/compactcalendar_view"
+        android:layout_width="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tvData"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_below="@id/compactcalendar_view"
+        android:layout_marginTop="@dimen/padding_10dp"
+        android:padding="@dimen/padding_10dp"
+        android:layout_height="wrap_content" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/compactcalendar_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padding_20dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

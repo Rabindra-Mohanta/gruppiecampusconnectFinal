@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:weightSum="1"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/btn_cancel"  android:text="cancel"
+        android:layout_width="0dp" android:background="@color/colorPrimary"
+        android:layout_height="wrap_content" android:textAllCaps="true" android:textColor="@color/color_white"
+        android:layout_weight="0.5" />
+    <Button android:text="done"
+        android:id="@+id/btn_done"  android:textColor="@color/color_white"
+        android:layout_width="0dp" android:background="@color/colorPrimary"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5" />
+
+</LinearLayout>

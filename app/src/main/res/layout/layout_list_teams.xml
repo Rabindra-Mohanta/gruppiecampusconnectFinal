@@ -1,0 +1,188 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="size"
+            type="int" />
+
+        <variable
+            name="message"
+            type="int" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorTextWhiteDark"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/relTeamDetails"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <com.baoyz.widget.PullRefreshLayout
+                android:id="@+id/swipeRefreshLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:refreshColor="@color/colorPrimary">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/txt_level" />
+
+            </com.baoyz.widget.PullRefreshLayout>
+
+            <TextView
+                android:id="@+id/txtEmpty2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@{message}"
+                android:textSize="18sp"
+                android:visibility="@{size &gt; 0 ? View.GONE : View.VISIBLE}" />
+
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlPush"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_marginBottom="-5dp"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/llBlankView"
+                android:layout_width="match_parent"
+                android:background="@android:color/black"
+                android:alpha="0.3"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/llCardView"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/padding_5dp"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:padding="@dimen/padding_15dp"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/llReport"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:gravity="center"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/icon_report"
+                            android:tint="@color/colorTextLight"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_report"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/llRemovePost"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:gravity="center"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/icon_remove"
+                            android:tint="@color/colorTextLight"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_remove"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llAskDoubt"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:gravity="center"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/icon_nav_doubts"
+                            android:tint="@color/colorTextLight"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_ask_doubt"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+        </RelativeLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabTrack"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_bus"
+            android:tint="@color/white"
+            app:fab_size="normal"
+            android:visibility="gone"
+            android:layout_margin="@dimen/padding_15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAttendance"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_attendance"
+            android:tint="@color/white"
+            app:fab_size="normal"
+            android:visibility="gone"
+            android:layout_margin="@dimen/padding_15dp"
+            android:layout_above="@+id/fabJoinMeeting"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabJoinMeeting"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_golive"
+            app:fab_size="normal"
+            android:tint="@color/white"
+            android:visibility="gone"
+            android:layout_margin="@dimen/padding_15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+</layout>

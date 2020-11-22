@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/img_leftDrawable"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/textInputLayout"
+        android:layout_marginBottom="10dp"
+        android:paddingRight="@dimen/padding_16dp"
+        android:src="@android:drawable/ic_menu_call" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@id/textInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/img_leftDrawable">
+
+        <EditText
+            android:id="@+id/editText"
+            style="@style/AppTheme.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textAppearance="@style/TextAppearance.Regular"
+            android:textColor="@color/color_grey_icon"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</RelativeLayout>

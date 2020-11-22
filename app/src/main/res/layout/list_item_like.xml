@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/list_divider"
+            android:padding="10dp">
+
+
+            <ImageView
+                android:id="@+id/img_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:paddingEnd="16dp"
+                android:src="@drawable/ic_phone"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/relative_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/img_call">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_lead"
+                    android:layout_width="@dimen/user_image_size"
+                    android:layout_height="@dimen/user_image_size"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/icon_default_user" />
+
+                <ImageView
+                    android:id="@+id/img_lead_default"
+                    android:layout_width="@dimen/user_image_size"
+                    android:layout_height="@dimen/user_image_size"
+                    android:layout_alignParentStart="true"
+                    android:visibility="invisible"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/img_lead"
+                    android:orientation="vertical"
+                    android:paddingEnd="4dp"
+                    android:paddingStart="16dp">
+
+                    <com.scopely.fontain.views.FontTextView
+                        android:id="@+id/txt_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+
+                        android:text="ssd"
+                        android:textColor="@color/color_grey_icon"
+                        android:textAppearance="@style/TextAppearance.Regular"
+                        app:caps_mode="words"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:id="@+id/txt_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="ssd"
+                        android:textColor="@color/color_323232"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

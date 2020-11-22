@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_20dp"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:layout_gravity="center_vertical" />
+
+        &lt;!&ndash;<de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_profile"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:layout_marginRight="@dimen/padding_15dp"
+            android:scaleType="centerCrop"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp" />&ndash;&gt;
+
+        <LinearLayout
+            android:id="@+id/vUserDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_15dp"
+            android:layout_marginStart="@dimen/padding_15dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:progressDrawable="@drawable/progress_color" />
+
+        </LinearLayout>
+
+    </LinearLayout>-->
+
+    <!--<ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="8dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:progressDrawable="@drawable/progress_color" />
+
+    <TextView
+        android:id="@+id/txt_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:gravity="right"
+        android:textColor="@color/colorPrimary"
+        android:textSize="12sp" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"></FrameLayout>-->
+
+
+  <!--  <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/AppTheme.TabLayoutProfile"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/white"
+            android:textAppearance="@style/TextAppearance.Regular"
+            app:tabTextColor="@color/unseen" />
+
+
+    </RelativeLayout>-->
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_8dp"
+        android:layout_marginLeft="@dimen/padding_8dp"
+        android:layout_marginRight="@dimen/padding_8dp"
+        >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--<android.support.v4.view.ViewPager-->
+        <school.campusconnect.utils.WrappingViewPager
+            android:id="@+id/tabViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_color" />
+
+        <!--<RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_15dp">
+
+            <ImageView
+                android:id="@+id/btn_update"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/padding_30dp"
+                android:layout_marginEnd="@dimen/padding_30dp"
+                android:layout_marginRight="@dimen/padding_30dp"
+                android:src="@drawable/icon_tick_green" />
+
+        </RelativeLayout>-->
+    </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+    <!--<nnr.gruppie.views.DrawableEditText
+        android:id="@+id/address_one"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_20dp"
+        android:inputType="textNoSuggestions"
+        app:leftDrawable="@drawable/ic_location_city"
+        app:textHint="Enter address line 1" />
+
+    <nnr.gruppie.views.DrawableEditText
+        android:id="@+id/address_two"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_20dp"
+        android:inputType="textNoSuggestions"
+        app:leftDrawable="@drawable/ic_location_city"
+        app:textHint="Enter address line 2" />
+
+    <nnr.gruppie.views.DrawableEditText
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_20dp"
+        android:inputType="textNoSuggestions"
+        app:leftDrawable="@drawable/ic_location_city"
+        app:textHint="Enter city" />
+
+    <nnr.gruppie.views.DrawableEditText
+        android:id="@+id/state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_20dp"
+        android:inputType="textNoSuggestions"
+        app:leftDrawable="@drawable/ic_location_city"
+        app:textHint="Enter state" />
+
+    <nnr.gruppie.views.DrawableEditText
+        android:id="@+id/pincode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_20dp"
+        android:inputType="phone"
+        app:leftDrawable="@drawable/ic_location_city"
+        app:textHint="Enter pincode" />
+
+    <nnr.gruppie.views.DrawableEditText
+        android:id="@+id/countryCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_20dp"
+
+        android:inputType="textNoSuggestions"
+        app:leftDrawable="@drawable/ic_countr"
+        app:textHint="Enter countryCode" />
+
+    <nnr.gruppie.views.DrawableEditText
+        android:id="@+id/id_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_20dp"
+        android:inputType="phone"
+        android:visibility="gone"
+        app:leftDrawable="@drawable/ic_keyboard"
+        app:textHint="@string/hint_lead_id" />-->
+
+
+    <!--<Button
+        android:id="@+id/btn_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/color_green"
+        android:text="@string/action_update_profile"
+        android:textAllCaps="true"
+        android:textColor="@color/color_white"
+        android:textSize="14sp" />-->
+
+</LinearLayout>

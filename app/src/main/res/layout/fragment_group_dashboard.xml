@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relDashboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cardview_light_background"
+    >
+
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        app:bb_inActiveTabColor="@color/white"
+        app:bb_inActiveTabAlpha="0.5"
+        app:bb_activeTabColor="@color/white"
+        app:bb_tabXmlResource="@xml/bottum_bar_tabs" />
+
+</RelativeLayout>

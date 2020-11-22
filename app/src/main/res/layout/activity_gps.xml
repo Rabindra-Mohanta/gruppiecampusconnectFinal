@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.GpsActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <fragment
+        android:layout_below="@id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map"
+        tools:context=".MapsActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="140dp"
+        android:background="@drawable/add_post_button_bg"
+        android:layout_margin="@dimen/padding_10dp"
+        android:layout_alignParentBottom="true"
+        android:text="Start"
+        android:textColor="@color/white"
+        android:layout_height="40dp" />
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="140dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/padding_10dp"
+        android:background="@drawable/add_post_button_bg"
+        android:text="Stop"
+        android:textColor="@color/white"
+        android:layout_height="40dp" />
+
+    <TextView
+        android:id="@+id/tvStartTime"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/padding_10dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:padding="@dimen/padding_5dp"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

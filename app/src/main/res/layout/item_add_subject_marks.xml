@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:gravity="center"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tvSubject"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="name"
+        android:textSize="@dimen/text_size_15sp"
+        android:textColor="@color/colorTextDark"
+        style="@style/LabelNormal" />
+
+    <EditText
+        android:id="@+id/etMarks"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_13sp"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_marginRight="@dimen/padding_5dp" />
+
+    <EditText
+        android:id="@+id/etMarksMax"
+        android:textSize="@dimen/text_size_13sp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:enabled="false"
+        android:layout_marginLeft="@dimen/padding_5dp"
+        android:gravity="center"
+        android:layout_height="@dimen/login_button_height" />
+    <EditText
+        android:id="@+id/etMinMarks"
+        android:textSize="@dimen/text_size_13sp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:enabled="false"
+        android:layout_marginLeft="@dimen/padding_5dp"
+        android:gravity="center"
+        android:layout_height="@dimen/login_button_height" />
+</LinearLayout>

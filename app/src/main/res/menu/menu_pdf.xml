@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_notification"
+        android:icon="@drawable/icon_notification"
+        android:title="  "
+        android:visible="false"
+        app:actionLayout="@layout/action_bar_noti_layout"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_group"
+        android:icon="@drawable/ic_home"
+        android:title="  "
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_invite"
+        android:icon="@drawable/ic_person_add_white"
+        android:title="  "
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_cart"
+        android:title="test"
+        android:visible="false"
+        app:actionLayout="@layout/layout_badge"
+        app:showAsAction="always" />
+
+    <!--<item
+        android:id="@+id/action_add_count"
+        android:title="0 Selected"
+        android:visible="false"
+        app:showAsAction="always" />-->
+
+    <item
+        android:id="@+id/pdf_pre"
+        android:title="Previous"
+        android:icon="@drawable/ic_skip_previous_black_24dp"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/pdf_next"
+        android:title="Next"
+        android:icon="@drawable/ic_skip_next_black_24dp"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/pdf_go_to"
+        android:title="@string/menu_title_go_to_page"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/pdf_reset_zoom"
+        android:title="@string/menu_title_reset_zoom"
+        app:showAsAction="never" />
+
+</menu>

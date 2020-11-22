@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.chauthai.swipereveallayout.SwipeRevealLayout
+        android:id="@+id/swipeRevealLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:mode="same_level"
+        app:dragEdge="right">
+
+        <!-- Your secondary layout here -->
+        <FrameLayout
+            android:id="@+id/flRestore"
+            android:layout_width="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_height="match_parent" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="RESTORE"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:paddingRight="@dimen/padding_10dp"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_16sp"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
+        <!-- Your main layout here -->
+        <RelativeLayout
+            android:id="@+id/rlMain"
+            android:layout_width="match_parent"
+            android:padding="@dimen/padding_10dp"
+            android:layout_height="match_parent" >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgTeam"
+                android:layout_width="@dimen/list_image_size"
+                android:src="@color/colorTextLight"
+                android:layout_height="@dimen/list_image_size" />
+            <ImageView
+                android:id="@+id/imgDefault"
+                android:layout_width="@dimen/list_image_size"
+                android:layout_height="@dimen/list_image_size" />
+            <TextView
+                android:id="@+id/tvTeamName"
+                android:layout_toRightOf="@+id/imgTeam"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:textColor="@color/colorTextDark"
+                android:textSize="@dimen/text_size_14sp"
+                android:text="Team Name"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+    </com.chauthai.swipereveallayout.SwipeRevealLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/color_divider"
+        android:layout_height="0.1dp"/>
+</LinearLayout>

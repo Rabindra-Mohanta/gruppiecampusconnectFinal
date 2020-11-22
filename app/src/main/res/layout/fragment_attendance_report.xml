@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/llClass"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="center|right"
+                android:paddingRight="@dimen/padding_10dp"
+                android:text="Select Class >"
+                android:textSize="@dimen/text_size_16sp"
+                android:layout_height="wrap_content" />
+            <FrameLayout
+                android:layout_gravity="center"
+                android:layout_width="200dp"
+                android:background="@drawable/ract_border"
+                android:layout_height="wrap_content">
+                <Spinner
+                    android:id="@+id/spClass"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_height="@dimen/login_button_height" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_15dp"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imgLeft"
+                android:layout_width="40dp"
+                android:src="@drawable/icon_left_arraw"
+                android:padding="@dimen/padding_5dp"
+                android:layout_height="40dp" />
+            <TextView
+                android:id="@+id/tvMonth"
+                android:layout_width="140dp"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_18sp"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/imgRight"
+                android:layout_width="40dp"
+                android:src="@drawable/icon_right_arraw"
+                android:padding="@dimen/padding_5dp"
+                android:layout_height="40dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/ract_border"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Roll No"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_width="1px"
+                android:background="@color/color_divider"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Name"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_width="1px"
+                android:background="@color/color_divider"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="@dimen/padding_10dp"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Attendance"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:textSize="@dimen/text_size_14sp"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:layout_width="match_parent"
+                    android:background="@color/color_divider"
+                    android:layout_height="1px"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Morning"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:layout_marginBottom="@dimen/padding_5dp"
+                        android:textSize="@dimen/text_size_14sp"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content" />
+                    <View
+                        android:layout_width="1px"
+                        android:background="@color/color_divider"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Evening"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:layout_marginBottom="@dimen/padding_5dp"
+                        android:textSize="@dimen/text_size_14sp"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvStudents"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:textSize="18sp" />
+</RelativeLayout>

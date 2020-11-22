@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AttendanceActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <LinearLayout
+        android:id="@+id/llMarkCard"
+        android:layout_below="@id/topbar"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center|right"
+            android:paddingRight="@dimen/padding_10dp"
+            android:text="Select Mark Card >"
+            android:textSize="@dimen/text_size_16sp"
+            android:layout_height="wrap_content" />
+        <FrameLayout
+            android:layout_gravity="center"
+            android:layout_width="200dp"
+            android:background="@drawable/ract_border"
+            android:layout_height="wrap_content">
+            <Spinner
+                android:id="@+id/spMarkCard"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:layout_height="@dimen/login_button_height" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAttendance"
+        android:layout_below="@id/llMarkCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

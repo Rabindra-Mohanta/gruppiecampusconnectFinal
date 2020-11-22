@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_color"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/img_tree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:paddingEnd="16dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_arrow" />
+
+            <!--<View
+                android:id="@+id/line"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/img_tree"
+                android:layout_alignTop="@id/img_tree"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="14dp"
+                android:layout_toStartOf="@id/img_tree"
+                android:background="@color/color_grey_icon"
+                android:paddingStart="4dp" />-->
+
+            <RelativeLayout
+                android:id="@+id/relative_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/img_call">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_lead"
+                    android:layout_width="@dimen/user_image_size"
+                    android:layout_height="@dimen/user_image_size"
+                    android:layout_alignParentStart="true" />
+
+                <ImageView
+                    android:id="@+id/img_lead_default"
+                    android:layout_width="@dimen/user_image_size"
+                    android:layout_height="@dimen/user_image_size"
+                    android:layout_alignParentStart="true"
+                    android:visibility="invisible"
+                     />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/img_lead"
+                    android:orientation="vertical"
+                    android:paddingEnd="4dp"
+                    android:paddingStart="16dp">
+
+                    <com.scopely.fontain.views.FontTextView
+                        android:id="@+id/txt_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="60dp"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:text="ssd"
+                        android:textColor="@color/color_grey_icon"
+                        android:textAppearance="@style/TextAppearance.Regular"
+                        app:caps_mode="words"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:id="@+id/txt_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_label"
+                        android:textAppearance="@style/TextAppearance.Light"
+                        android:inputType="textCapWords"
+                        android:textSize="@dimen/text_size_12sp" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+
+        android:layout_height="1px" android:background="@color/color_divider"/>
+</LinearLayout>

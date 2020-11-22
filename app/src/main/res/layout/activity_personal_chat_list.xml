@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/relPost" />
+
+        <RelativeLayout
+            android:id="@+id/relPost"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:background="@color/white"
+            android:padding="@dimen/padding_10dp"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/edt_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/img_thumbnail"
+                android:hint="Enter your question..."
+                android:paddingStart="@dimen/padding_10dp"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/img_thumbnail"
+                android:layout_width="@dimen/padding_50dp"
+                android:layout_height="@dimen/padding_50dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/img_post"
+                android:padding="@dimen/padding_5dp"
+                android:src="@drawable/icon_attachment" />
+
+            <ImageView
+                android:id="@+id/img_post"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/padding_30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/comment_send_background"
+                android:onClick="onClickAddComment"
+                android:padding="@dimen/padding_5dp"
+                android:src="@drawable/ic_send" />
+
+        </RelativeLayout>
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+</LinearLayout>
+

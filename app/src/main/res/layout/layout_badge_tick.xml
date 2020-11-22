@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="right">
+
+    <RelativeLayout
+        android:layout_width="28dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_20dp"
+        android:layout_marginRight="@dimen/padding_20dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="fill_parent"
+            android:src="@drawable/icon_tick" />
+
+        <!-- Badge Count -->
+        <TextView
+            android:id="@+id/actionbar_notifcation_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/date_circle_background"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text=""
+            android:textColor="@color/color_orange_hover"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</RelativeLayout>

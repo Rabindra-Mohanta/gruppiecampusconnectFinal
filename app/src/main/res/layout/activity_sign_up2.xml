@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/padding_20dp"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    tools:context=".activities.SignUpActivity2">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnNext"
+                android:layout_width="@dimen/login_button_width"
+                android:text="@string/next"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/padding_30dp"
+                style="@style/LoginButton_Top"
+                android:textStyle="bold"
+                android:gravity="right|center_vertical"
+                android:layout_height="@dimen/login_button_height" />
+
+            <ImageView
+                android:id="@+id/img_signup"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_gruppie"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_30dp"
+                android:layout_marginRight="@dimen/padding_30dp"
+                android:layout_marginTop="@dimen/padding_10dp"
+                android:text="@string/hint_name"
+                style="@style/LabelNormal"
+                android:textColor="@color/colorTextWhite"
+                />
+
+            <EditText
+                android:id="@+id/layout_signup_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_30dp"
+                android:layout_marginRight="@dimen/padding_30dp"
+                android:inputType="text"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:maxLines="1"
+                style="@style/RegEditText"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <TextView
+                android:id="@+id/tvEmailLbl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_login"
+                android:layout_marginLeft="@dimen/padding_30dp"
+                android:layout_marginRight="@dimen/padding_30dp"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:visibility="gone"
+                android:text="@string/hint_email"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <EditText
+                android:id="@+id/layout_signup_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_30dp"
+                android:layout_marginRight="@dimen/padding_30dp"
+                android:inputType="text"
+                android:visibility="gone"
+                android:maxLines="1"
+                android:textSize="@dimen/text_size_16sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:theme="@style/ProgressWhite"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

@@ -1,0 +1,72 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="size"
+            type="int" />
+
+        <variable
+            name="message"
+            type="int" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/background_color"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txt_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/group_name"
+            android:padding="@dimen/padding_10dp"
+            android:paddingBottom="@dimen/padding_10dp"
+            android:text="Level : "
+            android:textColor="@color/color_white"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <!--style="?android:attr/progressBarStyleLarge"-->
+
+        <com.baoyz.widget.PullRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:refreshColor="@color/colorPrimary">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_level" />
+
+        </com.baoyz.widget.PullRefreshLayout>
+
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/txtEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@{message}"
+            android:textSize="18sp"
+            android:visibility="@{size &gt; 0 ? View.GONE : View.VISIBLE}" />
+
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.VideoPlayActivity">
+
+    <FrameLayout
+        android:id="@+id/llProgress"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        android:layout_height="wrap_content">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:indeterminate="false"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            android:background="@drawable/circle_shape"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
+            android:progress="0" />
+
+        <ImageView
+            android:id="@+id/imgCancel"
+            android:layout_width="45dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_close"
+            android:padding="5dp"
+            android:layout_height="45dp"/>
+
+
+    </FrameLayout>
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="110dp"
+        android:visibility="visible"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:layout_centerInParent="true"
+        android:layout_height="110dp"
+        android:indeterminate="false" />
+
+    <com.devbrackets.android.exomedia.ui.widget.VideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:useDefaultControls="true"
+        app:useTextureViewBacking="true" />
+
+</RelativeLayout>

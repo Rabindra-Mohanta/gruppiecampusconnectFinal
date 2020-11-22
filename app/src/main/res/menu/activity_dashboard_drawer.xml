@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/group1" android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_add_lead"
+            android:icon="@drawable/icon_add_friend"
+            android:title="@string/action_add_lead" />
+    </group>
+
+    <group android:id="@+id/group2" android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_view_leads"
+            android:icon="@drawable/icon_friends"
+            android:title="@string/action_view_lead" />
+    </group>
+
+   <!-- <group android:id="@+id/group3" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_leads"
+            android:icon="@drawable/icon_leads"
+            android:title="@string/action_my_lead" />
+    </group>
+
+    <group android:id="@+id/group9" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_teams"
+            android:icon="@drawable/icon_important_contact"
+            android:title="@string/action_my_teams" />
+    </group>
+
+
+    <group android:id="@+id/group4" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_imp_contacts"
+            android:icon="@drawable/icon_important_contact"
+            android:title="@string/action_imp_contacts" />
+    </group>-->
+
+
+    <group android:id="@+id/group9" android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_view_authorized"
+            android:icon="@drawable/icon_leads"
+            android:title="@string/action_view_autho" />
+    </group>
+
+    <group android:id="@+id/group5" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_favourites"
+            android:icon="@drawable/icon_favourite"
+            android:title="@string/action_notification" />
+    </group>
+
+    <group android:id="@+id/group10" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_questions"
+            android:icon="@drawable/icon_doubts"
+            android:title="@string/action_questions" />
+    </group>
+
+    <group android:id="@+id/group6" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_all_users"
+            android:icon="@drawable/icon_allusers"
+            android:title="@string/action_users" />
+    </group>
+
+    <group android:id="@+id/group7" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_language"
+            android:icon="@drawable/ic_language"
+            android:title="@string/action_language"
+            android:visible="false" />
+    </group>
+
+    <group android:id="@+id/group8" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/icon_about"
+            android:title="@string/action_about_us" />
+    </group>
+
+
+</menu>

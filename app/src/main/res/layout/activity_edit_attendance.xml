@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.EditAttendanceActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topbar"
+        android:layout_marginLeft="@dimen/padding_10dp"
+        android:layout_marginRight="@dimen/padding_10dp"
+        android:layout_marginBottom="@dimen/padding_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_15dp"
+            android:text="@string/hint_roll_no"
+            android:paddingLeft="@dimen/padding_10dp"
+            style="@style/LabelNormal"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edtRollNo"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_5dp"
+            android:layout_height="@dimen/login_button_height"
+            android:inputType="numberDecimal"
+            style="@style/RegEditText" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_15dp"
+            android:text="@string/hint_name"
+            android:paddingLeft="@dimen/padding_10dp"
+            style="@style/LabelNormal"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edtName"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_5dp"
+            android:layout_marginBottom="@dimen/padding_30dp"
+            android:layout_height="@dimen/login_button_height"
+            android:inputType="textPersonName"
+            style="@style/RegEditText" />
+
+
+        <Button
+            android:id="@+id/btnCreateTeam"
+            android:layout_width="@dimen/login_button_width"
+            style="@style/AddPostButton"
+            android:layout_gravity="center"
+            android:text="Edit"
+            android:layout_height="@dimen/login_button_height" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_16">
+
+    <TextView
+        android:layout_width="match_parent" android:textSize="@dimen/text_size_16sp" android:textColor="@color/colorPrimary" android:padding="@dimen/dimen_16"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_lang" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dimen_16">
+
+        <RadioButton
+            android:id="@+id/rd_kannada" android:checked="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_10dp"
+            android:text="@string/lbl_kannada"
+            android:textColor="@color/color_323232"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rd_english"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_english"   android:layout_marginBottom="@dimen/padding_10dp"
+            android:textColor="@color/color_323232"
+            android:textSize="@dimen/text_size_16sp" />
+    </RadioGroup>
+
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_30dp"
+        android:background="@color/color_green"
+        android:text="@string/action_update_language"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -1,0 +1,19 @@
+<tabs>
+    <tab
+        id="@+id/tab_group"
+        icon="@drawable/icon_home"
+        title="GROUP" />
+    <tab
+        id="@+id/tab_team"
+        icon="@drawable/icon_team"
+        title="TEAM" />
+    <tab
+        id="@+id/tab_personal"
+        icon="@drawable/icon_personal"
+        title="PERSONAL" />
+
+    <tab
+        id="@+id/tab_more"
+        icon="@drawable/icon_more"
+        title="MORE" />
+</tabs>

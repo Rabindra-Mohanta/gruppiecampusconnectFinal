@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AddStudentActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <FrameLayout
+        android:id="@+id/flMain"
+        android:layout_below="@+id/appBar"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/padding_15dp"
+            app:cardCornerRadius="@dimen/padding_10dp"
+            app:cardElevation="4dp"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_marginRight="@dimen/padding_10dp"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:text="@string/lbl_student_name"
+                    android:paddingLeft="@dimen/padding_10dp"
+                    style="@style/LabelNormal"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/etName"
+                    android:layout_width="match_parent"
+                    android:inputType="textPersonName|textCapWords"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_height="@dimen/login_button_height"
+                    style="@style/RegEditText" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:text="@string/lbl_country"
+                    android:paddingLeft="@dimen/padding_10dp"
+                    style="@style/LabelNormal"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/etCountry"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:layout_height="@dimen/login_button_height"
+                    style="@style/RegEditText" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:text="@string/lbl_parent_number"
+                    android:paddingLeft="@dimen/padding_10dp"
+                    style="@style/LabelNormal"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/etParentNumber"
+                    android:layout_width="match_parent"
+                    android:inputType="phone"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_height="@dimen/login_button_height"
+                    style="@style/RegEditText" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:text="@string/lbl_roll_number"
+                    android:paddingLeft="@dimen/padding_10dp"
+                    style="@style/LabelNormal"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/etRollNo"
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_marginBottom="@dimen/padding_50dp"
+                    android:layout_height="@dimen/login_button_height"
+                    style="@style/RegEditText" />
+
+
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btnCreateTeam"
+        android:layout_width="@dimen/login_button_width"
+        style="@style/AddPostButton"
+        android:layout_below="@+id/flMain"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-40dp"
+        android:text="@string/lbl_add"
+        android:layout_height="@dimen/login_button_height" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

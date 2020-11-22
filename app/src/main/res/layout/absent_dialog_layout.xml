@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:padding="@dimen/padding_10dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="Absent Students"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvStudents"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/padding_10dp"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="100dp"
+        android:text="Submit"
+        android:layout_gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/add_post_button_bg"
+        android:layout_marginBottom="@dimen/padding_5dp"
+        android:layout_marginTop="@dimen/padding_15dp"
+        android:layout_height="35dp" />
+</LinearLayout>

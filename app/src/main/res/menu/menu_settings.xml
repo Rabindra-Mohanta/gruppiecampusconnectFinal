@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<item
+        android:id="@+id/action_notification"
+        android:icon="@drawable/icon_important_contact"
+        android:orderInCategory="100"
+        android:title="@string/action_notifications"
+        app:showAsAction="always" />-->
+
+    <!--<item
+        android:id="@+id/nav_profile"
+        android:title="@string/action_myprofile"
+        app:actionLayout="@layout/menu_layout"
+        app:showAsAction="never" />-->
+
+    <item
+        android:id="@+id/nav_creategroup"
+        android:actionLayout="@layout/menu_layout"
+        android:title="@string/action_creategroup"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_all_contacts"
+        android:title="@string/action_all_contacts"
+        app:actionLayout="@layout/menu_layout"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nav_change_pwd"
+        android:title="@string/action_change_pwd"
+        app:actionLayout="@layout/menu_layout"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nav_change_number"
+        android:actionLayout="@layout/menu_layout"
+        android:title="@string/action_change_number"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/nav_logout"
+        android:actionLayout="@layout/menu_layout"
+        android:title="@string/action_logout"
+        app:showAsAction="never" />
+
+</menu>

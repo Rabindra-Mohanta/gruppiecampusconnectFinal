@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/padding_5dp"
+    app:cardCornerRadius="@dimen/padding_5dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <RelativeLayout
+                android:id="@+id/rel"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="@dimen/padding_10dp"
+                android:layout_marginBottom="@dimen/padding_10dp">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/pdf_thumbnail"
+                    android:layout_alignParentTop="true"
+                    android:adjustViewBounds="true" />
+                <TextView
+                    android:id="@+id/tvCount"
+                    android:visibility="gone"
+                    android:background="@drawable/round_background"
+                    android:layout_width="match_parent"
+                    android:layout_margin="@dimen/padding_40dp"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/padding_10dp"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="+6"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constThumb"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_10dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:background="@color/imgBg"
+                    android:padding="@dimen/padding_5dp"
+                    android:layout_marginRight="@dimen/padding_10dp"
+                    android:layout_marginBottom="@dimen/padding_5dp">
+
+                    <school.campusconnect.views.TopCropImageView
+                        android:id="@+id/imageThumb"
+                        android:layout_width="0dp"
+                        android:src="@drawable/pdf_place_holder"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="H,1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgDownloadPdf"
+                        android:layout_width="@dimen/pdf_download_icon_size"
+                        android:src="@drawable/pdf_download_icon"
+                        android:adjustViewBounds="true"
+                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/padding_10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_height="@dimen/pdf_download_icon_size"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txt_title"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:autoLink="web"
+                    android:ellipsize="end"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:paddingRight="@dimen/padding_5dp"
+                    android:text="Title Text"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:textColor="@color/colorTextDark"
+                    android:textColorLink="@color/colorPrimary"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingTop="@dimen/padding_5dp"
+                    android:paddingBottom="@dimen/padding_5dp"
+                    android:paddingLeft="@dimen/padding_10dp"
+                    android:paddingRight="@dimen/padding_10dp"
+                    android:autoLink="web"
+                    android:maxLength="100"
+                    android:text="Description"
+                    android:visibility="visible"
+                    android:textColorLink="@color/colorPrimary"
+                    android:textColor="@color/colorTextDark"
+                    style="@style/LabelNormal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

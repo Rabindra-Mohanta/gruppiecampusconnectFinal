@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.ViewPDFActivity">
+    <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/padding_15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvCurrentPage"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:text="0/0"
+            android:paddingBottom="5dp"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            style="@style/LabelNormal"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/llProgress"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        android:layout_height="wrap_content">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:indeterminate="false"
+            android:layout_gravity="center"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            android:background="@drawable/circle_shape"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
+            android:progress="0" />
+
+        <ImageView
+            android:id="@+id/imgCancel"
+            android:layout_width="45dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_close"
+            android:padding="5dp"
+            android:tint="@color/colorPrimary"
+            android:layout_height="45dp"/>
+
+
+    </FrameLayout>
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="110dp"
+        android:visibility="visible"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:layout_centerInParent="true"
+        android:layout_height="110dp"
+        android:indeterminate="false" />
+
+</RelativeLayout>

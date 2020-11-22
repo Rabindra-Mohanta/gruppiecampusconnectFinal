@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_group_settings"
+        android:title="@string/action_group_setting"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nav_change_admin"
+        android:title="@string/action_change_admin"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nav_edit_group"
+        android:title="@string/action_edit_group"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nav_delete_group"
+        android:title="@string/action_delete_group"
+        android:visible="false"
+        app:showAsAction="never" />
+    <!--  <item
+          android:id="@+id/nav_leave_group"
+          android:title="@string/action_leave"
+          app:showAsAction="never" />-->
+
+
+
+</menu>

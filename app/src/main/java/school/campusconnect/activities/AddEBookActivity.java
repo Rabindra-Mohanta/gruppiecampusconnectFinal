@@ -1,0 +1,495 @@
+package school.campusconnect.activities;
+
+import android.Manifest;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import school.campusconnect.R;
+import school.campusconnect.adapters.AddEBookAdapter;
+import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.ErrorResponseModel;
+import school.campusconnect.datamodel.GroupValidationError;
+import school.campusconnect.datamodel.ebook.AddEbookReq;
+import school.campusconnect.datamodel.ebook.EBooksResponse;
+import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AmazoneHelper;
+import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.GetThumbnail;
+import school.campusconnect.utils.ImageUtil;
+
+public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
+
+    private static final String TAG = "CreateTeamActivity";
+
+    @Bind(R.id.etPdf)
+    TextView etPdf;
+
+    @Bind(R.id.tvSubject)
+    EditText etSubject;
+
+    @Bind(R.id.etName)
+    EditText etName;
+
+    @Bind(R.id.etDesc)
+    EditText etDesc;
+
+    @Bind(R.id.imgAdd)
+    ImageView imgAdd;
+
+    @Bind(R.id.toolbar)
+    public Toolbar mToolBar;
+
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
+
+    @Bind(R.id.rvSubjects)
+    RecyclerView rvSubjects;
+
+    LeafManager leafManager;
+
+    AddEBookAdapter adapter = new AddEBookAdapter();
+
+    ArrayList<String> pdfSelected = new ArrayList<>();
+
+    public int REQUEST_LOAD_PDF = 103;
+    private ProgressDialog progressDialog;
+    private AddEbookReq mainRequest;
+    private TransferUtility transferUtility;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_ebook);
+
+        init();
+
+    }
+
+    private void init() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+
+        transferUtility = AmazoneHelper.getTransferUtility(this);
+
+        ButterKnife.bind(this);
+
+        rvSubjects.setAdapter(adapter);
+
+        setSupportActionBar(mToolBar);
+        setBackEnabled(true);
+        setTitle(getResources().getString(R.string.lbl_add_ebook));
+        leafManager = new LeafManager();
+
+        imgAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (TextUtils.isEmpty(etSubject.getText().toString().trim())) {
+                    Toast.makeText(AddEBookActivity.this, "Please Add Subject", Toast.LENGTH_SHORT).show();
+                    etSubject.requestFocus();
+                } else if (pdfSelected.size() == 0) {
+                    Toast.makeText(AddEBookActivity.this, "Please Select Pdf", Toast.LENGTH_SHORT).show();
+                } else {
+                    adapter.add(new EBooksResponse.SubjectBook(etSubject.getText().toString(),etDesc.getText().toString(), pdfSelected));
+                    hide_keyboard(view);
+                    pdfSelected.clear();
+                    etSubject.setText("");
+                    etDesc.setText("");
+                    etPdf.setText(getResources().getString(R.string.hint_select_Pdf_Book));
+                    etSubject.requestFocus();
+                }
+            }
+        });
+
+
+    }
+
+    public void hide_keyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (view == null) {
+            view = new View(this);
+        }
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @OnClick({R.id.btnCreateClass, R.id.etPdf})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btnCreateClass:
+                if (isValid()) {
+                    if (!TextUtils.isEmpty(etSubject.getText().toString().trim()) && pdfSelected.size() > 0) {
+
+                    } else if (TextUtils.isEmpty(etSubject.getText().toString().trim()) && pdfSelected.size() == 0) {
+                        if (adapter.getList().size() == 0) {
+                            Toast.makeText(this, "Please add at least one subject and pdf", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        if (TextUtils.isEmpty(etSubject.getText().toString().trim())) {
+                            Toast.makeText(AddEBookActivity.this, "Please Add Subject", Toast.LENGTH_SHORT).show();
+                            etSubject.requestFocus();
+                            return;
+                        } else if (pdfSelected.size() == 0) {
+                            Toast.makeText(AddEBookActivity.this, "Please Select Pdf", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                    if (!isConnectionAvailable()) {
+                        showNoNetworkMsg();
+                        return;
+                    }
+
+                    AddEbookReq request = new AddEbookReq();
+                    request.className = etName.getText().toString();
+                    request.subjectBooks = adapter.getList();
+                    if (!TextUtils.isEmpty(etSubject.getText().toString().trim()) && pdfSelected.size() > 0) {
+                        request.subjectBooks.add((new EBooksResponse.SubjectBook(etSubject.getText().toString(),etDesc.getText().toString(), pdfSelected)));
+                    }
+                    AppLog.e(TAG, "request :" + request);
+                    progressDialog.setMessage("Uploading Pdf...");
+                    progressDialog.show();
+                    uploadToAmazone(request);
+
+                }
+                break;
+
+            case R.id.etPdf:
+                if (checkPermissionForWriteExternal()) {
+                    selectPdf();
+                } else {
+                    requestPermissionForWriteExternal(23);
+                }
+                break;
+        }
+
+    }
+
+
+    private boolean checkPermissionForWriteExternal() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            Log.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            Log.e("External" + "permission", "checkpermission , denied");
+            return false;
+        }
+    }
+
+    public void requestPermissionForWriteExternal(int code) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            AppLog.e(TAG, "requestPermissionForWriteExternal");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 23) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectPdf();
+            } else {
+                Log.e("AddPost" + "permission", "denied camera");
+            }
+        }
+    }
+
+    public boolean isValid() {
+        boolean valid = true;
+        if (!isValueValidOnly(etName)) {
+            Toast.makeText(this, "Please Enter Class Name", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        return valid;
+    }
+
+    @Override
+    public void onSuccess(int apiId, BaseResponse response) {
+        super.onSuccess(apiId, response);
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
+
+        switch (apiId) {
+            case LeafManager.API_EBOOK_REGISTER:
+                finish();
+                break;
+
+        }
+    }
+
+    @Override
+    public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
+
+        if (error.status.equals("401")) {
+            Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
+            logout();
+        } else {
+            if (apiId == LeafManager.API_SUBJECTS_DELETE) {
+                GroupValidationError groupValidationError = (GroupValidationError) error;
+                Toast.makeText(this, groupValidationError.message, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, error.title, Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+    }
+
+    @Override
+    public void onException(int apiId, String msg) {
+        super.onException(apiId, msg);
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
+        Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
+    }
+
+    private void selectPdf() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        intent.setType("application/pdf");
+        startActivityForResult(intent, REQUEST_LOAD_PDF);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+
+        if (requestCode == REQUEST_LOAD_PDF && resultCode == Activity.RESULT_OK && data != null) {
+            pdfSelected.clear();
+            etPdf.setText("");
+            ClipData clipData = data.getClipData();
+            if (clipData == null) {
+                Uri selectedImageURI = data.getData();
+                Log.e("SelectedURI : ", selectedImageURI.toString());
+                if (selectedImageURI.toString().startsWith("content")) {
+                    pdfSelected.add(ImageUtil.getPath(this, selectedImageURI));
+                } else {
+                    pdfSelected.add(selectedImageURI.getPath());
+                }
+            } else {
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    ClipData.Item item = clipData.getItemAt(i);
+                    final Uri uri1 = item.getUri();
+                    String path = ImageUtil.getPath(this, uri1);
+                    pdfSelected.add(path);
+                }
+            }
+            if (pdfSelected.size() == 0) {
+                Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+            } else {
+                etPdf.setText(pdfSelected.size() + " book selected");
+            }
+        }
+    }
+
+    ArrayList<ArrayList<String>> thumbnailListMulti = new ArrayList<>();
+    private void uploadToAmazone(AddEbookReq request) {
+        mainRequest = request;
+        thumbnailListMulti.clear();
+        createMultipleListThumbnail(0);
+    }
+    private void createMultipleListThumbnail(int index) {
+        if(mainRequest.subjectBooks.size()==index){
+            upLoadThumbnailOnCloud(0,0);
+        }else {
+            GetThumbnail.create(mainRequest.subjectBooks.get(index).fileName, new GetThumbnail.GetThumbnailListener() {
+                @Override
+                public void onThumbnail(ArrayList<String> listThumbnails) {
+                    if(listThumbnails!=null){
+                        thumbnailListMulti.add(listThumbnails);
+                        createMultipleListThumbnail(index+1);
+                    }else {
+                        Toast.makeText(AddEBookActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            },Constants.FILE_TYPE_PDF);
+        }
+    }
+
+    private void upLoadImageOnCloud(final int pos, final int pdfPos) {
+
+            final String key = AmazoneHelper.getAmazonS3Key(mainRequest.subjectBooks.get(pos).fileType);
+
+            File file = new File(mainRequest.subjectBooks.get(pos).fileName.get(pdfPos));
+            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
+                    file , CannedAccessControlList.PublicRead);
+
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                        updateList(pos, pdfPos, key);
+                    }
+                    if (TransferState.FAILED.equals(state)) {
+                        Toast.makeText(AddEBookActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+                    progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pdfPos + 1) + "/" + mainRequest.subjectBooks.get(pos).fileName.size() + " From " + (pos + 1) + "/" + mainRequest.subjectBooks.size() + " Subject");
+                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    progressBar.setVisibility(View.GONE);
+                    progressDialog.dismiss();
+                    AppLog.e(TAG, "Upload Error : " + ex);
+                    Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    }
+
+    private void updateList(int pos, int pdfPos, String key) {
+        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+        Log.e("FINALURL", "url is " + _finalUrl);
+
+        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+        Log.e("FINALURL", "encoded url is " + _finalUrl);
+
+        mainRequest.subjectBooks.get(pos).fileName.set(pdfPos,_finalUrl);
+        pdfPos = pdfPos+1;
+        if(mainRequest.subjectBooks.get(pos).fileName.size()==pdfPos){
+            pos = pos+1;
+            if (pos == mainRequest.subjectBooks.size()) {
+
+                for (int i=0;i<mainRequest.subjectBooks.size();i++){
+                    mainRequest.subjectBooks.get(i).thumbnailImage = thumbnailListMulti.get(i);
+                }
+                progressDialog.dismiss();
+                AppLog.e(TAG, "mainRequest :" + mainRequest);
+                progressBar.setVisibility(View.VISIBLE);
+                leafManager.addEBook(this, GroupDashboardActivityNew.groupId, mainRequest);
+            }else {
+                pdfPos=0;
+                upLoadImageOnCloud(pos,pdfPos);
+            }
+        }else {
+            upLoadImageOnCloud(pos,pdfPos);
+        }
+    }
+
+
+
+    private void upLoadThumbnailOnCloud(final int pos, final int pdfPos) {
+
+        final String key = AmazoneHelper.getAmazonS3KeyThumbnail(Constants.FILE_TYPE_PDF);
+
+        File file = new File(thumbnailListMulti.get(pos).get(pdfPos));
+        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
+                file , CannedAccessControlList.PublicRead);
+
+        observer.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                    Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                    updateThumbnailList(pos, pdfPos, key);
+                }
+                if (TransferState.FAILED.equals(state)) {
+                    Toast.makeText(AddEBookActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                int percentDone = (int) percentDonef;
+                //progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pdfPos + 1) + "/" + mainRequest.subjectBooks.get(pos).fileName.size() + " From " + (pos + 1) + "/" + mainRequest.subjectBooks.size() + " Subject");
+                AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                progressBar.setVisibility(View.GONE);
+                progressDialog.dismiss();
+                AppLog.e(TAG, "Upload Error : " + ex);
+                Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void updateThumbnailList(int pos, int pdfPos, String key) {
+        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+        Log.e("FINALURL", "url is " + _finalUrl);
+
+        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+        Log.e("FINALURL", "encoded url is " + _finalUrl);
+
+        thumbnailListMulti.get(pos).set(pdfPos,_finalUrl);
+        pdfPos = pdfPos+1;
+        if(thumbnailListMulti.get(pos).size()==pdfPos){
+            pos = pos+1;
+            if (pos == thumbnailListMulti.size()) {
+                upLoadImageOnCloud(0,0);
+            }else {
+                pdfPos=0;
+                upLoadThumbnailOnCloud(pos,pdfPos);
+            }
+        }else {
+            upLoadThumbnailOnCloud(pos,pdfPos);
+        }
+    }
+}

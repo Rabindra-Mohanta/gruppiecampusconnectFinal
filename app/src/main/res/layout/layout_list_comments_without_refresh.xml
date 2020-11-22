@@ -1,0 +1,136 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="size"
+            type="int" />
+
+        <variable
+            name="message"
+            type="int" />
+
+        <variable
+            name="hint"
+            type="String" />
+
+        <variable
+            name="handlers"
+            type="school.campusconnect.activities.CommentsActivity" />
+
+        <variable
+            name="comment"
+            type="school.campusconnect.datamodel.comments.Comment" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <!--<Button
+            android:id="@+id/btn_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/padding_10dp"
+            android:text="Comment"
+            android:textColor="@color/half_black"
+            android:textSize="18sp" />-->
+
+        <!--style="?android:attr/progressBarStyleLarge"-->
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <com.baoyz.widget.PullRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/relComment"
+            app:refreshColor="@color/colorPrimary">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.baoyz.widget.PullRefreshLayout>
+
+        <TextView
+            android:id="@+id/txtEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@{message}"
+            android:textSize="18sp"
+            android:textAppearance="@style/TextAppearance.Regular"
+            android:visibility="@{size &gt; 0 ? View.GONE : View.VISIBLE}" />
+
+        <RelativeLayout
+            android:id="@+id/relComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/padding_10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_Cmt"
+                    android:layout_width="@dimen/comment_image_size"
+                    android:visibility="visible"
+                    android:layout_height="@dimen/comment_image_size" />
+                <ImageView
+                    android:id="@+id/imgCmtDefault"
+                    android:layout_width="@dimen/comment_image_size"
+                    android:visibility="gone"
+                    android:layout_height="@dimen/comment_image_size" />
+
+
+                <EditText
+                    android:id="@+id/edt_comment"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/padding_5dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@{hint}"
+                    android:inputType="textCapSentences"
+                    android:paddingStart="@dimen/padding_10dp"
+                    style="@style/CommentEditText"
+                    android:singleLine="true"
+                    android:text="@{comment.commentString}"
+                    android:paddingLeft="@dimen/padding_10dp" />
+                <ImageView
+                    android:id="@+id/img_comment"
+                    android:layout_width="@dimen/padding_30dp"
+                    android:layout_height="@dimen/padding_30dp"
+                    android:layout_marginLeft="@dimen/padding_5dp"
+                    android:onClick="onClickAddComment"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_send_msg" />
+            </LinearLayout>
+
+
+
+            <!--android:onTextChanged="@={data.addTextChangedListener}"-->
+
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryBg"
+    tools:context=".activities.UserExistActivity">
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginRight="@dimen/padding_30dp"
+                    android:background="@drawable/otp_bg"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/layout_password"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="@dimen/padding_40dp"
+                            android:inputType="textPassword"
+                            style="@style/OTPEditText"
+                            android:textColorHint="@color/white"
+                            android:hint="@string/hint_pass"
+                            android:paddingLeft="@dimen/padding_15dp"
+                            android:imeOptions="actionDone"
+                            android:paddingRight="@dimen/padding_15dp"
+                            />
+                        <ImageView
+                            android:id="@+id/imgEye"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginRight="@dimen/padding_10dp"
+                            android:layout_gravity="center"
+                            android:tint="@color/white"
+                            android:src="@drawable/icon_eye_hide"
+                            android:layout_marginEnd="@dimen/padding_10dp" />
+                    </LinearLayout>
+
+                </FrameLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:layout_weight="1.2"
+                    android:id="@+id/chk"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding_10dp"
+                    android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:buttonTint="@color/white"
+                    android:checked="true"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/remember_me"
+                    android:textColor="@color/colorTextWhite"
+                    android:textSize="@dimen/text_size_14sp" />
+
+
+            </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llOptSend"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:visibility="invisible"
+                    android:orientation="vertical"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/txtCountDown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="60"
+                            android:gravity="center"
+                            android:textColor="@color/colorTextWhite"
+                            android:layout_marginBottom="@dimen/padding_5dp"
+                            android:textSize="100sp"
+                            android:visibility="visible" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lbl_seconds"
+                            android:gravity="center"
+                            android:layout_gravity="bottom"
+                            android:textColor="@color/colorTextWhite"
+                            android:textSize="@dimen/text_size_18sp"
+                            android:visibility="visible" />
+
+                    </FrameLayout>
+                    <TextView
+                        android:id="@+id/tvOtpSendMsg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="bottom"
+                        android:layout_marginTop="@dimen/padding_20dp"
+                        android:textColor="@color/colorTextWhiteDark"
+                        android:textSize="@dimen/text_size_18sp"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/llGetOpt"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tvGenerateOTP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_generate_otp"
+                    android:gravity="center"
+                    android:layout_gravity="bottom"
+                    android:textColor="@color/colorTextWhite"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+
+            </LinearLayout>
+
+            </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tvLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="© 2016 Vivid Innovation Pvt Ltd"
+        android:textColor="@color/black_semi_transparent"
+        android:visibility="invisible" />
+
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="@dimen/login_button_width"
+        android:text="@string/done"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:layout_marginRight="@dimen/padding_30dp"
+        style="@style/LoginButton_Top"
+        android:layout_marginTop="@dimen/padding_15dp"
+        android:textStyle="bold"
+        android:gravity="right|center_vertical"
+        android:layout_height="@dimen/login_button_height" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:theme="@style/ProgressWhite"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

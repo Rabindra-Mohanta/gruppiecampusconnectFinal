@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header_profile_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/header_height"
+    android:background="@color/color_header"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/header_padding_other"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/header_padding"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <school.campusconnect.views.RoundedImageView
+        android:id="@+id/imageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp" android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:src="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_toRightOf="@+id/imageView"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:paddingTop="@dimen/header_text_padding"
+        android:layout_marginLeft="@dimen/padding_10dp"
+        >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:id="@+id/user_name"
+
+        android:text="Username"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_alignTop="@+id/imageView"
+
+        android:textSize="@dimen/text_size_16sp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/user_name"
+        android:layout_below="@+id/user_name"
+        android:textSize="@dimen/text_size_14sp"
+        android:text="33% Profile updated" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_invite"
+        android:icon="@drawable/ic_person_add_white"
+        android:title="Invite Friend"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_friend_list"
+        android:icon="@drawable/icon_friend_list"
+        app:showAsAction="always"
+        android:visible="false"
+        android:title="Friend List"
+        />
+
+    <item
+        android:id="@+id/menu_add_friend"
+        android:icon="@drawable/addfriends"
+        android:title="Add Friends"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_add_chat"
+        android:icon="@drawable/icon_add_chat"
+        android:title="Add Friends"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+
+
+    <item
+        android:id="@+id/action_notification"
+        android:icon="@drawable/icon_notification"
+        android:title="  "
+        android:visible="false"
+        app:actionLayout="@layout/action_bar_noti_layout"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_notification1"
+        android:icon="@drawable/icon_notification"
+        android:title="  "
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_cart"
+        android:title="test"
+        android:visible="false"
+        app:actionLayout="@layout/layout_badge"
+        app:showAsAction="always" />
+
+    <!--<item
+        android:id="@+id/action_add_count"
+        android:title="0 Selected"
+        android:visible="false"
+        app:showAsAction="always" />-->
+
+    <item
+        android:id="@+id/action_add_multi"
+        android:title="Add Friends"
+        android:visible="false"
+        android:enabled="true"
+        app:actionLayout="@layout/layout_badge_tick"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_sync2"
+        android:icon="@drawable/icon_sync"
+        android:title="Sync Contacts"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_sync"
+        android:title="Sync Contacts"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_notification_list"
+        android:title="Notification"
+        android:icon="@drawable/icon_notification"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_zoom"
+        android:icon="@drawable/call_icon"
+        android:title="Zoom Meeting"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_add_post"
+        android:icon="@drawable/posticon"
+        android:title="Add Post"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_ic_close"
+        android:icon="@drawable/ic_close"
+        android:title="Close"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_more"
+        app:showAsAction="always"
+        android:visible="false"
+        android:icon="@drawable/more_vert"
+        android:title="">
+        <menu>
+            <item
+                android:id="@+id/action_settings"
+                android:icon="@drawable/icon_menu_setting"
+                android:title="Settings"
+                app:showAsAction="ifRoom"
+                android:visible="false" />
+
+            <item android:id="@+id/menu_leave_team"
+                android:visible="false"
+                app:showAsAction="ifRoom"
+                android:title="Leave Team"/>
+
+            <item android:id="@+id/menu_edit_team"
+                android:visible="false"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/icon_menu_edit"
+                android:title="Edit Team"/>
+            <item android:id="@+id/menu_change_admin"
+                android:visible="false"
+                app:showAsAction="ifRoom"
+                android:icon="@drawable/change_admin"
+                android:title="Change Admin"/>
+
+
+            <item android:id="@+id/menu_archive_team"
+                android:visible="false"
+                android:icon="@drawable/icon_menu_archive"
+                app:showAsAction="ifRoom"
+                android:title="Archive Team"/>
+            <item android:id="@+id/menu_add_time_table"
+                android:visible="false"
+                android:icon="@drawable/icon_time_table"
+                app:showAsAction="ifRoom"
+                android:title="Add Time Table"/>
+            <item android:id="@+id/menu_get_attendance"
+                android:visible="false"
+                android:icon="@drawable/icon_attendance_report"
+                app:showAsAction="ifRoom"
+                android:title="@string/lbl_attendance_report"/>
+            <item android:id="@+id/menu_leave_request"
+                android:visible="false"
+                app:showAsAction="ifRoom"
+                android:title="Leave Request"/>
+
+
+        </menu>
+    </item>
+
+    <item android:id="@+id/menu_add_team"
+        android:visible="false"
+        android:title="Add Team"/>
+
+    <item android:id="@+id/menu_change_pass"
+        android:visible="false"
+        android:title="Change Password"/>
+
+
+    <item android:id="@+id/menu_set_wallpaper"
+        android:visible="false"
+        android:title="Set Wallpaper"/>
+    <item android:id="@+id/menu_remove_wallpaper"
+        android:visible="false"
+        android:title="Remove Wallpaper"/>
+
+
+    <item android:id="@+id/menu_logout"
+        android:visible="false"
+        android:title="Logout"/>
+
+
+
+
+</menu>
