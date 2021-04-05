@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -156,9 +158,17 @@ public class AddClassActivity extends BaseActivity implements LeafManager.OnAddU
         String[] str = getResources().getStringArray(R.array.array_country);
         tvCountry.setText(str[0]);
     }
-
+    private static final long MIN_CLICK_INTERVAL = 1000; //in millis
+    private long lastClickTime = 0;
     @OnClick({R.id.btnCreateClass, R.id.tvCountry})
     public void onClick(View view) {
+        long currentTime = SystemClock.elapsedRealtime();
+        if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
+            lastClickTime = currentTime;
+        }else {
+            return;
+        }
+        Log.e(TAG,"Tap : ");
         switch (view.getId()) {
             case R.id.btnCreateClass:
                 if (isValid()) {

@@ -68,6 +68,7 @@ public class ClassStudentActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_class_student, menu);
+        menu.findItem(R.id.menu_print_student_list).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -81,6 +82,9 @@ public class ClassStudentActivity extends BaseActivity {
                 startActivity(intent);
                 return true;
             }
+            case R.id.menu_print_student_list:
+                ((ClassStudentListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).exportDataToCSV();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

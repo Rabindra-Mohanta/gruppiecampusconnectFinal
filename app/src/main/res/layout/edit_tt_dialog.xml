@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/padding_10dp"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        tools:ignore="RtlSymmetry">
+        <TextView
+            android:id="@+id/txt_period"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="Period"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_16sp"
+            android:textColor="@color/colorTextDark"
+            style="@style/LabelNormal" />
+
+        <TextView
+            android:id="@+id/txt_subject"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/padding_10dp"
+            android:layout_marginEnd="@dimen/padding_10dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Select Subject"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_16sp"
+            android:textColor="@color/colorTextDark"
+            style="@style/LabelNormal" />
+
+        <TextView
+            android:id="@+id/txt_staff"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Select Staff"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_16sp"
+            android:textColor="@color/colorTextDark"
+            style="@style/LabelNormal" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:layout_height="50dp">
+        <EditText
+            android:id="@+id/et_period"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="@dimen/login_button_height"
+            android:gravity="center"
+            android:singleLine="true"
+            android:focusable="false"
+            android:inputType="numberDecimal"
+            android:digits="1234567890"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_16sp"
+            style="@style/RegEditText" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/padding_10dp"
+            android:layout_marginEnd="@dimen/padding_10dp"
+            android:layout_height="wrap_content">
+            <Spinner
+                android:id="@+id/spSubject"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height" />
+            <ImageView
+                android:layout_width="25dp"
+                android:src="@drawable/icon_down_white"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:layout_gravity="right|center"
+                android:layout_height="25dp"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <Spinner
+                android:id="@+id/spStaff"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height" />
+            <ImageView
+                android:layout_width="25dp"
+                android:src="@drawable/icon_down_white"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:layout_gravity="right|center"
+                android:layout_height="25dp"/>
+        </FrameLayout>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="@dimen/login_button_width"
+        style="@style/AddPostButton"
+        android:layout_marginTop="@dimen/padding_20dp"
+        android:text="@string/action_save"
+        android:layout_height="@dimen/login_button_height" />
+</LinearLayout>

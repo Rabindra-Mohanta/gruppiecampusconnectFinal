@@ -4,7 +4,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -210,9 +213,16 @@ public class AddStaffActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
     }
-
+    private long lastClickTime = 0;
     @OnClick({R.id.btnAdd, R.id.etCountry,R.id.etdob,R.id.etdoj})
     public void onClick(View view) {
+        long currentTime = SystemClock.elapsedRealtime();
+        if (currentTime - lastClickTime > 1000) {
+            lastClickTime = currentTime;
+        }else {
+            return;
+        }
+        Log.e(TAG,"Tap : ");
         switch (view.getId()) {
             case R.id.btnAdd:
                 if (isValid()) {

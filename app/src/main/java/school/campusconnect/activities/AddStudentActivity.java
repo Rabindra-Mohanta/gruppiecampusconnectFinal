@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import androidx.appcompat.app.AlertDialog;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -65,9 +68,17 @@ public class AddStudentActivity extends BaseActivity {
         String[] str = getResources().getStringArray(R.array.array_country);
         etCountry.setText(str[0]);
     }
-
+    private long lastClickTime = 0;
     @OnClick({R.id.btnCreateTeam, R.id.etCountry})
     public void onClick(View view) {
+        long currentTime = SystemClock.elapsedRealtime();
+        if (currentTime - lastClickTime > 1000) {
+            lastClickTime = currentTime;
+        }else {
+            return;
+        }
+        Log.e(TAG,"Tap : ");
+
         switch (view.getId()) {
             case R.id.btnCreateTeam:
                 if (isValid()) {

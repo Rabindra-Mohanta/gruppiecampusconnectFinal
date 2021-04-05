@@ -111,6 +111,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.llSubject)
     LinearLayout llSubject;
 
+    @Bind(R.id.llSubject2)
+    LinearLayout llSubject2;
+
     @Bind(R.id.llStaffReg)
     LinearLayout llStaffReg;
 
@@ -387,7 +390,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         createTabIcons();
     }
 
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople,R.id.llSubject, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass,R.id.llEBook, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople,R.id.llSubject,R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass,R.id.llEBook, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -516,6 +519,13 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.llSubject:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, SubjectActivity.class));
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+            case R.id.llSubject2:
+                if (isConnectionAvailable()) {
+                    startActivity(new Intent(this, ClassActivity2.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -659,6 +669,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             llClass.setVisibility(View.VISIBLE);
             llEBook.setVisibility(View.VISIBLE);
             llSubject.setVisibility(View.VISIBLE);
+            llSubject2.setVisibility(View.VISIBLE);
             llStaffReg.setVisibility(View.VISIBLE);
             llAttendanceReport.setVisibility(View.VISIBLE);
             llBusRegister.setVisibility(View.VISIBLE);
@@ -887,8 +898,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         } else if (group.type.equalsIgnoreCase("Calendar")) {
             startActivity(new Intent(this, CalendarActivity.class));
         } else if (group.type.equals("Time Table")) {
-            Intent intent = new Intent(this, TimeTableActivity.class);
-            intent.putExtra("role",group.role);
+            Intent intent = new Intent(this, TimeTableClassActivity2.class);
+            intent.putExtra("role", group.role);
             startActivity(intent);
         } else if (group.type.equals("Chat")) {
             Intent intent = new Intent(this, ChatActivity.class);

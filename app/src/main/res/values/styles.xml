@@ -11,7 +11,10 @@
         <item name="android:typeface">serif</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
-
+    <style name="FragmentDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">50%</item>
+        <item name="android:windowMinWidthMinor">70%</item>
+    </style>
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@android:color/white</item>
     </style>
@@ -68,6 +71,7 @@
         <item name="android:textColorHint">#6D777E</item>
         <item name="android:textColor">#3C5F3D</item>
     </style>
+    <style name="AppDialog" parent="Theme.AppCompat.Light.Dialog.Alert"/>
 
 
     <style name="AppTheme.AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">

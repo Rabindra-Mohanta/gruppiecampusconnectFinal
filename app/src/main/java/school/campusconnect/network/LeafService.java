@@ -107,9 +107,15 @@ import school.campusconnect.datamodel.publicgroup.PublicGroupResponse;
 import school.campusconnect.datamodel.question.QuestionResponse;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.sharepost.ShareGroupResponse;
+import school.campusconnect.datamodel.subjects.AbsentSubjectReq;
+import school.campusconnect.datamodel.subjects.AddSubjectStaffReq;
 import school.campusconnect.datamodel.subjects.SubjectResponse;
+import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetResponse;
+import school.campusconnect.datamodel.time_table.SubStaffTTReq;
+import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
+import school.campusconnect.datamodel.time_table.TimeTableList2Response;
 import school.campusconnect.datamodel.versioncheck.VersionCheckResponse;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
@@ -469,6 +475,29 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<SubjectResponse> getSubjects(@Path("group_id") String group_id);
 
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubjectStaffResponse> getSubjectStaff(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TimeTableList2Response> getTTNew(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TimeTableList2Response> getTTNewDayWise(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("day") String day);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addSubjectStaff(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body AddSubjectStaffReq addSubjectStaffReq);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_with_staff_id}/staff/{staff_id}/year/timetable/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addSubjectStaffTT(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                         @Path("subject_with_staff_id") String subject_with_staff_id, @Path("staff_id") String staff_id,
+                                         @Body SubStaffTTReq addSubjectStaffReq);
+
     @GET("/api/v1/groups/{group_id}/team/{team_id}/markscard/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<MarkCardListResponse> getMarkCardList(@Path("group_id") String group_id, @Path("team_id") String team_id);
@@ -501,6 +530,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<StaffResponse> getStaff(@Path("group_id") String group_id);
 
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubjectStaffTTResponse> getSubjectStaffTT(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                                   @Body SubStaffTTReq subStaffTTReq);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/students/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -961,6 +994,10 @@ public interface LeafService {
 
 
     //Attendance
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subjects/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubjectResponse> getAttendanceSubject(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
     @GET("/api/v1/groups/{group_id}/team/{team_id}/attendance/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AttendanceListRes> getAttendance(@Path("group_id") String group_id, @Path("team_id") String team_id);
@@ -979,7 +1016,8 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/message/absenties")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<AbsentAttendanceRes> sendAbsenties(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query(value = "userIds[]", encoded = true) ArrayList<String> userIds);
+    Call<AbsentAttendanceRes> sendAbsenties(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                            @Query(value = "userIds[]", encoded = true) ArrayList<String> userIds, @Body AbsentSubjectReq absentSubjectReq);
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/attendance/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

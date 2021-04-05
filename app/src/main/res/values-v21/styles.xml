@@ -10,7 +10,10 @@
         <item name="android:editTextStyle">@style/AppTheme.EditText</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
-
+    <style name="FragmentDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">70%</item>
+    </style>
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@android:color/white</item>
     </style>

@@ -395,6 +395,24 @@
             android:name="school.campusconnect.activities.SubjectActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="school.campusconnect.activities.SubjectActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.AddSubjectActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.ClassActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.TimeTableClassActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.TimeTabelActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.AddTimeTable2"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="school.campusconnect.activities.ClassActivity"
             android:screenOrientation="portrait" />
         <activity

@@ -1,6 +1,7 @@
 package school.campusconnect.activities;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,11 +10,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +38,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import school.campusconnect.datamodel.subjects.AbsentSubjectReq;
+import school.campusconnect.datamodel.subjects.SubjectResponse;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -67,6 +74,7 @@ public class AttendanceActivity extends BaseActivity {
     ArrayList<AttendanceListRes.AttendanceData> listAbsent = new ArrayList<>();
     AttendanceAdapter attendanceAdapter;
     private ArrayList<String> userIds = new ArrayList<>();
+    private ArrayList<String> subjectList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +88,11 @@ public class AttendanceActivity extends BaseActivity {
         init_();
 
         getAttendanceList();
+
+        getSubjectList();
+    }
+    private void getSubjectList(){
+        leafManager.getAttendanceSubject(this,groupId,teamId);
     }
 
     @Override
@@ -179,26 +192,53 @@ public class AttendanceActivity extends BaseActivity {
     }
 
     private void showAbsentStudentDialog(String absentName) {
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(this,R.style.FragmentDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.absent_dialog_layout);
 
         TextView tvStudents = dialog.findViewById(R.id.tvStudents);
         Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
 
+        RecyclerView rvSubject = dialog.findViewById(R.id.rvSubjects);
+        EditText etSubject = dialog.findViewById(R.id.etSubject);
+
+        if(!TextUtils.isEmpty(absentName)){
+            dialog.findViewById(R.id.llSubject).setVisibility(View.VISIBLE);
+        }else {
+            dialog.findViewById(R.id.llSubject).setVisibility(View.GONE);
+        }
+
+        AttendanceSubjectAdapter subjectAdapter = new AttendanceSubjectAdapter(subjectList, new AttendanceSubjectListener() {
+            @Override
+            public void itemClick(int checkPos) {
+                if(checkPos>=0){
+                    etSubject.setText("");
+                    etSubject.setEnabled(false);
+                }else {
+                    etSubject.setEnabled(true);
+                }
+            }
+        });
+        rvSubject.setAdapter(subjectAdapter);
         tvStudents.setText(absentName);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                callAbsentStudentApi();
+                String subjectName;
+                if(!TextUtils.isEmpty(subjectAdapter.getSelected())){
+                    subjectName = subjectAdapter.getSelected();
+                }else {
+                    subjectName = etSubject.getText().toString().trim();
+                }
+                callAbsentStudentApi(subjectName);
             }
         });
 
         dialog.show();
     }
 
-    private void callAbsentStudentApi() {
+    private void callAbsentStudentApi(String subjectName) {
         userIds.clear();
         if (!isConnectionAvailable()) {
             showNoNetworkMsg();
@@ -210,7 +250,8 @@ public class AttendanceActivity extends BaseActivity {
         for (int i = 0; i < listAbsent.size(); i++) {
             userIds.add(listAbsent.get(i).userId + "," + listAbsent.get(i).rollNumber);
         }
-        leafManager.sendAbsenties(this, groupId, teamId, userIds);
+
+        leafManager.sendAbsenties(this, groupId, teamId, userIds,new AbsentSubjectReq(TextUtils.isEmpty(subjectName)?null:subjectName));
     }
 
 /*
@@ -273,6 +314,12 @@ public class AttendanceActivity extends BaseActivity {
                 AppLog.e(TAG, "AbsentAttendanceRes : " + absentAttendanceRes);
                 new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 finish();
+                break;
+            case LeafManager.API_ATTENDANCE_SUBJECT:
+                SubjectResponse subjectResponse = (SubjectResponse) response;
+                if(subjectResponse.getData()!=null && subjectResponse.getData().size()>0){
+                    subjectList=subjectResponse.getData().get(0).getSubjects();
+                }
                 break;
         }
     }
@@ -399,5 +446,77 @@ public class AttendanceActivity extends BaseActivity {
                 AppLog.e(TAG, "Notification Send Fail");
             }
         }
+    }
+
+
+    public class AttendanceSubjectAdapter extends RecyclerView.Adapter<AttendanceSubjectAdapter.ViewHolder> {
+        int checkPos = -1;
+        private final ArrayList<String> listSubject;
+        private Context mContext;
+        AttendanceSubjectListener listener;
+        public AttendanceSubjectAdapter(ArrayList<String> listSubject,AttendanceSubjectListener listener) {
+            this.listSubject=listSubject;
+            this.listener=listener;
+        }
+
+        @Override
+        public AttendanceSubjectAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_attendance_subject, parent, false);
+            return new AttendanceSubjectAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final AttendanceSubjectAdapter.ViewHolder holder, final int position) {
+            holder.tvName.setText(listSubject.get(position));
+            if(checkPos==position){
+                holder.chkAttendance.setChecked(true);
+            }else {
+                holder.chkAttendance.setChecked(false);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return listSubject!=null?listSubject.size():0;
+        }
+
+        public String getSelected() {
+            if(checkPos>=0){
+                return listSubject.get(checkPos);
+            }else {
+                return "";
+            }
+
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            @Bind(R.id.chkAttendance)
+            CheckBox chkAttendance;
+
+            @Bind(R.id.tvName)
+            TextView tvName;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this,itemView);
+                chkAttendance.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(checkPos==getAdapterPosition()){
+                            checkPos = -1;
+                        }else {
+                            checkPos = getAdapterPosition();
+                        }
+                        notifyDataSetChanged();
+                        listener.itemClick(checkPos);
+                    }
+                });
+            }
+        }
+
+    }
+    public interface AttendanceSubjectListener{
+        void itemClick(int checkPos);
     }
 }

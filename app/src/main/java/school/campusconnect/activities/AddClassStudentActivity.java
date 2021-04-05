@@ -4,7 +4,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,8 +52,6 @@ public class AddClassStudentActivity extends BaseActivity {
 
     @Bind(R.id.btnAdd)
     public Button btnAdd;
-
-
 
 
     @Bind(R.id.progressBar)
@@ -98,6 +99,8 @@ public class AddClassStudentActivity extends BaseActivity {
     private boolean isEdit=false;
 
     StudentRes.StudentData studentData;
+
+    boolean submitted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,12 +191,22 @@ public class AddClassStudentActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
     }
-
+    private long lastClickTime = 0;
     @OnClick({R.id.btnAdd, R.id.etCountry,R.id.etdob,R.id.etdoj})
     public void onClick(View view) {
+        long currentTime = SystemClock.elapsedRealtime();
+        if (currentTime - lastClickTime > 1000) {
+            lastClickTime = currentTime;
+        }else {
+            return;
+        }
+        Log.e(TAG,"Tap : ");
         switch (view.getId()) {
             case R.id.btnAdd:
-                if (isValid()) {
+
+                if (isValid() && !submitted )
+                {
+                    submitted = true;
                     StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
                     addStudentReq.name = etName.getText().toString();
                     String[] str = getResources().getStringArray(R.array.array_country_values);
@@ -233,6 +246,10 @@ public class AddClassStudentActivity extends BaseActivity {
                         progressBar.setVisibility(View.VISIBLE);
                         leafManager.addClassStudent(this, group_id, team_id, addStudentReq);
                     }
+                }
+                else
+                {
+                    submitted =false;
                 }
                 break;
             case R.id.etCountry:
@@ -311,6 +328,7 @@ public class AddClassStudentActivity extends BaseActivity {
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
+        submitted = false;
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
 
@@ -334,6 +352,7 @@ public class AddClassStudentActivity extends BaseActivity {
     @Override
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
+        submitted =false;
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
 
@@ -349,6 +368,8 @@ public class AddClassStudentActivity extends BaseActivity {
     @Override
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
+
+        submitted =false;
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
