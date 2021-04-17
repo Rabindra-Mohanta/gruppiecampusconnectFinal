@@ -2,9 +2,10 @@ package school.campusconnect.datamodel;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class AddPostRequest {
+public class AddPostRequest  implements Serializable {
     public String text;
     public String video;
     public String fileType;// pdf/youtube/image

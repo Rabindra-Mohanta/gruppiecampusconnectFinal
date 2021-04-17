@@ -253,6 +253,11 @@
             android:name="school.campusconnect.utils.youtube.UploadService"
             android:exported="true" />
 
+        <service
+            android:name=".utils.BackgroundVideoUploadService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name="school.campusconnect.utils.youtube.MainActivity"
             android:configChanges="orientation|screenSize"

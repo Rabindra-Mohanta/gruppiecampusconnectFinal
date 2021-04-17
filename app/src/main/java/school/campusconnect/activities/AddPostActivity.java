@@ -78,6 +78,7 @@ import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.BackgroundVideoUploadService;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
@@ -346,12 +347,15 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     manager.addPost(this, group_id, team_id, request, postType, friend_id, isFromChat);
                 } else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     request.fileType = fileTypeImageOrVideo;
+                    mainRequest = request;
                     Log.e(TAG, "send data " + new Gson().toJson(request));
 //                    progressDialog.setMessage("Preparing Video...");
 //                    progressDialog.show();
 //                    compressVideo(request, 0);
-                    if(isFromCamera){
-                       /* AppDialog.showConfirmDialog(this, "Do you want to compress?", new AppDialog.AppDialogListener() {
+
+                    startService();
+                   /* if(isFromCamera){
+                       *//* AppDialog.showConfirmDialog(this, "Do you want to compress?", new AppDialog.AppDialogListener() {
                             @Override
                             public void okPositiveClick(DialogInterface dialog) {
                                 dialog.dismiss();
@@ -363,11 +367,11 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                                 dialog.dismiss();
                                 new VideoCompressor(request,false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
-                        });*/
+                        });*//*
                         new VideoCompressor(request,false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }else {
                         new VideoCompressor(request,false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    }
+                    }*/
 
                 } else if (!TextUtils.isEmpty(pdfPath)) {
                     request.fileType = Constants.FILE_TYPE_PDF;
@@ -385,6 +389,27 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         } else {
             showNoNetworkMsg();
         }
+
+    }
+
+
+
+    public void startService() {
+
+        Intent serviceIntent = new Intent(this, BackgroundVideoUploadService.class);
+        serviceIntent.putExtra("isFromCamera", isFromCamera);
+        serviceIntent.putExtra("videoUrl", videoUrl);
+        serviceIntent.putExtra("mainRequest", mainRequest);
+        serviceIntent.putExtra("listImages", listImages);
+        serviceIntent.putExtra("group_id", group_id);
+        serviceIntent.putExtra("team_id", team_id);
+        serviceIntent.putExtra("postType", postType);
+        serviceIntent.putExtra("friend_id", friend_id);
+        serviceIntent.putExtra("isFromChat", isFromChat);
+        ContextCompat.startForegroundService(this, serviceIntent);
+
+        Toast.makeText(this, "Video Uploading in backgroud", Toast.LENGTH_SHORT).show();
+        finish();
 
     }
 /*

@@ -167,6 +167,13 @@ dependencies {
     implementation project(path: ':mobilertc2')
     implementation project(path: ':commonlib2')
    // implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
+    implementation ('com.github.AbedElazizShe:LightCompressor:0.8.1') {
+        exclude module : 'aspectjrt'
+        exclude module : 'isoparser'
+    }
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
 
     /*Excelsheet*/
     implementation 'com.opencsv:opencsv:3.7'

@@ -1,0 +1,837 @@
+package school.campusconnect.utils;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
+import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
+import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
+import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.google.gson.Gson;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+
+
+import id.zelory.compressor.Compressor;
+import school.campusconnect.R;
+import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.datamodel.AddPostRequest;
+import school.campusconnect.datamodel.AddPostValidationError;
+import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.ErrorResponseModel;
+import school.campusconnect.network.LeafManager;
+
+public class BackgroundVideoUploadService extends Service implements LeafManager.OnAddUpdateListener<AddPostValidationError> {
+
+    public static final String CHANNEL_ID = "ForegroundServiceChannel";
+
+    public static final String TAG = "BackgroundVideoUploadService";
+
+    private Context context;
+    private ArrayList<String> listImages = new ArrayList<>();
+    private TransferUtility transferUtility;
+    ArrayList<String> listAmazonS3Url = new ArrayList<>();
+    private AddPostRequest mainRequest;
+    LeafManager manager = new LeafManager();
+    private String friend_id, postType, team_id, group_id, videoUrl;
+    private boolean isFromCamera, isFromChat;
+    private int id = 1;
+    private int notifyId = 1;
+    int progress = 0;
+    NotificationCompat.Builder notificationBuilder;
+    Notification notification;
+    NotificationManager notificationManager;
+
+    private ArrayList<Integer> compressedVideoCount = new ArrayList<>();
+    private ArrayList<Integer> uploadVideoPercentages = new ArrayList<>();
+
+    int compressedCounts = 0;
+
+    //95387 32882
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+
+        AppLog.e(TAG , "OnCreate called");
+        context = getApplicationContext();
+        transferUtility = AmazoneHelper.getTransferUtility(this);
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        AppLog.e(TAG , "onStartCommand called : "+startId);
+
+        isFromCamera = intent.getBooleanExtra("isFromCamera", false);
+        isFromChat = intent.getBooleanExtra("isFromChat", false);
+        videoUrl = intent.getStringExtra("videoUrl");
+        group_id = intent.getStringExtra("group_id");
+        team_id = intent.getStringExtra("team_id");
+        postType = intent.getStringExtra("postType");
+        friend_id = intent.getStringExtra("friend_id");
+        listImages = (ArrayList<String>) intent.getSerializableExtra("listImages");
+        mainRequest = (AddPostRequest) intent.getSerializableExtra("mainRequest");
+
+        /*if (isFromCamera) {
+            new VideoCompressor1(mainRequest, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            new VideoCompressor1(mainRequest, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+*/
+       /* createNotificationChannel();
+        Intent notificationIntent = new Intent(this, AddPostActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Foreground Service")
+                .setContentText("input")
+                .setSmallIcon(R.drawable.app_icon)
+                .setContentIntent(pendingIntent)
+                .build();
+        startForeground(1, notification);*/
+        //do heavy work on a background thread
+        //stopSelf();
+
+        uploadVideos();
+
+        return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Foreground Service Channel",
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            serviceChannel.setSound(null , null);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
+    }
+
+    @Override
+    public void onSuccess(int apiId, BaseResponse response)
+    {
+        AppLog.e(TAG , "API onSuccess : "+apiId);
+
+        Intent intent = new Intent("postadded");
+        sendBroadcast(intent);
+
+        stopForeground(false);
+    }
+
+    @Override
+    public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
+        if (error.status.equals("401")) {
+            Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
+
+        } else {
+            if (error.errors == null)
+                return;
+            if (error.errors.get(0).video != null) {
+                Toast.makeText(context, error.errors.get(0).video, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, error.title, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onException(int apiId, String error) {
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+    }
+
+    public void uploadVideos()
+    {
+        compressedVideoCount = new ArrayList<>();
+
+        for(String s : listImages)
+        compressedVideoCount.add(0);
+
+        for(String s : listImages)
+            uploadVideoPercentages.add(0);
+
+        compressedCounts = 0;
+
+        createNotificationChannel();
+        Intent notificationIntent = new Intent(context, GroupDashboardActivityNew.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                0, notificationIntent, 0);
+        notificationManager = (NotificationManager) getApplicationContext()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setContentTitle("Video Uploading...")
+                    .setContentText("0%")
+                    .setSmallIcon(R.drawable.app_icon)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setProgress(100, 0, false)
+
+                    .setAutoCancel(false);
+            Notification notification = notificationBuilder.build();
+
+            AppLog.e(TAG , "start foregournd called 1");
+            this.startForeground(notifyId, notification);
+        }
+        else
+        {
+
+            notificationBuilder = new NotificationCompat.Builder(context)
+                    .setContentTitle("Video Upload")
+                    .setContentText("0%")
+                    .setSmallIcon(R.drawable.app_icon)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setProgress(100, 0, false)
+                    .setAutoCancel(false);
+            Notification notification = notificationBuilder.build();
+
+            AppLog.e(TAG , "start foregournd  2");
+            this.startForeground(notifyId, notification);
+        }
+
+        notificationBuilder.setProgress(100, 0, false);
+        notificationManager.notify(notifyId, notificationBuilder.build());
+
+
+        try {
+
+                compressVideo(0);
+
+        } catch (Exception e)
+        {
+            Toast.makeText(context, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void compressVideo(int index)
+    {
+        if(compressedCounts == listImages.size())
+        {
+            uploadToAmazone(mainRequest);
+            return;
+        }
+
+        int finalI = index;
+
+        File file = new File(listImages.get(finalI));
+        // Get length of file in bytes
+        long fileSizeInBytes = file.length();
+        // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+        long fileSizeInKB = fileSizeInBytes / 1024;
+        // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+        long fileSizeInMB = fileSizeInKB / 1024;
+        AppLog.e(TAG, "fileSizeInMB : " + fileSizeInMB);
+
+
+        File videoCompresed  = ImageUtil.getOutputMediaVideo(finalI);
+
+
+        AppLog.e(TAG, "compression Started id : "+finalI+", output path : "+videoCompresed.getPath());
+        VideoCompressor.start(listImages.get(finalI), videoCompresed.getPath(), new CompressionListener()
+        {
+            @Override
+            public void onStart()
+            {
+                // Compression start
+            }
+
+            @Override
+            public void onSuccess()
+            {
+                // On Compression success
+                AppLog.e(TAG, "Compression onSuccess id :  "+finalI + " & getPath  : "+videoCompresed.getPath());
+
+                File file = new File(videoCompresed.getPath());
+                // Get length of file in bytes
+                long fileSizeInBytes = file.length();
+                long fileSizeInKB = fileSizeInBytes / 1024;
+                long fileSizeInMB = fileSizeInKB / 1024;
+
+                AppLog.e(TAG, "onSuccess: with size :  "+fileSizeInMB + " compressCounts : "+compressedCounts);
+                listImages.set(finalI, file.getPath());
+
+                compressedCounts++;
+
+                compressVideo(compressedCounts);
+
+            }
+
+            @Override
+            public void onFailure(String failureMessage) {
+                // On Failure
+
+                AppLog.e(TAG , "Compression "+finalI+" onFailure : "+failureMessage);
+
+                compressedCounts++;
+
+                compressVideo(compressedCounts);
+            }
+
+            @Override
+            public void onProgress(float progressPercent)
+            {
+                AppLog.e( TAG, "Compression onProgress : "+progressPercent);
+                compressedVideoCount.set(finalI , (int) progressPercent) ;
+                publishCompressProgress((int) progressPercent);
+            }
+
+            @Override
+            public void onCancelled() {
+                // On Cancelled
+            }
+        }, VideoQuality.LOW, true, true);
+
+
+    }
+
+
+    public void publishCompressProgress(int percentage)
+    {
+        int total = 0;
+        for(int i : compressedVideoCount)
+        {
+            total += i;
+        }
+
+        int newPercentage = (total ) / compressedVideoCount.size();
+
+        notificationBuilder.setContentTitle("Preparing Videos ...");
+        notificationBuilder.setContentText("" + newPercentage + "%");
+        notificationBuilder.setProgress(100, newPercentage, false);
+
+        Notification notification = notificationBuilder.build();
+        //BackgroundVideoUploadService.this.startForeground(0, notification);
+        notificationManager.notify(notifyId, notification);
+    }
+
+    public void publishUploadProgress()
+    {
+        int total = 0;
+        for(int i : uploadVideoPercentages)
+        {
+            total += i;
+        }
+
+        int newPercentage = (total ) / uploadVideoPercentages.size();
+
+        notificationBuilder.setContentTitle("Upload Videos ...");
+        notificationBuilder.setContentText("" + newPercentage + "%");
+        notificationBuilder.setProgress(100, newPercentage, false);
+
+        Notification notification = notificationBuilder.build();
+        //BackgroundVideoUploadService.this.startForeground(0, notification);
+        notificationManager.notify(notifyId, notification);
+    }
+
+
+    public class VideoCompressor1 extends AsyncTask<Void, Integer, Boolean> {
+        private AddPostRequest addPostRequest;
+        private boolean isCompress;
+        private int size = 0;
+
+        public VideoCompressor1(AddPostRequest addPostRequest, boolean isCompress) {
+            this.addPostRequest = addPostRequest;
+            this.isCompress = isCompress;
+
+            notifyId = new Random().nextInt();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            createNotificationChannel();
+            Intent notificationIntent = new Intent(context, GroupDashboardActivityNew.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                    0, notificationIntent, 0);
+            notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setContentTitle("Video Uploading...")
+                        .setContentText("0%")
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setContentIntent(pendingIntent)
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setProgress(100, 0, false)
+                        .setAutoCancel(false);
+                Notification notification = notificationBuilder.build();
+                startForeground(notifyId, notification);
+            } else {
+
+                notificationBuilder = new NotificationCompat.Builder(context)
+                        .setContentTitle("Video Upload")
+                        .setContentText("0%")
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setContentIntent(pendingIntent)
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setProgress(100, 0, false)
+                        .setAutoCancel(false);
+                Notification notification = notificationBuilder.build();
+                startForeground(notifyId, notification);
+            }
+
+            notificationBuilder.setProgress(100, 0, false);
+            notificationManager.notify(notifyId, notificationBuilder.build());
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            //progressDialog.setMessage("Preparing Video... " + values[0] + " out of " + listImages.size() + ", please wait...");
+
+            notificationBuilder.setContentText("" + values[0] + "%");
+            notificationBuilder.setProgress(100, values[0], false);
+            Notification notification = notificationBuilder.build();
+            //startForeground(id, notification);
+            notificationManager.notify(notifyId, notificationBuilder.build());
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            try {
+
+                if (isFromCamera) {
+                    if (isCompress) {
+                        for (int i = 0; i < listImages.size(); i++) {
+                            int finalI = i;
+
+                            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                            retriever.setDataSource(listImages.get(i));
+
+                            Bitmap bmp = retriever.getFrameAtTime();
+                            String orient = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+                            int h;
+                            int w;
+                            if (orient.equals("0")) {
+                                h = bmp.getHeight();
+                                w = bmp.getWidth();
+                            } else {
+                                w = bmp.getHeight();
+                                h = bmp.getWidth();
+                            }
+
+                            if (w > 480 && h > 480) {
+                                if (w > h) {
+                                    float tempw = 480.0f;
+                                    h = (int) ((tempw / w) * h);
+                                    w = 480;
+                                } else {
+                                    float temph = 480.0f;
+                                    w = (int) ((temph / h) * w);
+                                    h = 480;
+                                }
+                            } else if (w > 480) {
+                                float tempw = 480.0f;
+                                h = (int) ((tempw / w) * h);
+                                w = 480;
+                            } else if (h > 480) {
+                                float temph = 480.0f;
+                                w = (int) ((temph / h) * w);
+                                h = 480;
+                            }
+
+                            AppLog.e("TAG", "w, h passed : " + w + "," + h);
+
+                            //listImages.set(i, SiliCompressor.with(context).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath(), w, h, 420000));
+                            Log.e("TAG", "compressPath : " + videoUrl);
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if (size == 0) {
+                                        publishProgress((int) 100 / listImages.size());
+                                        size = listImages.size() - 1;
+                                    } else {
+                                        publishProgress((int) 100 / size);
+                                        size = size - 1;
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        return true;
+                    }
+                } else {
+                    for (int i = 0; i < listImages.size(); i++) {
+                        int finalI = i;
+
+                        File file = new File(listImages.get(i));
+                        // Get length of file in bytes
+                        long fileSizeInBytes = file.length();
+                        // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+                        long fileSizeInKB = fileSizeInBytes / 1024;
+                        // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+                        long fileSizeInMB = fileSizeInKB / 1024;
+                        AppLog.e("TAG", "fileSizeInMB : " + fileSizeInMB);
+
+
+                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                        retriever.setDataSource(listImages.get(i));
+
+                        Bitmap bmp = retriever.getFrameAtTime();
+                        String orient = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+                        int h;
+                        int w;
+                        if (orient.equals("0")) {
+                            h = bmp.getHeight();
+                            w = bmp.getWidth();
+                        } else {
+                            w = bmp.getHeight();
+                            h = bmp.getWidth();
+                        }
+
+                        if (w > 480 && h > 480) {
+                            if (w > h) {
+                                float tempw = 480.0f;
+                                h = (int) ((tempw / w) * h);
+                                w = 480;
+                            } else {
+                                float temph = 480.0f;
+                                w = (int) ((temph / h) * w);
+                                h = 480;
+                            }
+                        } else if (w > 480) {
+                            float tempw = 480.0f;
+                            h = (int) ((tempw / w) * h);
+                            w = 480;
+                        } else if (h > 480) {
+                            float temph = 480.0f;
+                            w = (int) ((temph / h) * w);
+                            h = 480;
+                        }
+
+                        AppLog.e("TAG", "w, h passed : " + w + "," + h);
+
+                        //listImages.set(i, SiliCompressor.with(context).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath()));
+                        Log.e("TAG", "compressPath : " + videoUrl);
+
+                        AppLog.e("TAG", "ListImage: "+listImages.get(i));
+                        VideoCompressor.start(listImages.get(i), getExternalCacheDir().getAbsolutePath()+"/"+file.getName(), new CompressionListener() {
+                            @Override
+                            public void onStart() {
+                                // Compression start
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                // On Compression success
+                                AppLog.e("TAG", "onSuccess: ");
+                                //listImages.set(i,getExternalCacheDir().getAbsolutePath());
+
+                            }
+
+                            @Override
+                            public void onFailure(String failureMessage) {
+                                // On Failure
+                            }
+
+                            @Override
+                            public void onProgress(float progressPercent) {
+
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        publishProgress((int) progressPercent);
+                                        AppLog.e("TAG", "progressPercent: " + progressPercent);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled() {
+                                // On Cancelled
+                            }
+                        }, VideoQuality.VERY_LOW, true, true);
+
+                        /*new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (size == 0) {
+                                    publishProgress((int) 100 / listImages.size());
+                                    size = listImages.size() - 1;
+                                } else {
+                                    publishProgress((int) 100 / size);
+                                    size = size - 1;
+                                }
+                            }
+                        });*/
+
+                    }
+                }
+
+            } catch (Exception e) {
+                Toast.makeText(context, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aVoid) {
+            super.onPostExecute(aVoid);
+            if (aVoid) {
+                //progressDialog.setMessage("Uploading Video...");
+                publishProgress(100);
+                uploadToAmazone(addPostRequest);
+            } else {
+                //progressDialog.dismiss();
+            }
+        }
+    }
+
+    private void uploadToAmazone(AddPostRequest request) {
+        mainRequest = request;
+        //request.fileName = listAmazonS3Url;
+        AppLog.e(TAG, "send data " + new Gson().toJson(request));
+
+        if (request.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
+            AppLog.e(TAG, "Final videos :: " + listImages.toString());
+            GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
+                @Override
+                public void onThumbnail(ArrayList<String> listThumbnails) {
+                    if (listThumbnails != null) {
+                        uploadThumbnail(listThumbnails, 0);
+                    } else {
+                        Toast.makeText(context, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }, Constants.FILE_TYPE_VIDEO);
+        } else {
+            for (int i = 0; i < listImages.size(); i++) {
+                try {
+                    File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
+                    listImages.set(i, newFile.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            AppLog.e(TAG, "Final PAth :: " + listImages.toString());
+            upLoadImageOnCloud(0);
+        }
+    }
+
+    private void uploadThumbnail(ArrayList<String> listThumbnails, int index) {
+        if (index == listThumbnails.size()) {
+            mainRequest.thumbnailImage = listThumbnails;
+            upLoadImageOnCloud(0);
+        } else {
+            final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
+            File file = new File(listThumbnails.get(index));
+
+            TransferObserver observer = null;
+            if (file != null) {
+                AppLog.e(TAG, "file " + file.getName() + " , " + file.getAbsolutePath());
+                try {
+                    observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
+                            file, CannedAccessControlList.PublicRead);
+
+                    observer.setTransferListener(new TransferListener() {
+                        @Override
+                        public void onStateChanged(int id, TransferState state) {
+                            AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                            if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                                AppLog.e(TAG, "onStateChanged " + index);
+
+                                String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+                                AppLog.e(TAG, "url is " + _finalUrl);
+
+                                _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+                                AppLog.e(TAG, "encoded url is " + _finalUrl);
+
+                                listThumbnails.set(index, _finalUrl);
+
+                                uploadThumbnail(listThumbnails, index + 1);
+
+                            }
+                            if (TransferState.FAILED.equals(state)) {
+                                //progressBar.setVisibility(View.GONE);
+                                if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                                    //progressDialog.dismiss();
+                                }
+                                Toast.makeText(context, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                            float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                            int percentDone = (int) percentDonef;
+                            AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                    + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                        }
+
+                        @Override
+                        public void onError(int id, Exception ex) {
+                            //progressBar.setVisibility(View.GONE);
+                            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                                //progressDialog.dismiss();
+                            }
+                            AppLog.e(TAG, "Upload Error : " + ex);
+                            Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (Exception ex) {
+                    Log.e("Thumbnail", "onStateChanged " + index);
+
+                    String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+                    AppLog.e(TAG, "url is " + _finalUrl);
+
+                    _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+                    AppLog.e(TAG, "encoded url is " + _finalUrl);
+
+                    listThumbnails.set(index, _finalUrl);
+
+                    uploadThumbnail(listThumbnails, index + 1);
+                }
+
+
+            } else {
+                AppLog.e(TAG, "onStateChanged " + index);
+
+                String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+                AppLog.e(TAG, "url is " + _finalUrl);
+
+                _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+                AppLog.e(TAG, "encoded url is " + _finalUrl);
+
+                listThumbnails.set(index, _finalUrl);
+
+                uploadThumbnail(listThumbnails, index + 1);
+            }
+        }
+    }
+
+    private void upLoadImageOnCloud(final int pos) {
+        if (pos == listImages.size()) {
+            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                //progressDialog.dismiss();
+                notificationBuilder.setContentTitle("Video Upload Successfully");
+                notificationBuilder.setProgress(0, 0, false);
+                notificationBuilder.setContentText("Success");
+                notificationBuilder.setAutoCancel(true);
+                notificationManager.notify(notifyId, notificationBuilder.build());
+            }
+            AppLog.e(TAG, "upLoadImageOnCloud: ");
+            mainRequest.fileName = listAmazonS3Url;
+            manager.addPost(this, group_id, team_id, mainRequest, postType, friend_id, isFromChat);
+        } else {
+            final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
+            File file = new File(listImages.get(pos));
+            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
+                    file, CannedAccessControlList.PublicRead);
+
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                        updateList(pos, key);
+                    }
+                    if (TransferState.FAILED.equals(state)) {
+                        //progressDialog.dismiss();
+                        Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                        // progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        uploadVideoPercentages.set(pos , percentDone) ;
+                        publishUploadProgress();
+                    }
+                    AppLog.d(TAG, "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex)
+                {
+                    //progressBar.setVisibility(View.GONE);
+                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                        //progressDialog.dismiss();
+                    }
+                    AppLog.e(TAG, "Upload Error : " + ex);
+                    Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    }
+
+    private void updateList(int pos, String key) {
+        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+        Log.e("FINALURL", "url is " + _finalUrl);
+
+        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+        Log.e("FINALURL", "encoded url is " + _finalUrl);
+
+        listAmazonS3Url.add(_finalUrl);
+
+        upLoadImageOnCloud(pos + 1);
+    }
+}
