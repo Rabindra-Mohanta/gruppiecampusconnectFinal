@@ -536,6 +536,19 @@
         <activity
             android:name="school.campusconnect.activities.ClassAddTokenActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.RecordedClassActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.RecClassSubjectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.ChapterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.AddChapterPostActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

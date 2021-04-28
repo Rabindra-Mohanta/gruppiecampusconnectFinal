@@ -93,5 +93,6 @@ public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.
     public interface UploadImageListener
     {
         public void onImageSelect();
+        public void onImageRemove();
     }
 }

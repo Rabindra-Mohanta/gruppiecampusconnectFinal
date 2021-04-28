@@ -18,6 +18,8 @@ import school.campusconnect.datamodel.bus.BusStudentRes;
 import school.campusconnect.datamodel.calendar.AddEventReq;
 import school.campusconnect.datamodel.calendar.EventInDayRes;
 import school.campusconnect.datamodel.calendar.EventListRes;
+import school.campusconnect.datamodel.chapter.AddChapterPostRequest;
+import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.classs.ParentKidsResponse;
 import school.campusconnect.datamodel.ebook.AddEbookReq;
@@ -1240,4 +1242,30 @@ public interface LeafService {
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<GroupResponse> getGroups(@Query("category") String category);
+
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/posts/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ChapterRes> getChapterList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/posts/add")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> addChapterPost(@Path("group_id") String group_id,@Path("team_id") String team_id,@Path("subject_id") String subject_id,@Body AddChapterPostRequest request);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/topics/add")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> addChapterTopicPost(@Path("group_id") String group_id,@Path("team_id") String team_id,@Path("subject_id") String subject_id,@Path("chapter_id") String chapter_id,@Body AddChapterPostRequest request);
+
+    @DELETE("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/remove")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteTopic(@Path("group_id") String group_id,@Path("team_id") String team_id,
+                                           @Path("subject_id") String subject_id,
+                                           @Path("chapter_id") String chapter_id,@Query("topicId") String topicId);
+
+    @DELETE("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/remove")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteChapter(@Path("group_id") String group_id,@Path("team_id") String team_id,
+                                           @Path("subject_id") String subject_id,
+                                           @Path("chapter_id") String chapter_id);
+
 }

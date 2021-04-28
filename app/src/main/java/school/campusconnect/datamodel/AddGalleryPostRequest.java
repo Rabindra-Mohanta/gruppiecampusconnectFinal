@@ -8,4 +8,5 @@ public class AddGalleryPostRequest {
     public ArrayList<String> fileName;
     public ArrayList<String> thumbnailImage;
     public String albumName;
+    public String topicName; // use for Chapter Api
 }

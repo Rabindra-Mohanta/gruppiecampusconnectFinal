@@ -8,9 +8,10 @@ import androidx.appcompat.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.fragments.RecordedClassListFragment;
 import school.campusconnect.fragments.VideoClassListFragment;
 
-public class VideoClassActivity extends BaseActivity {
+public class RecordedClassActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -29,7 +30,7 @@ public class VideoClassActivity extends BaseActivity {
         setBackEnabled(true);
         setTitle(getIntent().getStringExtra("title"));
 
-        VideoClassListFragment classListFragment=new VideoClassListFragment();
+        RecordedClassListFragment classListFragment=new RecordedClassListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
 

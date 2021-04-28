@@ -1377,6 +1377,11 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     }
 
+    @Override
+    public void onImageRemove() {
+        shareButtonEnableDisable();
+    }
+
     private class SendNotification extends AsyncTask<String, String, String> {
         String receiverToken;
         private String server_response;

@@ -516,13 +516,13 @@ public class GroupDashboardActivityNew extends BaseActivity
                 }
                 break;
 
-            case R.id.llSubject:
+          /*  case R.id.llSubject:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, SubjectActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
-                break;
+                break;*/
             case R.id.llSubject2:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, ClassActivity2.class));
@@ -668,7 +668,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (mGroupItem.isAdmin || mGroupItem.canPost) {
             llClass.setVisibility(View.VISIBLE);
             llEBook.setVisibility(View.VISIBLE);
-            llSubject.setVisibility(View.VISIBLE);
+//            llSubject.setVisibility(View.VISIBLE);
             llSubject2.setVisibility(View.VISIBLE);
             llStaffReg.setVisibility(View.VISIBLE);
             llAttendanceReport.setVisibility(View.VISIBLE);
@@ -892,7 +892,13 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     public void groupSelected(MyTeamData group) {
         if (group.type.equals("Video Class")) {
-            startActivity(new Intent(this, VideoClassActivity.class));
+            Intent intent = new Intent(this, VideoClassActivity.class);
+            intent.putExtra("title",group.name);
+            startActivity(intent);
+        }else if (group.type.equals("Recorded Class")) {
+            Intent intent = new Intent(this, RecordedClassActivity.class);
+            intent.putExtra("title",group.name);
+            startActivity(intent);
         }else if (group.type.equals("Gallery")) {
             startActivity(new Intent(this, GalleryActivity.class));
         } else if (group.type.equalsIgnoreCase("Calendar")) {

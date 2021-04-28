@@ -1,6 +1,9 @@
 package school.campusconnect.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -8,9 +11,10 @@ import androidx.appcompat.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.fragments.VideoClassListFragment;
+import school.campusconnect.fragments.RecSubjectListFragment;
+import school.campusconnect.fragments.SubjectListFragment2;
 
-public class VideoClassActivity extends BaseActivity {
+public class RecClassSubjectActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -29,11 +33,12 @@ public class VideoClassActivity extends BaseActivity {
         setBackEnabled(true);
         setTitle(getIntent().getStringExtra("title"));
 
-        VideoClassListFragment classListFragment=new VideoClassListFragment();
+
+        RecSubjectListFragment classListFragment=new RecSubjectListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
-
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

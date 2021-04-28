@@ -13,15 +13,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -37,6 +28,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
@@ -47,8 +48,17 @@ import com.iceteck.silicompressorr.SiliCompressor;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,7 +84,7 @@ import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
 
 
-public class AddGalleryPostActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener, UploadImageAdapter.UploadImageListener {
+public class AddChapterPostActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener, UploadImageAdapter.UploadImageListener {
 
     private static final String TAG = "AddPostActivity";
     @Bind(R.id.toolbar)
@@ -125,9 +135,6 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.rvImages)
     RecyclerView rvImages;
 
-    @Bind(R.id.cardAlbumName)
-    CardView cardAlbumName;
-
     TextView btn_ok;
     TextView btn_cancel;
     TextView btn_upload;
@@ -137,6 +144,8 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     Dialog dialog;
 
     String group_id;
+    String team_id;
+    String subject_id;
 
     public Uri imageCaptureFile;
 
@@ -160,14 +169,14 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     private UploadImageAdapter imageAdapter;
     private String receiverToken = "";
     private String receiverDeviceType = "";
-    boolean isEdit;
-    String album_id;
-    private String type;
     private ProgressDialog progressDialog;
+    private boolean isEdit;
+    private String chapter_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_gallery_post);
+        setContentView(R.layout.activity_add_chapter_post);
         ButterKnife.bind(this);
 
         init();
@@ -223,59 +232,33 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         progressDialog.setCancelable(false);
 
         group_id = GroupDashboardActivityNew.groupId;
-//        edtDesc.setMovementMethod(new ScrollingMovementMethod());
-//        edtTitle.setMovementMethod(new ScrollingMovementMethod());
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         transferUtility = AmazoneHelper.getTransferUtility(this);
 
         if (getIntent() != null) {
+            group_id = getIntent().getStringExtra("group_id");
+            team_id = getIntent().getStringExtra("team_id");
+            subject_id = getIntent().getStringExtra("subject_id");
             isEdit = getIntent().getBooleanExtra("isEdit", false);
             if (isEdit) {
-                album_id = getIntent().getStringExtra("album_id");
-                type = getIntent().getStringExtra("type");
-                cardAlbumName.setVisibility(View.GONE);
-                tvLabelTitle.setVisibility(View.GONE);
-
-                if (Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(type)) {
-                    llVideo.setEnabled(false);
-                    llYoutubeLink.setEnabled(false);
-                    img_youtube.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
-                    img_video.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
-                }else if (Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(type)) {
-                    llYoutubeLink.setEnabled(false);
-                    img_youtube.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
-                    llImage.setEnabled(false);
-                    img_image.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
-                }
-                else {
-                    llImage.setEnabled(false);
-                    llVideo.setEnabled(false);
-                    img_image.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
-                    img_video.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
-                }
+                setTitle("Add Topic");
+                chapter_id = getIntent().getStringExtra("chapter_id");
+                edtTitle.setText(getIntent().getStringExtra("chapter_name"));
+                edtTitle.setEnabled(false);
+            } else {
+                setTitle("Add Chapter");
             }
         }
         rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new UploadImageAdapter(listImages, this);
         rvImages.setAdapter(imageAdapter);
 
-        if(isEdit){
-            setTitle("Add File to album");
-        }else {
-            setTitle("Add to Gallery");
-        }
-
-
     }
 
     private void shareButtonEnableDisable() {
-        if (isValid(false)) {
-            btnShare.setEnabled(true);
-        } else {
-            btnShare.setEnabled(false);
-        }
+        btnShare.setEnabled(isValid(false));
     }
 
     @Override
@@ -293,6 +276,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
                 AddGalleryPostRequest request = new AddGalleryPostRequest();
                 request.albumName = edtTitle.getText().toString();
+                request.topicName = edtDesc.getText().toString();
 
                 if (!TextUtils.isEmpty(videoUrl)) {
                     request.video = videoUrl;
@@ -305,54 +289,52 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                         request.fileType = Constants.FILE_TYPE_VIDEO;
                         request.fileName = new ArrayList<>();
                         request.fileName.add(videoUrl);
-                        manager.addGalleryFile(this, group_id, album_id, request);
+                        manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, request);
                     } else {
-                        manager.addGalleryPost(this, group_id, request);
+                        manager.addChapterPost(this, group_id, team_id, subject_id, request);
                     }
 
                 } else if (!TextUtils.isEmpty(pdfPath)) {
-                     request.fileType = Constants.FILE_TYPE_PDF;
-                    //uploadToAmazone(request);
-                }
-                else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
+                    request.fileType = Constants.FILE_TYPE_PDF;
+                    uploadToAmazone(request);
+                } else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     request.fileType = fileTypeImageOrVideo;
                     Log.e(TAG, "send data " + new Gson().toJson(request));
 //                    progressDialog.setMessage("Preparing Video...");
 //                    progressDialog.show();
 //                    compressVideo(request, 0);
                     new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-                else if (listImages.size() > 0) {
+                } else if (listImages.size() > 0) {
                     request.fileType = Constants.FILE_TYPE_IMAGE;
                     uploadToAmazone(request);
-                } /*else {
-                    Log.e(TAG, "send data " + new Gson().toJson(request));
-                    mainRequest = request;
-                    manager.addGalleryPost(this, group_id, request);
-
-                }*/
+                }
             }
         } else {
             showNoNetworkMsg();
         }
 
     }
+
     public class VideoCompressor extends AsyncTask<Void, Integer, Boolean> {
         private AddGalleryPostRequest addPostRequest;
+
         public VideoCompressor(AddGalleryPostRequest addPostRequest) {
             this.addPostRequest = addPostRequest;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog.setMessage("Preparing Video...");
             progressDialog.show();
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            progressDialog.setMessage("Preparing Video... "+values[0]+" out of "+listImages.size()+", please wait...");
+            progressDialog.setMessage("Preparing Video... " + values[0] + " out of " + listImages.size() + ", please wait...");
         }
+
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
@@ -361,7 +343,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            onProgressUpdate((finalI +1));
+                            onProgressUpdate((finalI + 1));
                         }
                     });
                     File file = new File(listImages.get(i));
@@ -373,17 +355,18 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     long fileSizeInMB = fileSizeInKB / 1024;
                     AppLog.e(TAG, "fileSizeInMB : " + fileSizeInMB);
                     if (fileSizeInMB > 10) {
-                        listImages.set(i, SiliCompressor.with(AddGalleryPostActivity.this).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath()));
+                        listImages.set(i, SiliCompressor.with(AddChapterPostActivity.this).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath()));
                         Log.e(TAG, "compressPath : " + videoUrl);
                     }
                 }
             } catch (Exception e) {
-                Toast.makeText(AddGalleryPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddChapterPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
             return true;
         }
+
         @Override
         protected void onPostExecute(Boolean aVoid) {
             super.onPostExecute(aVoid);
@@ -409,27 +392,27 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
                 @Override
                 public void onThumbnail(ArrayList<String> listThumbnails) {
-                    if(listThumbnails!=null){
-                        uploadThumbnail(listThumbnails,0);
-                    }else {
-                        Toast.makeText(AddGalleryPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    if (listThumbnails != null) {
+                        uploadThumbnail(listThumbnails, 0);
+                    } else {
+                        Toast.makeText(AddChapterPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
                     }
 
                 }
-            },Constants.FILE_TYPE_PDF);
+            }, Constants.FILE_TYPE_PDF);
         } else if (request.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
             AppLog.e(TAG, "Final videos :: " + listImages.toString());
             GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
                 @Override
                 public void onThumbnail(ArrayList<String> listThumbnails) {
-                    if(listThumbnails!=null){
-                        uploadThumbnail(listThumbnails,0);
-                    }else {
-                        Toast.makeText(AddGalleryPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    if (listThumbnails != null) {
+                        uploadThumbnail(listThumbnails, 0);
+                    } else {
+                        Toast.makeText(AddChapterPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
                     }
 
                 }
-            },Constants.FILE_TYPE_VIDEO);
+            }, Constants.FILE_TYPE_VIDEO);
         } else {
             for (int i = 0; i < listImages.size(); i++) {
                 try {
@@ -443,15 +426,16 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             upLoadImageOnCloud(0);
         }
     }
+
     private void uploadThumbnail(ArrayList<String> listThumbnails, int index) {
         if (index == listThumbnails.size()) {
             mainRequest.thumbnailImage = listThumbnails;
             upLoadImageOnCloud(0);
-        }else {
+        } else {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
             File file = new File(listThumbnails.get(index));
             TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
+                    file, CannedAccessControlList.PublicRead);
 
             observer.setTransferListener(new TransferListener() {
                 @Override
@@ -468,9 +452,9 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
                         Log.e("FINALURL", "encoded url is " + _finalUrl);
 
-                        listThumbnails.set(index,_finalUrl);
+                        listThumbnails.set(index, _finalUrl);
 
-                        uploadThumbnail(listThumbnails,index+1);
+                        uploadThumbnail(listThumbnails, index + 1);
 
                     }
                     if (TransferState.FAILED.equals(state)) {
@@ -478,7 +462,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                         if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
                             progressDialog.dismiss();
                         }
-                        Toast.makeText(AddGalleryPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddChapterPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -497,7 +481,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                         progressDialog.dismiss();
                     }
                     AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -512,16 +496,16 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             mainRequest.fileName = listAmazonS3Url;
             AppLog.e(TAG, "send data : " + new Gson().toJson(mainRequest));
             if (isEdit) {
-                manager.addGalleryFile(this, group_id, album_id, mainRequest);
+                manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
             } else {
-                manager.addGalleryPost(this, group_id, mainRequest);
+                manager.addChapterPost(this, group_id, team_id, subject_id, mainRequest);
             }
 
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
             File file = new File(listImages.get(pos));
             TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
+                    file, CannedAccessControlList.PublicRead);
 
             observer.setTransferListener(new TransferListener() {
                 @Override
@@ -532,7 +516,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                         updateList(pos, key);
                     }
                     if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddGalleryPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddChapterPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 }
@@ -542,7 +526,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                     int percentDone = (int) percentDonef;
                     if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size()+", please wait...");
+                        progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                     }
                     AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                             + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
@@ -555,7 +539,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                         progressDialog.dismiss();
                     }
                     AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -585,37 +569,29 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         Log.e("videoUrl : ", videoUrl);
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
-
-        if (isEdit) {
-            if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl)) {
-                if (showToast)
-                    Toast.makeText(this, "Please Add Image or video", Toast.LENGTH_SHORT).show();
-                valid = false;
-            }
-            if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
-                valid = false;
-                removeImage();
-                removePdf();
-                Toast.makeText(this, "" + getResources().getString(R.string.msg_upload2), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            if (!isValueValidOnly(edtTitle)) {
-                if (showToast)
-                    Toast.makeText(this, "Please Add Album Name", Toast.LENGTH_SHORT).show();
-                valid = false;
-            }
-            if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl)) {
-                if (showToast)
-                    Toast.makeText(this, "Please Add Image or video", Toast.LENGTH_SHORT).show();
-                valid = false;
-            }
-            if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
-                valid = false;
-                removeImage();
-                removePdf();
-                Toast.makeText(this, "" + getResources().getString(R.string.msg_upload2), Toast.LENGTH_SHORT).show();
-            }
+        if (!isValueValidOnly(edtTitle)) {
+            if (showToast)
+                Toast.makeText(this, "Please Enter Chapter Name", Toast.LENGTH_SHORT).show();
+            return false;
         }
+        if (!isValueValidOnly(edtDesc)) {
+            if (showToast)
+                Toast.makeText(this, "Please Enter Topic Name", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
+            if (showToast)
+                Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
+            valid = false;
+            removeImage();
+            removePdf();
+            Toast.makeText(this, "" + getResources().getString(R.string.msg_upload2), Toast.LENGTH_SHORT).show();
+        }
+        AppLog.e(TAG, "valid : " + valid);
         return valid;
     }
 
@@ -632,7 +608,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                    /* if (listImages.size() > 0) {
                         showPhotoDialog(R.array.array_image_modify);
                     } else {*/
-                        showPhotoDialog(R.array.array_image);
+                    showPhotoDialog(R.array.array_image);
                     //}
 
                 } else {
@@ -665,6 +641,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
         }
     }
+
     private void selectVideoIntent() {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("video/*");
@@ -680,21 +657,15 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             progressBar.setVisibility(View.GONE);
         switch (apiId) {
 
-            default:
-                Toast.makeText(AddGalleryPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
-
-                LeafPreference.getInstance(AddGalleryPostActivity.this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
-
-                finish();
-                break;
-            case LeafManager.API_GALLERY_FILE_ADD:
-                Toast.makeText(AddGalleryPostActivity.this, "Add File Successfully", Toast.LENGTH_SHORT).show();
-
-                LeafPreference.getInstance(AddGalleryPostActivity.this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
-
-                Intent intent = new Intent(this,GalleryActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+            case LeafManager.API_CHAPTER_ADD:
+                Toast.makeText(AddChapterPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                if (isEdit) {
+                    LeafPreference.getInstance(AddChapterPostActivity.this).setBoolean("is_topic_added", true);
+                    new SendNotification(edtDesc.getText().toString(), false).execute();
+                } else {
+                    LeafPreference.getInstance(AddChapterPostActivity.this).setBoolean("is_chapter_added", true);
+                    new SendNotification(edtTitle.getText().toString(), true).execute();
+                }
                 finish();
                 break;
         }
@@ -717,7 +688,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
             if (!TextUtils.isEmpty(error.message)) {
                 Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show();
-            }else if (error.errors.get(0).video != null) {
+            } else if (error.errors.get(0).video != null) {
                 Toast.makeText(this, error.errors.get(0).video, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, error.title, Toast.LENGTH_SHORT).show();
@@ -733,13 +704,13 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
-        Toast.makeText(AddGalleryPostActivity.this, error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(AddChapterPostActivity.this, error, Toast.LENGTH_SHORT).show();
 
     }
 
 
     public void showPhotoDialog(int resId) {
-        SMBDialogUtils.showSMBSingleChoiceDialog(AddGalleryPostActivity.this,
+        SMBDialogUtils.showSMBSingleChoiceDialog(AddChapterPostActivity.this,
                 R.string.lbl_select_img, resId, 0,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -974,7 +945,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddGalleryPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddChapterPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -988,7 +959,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
                     Log.e("img_url is->", "" + img_url);
 
-                    Picasso.with(AddGalleryPostActivity.this)
+                    Picasso.with(AddChapterPostActivity.this)
                             .load(img_url)
                             .placeholder(R.drawable.icon_popup_youtube)
                             .into(img_youtube, new Callback() {
@@ -1002,7 +973,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddGalleryPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddChapterPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();
@@ -1025,7 +996,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                 GroupDashboardActivityNew.enteredTitle = edtTitle.getText().toString();
                 GroupDashboardActivityNew.enteredDesc = edtDesc.getText().toString();
 
-                startActivity(new Intent(AddGalleryPostActivity.this, MainActivity.class));
+                startActivity(new Intent(AddChapterPostActivity.this, MainActivity.class));
             }
         });
 
@@ -1053,13 +1024,15 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         shareButtonEnableDisable();
     }
 
-  /*  private class SendNotification extends AsyncTask<String,String,String>
-    {
-        private final AddPostRequest requestData;
+    private class SendNotification extends AsyncTask<String, String, String> {
+
+        private final String chapterOrTopic;
+        private final boolean isChapter;
         private String server_response;
 
-        public SendNotification(AddPostRequest mainRequest) {
-            requestData=mainRequest;
+        public SendNotification(String chapterOrTopic, boolean isChapter) {
+            this.chapterOrTopic = chapterOrTopic;
+            this.isChapter = isChapter;
         }
 
         @Override
@@ -1074,8 +1047,8 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                 urlConnection.setDoOutput(true);
                 urlConnection.setDoInput(true);
                 urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty ("Authorization", BuildConfig.API_KEY_FIREBASE);
-                urlConnection.setRequestProperty ("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
 
                 DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
 
@@ -1083,43 +1056,36 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     JSONObject object = new JSONObject();
 
                     String topic;
-                    String title=getResources().getString(R.string.app_name);
-                    String message="";
-                    if(postType.equals("group"))
-                    {
-                        message=userName+" Has Posted in "+GroupDashboardActivityNew.group_name;
-                        topic=group_id;
-                        object.put("to","/topics/"+ topic);
-                    }
-                    else if(postType.equals("team"))
-                    {
-                        message=userName+" Has Posted in "+team_name+" Team";
-                        topic=group_id+"_"+team_id;
-                        object.put("to","/topics/"+ topic);
-                    }
-                    else
-                    {
-                        message=userName+" Has Sent you Message";
-                        object.put("to",receiverToken);
-                    }
-                    JSONObject notificationObj=new JSONObject();
-                    notificationObj.put("title",title);
-                    notificationObj.put("body",message);
-                    object.put("notification",notificationObj);
+                    String title = getResources().getString(R.string.app_name);
+                    String message = "";
 
-                    JSONObject dataObj=new JSONObject();
-                    dataObj.put("groupId",group_id);
-                    dataObj.put("createdById",LeafPreference.getInstance(AddGalleryPostActivity.this).getString(LeafPreference.LOGIN_ID));
-                    dataObj.put("postId","");
-                    dataObj.put("teamId",team_id);
-                    dataObj.put("title",title);
-                    dataObj.put("postType",postType);
-                    dataObj.put("Notification_type","post");
-                    dataObj.put("body",message);
-                    object.put("data",dataObj);
+                    if(isChapter){
+                        message = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.NAME) + " Has Posted " + chapterOrTopic + " Chapter";
+                    }else {
+                        message = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.NAME) + " Has Posted " + chapterOrTopic + " Topic";
+                    }
+
+                    topic = group_id + "_" + team_id;
+                    object.put("to", "/topics/" + topic);
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                    object.put("notification", notificationObj);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", group_id);
+                    dataObj.put("createdById", LeafPreference.getInstance(AddChapterPostActivity.this).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("postId", "");
+                    dataObj.put("teamId", team_id);
+                    dataObj.put("title", title);
+                    dataObj.put("postType", isChapter?"chapter":"topic");
+                    dataObj.put("Notification_type", "VideoClass");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
 
                     wr.writeBytes(object.toString());
-                    Log.e(TAG , " JSON input : "+ object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
                     wr.flush();
                     wr.close();
                 } catch (Exception ex) {
@@ -1128,7 +1094,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                 urlConnection.connect();
 
                 int responseCode = urlConnection.getResponseCode();
-                AppLog.e(TAG,"responseCode :"+responseCode);
+                AppLog.e(TAG, "responseCode :" + responseCode);
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     server_response = readStream(urlConnection.getInputStream());
                 }
@@ -1141,6 +1107,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
             return server_response;
         }
+
         private String readStream(InputStream in) {
             BufferedReader reader = null;
             StringBuffer response = new StringBuffer();
@@ -1167,17 +1134,12 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            AppLog.e(TAG,"server_response :"+server_response);
-
-            if(!TextUtils.isEmpty(server_response))
-            {
-                AppLog.e(TAG,"Notification Sent");
-            }
-            else
-            {
-                AppLog.e(TAG,"Notification Send Fail");
+            AppLog.e(TAG, "server_response :" + server_response);
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
             }
         }
     }
-*/
 }

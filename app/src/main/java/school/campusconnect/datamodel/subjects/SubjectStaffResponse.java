@@ -24,7 +24,7 @@ public class SubjectStaffResponse extends BaseResponse {
     public static class SubjectData {
         @SerializedName(value = "staffName")
         @Expose
-        public ArrayList<String> staffName;
+        public ArrayList<SubjectStaff> staffName;
         @SerializedName("subjectId")
         @Expose
         public String subjectId;
@@ -32,11 +32,11 @@ public class SubjectStaffResponse extends BaseResponse {
         @Expose
         public String name;
 
-        public ArrayList<String> getStaffName() {
+        public ArrayList<SubjectStaff> getStaffName() {
             return staffName;
         }
 
-        public void setStaffName(ArrayList<String> staffName) {
+        public void setStaffName(ArrayList<SubjectStaff> staffName) {
             this.staffName = staffName;
         }
 
@@ -67,13 +67,23 @@ public class SubjectStaffResponse extends BaseResponse {
             if(staffName!=null){
                 for (int i=0;i<staffName.size();i++){
                     if(i==0){
-                        stringBuilder.append(staffName.get(i));
+                        stringBuilder.append(staffName.get(i).staffName);
                     }else {
-                        stringBuilder.append(", ").append(staffName.get(i));
+                        stringBuilder.append(", ").append(staffName.get(i).staffName);
                     }
                 }
             }
             return stringBuilder.toString();
         }
+    }
+
+    public static class SubjectStaff {
+        @SerializedName("staffId")
+        @Expose
+        public String staffId;
+        @SerializedName("staffName")
+        @Expose
+        public String staffName;
+
     }
 }
