@@ -41,7 +41,6 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
     public ProgressBar progressBar;
 
     String team_id;
-    boolean canPost;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,7 +49,6 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         team_id=getArguments().getString("team_id");
-        canPost=getArguments().getBoolean("canPost");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -165,7 +163,8 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
         Intent intent = new Intent(getActivity(), ChapterActivity.class);
         intent.putExtra("team_id",team_id);
         intent.putExtra("subject_id",classData.subjectId);
-        intent.putExtra("canPost",canPost);
+        intent.putExtra("subject_name",classData.name);
+        intent.putExtra("canPost",classData.canPost);
         intent.putExtra("title",classData.name);
         startActivity(intent);
     }

@@ -39,6 +39,7 @@ import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.ImageViewHolder> {
@@ -149,7 +150,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         }
 
         holder.txt_title.setText(item.topicName);
-
+        holder.txtDate.setText(MixOperations.getFormattedDate(item.insertedAt, Constants.DATE_FORMAT));
     }
 
 

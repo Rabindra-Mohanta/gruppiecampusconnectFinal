@@ -146,6 +146,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     String group_id;
     String team_id;
     String subject_id;
+    String subject_name;
 
     public Uri imageCaptureFile;
 
@@ -241,6 +242,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             group_id = getIntent().getStringExtra("group_id");
             team_id = getIntent().getStringExtra("team_id");
             subject_id = getIntent().getStringExtra("subject_id");
+            subject_name = getIntent().getStringExtra("subject_name");
             isEdit = getIntent().getBooleanExtra("isEdit", false);
             if (isEdit) {
                 setTitle("Add Topic");
@@ -661,7 +663,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 Toast.makeText(AddChapterPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
                 if (isEdit) {
                     LeafPreference.getInstance(AddChapterPostActivity.this).setBoolean("is_topic_added", true);
-                    new SendNotification(edtDesc.getText().toString(), false).execute();
+                    new SendNotification(edtTitle.getText().toString(), false).execute();
                 } else {
                     LeafPreference.getInstance(AddChapterPostActivity.this).setBoolean("is_chapter_added", true);
                     new SendNotification(edtTitle.getText().toString(), true).execute();
@@ -1026,12 +1028,12 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     private class SendNotification extends AsyncTask<String, String, String> {
 
-        private final String chapterOrTopic;
+        private final String chapterName;
         private final boolean isChapter;
         private String server_response;
 
-        public SendNotification(String chapterOrTopic, boolean isChapter) {
-            this.chapterOrTopic = chapterOrTopic;
+        public SendNotification(String chapterName, boolean isChapter) {
+            this.chapterName = chapterName;
             this.isChapter = isChapter;
         }
 
@@ -1060,9 +1062,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     String message = "";
 
                     if(isChapter){
-                        message = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.NAME) + " Has Posted " + chapterOrTopic + " Chapter";
+                        message = subject_name+" : New chapter added";
                     }else {
-                        message = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.NAME) + " Has Posted " + chapterOrTopic + " Topic";
+                        message = " New topic added to "+chapterName;
                     }
 
                     topic = group_id + "_" + team_id;

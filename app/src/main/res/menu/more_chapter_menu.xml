@@ -7,5 +7,5 @@
     <item
         android:id="@+id/menu_delete"
         android:icon="@drawable/posticon"
-        android:title="Delete"/>
+        android:title="Delete Chapter"/>
 </menu>

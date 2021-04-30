@@ -65,6 +65,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     String team_id;
     String subject_id;
+    String subject_name;
     boolean canPost;
     private ArrayList<ChapterRes.ChapterData> chapterList;
     private ChapterRes.TopicData currentItem;
@@ -80,6 +81,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
         team_id = getArguments().getString("team_id");
         subject_id = getArguments().getString("subject_id");
+        subject_name = getArguments().getString("subject_name");
         canPost = getArguments().getBoolean("canPost");
 
         progressBar.setVisibility(View.VISIBLE);
@@ -127,6 +129,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
         intent.putExtra("team_id", team_id);
         intent.putExtra("subject_id", subject_id);
+        intent.putExtra("subject_name", subject_name);
         intent.putExtra("isEdit", true);
         intent.putExtra("chapter_id", chapterList.get(spChapter.getSelectedItemPosition()).chapterId);
         intent.putExtra("chapter_name", chapterList.get(spChapter.getSelectedItemPosition()).chapterName);

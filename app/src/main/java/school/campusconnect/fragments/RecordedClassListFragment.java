@@ -250,7 +250,6 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
     {
         Intent intent = new Intent(getContext(), RecClassSubjectActivity.class);
         intent.putExtra("team_id",classData.getId());
-        intent.putExtra("canPost",classData.canPost);
         intent.putExtra("title",classData.className);
         startActivity(intent);
 

@@ -27,6 +27,7 @@ public class ChapterActivity extends BaseActivity {
     boolean canPost;
     String team_id;
     String subject_id;
+    String subject_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,7 @@ public class ChapterActivity extends BaseActivity {
         canPost = getIntent().getBooleanExtra("canPost",false);
         team_id = getIntent().getStringExtra("team_id");
         subject_id = getIntent().getStringExtra("subject_id");
+        subject_name = getIntent().getStringExtra("subject_name");
 
 
         ChapterListFragment classListFragment=new ChapterListFragment();
@@ -69,6 +71,7 @@ public class ChapterActivity extends BaseActivity {
             intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
             intent.putExtra("team_id",team_id);
             intent.putExtra("subject_id",subject_id);
+            intent.putExtra("subject_name",subject_name);
             startActivity(intent);
             return true;
         }
