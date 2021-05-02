@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -140,13 +141,20 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
             holder.recyclerView.setVisibility(View.GONE);
         }
 
-
+        holder.chkCompleted.setChecked(item.topicCompleted);
         if (canEdit) {
             holder.llMore.setVisibility(View.VISIBLE);
-            holder.txt_drop_delete.setVisibility(View.VISIBLE);
+            holder.chkCompleted.setVisibility(View.GONE);
         } else {
-            holder.txt_drop_delete.setVisibility(View.GONE);
             holder.llMore.setVisibility(View.GONE);
+            holder.chkCompleted.setVisibility(View.VISIBLE);
+            holder.chkCompleted.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item.topicCompleted = holder.chkCompleted.isChecked();
+                    listener.onCompleteClick(item,position);
+                }
+            });
         }
 
         holder.txt_title.setText(item.topicName);
@@ -279,6 +287,9 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         @Bind(R.id.llMore)
         LinearLayout llMore;
 
+        @Bind(R.id.chkCompleted)
+        CheckBox chkCompleted;
+
         public ImageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -314,6 +325,14 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                         showNoNetworkMsg();
                     }
                     break;
+                case R.id.txt_drop_share:
+                    lin_drop.setVisibility(View.GONE);
+                    if (isConnectionAvailable()) {
+                        listener.onCompletedStudentClick(item,getAdapterPosition());
+                    } else {
+                        showNoNetworkMsg();
+                    }
+                    break;
                 case R.id.rel:
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
@@ -334,6 +353,10 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
     public interface OnItemClickListener {
 
         void onDeleteClick(ChapterRes.TopicData item, int adapterPosition);
+
+        void onCompleteClick(ChapterRes.TopicData item, int adapterPosition);
+
+        void onCompletedStudentClick(ChapterRes.TopicData item, int adapterPosition);
 
         void onPostClick(ChapterRes.TopicData item);
     }

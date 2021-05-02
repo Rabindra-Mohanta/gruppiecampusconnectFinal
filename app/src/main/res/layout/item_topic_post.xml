@@ -29,10 +29,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:orientation="vertical"
                     android:layout_marginStart="@dimen/padding_5dp"
                     android:layout_marginEnd="@dimen/padding_5dp"
                     android:layout_toStartOf="@+id/llMore"
+                    android:orientation="vertical"
                     android:visibility="visible">
 
                     <TextView
@@ -61,23 +61,21 @@
                     android:id="@+id/img_lead"
                     android:layout_width="@dimen/list_image_size"
                     android:layout_height="@dimen/list_image_size"
-                    android:visibility="gone"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/icon_default_user" />
+                    android:src="@drawable/icon_default_user"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/img_lead_default"
                     android:layout_width="@dimen/list_image_size"
                     android:layout_height="@dimen/list_image_size"
-                    android:visibility="gone"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
-                    />
+                    android:visibility="gone" />
 
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -87,7 +85,8 @@
                     android:paddingStart="10dp"
                     android:paddingLeft="10dp"
                     android:paddingEnd="@dimen/padding_16dp"
-                    android:paddingRight="@dimen/padding_16dp">
+                    android:paddingRight="@dimen/padding_16dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/txt_name"
@@ -97,14 +96,14 @@
                         android:textAppearance="@style/TextAppearance.Regular"
                         android:textColor="@color/colorTextDark" />
 
-               <!--     <TextView
-                        android:id="@+id/txt_date"
-                        style="@style/LabelSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="dd/MM/yyyy"
-                        android:textColor="@color/colorTextLight" />
--->
+                    <!--     <TextView
+                             android:id="@+id/txt_date"
+                             style="@style/LabelSmall"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:text="dd/MM/yyyy"
+                             android:textColor="@color/colorTextLight" />
+     -->
                 </LinearLayout>
 
                 <LinearLayout
@@ -135,12 +134,11 @@
             </RelativeLayout>
 
 
-
             <RelativeLayout
                 android:id="@+id/rel"
-                android:layout_marginBottom="@dimen/padding_10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_10dp"
                 android:paddingLeft="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_5dp">
 
@@ -274,14 +272,14 @@
 
 
             <LinearLayout
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/padding_10dp"
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_10dp"
-                android:paddingBottom="@dimen/padding_5dp">
+                android:paddingBottom="@dimen/padding_5dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/linLikes"
@@ -371,6 +369,18 @@
 
 
             </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/chkCompleted"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_10dp"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:layout_marginBottom="@dimen/padding_5dp"
+                android:text="Completed" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -384,35 +394,6 @@
             android:background="@drawable/rounded_bg_popup"
             android:orientation="vertical"
             android:visibility="gone">
-
-            <TextView
-                android:id="@+id/txt_drop_share"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/padding_5dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:paddingLeft="@dimen/padding_20dp"
-                android:paddingTop="@dimen/padding_5dp"
-                android:paddingRight="@dimen/padding_20dp"
-                android:paddingBottom="@dimen/padding_5dp"
-                android:text="Share Post"
-                android:textAppearance="@style/TextAppearance.Regular"
-                android:textColor="@color/black_semi_transparent"
-                android:textSize="@dimen/text_size_14sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="120dp"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/padding_10dp"
-                android:layout_marginRight="@dimen/padding_10dp"
-                android:background="@color/black_semi_transparent"
-                android:paddingLeft="@dimen/padding_20dp"
-                android:paddingRight="@dimen/padding_20dp"
-                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/txt_drop_delete"
@@ -430,7 +411,36 @@
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                android:visibility="visible" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="120dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_marginRight="@dimen/padding_10dp"
+                android:background="@color/black_semi_transparent"
+                android:paddingLeft="@dimen/padding_20dp"
+                android:paddingRight="@dimen/padding_20dp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/txt_drop_share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_5dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingLeft="@dimen/padding_20dp"
+                android:paddingTop="@dimen/padding_5dp"
+                android:paddingRight="@dimen/padding_20dp"
+                android:paddingBottom="@dimen/padding_5dp"
+                android:text="Completed Students"
+                android:textAppearance="@style/TextAppearance.Regular"
+                android:textColor="@color/black_semi_transparent"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/txt_drop_report"

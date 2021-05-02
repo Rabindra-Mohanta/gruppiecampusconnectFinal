@@ -65,13 +65,32 @@ public class ChapterRes extends BaseResponse {
         @SerializedName("thumbnailImage")
         @Expose
         public ArrayList<String> thumbnailImage;
+        @SerializedName("studentStatusCompleted")
+        @Expose
+        public ArrayList<StudentTopicCompleted> studentList;
+
         @SerializedName("thumbnail")
         @Expose
         public String thumbnail;
         @SerializedName("video")
         @Expose
         public String video;
+        @SerializedName("topicCompleted")
+        @Expose
+        public boolean topicCompleted;
 
 
+
+        public static class StudentTopicCompleted {
+            @SerializedName("userId")
+            @Expose
+            public String userId;
+            @SerializedName("studentDbId")
+            @Expose
+            public String studentDbId;
+            @SerializedName("name")
+            @Expose
+            public String name;
+        }
     }
 }

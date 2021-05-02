@@ -144,7 +144,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
         @Bind(R.id.txt_content)
         TextView txt_content;
 
-        @Bind(R.id.image)
+        @Bind(R.id.imageThumb)
         ImageView imgPhoto;
 
         @Bind(R.id.txt_drop_delete)

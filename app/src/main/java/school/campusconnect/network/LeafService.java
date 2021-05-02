@@ -1,3 +1,4 @@
+
 package school.campusconnect.network;
 
 import java.util.ArrayList;
@@ -446,7 +447,6 @@ public interface LeafService {
     Call<StartMeetingRes> stopMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId);
 
 
-
     @GET("/api/v1/groups/{group_id}/ebooks/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<EBooksResponse> getEBooks(@Path("group_id") String group_id);
@@ -457,20 +457,20 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/ebooks/register")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addEBook(@Path("group_id") String group_id,@Body AddEbookReq addEbookReq);
+    Call<BaseResponse> addEBook(@Path("group_id") String group_id, @Body AddEbookReq addEbookReq);
 
     @POST("/api/v1/groups/{group_id}/team/{teamId}/jitsi/token/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addJitiToken(@Path("group_id") String group_id,@Path("teamId") String teamId);
+    Call<BaseResponse> addJitiToken(@Path("group_id") String group_id, @Path("teamId") String teamId);
 
 
     @PUT("/api/v1/groups/{group_id}/ebook/{book_id}/delete")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> deleteEBook(@Path("group_id") String group_id,@Path("book_id") String book_id);
+    Call<BaseResponse> deleteEBook(@Path("group_id") String group_id, @Path("book_id") String book_id);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/ebook/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> updateEBookInClass(@Path("group_id") String group_id,@Path("team_id") String team_id,@Query("ebookId") String ebookId);
+    Call<BaseResponse> updateEBookInClass(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("ebookId") String ebookId);
 
 
     @GET("/api/v1/groups/{group_id}/subjects/get")
@@ -488,11 +488,22 @@ public interface LeafService {
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<TimeTableList2Response> getTTNewDayWise(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("day") String day);
+    Call<TimeTableList2Response> getTTNewDayWise(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("day") String day);
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addSubjectStaff(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body AddSubjectStaffReq addSubjectStaffReq);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/staff/update")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateSubjectStaff(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                          @Path("subject_id") String subject_id
+            , @Body AddSubjectStaffReq addSubjectStaffReq);
+
+    @DELETE("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteSubjectStaff(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                          @Path("subject_id") String subject_id);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_with_staff_id}/staff/{staff_id}/year/timetable/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -509,10 +520,9 @@ public interface LeafService {
     Call<StudentMarkCardListResponse> getMarkCardStudents(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("markscard_id") String markscard_id);
 
 
-
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subjects/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<SubjectTeamResponse> getTeamSubjects(@Path("group_id") String group_id,@Path("team_id") String team_id);
+    Call<SubjectTeamResponse> getTeamSubjects(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/markscard/create")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1075,7 +1085,7 @@ public interface LeafService {
 
     @PUT("/api/v1/groups/{group_id}/album/{album_id}/remove")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> deleteGalleryFile(@Path("group_id") String groupId, @Path("album_id") String album_id,@Query("fileName") String fileName);
+    Call<BaseResponse> deleteGalleryFile(@Path("group_id") String groupId, @Path("album_id") String album_id, @Query("fileName") String fileName);
 
     @POST("/api/v1/groups/{group_id}/gallery/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1083,7 +1093,7 @@ public interface LeafService {
 
     @PUT("/api/v1/groups/{group_id}/album/{album_id}/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addGalleryFile(@Path("group_id") String groupId,@Path("album_id") String album_id, @Body AddGalleryPostRequest addGalleryPostRequest);
+    Call<BaseResponse> addGalleryFile(@Path("group_id") String groupId, @Path("album_id") String album_id, @Body AddGalleryPostRequest addGalleryPostRequest);
 
     @GET("/api/v1/groups/{group_id}/timetable/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1231,10 +1241,11 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{student_id}/markscard/{markscard_id}/remove")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> deleteMarkCart(@Path("group_id") String group_id,
-                                                 @Path("team_id") String team_id,
-                                                 @Path("markscard_id") String markscard_id,
-                                                 @Path("student_id") String student_id,
-                                                 @Query("rollNo") String rollNumber);
+                                      @Path("team_id") String team_id,
+                                      @Path("markscard_id") String markscard_id,
+                                      @Path("student_id") String student_id,
+                                      @Query("rollNo") String rollNumber);
+
     @GET
     Call<ResponseBody> downloadFile(@Url String url);
 
@@ -1250,22 +1261,37 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/posts/add")
     @Headers({"Content-Type: application/json"})
-    Call<BaseResponse> addChapterPost(@Path("group_id") String group_id,@Path("team_id") String team_id,@Path("subject_id") String subject_id,@Body AddChapterPostRequest request);
+    Call<BaseResponse> addChapterPost(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body AddChapterPostRequest request);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/topics/add")
     @Headers({"Content-Type: application/json"})
-    Call<BaseResponse> addChapterTopicPost(@Path("group_id") String group_id,@Path("team_id") String team_id,@Path("subject_id") String subject_id,@Path("chapter_id") String chapter_id,@Body AddChapterPostRequest request);
+    Call<BaseResponse> addChapterTopicPost(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Path("chapter_id") String chapter_id, @Body AddChapterPostRequest request);
 
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/remove")
     @Headers({"Content-Type: application/json"})
-    Call<BaseResponse> deleteTopic(@Path("group_id") String group_id,@Path("team_id") String team_id,
-                                           @Path("subject_id") String subject_id,
-                                           @Path("chapter_id") String chapter_id,@Query("topicId") String topicId);
+    Call<BaseResponse> deleteTopic(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                   @Path("subject_id") String subject_id,
+                                   @Path("chapter_id") String chapter_id, @Query("topicId") String topicId);
 
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/remove")
     @Headers({"Content-Type: application/json"})
-    Call<BaseResponse> deleteChapter(@Path("group_id") String group_id,@Path("team_id") String team_id,
-                                           @Path("subject_id") String subject_id,
-                                           @Path("chapter_id") String chapter_id);
+    Call<BaseResponse> deleteChapter(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                     @Path("subject_id") String subject_id,
+                                     @Path("chapter_id") String chapter_id);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/topic/{topic_id}/completed")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> topicCompleteStatus(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                     @Path("subject_id") String subject_id,
+                                     @Path("chapter_id") String chapter_id,
+                                     @Path("topic_id") String topic_id);
+
+    @DELETE("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/remove")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteTTNew(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @DELETE("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/remove")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteTTNewByDay(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("day") String day);
 
 }

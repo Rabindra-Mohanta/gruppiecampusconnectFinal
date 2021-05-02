@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import school.campusconnect.views.SMBDialogUtils;
 
 public class TimeTableListFragment2 extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "TeamDiscussFragment";
@@ -43,6 +45,9 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     public ProgressBar progressBar;
 
     String team_id;
+    String role;
+    private ArrayList<TimeTableList2Response.TimeTableData2> result;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,8 +56,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         team_id=getArguments().getString("team_id");
-
-        progressBar.setVisibility(View.VISIBLE);
+        role=getArguments().getString("role");
 
         return view;
     }
@@ -60,6 +64,11 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     @Override
     public void onStart() {
         super.onStart();
+        getList();
+    }
+
+    private void getList() {
+        progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTTNew(this,GroupDashboardActivityNew.groupId,team_id);
     }
@@ -67,19 +76,32 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
-        TimeTableList2Response res = (TimeTableList2Response) response;
-        List<TimeTableList2Response.TimeTableData2> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
-        if(result!=null){
-            int currDay = getIntDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-            AppLog.e(TAG,"currDay : "+currDay);
-            for (int i=0;i<result.size();i++){
-                if(result.get(i).getDay().equals(currDay+"")){
-                    result.get(i).isSelected = true;
+        switch (apiId){
+            case LeafManager.API_TT_REMOVE_DAY:
+                getList();
+                break;
+            case LeafManager.API_TT_REMOVE:
+                if(getActivity()!=null){
+                    getActivity().finish();
                 }
-            }
+                break;
+
+            default:
+                TimeTableList2Response res = (TimeTableList2Response) response;
+                result = res.getData();
+                AppLog.e(TAG, "ClassResponse " + result);
+                if(result!=null){
+                    int currDay = getIntDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+                    AppLog.e(TAG,"currDay : "+currDay);
+                    for (int i=0;i<result.size();i++){
+                        if(result.get(i).getDay().equals(currDay+"")){
+                            result.get(i).isSelected = true;
+                        }
+                    }
+                }
+                rvClass.setAdapter(new SubjectAdapter(result));
         }
-        rvClass.setAdapter(new SubjectAdapter(result));
+
     }
     private int getIntDay(int i) {
         switch (i) {
@@ -110,6 +132,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
     }
+
 
     public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder>
     {
@@ -153,6 +176,19 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             });
 
             holder.rvSession.setAdapter(new SessionAdapter(item.getSessions()));
+
+            if("admin".equalsIgnoreCase(role)){
+                holder.imgRemove.setVisibility(View.VISIBLE);
+                holder.imgRemove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteTimeTableDay(item);
+                    }
+                });
+            }else {
+                holder.imgRemove.setVisibility(View.GONE);
+            }
+
         }
 
         private String getWeekDay(String day) {
@@ -201,6 +237,9 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             @Bind(R.id.imgDown)
             ImageView imgDown;
 
+            @Bind(R.id.imgRemove)
+            ImageView imgRemove;
+
             @Bind(R.id.rvSession)
             RecyclerView rvSession;
 
@@ -209,6 +248,32 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
                 super(itemView);
                 ButterKnife.bind(this,itemView);
             }
+        }
+    }
+
+    private void deleteTimeTableDay(TimeTableList2Response.TimeTableData2 item) {
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete time-table day?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                LeafManager leafManager=new LeafManager();
+                progressBar.setVisibility(View.VISIBLE);
+                leafManager.deleteTTNewByDay(TimeTableListFragment2.this,GroupDashboardActivityNew.groupId,team_id,item.day);
+            }
+        });
+
+
+    }
+
+    public void deleteTT() {
+        if(result!=null && result.size()>0){
+            SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete time-table?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    LeafManager leafManager=new LeafManager();
+                    progressBar.setVisibility(View.VISIBLE);
+                    leafManager.deleteTTNew(TimeTableListFragment2.this,GroupDashboardActivityNew.groupId,team_id);
+                }
+            });
         }
     }
 

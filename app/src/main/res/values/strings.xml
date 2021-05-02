@@ -479,6 +479,10 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strAddNew">Add New</string>
     <string name="lbl_chapter_name">Chapter Name</string>
     <string name="lbl_topic_name">Topic Name</string>
+    <string name="lbl_update_subject">Update Subject</string>
+    <string name="lbl_completed_student">Completed Students</string>
+    <string name="lbl_not_completed_student">Not Completed Topic Students</string>
+    <string name="lbl_completed_topic_student">Completed Topic Students</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

@@ -22,6 +22,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.j256.ormlite.stmt.query.In;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.AddChapterPostActivity;
+import school.campusconnect.activities.CompletedTopicUserActivity;
 import school.campusconnect.activities.FullScreenActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.TestActivity;
@@ -168,6 +172,9 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 chapterList.get(spChapter.getSelectedItemPosition()).topicList.remove(adapterPosition);
                 adapter.notifyDataSetChanged();
                 break;
+            case LeafManager.API_TOPIC_STATUS_CHANGE:
+                // do nothing
+                break;
             default:
                 ChapterRes res = (ChapterRes) response;
                 chapterList = res.getData();
@@ -239,6 +246,23 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         currentItem = item;
         this.adapterPosition = adapterPosition;
         SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+    }
+
+    @Override
+    public void onCompleteClick(ChapterRes.TopicData item, int adapterPosition) {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager manager = new LeafManager();
+        manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId,item.topicId);
+    }
+
+    @Override
+    public void onCompletedStudentClick(ChapterRes.TopicData item, int adapterPosition) {
+        Intent intent=new Intent(getActivity(), CompletedTopicUserActivity.class);
+        intent.putExtra("item",new Gson().toJson(item));
+        intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
+        intent.putExtra("team_id",team_id);
+        intent.putExtra("subject_id",subject_id);
+        startActivity(intent);
     }
 
     public void onDeleteChapterClick() {

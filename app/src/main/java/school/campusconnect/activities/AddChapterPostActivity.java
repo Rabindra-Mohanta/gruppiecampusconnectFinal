@@ -298,16 +298,17 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                 } else if (!TextUtils.isEmpty(pdfPath)) {
                     request.fileType = Constants.FILE_TYPE_PDF;
+                    progressDialog.setMessage("Preparing Pdf...");
+                    progressDialog.show();
                     uploadToAmazone(request);
                 } else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     request.fileType = fileTypeImageOrVideo;
                     Log.e(TAG, "send data " + new Gson().toJson(request));
-//                    progressDialog.setMessage("Preparing Video...");
-//                    progressDialog.show();
-//                    compressVideo(request, 0);
                     new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else if (listImages.size() > 0) {
                     request.fileType = Constants.FILE_TYPE_IMAGE;
+                    progressDialog.setMessage("Uploading Image...");
+                    progressDialog.show();
                     uploadToAmazone(request);
                 }
             }
@@ -334,7 +335,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            progressDialog.setMessage("Preparing Video... " + values[0] + " out of " + listImages.size() + ", please wait...");
+            progressDialog.setMessage("Preparing Video " + values[0] + " out of " + listImages.size() + ", please wait...");
         }
 
         @Override
@@ -461,7 +462,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     }
                     if (TransferState.FAILED.equals(state)) {
                         progressBar.setVisibility(View.GONE);
-                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                        if (progressDialog!=null) {
                             progressDialog.dismiss();
                         }
                         Toast.makeText(AddChapterPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
@@ -472,6 +473,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                     float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                     int percentDone = (int) percentDonef;
+
+                    if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Preparing Pdf " + percentDone + "% " + (index + 1) + " out of " + listImages.size() + ", please wait...");
+                    }
+
                     AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                             + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
                 }
@@ -479,7 +485,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 @Override
                 public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                    if (progressDialog!=null) {
                         progressDialog.dismiss();
                     }
                     AppLog.e(TAG, "Upload Error : " + ex);
@@ -492,7 +498,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void upLoadImageOnCloud(final int pos) {
 
         if (pos == listImages.size()) {
-            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+            if (progressDialog!=null) {
                 progressDialog.dismiss();
             }
             mainRequest.fileName = listAmazonS3Url;
@@ -519,7 +525,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     }
                     if (TransferState.FAILED.equals(state)) {
                         Toast.makeText(AddChapterPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+                        if(progressDialog!=null)
+                            progressDialog.dismiss();
                     }
                 }
 
@@ -528,8 +535,13 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                     int percentDone = (int) percentDonef;
                     if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        progressDialog.setMessage("Uploading Video " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                    } else if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                    } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                     }
+
                     AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                             + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
                 }
@@ -537,7 +549,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 @Override
                 public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                    if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
                     AppLog.e(TAG, "Upload Error : " + ex);
@@ -1061,10 +1073,10 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     String title = getResources().getString(R.string.app_name);
                     String message = "";
 
-                    if(isChapter){
-                        message = subject_name+" : New chapter added";
-                    }else {
-                        message = " New topic added to "+chapterName;
+                    if (isChapter) {
+                        message = subject_name + " : New chapter added";
+                    } else {
+                        message = " New topic added to " + chapterName;
                     }
 
                     topic = group_id + "_" + team_id;
@@ -1081,7 +1093,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     dataObj.put("postId", "");
                     dataObj.put("teamId", team_id);
                     dataObj.put("title", title);
-                    dataObj.put("postType", isChapter?"chapter":"topic");
+                    dataObj.put("postType", isChapter ? "chapter" : "topic");
                     dataObj.put("Notification_type", "VideoClass");
                     dataObj.put("body", message);
                     object.put("data", dataObj);

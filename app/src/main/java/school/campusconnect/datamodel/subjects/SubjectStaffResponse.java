@@ -31,6 +31,17 @@ public class SubjectStaffResponse extends BaseResponse {
         @SerializedName("subjectName")
         @Expose
         public String name;
+        @SerializedName("canPost")
+        @Expose
+        public boolean canPost;
+
+        public boolean isCanPost() {
+            return canPost;
+        }
+
+        public void setCanPost(boolean canPost) {
+            this.canPost = canPost;
+        }
 
         public ArrayList<SubjectStaff> getStaffName() {
             return staffName;

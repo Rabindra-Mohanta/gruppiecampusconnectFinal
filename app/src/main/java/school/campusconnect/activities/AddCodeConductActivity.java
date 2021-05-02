@@ -3,6 +3,7 @@ package school.campusconnect.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -137,7 +138,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
     private TransferUtility transferUtility;
     private AddCodeOfConductReq mainRequest;
     private File cameraFile;
-
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,6 +194,9 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
 
     private void init() {
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+
         group_id=GroupDashboardActivityNew.groupId;
 
 //        edtDesc.setMovementMethod(new ScrollingMovementMethod());
@@ -240,9 +244,13 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
                     manager.addGalleryPost(this, group_id,  request);
                 } else*/ if (!TextUtils.isEmpty(pdfPath)) {
                     request.fileType = Constants.FILE_TYPE_PDF;
+                    progressDialog.setMessage("Preparing Pdf...");
+                    progressDialog.show();
                     uploadToAmazone(request);
                 } else if (listImages.size() > 0) {
                     request.fileType = Constants.FILE_TYPE_IMAGE;
+                    progressDialog.setMessage("Uploading Image...");
+                    progressDialog.show();
                     uploadToAmazone(request);
                 } else {
                     Log.e(TAG, "send data " + new Gson().toJson(request));
@@ -324,6 +332,9 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
                     }
                     if (TransferState.FAILED.equals(state)) {
                         progressBar.setVisibility(View.GONE);
+                        if (progressDialog!=null) {
+                            progressDialog.dismiss();
+                        }
                         Toast.makeText(AddCodeConductActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -332,6 +343,9 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
                 public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                     float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                     int percentDone = (int) percentDonef;
+                    if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Preparing Pdf " + percentDone + "% " + (index + 1) + " out of " + listImages.size() + ", please wait...");
+                    }
                     AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                             + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
                 }
@@ -339,6 +353,9 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
                 @Override
                 public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
+                    if (progressDialog!=null) {
+                        progressDialog.dismiss();
+                    }
                     AppLog.e(TAG, "Upload Error : " + ex);
                     Toast.makeText(AddCodeConductActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                 }
@@ -349,6 +366,9 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
     private void upLoadImageOnCloud(final int pos) {
 
         if (pos == listImages.size()) {
+            if (progressDialog!=null) {
+                progressDialog.dismiss();
+            }
             mainRequest.fileName = listAmazonS3Url;
             AppLog.e(TAG,"send data : "+new Gson().toJson(mainRequest));
             manager.addCodeOfConduct(this, group_id, mainRequest);
@@ -366,13 +386,22 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
                         Log.e("MULTI_IMAGE", "onStateChanged " + pos);
                         updateList(pos, key);
                     }
+                    if (TransferState.FAILED.equals(state)) {
+                        Toast.makeText(AddCodeConductActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        if(progressDialog!=null)
+                            progressDialog.dismiss();
+                    }
                 }
 
                 @Override
                 public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                     float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                     int percentDone = (int) percentDonef;
-
+                    if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                    } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                    }
                     AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                             + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
                 }
@@ -380,6 +409,9 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
                 @Override
                 public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
                     AppLog.e(TAG, "Upload Error : " + ex);
                     Toast.makeText(AddCodeConductActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                 }

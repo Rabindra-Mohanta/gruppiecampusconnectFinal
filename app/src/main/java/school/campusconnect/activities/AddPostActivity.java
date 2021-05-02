@@ -375,9 +375,13 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
                 } else if (!TextUtils.isEmpty(pdfPath)) {
                     request.fileType = Constants.FILE_TYPE_PDF;
+                    progressDialog.setMessage("Preparing Pdf...");
+                    progressDialog.show();
                     uploadToAmazone(request);
                 } else if (listImages.size() > 0) {
                     request.fileType = Constants.FILE_TYPE_IMAGE;
+                    progressDialog.setMessage("Uploading Image...");
+                    progressDialog.show();
                     uploadToAmazone(request);
                 } else {
                     Log.e(TAG, "send data " + new Gson().toJson(request));
@@ -408,7 +412,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         serviceIntent.putExtra("isFromChat", isFromChat);
         ContextCompat.startForegroundService(this, serviceIntent);
 
-        Toast.makeText(this, "Video Uploading in backgroud", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Video Uploading in background", Toast.LENGTH_SHORT).show();
         finish();
 
     }
@@ -664,7 +668,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     }
                     if (TransferState.FAILED.equals(state)) {
                         progressBar.setVisibility(View.GONE);
-                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                        if (progressDialog!=null) {
                             progressDialog.dismiss();
                         }
                         Toast.makeText(AddPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
@@ -675,6 +679,10 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                     float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                     int percentDone = (int) percentDonef;
+
+                    if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Preparing Pdf " + percentDone + "% " + (index + 1) + " out of " + listImages.size() + ", please wait...");
+                    }
                     AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                             + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
                 }
@@ -682,7 +690,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 @Override
                 public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                    if (progressDialog!=null) {
                         progressDialog.dismiss();
                     }
                     AppLog.e(TAG, "Upload Error : " + ex);
@@ -695,7 +703,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     private void upLoadImageOnCloud(final int pos) {
         if (pos == listImages.size()) {
-            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+            if (progressDialog!=null) {
                 progressDialog.dismiss();
             }
             mainRequest.fileName = listAmazonS3Url;
@@ -716,7 +724,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     }
                     if (TransferState.FAILED.equals(state)) {
                         Toast.makeText(AddPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+                        if(progressDialog!=null)
+                            progressDialog.dismiss();
                     }
                 }
 
@@ -725,7 +734,11 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                     int percentDone = (int) percentDonef;
                     if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size()+", please wait...");
+                        progressDialog.setMessage("Uploading Video " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                    } else if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                    } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
+                        progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                     }
                     AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                             + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
@@ -734,7 +747,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 @Override
                 public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                    if (progressDialog != null) {
                         progressDialog.dismiss();
                     }
                     AppLog.e(TAG, "Upload Error : " + ex);

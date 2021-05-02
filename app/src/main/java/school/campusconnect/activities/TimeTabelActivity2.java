@@ -48,8 +48,7 @@ public class TimeTabelActivity2 extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if("admin".equals(role)){
-            getMenuInflater().inflate(R.menu.menu_class,menu);
-            menu.findItem(R.id.menu_add_class).setTitle("Add/Update Time Table");
+            getMenuInflater().inflate(R.menu.menu_tt_new,menu);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -57,12 +56,16 @@ public class TimeTabelActivity2 extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_add_class:
+            case R.id.menu_add:
                 Intent intent = new Intent(this, AddTimeTable2.class);
                 intent.putExtra("team_id",getIntent().getStringExtra("team_id"));
                 intent.putExtra("team_name",getIntent().getStringExtra("team_name"));
                 startActivity(intent);
                 return true;
+            case R.id.menu_delete:
+                ((TimeTableListFragment2)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).deleteTT();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

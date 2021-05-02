@@ -548,6 +548,9 @@
         <activity
             android:name="school.campusconnect.activities.AddChapterPostActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="school.campusconnect.activities.CompletedTopicUserActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

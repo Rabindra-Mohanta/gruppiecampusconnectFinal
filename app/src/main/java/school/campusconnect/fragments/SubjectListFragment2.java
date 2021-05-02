@@ -20,6 +20,7 @@ import java.util.List;
 
 import school.campusconnect.R;
 import school.campusconnect.activities.AddSubjectActivity;
+import school.campusconnect.activities.AddSubjectActivity2;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.subjects.SubjectResponse;
@@ -161,9 +162,10 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
     }
 
     private void onTreeClick(SubjectStaffResponse.SubjectData classData) {
-        /*Intent intent = new Intent(getActivity(), AddSubjectActivity.class);
-        intent.putExtra("data",new Gson().toJson(classData));
+        Intent intent = new Intent(getActivity(), AddSubjectActivity2.class);
+        intent.putExtra("team_id",team_id);
         intent.putExtra("is_edit",true);
-        startActivity(intent);*/
+        intent.putExtra("data",new Gson().toJson(classData));
+        startActivity(intent);
     }
 }

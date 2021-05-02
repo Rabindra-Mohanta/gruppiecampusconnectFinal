@@ -29,6 +29,9 @@ public class StudentRes extends BaseResponse {
         @SerializedName("studentId")
         @Expose
         public String studentId;
+        @SerializedName("studentDbId")
+        @Expose
+        public String studentDbId;
         @SerializedName("section")
         @Expose
         public String section;
