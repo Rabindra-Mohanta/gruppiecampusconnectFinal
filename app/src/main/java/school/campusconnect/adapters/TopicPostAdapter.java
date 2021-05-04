@@ -158,6 +158,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         }
 
         holder.txt_title.setText(item.topicName);
+        holder.txt_createdBy.setText(item.createdByName);
         holder.txtDate.setText(MixOperations.getFormattedDate(item.insertedAt, Constants.DATE_FORMAT));
     }
 
@@ -216,6 +217,10 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
 
         @Bind(R.id.txt_title)
         TextView txt_title;
+
+        @Bind(R.id.txt_createdBy)
+        TextView txt_createdBy;
+
 
         @Bind(R.id.txt_readmore)
         TextView txt_readmore;

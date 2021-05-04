@@ -57,9 +57,9 @@ public class ChapterActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-//        if (canPost) {
+        if (canPost) {
             getMenuInflater().inflate(R.menu.menu_chapter, menu);
-//        }
+        }
 
         return true;
     }

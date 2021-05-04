@@ -56,6 +56,10 @@ public class ChapterRes extends BaseResponse {
         @SerializedName("insertedAt")
         @Expose
         public String insertedAt;
+        @SerializedName("createdByName")
+        @Expose
+        public String createdByName;
+
         @SerializedName("fileType")
         @Expose
         public String fileType;

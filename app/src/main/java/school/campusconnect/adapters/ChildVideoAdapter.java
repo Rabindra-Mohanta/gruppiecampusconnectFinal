@@ -142,7 +142,7 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
 
             Log.e("MULTI_BIND", "image " + position + "is " + Constants.decodeUrlToBase64(item.get(position).getImagePath()));
 
-            if(thumbnailImages!=null && thumbnailImages.size()>=position){
+            if(thumbnailImages!=null && thumbnailImages.size()>position){
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(thumbnailImages.get(position))).placeholder(R.drawable.video_place_holder).into(mImageView);
 
             }
