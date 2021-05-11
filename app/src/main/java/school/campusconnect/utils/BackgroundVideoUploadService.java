@@ -71,6 +71,9 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
     int compressedCounts = 0;
 
+    ArrayList<Intent> taskIntents = new ArrayList<>();
+
+    Intent currentTask  = null;
     //95387 32882
     @Override
     public void onCreate()
@@ -80,6 +83,10 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         AppLog.e(TAG , "OnCreate called");
         context = getApplicationContext();
         transferUtility = AmazoneHelper.getTransferUtility(this);
+
+        currentTask = null;
+        taskIntents = new ArrayList<>();
+
     }
 
     @Nullable
@@ -91,9 +98,19 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        AppLog.e(TAG , "onStartCommand called : "+startId);
+        AppLog.e(TAG , "onStartCommand called : "+startId +" and currentTassk : "+(currentTask !=null));
+        if(currentTask != null)
+        {
+            taskIntents.add(intent);
+            AppLog.e(TAG, "onStartCommand currentTask is not null and taskIntent size is : "+taskIntents.size());
+            return START_NOT_STICKY;
+        }
+        else
+        {
+            currentTask = intent;
+        }
 
-        isFromCamera = intent.getBooleanExtra("isFromCamera", false);
+        /*isFromCamera = intent.getBooleanExtra("isFromCamera", false);
         isFromChat = intent.getBooleanExtra("isFromChat", false);
         videoUrl = intent.getStringExtra("videoUrl");
         group_id = intent.getStringExtra("group_id");
@@ -101,7 +118,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         postType = intent.getStringExtra("postType");
         friend_id = intent.getStringExtra("friend_id");
         listImages = (ArrayList<String>) intent.getSerializableExtra("listImages");
-        mainRequest = (AddPostRequest) intent.getSerializableExtra("mainRequest");
+        mainRequest = (AddPostRequest) intent.getSerializableExtra("mainRequest");*/
 
         /*if (isFromCamera) {
             new VideoCompressor1(mainRequest, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -123,9 +140,30 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         //do heavy work on a background thread
         //stopSelf();
 
+        getDataFromCurrentTask();
         uploadVideos();
 
         return START_NOT_STICKY;
+    }
+
+
+    public void getDataFromCurrentTask()
+    {
+        AppLog.e(TAG , "getDataFromCurrentTask called ");
+        isFromCamera = currentTask.getBooleanExtra("isFromCamera", false);
+        isFromChat = currentTask.getBooleanExtra("isFromChat", false);
+        videoUrl = currentTask.getStringExtra("videoUrl");
+        group_id = currentTask.getStringExtra("group_id");
+        team_id = currentTask.getStringExtra("team_id");
+        postType = currentTask.getStringExtra("postType");
+        friend_id = currentTask.getStringExtra("friend_id");
+
+        listImages = new ArrayList<>();
+        listAmazonS3Url = new ArrayList<>();
+        mainRequest = null;
+
+        listImages = (ArrayList<String>) currentTask.getSerializableExtra("listImages");
+        mainRequest = (AddPostRequest) currentTask.getSerializableExtra("mainRequest");
     }
 
     @Override
@@ -149,7 +187,18 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
     @Override
     public void onSuccess(int apiId, BaseResponse response)
     {
-        AppLog.e(TAG , "API onSuccess : "+apiId);
+        AppLog.e(TAG , "API onSuccess : "+apiId +" taskIntent size : "+taskIntents.size());
+
+        if(taskIntents.size() > 0)
+        {
+            currentTask = taskIntents.remove(0);
+
+            AppLog.e(TAG , "onSuccess nexttask assigned now size is : "+taskIntents.size());
+            getDataFromCurrentTask();
+            uploadVideos();
+
+            return;
+        }
 
         Intent intent = new Intent("postadded");
         sendBroadcast(intent);
@@ -181,6 +230,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
     public void uploadVideos()
     {
         compressedVideoCount = new ArrayList<>();
+        uploadVideoPercentages = new ArrayList<>();
 
         for(String s : listImages)
         compressedVideoCount.add(0);
@@ -264,7 +314,6 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         long fileSizeInKB = fileSizeInBytes / 1024;
         // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
         long fileSizeInMB = fileSizeInKB / 1024;
-        AppLog.e(TAG, "fileSizeInMB : " + fileSizeInMB);
 
 
         File videoCompresed  = ImageUtil.getOutputMediaVideo(finalI);
@@ -314,7 +363,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
             @Override
             public void onProgress(float progressPercent)
             {
-                AppLog.e( TAG, "Compression onProgress : "+progressPercent);
+
                 compressedVideoCount.set(finalI , (int) progressPercent) ;
                 publishCompressProgress((int) progressPercent);
             }
@@ -368,13 +417,14 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
     }
 
     private void uploadToAmazone(AddPostRequest request) {
-        mainRequest = request;
+       // mainRequest = request;
         //request.fileName = listAmazonS3Url;
         AppLog.e(TAG, "send data " + new Gson().toJson(request));
 
         if (request.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
             AppLog.e(TAG, "Final videos :: " + listImages.toString());
-            GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
+            GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener()
+            {
                 @Override
                 public void onThumbnail(ArrayList<String> listThumbnails) {
                     if (listThumbnails != null) {
@@ -385,8 +435,10 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
                 }
             }, Constants.FILE_TYPE_VIDEO);
-        } else {
-            for (int i = 0; i < listImages.size(); i++) {
+        } else
+            {
+            for (int i = 0; i < listImages.size(); i++)
+            {
                 try {
                     File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
                     listImages.set(i, newFile.getAbsolutePath());
@@ -399,11 +451,14 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         }
     }
 
-    private void uploadThumbnail(ArrayList<String> listThumbnails, int index) {
-        if (index == listThumbnails.size()) {
+    private void uploadThumbnail(ArrayList<String> listThumbnails, int index)
+    {
+        if (index == listThumbnails.size())
+        {
             mainRequest.thumbnailImage = listThumbnails;
             upLoadImageOnCloud(0);
-        } else {
+        } else
+            {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
             File file = new File(listThumbnails.get(index));
 
@@ -497,8 +552,13 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
     }
 
     private void upLoadImageOnCloud(final int pos) {
-        if (pos == listImages.size()) {
-            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+
+        AppLog.e(TAG, "upLoadImageOnCloud: position "+pos);
+
+        if (pos == listImages.size())
+        {
+            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType))
+            {
                 //progressDialog.dismiss();
                 notificationBuilder.setContentTitle("Video Upload Successfully");
                 notificationBuilder.setProgress(0, 0, false);
@@ -506,8 +566,9 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
                 notificationBuilder.setAutoCancel(true);
                 notificationManager.notify(notifyId, notificationBuilder.build());
             }
-            AppLog.e(TAG, "upLoadImageOnCloud: ");
             mainRequest.fileName = listAmazonS3Url;
+
+            AppLog.e(TAG , "addPost mainRequest : "+new Gson().toJson(mainRequest));
             manager.addPost(this, group_id, team_id, mainRequest, postType, friend_id, isFromChat);
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
