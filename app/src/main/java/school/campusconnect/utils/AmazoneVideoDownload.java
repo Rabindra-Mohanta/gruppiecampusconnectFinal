@@ -24,13 +24,17 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
     private AmazoneDownloadSingleListener listenerSignle;
     String url;
     File file;
-    Activity activity;
+    Context context;
     private PowerManager.WakeLock mWakeLock;
 
-    public AmazoneVideoDownload(Activity activity, String url, AmazoneDownloadSingleListener listener) {
+    public AmazoneVideoDownload(Context activity, String url, AmazoneDownloadSingleListener listener) {
         this.url = url;
-        this.activity = activity;
+        this.context = activity;
         this.listenerSignle = listener;
+    }
+
+    public AmazoneVideoDownload(Context context) {
+    this.context = context;
     }
 
     public static AmazoneVideoDownload download(Activity activity, String file, AmazoneDownloadSingleListener listener) {
@@ -39,7 +43,7 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
         return asynchTask;
     }
 
-    public static boolean isVideoDownloaded(String url) {
+    public boolean isVideoDownloaded(String url) {
         try {
             if (!TextUtils.isEmpty(url)) {
                 url = Constants.decodeUrlToBase64(url);
@@ -59,10 +63,12 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
         return false;
     }
 
+
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        PowerManager pm = (PowerManager) activity.getSystemService(Context.POWER_SERVICE);
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 getClass().getName());
         mWakeLock.acquire();
@@ -175,8 +181,8 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
 
     }
 
-    private static File getDirForMedia(String folder) {
-        File mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+    private  File getDirForMedia(String folder) {
+        File mainFolder = new File(context.getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }

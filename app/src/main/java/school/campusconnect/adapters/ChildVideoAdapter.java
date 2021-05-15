@@ -35,12 +35,15 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
     private int mTotal = 0;
     private Context context;
 
+    AmazoneVideoDownload videoDownloader;
+
     public ChildVideoAdapter(int mDisplay, Context context, ArrayList<String> allImageList,ArrayList<String> thumbnailImages) {
         this.allImageList = allImageList;
         this.thumbnailImages = thumbnailImages;
         this.mDisplay = mDisplay;
         this.mTotal = allImageList.size();
         this.context = context;
+        videoDownloader = new AmazoneVideoDownload(context);
         for (String s : allImageList) {
             Log.e("ChildAdapter Images", s);
         }
@@ -146,7 +149,7 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(thumbnailImages.get(position))).placeholder(R.drawable.video_place_holder).into(mImageView);
 
             }
-            if(AmazoneVideoDownload.isVideoDownloaded(item.get(position).getImagePath())){
+            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.get(position).getImagePath())){
                 img_play.setVisibility(View.VISIBLE);
                 imgDownloadVideo.setVisibility(View.GONE);
             }else {
