@@ -44,6 +44,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.VideoClassActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
@@ -477,6 +478,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     }
                 });
 
+               /* txt_name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onNameClick(list.get(getAdapterPosition()));
+                    }
+                });*/
+
                 tv_stop.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v)
@@ -527,12 +535,25 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void onTreeClick(VideoClassResponse.ClassData classData)
     {
+
         if(!videoClassClicked)
         {
             Log.e(TAG , "onTreeClick  : "+videoClassClicked);
             videoClassClicked = true;
             startMeeting(classData);
+
+            ((VideoClassActivity) getActivity()).startRecordingScreen();
         }
+    }
+
+
+    private void onNameClick(VideoClassResponse.ClassData classData)
+    {
+            AppLog.e(TAG , "onNameClick called ");
+
+            ((VideoClassActivity) getActivity()).startRecordingScreen();
+            return;
+
     }
 
 
@@ -753,6 +774,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                             if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING"))
                             {
                                 AppLog.e(TAG , "meeting Disconnecting : "+item.canPost + " , "+meetingCreatedBy);
+
+                                if(getActivity() !=null)
+                                {
+                                    ((VideoClassActivity)getActivity()).stopRecording();
+                                }
+
+
                                 if (item.canPost && meetingCreatedBy && !isSentNotification ) {
                                     isSentNotification = true;
                                     // stopMeeting(item);
