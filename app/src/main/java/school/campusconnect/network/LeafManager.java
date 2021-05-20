@@ -25,6 +25,7 @@ import school.campusconnect.datamodel.classs.ParentKidsResponse;
 import school.campusconnect.datamodel.ebook.AddEbookReq;
 import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
+import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.marksheet.AddMarkCardReq;
 import school.campusconnect.datamodel.marksheet.MarkCardListResponse;
 import school.campusconnect.datamodel.marksheet.StudentMarkCardListResponse;
@@ -346,6 +347,7 @@ public class LeafManager {
     public static final int API_UPDATE_SUBJECT_STAFF = 220;
     public static final int API_DELETE_SUBJECT_STAFF = 221;
     public static final int API_TOPIC_STATUS_CHANGE = 222;
+    public static final int API_STUDENT_FEES_LIST = 224;
 
     public LeafManager() {
 
@@ -8503,6 +8505,43 @@ public class LeafManager {
         wrapper.execute(API_TT_REMOVE_DAY, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
+    public void getStudentFeesList(OnCommunicationListener listListener, String groupId, String team_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<StudentFeesRes> model = service.getStudentFeesList(groupId, team_id);
+        ResponseWrapper<StudentFeesRes> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+
+        wrapper.execute(API_STUDENT_FEES_LIST, new ResponseWrapper.ResponseHandler<StudentFeesRes, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, StudentFeesRes response) {
                 if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }

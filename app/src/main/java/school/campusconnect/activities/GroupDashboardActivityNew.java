@@ -120,6 +120,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.llBusRegister)
     LinearLayout llBusRegister;
 
+    @Bind(R.id.llFees)
+    LinearLayout llFees;
+
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
 
@@ -390,7 +393,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         createTabIcons();
     }
 
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople,R.id.llSubject,R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass,R.id.llEBook, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople,R.id.llSubject,R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass,R.id.llEBook, R.id.llBusRegister,R.id.llFees, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -526,6 +529,13 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.llSubject2:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, ClassActivity2.class));
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+            case R.id.llFees:
+                if (isConnectionAvailable()) {
+                    startActivity(new Intent(this, FeesClassActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -673,6 +683,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             llStaffReg.setVisibility(View.VISIBLE);
             llAttendanceReport.setVisibility(View.VISIBLE);
             llBusRegister.setVisibility(View.VISIBLE);
+            llFees.setVisibility(View.VISIBLE);
         }
     }
 

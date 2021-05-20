@@ -133,7 +133,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.github.stfalcon:smsverifycatcher:0.3.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.nbsp:library:1.1'
+//    implementation 'com.nbsp:library:1.1'
     implementation 'app.num.numandroidpagecurleffect:numandroidpagecurleffect:1.0'
     //  implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.scopely:fontain:1.0.0'
@@ -181,5 +181,6 @@ dependencies {
     /*Excelsheet*/
     implementation 'com.opencsv:opencsv:3.7'
     implementation 'org.apache.poi:poi:3.16'
+    
 }
 apply plugin: 'com.google.gms.google-services'

@@ -551,6 +551,12 @@
         <activity
             android:name="school.campusconnect.activities.CompletedTopicUserActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.FeesClassActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.FeesListActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

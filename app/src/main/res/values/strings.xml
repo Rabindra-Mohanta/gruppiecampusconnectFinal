@@ -483,6 +483,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_completed_student">Completed Students</string>
     <string name="lbl_not_completed_student">Not Completed Topic Students</string>
     <string name="lbl_completed_topic_student">Completed Topic Students</string>
+    <string name="lbl_fees_details">Fees Details</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>
