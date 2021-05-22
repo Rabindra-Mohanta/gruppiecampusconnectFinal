@@ -208,6 +208,7 @@ public class ClassListFragment2 extends BaseFragment implements LeafManager.OnCo
     private void onTreeClick(ClassResponse.ClassData classData) {
         Intent intent = new Intent(getActivity(), SubjectActivity2.class);
         intent.putExtra("team_id",classData.getId());
+        intent.putExtra("className",classData.className);
         startActivity(intent);
     }
 }

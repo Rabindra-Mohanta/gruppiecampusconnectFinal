@@ -127,14 +127,14 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_add_subject));
+        setTitle(getResources().getString(R.string.lbl_add_subject)+" - ("+getIntent().getStringExtra("className")+")");
         leafManager = new LeafManager();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             team_id = bundle.getString("team_id");
             isEdit = bundle.getBoolean("is_edit");
             if (isEdit) {
-                setTitle(getResources().getString(R.string.lbl_update_subject));
+                setTitle(getResources().getString(R.string.lbl_update_subject)+" - ("+getIntent().getStringExtra("className")+")");
                 subjectData = new Gson().fromJson(bundle.getString("data"), SubjectStaffResponse.SubjectData.class);
 
                 for (int i = 0; i < subjectData.staffName.size(); i++) {

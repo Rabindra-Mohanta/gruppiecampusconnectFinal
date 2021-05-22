@@ -48,6 +48,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    String role;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        role = getArguments().getString("role");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -208,7 +210,8 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
     private void onTreeClick(ClassResponse.ClassData classData) {
         Intent intent = new Intent(getActivity(), FeesListActivity.class);
         intent.putExtra("title",classData.getName());
-        intent.putExtra("class_data",new Gson().toJson(classData));
+        intent.putExtra("team_id",classData.getId());
+        intent.putExtra("role",role);
         startActivity(intent);
     }
 }

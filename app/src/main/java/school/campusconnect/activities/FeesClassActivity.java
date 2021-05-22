@@ -28,7 +28,7 @@ public class FeesClassActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_fees_details));
+        setTitle(getIntent().getStringExtra("title"));
 
 
         FeesClassListFragment classListFragment=new FeesClassListFragment();

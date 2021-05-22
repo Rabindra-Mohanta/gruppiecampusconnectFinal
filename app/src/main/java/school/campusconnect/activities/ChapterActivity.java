@@ -26,6 +26,7 @@ public class ChapterActivity extends BaseActivity {
 
     boolean canPost;
     String team_id;
+    String className;
     String subject_id;
     String subject_name;
     @Override
@@ -36,7 +37,7 @@ public class ChapterActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getIntent().getStringExtra("title"));
+        setTitle(getIntent().getStringExtra("title")+" - ("+getIntent().getStringExtra("className")+")");
 
         canPost = getIntent().getBooleanExtra("canPost",false);
         team_id = getIntent().getStringExtra("team_id");

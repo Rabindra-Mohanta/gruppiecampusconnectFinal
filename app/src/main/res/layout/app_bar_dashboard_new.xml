@@ -487,27 +487,6 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
 
-
-                    <LinearLayout
-                        android:id="@+id/llFees"
-                        android:layout_width="match_parent"
-                        android:padding="@dimen/padding_10dp"
-                        android:layout_marginTop="@dimen/padding_5dp"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/icon_time_table"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_fees_details"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-
                     <LinearLayout
                         android:id="@+id/llNotification"
                         android:layout_width="match_parent"

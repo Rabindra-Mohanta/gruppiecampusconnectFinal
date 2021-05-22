@@ -357,6 +357,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     Intent intent = new Intent(getActivity(), AttendanceActivity.class);
                     intent.putExtra("isTeamAdmin", teamData.isTeamAdmin);
                     intent.putExtra("team_id", teamData.teamId);
+                    intent.putExtra("className", teamData.name);
                     intent.putExtra("group_id", teamData.groupId);
                     startActivity(intent);
                 }

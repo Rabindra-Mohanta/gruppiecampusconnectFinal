@@ -31,7 +31,7 @@ public class SubjectActivity2 extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_register_subject));
+        setTitle(getResources().getString(R.string.lbl_register_subject)+" - ("+getIntent().getStringExtra("className")+")");
 
 
         SubjectListFragment2 classListFragment=new SubjectListFragment2();
@@ -57,6 +57,7 @@ public class SubjectActivity2 extends BaseActivity {
             case R.id.menu_add_class:
                 Intent intent = new Intent(this, AddSubjectActivity2.class);
                 intent.putExtra("team_id",getIntent().getStringExtra("team_id"));
+                intent.putExtra("className",getIntent().getStringExtra("className"));
                 startActivity(intent);
                 return true;
              default:

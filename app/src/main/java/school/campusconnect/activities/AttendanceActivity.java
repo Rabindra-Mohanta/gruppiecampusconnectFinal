@@ -83,7 +83,7 @@ public class AttendanceActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Attendance");
+        setTitle("Attendance - ("+getIntent().getStringExtra("className")+")");
 
         init_();
 
@@ -107,6 +107,7 @@ public class AttendanceActivity extends BaseActivity {
             case R.id.menu_add_class:
                 Intent attendanceIntent = new Intent(this, AttendanceReportActivity.class);
                 attendanceIntent.putExtra("team_id", teamId);
+                attendanceIntent.putExtra("className", getIntent().getStringExtra("className"));
                 startActivity(attendanceIntent);
                 return true;
             default:

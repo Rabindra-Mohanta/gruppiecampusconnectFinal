@@ -1,5 +1,6 @@
 package school.campusconnect.datamodel.fees;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,43 +24,43 @@ public class StudentFeesRes extends BaseResponse {
     public static class StudentFees {
         @SerializedName("totalFee")
         @Expose
-        private String totalFee;
+        public String totalFee;
         @SerializedName("totalBalanceAmount")
         @Expose
-        private String totalBalanceAmount;
+        public String totalBalanceAmount;
         @SerializedName("totalAmountPaid")
         @Expose
-        private String totalAmountPaid;
+        public String totalAmountPaid;
         @SerializedName("teamId")
         @Expose
-        private String teamId;
+        public String teamId;
         @SerializedName("studentRollNumber")
         @Expose
-        private String studentRollNumber;
+        public String studentRollNumber;
         @SerializedName("studentName")
         @Expose
-        private String studentName;
+        public String studentName;
         @SerializedName("studentImage")
         @Expose
-        private String studentImage;
+        public String studentImage;
         @SerializedName("studentDbId")
         @Expose
-        private String studentDbId;
+        public String studentDbId;
         @SerializedName("groupId")
         @Expose
-        private String groupId;
+        public String groupId;
         @SerializedName("feeTitle")
         @Expose
-        private String feeTitle;
+        public String feeTitle;
         @SerializedName("feePaidDetails")
         @Expose
-        private ArrayList<FeePaidDetails> feePaidDetails;
+        public ArrayList<FeePaidDetails> feePaidDetails;
         @SerializedName("feeDetails")
         @Expose
-        private HashMap<String,String> feeDetails;
+        public HashMap<String,String> feeDetails;
         @SerializedName("dueDates")
         @Expose
-        private ArrayList<DueDates> dueDates;
+        public ArrayList<DueDates> dueDates;
 
         public String getTotalFee() {
             return totalFee;
@@ -164,54 +165,16 @@ public class StudentFeesRes extends BaseResponse {
         public void setDueDates(ArrayList<DueDates> dueDates) {
             this.dueDates = dueDates;
         }
-    }
-    public static class FeePaidDetails{
-        @SerializedName("date")
-        @Expose
-        private String date;
-        @SerializedName("amountPaid")
-        @Expose
-        private String amountPaid;
 
-        public String getDate() {
-            return date;
-        }
 
-        public void setDate(String date) {
-            this.date = date;
-        }
-
-        public String getAmountPaid() {
-            return amountPaid;
-        }
-
-        public void setAmountPaid(String amountPaid) {
-            this.amountPaid = amountPaid;
+        @Override
+        public String toString() {
+            return new Gson().toJson(this);
         }
     }
 
-    private static class DueDates {
-        @SerializedName("minimumAmount")
-        @Expose
-        private String minimumAmount;
-        @SerializedName("date")
-        @Expose
-        private String date;
-
-        public String getMinimumAmount() {
-            return minimumAmount;
-        }
-
-        public void setMinimumAmount(String minimumAmount) {
-            this.minimumAmount = minimumAmount;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public void setDate(String date) {
-            this.date = date;
-        }
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

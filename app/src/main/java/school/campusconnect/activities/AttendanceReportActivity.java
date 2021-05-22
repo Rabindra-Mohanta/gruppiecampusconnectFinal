@@ -26,8 +26,7 @@ public class AttendanceReportActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_attendance_report));
-
+        setTitle(getResources().getString(R.string.lbl_attendance_report)+" - ("+getIntent().getStringExtra("className")+")");
 
         AttendanceReportFragment attendanceReportFragment=new AttendanceReportFragment();
         attendanceReportFragment.setArguments(getIntent().getExtras());

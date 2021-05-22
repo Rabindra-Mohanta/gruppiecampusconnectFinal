@@ -43,6 +43,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
     public ProgressBar progressBar;
 
     String team_id;
+    String className;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         team_id=getArguments().getString("team_id");
+        className=getArguments().getString("className");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -164,6 +166,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
     private void onTreeClick(SubjectStaffResponse.SubjectData classData) {
         Intent intent = new Intent(getActivity(), AddSubjectActivity2.class);
         intent.putExtra("team_id",team_id);
+        intent.putExtra("className",className);
         intent.putExtra("is_edit",true);
         intent.putExtra("data",new Gson().toJson(classData));
         startActivity(intent);

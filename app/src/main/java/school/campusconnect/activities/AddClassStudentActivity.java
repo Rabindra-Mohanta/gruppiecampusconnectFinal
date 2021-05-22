@@ -183,7 +183,7 @@ public class AddClassStudentActivity extends BaseActivity {
         if (isEdit) {
             imageFragment = UploadImageFragment.newInstance(studentData.getImage(), true, true);
             btnAdd.setText("Update");
-            setTitle("Student Detail");
+            setTitle("Student Detail - ("+getIntent().getStringExtra("className")+")");
         } else {
             imageFragment = UploadImageFragment.newInstance(null, true, true);
         }

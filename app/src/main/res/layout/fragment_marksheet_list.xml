@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:gravity="center|right"
             android:paddingRight="@dimen/padding_10dp"
-            android:text="Select Mark Card >"
+            android:text="Mark Card >"
             android:textSize="@dimen/text_size_16sp" />
 
         <FrameLayout

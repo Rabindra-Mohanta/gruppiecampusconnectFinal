@@ -452,7 +452,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_class_subject">Class Subject</string>
     <string name="lbl_add_subject">Add Subject</string>
     <string name="lbl_select_subject">Select Subject</string>
-    <string name="lbl_select_mark_card">Select Mark Card</string>
+    <string name="lbl_select_mark_card">Mark Card</string>
     <string name="lbl_create_mark_card">Create Mark Card</string>
     <string name="lbl_create">Create</string>
     <string name="lbl_duration">Duration</string>
@@ -484,6 +484,17 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_not_completed_student">Not Completed Topic Students</string>
     <string name="lbl_completed_topic_student">Completed Topic Students</string>
     <string name="lbl_fees_details">Fees Details</string>
+    <string name="lbl_fees_title">Fees Title</string>
+    <string name="lbl_total_fees">Total Fees</string>
+    <string name="hint_amount">Amount</string>
+    <string name="lbl_due_date">Due Dates</string>
+    <string name="hint_min_amount">Minimum Amount</string>
+    <string name="due_date">Due Date</string>
+    <string name="lbl_PaidDates">Paid Dates</string>
+    <string name="lbl_total_paid">Amount Paid</string>
+    <string name="paid_date">Paid Date</string>
+    <string name="lbl_total_balance">Total Balance Amount</string>
+    <string name="lbl_total_amount_paid">Total Amount Paid</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

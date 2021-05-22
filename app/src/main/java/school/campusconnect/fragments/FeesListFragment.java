@@ -46,7 +46,9 @@ import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.activities.AddClassStudentActivity;
+import school.campusconnect.activities.FeesListActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.UpdateStudentFeesActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
@@ -68,9 +70,10 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
-    ClassResponse.ClassData classData;
     private String mGroupId;
     private String teamId;
+    private String role;
+    private String className;
     private ArrayList<StudentFeesRes.StudentFees> list;
 
     @Nullable
@@ -90,10 +93,10 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
     private void init() {
         if (getArguments() != null) {
-            classData = new Gson().fromJson(getArguments().getString("class_data"), ClassResponse.ClassData.class);
-            AppLog.e(TAG, "classData : " + classData);
             mGroupId = GroupDashboardActivityNew.groupId;
-            teamId = classData.getId();
+            teamId = getArguments().getString("team_id");
+            role = getArguments().getString("role");
+            className = getArguments().getString("title");
         }
     }
 
@@ -102,7 +105,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         super.onStart();
         LeafManager leafManager = new LeafManager();
         AppLog.e(TAG, "getStudents : ");
-        leafManager.getStudentFeesList(this, GroupDashboardActivityNew.groupId, classData.getId());
+        leafManager.getStudentFeesList(this, GroupDashboardActivityNew.groupId, teamId);
     }
 
     @Override
@@ -113,6 +116,12 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         AppLog.e(TAG, "StudentRes " + list);
 
         rvClass.setAdapter(new ClassesStudentAdapter(list));
+
+        if(list!=null && list.size()>0){
+            ((FeesListActivity)getActivity()).setOptionMenuName("Update Fees");
+        }else {
+            ((FeesListActivity)getActivity()).setOptionMenuName("Add Fees");
+        }
     }
 
     @Override
@@ -144,8 +153,8 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final StudentFeesRes.StudentFees item = list.get(position);
 
-           /* if (!TextUtils.isEmpty(item.getImage())) {
-                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50, 50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
+            if (!TextUtils.isEmpty(item.getStudentImage())) {
+                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getStudentImage())).resize(50, 50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
                         new Callback() {
                             @Override
                             public void onSuccess() {
@@ -154,7 +163,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
                             @Override
                             public void onError() {
-                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50, 50).into(holder.imgTeam, new Callback() {
+                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getStudentImage())).resize(50, 50).into(holder.imgTeam, new Callback() {
                                     @Override
                                     public void onSuccess() {
                                         holder.img_lead_default.setVisibility(View.INVISIBLE);
@@ -164,7 +173,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
                                     public void onError() {
                                         holder.img_lead_default.setVisibility(View.VISIBLE);
                                         TextDrawable drawable = TextDrawable.builder()
-                                                .buildRound(ImageUtil.getTextLetter(item.getName()), ImageUtil.getRandomColor(position));
+                                                .buildRound(ImageUtil.getTextLetter(item.getStudentName()), ImageUtil.getRandomColor(position));
                                         holder.img_lead_default.setImageDrawable(drawable);
                                         AppLog.e("Picasso", "Error : ");
                                     }
@@ -174,12 +183,16 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
             } else {
                 holder.img_lead_default.setVisibility(View.VISIBLE);
                 TextDrawable drawable = TextDrawable.builder()
-                        .buildRound(ImageUtil.getTextLetter(item.getName()), ImageUtil.getRandomColor(position));
+                        .buildRound(ImageUtil.getTextLetter(item.getStudentName()), ImageUtil.getRandomColor(position));
                 holder.img_lead_default.setImageDrawable(drawable);
             }
-*/
+            if("admin".equalsIgnoreCase(role)){
+                holder.img_Edit.setVisibility(View.VISIBLE);
+            }else {
+                holder.img_Edit.setVisibility(View.GONE);
+            }
             holder.txt_name.setText(item.getStudentName());
-            holder.txt_count.setVisibility(View.GONE);
+            holder.txt_count.setText("Total Balance Amount : "+(TextUtils.isEmpty(item.getTotalBalanceAmount())?"0":item.getTotalBalanceAmount()));
         }
 
         @Override
@@ -212,27 +225,40 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
             @Bind(R.id.txt_count)
             TextView txt_count;
 
+            @Bind(R.id.img_Edit)
+            ImageView img_Edit;
+
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        editStudent(list.get(getAdapterPosition()));
-                    }
-                });
+                if("admin".equalsIgnoreCase(role)){
+                    img_Edit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            editStudent(list.get(getAdapterPosition()));
+                        }
+                    });
+                }else {
+                    itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            editStudent(list.get(getAdapterPosition()));
+                        }
+                    });
+                }
             }
         }
     }
 
     private void editStudent(StudentFeesRes.StudentFees studentData) {
-        Intent intent = new Intent(getActivity(), AddClassStudentActivity.class);
+        Intent intent = new Intent(getActivity(), UpdateStudentFeesActivity.class);
         intent.putExtra("group_id", mGroupId);
         intent.putExtra("team_id", teamId);
-        intent.putExtra("isEdit", true);
-        intent.putExtra("student_data", new Gson().toJson(studentData));
+        intent.putExtra("title", studentData.studentName+" - ("+className+")");
+        intent.putExtra("role", role);
+        intent.putExtra("StudentFees", new Gson().toJson(studentData));
         startActivity(intent);
     }
 }

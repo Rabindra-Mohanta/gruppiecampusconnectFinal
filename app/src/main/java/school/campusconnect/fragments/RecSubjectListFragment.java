@@ -41,6 +41,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
     public ProgressBar progressBar;
 
     String team_id;
+    String className;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         team_id=getArguments().getString("team_id");
+        className=getArguments().getString("title");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -162,6 +164,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
     private void onTreeClick(SubjectStaffResponse.SubjectData classData) {
         Intent intent = new Intent(getActivity(), ChapterActivity.class);
         intent.putExtra("team_id",team_id);
+        intent.putExtra("className",className);
         intent.putExtra("subject_id",classData.subjectId);
         intent.putExtra("subject_name",classData.name);
         intent.putExtra("canPost",classData.canPost);

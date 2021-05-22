@@ -120,9 +120,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.llBusRegister)
     LinearLayout llBusRegister;
 
-    @Bind(R.id.llFees)
-    LinearLayout llFees;
-
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
 
@@ -393,7 +390,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         createTabIcons();
     }
 
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople,R.id.llSubject,R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass,R.id.llEBook, R.id.llBusRegister,R.id.llFees, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople,R.id.llSubject,R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass,R.id.llEBook, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -529,13 +526,6 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.llSubject2:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, ClassActivity2.class));
-                } else {
-                    showNoNetworkMsg();
-                }
-                break;
-            case R.id.llFees:
-                if (isConnectionAvailable()) {
-                    startActivity(new Intent(this, FeesClassActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -683,7 +673,6 @@ public class GroupDashboardActivityNew extends BaseActivity
             llStaffReg.setVisibility(View.VISIBLE);
             llAttendanceReport.setVisibility(View.VISIBLE);
             llBusRegister.setVisibility(View.VISIBLE);
-            llFees.setVisibility(View.VISIBLE);
         }
     }
 
@@ -918,6 +907,29 @@ public class GroupDashboardActivityNew extends BaseActivity
             Intent intent = new Intent(this, TimeTableClassActivity2.class);
             intent.putExtra("role", group.role);
             startActivity(intent);
+        } else if (group.type.equals("Fees")) {
+
+            if ("admin".equalsIgnoreCase(group.role)){
+                Intent intent = new Intent(this, FeesClassActivity.class);
+                intent.putExtra("title",group.name);
+                intent.putExtra("role", group.role);
+                startActivity(intent);
+            }else {
+                if(group.count==1){
+                    Intent intent = new Intent(this, FeesListActivity.class);
+                    intent.putExtra("group_id",groupId);
+                    intent.putExtra("team_id",group.details.teamId);
+                    intent.putExtra("title",group.details.studentName);
+                    intent.putExtra("role",group.role);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(this, FeesClassActivity.class);
+                    intent.putExtra("title",group.name);
+                    intent.putExtra("role", group.role);
+                    startActivity(intent);
+                }
+            }
+
         } else if (group.type.equals("Chat")) {
             Intent intent = new Intent(this, ChatActivity.class);
             intent.putExtra("role",group.role);
@@ -957,6 +969,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     Intent intent = new Intent(this,AttendanceActivity.class);
                     intent.putExtra("group_id",groupId);
                     intent.putExtra("team_id",group.details.teamId);
+                    intent.putExtra("className",group.details.teamName);
                     startActivity(intent);
                 }
 
@@ -993,6 +1006,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             if ("teacher".equalsIgnoreCase(group.role) && group.count==1) {
                 Intent intent = new Intent(this, MarksheetActivity.class);
                 intent.putExtra("team_id", group.details.teamId);
+                intent.putExtra("className", group.details.teamName);
                 intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
                 startActivity(intent);
             }
@@ -1012,6 +1026,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 Intent intent = new Intent(this,MarkSheetListActivity.class);
                 intent.putExtra("group_id",groupId);
                 intent.putExtra("team_id",group.details.teamId);
+                intent.putExtra("className",group.details.teamName);
                 intent.putExtra("user_id",group.details.userId);
                 intent.putExtra("name",group.details.studentName);
                 intent.putExtra("roll_no",group.details.rollNumber);

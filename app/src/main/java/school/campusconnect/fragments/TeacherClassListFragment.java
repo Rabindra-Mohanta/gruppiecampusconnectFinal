@@ -220,12 +220,14 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
                 Intent intent = new Intent(getActivity(), AttendancePareSchool.class);
                 intent.putExtra("isTeamAdmin", true);
                 intent.putExtra("team_id", classData.getId());
+                intent.putExtra("className", classData.className);
                 intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
                 startActivity(intent);
             }else {
                 Intent intent = new Intent(getActivity(), AttendanceActivity.class);
                 intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
                 intent.putExtra("team_id",classData.getId());
+                intent.putExtra("className",classData.className);
                 startActivity(intent);
             }
         }else {
@@ -234,6 +236,7 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
             Intent intent = new Intent(getActivity(), MarksheetActivity.class);
             intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
             intent.putExtra("team_id",classData.getId());
+            intent.putExtra("className",classData.className);
             startActivity(intent);
         }
     }

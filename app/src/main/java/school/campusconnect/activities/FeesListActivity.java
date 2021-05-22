@@ -27,7 +27,8 @@ public class FeesListActivity extends BaseActivity {
 
     private String mGroupId;
     private String teamId;
-    ClassResponse.ClassData classData;
+    private String role;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +53,9 @@ public class FeesListActivity extends BaseActivity {
 
     private void init() {
         if (getIntent().getExtras() != null) {
-            classData = new Gson().fromJson(getIntent().getStringExtra("class_data"), ClassResponse.ClassData.class);
             mGroupId = GroupDashboardActivityNew.groupId;
-            teamId = classData.getId();
-
+            teamId = getIntent().getStringExtra("team_id");
+            role = getIntent().getStringExtra("role");
         }
 
     }
@@ -67,21 +67,35 @@ public class FeesListActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_fees, menu);
+        if("admin".equalsIgnoreCase(role)){
+            getMenuInflater().inflate(R.menu.menu_fees, menu);
+        }
+        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menuAdd) {
-//            Intent intent = new Intent(this, AddClassStudentActivity.class);
-//            intent.putExtra("group_id", mGroupId);
-//            intent.putExtra("team_id", teamId);
-//            startActivity(intent);
+            Intent intent = new Intent(this, AddFeesActivity.class);
+            intent.putExtra("group_id", mGroupId);
+            intent.putExtra("team_id", teamId);
+            if(menu!=null){
+                intent.putExtra("title", menu.findItem(R.id.menuAdd).getTitle()+" - "+getIntent().getStringExtra("title"));
+            }else {
+                intent.putExtra("title", "Add/Update Fees");
+            }
+
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
 
+    public void setOptionMenuName(String menuName) {
+        if(menu!=null){
+            menu.findItem(R.id.menuAdd).setTitle(menuName);
+        }
+    }
 }
