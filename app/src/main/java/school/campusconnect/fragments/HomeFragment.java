@@ -160,7 +160,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             final GroupItem item = list.get(position);
 
             if (!TextUtils.isEmpty(item.getImage())) {
-                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgGroupNew,
+                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(200,200).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgGroupNew,
                         new Callback() {
                             @Override
                             public void onSuccess() {
@@ -169,7 +169,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
                             @Override
                             public void onError() {
-                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50,50).into(holder.imgGroupNew, new Callback() {
+                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(200,200).into(holder.imgGroupNew, new Callback() {
                                     @Override
                                     public void onSuccess() {
                                         holder.imgGroupNewDefault.setVisibility(View.INVISIBLE);

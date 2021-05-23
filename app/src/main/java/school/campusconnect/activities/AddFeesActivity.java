@@ -299,7 +299,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
         }
 
         if(feedDetailAmount>total){
-            Toast.makeText(this, "Fees Detail Amount should not greater than total fees amount", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Fees Detail Amount should not be greater than total fees amount", Toast.LENGTH_SHORT).show();
             return false;
         }
 

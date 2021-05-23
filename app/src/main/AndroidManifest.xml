@@ -563,6 +563,9 @@
         <activity
             android:name=".activities.UpdateStudentFeesActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.UpdateStudentFeesEditActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

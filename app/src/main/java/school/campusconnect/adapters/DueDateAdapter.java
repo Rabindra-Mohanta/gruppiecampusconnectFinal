@@ -46,6 +46,9 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
     }
 
     public void addList(ArrayList<DueDates> list) {
+        if(list==null)
+            return;
+
         this.list.clear();
         this.list.addAll(list);
         notifyDataSetChanged();
@@ -66,7 +69,9 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
 
         if("admin".equalsIgnoreCase(role) && isEdit){
             holder.chkCompleted.setVisibility(View.VISIBLE);
+            holder.imgDelete.setVisibility(View.GONE);
         }else {
+            holder.imgDelete.setVisibility(View.VISIBLE);
             holder.chkCompleted.setVisibility(View.GONE);
         }
 

@@ -35,6 +35,9 @@ public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.Vi
     }
 
     public void addList(ArrayList<FeesDetailTemp> list) {
+        if(list==null)
+            return;
+
         this.list.clear();
         this.list.addAll(list);
         notifyDataSetChanged();

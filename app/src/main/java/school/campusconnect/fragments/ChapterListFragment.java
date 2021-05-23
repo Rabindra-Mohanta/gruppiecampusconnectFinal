@@ -88,13 +88,13 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         subject_name = getArguments().getString("subject_name");
         canPost = getArguments().getBoolean("canPost");
 
-        progressBar.setVisibility(View.VISIBLE);
-
-        if (canPost) {
+        if(canPost){
             imgMore.setVisibility(View.VISIBLE);
-        } else {
+        }else {
             imgMore.setVisibility(View.GONE);
         }
+
+        progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -108,27 +108,13 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         imgMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getContext(), v);
-                popupMenu.inflate(R.menu.more_chapter_menu);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.menu_add) {
-                            addNewTopic();
-                            return true;
-                        } else if (item.getItemId() == R.id.menu_delete) {
-                            onDeleteChapterClick();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
+                onDeleteChapterClick();
             }
         });
+
     }
 
-    private void addNewTopic() {
+   /* private void addNewTopic() {
         Intent intent = new Intent(getActivity(), AddChapterPostActivity.class);
         intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
         intent.putExtra("team_id", team_id);
@@ -138,7 +124,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         intent.putExtra("chapter_id", chapterList.get(spChapter.getSelectedItemPosition()).chapterId);
         intent.putExtra("chapter_name", chapterList.get(spChapter.getSelectedItemPosition()).chapterName);
         startActivity(intent);
-    }
+    }*/
 
     private void getChapters() {
         LeafManager leafManager = new LeafManager();
@@ -245,7 +231,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     public void onDeleteClick(ChapterRes.TopicData item, int adapterPosition) {
         currentItem = item;
         this.adapterPosition = adapterPosition;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this topic?", this);
     }
 
     @Override
@@ -266,7 +252,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     public void onDeleteChapterClick() {
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this chapter?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isConnectionAvailable()) {

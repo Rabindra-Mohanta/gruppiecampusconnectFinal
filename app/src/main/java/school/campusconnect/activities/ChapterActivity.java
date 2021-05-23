@@ -26,7 +26,6 @@ public class ChapterActivity extends BaseActivity {
 
     boolean canPost;
     String team_id;
-    String className;
     String subject_id;
     String subject_name;
     @Override

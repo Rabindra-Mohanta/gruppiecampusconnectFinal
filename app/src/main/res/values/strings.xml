@@ -495,6 +495,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="paid_date">Paid Date</string>
     <string name="lbl_total_balance">Total Balance Amount</string>
     <string name="lbl_total_amount_paid">Total Amount Paid</string>
+    <string name="lbl_enter_chapter_name">Enter chapter name</string>
+    <string name="lbl_completed">Completed</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

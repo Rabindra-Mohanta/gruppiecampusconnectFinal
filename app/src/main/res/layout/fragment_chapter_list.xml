@@ -29,8 +29,8 @@
             android:id="@+id/imgMore"
             android:layout_width="25dp"
             android:visibility="gone"
-            android:src="@drawable/more_vert"
-            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_delete_black"
+            android:tint="@android:color/holo_red_dark"
             android:layout_marginStart="@dimen/padding_10dp"
             android:layout_gravity="right|center"
             android:layout_height="25dp"/>

@@ -63,28 +63,6 @@
                             android:layout_height="@dimen/login_button_height"
                             android:layout_marginTop="@dimen/padding_5dp"
                             android:digits="1234567890"
-                            android:focusable="false"
-                            android:inputType="numberDecimal" />
-
-                        <TextView
-                            style="@style/LabelNormal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/padding_15dp"
-                            android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_total_amount_paid"
-                            android:textAllCaps="true"
-                            android:textColor="@color/colorPrimary" />
-
-                        <EditText
-                            android:id="@+id/etTotalPaid"
-                            style="@style/RegEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/login_button_height"
-                            android:layout_marginTop="@dimen/padding_5dp"
-                            android:layout_marginBottom="@dimen/padding_5dp"
-                            android:digits="1234567890"
-                            android:enabled="false"
                             android:inputType="numberDecimal" />
 
 
@@ -94,6 +72,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding_15dp"
                             android:paddingLeft="@dimen/padding_10dp"
+                            android:visibility="gone"
                             android:text="@string/lbl_total_balance"
                             android:textAllCaps="true"
                             android:textColor="@color/colorPrimary" />
@@ -105,9 +84,32 @@
                             android:layout_height="@dimen/login_button_height"
                             android:layout_marginTop="@dimen/padding_5dp"
                             android:digits="1234567890"
+                            android:visibility="gone"
                             android:enabled="false"
                             android:inputType="numberDecimal" />
 
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding_15dp"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:visibility="gone"
+                            android:text="@string/lbl_total_amount_paid"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etTotalPaid"
+                            style="@style/RegEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/login_button_height"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:visibility="gone"
+                            android:layout_marginBottom="@dimen/padding_5dp"
+                            android:digits="1234567890"
+                            android:enabled="false"
+                            android:inputType="numberDecimal" />
 
                         <TextView
                             style="@style/LabelNormal"
@@ -117,19 +119,16 @@
                             android:paddingLeft="@dimen/padding_10dp"
                             android:text="@string/lbl_fees_details"
                             android:textAllCaps="true"
-                            android:visibility="gone"
                             android:textColor="@color/colorPrimary" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvFeesDetails"
-                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/llFees"
-                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/padding_10dp"
@@ -180,17 +179,20 @@
                             android:layout_marginTop="@dimen/padding_15dp"
                             android:paddingLeft="@dimen/padding_10dp"
                             android:text="@string/lbl_total_paid"
+                            android:visibility="gone"
                             android:textAllCaps="true"
                             android:textColor="@color/colorPrimary" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvPaid"
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/llPaid"
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/padding_10dp"
@@ -238,36 +240,20 @@
                         </androidx.cardview.widget.CardView>
 
 
-                        <LinearLayout
+                        <TextView
+                            style="@style/LabelNormal"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding_15dp"
                             android:paddingLeft="@dimen/padding_10dp"
-                            android:paddingRight="@dimen/padding_10dp"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                style="@style/LabelNormal"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
-                                android:text="@string/lbl_due_date"
-                                android:textAllCaps="true"
-                                android:textColor="@color/colorPrimary" />
-                            <TextView
-                                style="@style/LabelNormal"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:gravity="right"
-                                android:layout_height="wrap_content"
-                                android:text="@string/lbl_completed"
-                                android:textColor="@color/colorPrimary" />
-                        </LinearLayout>
+                            android:text="@string/lbl_due_date"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvDueDates"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/padding_30dp"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                         <androidx.cardview.widget.CardView
@@ -276,7 +262,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/padding_10dp"
                             android:layout_marginTop="@dimen/padding_5dp"
-                            android:visibility="gone"
                             android:layout_marginRight="@dimen/padding_10dp"
                             android:layout_marginBottom="@dimen/padding_30dp">
 

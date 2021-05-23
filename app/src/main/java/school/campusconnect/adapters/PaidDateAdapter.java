@@ -31,6 +31,9 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
     }
 
     public void addList(ArrayList<FeePaidDetails> list) {
+        if(list==null)
+            return;
+
         this.list.clear();
         this.list.addAll(list);
         notifyDataSetChanged();

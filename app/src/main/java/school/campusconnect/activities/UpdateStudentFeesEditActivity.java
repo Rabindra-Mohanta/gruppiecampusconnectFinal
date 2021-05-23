@@ -2,7 +2,6 @@ package school.campusconnect.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.googlecode.mp4parser.authoring.Edit;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,13 +40,12 @@ import school.campusconnect.datamodel.GroupValidationError;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.FeePaidDetails;
 import school.campusconnect.datamodel.fees.FeesDetailTemp;
-import school.campusconnect.datamodel.fees.FeesRes;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.fees.UpdateStudentFees;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 
-public class UpdateStudentFeesActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
+public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
 
     private static final String TAG = "CreateTeamActivity";
 
@@ -125,7 +121,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fees_student_update);
+        setContentView(R.layout.activity_fees_student_update_edit);
 
         init();
 
@@ -135,25 +131,30 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        if ("admin".equalsIgnoreCase(role)) {
-            getMenuInflater().inflate(R.menu.menu_fees_edit, menu);
+      /*  if (isEdit) {
+            getMenuInflater().inflate(R.menu.menu_edit, menu);
         }
+*/
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menuEdit) {
-            Intent intent = new Intent(this, UpdateStudentFeesEditActivity.class);
-            intent.putExtra("group_id", groupId);
-            intent.putExtra("team_id", teamId);
-            intent.putExtra("title", getIntent().getStringExtra("title"));
-            intent.putExtra("role", role);
-            intent.putExtra("StudentFees", new Gson().toJson(studentFees));
-            startActivity(intent);
-            finish();
+      /*  if (item.getItemId() == R.id.menuDelete) {
+            if (!isConnectionAvailable()) {
+                showNoNetworkMsg();
+                return true;
+            }
+
+            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this Subjects.?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    leafManager.deleteSubjects(AddMarkCardActivity.this, GroupDashboardActivityNew.groupId, subjectData.getSubjectId());
+                }
+            });
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -178,18 +179,18 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             studentFees = new Gson().fromJson(getIntent().getStringExtra("StudentFees"), StudentFeesRes.StudentFees.class);
         }
 
-        dueDateAdapter = new DueDateAdapter(role,true);
+        dueDateAdapter = new DueDateAdapter(role,false);
         rvDueDates.setAdapter(dueDateAdapter);
 
         imgAddFees.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etFeesType.getText().toString().trim())) {
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Fees Type", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesEditActivity.this, "Please Enter Fees Type", Toast.LENGTH_SHORT).show();
                     etFeesType.requestFocus();
                 } else if (TextUtils.isEmpty(etFeesTypeVal.getText().toString().trim())) {
                     etFeesTypeVal.requestFocus();
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Fees Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesEditActivity.this, "Please Enter Fees Amount", Toast.LENGTH_SHORT).show();
                 } else {
                     feesAdapter.add(new FeesDetailTemp(etFeesType.getText().toString(), etFeesTypeVal.getText().toString()));
                     hide_keyboard(view);
@@ -203,11 +204,11 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etDate.getText().toString().trim())) {
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Select Due Date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesEditActivity.this, "Please Select Due Date", Toast.LENGTH_SHORT).show();
                     etDate.requestFocus();
                 } else if (TextUtils.isEmpty(etDateAmount.getText().toString().trim())) {
                     etDateAmount.requestFocus();
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Due Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesEditActivity.this, "Please Enter Due Amount", Toast.LENGTH_SHORT).show();
                 } else {
                     dueDateAdapter.add(new DueDates(etDate.getText().toString(), etDateAmount.getText().toString()));
                     hide_keyboard(view);
@@ -221,11 +222,11 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etDatePaid.getText().toString().trim())) {
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Select Paid Date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesEditActivity.this, "Please Select Paid Date", Toast.LENGTH_SHORT).show();
                     etDatePaid.requestFocus();
                 } else if (TextUtils.isEmpty(etPaidAmount.getText().toString().trim())) {
                     etPaidAmount.requestFocus();
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Paid Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesEditActivity.this, "Please Enter Paid Amount", Toast.LENGTH_SHORT).show();
                 } else {
                     paidDateAdapter.add(new FeePaidDetails(etDatePaid.getText().toString(), etPaidAmount.getText().toString()));
                     hide_keyboard(view);
@@ -267,12 +268,12 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
 
                     } else {
                         if (TextUtils.isEmpty(etDatePaid.getText().toString().trim())) {
-                            Toast.makeText(UpdateStudentFeesActivity.this, "Please Select Paid Date", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpdateStudentFeesEditActivity.this, "Please Select Paid Date", Toast.LENGTH_SHORT).show();
                             etDatePaid.requestFocus();
                             return;
                         } else if (TextUtils.isEmpty(etPaidAmount.getText().toString().trim())) {
                             etPaidAmount.requestFocus();
-                            Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Due Paid Amount", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpdateStudentFeesEditActivity.this, "Please Enter Due Paid Amount", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
