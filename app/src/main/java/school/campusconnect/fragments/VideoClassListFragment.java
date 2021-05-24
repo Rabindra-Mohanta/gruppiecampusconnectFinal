@@ -55,6 +55,7 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBAlterDialog;
+import us.zoom.sdk.FreeMeetingNeedUpgradeType;
 import us.zoom.sdk.InMeetingAudioController;
 import us.zoom.sdk.InMeetingChatMessage;
 import us.zoom.sdk.InMeetingEventHandler;
@@ -542,7 +543,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             videoClassClicked = true;
             startMeeting(classData);
 
-            ((VideoClassActivity) getActivity()).startRecordingScreen();
+          //  ((VideoClassActivity) getActivity()).startRecordingScreen();
         }
     }
 
@@ -551,7 +552,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     {
             AppLog.e(TAG , "onNameClick called ");
 
-            ((VideoClassActivity) getActivity()).startRecordingScreen();
+          //  ((VideoClassActivity) getActivity()).startRecordingScreen();
             return;
 
     }
@@ -750,6 +751,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         isSentNotification = false;
         MeetingService meetingService = ZoomSDK.getInstance().getMeetingService();
 
+
+
         ZoomSDK.getInstance().addAuthenticationListener(new ZoomSDKAuthenticationListener() {
             @Override
             public void onZoomSDKLoginResult(long result) {
@@ -777,7 +780,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                                 if(getActivity() !=null)
                                 {
-                                    ((VideoClassActivity)getActivity()).stopRecording();
+                                   // ((VideoClassActivity)getActivity()).stopRecording();
                                 }
 
 
@@ -809,9 +812,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             @Override
             public void onZoomAuthIdentityExpired() {
+
                 AppLog.e(TAG , "onZoomAuthIdentityExpired");
 
             }
+
+
+
 
          /*   @Override
             public void onZoomAuthIdentityExpired() {
@@ -961,6 +968,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         }
 
         @Override
+        public void onUserVideoStatusChanged(long l, VideoStatus videoStatus) {
+
+        }
+
+        @Override
         public void onUserNetworkQualityChanged(long l) {
 
         }
@@ -972,6 +984,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         @Override
         public void onUserAudioStatusChanged(long l) {
+
+        }
+
+        @Override
+        public void onUserAudioStatusChanged(long l, AudioStatus audioStatus) {
 
         }
 
@@ -1032,6 +1049,41 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         @Override
         public void onSinkAllowAttendeeChatNotification(int i) {
+
+        }
+
+        @Override
+        public void onUserNameChanged(long l, String s) {
+
+        }
+
+        @Override
+        public void onFreeMeetingNeedToUpgrade(FreeMeetingNeedUpgradeType freeMeetingNeedUpgradeType, String s) {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToGiftFreeTrialStart() {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToGiftFreeTrialStop() {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToProMeeting() {
+
+        }
+
+        @Override
+        public void onClosedCaptionReceived(String s) {
+
+        }
+
+        @Override
+        public void onRecordingStatus(RecordingStatus recordingStatus) {
 
         }
     };
