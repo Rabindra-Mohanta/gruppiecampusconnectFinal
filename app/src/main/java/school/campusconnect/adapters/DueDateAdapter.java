@@ -1,6 +1,7 @@
 package school.campusconnect.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.FeesDetailTemp;
+import school.campusconnect.utils.AppDialog;
 
 public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHolder> {
     private Context mContext;
@@ -28,13 +30,14 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
 
     String role="admin";
     boolean isEdit=false;
-
+    boolean isFromUpdate = false;
     public DueDateAdapter() {
     }
 
-    public DueDateAdapter(String role, boolean isEdit) {
+    public DueDateAdapter(String role, boolean isEdit,boolean isFromUpdate) {
         this.role = role;
         this.isEdit = isEdit;
+        this.isFromUpdate = isFromUpdate;
     }
 
     @NonNull
@@ -121,9 +124,23 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    list.remove(getAdapterPosition());
-                    notifyDataSetChanged();
-                    //showAddSubjectDialog();
+                    if(isFromUpdate){
+                        AppDialog.showConfirmDialog(mContext, "Are you sure you want to delete?", new AppDialog.AppDialogListener() {
+                            @Override
+                            public void okPositiveClick(DialogInterface dialog) {
+                                list.remove(getAdapterPosition());
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void okCancelClick(DialogInterface dialog) {
+
+                            }
+                        });
+                    }else {
+                        list.remove(getAdapterPosition());
+                        notifyDataSetChanged();
+                    }
                 }
             });
 

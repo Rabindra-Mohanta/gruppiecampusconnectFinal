@@ -112,9 +112,9 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
     private String role;
     private String title;
 
-    FeesDetailAdapter feesAdapter = new FeesDetailAdapter();
+    FeesDetailAdapter feesAdapter = new FeesDetailAdapter(true);
     DueDateAdapter dueDateAdapter ;
-    PaidDateAdapter paidDateAdapter = new PaidDateAdapter();
+    PaidDateAdapter paidDateAdapter = new PaidDateAdapter(false);
     StudentFeesRes.StudentFees studentFees;
     UpdateStudentFees updateStudentFees;
 
@@ -167,7 +167,7 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getIntent().getStringExtra("title"));
+        setTitle("Edit fee for "+getIntent().getStringExtra("title"));
         leafManager = new LeafManager();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -179,7 +179,7 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
             studentFees = new Gson().fromJson(getIntent().getStringExtra("StudentFees"), StudentFeesRes.StudentFees.class);
         }
 
-        dueDateAdapter = new DueDateAdapter(role,false);
+        dueDateAdapter = new DueDateAdapter(role,false,true);
         rvDueDates.setAdapter(dueDateAdapter);
 
         imgAddFees.setOnClickListener(new View.OnClickListener() {
@@ -362,7 +362,10 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
     }
 
         private boolean validateFees () {
-
+            if (updateStudentFees.dueDates==null || updateStudentFees.dueDates.size() == 0) {
+                Toast.makeText(this, "Please add at least one due date", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             int total = Integer.parseInt(etTotalFees.getText().toString());
 
             int feedDetailAmount = 0;
@@ -376,15 +379,13 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
                 return false;
             }
 
-            if(updateStudentFees.paidDates!=null){
-                int paidFees = 0;
-                for (int i = 0; i < updateStudentFees.paidDates.size(); i++) {
-                    paidFees = paidFees + Integer.parseInt(updateStudentFees.paidDates.get(i).getAmountPaid());
-                }
-                if (paidFees > total) {
-                    Toast.makeText(this, "Paid Amount should not more than Total Fees", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
+            int dueFees = 0;
+            for (int i=0;i<updateStudentFees.dueDates.size();i++){
+                dueFees = dueFees + Integer.parseInt(updateStudentFees.dueDates.get(i).getMinimumAmount());
+            }
+            if(dueFees!=total){
+                Toast.makeText(this, "Total Fees and Due Dates Amounts should be same", Toast.LENGTH_SHORT).show();
+                return false;
             }
 
             return true;

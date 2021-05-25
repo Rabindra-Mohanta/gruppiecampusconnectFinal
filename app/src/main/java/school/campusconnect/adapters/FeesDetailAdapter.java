@@ -1,6 +1,7 @@
 package school.campusconnect.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,10 +22,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.fees.FeesDetailTemp;
+import school.campusconnect.utils.AppDialog;
 
 public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.ViewHolder> {
     private Context mContext;
     ArrayList<FeesDetailTemp> list = new ArrayList<>();
+    boolean isFromUpdate =false;
+
+    public FeesDetailAdapter(boolean isFromUpdate) {
+        this.isFromUpdate = isFromUpdate;
+    }
 
     @NonNull
     @Override
@@ -87,11 +94,26 @@ public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.Vi
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    list.remove(getAdapterPosition());
-                    notifyDataSetChanged();
-                    //showAddSubjectDialog();
+                    if(isFromUpdate){
+                        AppDialog.showConfirmDialog(mContext, "Are you sure you want to delete?", new AppDialog.AppDialogListener() {
+                            @Override
+                            public void okPositiveClick(DialogInterface dialog) {
+                                list.remove(getAdapterPosition());
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void okCancelClick(DialogInterface dialog) {
+
+                            }
+                        });
+                    }else {
+                        list.remove(getAdapterPosition());
+                        notifyDataSetChanged();
+                    }
                 }
             });
+
 
             etFeesType.addTextChangedListener(new TextWatcher() {
                 @Override

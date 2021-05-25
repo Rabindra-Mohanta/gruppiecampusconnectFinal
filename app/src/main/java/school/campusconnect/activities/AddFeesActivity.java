@@ -92,7 +92,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
     private String groupId;
     private String teamId;
 
-    FeesDetailAdapter feesAdapter = new FeesDetailAdapter();
+    FeesDetailAdapter feesAdapter = new FeesDetailAdapter(false);
     DueDateAdapter dueDateAdapter = new DueDateAdapter();
     FeesRes.Fees feesReq = new FeesRes.Fees();
 
@@ -317,10 +317,10 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
 
     public boolean isValid() {
         boolean valid = true;
-        if (!isValueValidOnly(etName)) {
+       /* if (!isValueValidOnly(etName)) {
             Toast.makeText(this, "Please add Title", Toast.LENGTH_SHORT).show();
             valid = false;
-        }else if (!isValueValidOnly(etTotalFees)) {
+        }else*/ if (!isValueValidOnly(etTotalFees)) {
             Toast.makeText(this, "Please add total fees", Toast.LENGTH_SHORT).show();
             valid = false;
         }

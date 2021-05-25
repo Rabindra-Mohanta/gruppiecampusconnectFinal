@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_delete_chapter"
+        android:title="Delete Chapter" />
+    <item
         android:id="@+id/menu_add_post"
         android:icon="@drawable/posticon"
         android:title="Add Chapter"
         app:showAsAction="always" />
+
 </menu>

@@ -1,6 +1,7 @@
 package school.campusconnect.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,16 @@ import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.FeePaidDetails;
+import school.campusconnect.utils.AppDialog;
 
 public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHolder> {
     private Context mContext;
     ArrayList<FeePaidDetails> list = new ArrayList<>();
+    boolean isFromUpdate=false;
+
+    public PaidDateAdapter(boolean isFromUpdate) {
+        this.isFromUpdate = isFromUpdate;
+    }
 
     @NonNull
     @Override
@@ -74,9 +81,23 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    list.remove(getAdapterPosition());
-                    notifyDataSetChanged();
-                    //showAddSubjectDialog();
+                    if(isFromUpdate){
+                        AppDialog.showConfirmDialog(mContext, "Are you sure you want to delete?", new AppDialog.AppDialogListener() {
+                            @Override
+                            public void okPositiveClick(DialogInterface dialog) {
+                                list.remove(getAdapterPosition());
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void okCancelClick(DialogInterface dialog) {
+
+                            }
+                        });
+                    }else {
+                        list.remove(getAdapterPosition());
+                        notifyDataSetChanged();
+                    }
                 }
             });
 

@@ -75,6 +75,11 @@ public class ChapterActivity extends BaseActivity {
             startActivity(intent);
             return true;
         }
+        if (item.getItemId() == R.id.menu_delete_chapter) {
+            ((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).onDeleteChapterClick();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

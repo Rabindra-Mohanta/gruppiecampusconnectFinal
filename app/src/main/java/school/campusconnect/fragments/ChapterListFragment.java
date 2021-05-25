@@ -64,8 +64,6 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     @Bind(R.id.spChapter)
     public Spinner spChapter;
 
-    @Bind(R.id.imgMore)
-    public ImageView imgMore;
 
     String team_id;
     String subject_id;
@@ -88,12 +86,6 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         subject_name = getArguments().getString("subject_name");
         canPost = getArguments().getBoolean("canPost");
 
-        if(canPost){
-            imgMore.setVisibility(View.VISIBLE);
-        }else {
-            imgMore.setVisibility(View.GONE);
-        }
-
         progressBar.setVisibility(View.VISIBLE);
 
         return view;
@@ -105,12 +97,6 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
         getChapters();
 
-        imgMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDeleteChapterClick();
-            }
-        });
 
     }
 

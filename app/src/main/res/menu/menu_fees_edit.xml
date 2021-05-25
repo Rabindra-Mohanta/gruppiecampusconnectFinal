@@ -2,7 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menuEdit"
-        android:title="Edit"
-        android:icon="@drawable/ic_edit_white"
-        app:showAsAction="ifRoom"/>
+        android:title="Edit Fees"/>
 </menu>

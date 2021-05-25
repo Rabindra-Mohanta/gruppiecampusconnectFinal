@@ -116,9 +116,9 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
     private String role;
     private String title;
 
-    FeesDetailAdapter feesAdapter = new FeesDetailAdapter();
+    FeesDetailAdapter feesAdapter = new FeesDetailAdapter(true);
     DueDateAdapter dueDateAdapter ;
-    PaidDateAdapter paidDateAdapter = new PaidDateAdapter();
+    PaidDateAdapter paidDateAdapter = new PaidDateAdapter(true);
     StudentFeesRes.StudentFees studentFees;
     UpdateStudentFees updateStudentFees;
 
@@ -178,7 +178,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             studentFees = new Gson().fromJson(getIntent().getStringExtra("StudentFees"), StudentFeesRes.StudentFees.class);
         }
 
-        dueDateAdapter = new DueDateAdapter(role,true);
+        dueDateAdapter = new DueDateAdapter(role,true,true);
         rvDueDates.setAdapter(dueDateAdapter);
 
         imgAddFees.setOnClickListener(new View.OnClickListener() {
