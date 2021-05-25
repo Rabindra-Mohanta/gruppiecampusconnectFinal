@@ -178,7 +178,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             studentFees = new Gson().fromJson(getIntent().getStringExtra("StudentFees"), StudentFeesRes.StudentFees.class);
         }
 
-        dueDateAdapter = new DueDateAdapter(role,true,true);
+        dueDateAdapter = new DueDateAdapter(role,true,false);
         rvDueDates.setAdapter(dueDateAdapter);
 
         imgAddFees.setOnClickListener(new View.OnClickListener() {
@@ -195,6 +195,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
                     hide_keyboard(view);
                     etFeesType.setText("");
                     etFeesTypeVal.setText("");
+                    etFeesTypeVal.clearFocus();
                 }
             }
         });
@@ -213,6 +214,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
                     hide_keyboard(view);
                     etDate.setText("");
                     etDateAmount.setText("");
+                    etDateAmount.clearFocus();
                 }
             }
         });
@@ -231,6 +233,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
                     hide_keyboard(view);
                     etDatePaid.setText("");
                     etPaidAmount.setText("");
+                    etPaidAmount.clearFocus();
                 }
             }
         });

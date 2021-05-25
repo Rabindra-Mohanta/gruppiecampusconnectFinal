@@ -31,7 +31,6 @@
             android:hint="@string/hint_amount"
             android:maxLength="7"
             android:gravity="center"
-            android:focusable="false"
             android:textSize="@dimen/text_size_13sp"
             android:inputType="numberDecimal"
             android:digits="1234567890"
@@ -40,11 +39,11 @@
 
         <ImageView
             android:id="@+id/imgDelete"
-            android:tint="@android:color/holo_red_dark"
             android:layout_width="@dimen/padding_30dp"
             android:layout_height="@dimen/padding_30dp"
             android:padding="@dimen/padding_5dp"
-            app:srcCompat="@drawable/ic_close" />
+            app:srcCompat="@drawable/ic_close"
+            app:tint="@android:color/holo_red_dark" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

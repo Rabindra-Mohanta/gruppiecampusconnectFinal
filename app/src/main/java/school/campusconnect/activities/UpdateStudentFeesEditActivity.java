@@ -195,7 +195,10 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
                     feesAdapter.add(new FeesDetailTemp(etFeesType.getText().toString(), etFeesTypeVal.getText().toString()));
                     hide_keyboard(view);
                     etFeesType.setText("");
+                    etFeesType.clearFocus();
                     etFeesTypeVal.setText("");
+                    etFeesTypeVal.clearFocus();
+
                 }
             }
         });
@@ -214,6 +217,7 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
                     hide_keyboard(view);
                     etDate.setText("");
                     etDateAmount.setText("");
+                    etDateAmount.clearFocus();
                 }
             }
         });
@@ -232,6 +236,7 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
                     hide_keyboard(view);
                     etDatePaid.setText("");
                     etPaidAmount.setText("");
+                    etPaidAmount.clearFocus();
                 }
             }
         });

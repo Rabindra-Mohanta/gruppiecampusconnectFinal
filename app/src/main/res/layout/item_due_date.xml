@@ -35,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:digits="1234567890"
-                android:focusable="false"
                 android:gravity="center"
                 android:hint="@string/hint_amount"
                 android:inputType="numberDecimal"

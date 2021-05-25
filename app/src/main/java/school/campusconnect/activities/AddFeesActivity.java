@@ -92,8 +92,8 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
     private String groupId;
     private String teamId;
 
-    FeesDetailAdapter feesAdapter = new FeesDetailAdapter(false);
-    DueDateAdapter dueDateAdapter = new DueDateAdapter();
+    FeesDetailAdapter feesAdapter = new FeesDetailAdapter(true);
+    DueDateAdapter dueDateAdapter = new DueDateAdapter(true);
     FeesRes.Fees feesReq = new FeesRes.Fees();
 
     @Override
@@ -168,7 +168,9 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
                     feesAdapter.add(new FeesDetailTemp(etFeesType.getText().toString(), etFeesTypeVal.getText().toString()));
                     hide_keyboard(view);
                     etFeesType.setText("");
+                    etFeesType.clearFocus();
                     etFeesTypeVal.setText("");
+                    etFeesTypeVal.clearFocus();
                 }
             }
         });
@@ -187,6 +189,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
                     hide_keyboard(view);
                     etDate.setText("");
                     etDateAmount.setText("");
+                    etDateAmount.clearFocus();
                 }
             }
         });
