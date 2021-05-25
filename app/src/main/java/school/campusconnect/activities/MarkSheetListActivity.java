@@ -28,6 +28,6 @@ public class MarkSheetListActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getIntent().getStringExtra("name")+" Mark Card");
+        setTitle(getIntent().getStringExtra("name")+" - ("+getIntent().getStringExtra("className")+")");
     }
 }

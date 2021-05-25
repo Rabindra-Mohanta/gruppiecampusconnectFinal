@@ -233,6 +233,7 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         Intent intent = new Intent(getActivity(), AddClassStudentActivity.class);
         intent.putExtra("group_id", mGroupId);
         intent.putExtra("team_id", teamId);
+        intent.putExtra("className", classData.className);
         intent.putExtra("isEdit", true);
         intent.putExtra("student_data", new Gson().toJson(studentData));
         startActivity(intent);

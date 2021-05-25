@@ -64,6 +64,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     Calendar calendar;
     private ArrayList<ClassResponse.ClassData> listClass;
     private String selectedTeamId="";
+    private String className="";
 
     @Nullable
     @Override
@@ -77,6 +78,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
         if(getArguments()!=null){
             selectedTeamId=getArguments().getString("team_id","");
+            className=getArguments().getString("className","");
         }
 
         if(TextUtils.isEmpty(selectedTeamId)){
@@ -243,7 +245,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         Intent intent = new Intent(getActivity(), AttendanceDetailActivity.class);
         intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
         intent.putExtra("team_id",selectedTeamId);
-        intent.putExtra("title",studentData.getStudentName());
+        intent.putExtra("title",studentData.getStudentName()+"- ("+className+")");
         intent.putExtra("calendar",calendar);
         intent.putExtra("userId",studentData.getUserId());
         intent.putExtra("rollNo",studentData.getRollNumber());

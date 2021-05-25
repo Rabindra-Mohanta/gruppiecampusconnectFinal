@@ -36,7 +36,7 @@ public class ChapterActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getIntent().getStringExtra("title"));
+        setTitle(getIntent().getStringExtra("title")+" - ("+getIntent().getStringExtra("className")+")");
 
         canPost = getIntent().getBooleanExtra("canPost",false);
         team_id = getIntent().getStringExtra("team_id");
@@ -75,6 +75,11 @@ public class ChapterActivity extends BaseActivity {
             startActivity(intent);
             return true;
         }
+        if (item.getItemId() == R.id.menu_delete_chapter) {
+            ((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).onDeleteChapterClick();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

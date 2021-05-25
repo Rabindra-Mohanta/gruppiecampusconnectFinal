@@ -98,6 +98,7 @@ public class MarksheetActivity extends BaseActivity {
 
     private String groupId;
     private String teamId;
+    private String className;
     private LeafPreference leafPreference;
     private LeafManager leafManager;
 
@@ -136,6 +137,7 @@ public class MarksheetActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         groupId = bundle.getString("group_id", "");
         teamId = bundle.getString("team_id", "");
+        className = bundle.getString("className", "");
         AppLog.e(TAG, ",groupId:" + groupId + ",teamId:" + teamId);
 
         rvAttendance.setLayoutManager(new LinearLayoutManager(this));
@@ -291,6 +293,7 @@ public class MarksheetActivity extends BaseActivity {
         Intent intent = new Intent(this, MarkSheetListActivity.class);
         intent.putExtra("group_id", groupId);
         intent.putExtra("team_id", teamId);
+        intent.putExtra("className", className);
         intent.putExtra("user_id", studentData.getUserId());
         intent.putExtra("name", studentData.getName());
         intent.putExtra("roll_no", studentData.getRollNumber());

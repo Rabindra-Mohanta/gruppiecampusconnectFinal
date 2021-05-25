@@ -23,8 +23,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.activities.ClassStudentActivity;
+import school.campusconnect.activities.FeesListActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.SubjectActivity2;
 import school.campusconnect.datamodel.BaseResponse;
@@ -34,10 +36,8 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
-public class ClassListFragment2 extends BaseFragment implements LeafManager.OnCommunicationListener {
+public class FeesClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "TeamDiscussFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
@@ -48,6 +48,7 @@ public class ClassListFragment2 extends BaseFragment implements LeafManager.OnCo
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    String role;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class ClassListFragment2 extends BaseFragment implements LeafManager.OnCo
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        role = getArguments().getString("role");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -206,9 +208,10 @@ public class ClassListFragment2 extends BaseFragment implements LeafManager.OnCo
     }
 
     private void onTreeClick(ClassResponse.ClassData classData) {
-        Intent intent = new Intent(getActivity(), SubjectActivity2.class);
+        Intent intent = new Intent(getActivity(), FeesListActivity.class);
+        intent.putExtra("title",classData.getName());
         intent.putExtra("team_id",classData.getId());
-        intent.putExtra("className",classData.className);
+        intent.putExtra("role",role);
         startActivity(intent);
     }
 }

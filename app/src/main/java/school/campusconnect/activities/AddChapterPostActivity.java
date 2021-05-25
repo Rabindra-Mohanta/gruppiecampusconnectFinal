@@ -19,12 +19,15 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +77,7 @@ import school.campusconnect.datamodel.AddGalleryPostRequest;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
+import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
@@ -135,6 +139,15 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.rvImages)
     RecyclerView rvImages;
 
+    @Bind(R.id.spChapter)
+    Spinner spChapter;
+
+    @Bind(R.id.cardChapterName)
+    CardView cardChapterName;
+
+    @Bind(R.id.llTop)
+    LinearLayout llTop;
+
     TextView btn_ok;
     TextView btn_cancel;
     TextView btn_upload;
@@ -173,6 +186,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private ProgressDialog progressDialog;
     private boolean isEdit;
     private String chapter_id;
+    private ArrayList<ChapterRes.ChapterData> chapterList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +198,13 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         setListener();
 
+
+        getChapters();
+    }
+    private void getChapters() {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
 
     private void setListener() {
@@ -237,21 +258,12 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         transferUtility = AmazoneHelper.getTransferUtility(this);
-
+        setTitle("Add Chapter");
         if (getIntent() != null) {
             group_id = getIntent().getStringExtra("group_id");
             team_id = getIntent().getStringExtra("team_id");
             subject_id = getIntent().getStringExtra("subject_id");
             subject_name = getIntent().getStringExtra("subject_name");
-            isEdit = getIntent().getBooleanExtra("isEdit", false);
-            if (isEdit) {
-                setTitle("Add Topic");
-                chapter_id = getIntent().getStringExtra("chapter_id");
-                edtTitle.setText(getIntent().getStringExtra("chapter_name"));
-                edtTitle.setEnabled(false);
-            } else {
-                setTitle("Add Chapter");
-            }
         }
         rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new UploadImageAdapter(listImages, this);
@@ -682,6 +694,55 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 }
                 finish();
                 break;
+            case LeafManager.API_CHAPTER_LIST:
+                ChapterRes res = (ChapterRes) response;
+                chapterList = res.getData();
+                AppLog.e(TAG, "ChapterRes " + chapterList);
+                bindChapter();
+                break;
+        }
+
+    }
+
+    private void bindChapter() {
+        if (chapterList != null && chapterList.size() > 0) {
+            llTop.setVisibility(View.VISIBLE);
+            cardChapterName.setVisibility(View.GONE);
+            String[] strChapter = new String[chapterList.size()+1];
+            for (int i=0;i<chapterList.size();i++){
+                strChapter[i]=chapterList.get(i).chapterName;
+            }
+            strChapter[strChapter.length-1]="Create New Chapter";
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner,strChapter);
+            spChapter.setAdapter(adapter);
+
+            spChapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    AppLog.e(TAG, "onItemSelected : " + position);
+                    if(position==strChapter.length-1){
+                        cardChapterName.setVisibility(View.VISIBLE);
+                        edtTitle.setText("");
+                        isEdit = false;
+                    }else {
+                        isEdit = true;
+                        edtTitle.setText(chapterList.get(position).chapterName);
+                        chapter_id = chapterList.get(position).chapterId;
+                        cardChapterName.setVisibility(View.GONE);
+                    }
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        } else {
+            edtTitle.setHint("");
+            isEdit = false;
+            llTop.setVisibility(View.GONE);
+            cardChapterName.setVisibility(View.VISIBLE);
         }
 
     }

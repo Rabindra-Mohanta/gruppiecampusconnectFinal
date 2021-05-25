@@ -26,6 +26,9 @@ import school.campusconnect.datamodel.classs.ParentKidsResponse;
 import school.campusconnect.datamodel.ebook.AddEbookReq;
 import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
+import school.campusconnect.datamodel.fees.FeesRes;
+import school.campusconnect.datamodel.fees.StudentFeesRes;
+import school.campusconnect.datamodel.fees.UpdateStudentFees;
 import school.campusconnect.datamodel.marksheet.AddMarkCardReq;
 import school.campusconnect.datamodel.marksheet.MarkCardListResponse;
 import school.campusconnect.datamodel.marksheet.StudentMarkCardListResponse;
@@ -1293,5 +1296,21 @@ public interface LeafService {
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/remove")
     @Headers({"Content-Type: application/json"})
     Call<BaseResponse> deleteTTNewByDay(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("day") String day);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/student/fee/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StudentFeesRes> getStudentFeesList(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/fee/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<FeesRes> getFeesDetails(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/fee/create")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> createFees(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body FeesRes.Fees req);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/student/{student_id}/fee/paid/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addStudentPaidFees(@Path("group_id") String group_id, @Path("team_id") String team_id,@Path("student_id") String student_id, @Body UpdateStudentFees req);
 
 }
