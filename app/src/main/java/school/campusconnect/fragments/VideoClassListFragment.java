@@ -37,6 +37,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -85,6 +86,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+
+    @Bind(R.id.progressBarZoom)
+    public ProgressBar progressBarZoom;
+
     VideoClassResponse.ClassData item;
 
     boolean meetingCreatedBy =false;
@@ -92,6 +97,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     boolean isSentNotification = false;
 
     boolean videoClassClicked = false;
+
+
+    ClassesAdapter classesAdapter = new ClassesAdapter();
+    VideoClassResponse.ClassData selectedClassdata ;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +118,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
 
         progressBar.setVisibility(View.VISIBLE);
+
+
+        classesAdapter = new ClassesAdapter();
+        rvClass.setAdapter(classesAdapter);
 
         return view;
     }
@@ -194,7 +207,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         List<VideoClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
 
-        rvClass.setAdapter(new ClassesAdapter(result));
+       // rvClass.setAdapter(new ClassesAdapter(result));
+
+        classesAdapter.setList(result);
     }
 
 
@@ -346,6 +361,19 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         public ClassesAdapter(List<VideoClassResponse.ClassData> list) {
             this.list = list;
+        }
+
+
+
+        public ClassesAdapter()
+        {
+            list = new ArrayList<>();
+        }
+
+        public void setList(List<VideoClassResponse.ClassData> list)
+        {
+            this.list = list;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -536,17 +564,29 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void onTreeClick(VideoClassResponse.ClassData classData)
     {
-
-        if(!videoClassClicked)
+        selectedClassdata = classData;
+        ((VideoClassActivity) getActivity()).startRecordingScreen();
+       /* if(!videoClassClicked)
         {
             Log.e(TAG , "onTreeClick  : "+videoClassClicked);
             videoClassClicked = true;
             startMeeting(classData);
 
           //  ((VideoClassActivity) getActivity()).startRecordingScreen();
-        }
+        }*/
     }
 
+    public void startMeetingFromActivity()
+    {
+        if(!videoClassClicked)
+        {
+            Log.e(TAG , "onTreeClick  : "+videoClassClicked);
+            videoClassClicked = true;
+            startMeeting(selectedClassdata);
+            progressBarZoom.setVisibility(View.VISIBLE);
+
+        }
+    }
 
     private void onNameClick(VideoClassResponse.ClassData classData)
     {
@@ -772,7 +812,12 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         @Override
                         public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
                             Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
-                            progressBar.setVisibility(View.GONE);
+
+                            if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING"))
+                            {
+                                progressBar.setVisibility(View.GONE);
+                                progressBarZoom.setVisibility(View.GONE);
+                            }
 
                             if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING"))
                             {
@@ -780,7 +825,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                                 if(getActivity() !=null)
                                 {
-                                   // ((VideoClassActivity)getActivity()).stopRecording();
+                                    ((VideoClassActivity)getActivity()).stopRecording();
                                 }
 
 
@@ -877,7 +922,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             @Override
             public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
                 Log.e(TAG , "meetinsstatusChanged : "+meetingStatus.name()+" errorcode : "+errorCode+" internalError: "+internalErrorCode);
-                progressBar.setVisibility(View.GONE);
+                if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
+                    progressBar.setVisibility(View.GONE);
+                    progressBarZoom.setVisibility(View.GONE);
+                }
 
             }
         });

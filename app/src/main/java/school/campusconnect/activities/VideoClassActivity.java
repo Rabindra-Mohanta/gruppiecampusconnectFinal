@@ -32,6 +32,11 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
     public static int SCREEN_RECORD_REQUEST_CODE = 321;
     public static String TAG = VideoClassActivity.class.getName();
 
+    VideoClassListFragment classListFragment=new VideoClassListFragment();
+
+    Intent recorderIntent ;
+    int resultcode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,7 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
         setBackEnabled(true);
         setTitle(getIntent().getStringExtra("title"));
 
-        VideoClassListFragment classListFragment=new VideoClassListFragment();
+    //    VideoClassListFragment classListFragment=new VideoClassListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
 
@@ -89,6 +94,21 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     }
 
+
+    public void startRecording()
+    {
+        if(hbRecorder == null)
+        {
+            return;
+        }
+        //Start screen recording
+        hbRecorder.setAudioSource("DEFAULT");
+        hbRecorder.setOutputPath(Environment.getExternalStorageDirectory().getPath());
+        if(recorderIntent !=null)
+            hbRecorder.startScreenRecording(recorderIntent ,resultcode, this);
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -98,10 +118,22 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
             if (resultCode == RESULT_OK) {
                 AppLog.e(TAG , "startScreenRecording called ");
 
+                resultcode = resultCode;
+                recorderIntent = data;
+
                 //Start screen recording
-                hbRecorder.setAudioSource("REMOTE_SUBMIX");
+                hbRecorder.setAudioSource("DEFAULT");
                 hbRecorder.setOutputPath(Environment.getExternalStorageDirectory().getPath());
                 hbRecorder.startScreenRecording(data ,resultCode, this);
+
+                if(classListFragment !=null)
+                    classListFragment.startMeetingFromActivity();
+
+            }
+            else
+            {
+                if(classListFragment !=null)
+                    classListFragment.startMeetingFromActivity();
 
             }
         }
