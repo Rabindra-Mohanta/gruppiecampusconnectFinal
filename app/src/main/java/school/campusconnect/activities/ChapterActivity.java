@@ -28,6 +28,7 @@ public class ChapterActivity extends BaseActivity {
     String team_id;
     String subject_id;
     String subject_name;
+    String path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,7 @@ public class ChapterActivity extends BaseActivity {
         team_id = getIntent().getStringExtra("team_id");
         subject_id = getIntent().getStringExtra("subject_id");
         subject_name = getIntent().getStringExtra("subject_name");
+        path = getIntent().getStringExtra("path");
 
 
         ChapterListFragment classListFragment=new ChapterListFragment();
@@ -72,6 +74,7 @@ public class ChapterActivity extends BaseActivity {
             intent.putExtra("team_id",team_id);
             intent.putExtra("subject_id",subject_id);
             intent.putExtra("subject_name",subject_name);
+            intent.putExtra("path",path);
             startActivity(intent);
             return true;
         }

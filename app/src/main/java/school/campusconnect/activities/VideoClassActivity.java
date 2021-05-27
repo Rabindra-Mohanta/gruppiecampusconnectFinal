@@ -1,6 +1,7 @@
 package school.campusconnect.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjectionManager;
@@ -16,7 +17,9 @@ import com.hbisoft.hbrecorder.HBRecorderListener;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.fragments.VideoClassListFragment;
+import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 
 public class VideoClassActivity extends BaseActivity  implements HBRecorderListener {
@@ -36,6 +39,7 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     Intent recorderIntent ;
     int resultcode;
+    private VideoClassResponse.ClassData selectedClassData;
 
 
     @Override
@@ -80,7 +84,8 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     }
 
-    public void startRecordingScreen() {
+    public void startRecordingScreen(VideoClassResponse.ClassData selectedClassData) {
+        this.selectedClassData = selectedClassData;
         AppLog.e(TAG , "StartRecordingScreen called ");
         MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
@@ -89,9 +94,29 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     public void stopRecording()
     {
-        if(hbRecorder !=null)
+        if(hbRecorder !=null){
             hbRecorder.stopScreenRecording();
+            AppLog.e(TAG,"hbRecorder.getFilePath() : "+hbRecorder.getFilePath());
+            AppLog.e(TAG,"hbRecorder.getFileName() : "+hbRecorder.getFileName());
+            AppLog.e(TAG,"selected ClassData : "+selectedClassData.getId());
 
+            AppDialog.showConfirmDialog(this, "Do you want to share this live class?", new AppDialog.AppDialogListener() {
+                @Override
+                public void okPositiveClick(DialogInterface dialog) {
+                    dialog.dismiss();
+                    Intent intent = new Intent(VideoClassActivity.this, RecClassSubjectActivity.class);
+                    intent.putExtra("team_id",selectedClassData.getId());
+                    intent.putExtra("title",selectedClassData.className);
+                    intent.putExtra("path",hbRecorder.getFilePath());
+                    startActivity(intent);
+                }
+
+                @Override
+                public void okCancelClick(DialogInterface dialog) {
+                    dialog.dismiss();
+                }
+            });
+        }
     }
 
 

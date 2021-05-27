@@ -187,6 +187,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private boolean isEdit;
     private String chapter_id;
     private ArrayList<ChapterRes.ChapterData> chapterList;
+    private String sharePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,8 +199,14 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         setListener();
 
-
         getChapters();
+
+//        if(!TextUtils.isEmpty(sharePath)){
+            fileTypeImageOrVideo = Constants.FILE_TYPE_VIDEO;
+            listImages.add("/storage/emulated/0/HD2021-05-27-08-42-33.mp4");
+            showLastImage();
+//        }
+
     }
     private void getChapters() {
         progressBar.setVisibility(View.VISIBLE);
@@ -264,6 +271,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             team_id = getIntent().getStringExtra("team_id");
             subject_id = getIntent().getStringExtra("subject_id");
             subject_name = getIntent().getStringExtra("subject_name");
+            sharePath = getIntent().getStringExtra("path");
+
         }
         rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new UploadImageAdapter(listImages, this);

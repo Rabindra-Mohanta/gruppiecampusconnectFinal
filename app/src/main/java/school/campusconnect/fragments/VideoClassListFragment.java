@@ -565,7 +565,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     private void onTreeClick(VideoClassResponse.ClassData classData)
     {
         selectedClassdata = classData;
-        ((VideoClassActivity) getActivity()).startRecordingScreen();
+        ((VideoClassActivity) getActivity()).startRecordingScreen(selectedClassdata);
        /* if(!videoClassClicked)
         {
             Log.e(TAG , "onTreeClick  : "+videoClassClicked);

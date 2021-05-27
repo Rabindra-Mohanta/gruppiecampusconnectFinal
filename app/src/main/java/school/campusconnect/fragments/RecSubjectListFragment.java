@@ -42,6 +42,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
 
     String team_id;
     String className;
+    String path;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
 
         team_id=getArguments().getString("team_id");
         className=getArguments().getString("title");
+        path=getArguments().getString("path");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -169,6 +171,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
         intent.putExtra("subject_name",classData.name);
         intent.putExtra("canPost",classData.canPost);
         intent.putExtra("title",classData.name);
+        intent.putExtra("path",path);
         startActivity(intent);
     }
 }
