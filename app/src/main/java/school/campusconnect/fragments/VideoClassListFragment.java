@@ -452,6 +452,54 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }else {
                 holder.img_tree.setVisibility(View.GONE);
             }
+
+
+
+            holder.tv_stop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+
+                    final SMBAlterDialog dialog =
+                            new SMBAlterDialog(getActivity());
+                    dialog.setTitle(R.string.app_name);
+                    dialog.setMessage("Are You Sure Want To End Meeting ?");
+                    dialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            stopMeeting(list.get(position));
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+
+
+                }
+            });
+
+
+            holder.tvInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+
+                    final SMBAlterDialog dialog =
+                            new SMBAlterDialog(getActivity());
+                    dialog.setTitle(R.string.app_name);
+                    dialog.setMessage("Meeting Created By "+list.get(position).getMeetingCreatedByName());
+                    dialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+
+
+                }
+            });
+
+
         }
 
         @Override
@@ -514,49 +562,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     }
                 });*/
 
-                tv_stop.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v)
-                    {
-
-                        final SMBAlterDialog dialog =
-                                new SMBAlterDialog(getActivity());
-                        dialog.setTitle(R.string.app_name);
-                        dialog.setMessage("Are You Sure Want To End Meeting ?");
-                        dialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                stopMeeting(list.get(getAdapterPosition()));
-                                dialog.dismiss();
-                            }
-                        });
-                        dialog.show();
-
-
-                    }
-                });
-
-
-                tvInfo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v)
-                    {
-
-                        final SMBAlterDialog dialog =
-                                new SMBAlterDialog(getActivity());
-                        dialog.setTitle(R.string.app_name);
-                        dialog.setMessage("Meeting Created By "+list.get(getAdapterPosition()).getMeetingCreatedByName());
-                        dialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        dialog.show();
-
-
-                    }
-                });
 
             }
         }
@@ -565,7 +570,17 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     private void onTreeClick(VideoClassResponse.ClassData classData)
     {
         selectedClassdata = classData;
-        ((VideoClassActivity) getActivity()).startRecordingScreen(selectedClassdata);
+
+        if(classData.canPost) {
+            ((VideoClassActivity) getActivity()).startRecordingScreen(selectedClassdata);
+        }
+        else
+        {
+            videoClassClicked = true;
+            startMeeting(selectedClassdata);
+            progressBarZoom.setVisibility(View.VISIBLE);
+        }
+
        /* if(!videoClassClicked)
         {
             Log.e(TAG , "onTreeClick  : "+videoClassClicked);
@@ -823,7 +838,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                             {
                                 AppLog.e(TAG , "meeting Disconnecting : "+item.canPost + " , "+meetingCreatedBy);
 
-                                if(getActivity() !=null)
+                                if(getActivity() !=null && item.canPost)
                                 {
                                     ((VideoClassActivity)getActivity()).stopRecording();
                                 }

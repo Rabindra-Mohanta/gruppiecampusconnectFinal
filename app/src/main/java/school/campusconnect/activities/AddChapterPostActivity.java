@@ -8,6 +8,8 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -377,9 +379,26 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     long fileSizeInKB = fileSizeInBytes / 1024;
                     // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
                     long fileSizeInMB = fileSizeInKB / 1024;
+
+
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(listImages.get(i));
+
+                    Bitmap bmp = retriever.getFrameAtTime();
+                    String orient = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+                    int h;
+                    int w;
+                    if (orient.equals("0")) {
+                        h = bmp.getHeight();
+                        w = bmp.getWidth();
+                    } else {
+                        w = bmp.getHeight();
+                        h = bmp.getWidth();
+                    }
+
                     AppLog.e(TAG, "fileSizeInMB : " + fileSizeInMB);
                     if (fileSizeInMB > 10) {
-                        listImages.set(i, SiliCompressor.with(AddChapterPostActivity.this).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath()));
+                        listImages.set(i, SiliCompressor.with(AddChapterPostActivity.this).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath() , w ,h , 950000));
                         Log.e(TAG, "compressPath : " + videoUrl);
                     }
                 }
