@@ -1,5 +1,6 @@
 package school.campusconnect.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -112,7 +113,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         startActivity(intent);
     }*/
 
-    private void getChapters() {
+    public void getChapters() {
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
@@ -129,7 +130,11 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             getChapters();
             LeafPreference.getInstance(getActivity()).setBoolean("is_topic_added", false);
         }
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override

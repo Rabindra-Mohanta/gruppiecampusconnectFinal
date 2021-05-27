@@ -1,7 +1,10 @@
 package school.campusconnect.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,4 +89,28 @@ public class ChapterActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(updateReceiver,new IntentFilter("chapter_refresh"));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            unregisterReceiver(updateReceiver);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if("chapter_refresh".equalsIgnoreCase(intent.getAction())){
+                ((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getChapters();
+            }
+        }
+    };
 }

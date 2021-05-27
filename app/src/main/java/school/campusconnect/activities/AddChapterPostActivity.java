@@ -83,6 +83,8 @@ import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.BackgroundVideoUploadChapterService;
+import school.campusconnect.utils.BackgroundVideoUploadService;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
@@ -203,11 +205,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         getChapters();
 
-//        if(!TextUtils.isEmpty(sharePath)){
+        if(!TextUtils.isEmpty(sharePath)){
             fileTypeImageOrVideo = Constants.FILE_TYPE_VIDEO;
-            listImages.add("/storage/emulated/0/HD2021-05-27-08-42-33.mp4");
+            listImages.add(sharePath);
             showLastImage();
-//        }
+        }
 
     }
     private void getChapters() {
@@ -299,45 +301,64 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     progressBar.setVisibility(View.VISIBLE);
                 btnShare.setEnabled(false);
 
-                AddGalleryPostRequest request = new AddGalleryPostRequest();
-                request.albumName = edtTitle.getText().toString();
-                request.topicName = edtDesc.getText().toString();
+                mainRequest = new AddGalleryPostRequest();
+
+                mainRequest.albumName = edtTitle.getText().toString();
+                mainRequest.topicName = edtDesc.getText().toString();
 
                 if (!TextUtils.isEmpty(videoUrl)) {
-                    request.video = videoUrl;
-                    request.fileType = Constants.FILE_TYPE_YOUTUBE;
+                    mainRequest.video = videoUrl;
+                    mainRequest.fileType = Constants.FILE_TYPE_YOUTUBE;
 
-                    Log.e(TAG, "send data " + new Gson().toJson(request));
-                    mainRequest = request;
+                    Log.e(TAG, "send data " + new Gson().toJson(mainRequest));
 
                     if (isEdit) {
-                        request.fileType = Constants.FILE_TYPE_VIDEO;
-                        request.fileName = new ArrayList<>();
-                        request.fileName.add(videoUrl);
-                        manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, request);
+                        mainRequest.fileType = Constants.FILE_TYPE_VIDEO;
+                        mainRequest.fileName = new ArrayList<>();
+                        mainRequest.fileName.add(videoUrl);
+                        manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
                     } else {
-                        manager.addChapterPost(this, group_id, team_id, subject_id, request);
+                        manager.addChapterPost(this, group_id, team_id, subject_id, mainRequest);
                     }
 
                 } else if (!TextUtils.isEmpty(pdfPath)) {
-                    request.fileType = Constants.FILE_TYPE_PDF;
+                    mainRequest.fileType = Constants.FILE_TYPE_PDF;
                     progressDialog.setMessage("Preparing Pdf...");
                     progressDialog.show();
-                    uploadToAmazone(request);
+                    uploadToAmazone(mainRequest);
                 } else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
-                    request.fileType = fileTypeImageOrVideo;
-                    Log.e(TAG, "send data " + new Gson().toJson(request));
-                    new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    mainRequest.fileType = fileTypeImageOrVideo;
+                    Log.e(TAG, "send data " + new Gson().toJson(mainRequest));
+                    startService();
+//                    new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else if (listImages.size() > 0) {
-                    request.fileType = Constants.FILE_TYPE_IMAGE;
+                    mainRequest.fileType = Constants.FILE_TYPE_IMAGE;
                     progressDialog.setMessage("Uploading Image...");
                     progressDialog.show();
-                    uploadToAmazone(request);
+                    uploadToAmazone(mainRequest);
                 }
             }
         } else {
             showNoNetworkMsg();
         }
+
+    }
+    public void startService() {
+
+        Intent serviceIntent = new Intent(this, BackgroundVideoUploadChapterService.class);
+        serviceIntent.putExtra("videoUrl", videoUrl);
+        serviceIntent.putExtra("mainRequest", mainRequest);
+        serviceIntent.putExtra("listImages", listImages);
+        serviceIntent.putExtra("group_id", group_id);
+        serviceIntent.putExtra("team_id", team_id);
+        serviceIntent.putExtra("chapter_id", chapter_id);
+        serviceIntent.putExtra("subject_id", subject_id);
+        serviceIntent.putExtra("subject_name", subject_name);
+        serviceIntent.putExtra("isEdit", isEdit);
+        ContextCompat.startForegroundService(this, serviceIntent);
+
+        Toast.makeText(this, "Video Uploading in background", Toast.LENGTH_SHORT).show();
+        finish();
 
     }
 

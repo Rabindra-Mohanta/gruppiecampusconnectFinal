@@ -7,13 +7,10 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,22 +27,33 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
-
 
 import id.zelory.compressor.Compressor;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.AddGalleryPostRequest;
 import school.campusconnect.datamodel.AddPostRequest;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.network.LeafManager;
 
-public class BackgroundVideoUploadService extends Service implements LeafManager.OnAddUpdateListener<AddPostValidationError> {
+public class BackgroundVideoUploadChapterService extends Service implements LeafManager.OnAddUpdateListener<AddPostValidationError> {
 
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
 
@@ -55,15 +63,11 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
     private ArrayList<String> listImages = new ArrayList<>();
     private TransferUtility transferUtility;
     ArrayList<String> listAmazonS3Url = new ArrayList<>();
-    private AddPostRequest mainRequest;
+    private AddGalleryPostRequest mainRequest;
     LeafManager manager = new LeafManager();
-    private String friend_id, postType, team_id, group_id, videoUrl;
-    private boolean isFromCamera, isFromChat;
-    private int id = 1;
+    private String  team_id, group_id, videoUrl;
     private int notifyId = 1;
-    int progress = 0;
     NotificationCompat.Builder notificationBuilder;
-    Notification notification;
     NotificationManager notificationManager;
 
     private ArrayList<Integer> compressedVideoCount = new ArrayList<>();
@@ -74,6 +78,11 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
     ArrayList<Intent> taskIntents = new ArrayList<>();
 
     Intent currentTask  = null;
+    private String chapter_id;
+    private String subject_id;
+    private boolean isEdit;
+    private String subject_name;
+
     //95387 32882
     @Override
     public void onCreate()
@@ -110,36 +119,6 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
             currentTask = intent;
         }
 
-        /*isFromCamera = intent.getBooleanExtra("isFromCamera", false);
-        isFromChat = intent.getBooleanExtra("isFromChat", false);
-        videoUrl = intent.getStringExtra("videoUrl");
-        group_id = intent.getStringExtra("group_id");
-        team_id = intent.getStringExtra("team_id");
-        postType = intent.getStringExtra("postType");
-        friend_id = intent.getStringExtra("friend_id");
-        listImages = (ArrayList<String>) intent.getSerializableExtra("listImages");
-        mainRequest = (AddPostRequest) intent.getSerializableExtra("mainRequest");*/
-
-        /*if (isFromCamera) {
-            new VideoCompressor1(mainRequest, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new VideoCompressor1(mainRequest, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-*/
-       /* createNotificationChannel();
-        Intent notificationIntent = new Intent(this, AddPostActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Foreground Service")
-                .setContentText("input")
-                .setSmallIcon(R.drawable.app_icon)
-                .setContentIntent(pendingIntent)
-                .build();
-        startForeground(1, notification);*/
-        //do heavy work on a background thread
-        //stopSelf();
-
         getDataFromCurrentTask();
         uploadVideos();
 
@@ -150,20 +129,20 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
     public void getDataFromCurrentTask()
     {
         AppLog.e(TAG , "getDataFromCurrentTask called ");
-        isFromCamera = currentTask.getBooleanExtra("isFromCamera", false);
-        isFromChat = currentTask.getBooleanExtra("isFromChat", false);
         videoUrl = currentTask.getStringExtra("videoUrl");
         group_id = currentTask.getStringExtra("group_id");
         team_id = currentTask.getStringExtra("team_id");
-        postType = currentTask.getStringExtra("postType");
-        friend_id = currentTask.getStringExtra("friend_id");
+        chapter_id = currentTask.getStringExtra("chapter_id");
+        subject_id = currentTask.getStringExtra("subject_id");
+        subject_name = currentTask.getStringExtra("subject_name");
+        isEdit = currentTask.getBooleanExtra("isEdit",false);
 
         listImages = new ArrayList<>();
         listAmazonS3Url = new ArrayList<>();
         mainRequest = null;
 
         listImages = (ArrayList<String>) currentTask.getSerializableExtra("listImages");
-        mainRequest = (AddPostRequest) currentTask.getSerializableExtra("mainRequest");
+        mainRequest = (AddGalleryPostRequest) currentTask.getSerializableExtra("mainRequest");
     }
 
     @Override
@@ -198,12 +177,15 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
             uploadVideos();
 
             return;
+        }else {
+            if (isEdit) {
+                LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).setBoolean("is_topic_added", true);
+                new SendNotification(mainRequest.albumName, false).execute();
+            } else {
+                LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).setBoolean("is_chapter_added", true);
+                new SendNotification(mainRequest.albumName, true).execute();
+            }
         }
-
-        Intent intent = new Intent("postadded");
-        sendBroadcast(intent);
-
-        stopForeground(false);
     }
 
     @Override
@@ -416,7 +398,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         notificationManager.notify(notifyId, notification);
     }
 
-    private void uploadToAmazone(AddPostRequest request) {
+    private void uploadToAmazone(AddGalleryPostRequest request) {
        // mainRequest = request;
         //request.fileName = listAmazonS3Url;
         AppLog.e(TAG, "send data " + new Gson().toJson(request));
@@ -568,8 +550,12 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
             }
             mainRequest.fileName = listAmazonS3Url;
 
-            AppLog.e(TAG , "addPost mainRequest : "+new Gson().toJson(mainRequest));
-            manager.addPost(this, group_id, team_id, mainRequest, postType, friend_id, isFromChat);
+            AppLog.e(TAG , "send data : "+new Gson().toJson(mainRequest));
+            if (isEdit) {
+                manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
+            } else {
+                manager.addChapterPost(this, group_id, team_id, subject_id, mainRequest);
+            }
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
             File file = new File(listImages.get(pos));
@@ -633,5 +619,125 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         upLoadImageOnCloud(pos + 1);
     }
 
+    private class SendNotification extends AsyncTask<String, String, String> {
 
+        private final String chapterName;
+        private final boolean isChapter;
+        private String server_response;
+
+        public SendNotification(String chapterName, boolean isChapter) {
+            this.chapterName = chapterName;
+            this.isChapter = isChapter;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String message = "";
+
+                    if (isChapter) {
+                        message = subject_name + " : New chapter added";
+                    } else {
+                        message = " New topic added to " + chapterName;
+                    }
+
+                    topic = group_id + "_" + team_id;
+                    object.put("to", "/topics/" + topic);
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                    object.put("notification", notificationObj);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", group_id);
+                    dataObj.put("createdById", LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("postId", "");
+                    dataObj.put("teamId", team_id);
+                    dataObj.put("title", title);
+                    dataObj.put("postType", isChapter ? "chapter" : "topic");
+                    dataObj.put("Notification_type", "VideoClass");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+
+                    wr.writeBytes(object.toString());
+                    Log.e(" JSON input : " , object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+            Intent intent = new Intent("chapter_refresh");
+            sendBroadcast(intent);
+            stopForeground(false);
+        }
+    }
 }
