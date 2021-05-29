@@ -133,34 +133,65 @@ public interface LeafService {
     @Headers({"Content-Type: application/json"})
     Call<NumberExistResponse> next(@Body NumberExistRequest request, @Query("category") String category);
 
+    @POST("/api/v1/user/exist/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<NumberExistResponse> nextIndividual(@Body NumberExistRequest request, @Query("appId") String group_id);
+
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> login(@Body LoginRequest request, @Query("category") String category, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+
+    @POST("/api/v1/login/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> loginCampusCopy(@Body LoginRequest request, @Query("category") String category,@Query("appName") String appName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+
+    @POST("/api/v1/login/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> loginIndividual(@Body LoginRequest request, @Query("appId") String group_id, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
     @POST("/api/v1/verify/otp/category/app")
     @Headers({"Content-Type: application/json"})
     Call<OtpVerifyRes> otpVerify(@Body OtpVerifyReq request, @Query("category") String category);
 
+    @POST("/api/v1/verify/otp/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<OtpVerifyRes> otpVerifyIndividual(@Body OtpVerifyReq request, @Query("appId") String group_id);
+
     @PUT("/api/v1/create/password/category/app")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> newPass(@Body NewPassReq request, @Query("category") String category);
+
+    @PUT("/api/v1/create/password/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> newPassIndividual(@Body NewPassReq request, @Query("appId") String group_id);
 
     @PUT("/api/v1/forgot/password/category/app")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> forgotPassword(@Body ForgotPasswordRequest request, @Query("category") String category, @Query("sms") int count);
 
+    @PUT("/api/v1/forgot/password/individual?")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> forgotPasswordIndividual(@Body ForgotPasswordRequest request, @Query("appId") String groupId, @Query("sms") int count);
+
     @PUT("/api/v1/password/change/category/app")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request, @Query("category") String category);
 
-    @PUT("/api/v1/number/change")
+    @PUT("/api/v1/password/change/individual")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> changeNumber(@Body ChangeNumberRequest request);
-
+    Call<ChangePasswordResponse> changePasswordIndividual(@Body ChangePasswordRequest request, @Query("appId") String groupId);
 
     @POST("/api/v1/register/category/app")
     @Headers({"Content-Type: application/json"})
     Call<SignUpResponse> signup(@Body SignUpRequest request, @Query("category") String category);
+
+    @POST("/api/v1/register/individual?")
+    @Headers({"Content-Type: application/json"})
+        Call<SignUpResponse> signupIndividual(@Body SignUpRequest request, @Query("appId") String group_id);
+
+    @PUT("/api/v1/number/change")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> changeNumber(@Body ChangeNumberRequest request);
 
 
     @PUT("/api/v1/logout")
@@ -1256,6 +1287,10 @@ public interface LeafService {
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<GroupResponse> getGroups(@Query("category") String category);
+
+    @GET("/api/v1/groups")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<GroupResponse> getGroups(@Query("category") String category,@Query("appName") String appName);
 
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/posts/get")

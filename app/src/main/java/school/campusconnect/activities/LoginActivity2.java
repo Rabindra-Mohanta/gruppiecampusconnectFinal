@@ -241,7 +241,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
         countryCode = str[currentCountry - 1];
 
         AppLog.e("Login2", "Post Data :" + new Gson().toJson(request));
-        manager.doNext(this, request, Constants.group_category);
+        manager.doNext(this, request);
     }
 
     private boolean permissionCheck() {

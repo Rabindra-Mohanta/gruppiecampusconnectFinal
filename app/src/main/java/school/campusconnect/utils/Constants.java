@@ -11,8 +11,6 @@ import school.campusconnect.BuildConfig;
  */
 
 public class Constants {
-    public static String group_category="school";
-
     public static final String VIVID_GROUP_ID =  "";//  First Group Id
 
     public static final String APP_KEY = "NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk" ; //zoom key

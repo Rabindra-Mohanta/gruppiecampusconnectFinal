@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 
 import androidx.annotation.NonNull;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.utils.AppLog;
@@ -220,7 +221,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             otpVerifyReq.countryCode = countryCode;
             otpVerifyReq.phone = phoneNumber;
             otpVerifyReq.otp = edtPassword.getText().toString();
-            manager.otpVerify(this, otpVerifyReq, Constants.group_category);
+            manager.otpVerify(this, otpVerifyReq);
         } else {
             showNoNetworkMsg();
         }
@@ -299,7 +300,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             request.deviceToken = LeafPreference.getInstance(UserExistActivity.this).getString(LeafPreference.GCM_TOKEN);
             request.password = edtPassword/*.editText*/.getText().toString();
             AppLog.e("Login..", "data is " + new Gson().toJson(request));
-            manager.doLogin(this, request, Constants.group_category);
+            manager.doLogin(this, request);
 
         } else {
 
@@ -360,7 +361,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (count == 4)
                 count = 1;
 
-            manager.forgetPassword(this, request, count, Constants.group_category);
+            manager.forgetPassword(this, request, count);
             txtGetOtp.setEnabled(false);
             txtGetOtp.setTextColor(getResources().getColor(R.color.colorTextLight));
         } else {
@@ -420,19 +421,33 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
             hide_keyboard();
 
-
-            AppLog.e("UserExist->", "join group api called");
-            hide_keyboard();
-            LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
-            if(response1.groupCount>1){
-                Intent login = new Intent(this, Home.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(login);
-                finish();
+            if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+                AppLog.e("UserExist->", "join group api called");
+                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
+                if(response1.groupCount>1){
+                    Intent login = new Intent(this, Home.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                }else {
+                    manager = new LeafManager();
+                    manager.getGroupDetail(this, response1.groupId);
+                }
             }else {
+                AppLog.e("UserExist->", "join group api called");
                 manager = new LeafManager();
-                manager.getGroupDetail(this, response1.groupId);
+
+                manager.joinGroupDirect(this, BuildConfig.APP_ID);
             }
+
+        }
+        if (apiId == LeafManager.API_JOIN_GROUP) {
+            AppLog.e("UserExist->", "join group api response");
+            if (progressBar != null)
+                progressBar.setVisibility(View.GONE);
+
+            AppLog.e("UserExist->", "getGroupDetail api called");
+            manager.getGroupDetail(this, BuildConfig.APP_ID);
         }
         if (apiId == LeafManager.API_ID_GROUP_DETAIL) {
             AppLog.e("UserExist->", "getGroupDetail api response");
@@ -536,7 +551,18 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(this, "Invalid OTP/Password", Toast.LENGTH_LONG).show();
+        if(apiId==LeafManager.API_JOIN_GROUP)
+        {
+            AppLog.e("UserExist-> on Failure","join group api response");
+
+            AppLog.e("UserExist->", "getGroupDetail api called");
+            manager.getGroupDetail(this, BuildConfig.APP_ID);
+
+        }
+        else
+        {
+            Toast.makeText(this, "Invalid OTP/Password", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

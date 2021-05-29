@@ -76,7 +76,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
-        leafManager.getGroups(this, Constants.group_category);
+        leafManager.getGroups(this);
     }
 
     @Override

@@ -5,7 +5,6 @@ plugins {
 }
 
 apply plugin: 'com.google.firebase.crashlytics'
-
 android {
 
     compileSdkVersion 29
@@ -20,13 +19,41 @@ android {
     defaultConfig
             {
                 vectorDrawables.useSupportLibrary = true
-                applicationId "school.campusconnect"
                 minSdkVersion 21
                 targetSdkVersion 29
-                versionCode 2
-                versionName "1.0"
                 testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
                 multiDexEnabled true
+
+                //  [ 1. Gruppie Campus ]
+                applicationId "school.campusconnect"
+                versionCode 2
+                versionName "1.0"
+                resValue "string", "app_name", '"Gruppie Campus"'
+                buildConfigField("String", "AppName", '"Gruppie Campus"')
+                buildConfigField("String", "AppCategory", '"CAMPUS"')
+                buildConfigField("String", "AppType",  '"CAMPUS"')
+                buildConfigField("String", "APP_ID",  '"school"')
+
+                // [ 2. RPES :  Campus Copy]
+//                applicationId "school.campusconnect"
+//                versionCode 2
+//                versionName "1.0"
+//                resValue "string", "app_name", '"RPES"'
+//                buildConfigField("String", "AppName", '"RPES"')
+//                buildConfigField("String", "AppCategory", '"CAMPUS"')
+//                buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
+//                buildConfigField("String", "APP_ID",  '"school"')
+
+                // [ 2. R.P.A : Single]
+//                applicationId "rpa.gruppie"
+//                versionCode 9
+//                versionName "1.8"
+//                resValue "string", "app_name", '"RPA"'
+//                buildConfigField("String", "AppName", '"RPA"')
+//                buildConfigField("String", "AppCategory", '"SINGLE"')
+//                buildConfigField("String", "AppType",  '"SINGLE"')
+//                buildConfigField("String", "APP_ID",  '"5f53228ca0ccf772b959c471"')
+
 
                 ndk {
                     // Specifies the ABI configurations of your native

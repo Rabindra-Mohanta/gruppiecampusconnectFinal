@@ -112,7 +112,7 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
                 request.phone = pNumber;
                 request.countryCode = countryCode;
                 btnNext.setEnabled(false);
-                manager.doSignUp(this, request, Constants.group_category);
+                manager.doSignUp(this, request);
                 AppLog.e("TAG", new Gson().toJson(request));
 
             }

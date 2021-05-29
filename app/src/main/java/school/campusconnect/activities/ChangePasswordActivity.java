@@ -99,7 +99,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
                 progressBar.setVisibility(View.VISIBLE);
                 hide_keyboard();
-                manager.changePassword(this, changePasswordRequest, Constants.group_category);
+                manager.changePassword(this, changePasswordRequest);
             } else {
                 showNoNetworkMsg();
             }

@@ -3,6 +3,7 @@ package school.campusconnect.network;
 import android.content.Context;
 import android.content.Intent;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.LeaveErrorResponse;
 import school.campusconnect.datamodel.LeaveReq;
 import school.campusconnect.datamodel.MarkSheetListResponse;
@@ -358,13 +359,26 @@ public class LeafManager {
 
     }
 
-    public void doLogin(OnCommunicationListener listListener, LoginRequest request, String group_id) {
-        AppLog.e(TAG, "doLogin->> id->" + group_id);
+    public void doLogin(OnCommunicationListener listListener, LoginRequest request) {
         AppLog.e(TAG, "doLogin->> send data" + new Gson().toJson(request));
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<LoginResponse> model = service.login(request, group_id, request.deviceToken, request.deviceType);
+
+        final Call<LoginResponse> model;
+
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            if("CAMPUS".equalsIgnoreCase(BuildConfig.AppType)){
+                model = service.login(request, BuildConfig.APP_ID, request.deviceToken, request.deviceType);
+            }else {
+                model = service.loginCampusCopy(request, BuildConfig.APP_ID,BuildConfig.AppName, request.deviceToken, request.deviceType);
+            }
+
+        }else {
+            model = service.loginIndividual(request, BuildConfig.APP_ID, request.deviceToken, request.deviceType);
+        }
+
+
         ResponseWrapper<LoginResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_ID_LOGIN, new ResponseWrapper.ResponseHandler<LoginResponse, ErrorResponse>() {
@@ -393,13 +407,19 @@ public class LeafManager {
 
     }
 
-    public void otpVerify(OnCommunicationListener listListener, OtpVerifyReq request, String group_id) {
-        AppLog.e(TAG, "otpVerify->> id->" + group_id);
+    public void otpVerify(OnCommunicationListener listListener, OtpVerifyReq request) {
         AppLog.e(TAG, "otpVerify->> send data" + new Gson().toJson(request));
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<OtpVerifyRes> model = service.otpVerify(request, group_id);
+        final Call<OtpVerifyRes> model;
+
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            model = service.otpVerify(request, BuildConfig.APP_ID);
+        }else {
+            model = service.otpVerifyIndividual(request, BuildConfig.APP_ID);
+        }
+
         ResponseWrapper<OtpVerifyRes> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_ID_OTP_VERIFY, new ResponseWrapper.ResponseHandler<OtpVerifyRes, ErrorResponse>() {
@@ -428,13 +448,19 @@ public class LeafManager {
 
     }
 
-    public void newPass(OnCommunicationListener listListener, NewPassReq request, String group_id) {
-        AppLog.e(TAG, "newPass->> id->" + group_id);
+    public void newPass(OnCommunicationListener listListener, NewPassReq request) {
         AppLog.e(TAG, "newPass->> send data" + new Gson().toJson(request));
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<LoginResponse> model = service.newPass(request, group_id);
+        final Call<LoginResponse> model ;
+
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            model = service.newPass(request, BuildConfig.APP_ID);
+        }else {
+            model = service.newPassIndividual(request, BuildConfig.APP_ID);
+        }
+
         ResponseWrapper<LoginResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_ID_NEW_PASS, new ResponseWrapper.ResponseHandler<LoginResponse, ErrorResponse>() {
@@ -463,13 +489,19 @@ public class LeafManager {
 
     }
 
-    public void doSignUp(OnAddUpdateListener<SignupValidationError> listListener, SignUpRequest request, String group_id) {
-        AppLog.e(TAG, "doSignUp->> id->" + group_id);
+    public void doSignUp(OnAddUpdateListener<SignupValidationError> listListener, SignUpRequest request) {
         AppLog.e(TAG, "doSignUp->> send data" + new Gson().toJson(request));
         mListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<SignUpResponse> model = service.signup(request, group_id);
+        final Call<SignUpResponse> model;
+
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            model = service.signup(request, BuildConfig.APP_ID);
+        }else {
+            model = service.signupIndividual(request, BuildConfig.APP_ID);
+        }
+
         ResponseWrapper<SignUpResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<SignupValidationError>>() {
@@ -500,14 +532,20 @@ public class LeafManager {
 
     }
 
-    public void forgetPassword(OnAddUpdateListener<ForgotPasswordValidationError> listListener, ForgotPasswordRequest request, int count, String group_id) {
-        AppLog.e(TAG, "forgetPassword->> id->" + group_id);
+    public void forgetPassword(OnAddUpdateListener<ForgotPasswordValidationError> listListener, ForgotPasswordRequest request, int count) {
         AppLog.e(TAG, "forgetPassword->> send data" + new Gson().toJson(request));
 
         mListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BaseResponse> model = service.forgotPassword(request, group_id, count);
+        final Call<BaseResponse> model;
+
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            model = service.forgotPassword(request, BuildConfig.APP_ID, count);
+        }else {
+            model = service.forgotPasswordIndividual(request, BuildConfig.APP_ID, count);
+        }
+
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<ForgotPasswordValidationError>>() {
@@ -947,11 +985,20 @@ public class LeafManager {
     }
 
 
-    public void changePassword(OnAddUpdateListener<PasswordValidationError> listListener, ChangePasswordRequest request, String groupId) {
+    public void changePassword(OnAddUpdateListener<PasswordValidationError> listListener, ChangePasswordRequest request) {
         mListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<ChangePasswordResponse> model = service.changePassword(request, groupId);
+
+        final Call<ChangePasswordResponse> model;
+
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            model = service.changePassword(request, BuildConfig.APP_ID);
+        }else {
+            model = service.changePasswordIndividual(request, BuildConfig.APP_ID);
+        }
+
+
         ResponseWrapper<ChangePasswordResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<PasswordValidationError>>() {
@@ -5996,13 +6043,19 @@ public class LeafManager {
 
     }
 
-    public void doNext(OnCommunicationListener listener, NumberExistRequest request, String groupId) {
-        AppLog.e(TAG, "doNext->> group id ->" + groupId);
+    public void doNext(OnCommunicationListener listener, NumberExistRequest request) {
         AppLog.e(TAG, "send data ->" + new Gson().toJson(request));
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<NumberExistResponse> model = service.next(request, groupId);
+        final Call<NumberExistResponse> model;
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            model = service.next(request, BuildConfig.APP_ID);
+        }else {
+            model = service.nextIndividual(request, BuildConfig.APP_ID);
+        }
+
+
         ResponseWrapper<NumberExistResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_ID_LOGIN, new ResponseWrapper.ResponseHandler<NumberExistResponse, ErrorResponse>() {
@@ -8197,11 +8250,16 @@ public class LeafManager {
 
     }
 
-    public void getGroups(final OnCommunicationListener listListener, String category) {
+    public void getGroups(final OnCommunicationListener listListener) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<GroupResponse> model = service.getGroups(category);
+        final Call<GroupResponse> model;
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && "CAMPUS".equalsIgnoreCase(BuildConfig.AppType)){
+            model = service.getGroups(BuildConfig.APP_ID);
+        }else {
+            model = service.getGroups(BuildConfig.APP_ID,BuildConfig.AppName);
+        }
         ResponseWrapper<GroupResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_ID_GROUP_LIST, new ResponseWrapper.ResponseHandler<GroupResponse, ErrorResponse>() {

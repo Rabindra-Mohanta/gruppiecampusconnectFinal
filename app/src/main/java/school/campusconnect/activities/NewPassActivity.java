@@ -107,7 +107,7 @@ public class NewPassActivity extends BaseActivity {
                 newPassReq.confirmPassword = layout_password_conf.getText().toString();
 
                 progressBar.setVisibility(View.VISIBLE);
-                manager.newPass(this,newPassReq,Constants.group_category);
+                manager.newPass(this,newPassReq);
             }
             else
             {

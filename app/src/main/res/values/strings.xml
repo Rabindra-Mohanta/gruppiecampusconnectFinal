@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Gruppie Campus</string>
     <string name="app_version">Version 1.0</string>
     <string name="action_create_acc">Create Group</string>
     <string name="action_notify_all">MESSAGE ALL</string>

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.GroupResponse;
 import school.campusconnect.utils.AppLog;
 import android.util.TypedValue;
@@ -121,7 +122,12 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
                     if (!isConnectionAvailable())
                         gotoHomeScreen();
                     else {
-                        SplashActivity.this.manager.getGroups(SplashActivity.this, Constants.group_category);
+                        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+                            SplashActivity.this.manager.getGroups(SplashActivity.this);
+                        }else {
+                            SplashActivity.this.manager.getGroupDetail(SplashActivity.this, BuildConfig.APP_ID);
+                        }
+
                     }
                 }
             }, 1000);
@@ -175,22 +181,43 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        GroupResponse res = (GroupResponse) response;
-        AppLog.e(TAG, "ClassResponse " + res.data);
-        LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, res.data.size());
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            GroupResponse res = (GroupResponse) response;
+            AppLog.e(TAG, "ClassResponse " + res.data);
+            LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, res.data.size());
+            gotoHomeScreen();
+        }else {
+            if (apiId == LeafManager.API_ID_GROUP_DETAIL) {
+                GroupDetailResponse gRes = (GroupDetailResponse) response;
+                AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
+                saveGroupDetails(gRes);
+            }
+        }
+    }
+    //save group detail
+    private void saveGroupDetails(GroupDetailResponse gRes) {
+        LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
+        LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
         gotoHomeScreen();
     }
     private void gotoHomeScreen()
     {
-        if(LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT)>1){
-            Intent intent = new Intent(SplashActivity.this, Home.class);
+        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            if(LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT)>1){
+                Intent intent = new Intent(SplashActivity.this, Home.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }else {
+                Intent login = new Intent(this, GroupDashboardActivityNew.class);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(login);
+                finish();
+            }
+        }else {
+            Intent intent = new Intent(SplashActivity.this, GroupDashboardActivityNew.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            finish();
-        }else {
-            Intent login = new Intent(this, GroupDashboardActivityNew.class);
-            login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(login);
             finish();
         }
     }

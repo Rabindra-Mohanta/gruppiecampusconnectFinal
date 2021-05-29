@@ -406,8 +406,8 @@ public class Fragment_PhoneContacts extends BaseFragment implements MyContactLis
             try {
                 String body = "I have added you to " + GroupDashboardActivityNew.group_name + ", to login plz download the " + getResources().getString(R.string.app_name) + " app from\n" +
                         "\n" +
-                        "gruppie.in/android/campusconnect"+"\n" +
-                        "gruppie.in/ios/campusconnect"+"\n" +
+                        "gruppie.in/android/"+getResources().getString(R.string.app_name).replace(" ","")+"\n" +
+                        "gruppie.in/ios/"+getResources().getString(R.string.app_name).replace(" ","")+"\n" +
                         "Plz add your friends to this group";
                 try {
 
