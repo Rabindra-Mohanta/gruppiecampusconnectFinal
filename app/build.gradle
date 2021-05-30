@@ -25,24 +25,24 @@ android {
                 multiDexEnabled true
 
                 //  [ 1. Gruppie Campus ]
-                applicationId "school.campusconnect"
-                versionCode 2
-                versionName "1.0"
-                resValue "string", "app_name", '"Gruppie Campus"'
-                buildConfigField("String", "AppName", '"Gruppie Campus"')
-                buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
-
-                // [ 2. RPES :  Campus Copy]
 //                applicationId "school.campusconnect"
 //                versionCode 2
 //                versionName "1.0"
-//                resValue "string", "app_name", '"RPES"'
-//                buildConfigField("String", "AppName", '"RPES"')
+//                resValue "string", "app_name", '"Gruppie Campus"'
+//                buildConfigField("String", "AppName", '"Gruppie Campus"')
 //                buildConfigField("String", "AppCategory", '"CAMPUS"')
-//                buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
+//                buildConfigField("String", "AppType",  '"CAMPUS"')
 //                buildConfigField("String", "APP_ID",  '"school"')
+
+                // [ 2. RPES :  Campus Copy]
+                applicationId "rpes.campusconnect"
+                versionCode 1
+                versionName "1.0"
+                resValue "string", "app_name", '"RPES"'
+                buildConfigField("String", "AppName", '"RPES"')
+                buildConfigField("String", "AppCategory", '"CAMPUS"')
+                buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
+                buildConfigField("String", "APP_ID",  '"school"')
 
                 // [ 2. R.P.A : Single]
 //                applicationId "rpa.gruppie"
@@ -54,6 +54,15 @@ android {
 //                buildConfigField("String", "AppType",  '"SINGLE"')
 //                buildConfigField("String", "APP_ID",  '"5f53228ca0ccf772b959c471"')
 
+                // [ 3. ABM ASK ]
+//                applicationId "abm.gruppie"
+//                versionCode 1
+//                versionName "1.0"
+//                resValue "string", "app_name", '"ABM ASK"'
+//                buildConfigField("String", "AppName", '"ABM ASK"')
+//                buildConfigField("String", "AppCategory", '"SINGLE"')
+//                buildConfigField("String", "AppType",  '"SINGLE"')
+//                buildConfigField("String", "APP_ID",  '"60a9e3aaa0ccf76a8e5c2235"')
 
                 ndk {
                     // Specifies the ABI configurations of your native
