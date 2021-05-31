@@ -35,14 +35,14 @@ android {
 //                buildConfigField("String", "APP_ID",  '"school"')
 
                 // [ 2. RPES :  Campus Copy]
-                applicationId "rpes.campusconnect"
-                versionCode 1
-                versionName "1.0"
-                resValue "string", "app_name", '"RPES"'
-                buildConfigField("String", "AppName", '"RPES"')
-                buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
-                buildConfigField("String", "APP_ID",  '"school"')
+//                applicationId "rpes.campusconnect"
+//                versionCode 1
+//                versionName "1.0"
+//                resValue "string", "app_name", '"RPES"'
+//                buildConfigField("String", "AppName", '"RPES"')
+//                buildConfigField("String", "AppCategory", '"CAMPUS"')
+//                buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
+//                buildConfigField("String", "APP_ID",  '"school"')
 
                 // [ 2. R.P.A : Single]
 //                applicationId "rpa.gruppie"
@@ -63,6 +63,16 @@ android {
 //                buildConfigField("String", "AppCategory", '"SINGLE"')
 //                buildConfigField("String", "AppType",  '"SINGLE"')
 //                buildConfigField("String", "APP_ID",  '"60a9e3aaa0ccf76a8e5c2235"')
+
+                // [ 3. RPES JSPS ]
+                applicationId "rpes_jsps.gruppie"
+                versionCode 16
+                versionName "2.4"
+                resValue "string", "app_name", '"RPES JSPS"'
+                buildConfigField("String", "AppName", '"RPES JSPS"')
+                buildConfigField("String", "AppCategory", '"SINGLE"')
+                buildConfigField("String", "AppType",  '"SINGLE"')
+                buildConfigField("String", "APP_ID",  '"5d0c767c4e51ba54c9595bfb"')
 
                 ndk {
                     // Specifies the ABI configurations of your native
