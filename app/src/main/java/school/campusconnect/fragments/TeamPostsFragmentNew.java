@@ -23,6 +23,7 @@ import school.campusconnect.activities.LikesListActivity;
 import school.campusconnect.activities.TeamSettingsActivity;
 import school.campusconnect.activities.TeamUsersActivity;
 import school.campusconnect.adapters.ReportAdapter;
+import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
@@ -45,7 +46,11 @@ import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import school.campusconnect.R;
@@ -73,6 +78,7 @@ import school.campusconnect.datamodel.teamdiscussion.TeamPostGetResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
 /**
@@ -1040,6 +1046,39 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         } else {
             showNoNetworkMsg();
         }
+    }
+
+    @Override
+    public void onDeleteVideoClick(TeamPostGetData item)
+    {
+
+        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
+        LeafPreference leafPreference = LeafPreference.getInstance(getActivity());
+        if(!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase(""))
+        {
+            ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {}.getType());
+           int count = list.size();
+            for(VideoOfflineObject offlineObject : list)
+            {
+                try {
+                    AppLog.e(TAG , "filename from pref : "+offlineObject.getVideo_filename());
+                    if(offlineObject.getVideo_filename()!=null  && offlineObject.getVideo_filename().equalsIgnoreCase(item.fileName.get(0)))
+                    {
+                        MixOperations.deleteVideoFile(offlineObject.video_filepath);
+                        list.remove(offlineObject);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if(count != list.size())
+            {
+                leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
+            }
+
+        }
+
     }
 
     private static String[] fromString(String string) {

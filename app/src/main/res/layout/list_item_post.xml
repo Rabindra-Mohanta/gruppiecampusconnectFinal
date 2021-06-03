@@ -420,6 +420,24 @@
                 android:visibility="gone" />
 
             <TextView
+                android:id="@+id/txt_drop_deletevideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_5dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingLeft="@dimen/padding_20dp"
+                android:paddingTop="@dimen/padding_5dp"
+                android:paddingRight="@dimen/padding_20dp"
+                android:paddingBottom="@dimen/padding_5dp"
+                android:text="Delete Video"
+                android:textAppearance="@style/TextAppearance.Regular"
+                android:textColor="@color/black_semi_transparent"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/txt_drop_report"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

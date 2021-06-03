@@ -3,6 +3,7 @@ package school.campusconnect.activities;
 import android.content.res.Configuration;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,13 +12,23 @@ import android.widget.Toast;
 
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.utils.AmazoneVideoDownload;
+import school.campusconnect.utils.AppLog;
 
 public class VideoPlayActivity extends AppCompatActivity implements OnPreparedListener {
 
@@ -41,6 +52,15 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
                 progressBar.setVisibility(View.GONE);
                 progressBar1.setVisibility(View.GONE);
                 playerView.setVideoPath(file.getPath());
+
+                AppLog.e(GroupDashboardActivityNew.class.getName(), "filename saved in preference : "+getIntent().getStringExtra("video"));
+
+                try {
+                    saveVideoNameOffline(getIntent().getStringExtra("video") , file.getPath());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
 
             @Override
@@ -110,4 +130,32 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
             playerView.pause();
         }
     }
+
+    public void saveVideoNameOffline(String fileName, String filePath)
+    {
+        VideoOfflineObject offlineObject = new VideoOfflineObject();
+        offlineObject.setVideo_filename(fileName);
+        offlineObject.setVideo_filepath(filePath);
+        offlineObject.setVideo_date(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+        LeafPreference preference = LeafPreference.getInstance(VideoPlayActivity.this);
+
+        if(!preference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase(""))
+        {
+            ArrayList<VideoOfflineObject> offlineObjects = new Gson().fromJson(preference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {
+            }.getType());
+
+            offlineObjects.add(offlineObject);
+            preference.setString(LeafPreference.OFFLINE_VIDEONAMES , new Gson().toJson(offlineObjects));
+
+        }
+        else
+        {
+            ArrayList<VideoOfflineObject> offlineObjects = new ArrayList<>();
+            offlineObjects.add(offlineObject);
+            preference.setString(LeafPreference.OFFLINE_VIDEONAMES , new Gson().toJson(offlineObjects));
+        }
+
+    }
+
 }

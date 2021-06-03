@@ -48,6 +48,7 @@ public class LeafPreference {
     public static final String phoneNumber = "phone";
     public static final String ISWALKTHROUGHDONE = "walkthrough";
     public static String Subscribed_Teams="Subscribed_Teams";
+    public static final String OFFLINE_VIDEONAMES = "offlinevideonames";
 
     private LeafPreference(Context context) {
         sPref = context.getSharedPreferences("nnr.electionleaf", Context.MODE_PRIVATE);

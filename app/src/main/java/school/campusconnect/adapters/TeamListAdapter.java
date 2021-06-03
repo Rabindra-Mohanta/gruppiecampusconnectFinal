@@ -323,6 +323,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
             // holder.ivDelete.setVisibility(View.GONE);
         }
 
+        holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
         holder.txtLike.setVisibility(View.VISIBLE);
         holder.linLikes.setVisibility(View.VISIBLE);
         holder.txt_fav.setVisibility(View.VISIBLE);
@@ -361,6 +362,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         TextView txt_drop_delete;
         @Bind(R.id.txt_drop_report)
         TextView txt_drop_report;
+        @Bind(R.id.txt_drop_deletevideo)
+        TextView txt_drop_deletevideo;
 
         @Bind(R.id.view1)
         View view1;
@@ -446,7 +449,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         }
 
         @OnClick({R.id.txt_like, R.id.txt_fav, R.id.rel, R.id.txt_readmore, R.id.iv_delete,
-                R.id.txt_comments, R.id.txt_drop_delete, R.id.txt_drop_report, R.id.txt_drop_share, R.id.img_comments,
+                R.id.txt_comments, R.id.txt_drop_delete, R.id.txt_drop_report , R.id.txt_drop_deletevideo, R.id.txt_drop_share, R.id.img_comments,
                 R.id.txt_push, R.id.txt_name, R.id.img_like, R.id.txt_readUnreadUuser})
         public void OnLikeClick(View v) {
             item = list.get(getLayoutPosition());
@@ -545,6 +548,15 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                     }
                     break;
 
+                case R.id.txt_drop_deletevideo:
+                    lin_drop.setVisibility(View.GONE);
+                    if (isConnectionAvailable()) {
+                        listener.onDeleteVideoClick(item);
+                    } else {
+                        showNoNetworkMsg();
+                    }
+                    break;
+
                 case R.id.txt_drop_report:
                     lin_drop.setVisibility(View.GONE);
                     if (isConnectionAvailable()) {
@@ -614,6 +626,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         void onNameClick(TeamPostGetData item);
 
         void onLikeListClick(TeamPostGetData item);
+
+        void onDeleteVideoClick(TeamPostGetData item);
     }
 
     public boolean isConnectionAvailable() {

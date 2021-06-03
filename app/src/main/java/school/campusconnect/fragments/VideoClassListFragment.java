@@ -454,7 +454,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
 
 
-
             holder.tv_stop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v)
@@ -807,7 +806,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         MeetingService meetingService = ZoomSDK.getInstance().getMeetingService();
 
 
-
         ZoomSDK.getInstance().addAuthenticationListener(new ZoomSDKAuthenticationListener() {
             @Override
             public void onZoomSDKLoginResult(long result) {
@@ -817,6 +815,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     InstantMeetingOptions opts = new InstantMeetingOptions();
                     opts.custom_meeting_id = className;
                     opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_PASSWORD;
+
 
                     //opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
                     if(getActivity() ==null)
@@ -846,7 +845,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                                 if (item.canPost && meetingCreatedBy && !isSentNotification ) {
                                     isSentNotification = true;
-                                    // stopMeeting(item);
+                                     stopMeeting(item);
                                 } else {
 
                                 }

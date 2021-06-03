@@ -1,6 +1,7 @@
 package school.campusconnect.activities;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,9 +20,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
@@ -40,12 +44,18 @@ import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 import net.frederico.showtipsview.ShowTipsBuilder;
 import net.frederico.showtipsview.ShowTipsView;
 import net.frederico.showtipsview.ShowTipsViewInterface;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -63,6 +73,8 @@ import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.MixOperations;
+import school.campusconnect.utils.RealPathUtil;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class GroupDashboardActivityNew extends BaseActivity
@@ -212,6 +224,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         HomeClick();
 
+     //   DeleteOldSavedVideos();
+
         AppLog.e(TAG, "UserId : " + LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID));
         AppLog.e(TAG, "Category :" + mGroupItem.category);
 
@@ -226,6 +240,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         // sendNotification("Message","Title");
 
     }
+
+
 
     /*private void sendNotification(String messageBody, String title) {
         AppLog.e(TAG,"sendNotification() called");
@@ -1109,4 +1125,44 @@ public class GroupDashboardActivityNew extends BaseActivity
             return false;
         }
     }
+
+
+    private void DeleteOldSavedVideos()
+    {
+            LeafPreference leafPreference = LeafPreference.getInstance(GroupDashboardActivityNew.this);
+            if(!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase(""))
+            {
+                ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {}.getType());
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_YEAR, -7);
+                String sevendayDate = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+
+                AppLog.e(TAG , "DeleteOldSaveVideos called with sevendaydate is : "+sevendayDate);
+
+                int i =0 ;
+                for(VideoOfflineObject offlineObject : list)
+                {
+
+                    if(offlineObject.getVideo_date().compareTo(sevendayDate) <= 0)
+                    {
+                        MixOperations.deleteVideoFile(offlineObject.video_filepath);
+                        list.remove(offlineObject);
+                        i++;
+
+                        if(i > 20)
+                        { /// Adding this condition to avoid too many deletion on main thread.
+                            break;
+                        }
+                    }
+                }
+
+
+                leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
+            }
+    }
+
+
+
+
 }

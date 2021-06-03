@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -118,5 +119,42 @@ public class MixOperations {
     {
         SimpleDateFormat inputFormat = new SimpleDateFormat("MMM");
         return inputFormat.format(date);
+    }
+
+
+    public static void deleteVideoFile(String filepath)
+    {
+
+        AppLog.e(TAG , "deleteVideoFile called : "+filepath );
+        /*final String where = MediaStore.MediaColumns.DATA + "=?";
+        final String[] selectionArgs = new String[] {
+                filepath
+        };
+        final ContentResolver contentResolver = GroupDashboardActivityNew.this.getContentResolver();
+        final Uri filesUri = MediaStore.Files.getContentUri("external");
+
+        //contentResolver.delete(filesUri, where, selectionArgs);
+
+        filepath = RealPathUtil.getRealPath(GroupDashboardActivityNew.this , Uri.parse(filepath));
+
+        AppLog.e(TAG, "filepath : "+filepath);
+
+        if(filepath == null)
+        return;*/
+        if(filepath ==null)
+        {
+            return;
+        }
+
+        File file = new File(filepath);
+        AppLog.e(TAG, "file exists ? " +file.exists()+" , filepath : "+filepath);
+
+        if (file.exists())
+        {
+            file.delete();
+            // contentResolver.delete(filesUri, where, selectionArgs);
+        }
+        AppLog.e(TAG, "file deleted ? " +!file.exists());
+
     }
 }
