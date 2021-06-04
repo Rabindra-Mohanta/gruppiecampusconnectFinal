@@ -22,6 +22,7 @@ import school.campusconnect.activities.ReadUnreadPostUsers;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetData;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
 import android.view.LayoutInflater;
@@ -323,7 +324,15 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
             // holder.ivDelete.setVisibility(View.GONE);
         }
 
-        holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+        if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+        {
+            holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.txt_drop_deletevideo.setVisibility(View.GONE);
+        }
+
         holder.txtLike.setVisibility(View.VISIBLE);
         holder.linLikes.setVisibility(View.VISIBLE);
         holder.txt_fav.setVisibility(View.VISIBLE);
@@ -551,7 +560,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                 case R.id.txt_drop_deletevideo:
                     lin_drop.setVisibility(View.GONE);
                     if (isConnectionAvailable()) {
-                        listener.onDeleteVideoClick(item);
+                        listener.onDeleteVideoClick(item , getAdapterPosition());
                     } else {
                         showNoNetworkMsg();
                     }
@@ -627,7 +636,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
         void onLikeListClick(TeamPostGetData item);
 
-        void onDeleteVideoClick(TeamPostGetData item);
+        void onDeleteVideoClick(TeamPostGetData item , int position);
     }
 
     public boolean isConnectionAvailable() {

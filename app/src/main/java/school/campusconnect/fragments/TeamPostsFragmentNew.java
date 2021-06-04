@@ -1049,7 +1049,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     }
 
     @Override
-    public void onDeleteVideoClick(TeamPostGetData item)
+    public void onDeleteVideoClick(TeamPostGetData item , int position)
     {
 
         AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
@@ -1076,6 +1076,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             {
                 leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
             }
+
+            mAdapter2.notifyItemChanged(position);
 
         }
 
