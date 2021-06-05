@@ -570,7 +570,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     {
         selectedClassdata = classData;
 
-        if(classData.canPost) {
+        if(classData.canPost && !classData.alreadyOnJitsiLive) {
             ((VideoClassActivity) getActivity()).startRecordingScreen(selectedClassdata);
         }
         else
@@ -667,7 +667,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
 
             // showJitsiOptions(meetIntent  , item.getJitsiToken() );
-            if(item.canPost && item.meetingCreatedBy && item.alreadyOnJitsiLive)
+            if(item.canPost && item.meetingCreatedBy)
                 initializeZoom(item.zoomKey , item.zoomSecret , item.zoomMail, item.zoomPassword , item.jitsiToken  ,  item.zoomName.get(0)  , item.className , true);
             else
                 initializeZoom(item.zoomKey , item.zoomSecret , item.zoomMail, item.zoomMeetingPassword , item.jitsiToken  ,  item.zoomName.get(0)  , item.className, false);
@@ -837,7 +837,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                             {
                                 AppLog.e(TAG , "meeting Disconnecting : "+item.canPost + " , "+meetingCreatedBy);
 
-                                if(getActivity() !=null && item.canPost)
+                                if(getActivity() !=null && item.canPost && !item.alreadyOnJitsiLive)
                                 {
                                     ((VideoClassActivity)getActivity()).stopRecording();
                                 }

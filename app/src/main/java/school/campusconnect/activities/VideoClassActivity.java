@@ -90,17 +90,39 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     @Override
     public void HBRecorderOnStart() {
-
+        AppLog.e(TAG,"AAA HBRecorderOnStart()");
     }
 
     @Override
     public void HBRecorderOnComplete() {
+        AppLog.e(TAG,"AAA HBRecorderOnComplete()");
 
+        if(selectedClassData==null){
+            return;
+        }
+        AppDialog.showConfirmDialog(this, "Do you want to share this live class?", new AppDialog.AppDialogListener() {
+            @Override
+            public void okPositiveClick(DialogInterface dialog)
+            {
+                dialog.dismiss();
+                Intent intent = new Intent(VideoClassActivity.this, RecClassSubjectActivity.class);
+                intent.putExtra("team_id",selectedClassData.getId());
+                intent.putExtra("title",selectedClassData.className);
+
+                intent.putExtra("path",hbRecorder.getFilePath());
+                startActivity(intent);
+            }
+
+            @Override
+            public void okCancelClick(DialogInterface dialog) {
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
     public void HBRecorderOnError(int errorCode, String reason) {
-
+        AppLog.e(TAG,"AAA HBRecorderOnError() : "+reason);
     }
 
     public void startRecordingScreen(VideoClassResponse.ClassData selectedClassData) {
@@ -113,7 +135,7 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     public void stopRecording()
     {
-        if(hbRecorder !=null)
+        if(hbRecorder !=null && selectedClassData!=null)
         {
             hbRecorder.stopScreenRecording();
             AppLog.e(TAG,"hbRecorder.getFilePath() : "+hbRecorder.getFilePath());
@@ -127,23 +149,6 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
             else
             saveVideoNameOffline(hbRecorder.getFileName() ,hbRecorder.getFilePath());
 
-            AppDialog.showConfirmDialog(this, "Do you want to share this live class?", new AppDialog.AppDialogListener() {
-                @Override
-                public void okPositiveClick(DialogInterface dialog)
-                {
-                    dialog.dismiss();
-                    Intent intent = new Intent(VideoClassActivity.this, RecClassSubjectActivity.class);
-                    intent.putExtra("team_id",selectedClassData.getId());
-                    intent.putExtra("title",selectedClassData.className);
-                    intent.putExtra("path",hbRecorder.getFilePath());
-                    startActivity(intent);
-                }
-
-                @Override
-                public void okCancelClick(DialogInterface dialog) {
-                    dialog.dismiss();
-                }
-            });
         }
     }
 

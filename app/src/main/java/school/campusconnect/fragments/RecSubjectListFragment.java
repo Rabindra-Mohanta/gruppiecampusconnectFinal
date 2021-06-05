@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.ChapterActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
@@ -162,16 +164,24 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
             }
         }
     }
-
     private void onTreeClick(SubjectStaffResponse.SubjectData classData) {
-        Intent intent = new Intent(getActivity(), ChapterActivity.class);
-        intent.putExtra("team_id",team_id);
-        intent.putExtra("className",className);
-        intent.putExtra("subject_id",classData.subjectId);
-        intent.putExtra("subject_name",classData.name);
-        intent.putExtra("canPost",classData.canPost);
-        intent.putExtra("title",classData.name);
-        intent.putExtra("path",path);
-        startActivity(intent);
+        if(!TextUtils.isEmpty(path)){
+            Intent intent = new Intent(getActivity(), AddChapterPostActivity.class);
+            intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
+            intent.putExtra("team_id",team_id);
+            intent.putExtra("subject_id",classData.subjectId);
+            intent.putExtra("subject_name",classData.name);
+            intent.putExtra("path",path);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(getActivity(), ChapterActivity.class);
+            intent.putExtra("team_id",team_id);
+            intent.putExtra("className",className);
+            intent.putExtra("subject_id",classData.subjectId);
+            intent.putExtra("subject_name",classData.name);
+            intent.putExtra("canPost",classData.canPost);
+            intent.putExtra("title",classData.name);
+            startActivity(intent);
+        }
     }
 }
