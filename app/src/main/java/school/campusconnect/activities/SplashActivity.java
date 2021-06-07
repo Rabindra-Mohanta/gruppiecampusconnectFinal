@@ -7,15 +7,20 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.datamodel.GroupResponse;
 import school.campusconnect.utils.AppLog;
+
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -24,6 +29,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.iceteck.silicompressorr.RealPathUtils;
+
+import java.util.ArrayList;
 
 import school.campusconnect.R;
 import school.campusconnect.database.DatabaseHandler;
@@ -41,6 +49,7 @@ import school.campusconnect.datamodel.notifications.NotificationModel;
 import school.campusconnect.datamodel.personalchat.PersonalContactsModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class SplashActivity extends AppCompatActivity implements LeafManager.OnCommunicationListener {
@@ -57,6 +66,63 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         setContentView(R.layout.activity_splash);
         AppLog.e(TAG, "onCreate()");
         manager = new LeafManager();
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String action = intent.getAction();
+        String type = intent.getType();
+        AppLog.e(TAG,"action : "+action);
+        AppLog.e(TAG,"type : "+type);
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            AppLog.e(TAG,"uri : "+uri);
+            ArrayList<String> list = new ArrayList<>();
+            String path = ImageUtil.getPath(this, uri);
+            AppLog.e(TAG,"path : "+path);
+            if(!TextUtils.isEmpty(path)){
+                list.add(path);
+            }
+            String fileType = "";
+            if (type.startsWith("application/pdf")) {
+                fileType = Constants.FILE_TYPE_PDF;
+            }else if (type.startsWith("image/")) {
+                fileType = Constants.FILE_TYPE_IMAGE;
+            }else if (type.startsWith("video/")) {
+                fileType = Constants.FILE_TYPE_VIDEO;
+            }
+            LeafApplication.getInstance().setShareFileList(list,fileType);
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+            ArrayList<Uri> uriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+            AppLog.e(TAG,"uriList : "+uriList);
+            ArrayList<String> list = new ArrayList<>();
+            if(uriList!=null){
+                for (int i=0;i<uriList.size();i++){
+                    String path = ImageUtil.getPath(this, uriList.get(i));
+                    if(!TextUtils.isEmpty(path)){
+                        list.add(path);
+                    }
+                }
+            }
+            AppLog.e(TAG,"uriList path: "+list);
+            String fileType = "";
+            if (type.startsWith("application/pdf")) {
+                fileType = Constants.FILE_TYPE_PDF;
+            }else if (type.startsWith("image/")) {
+                fileType = Constants.FILE_TYPE_IMAGE;
+            }else if (type.startsWith("video/")) {
+                fileType = Constants.FILE_TYPE_VIDEO;
+            }
+            LeafApplication.getInstance().setShareFileList(list,fileType);
+        }
+
     }
 
     @Override

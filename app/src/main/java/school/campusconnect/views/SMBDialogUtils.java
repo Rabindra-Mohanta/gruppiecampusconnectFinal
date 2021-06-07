@@ -87,6 +87,21 @@ public class SMBDialogUtils {
         dialog.setPositiveButton(activity.getString(android.R.string.yes), okListener);
         dialog.show();
     }
+    public static void showSMBDialogYesNoCancel(Activity activity, String msg, DialogInterface.OnClickListener okListener)
+    {
+        final SMBAlterDialog dialog = new SMBAlterDialog(activity);
+        dialog.setTitle(R.string.app_name);
+        dialog.setNegativeButtonWithListener();
+        dialog.setMessage(msg);
+        dialog.setPositiveButton(activity.getString(R.string.strYes), okListener);
+        dialog.setNegativeButton(activity.getString(R.string.strNo), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
     public static androidx.appcompat.app.AlertDialog showSMBDialogOKCancel_(Activity activity, String msg, DialogInterface.OnClickListener okListener)
     {
         final SMBAlterDialog dialog = new SMBAlterDialog(activity);

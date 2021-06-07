@@ -147,7 +147,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this,itemView);
-
+                img_tree.setVisibility(View.VISIBLE);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

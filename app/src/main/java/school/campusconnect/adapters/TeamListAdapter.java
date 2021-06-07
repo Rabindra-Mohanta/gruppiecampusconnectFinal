@@ -324,12 +324,16 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
             // holder.ivDelete.setVisibility(View.GONE);
         }
 
-        if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
-        {
-            holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        if (item.fileName != null && item.fileName.size() > 0) {
+            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+            {
+                holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.txt_drop_deletevideo.setVisibility(View.GONE);
+            }
+        }else {
             holder.txt_drop_deletevideo.setVisibility(View.GONE);
         }
 

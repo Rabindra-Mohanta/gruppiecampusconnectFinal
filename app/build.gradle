@@ -84,11 +84,11 @@ android {
 //                buildConfigField("String", "AppType",  '"SINGLE"')
 //                buildConfigField("String", "APP_ID",  '"60a9e7f0a0ccf76a8e79a0a6"')
 //
-               /* ndk {
+                ndk {
                     // Specifies the ABI configurations of your native
                     // libraries Gradle should build and package with your APK.
                     abiFilters 'armeabi-v7a'//'arm64-v8a' //
-                }*/
+                }
             }
     buildTypes {
         release {

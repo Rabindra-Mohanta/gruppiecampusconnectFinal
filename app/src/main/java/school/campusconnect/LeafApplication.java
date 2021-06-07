@@ -7,6 +7,8 @@ import school.campusconnect.utils.AppLog;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
 
+import java.util.ArrayList;
+
 import school.campusconnect.network.LeafApiClient;
 import school.campusconnect.utils.TypeFaceUtil;
 
@@ -17,6 +19,20 @@ public class LeafApplication extends Application  {
     private LeafApiClient apiClient;
 
     private static LeafApplication sIntance;
+    ArrayList<String> shareFileList;
+    String type = "";
+    public ArrayList<String> getShareFileList() {
+        return shareFileList;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setShareFileList(ArrayList<String> shareFileList, String type) {
+        this.shareFileList = shareFileList;
+        this.type = type;
+    }
 
     @Override
     public void onCreate() {

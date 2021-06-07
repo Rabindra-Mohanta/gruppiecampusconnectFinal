@@ -67,6 +67,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.adapters.UploadImageAdapter;
 import school.campusconnect.database.LeafPreference;
@@ -200,6 +201,26 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
         setListener();
 
+        ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
+        if(shareList!=null && shareList.size()>0){
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+
+                    String fileType = LeafApplication.getInstance().getType();
+                    if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)
+                            || Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)){
+                        listImages.addAll(shareList);
+                        fileTypeImageOrVideo = fileType;
+                        showLastImage();
+                    }else if(Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
+                        pdfPath = shareList.get(0);
+                        Picasso.with(AddPostActivity.this).load(R.drawable.pdf_thumbnail).into(imgDoc);
+                    }
+                }
+            });
+        }
     }
 
     private void setListener() {
@@ -1207,7 +1228,6 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
                 if (!TextUtils.isEmpty(pdfPath))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
-
                 removeImage();
             }
         }

@@ -57,6 +57,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.adapters.UploadImageAdapter;
 import school.campusconnect.database.LeafPreference;
@@ -173,6 +174,26 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         init();
 
         setListener();
+
+        ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
+        if(shareList!=null && shareList.size()>0){
+            String fileType = LeafApplication.getInstance().getType();
+            if(Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
+                return;
+            }
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)
+                            || Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)){
+                        listImages.addAll(shareList);
+                        fileTypeImageOrVideo = fileType;
+                        showLastImage();
+                    }
+                }
+            });
+        }
 
     }
 
