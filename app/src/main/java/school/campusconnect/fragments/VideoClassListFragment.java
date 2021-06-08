@@ -68,9 +68,11 @@ import us.zoom.sdk.MeetingService;
 import us.zoom.sdk.MeetingServiceListener;
 import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.MeetingViewsOptions;
+import us.zoom.sdk.StartMeetingOptions;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 import us.zoom.sdk.ZoomSDKInitializeListener;
+import us.zoom.sdk.ZoomUIService;
 
 import static school.campusconnect.network.LeafManager.API_JISTI_MEETING_START;
 import static school.campusconnect.network.LeafManager.API_JISTI_MEETING_STOP;
@@ -148,7 +150,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         if(apiId == API_JISTI_MEETING_START)
         {
-            Log.e(TAG , "OnSuccess : "+item.getMeetingCreatedBy());
+            Log.e(TAG , "OnSuccess called ");
 
             StartMeetingRes startMeetingRes = (StartMeetingRes) response;
 
@@ -160,7 +162,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 meetingCreatedBy = startMeetingRes.data.get(0).isMeetingCreatedBy();
 
-                if(item.canPost)
+                Log.e(TAG , "meetingCreatedBy after startMeeting API call :"+startMeetingRes.data.get(0).isMeetingCreatedBy());
+
+                if(item.canPost && meetingCreatedBy)
                 {
                     // startZoomMeeting(item.zoomMail ,item.zoomPassword , item.jitsiToken , item.zoomName.get(0));
                     initializeZoom(item.zoomKey , item.zoomSecret , item.zoomMail , item.zoomPassword , item.jitsiToken ,  item.zoomName.get(0) , item.className ,true);
@@ -168,7 +172,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 else
                 {
                     //joinZoomMeeting(item.zoomMail , item.zoomPassword , item.jitsiToken , item.zoomName.get(0));
-                    initializeZoom(item.zoomKey , item.zoomSecret , item.zoomMail, item.zoomPassword , item.jitsiToken  ,  item.zoomName.get(0)  , item.className , true);
+                    initializeZoom(item.zoomKey , item.zoomSecret , item.zoomMail, item.zoomPassword , item.jitsiToken  ,  item.zoomName.get(0)  , item.className , false);
                 }
 
                 if(startMeetingRes.data.get(0).isMeetingCreatedBy() && !isSentNotification)
@@ -631,11 +635,22 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 AppLog.e(TAG , "Zoom SDK initialized : "+i+" , "+i1+" , "+startOrJoin);
 
+                ZoomSDK.getInstance().getMeetingSettingsHelper().setMuteMyMicrophoneWhenJoinMeeting(true);
+                ZoomSDK.getInstance().getMeetingSettingsHelper().disableCopyMeetingUrl(true);
+                ZoomSDK.getInstance().getMeetingSettingsHelper().setClaimHostWithHostKeyActionEnabled(false);
+                ZoomSDK.getInstance().getMeetingSettingsHelper().disableShowVideoPreviewWhenJoinMeeting(true);
+
 
                 if(startOrJoin)
                     startZoomMeeting(zoomMail , zoomPassword , zoomName, className,  meetingId);
                 else
-                    joinZoomMeeting(zoomName ,zoomPassword , className ,meetingId);
+                {
+                    AppLog.e(TAG, "after initialize : isLogged IN Zoom : "+ZoomSDK.getInstance().isLoggedIn());
+                   // joinZoomMeeting(zoomName, zoomPassword, className, meetingId);
+                     logoutZoomBeforeJoining(zoomName ,zoomPassword , className ,meetingId);
+                }
+
+
             }
 
             @Override
@@ -651,7 +666,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void startMeeting(VideoClassResponse.ClassData item)
     {
-        Log.e(TAG ,"startMeetin called : "+item.getMeetingCreatedBy());
+        Log.e(TAG ,"On Click To startMeeting called : "+item.getMeetingCreatedBy());
         if(isConnectionAvailable())
         {
 
@@ -667,9 +682,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
 
             // showJitsiOptions(meetIntent  , item.getJitsiToken() );
-            if(item.canPost && item.meetingCreatedBy)
+           /* if(item.canPost && !item.alreadyOnJitsiLive)
                 initializeZoom(item.zoomKey , item.zoomSecret , item.zoomMail, item.zoomPassword , item.jitsiToken  ,  item.zoomName.get(0)  , item.className , true);
-            else
+            else*/
                 initializeZoom(item.zoomKey , item.zoomSecret , item.zoomMail, item.zoomMeetingPassword , item.jitsiToken  ,  item.zoomName.get(0)  , item.className, false);
 
 
@@ -803,100 +818,50 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         AppLog.e(TAG , "startzoommeeting called "+zoomMail+", "+password+" , "+name +", "+meetingId);
 
         isSentNotification = false;
-        MeetingService meetingService = ZoomSDK.getInstance().getMeetingService();
 
 
-        ZoomSDK.getInstance().addAuthenticationListener(new ZoomSDKAuthenticationListener() {
-            @Override
-            public void onZoomSDKLoginResult(long result) {
-                Log.e(TAG ,"onZoomLogin Resut : "+result);
-                if(result ==0 )
-                {
-                    InstantMeetingOptions opts = new InstantMeetingOptions();
-                    opts.custom_meeting_id = className;
-                    opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_PASSWORD;
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthListener);
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthLogoutListener);
+        ZoomSDK.getInstance().addAuthenticationListener(ZoomAuthListener);
 
 
-                    //opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
-                    if(getActivity() ==null)
-                        return;
+        if(!ZoomSDK.getInstance().isLoggedIn())
+        {
+          //  ZoomSDK.getInstance().logoutZoom();
+            Log.e(TAG ,"loginwithzoom Called from startmeeting , not logged in already ");
+            ZoomSDK.getInstance().loginWithZoom(zoomMail, password);
+        }else
+        {
+            Log.e(TAG ,"logoutzoom Called from startmeeting , already loggedIn");
+            ZoomSDK.getInstance().logoutZoom();
 
-                    meetingService.startInstantMeeting(VideoClassListFragment.this.getActivity(), opts);
-                    meetingService.addListener(new MeetingServiceListener() {
-                        @Override
-                        public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
-                            Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
+        }
 
-                            if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING"))
-                            {
-                                progressBar.setVisibility(View.GONE);
-                                progressBarZoom.setVisibility(View.GONE);
-                            }
-
-                            if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING"))
-                            {
-                                AppLog.e(TAG , "meeting Disconnecting : "+item.canPost + " , "+meetingCreatedBy);
-
-                                if(getActivity() !=null && item.canPost && !item.alreadyOnJitsiLive)
-                                {
-                                    ((VideoClassActivity)getActivity()).stopRecording();
-                                }
+    }
 
 
-                                if (item.canPost && meetingCreatedBy && !isSentNotification ) {
-                                    isSentNotification = true;
-                                     stopMeeting(item);
-                                } else {
+    private void logoutZoomBeforeJoining(String name , String zoomPassword , String className ,String meetingID)
+    {
 
-                                }
-                            }
-
-                        }
-                    });
-
-                    ZoomSDK.getInstance().getInMeetingService().addListener(inMeetingListener);
-                }
-
-            }
-
-            @Override
-            public void onZoomSDKLogoutResult(long result) {
-                AppLog.e(TAG , "onZOomSDKLogoutResult : "+result);
-            }
-
-            @Override
-            public void onZoomIdentityExpired() {
-                AppLog.e(TAG , "onZOomIdentityExpired");
-            }
-
-            @Override
-            public void onZoomAuthIdentityExpired() {
-
-                AppLog.e(TAG , "onZoomAuthIdentityExpired");
-
-            }
+        AppLog.e(TAG , "logoutZoomBeforeJoining called "+name+", "+className+ ", "+meetingID);
 
 
-
-
-         /*   @Override
-            public void onZoomAuthIdentityExpired() {
-
-            }*/
-        });
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthLogoutListener);
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthListener);
+        ZoomSDK.getInstance().addAuthenticationListener(ZoomAuthLogoutListener);
 
         ZoomSDK.getInstance().logoutZoom();
 
-        ZoomSDK.getInstance().loginWithZoom(zoomMail , password);
-
     }
+
+
 
     private void joinZoomMeeting(String name , String zoomPassword , String className ,String meetingID)
     {
         JoinMeetingParams params = new JoinMeetingParams();
 
 
-        AppLog.e(TAG , "join zoom meeting called "+" , "+name +", "+meetingID);
+        AppLog.e(TAG , "joinzoommeeting called "+" , "+name +", "+meetingID + " ");
 
 
         params.meetingNo = meetingID;
@@ -931,21 +896,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
       /*  StartMeetingOptions startMeetingOptions = new StartMeetingOptions();
         startMeetingOptions.no_video = false;*/
 
-        AppLog.e(TAG, " onclcik join");
-        ZoomSDK.getInstance().getMeetingService().addListener(new MeetingServiceListener() {
-            @Override
-            public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
-                Log.e(TAG , "meetinsstatusChanged : "+meetingStatus.name()+" errorcode : "+errorCode+" internalError: "+internalErrorCode);
-                if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
-                    progressBar.setVisibility(View.GONE);
-                    progressBarZoom.setVisibility(View.GONE);
-                }
 
-            }
-        });
+        ZoomSDK.getInstance().getMeetingService().removeListener(JoinMeetListener);
+        ZoomSDK.getInstance().getMeetingService().removeListener(StartMeetListener);
+        ZoomSDK.getInstance().getMeetingService().addListener(JoinMeetListener);
 
-
-        ZoomSDK.getInstance().getMeetingSettingsHelper().setMuteMyMicrophoneWhenJoinMeeting(true);
         ZoomSDK.getInstance().getMeetingService().joinMeetingWithParams(getActivity(), params, opts);
 
     }
@@ -1150,5 +1105,122 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         }
     };
 
+
+    MeetingServiceListener JoinMeetListener = new MeetingServiceListener() {
+        @Override
+        public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
+            Log.e(TAG , "meetinsstatusChanged : "+meetingStatus.name()+" errorcode : "+errorCode+" internalError: "+internalErrorCode);
+            if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
+                progressBar.setVisibility(View.GONE);
+                progressBarZoom.setVisibility(View.GONE);
+            }
+
+        }
+    };
+
+
+    MeetingServiceListener StartMeetListener = new MeetingServiceListener() {
+        @Override
+        public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
+            Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
+
+            if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING"))
+            {
+                progressBar.setVisibility(View.GONE);
+                progressBarZoom.setVisibility(View.GONE);
+            }
+
+
+            if(meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING"))
+            {
+                AppLog.e(TAG , "meeting Disconnecting : "+item.canPost + " , "+meetingCreatedBy);
+
+                if(getActivity() !=null && item.canPost && !item.alreadyOnJitsiLive)
+                {
+                    ((VideoClassActivity)getActivity()).stopRecording();
+                }
+
+
+                if (item.canPost && meetingCreatedBy && !isSentNotification ) {
+                    isSentNotification = true;
+                    stopMeeting(item);
+                } else {
+
+                }
+            }
+
+        }
+    };
+
+    ZoomSDKAuthenticationListener ZoomAuthLogoutListener = new ZoomSDKAuthenticationListener() {
+        @Override
+        public void onZoomSDKLoginResult(long result) {
+            AppLog.e(TAG , "logoutZoomBeforeJoining , onZoomSDKLoginResult : "+result);
+        }
+
+        @Override
+        public void onZoomSDKLogoutResult(long result) {
+            AppLog.e(TAG , "logoutZoomBeforeJoining , onZOomSDKLogoutResult : "+result);
+
+            joinZoomMeeting(item.zoomName.get(0) , item.zoomMeetingPassword , item.className , item.jitsiToken);
+        }
+
+        @Override
+        public void onZoomIdentityExpired() {
+            AppLog.e(TAG , "onZOomIdentityExpired");
+        }
+
+        @Override
+        public void onZoomAuthIdentityExpired() {
+
+            AppLog.e(TAG , "onZoomAuthIdentityExpired");
+
+        }
+
+    };
+
+    ZoomSDKAuthenticationListener ZoomAuthListener = new ZoomSDKAuthenticationListener() {
+        @Override
+        public void onZoomSDKLoginResult(long result) {
+            Log.e(TAG ,"startmeeting , onZoomLogin Result : "+result);
+            if(result ==0 )
+            {
+                InstantMeetingOptions opts = new InstantMeetingOptions();
+                opts.custom_meeting_id = item.className;
+                opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_PASSWORD;
+
+                //opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
+                if(getActivity() ==null)
+                    return;
+
+                ZoomSDK.getInstance().getMeetingService().startInstantMeeting(VideoClassListFragment.this.getActivity(), opts);
+
+                ZoomSDK.getInstance().getMeetingService().removeListener(StartMeetListener);
+                ZoomSDK.getInstance().getMeetingService().removeListener(JoinMeetListener);
+                ZoomSDK.getInstance().getMeetingService().addListener(StartMeetListener);
+                ZoomSDK.getInstance().getInMeetingService().addListener(inMeetingListener);
+            }
+
+        }
+
+        @Override
+        public void onZoomSDKLogoutResult(long result) {
+            AppLog.e(TAG , "startmeeting, onZOomSDKLogoutResult : "+result);
+            ZoomSDK.getInstance().loginWithZoom(item.zoomMail, item.zoomPassword);
+        }
+
+        @Override
+        public void onZoomIdentityExpired() {
+            AppLog.e(TAG , "onZOomIdentityExpired");
+        }
+
+        @Override
+        public void onZoomAuthIdentityExpired() {
+
+            AppLog.e(TAG , "onZoomAuthIdentityExpired");
+
+        }
+
+    };
 
 }
