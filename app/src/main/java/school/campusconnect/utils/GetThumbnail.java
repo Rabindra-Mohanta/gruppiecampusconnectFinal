@@ -1,5 +1,6 @@
 package school.campusconnect.utils;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
@@ -10,6 +11,9 @@ import com.tom_roush.pdfbox.rendering.PDFRenderer;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import school.campusconnect.LeafApplication;
@@ -70,10 +74,42 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
                 fileOut.close();
             } catch (Exception e) {
                 e.printStackTrace();
-                thumbnailList.add("");
+                AssetManager assetFiles = LeafApplication.getInstance().getAssets();
+                try {
+                    File renderFile = new File(getThumbnainDir(),"pdf_default.png");
+                    if (!renderFile.exists()) {
+                        InputStream in = assetFiles.open("images/pdf_default.png");
+                        FileOutputStream out = new FileOutputStream(renderFile);
+                        copyAssetFiles(in, out);
+                    }
+                    thumbnailList.add(renderFile.getAbsolutePath());
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                createThumbnailMultiPdf(index+1);
             } finally {
                 createThumbnailMultiPdf(index+1);
             }
+        }
+    }
+    private static void copyAssetFiles(InputStream in, OutputStream out) {
+        try {
+
+            byte[] buffer = new byte[1024];
+            int read;
+
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+
+            in.close();
+            in = null;
+            out.flush();
+            out.close();
+            out = null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     private void createThumbnailMultiVideo(int index) {
