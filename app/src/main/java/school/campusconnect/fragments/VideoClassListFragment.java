@@ -62,6 +62,7 @@ import us.zoom.sdk.InMeetingChatMessage;
 import us.zoom.sdk.InMeetingEventHandler;
 import us.zoom.sdk.InMeetingServiceListener;
 import us.zoom.sdk.InstantMeetingOptions;
+import us.zoom.sdk.InviteOptions;
 import us.zoom.sdk.JoinMeetingOptions;
 import us.zoom.sdk.JoinMeetingParams;
 import us.zoom.sdk.MeetingService;
@@ -69,6 +70,7 @@ import us.zoom.sdk.MeetingServiceListener;
 import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.MeetingViewsOptions;
 import us.zoom.sdk.StartMeetingOptions;
+import us.zoom.sdk.StartMeetingParams;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 import us.zoom.sdk.ZoomSDKInitializeListener;
@@ -890,7 +892,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         opts.no_audio = true;// set true
 
 
-        opts.meeting_views_options = MeetingViewsOptions.NO_BUTTON_PARTICIPANTS;// + MeetingViewsOptions.NO_BUTTON_AUDIO;//+ MeetingViewsOptions.NO_BUTTON_VIDEO +
+        opts.meeting_views_options = MeetingViewsOptions.NO_BUTTON_PARTICIPANTS+MeetingViewsOptions.NO_TEXT_MEETING_ID;// + MeetingViewsOptions.NO_BUTTON_AUDIO;//+ MeetingViewsOptions.NO_BUTTON_VIDEO +
 
 
       /*  StartMeetingOptions startMeetingOptions = new StartMeetingOptions();
@@ -1187,7 +1189,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             {
                 InstantMeetingOptions opts = new InstantMeetingOptions();
                 opts.custom_meeting_id = item.className;
-                opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_PASSWORD;
+                opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID ;
+                opts.no_invite = true;
+
 
                 //opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
                 if(getActivity() ==null)
