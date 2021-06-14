@@ -211,6 +211,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "337951586049-cdjejf1a9unff3p27256qufpg5etn3g3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "expert_puc.gruppie",
+            "certificate_hash": "fbcd8cf32e9092e7050c79989035f0f5227a5580"
+          }
+        },
+        {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -591,6 +599,42 @@
         "mobilesdk_app_id": "1:337951586049:android:90e71aa8fec56e43",
         "android_client_info": {
           "package_name": "nnr.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cuddles.greenage.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:a1139a9f52343562340d00",
+        "android_client_info": {
+          "package_name": "nphps.gruppie"
         }
       },
       "oauth_client": [
@@ -1122,94 +1166,6 @@
         }
       },
       "oauth_client": [
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "cuddles.greenage.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:ba6ef4fcde44e7c7",
-        "android_client_info": {
-          "package_name": "tis_new.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-uol3a269p736d0c1mv03qlmi9crpu5ue.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "tis_new.gruppie",
-            "certificate_hash": "92c74c3903c6251579a6c866ea628cf4e5502a39"
-          }
-        },
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "cuddles.greenage.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:d39916ea2469581c",
-        "android_client_info": {
-          "package_name": "tsws.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-8a5ql6aopammtv5ledh20ksupn5aopig.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "tsws.gruppie",
-            "certificate_hash": "4def88ea7fb58160e89264c91ba9eb73670d857d"
-          }
-        },
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
