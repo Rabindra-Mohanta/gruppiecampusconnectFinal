@@ -85,14 +85,23 @@ android {
 //                buildConfigField("String", "APP_ID",  '"60a9e7f0a0ccf76a8e79a0a6"')
 //
                 // [ 4. NPHPS ]
-                applicationId "nphps.gruppie"
-                versionCode 1
-                versionName "1.0"
-                resValue "string", "app_name", '"NPHPS"'
-                buildConfigField("String", "AppName", '"NPHPS"')
+//                applicationId "nphps.gruppie"
+//                versionCode 1
+//                versionName "1.0"
+//                resValue "string", "app_name", '"NPHPS"'
+//                buildConfigField("String", "AppName", '"NPHPS"')
+//                buildConfigField("String", "AppCategory", '"SINGLE"')
+//                buildConfigField("String", "AppType",  '"SINGLE"')
+//                buildConfigField("String", "APP_ID",  '"60c32761a0ccf705c27ae019"')
+
+                applicationId "hoysala.gruppie"
+                versionCode 5
+                versionName "2.1"
+                resValue "string", "app_name", '"Hoysala"'
+                buildConfigField("String", "AppName", '"Hoysala"')
                 buildConfigField("String", "AppCategory", '"SINGLE"')
                 buildConfigField("String", "AppType",  '"SINGLE"')
-                buildConfigField("String", "APP_ID",  '"60c32761a0ccf705c27ae019"')
+                buildConfigField("String", "APP_ID",  '"5f72d668a0ccf7753777d8fe"')
 
                 /*ndk {
                     // Specifies the ABI configurations of your native
