@@ -821,9 +821,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         isSentNotification = false;
 
-
         ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthListener);
+
         ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthLogoutListener);
+
         ZoomSDK.getInstance().addAuthenticationListener(ZoomAuthListener);
 
 
@@ -836,7 +837,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         {
             Log.e(TAG ,"logoutzoom Called from startmeeting , already loggedIn");
             ZoomSDK.getInstance().logoutZoom();
-
         }
 
     }

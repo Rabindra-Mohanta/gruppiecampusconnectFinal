@@ -237,12 +237,15 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
                 hbRecorder.setAudioSource("DEFAULT");
                 hbRecorder.setVideoBitrate(900000);
+                hbRecorder.setVideoEncoder("H264");
                // hbRecorder.setVideoFrameRate(24);
 
 
 
                 hbRecorder.setOutputPath(Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
                 hbRecorder.setFileName("video_"+new SimpleDateFormat("yyyyMMdd_hhmmss").format(new Date()));
+
+
 
                 File directory = new File(Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
                 if (! directory.exists()){
