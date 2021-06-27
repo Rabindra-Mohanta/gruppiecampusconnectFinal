@@ -2,6 +2,7 @@ package school.campusconnect.network;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.LeaveErrorResponse;
@@ -13,6 +14,7 @@ import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
+import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
 import school.campusconnect.datamodel.attendance_report.PreSchoolStudentRes;
 import school.campusconnect.datamodel.bus.BusResponse;
 import school.campusconnect.datamodel.bus.BusStudentRes;
@@ -29,6 +31,10 @@ import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.fees.FeesRes;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.fees.UpdateStudentFees;
+import school.campusconnect.datamodel.homework.AddHwPostRequest;
+import school.campusconnect.datamodel.homework.AssignmentRes;
+import school.campusconnect.datamodel.homework.HwRes;
+import school.campusconnect.datamodel.homework.ReassignReq;
 import school.campusconnect.datamodel.marksheet.AddMarkCardReq;
 import school.campusconnect.datamodel.marksheet.MarkCardListResponse;
 import school.campusconnect.datamodel.marksheet.StudentMarkCardListResponse;
@@ -45,9 +51,10 @@ import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
+import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
+import school.campusconnect.datamodel.videocall.StopMeetingReq;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
-import school.campusconnect.utils.Constants;
 import retrofit2.Call;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.AbsentAttendanceRes;
@@ -354,6 +361,17 @@ public class LeafManager {
     public static final int API_FEES_RES = 223;
     public static final int API_STUDENT_FEES_LIST = 224;
     public static final int API_STUDENT_FEES_ADD = 225;
+    public static final int API_HW_ADD = 226;
+    public static final int API_HW_LIST = 227;
+    public static final int API_SUBMIT_ASSIGNMENT = 228;
+    public static final int API_ASSIGNMENT_LIST = 229;
+    public static final int API_VERIFY_ASSIGNMENT = 230;
+    public static final int API_REASSIGN_ASSIGNMENT = 2301;
+    public static final int API_DELETE_ASSIGNMENT_TEACHER = 231;
+    public static final int API_DELETE_ASSIGNMENT_STUDENT = 232;
+    public static final int API_JISTI_MEETING_JOIN = 233;
+    public static final int API_ONLINE_ATTENDANCE_REPORT = 234;
+
 
     public LeafManager() {
 
@@ -3221,12 +3239,47 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
-
-    public void stopMeeting(OnCommunicationListener listListener, String group_id, String teamId) {
+    public void joinMeeting(OnCommunicationListener listListener, String group_id, String teamId, JoinLiveClassReq req) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<StartMeetingRes> model = service.stopMeeting(group_id, teamId);
+        final Call<BaseResponse> model = service.joinMeeting(group_id, teamId,req);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_JISTI_MEETING_JOIN, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void stopMeeting(OnCommunicationListener listListener, String group_id, String teamId, StopMeetingReq req) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<StartMeetingRes> model = service.stopMeeting(group_id, teamId,req);
         ResponseWrapper<StartMeetingRes> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
@@ -3510,11 +3563,16 @@ public class LeafManager {
 
     }
 
-    public void getSubjectStaff(OnCommunicationListener listListener, String group_id, String team_id) {
+    public void getSubjectStaff(OnCommunicationListener listListener, String group_id, String team_id,String option) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<SubjectStaffResponse> model = service.getSubjectStaff(group_id, team_id);
+        Call<SubjectStaffResponse> model;
+        if(!TextUtils.isEmpty(option)){
+            model = service.getSubjectStaffMore(group_id, team_id,option);
+        }else {
+            model = service.getSubjectStaff(group_id, team_id);
+        }
         ResponseWrapper<SubjectStaffResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
@@ -7220,6 +7278,36 @@ public class LeafManager {
             }
         }, ErrorResponse.class);
     }
+    public void getAttendanceReportOnline(OnCommunicationListener listener, String groupId, String teamId, int month, int year) {
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<OnlineAttendanceRes> model = service.getAttendanceReportOnline(groupId, teamId, month, year);
+        ResponseWrapper<OnlineAttendanceRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ONLINE_ATTENDANCE_REPORT, new ResponseWrapper.ResponseHandler<OnlineAttendanceRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, OnlineAttendanceRes response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
 
     public void getAttendanceDetail(OnCommunicationListener listener, String groupId, String teamId, String userId, String rollNo, int month, int year) {
         mOnCommunicationListener = listener;
@@ -8726,6 +8814,289 @@ public class LeafManager {
 
             @Override
             public void handleError(int apiId, int code, ErrorResponseModel<GroupValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
+
+    public void getHwList(final OnCommunicationListener listListener, String groupId, String teamId, String subjectId) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<HwRes> model = service.getHwList(groupId, teamId, subjectId);
+        ResponseWrapper<HwRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_HW_LIST, new ResponseWrapper.ResponseHandler<HwRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, HwRes response) {
+                AppLog.e("LeafManager", "ChapterRes : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void addHwPost(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, AddHwPostRequest request) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.addHwPost(groupId, team_id, subject_id, request);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_HW_ADD, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+    public void submitAssignmentPost(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id,String assignment_id, AddHwPostRequest request) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.submitAssignmentPost(groupId, team_id, subject_id,assignment_id, request);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_SUBMIT_ASSIGNMENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
+    public void getAssignment(final OnCommunicationListener listListener, String groupId, String teamId, String subjectId,String assignment_id,String param) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<AssignmentRes> model;
+        if(!TextUtils.isEmpty(param)){
+            model = service.getAssignmentForTeacher(groupId, teamId, subjectId,assignment_id,param);
+        }else {
+            model = service.getAssignment(groupId, teamId, subjectId,assignment_id);
+        }
+
+        ResponseWrapper<AssignmentRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ASSIGNMENT_LIST, new ResponseWrapper.ResponseHandler<AssignmentRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, AssignmentRes response) {
+                AppLog.e("LeafManager", "ChapterRes : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void verifyAssignment(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id,String assignment_id,String student_assignment_id, boolean verify) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.verifyAssignment(groupId, team_id, subject_id,assignment_id,student_assignment_id, verify);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_VERIFY_ASSIGNMENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+    public void reassignAssignment(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String assignment_id, String student_assignment_id, boolean reassign, ReassignReq reassignReq) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.reassignAssignment(groupId, team_id, subject_id,assignment_id,student_assignment_id, reassign,reassignReq);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_REASSIGN_ASSIGNMENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+    public void deleteAssignmentTeacher(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id,String assignment_id) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.deleteAssignmentTeacher(groupId, team_id, subject_id,assignment_id);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_DELETE_ASSIGNMENT_TEACHER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+    public void deleteAssignmentStudent(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id,String assignment_id,String student_assignment_id) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.deleteAssignmentStudent(groupId, team_id, subject_id,assignment_id,student_assignment_id);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_DELETE_ASSIGNMENT_STUDENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
                 if (mListener != null) {
                     mListener.onFailure(apiId, error);
                 }

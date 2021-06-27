@@ -62,6 +62,11 @@ public class VideoClassResponse extends BaseResponse {
         @Expose
         public String zoomPassword;
 
+        @SerializedName(value = "meetingIdOnLive")
+        @Expose
+        public String meetingIdOnLive;
+
+
         public String getZoomMeetingPassword() {
             return zoomMeetingPassword;
         }

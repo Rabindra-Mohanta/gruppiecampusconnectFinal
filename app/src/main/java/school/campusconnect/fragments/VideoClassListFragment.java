@@ -13,10 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,11 +47,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.AttendanceActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VideoClassActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
+import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
+import school.campusconnect.datamodel.videocall.StopMeetingReq;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -106,6 +113,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     ClassesAdapter classesAdapter = new ClassesAdapter();
     VideoClassResponse.ClassData selectedClassdata ;
 
+    private ArrayList<SubjectStaffResponse.SubjectData> subjectList;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,21 +144,18 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         super.onStart();
 
         videoClassClicked = false;
+
+        LeafManager leafManager = new LeafManager();
+        leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        LeafManager leafManager = new LeafManager();
-
-        leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
-
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-
         if(apiId == API_JISTI_MEETING_START)
         {
             Log.e(TAG , "OnSuccess called ");
@@ -189,33 +195,36 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         else if(apiId == API_JISTI_MEETING_STOP)
         {
 
-            if (apiId == LeafManager.API_JISTI_MEETING_STOP) {
-                StartMeetingRes startMeetingRes = (StartMeetingRes) response;
-                if(startMeetingRes.data!=null && startMeetingRes.data.size()>0)
-                {
-                    AppLog.e(TAG , "SENDNOTIFICAITNO CODE ReACHED AT STOP");
-                    new SendNotification(false , item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-
-                LeafManager leafManager = new LeafManager();
-
-                leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
-
+            StartMeetingRes startMeetingRes = (StartMeetingRes) response;
+            if(startMeetingRes.data!=null && startMeetingRes.data.size()>0)
+            {
+                AppLog.e(TAG , "SENDNOTIFICAITNO CODE ReACHED AT STOP");
+                new SendNotification(false , item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
+
+            LeafManager leafManager = new LeafManager();
+
+            leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
+
             return;
 
         }
-
-
-
         progressBar.setVisibility(View.GONE);
-        VideoClassResponse res = (VideoClassResponse) response;
-        List<VideoClassResponse.ClassData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
+        if(apiId== LeafManager.API_Video_Class){
+            VideoClassResponse res = (VideoClassResponse) response;
+            List<VideoClassResponse.ClassData> result = res.getData();
+            AppLog.e(TAG, "ClassResponse " + result);
 
-       // rvClass.setAdapter(new ClassesAdapter(result));
+            // rvClass.setAdapter(new ClassesAdapter(result));
 
-        classesAdapter.setList(result);
+            classesAdapter.setList(result);
+        }
+
+        if(apiId == LeafManager.API_SUBJECT_STAFF){
+            SubjectStaffResponse subjectStaffResponse = (SubjectStaffResponse) response;
+            subjectList = subjectStaffResponse.getData();
+            showSubjectSelectDialog();
+        }
     }
 
 
@@ -621,8 +630,35 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     private void stopMeeting(VideoClassResponse.ClassData classData)
     {
         this.item = classData;
-        LeafManager leafManager = new LeafManager();
-        leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, classData.getId());
+        getSubjectList(classData.getId());
+    }
+
+    private void showSubjectSelectDialog() {
+        final Dialog dialog = new Dialog(getActivity(),R.style.FragmentDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_select_subject);
+        Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
+        RecyclerView rvSubject = dialog.findViewById(R.id.rvSubjects);
+
+        AttendanceSubjectAdapter subjectAdapter = new AttendanceSubjectAdapter(subjectList);
+        rvSubject.setAdapter(subjectAdapter);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if(!TextUtils.isEmpty(subjectAdapter.getSelected())){
+                    StopMeetingReq stopMeetingReq = new StopMeetingReq(item.meetingIdOnLive,subjectAdapter.getSelected());
+                    AppLog.e(TAG,"stopMeetingReq : "+stopMeetingReq);
+                    progressBar.setVisibility(View.VISIBLE);
+                    LeafManager leafManager = new LeafManager();
+                    leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(),stopMeetingReq);
+                }else {
+                    Toast.makeText(getActivity(), "Select Subject", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.show();
     }
 
     private void initializeZoom(String zoomKey , String zoomSecret , String zoomMail , String zoomPassword , String meetingId , String zoomName , String className, boolean startOrJoin)
@@ -681,6 +717,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 LeafManager leafManager = new LeafManager();
                 leafManager.startMeeting(this, GroupDashboardActivityNew.groupId, item.getId());
                 return;
+            }
+
+            if(!item.canPost && item.alreadyOnJitsiLive){
+                LeafManager leafManager = new LeafManager();
+                leafManager.joinMeeting(this, GroupDashboardActivityNew.groupId, item.getId(),new JoinLiveClassReq(item.meetingIdOnLive));
             }
 
             // showJitsiOptions(meetIntent  , item.getJitsiToken() );
@@ -1226,5 +1267,68 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         }
 
     };
+
+    public class AttendanceSubjectAdapter extends RecyclerView.Adapter<AttendanceSubjectAdapter.ViewHolder> {
+        String selectedId = "";
+        private final ArrayList<SubjectStaffResponse.SubjectData> listSubject;
+        private Context mContext;
+        public AttendanceSubjectAdapter(ArrayList<SubjectStaffResponse.SubjectData> listSubject) {
+            this.listSubject=listSubject;
+        }
+
+        @Override
+        public AttendanceSubjectAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_attendance_subject, parent, false);
+            return new AttendanceSubjectAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final AttendanceSubjectAdapter.ViewHolder holder, final int position) {
+            SubjectStaffResponse.SubjectData itemList = subjectList.get(position);
+            holder.tvName.setText(itemList.getName());
+            if(selectedId.equalsIgnoreCase(itemList.getSubjectId())){
+                holder.chkAttendance.setChecked(true);
+            }else {
+                holder.chkAttendance.setChecked(false);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return listSubject!=null?listSubject.size():0;
+        }
+
+        public String getSelected() {
+            return selectedId;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            @Bind(R.id.chkAttendance)
+            CheckBox chkAttendance;
+
+            @Bind(R.id.tvName)
+            TextView tvName;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this,itemView);
+                chkAttendance.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectedId = listSubject.get(getAdapterPosition()).subjectId;
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+
+    }
+
+    private void getSubjectList(String teamId){
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getSubjectStaff(this,GroupDashboardActivityNew.groupId,teamId,"");
+    }
 
 }

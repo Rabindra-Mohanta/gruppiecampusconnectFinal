@@ -104,12 +104,20 @@ public class AttendanceActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add_class:
+            case R.id.menu_add_class:{
                 Intent attendanceIntent = new Intent(this, AttendanceReportActivity.class);
                 attendanceIntent.putExtra("team_id", teamId);
                 attendanceIntent.putExtra("className", getIntent().getStringExtra("className"));
                 startActivity(attendanceIntent);
                 return true;
+            }
+            case R.id.menu_generate_report_online:
+                Intent attendanceIntent = new Intent(this, AttendanceReportOnlineActivity.class);
+                attendanceIntent.putExtra("team_id", teamId);
+                attendanceIntent.putExtra("className", getIntent().getStringExtra("className"));
+                startActivity(attendanceIntent);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -614,6 +614,30 @@
         <activity
             android:name=".activities.UpdateStudentFeesEditActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.HWClassActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.HWClassSubjectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.HWListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddHwPostActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.HWParentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.HWStudentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SubmitAssignmentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AttendanceReportOnlineActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,24 +15,22 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.activities.AddSubjectActivity;
-import school.campusconnect.activities.AddSubjectActivity2;
+import school.campusconnect.activities.AddChapterPostActivity;
+import school.campusconnect.activities.ChapterActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.HWListActivity;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.subjects.SubjectResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
-public class SubjectListFragment2 extends BaseFragment implements LeafManager.OnCommunicationListener {
+public class HWSubjectListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "TeamDiscussFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
@@ -44,15 +43,16 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
 
     String team_id;
     String className;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
+        ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        team_id=getArguments().getString("team_id");
-        className=getArguments().getString("className");
+        team_id = getArguments().getString("team_id");
+        className = getArguments().getString("title");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -63,7 +63,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
-        leafManager.getSubjectStaff(this,GroupDashboardActivityNew.groupId,team_id,"more");
+        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,"");
     }
 
     @Override
@@ -86,8 +86,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
         progressBar.setVisibility(View.GONE);
     }
 
-    public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder>
-    {
+    public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder> {
         List<SubjectStaffResponse.SubjectData> list;
         private Context mContext;
 
@@ -98,7 +97,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_subject_staff,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_subject_staff, parent, false);
             return new ViewHolder(view);
         }
 
@@ -111,20 +110,15 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
 
         @Override
         public int getItemCount() {
-            if(list!=null)
-            {
-                if(list.size()==0)
-                {
+            if (list != null) {
+                if (list.size() == 0) {
                     txtEmpty.setText("No Subject found.");
-                }
-                else {
+                } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
-            }
-            else
-            {
+            } else {
                 txtEmpty.setText("No Subject found.");
                 return 0;
             }
@@ -144,8 +138,8 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this,itemView);
-
+                ButterKnife.bind(this, itemView);
+                img_tree.setVisibility(View.VISIBLE);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -164,11 +158,13 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
     }
 
     private void onTreeClick(SubjectStaffResponse.SubjectData classData) {
-        Intent intent = new Intent(getActivity(), AddSubjectActivity2.class);
+        Intent intent = new Intent(getActivity(), HWListActivity.class);
         intent.putExtra("team_id",team_id);
         intent.putExtra("className",className);
-        intent.putExtra("is_edit",true);
-        intent.putExtra("data",new Gson().toJson(classData));
+        intent.putExtra("subject_id",classData.subjectId);
+        intent.putExtra("subject_name",classData.name);
+        intent.putExtra("canPost",classData.canPost);
+        intent.putExtra("title",classData.name);
         startActivity(intent);
     }
 }

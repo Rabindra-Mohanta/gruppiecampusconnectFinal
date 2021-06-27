@@ -99,13 +99,13 @@ public class ProfileBasicFragment extends BaseFragment implements View.OnClickLi
             }
         });
 
-        edtPhone.editText.setOnClickListener(new View.OnClickListener() {
+       /* edtPhone.editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ChangeNumberActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
         fillDetails(((ProfileActivity2) getActivity()).item);
         return view;
     }

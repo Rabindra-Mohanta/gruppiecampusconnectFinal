@@ -1,6 +1,9 @@
 package school.campusconnect.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 
@@ -297,6 +300,14 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             request.userName.countryCode = countryCode;
             request.userName.phone = phoneNumber;
             request.deviceType = "Android";
+            try {
+                PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                request.appVersion = pInfo.versionCode+"";
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            request.osVersion = Build.VERSION.SDK_INT+"";
+            request.deviceModel = Build.MODEL;
             request.deviceToken = LeafPreference.getInstance(UserExistActivity.this).getString(LeafPreference.GCM_TOKEN);
             request.password = edtPassword/*.editText*/.getText().toString();
             AppLog.e("Login..", "data is " + new Gson().toJson(request));

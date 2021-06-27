@@ -91,6 +91,21 @@ public class MixOperations {
             return "";
         }
     }
+
+    public static String getFormattedDateOnly(String dt, String inputPattern,String of)
+    {
+        Date date;
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat outputFormat = new SimpleDateFormat(of);
+            date = inputFormat.parse(dt);
+            return outputFormat.format(date);
+        } catch (Exception e) {
+            AppLog.e(TAG,e.toString());
+            return "";
+        }
+    }
     public static String convertBase64(Bitmap bitmap)
     {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

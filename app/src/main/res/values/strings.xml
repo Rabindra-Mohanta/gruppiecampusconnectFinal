@@ -498,6 +498,12 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_completed">Completed</string>
     <string name="strYes">Yes</string>
     <string name="strNo">No</string>
+    <string name="strDescription">Description</string>
+    <string name="lbl_last_submition_date">Last Submission Date</string>
+    <string name="hint_date">Select Date</string>
+    <string name="strDeleteHw">Delete Homework</string>
+    <string name="lbl_attendance_report_online">Attendance Report Online</string>
+    <string name="lbl_generate_report">Generate Report</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

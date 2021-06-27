@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/padding_10dp"
+    android:layout_height="500dp"
+    android:orientation="vertical">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_above="@id/btnSubmit"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/llSubject"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:text="Select Subject"
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:layout_height="wrap_content" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSubjects"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/single_attendance_subject"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="100dp"
+        android:text="Submit"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/add_post_button_bg"
+        android:layout_marginBottom="@dimen/padding_5dp"
+        android:layout_marginTop="@dimen/padding_15dp"
+        android:layout_height="35dp" />
+</RelativeLayout>

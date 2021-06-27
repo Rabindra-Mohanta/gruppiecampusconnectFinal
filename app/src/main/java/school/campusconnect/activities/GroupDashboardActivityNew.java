@@ -11,9 +11,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -223,7 +226,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         HomeClick();
 
-     //   DeleteOldSavedVideos();
+        //   DeleteOldSavedVideos();
 
         AppLog.e(TAG, "UserId : " + LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID));
         AppLog.e(TAG, "Category :" + mGroupItem.category);
@@ -405,7 +408,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         createTabIcons();
     }
 
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople,R.id.llSubject,R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass,R.id.llEBook, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llEBook, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -908,13 +911,31 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void groupSelected(MyTeamData group) {
         if (group.type.equals("Video Class")) {
             Intent intent = new Intent(this, VideoClassActivity.class);
-            intent.putExtra("title",group.name);
+            intent.putExtra("title", group.name);
             startActivity(intent);
-        }else if (group.type.equals("Recorded Class")) {
+        } else if (group.type.equals("Recorded Class")) {
             Intent intent = new Intent(this, RecordedClassActivity.class);
-            intent.putExtra("title",group.name);
+            intent.putExtra("title", group.name);
             startActivity(intent);
-        }else if (group.type.equals("Gallery")) {
+        } else if (group.type.equals("Home Work")) {
+            Intent intent;
+            if ("admin".equalsIgnoreCase(group.role)) {
+                intent = new Intent(this, HWClassActivity.class);
+                intent.putExtra("title", group.name);
+            } else {
+                if (group.count == 1) {
+                    intent = new Intent(this, HWClassSubjectActivity.class);
+                    intent.putExtra("group_id", groupId);
+                    intent.putExtra("team_id", group.details.teamId);
+                    intent.putExtra("title", group.details.studentName);
+                } else {
+                    intent = new Intent(this, HWClassActivity.class);
+                    intent.putExtra("title", group.name);
+                }
+            }
+            intent.putExtra("role", group.role);
+            startActivity(intent);
+        } else if (group.type.equals("Gallery")) {
             startActivity(new Intent(this, GalleryActivity.class));
         } else if (group.type.equalsIgnoreCase("Calendar")) {
             startActivity(new Intent(this, CalendarActivity.class));
@@ -924,22 +945,22 @@ public class GroupDashboardActivityNew extends BaseActivity
             startActivity(intent);
         } else if (group.type.equals("Fees")) {
 
-            if ("admin".equalsIgnoreCase(group.role)){
+            if ("admin".equalsIgnoreCase(group.role)) {
                 Intent intent = new Intent(this, FeesClassActivity.class);
-                intent.putExtra("title",group.name);
+                intent.putExtra("title", group.name);
                 intent.putExtra("role", group.role);
                 startActivity(intent);
-            }else {
-                if(group.count==1){
+            } else {
+                if (group.count == 1) {
                     Intent intent = new Intent(this, FeesListActivity.class);
-                    intent.putExtra("group_id",groupId);
-                    intent.putExtra("team_id",group.details.teamId);
-                    intent.putExtra("title",group.details.studentName);
-                    intent.putExtra("role",group.role);
+                    intent.putExtra("group_id", groupId);
+                    intent.putExtra("team_id", group.details.teamId);
+                    intent.putExtra("title", group.details.studentName);
+                    intent.putExtra("role", group.role);
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(this, FeesClassActivity.class);
-                    intent.putExtra("title",group.name);
+                    intent.putExtra("title", group.name);
                     intent.putExtra("role", group.role);
                     startActivity(intent);
                 }
@@ -947,110 +968,109 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         } else if (group.type.equals("Chat")) {
             Intent intent = new Intent(this, ChatActivity.class);
-            intent.putExtra("role",group.role);
+            intent.putExtra("role", group.role);
             startActivity(intent);
         } else if (group.type.equals("Vendor Connect")) {
             startActivity(new Intent(this, VendorActivity.class));
-        }else if (group.type.equals("E-Books")) {
-            if(group.count==0){
-                Intent intent=new Intent(this, EBookClassActivity.class);
-                intent.putExtra("group_id",groupId);
-                intent.putExtra("title",group.name);
+        } else if (group.type.equals("E-Books")) {
+            if (group.count == 0) {
+                Intent intent = new Intent(this, EBookClassActivity.class);
+                intent.putExtra("group_id", groupId);
+                intent.putExtra("title", group.name);
                 startActivity(intent);
-            }
-            else if(group.count==1){
-                Intent intent=new Intent(this, EBookPdfForTeamActivity.class);
-                intent.putExtra("group_id",groupId);
-                intent.putExtra("team_id",group.details.teamId);
+            } else if (group.count == 1) {
+                Intent intent = new Intent(this, EBookPdfForTeamActivity.class);
+                intent.putExtra("group_id", groupId);
+                intent.putExtra("team_id", group.details.teamId);
                 intent.putExtra("title", group.details.teamName);
                 startActivity(intent);
-            }else{
-                Intent intent=new Intent(this, ParentKidsForEBookActivity.class);
-                intent.putExtra("group_id",groupId);
-                intent.putExtra("title",group.name);
+            } else {
+                Intent intent = new Intent(this, ParentKidsForEBookActivity.class);
+                intent.putExtra("group_id", groupId);
+                intent.putExtra("title", group.name);
                 startActivity(intent);
             }
         } else if (group.type.equals("Code Of Conduct")) {
             startActivity(new Intent(this, CodeConductActivity.class));
         } else if (group.type.equals("Attendance")) {
-            if ("teacher".equalsIgnoreCase(group.role) && group.count==1) {
-                if("preschool".equalsIgnoreCase(group.details.category)){
+            if ("teacher".equalsIgnoreCase(group.role) && group.count == 1) {
+                if ("preschool".equalsIgnoreCase(group.details.category)) {
                     Intent intent = new Intent(this, AttendancePareSchool.class);
                     intent.putExtra("isTeamAdmin", true);
                     intent.putExtra("team_id", group.details.teamId);
-                    intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
+                    intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
                     startActivity(intent);
-                }else {
-                    Intent intent = new Intent(this,AttendanceActivity.class);
-                    intent.putExtra("group_id",groupId);
-                    intent.putExtra("team_id",group.details.teamId);
-                    intent.putExtra("className",group.details.teamName);
+                } else {
+                    Intent intent = new Intent(this, AttendanceActivity.class);
+                    intent.putExtra("group_id", groupId);
+                    intent.putExtra("team_id", group.details.teamId);
+                    intent.putExtra("className", group.details.teamName);
                     startActivity(intent);
                 }
 
             }
-            if ("teacher".equalsIgnoreCase(group.role) && group.count>1) {
-                Intent intent = new Intent(this,TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance",true);
+            if ("teacher".equalsIgnoreCase(group.role) && group.count > 1) {
+                Intent intent = new Intent(this, TeacherClassActivity.class);
+                intent.putExtra("is_for_attendance", true);
                 startActivity(intent);
             }
             if ("admin".equalsIgnoreCase(group.role)) {
-                Intent intent = new Intent(this,TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance",true);
-                intent.putExtra("role","admin");
+                Intent intent = new Intent(this, TeacherClassActivity.class);
+                intent.putExtra("is_for_attendance", true);
+                intent.putExtra("role", "admin");
                 startActivity(intent);
             }
 
 
-            if ("parent".equalsIgnoreCase(group.role) && group.count==1) {
+            if ("parent".equalsIgnoreCase(group.role) && group.count == 1) {
                 Intent intent = new Intent(this, AttendanceDetailActivity.class);
-                intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
-                intent.putExtra("team_id",group.details.teamId);
-                intent.putExtra("title",group.details.studentName);
-                intent.putExtra("userId",group.details.userId);
-                intent.putExtra("rollNo",group.details.rollNumber);
+                intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
+                intent.putExtra("team_id", group.details.teamId);
+                intent.putExtra("title", group.details.studentName);
+                intent.putExtra("userId", group.details.userId);
+                intent.putExtra("rollNo", group.details.rollNumber);
                 startActivity(intent);
             }
-            if ("parent".equalsIgnoreCase(group.role) && group.count>1) {
-                Intent intent = new Intent(this,ParentKidsActivity.class);
-                intent.putExtra("is_for_attendance",true);
+            if ("parent".equalsIgnoreCase(group.role) && group.count > 1) {
+                Intent intent = new Intent(this, ParentKidsActivity.class);
+                intent.putExtra("is_for_attendance", true);
                 startActivity(intent);
             }
 
         } else if (group.type.equals("Marks Card")) {
-            if ("teacher".equalsIgnoreCase(group.role) && group.count==1) {
+            if ("teacher".equalsIgnoreCase(group.role) && group.count == 1) {
                 Intent intent = new Intent(this, MarksheetActivity.class);
                 intent.putExtra("team_id", group.details.teamId);
                 intent.putExtra("className", group.details.teamName);
-                intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
+                intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
                 startActivity(intent);
             }
-            if ("teacher".equalsIgnoreCase(group.role) && group.count>1) {
-                Intent intent = new Intent(this,TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance",false);
+            if ("teacher".equalsIgnoreCase(group.role) && group.count > 1) {
+                Intent intent = new Intent(this, TeacherClassActivity.class);
+                intent.putExtra("is_for_attendance", false);
                 startActivity(intent);
             }
 
             if ("admin".equalsIgnoreCase(group.role)) {
-                Intent intent = new Intent(this,TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance",false);
-                intent.putExtra("role","admin");
+                Intent intent = new Intent(this, TeacherClassActivity.class);
+                intent.putExtra("is_for_attendance", false);
+                intent.putExtra("role", "admin");
                 startActivity(intent);
             }
-            if ("parent".equalsIgnoreCase(group.role) && group.count==1) {
-                Intent intent = new Intent(this,MarkSheetListActivity.class);
-                intent.putExtra("group_id",groupId);
-                intent.putExtra("team_id",group.details.teamId);
-                intent.putExtra("className",group.details.teamName);
-                intent.putExtra("user_id",group.details.userId);
-                intent.putExtra("name",group.details.studentName);
-                intent.putExtra("roll_no",group.details.rollNumber);
-                intent.putExtra("role","parent");
+            if ("parent".equalsIgnoreCase(group.role) && group.count == 1) {
+                Intent intent = new Intent(this, MarkSheetListActivity.class);
+                intent.putExtra("group_id", groupId);
+                intent.putExtra("team_id", group.details.teamId);
+                intent.putExtra("className", group.details.teamName);
+                intent.putExtra("user_id", group.details.userId);
+                intent.putExtra("name", group.details.studentName);
+                intent.putExtra("roll_no", group.details.rollNumber);
+                intent.putExtra("role", "parent");
                 startActivity(intent);
             }
-            if ("parent".equalsIgnoreCase(group.role) && group.count>1) {
-                Intent intent = new Intent(this,ParentKidsActivity.class);
-                intent.putExtra("is_for_attendance",false);
+            if ("parent".equalsIgnoreCase(group.role) && group.count > 1) {
+                Intent intent = new Intent(this, ParentKidsActivity.class);
+                intent.putExtra("is_for_attendance", false);
                 startActivity(intent);
             }
         } else {
@@ -1117,51 +1137,46 @@ public class GroupDashboardActivityNew extends BaseActivity
         });
 
     }
-    public boolean isBaseFragment(){
-        if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof BaseFragment){
+
+    public boolean isBaseFragment() {
+        if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof BaseFragment) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
 
-    private void DeleteOldSavedVideos()
-    {
-            LeafPreference leafPreference = LeafPreference.getInstance(GroupDashboardActivityNew.this);
-            if(!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase(""))
-            {
-                ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {}.getType());
+    private void DeleteOldSavedVideos() {
+        LeafPreference leafPreference = LeafPreference.getInstance(GroupDashboardActivityNew.this);
+        if (!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase("")) {
+            ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {
+            }.getType());
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DAY_OF_YEAR, -7);
-                String sevendayDate = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, -7);
+            String sevendayDate = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
 
-                AppLog.e(TAG , "DeleteOldSaveVideos called with sevendaydate is : "+sevendayDate);
+            AppLog.e(TAG, "DeleteOldSaveVideos called with sevendaydate is : " + sevendayDate);
 
-                int i =0 ;
-                for(VideoOfflineObject offlineObject : list)
-                {
+            int i = 0;
+            for (VideoOfflineObject offlineObject : list) {
 
-                    if(offlineObject.getVideo_date().compareTo(sevendayDate) <= 0)
-                    {
-                        MixOperations.deleteVideoFile(offlineObject.video_filepath);
-                        list.remove(offlineObject);
-                        i++;
+                if (offlineObject.getVideo_date().compareTo(sevendayDate) <= 0) {
+                    MixOperations.deleteVideoFile(offlineObject.video_filepath);
+                    list.remove(offlineObject);
+                    i++;
 
-                        if(i > 20)
-                        { /// Adding this condition to avoid too many deletion on main thread.
-                            break;
-                        }
+                    if (i > 20) { /// Adding this condition to avoid too many deletion on main thread.
+                        break;
                     }
                 }
-
-
-                leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
             }
+
+
+            leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
+        }
     }
-
-
 
 
 }

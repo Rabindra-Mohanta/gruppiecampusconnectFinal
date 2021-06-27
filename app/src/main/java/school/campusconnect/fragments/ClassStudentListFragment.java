@@ -269,23 +269,10 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         }
         File file = new File(csvFolder, classData.className + ".xls");
 
-//        FileWriter fw = null;
-//        BufferedWriter bw = null;
         try {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            /*fw = new FileWriter(file.getAbsoluteFile());
-            bw = new BufferedWriter(fw);
-            bw.write("Name, Phone Number, Roll Number");
-            bw.newLine();
-            if(list!=null){
-                for(int i=0;i<list.size();i++){
-                    StudentRes.StudentData item = list.get(i);
-                    bw.write(item.getName()+", "+item.getPhone()+", "+item.getRollNumber());
-                    bw.newLine();
-                }
-            }*/
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet firstSheet = workbook.createSheet(classData.className);
             HSSFRow rowA = firstSheet.createRow(0);
@@ -322,18 +309,6 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*finally {
-            try {
-                if (fw != null) {
-                    fw.flush();
-                }
-                if (bw != null) {
-                    bw.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
     private void shareFile(File file) {
