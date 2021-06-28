@@ -484,11 +484,15 @@ public interface LeafService {
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/jitsi/join")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> joinMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId, @Body JoinLiveClassReq req);
+    Call<BaseResponse> joinMeeting(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body JoinLiveClassReq req);
 
     @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/stop")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<StartMeetingRes> stopMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId,@Body StopMeetingReq req);
+
+    @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/stop")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StartMeetingRes> stopMeetingNoBody(@Path("group_id") String group_id, @Path("teamId") String teamId);
 
 
     @GET("/api/v1/groups/{group_id}/ebooks/get")

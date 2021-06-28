@@ -162,7 +162,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             StartMeetingRes startMeetingRes = (StartMeetingRes) response;
 
-            if(startMeetingRes.data != null && !startMeetingRes.data.get(0).jitsiToken.equalsIgnoreCase(""))
+            if(startMeetingRes.data != null && !("".equalsIgnoreCase(startMeetingRes.data.get(0).jitsiToken)))
             {
 
                 //startActivity(meetIntent);
@@ -206,6 +206,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
 
+            if(getActivity()!=null){
+                ((VideoClassActivity)getActivity()).showSharePopup();
+            }
             return;
 
         }
@@ -656,6 +659,15 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 }else {
                     Toast.makeText(getActivity(), "Select Subject", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                progressBar.setVisibility(View.VISIBLE);
+                LeafManager leafManager = new LeafManager();
+                leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(),null);
             }
         });
         dialog.show();
@@ -1279,7 +1291,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         @Override
         public AttendanceSubjectAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_attendance_subject, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_attendance_subject_1, parent, false);
             return new AttendanceSubjectAdapter.ViewHolder(view);
         }
 
@@ -1287,6 +1299,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         public void onBindViewHolder(final AttendanceSubjectAdapter.ViewHolder holder, final int position) {
             SubjectStaffResponse.SubjectData itemList = subjectList.get(position);
             holder.tvName.setText(itemList.getName());
+            holder.tvStaff.setText("["+itemList.getStaffNameFormatted()+"]");
             if(selectedId.equalsIgnoreCase(itemList.getSubjectId())){
                 holder.chkAttendance.setChecked(true);
             }else {
@@ -1309,6 +1322,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             @Bind(R.id.tvName)
             TextView tvName;
+
+            @Bind(R.id.tvStaff)
+            TextView tvStaff;
 
             public ViewHolder(View itemView) {
                 super(itemView);

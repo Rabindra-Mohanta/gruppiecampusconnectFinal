@@ -101,6 +101,11 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     TextView txtEmpty;
     @Bind(R.id.txt_lastDate)
     TextView txt_lastDate;
+    @Bind(R.id.txt_teacher)
+    TextView txt_teacher;
+    @Bind(R.id.txt_date)
+    TextView txt_date;
+
 
     private String group_id;
     private String team_id;
@@ -156,6 +161,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
 
     private void showData() {
         txt_title.setText(item.topic);
+        txt_teacher.setText(item.createdByName);
+        txt_date.setText(MixOperations.getFormattedDateOnly(item.postedAt, Constants.DATE_FORMAT,"dd MMM yyyy\nhh:mm a"));
         if (!TextUtils.isEmpty(item.description)) {
             txtContent.setVisibility(View.VISIBLE);
             if (item.description.length() > 200) {
@@ -565,6 +572,18 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             }else {
                 holder.imgChat.setVisibility(View.GONE);
                 holder.llAction.setVisibility(View.VISIBLE);
+
+                if(item.assignmentVerified){
+                    holder.btnYes.setVisibility(View.VISIBLE);
+                    holder.btnNo.setVisibility(View.GONE);
+                }else if(item.assignmentReassigned){
+                    holder.btnYes.setVisibility(View.GONE);
+                    holder.btnNo.setVisibility(View.VISIBLE);
+                }else {
+                    holder.btnYes.setVisibility(View.VISIBLE);
+                    holder.btnNo.setVisibility(View.VISIBLE);
+                }
+
             }
 
         }

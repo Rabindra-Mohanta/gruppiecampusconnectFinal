@@ -43,6 +43,9 @@ public class HwRes extends BaseResponse {
         @SerializedName("createdByName")
         @Expose
         public String createdByName;
+        @SerializedName("postedAt")
+        @Expose
+        public String postedAt;
         @SerializedName("createdByImage")
         @Expose
         public String createdByImage;

@@ -3279,7 +3279,13 @@ public class LeafManager {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<StartMeetingRes> model = service.stopMeeting(group_id, teamId,req);
+        final Call<StartMeetingRes> model;
+        if(req!=null){
+            model = service.stopMeeting(group_id, teamId,req);
+        }else {
+            model = service.stopMeetingNoBody(group_id, teamId);
+        }
+
         ResponseWrapper<StartMeetingRes> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {

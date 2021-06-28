@@ -95,7 +95,9 @@ public class FeesListActivity extends BaseActivity {
 
     public void setOptionMenuName(String menuName) {
         if(menu!=null){
-            menu.findItem(R.id.menuAdd).setTitle(menuName);
+            if(menu.findItem(R.id.menuAdd)!=null){
+                menu.findItem(R.id.menuAdd).setTitle(menuName);
+            }
         }
     }
 }

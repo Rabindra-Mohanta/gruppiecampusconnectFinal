@@ -60,6 +60,7 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
     private VideoClassResponse.ClassData selectedClassData;
 
     Uri mUri;
+    private boolean isRecordingStarted=false;
 
 
     @Override
@@ -96,8 +97,9 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
     @Override
     public void HBRecorderOnComplete() {
         AppLog.e(TAG,"AAA HBRecorderOnComplete()");
-
-        if(selectedClassData==null){
+    }
+    public void showSharePopup(){
+        if(selectedClassData==null || !isRecordingStarted){
             return;
         }
         AppDialog.showConfirmDialog(this, "Do you want to share this live class?", new AppDialog.AppDialogListener() {
@@ -202,7 +204,7 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
         if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 AppLog.e(TAG , "startScreenRecording called ");
-
+                isRecordingStarted = true;
                 resultcode = resultCode;
                 recorderIntent = data;
 
@@ -263,6 +265,7 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
             }
             else
             {
+                isRecordingStarted = false;
                 if(classListFragment !=null)
                     classListFragment.startMeetingFromActivity();
 

@@ -98,6 +98,10 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     @Bind(R.id.txt_lastDate)
     TextView txt_lastDate;
 
+    @Bind(R.id.txt_teacher)
+    TextView txt_teacher;
+    @Bind(R.id.txt_date)
+    TextView txt_date;
 
     private String group_id;
     private String team_id;
@@ -134,6 +138,8 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
 
     private void showData() {
         txt_title.setText(item.topic);
+        txt_teacher.setText(item.createdByName);
+        txt_date.setText(MixOperations.getFormattedDateOnly(item.postedAt, Constants.DATE_FORMAT,"dd MMM yyyy\nhh:mm a"));
         if (!TextUtils.isEmpty(item.description)) {
             txtContent.setVisibility(View.VISIBLE);
             if (item.description.length() > 200) {
