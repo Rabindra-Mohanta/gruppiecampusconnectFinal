@@ -73,6 +73,7 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
     public ProgressBar progressBar;
     private String team_id;
     private String className;
+    private String selectedMonthYear="";
 
     @Nullable
     @Override
@@ -92,26 +93,27 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
 
     private void showMonths() {
         List<MonthData> listMonth = new ArrayList<>();
-        listMonth.add(new MonthData("Jan", 1));
-        listMonth.add(new MonthData("Feb", 2));
-        listMonth.add(new MonthData("Mar", 3));
-        listMonth.add(new MonthData("Apr", 4));
+        listMonth.add(new MonthData("January", 1));
+        listMonth.add(new MonthData("February", 2));
+        listMonth.add(new MonthData("March", 3));
+        listMonth.add(new MonthData("April", 4));
         listMonth.add(new MonthData("May", 5));
-        listMonth.add(new MonthData("Jun", 6));
-        listMonth.add(new MonthData("Jul", 7));
-        listMonth.add(new MonthData("Aug", 8));
-        listMonth.add(new MonthData("Sep", 9));
-        listMonth.add(new MonthData("Oct", 10));
-        listMonth.add(new MonthData("Nob", 11));
-        listMonth.add(new MonthData("Dec", 11));
+        listMonth.add(new MonthData("June", 6));
+        listMonth.add(new MonthData("July", 7));
+        listMonth.add(new MonthData("August", 8));
+        listMonth.add(new MonthData("September", 9));
+        listMonth.add(new MonthData("October", 10));
+        listMonth.add(new MonthData("November", 11));
+        listMonth.add(new MonthData("December", 11));
         MonthAdapter adapter = new MonthAdapter(listMonth);
         rvMonth.setAdapter(adapter);
     }
 
-    private void getAttendanceReport(int month) {
+    private void getAttendanceReport(MonthData item) {
+        selectedMonthYear = item.dispName+"_"+Calendar.getInstance().get(Calendar.YEAR);
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getAttendanceReportOnline(this, GroupDashboardActivityNew.groupId, team_id, month, Calendar.getInstance().get(Calendar.YEAR));
+        leafManager.getAttendanceReportOnline(this, GroupDashboardActivityNew.groupId, team_id, item.month, Calendar.getInstance().get(Calendar.YEAR));
     }
 
     @Override
@@ -202,7 +204,7 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
                         if (!checkPermissionForWriteExternal()) {
                             return;
                         }
-                        getAttendanceReport(list.get(getAdapterPosition()).month);
+                        getAttendanceReport(list.get(getAdapterPosition()));
                     }
                 });
             }
@@ -247,7 +249,7 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
         if (!csvFolder.exists()) {
             csvFolder.mkdir();
         }
-        File file = new File(csvFolder, className + "_.xls");
+        File file = new File(csvFolder, className+"_"+selectedMonthYear+ ".xls");
 
         try {
             if (!file.exists()) {
