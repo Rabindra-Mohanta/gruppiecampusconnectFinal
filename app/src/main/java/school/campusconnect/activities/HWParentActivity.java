@@ -756,7 +756,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                 tvComment.setVisibility(View.GONE);
             }
         });
-        chkVerify.setOnClickListener(new View.OnClickListener() {
+        chkReAssign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chkVerify.setChecked(false);

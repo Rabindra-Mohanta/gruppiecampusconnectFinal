@@ -473,11 +473,9 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             if (!item.assignmentVerified && !item.assignmentReassigned) {
                 holder.txt_drop_delete.setVisibility(View.VISIBLE);
                 holder.ivDelete.setVisibility(View.VISIBLE);
-                holder.txt_NotVerify.setText("(Not Verified)");
             } else {
                 holder.txt_drop_delete.setVisibility(View.GONE);
                 holder.ivDelete.setVisibility(View.GONE);
-                holder.txt_NotVerify.setText("");
             }
 
 
