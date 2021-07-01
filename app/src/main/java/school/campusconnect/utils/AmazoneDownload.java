@@ -1,10 +1,13 @@
 package school.campusconnect.utils;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 
 import java.io.File;
@@ -14,9 +17,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.VideoOfflineObject;
 
 public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
     private static final String TAG = "AmazoneDownload";
@@ -53,6 +60,39 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void removeVideo(Context context,String fileName) {
+        try {
+            LeafPreference leafPreference = LeafPreference.getInstance(context);
+            if(!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase(""))
+            {
+                ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {}.getType());
+                int count = list.size();
+
+                for (Iterator<VideoOfflineObject> iterator = list.iterator(); iterator.hasNext(); ) {
+                    VideoOfflineObject offlineObject = iterator.next();
+                    try {
+                        AppLog.e(TAG , "filename from pref : "+offlineObject.getVideo_filename());
+                        if(offlineObject.getVideo_filename()!=null  && offlineObject.getVideo_filename().equalsIgnoreCase(fileName))
+                        {
+                            MixOperations.deleteVideoFile(offlineObject.video_filepath);
+                            iterator.remove();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if(count != list.size())
+                {
+                    leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override

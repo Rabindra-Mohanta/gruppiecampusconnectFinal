@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -226,7 +227,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         HomeClick();
 
-        //   DeleteOldSavedVideos();
+        DeleteOldSavedVideos();
 
         AppLog.e(TAG, "UserId : " + LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID));
         AppLog.e(TAG, "Category :" + mGroupItem.category);
@@ -914,9 +915,24 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("title", group.name);
             startActivity(intent);
         } else if (group.type.equals("Recorded Class")) {
-            Intent intent = new Intent(this, RecordedClassActivity.class);
-            intent.putExtra("title", group.name);
+            Intent intent;
+            if ("admin".equalsIgnoreCase(group.role)) {
+                intent = new Intent(this, RecordedClassActivity.class);
+                intent.putExtra("title", group.name);
+            } else {
+                if (group.count == 1) {
+                    intent = new Intent(this, RecClassSubjectActivity.class);
+                    intent.putExtra("group_id", groupId);
+                    intent.putExtra("team_id", group.details.teamId);
+                    intent.putExtra("title", group.details.studentName);
+                } else {
+                    intent = new Intent(this, RecordedClassActivity.class);
+                    intent.putExtra("title", group.name);
+                }
+            }
+            intent.putExtra("role", group.role);
             startActivity(intent);
+
         } else if (group.type.equals("Home Work")) {
             Intent intent;
             if ("admin".equalsIgnoreCase(group.role)) {
@@ -940,9 +956,24 @@ public class GroupDashboardActivityNew extends BaseActivity
         } else if (group.type.equalsIgnoreCase("Calendar")) {
             startActivity(new Intent(this, CalendarActivity.class));
         } else if (group.type.equals("Time Table")) {
-            Intent intent = new Intent(this, TimeTableClassActivity2.class);
+            Intent intent;
+            if ("admin".equalsIgnoreCase(group.role)) {
+                intent = new Intent(this, TimeTableClassActivity2.class);
+                intent.putExtra("title", group.name);
+            } else {
+                if (group.count == 1) {
+                    intent = new Intent(this, TimeTabelActivity2.class);
+                    intent.putExtra("group_id", groupId);
+                    intent.putExtra("team_id", group.details.teamId);
+                    intent.putExtra("team_name", group.details.studentName);
+                } else {
+                    intent = new Intent(this, TimeTableClassActivity2.class);
+                    intent.putExtra("title", group.name);
+                }
+            }
             intent.putExtra("role", group.role);
             startActivity(intent);
+
         } else if (group.type.equals("Fees")) {
 
             if ("admin".equalsIgnoreCase(group.role)) {
@@ -1152,7 +1183,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase("")) {
             ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {
             }.getType());
-
+            AppLog.e(TAG,"list before : "+list);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, -7);
             String sevendayDate = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
@@ -1160,20 +1191,19 @@ public class GroupDashboardActivityNew extends BaseActivity
             AppLog.e(TAG, "DeleteOldSaveVideos called with sevendaydate is : " + sevendayDate);
 
             int i = 0;
-            for (VideoOfflineObject offlineObject : list) {
 
-                if (offlineObject.getVideo_date().compareTo(sevendayDate) <= 0) {
-                    MixOperations.deleteVideoFile(offlineObject.video_filepath);
-                    list.remove(offlineObject);
-                    i++;
+            for (Iterator<VideoOfflineObject> iterator = list.iterator(); iterator.hasNext(); ) {
+                VideoOfflineObject offlineObject = iterator.next();
 
-                    if (i > 20) { /// Adding this condition to avoid too many deletion on main thread.
-                        break;
-                    }
+                MixOperations.deleteVideoFile(offlineObject.video_filepath);
+                iterator.remove();
+                i++;
+
+                if (i > 20) { /// Adding this condition to avoid too many deletion on main thread.
+                    break;
                 }
             }
-
-
+            AppLog.e(TAG,"list after : "+list);
             leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
         }
     }

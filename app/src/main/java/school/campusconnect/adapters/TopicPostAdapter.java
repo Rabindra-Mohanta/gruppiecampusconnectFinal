@@ -38,6 +38,7 @@ import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.MixOperations;
@@ -142,11 +143,23 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         }
 
         holder.chkCompleted.setChecked(item.topicCompleted);
+
+        holder.txt_drop_deletevideo.setVisibility(View.GONE);
+        holder.viewDeleteVideo.setVisibility(View.GONE);
+        holder.llMore.setVisibility(View.GONE);
+
         if (canEdit) {
             holder.llMore.setVisibility(View.VISIBLE);
             holder.chkCompleted.setVisibility(View.GONE);
+            if (item.fileName != null && item.fileName.size() > 0) {
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+                {
+                    holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+                    holder.viewDeleteVideo.setVisibility(View.VISIBLE);
+                    holder.llMore.setVisibility(View.VISIBLE);
+                }
+            }
         } else {
-            holder.llMore.setVisibility(View.GONE);
             holder.chkCompleted.setVisibility(View.VISIBLE);
             holder.chkCompleted.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,6 +168,16 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                     listener.onCompleteClick(item,position);
                 }
             });
+
+            holder.llMore.setVisibility(View.GONE);
+            if (item.fileName != null && item.fileName.size() > 0) {
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+                {
+                    holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+                    holder.viewDeleteVideo.setVisibility(View.VISIBLE);
+                    holder.llMore.setVisibility(View.VISIBLE);
+                }
+            }
         }
 
         holder.txt_title.setText(item.topicName);
@@ -208,6 +231,10 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
 
         @Bind(R.id.txt_drop_report)
         TextView txt_drop_report;
+        @Bind(R.id.txt_drop_deletevideo)
+        TextView txt_drop_deletevideo;
+        @Bind(R.id.viewDeleteVideo)
+        View viewDeleteVideo;
 
         @Bind(R.id.txt_name)
         TextView txtName;
@@ -311,7 +338,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         }
 
         @OnClick({R.id.txt_like, R.id.txt_fav, R.id.rel, R.id.txt_readmore, R.id.iv_delete,
-                R.id.txt_comments, R.id.txt_drop_delete, R.id.txt_drop_report, R.id.txt_drop_share,
+                R.id.txt_comments, R.id.txt_drop_delete, R.id.txt_drop_report, R.id.txt_drop_share,R.id.txt_drop_deletevideo,
                 R.id.txt_que, R.id.txt_push, R.id.txt_name, R.id.txt_like_list, R.id.img_comments, R.id.img_like})
         public void OnLikeClick(View v) {
             item = list.get(getLayoutPosition());
@@ -334,6 +361,14 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                     lin_drop.setVisibility(View.GONE);
                     if (isConnectionAvailable()) {
                         listener.onCompletedStudentClick(item,getAdapterPosition());
+                    } else {
+                        showNoNetworkMsg();
+                    }
+                    break;
+                case R.id.txt_drop_deletevideo:
+                    lin_drop.setVisibility(View.GONE);
+                    if (isConnectionAvailable()) {
+                        listener.onDeleteVideoClick(item , getAdapterPosition());
                     } else {
                         showNoNetworkMsg();
                     }
@@ -364,6 +399,8 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         void onCompletedStudentClick(ChapterRes.TopicData item, int adapterPosition);
 
         void onPostClick(ChapterRes.TopicData item);
+
+        void onDeleteVideoClick(ChapterRes.TopicData item, int adapterPosition);
     }
 
     public boolean isConnectionAvailable() {

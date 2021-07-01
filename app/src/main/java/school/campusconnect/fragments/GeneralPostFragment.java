@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 
@@ -766,6 +767,15 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             mBinding.llAskDoubt.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onDeleteVideoClick(PostItem item, int adapterPosition) {
+        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
+        if(item.fileName!=null && item.fileName.size()>0){
+            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+            mAdapter.notifyItemChanged(adapterPosition);
+        }
     }
 
     private static String[] fromString(String string) {

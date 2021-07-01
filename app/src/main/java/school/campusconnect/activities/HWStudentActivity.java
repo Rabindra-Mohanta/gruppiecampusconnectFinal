@@ -479,23 +479,28 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 holder.ivDelete.setVisibility(View.GONE);
                 holder.txt_NotVerify.setText("");
             }
-            if(item.assignmentReassigned){
-                holder.txt_comments.setText("Comment :\n"+item.reassignComment);
-                holder.txt_comments.setVisibility(View.VISIBLE);
-                holder.btnNo.setBackgroundResource(R.drawable.assignement_no_fill);
-                holder.imgNo.setColorFilter(ContextCompat.getColor(HWStudentActivity.this, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else {
-                holder.txt_comments.setVisibility(View.GONE);
-                holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
-                holder.imgNo.setColorFilter(ContextCompat.getColor(HWStudentActivity.this, android.R.color.holo_red_dark), android.graphics.PorterDuff.Mode.SRC_IN);
-            }
 
-            if(item.assignmentVerified){
-                holder.btnYes.setBackgroundResource(R.drawable.assignement_yes_fill);
-                holder.imgYes.setColorFilter(ContextCompat.getColor(HWStudentActivity.this, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else {
-                holder.btnYes.setBackgroundResource(R.drawable.assignement_yes);
-                holder.imgYes.setColorFilter(ContextCompat.getColor(HWStudentActivity.this, R.color.color_green), android.graphics.PorterDuff.Mode.SRC_IN);
+
+            if (!item.assignmentVerified && !item.assignmentReassigned) {
+                holder.btnYes.setVisibility(View.GONE);
+                holder.btnNo.setVisibility(View.GONE);
+                holder.txt_NotVerify.setVisibility(View.VISIBLE);
+                holder.txt_comments.setVisibility(View.GONE);
+            } else {
+                holder.txt_NotVerify.setVisibility(View.GONE);
+                if (item.assignmentVerified) {
+                    holder.btnYes.setVisibility(View.VISIBLE);
+                } else {
+                    holder.btnYes.setVisibility(View.GONE);
+                }
+                if (item.assignmentReassigned) {
+                    holder.txt_comments.setText("Comment :\n" + item.reassignComment);
+                    holder.txt_comments.setVisibility(View.VISIBLE);
+                    holder.btnNo.setVisibility(View.VISIBLE);
+                } else {
+                    holder.txt_comments.setVisibility(View.GONE);
+                    holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
+                }
             }
 
             if (!TextUtils.isEmpty(item.description)) {
@@ -612,13 +617,6 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
 
             @Bind(R.id.btnNo)
             FrameLayout btnNo;
-
-            @Bind(R.id.imgYes)
-            ImageView imgYes;
-
-            @Bind(R.id.imgNo)
-            ImageView imgNo;
-
 
             public ViewHolder(View itemView) {
                 super(itemView);

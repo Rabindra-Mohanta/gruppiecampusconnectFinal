@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -113,6 +115,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     private String subject_name;
     private String className;
     private HwRes.HwData item;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +126,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
 
         _init();
 
-        String nTopic = item.topic.length()>15?item.topic.substring(0,15):item.topic;
+        String nTopic = item.topic.length() > 15 ? item.topic.substring(0, 15) : item.topic;
         setTitle(nTopic + " (" + className + ")");
 
         showData();
@@ -142,7 +145,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         strStatus[0] = "Not Verified";
         strStatus[1] = "Verified";
         strStatus[2] = "Not Submitted";
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner,strStatus);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner, strStatus);
         spStatus.setAdapter(adapter);
 
         spStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -162,7 +165,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     private void showData() {
         txt_title.setText(item.topic);
         txt_teacher.setText(item.createdByName);
-        txt_date.setText(MixOperations.getFormattedDateOnly(item.postedAt, Constants.DATE_FORMAT,"dd MMM yyyy\nhh:mm a"));
+        txt_date.setText(MixOperations.getFormattedDateOnly(item.postedAt, Constants.DATE_FORMAT, "dd MMM yyyy\nhh:mm a"));
         if (!TextUtils.isEmpty(item.description)) {
             txtContent.setVisibility(View.VISIBLE);
             if (item.description.length() > 200) {
@@ -188,10 +191,10 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             txtContent.setVisibility(View.GONE);
             txt_readmore.setVisibility(View.GONE);
         }
-        if(!TextUtils.isEmpty(item.lastSubmissionDate)){
+        if (!TextUtils.isEmpty(item.lastSubmissionDate)) {
             txt_lastDate.setVisibility(View.VISIBLE);
-            txt_lastDate.setText("Last Submission Date : "+item.lastSubmissionDate);
-        }else {
+            txt_lastDate.setText("Last Submission Date : " + item.lastSubmissionDate);
+        } else {
             txt_lastDate.setVisibility(View.GONE);
             txt_lastDate.setText("");
         }
@@ -258,6 +261,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             recyclerView.setVisibility(View.GONE);
         }
     }
+
     public void onPostClick(ChapterRes.TopicData item) {
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
             Intent browserIntent = new Intent(this, TestActivity.class);
@@ -277,6 +281,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         }
 
     }
+
     public void onPostClick(AssignmentRes.AssignmentData item) {
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
             Intent browserIntent = new Intent(this, TestActivity.class);
@@ -299,9 +304,10 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_delete,menu);
+        getMenuInflater().inflate(R.menu.menu_delete, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -319,7 +325,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
-                leafManager.deleteAssignmentTeacher(HWParentActivity.this,group_id,team_id,subject_id,HWParentActivity.this.item.assignmentId);
+                leafManager.deleteAssignmentTeacher(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId);
             }
         });
     }
@@ -331,19 +337,20 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
 
 
     public void getAssignment() {
-        int pos=spStatus.getSelectedItemPosition();
+        int pos = spStatus.getSelectedItemPosition();
         String filter = "notVerified";
-        if(pos==0){
+        if (pos == 0) {
             filter = "notVerified";
-        }else if(pos==1){
+        } else if (pos == 1) {
             filter = "verified";
-        }else {
+        } else {
             filter = "notSubmitted";
         }
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getAssignment(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.assignmentId, filter);
     }
+
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
@@ -401,7 +408,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         public void onBindViewHolder(final AssignmentAdapter.ViewHolder holder, final int position) {
             final AssignmentRes.AssignmentData item = list.get(position);
             holder.txtName.setText(item.studentName);
-            holder.txtDate.setText(MixOperations.getFormattedDateOnly(item.insertedAt, Constants.DATE_FORMAT,"dd MMM yyyy\nhh:mm a"));
+            holder.txtDate.setText(MixOperations.getFormattedDateOnly(item.insertedAt, Constants.DATE_FORMAT, "dd MMM yyyy\nhh:mm a"));
 
             holder.constThumb.setVisibility(View.GONE);
             final String name = item.studentName;
@@ -502,24 +509,6 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                 holder.recyclerView.setVisibility(View.GONE);
             }
 
-            if(item.assignmentReassigned){
-                holder.txt_comments.setText("Comment :\n"+item.reassignComment);
-                holder.txt_comments.setVisibility(View.VISIBLE);
-                holder.btnNo.setBackgroundResource(R.drawable.assignement_no_fill);
-                holder.imgNo.setColorFilter(ContextCompat.getColor(HWParentActivity.this, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else {
-                holder.txt_comments.setVisibility(View.GONE);
-                holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
-                holder.imgNo.setColorFilter(ContextCompat.getColor(HWParentActivity.this, android.R.color.holo_red_dark), android.graphics.PorterDuff.Mode.SRC_IN);
-            }
-
-            if(item.assignmentVerified){
-                holder.btnYes.setBackgroundResource(R.drawable.assignement_yes_fill);
-                holder.imgYes.setColorFilter(ContextCompat.getColor(HWParentActivity.this, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else {
-                holder.btnYes.setBackgroundResource(R.drawable.assignement_yes);
-                holder.imgYes.setColorFilter(ContextCompat.getColor(HWParentActivity.this, R.color.color_green), android.graphics.PorterDuff.Mode.SRC_IN);
-            }
 
             if (!TextUtils.isEmpty(item.description)) {
                 holder.txtContent.setVisibility(View.VISIBLE);
@@ -559,8 +548,14 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                     reAssignment(item);
                 }
             });
+            holder.txt_NotVerify.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notVerifyAssignment(item);
+                }
+            });
 
-            if(spStatus.getSelectedItemPosition()==2){
+            if (spStatus.getSelectedItemPosition() == 2) {
                 holder.imgChat.setVisibility(View.VISIBLE);
                 holder.llAction.setVisibility(View.GONE);
                 holder.imgChat.setOnClickListener(new View.OnClickListener() {
@@ -569,19 +564,30 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                         onChatClick(item);
                     }
                 });
-            }else {
+            } else {
                 holder.imgChat.setVisibility(View.GONE);
                 holder.llAction.setVisibility(View.VISIBLE);
 
-                if(item.assignmentVerified){
-                    holder.btnYes.setVisibility(View.VISIBLE);
-                    holder.btnNo.setVisibility(View.GONE);
-                }else if(item.assignmentReassigned){
+                if (!item.assignmentVerified && !item.assignmentReassigned) {
                     holder.btnYes.setVisibility(View.GONE);
-                    holder.btnNo.setVisibility(View.VISIBLE);
-                }else {
-                    holder.btnYes.setVisibility(View.VISIBLE);
-                    holder.btnNo.setVisibility(View.VISIBLE);
+                    holder.btnNo.setVisibility(View.GONE);
+                    holder.txt_NotVerify.setVisibility(View.VISIBLE);
+                    holder.txt_comments.setVisibility(View.GONE);
+                } else {
+                    holder.txt_NotVerify.setVisibility(View.GONE);
+                    if (item.assignmentVerified) {
+                        holder.btnYes.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.btnYes.setVisibility(View.GONE);
+                    }
+                    if (item.assignmentReassigned) {
+                        holder.txt_comments.setText("Comment :\n" + item.reassignComment);
+                        holder.txt_comments.setVisibility(View.VISIBLE);
+                        holder.btnNo.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.txt_comments.setVisibility(View.GONE);
+                        holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
+                    }
                 }
 
             }
@@ -673,17 +679,14 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             @Bind(R.id.btnNo)
             FrameLayout btnNo;
 
-            @Bind(R.id.imgYes)
-            ImageView imgYes;
-
-            @Bind(R.id.imgNo)
-            ImageView imgNo;
+            @Bind(R.id.txt_NotVerify)
+            TextView txt_NotVerify;
 
             @Bind(R.id.imgChat)
             ImageView imgChat;
 
             @Bind(R.id.llAction)
-            LinearLayout llAction;
+            FrameLayout llAction;
 
 
             public ViewHolder(View itemView) {
@@ -736,38 +739,54 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         startActivity(intent);
     }
 
-    private void verifyAssignment(AssignmentRes.AssignmentData item) {
-        String msg="Are You Sure Want To verify "+item.studentName+" Assignment?";
-        if(item.assignmentVerified){
-            msg="Are You Sure Want To un-verify "+item.studentName+" Assignment?";
-        }
-        SMBDialogUtils.showSMBDialogOKCancel(this, msg, new DialogInterface.OnClickListener() {
+    private void notVerifyAssignment(AssignmentRes.AssignmentData item) {
+        final Dialog dialog=new Dialog(this,R.style.AppTheme_AlertDialogStyle);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_add_comment);
+        final EditText etTitle=dialog.findViewById(R.id.etTitle);
+        final TextView tvComment=dialog.findViewById(R.id.tvComment);
+        final CheckBox chkVerify=dialog.findViewById(R.id.chkVerify);
+        final CheckBox chkReAssign=dialog.findViewById(R.id.chkReAssign);
+        chkVerify.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
-                LeafManager leafManager = new LeafManager();
-                leafManager.verifyAssignment(HWParentActivity.this,group_id,team_id,subject_id,HWParentActivity.this.item.assignmentId,item.studentAssignmentId,!item.assignmentVerified);
+            public void onClick(View v) {
+                chkVerify.setChecked(true);
+                chkReAssign.setChecked(false);
+                etTitle.setVisibility(View.GONE);
+                tvComment.setVisibility(View.GONE);
             }
         });
-    }
-    private void reAssignment( AssignmentRes.AssignmentData item) {
-        if(item.assignmentReassigned){
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To move "+item.studentName+" assignment to not verified?", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+        chkVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chkVerify.setChecked(false);
+                chkReAssign.setChecked(true);
+                etTitle.setVisibility(View.VISIBLE);
+                tvComment.setVisibility(View.VISIBLE);
+            }
+        });
+
+        chkReAssign.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    etTitle.setVisibility(View.GONE);
+                    tvComment.setVisibility(View.GONE);
+                }else {
+                    etTitle.setVisibility(View.VISIBLE);
+                    tvComment.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        dialog.findViewById(R.id.btnAdd).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(chkVerify.isChecked()){
+                    dialog.dismiss();
                     progressBar.setVisibility(View.VISIBLE);
                     LeafManager leafManager = new LeafManager();
-                    leafManager.reassignAssignment(HWParentActivity.this,group_id,team_id,subject_id,HWParentActivity.this.item.assignmentId,item.studentAssignmentId,!item.assignmentReassigned,new ReassignReq("text"));
-                }
-            });
-        }else {
-            final Dialog dialog=new Dialog(this,R.style.AppTheme_AlertDialogStyle);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_add_comment);
-            final EditText etTitle=dialog.findViewById(R.id.etTitle);
-            dialog.findViewById(R.id.btnAdd).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                    leafManager.verifyAssignment(HWParentActivity.this,group_id,team_id,subject_id,HWParentActivity.this.item.assignmentId,item.studentAssignmentId,!item.assignmentVerified);
+                }else {
                     if(!TextUtils.isEmpty(etTitle.getText().toString().trim())){
                         dialog.dismiss();
                         progressBar.setVisibility(View.VISIBLE);
@@ -777,9 +796,31 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                         Toast.makeText(HWParentActivity.this, "Please Add Comment", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
-            dialog.show();
-        }
+            }
+        });
+        dialog.show();
+    }
 
+    private void verifyAssignment(AssignmentRes.AssignmentData item) {
+        String msg = "Are You Sure Want To un-verify " + item.studentName + " Assignment?";
+        SMBDialogUtils.showSMBDialogOKCancel(this, msg, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressBar.setVisibility(View.VISIBLE);
+                LeafManager leafManager = new LeafManager();
+                leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentVerified);
+            }
+        });
+    }
+
+    private void reAssignment(AssignmentRes.AssignmentData item) {
+        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To move " + item.studentName + " assignment to not verified?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressBar.setVisibility(View.VISIBLE);
+                LeafManager leafManager = new LeafManager();
+                leafManager.reassignAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentReassigned, new ReassignReq("text"));
+            }
+        });
     }
 }

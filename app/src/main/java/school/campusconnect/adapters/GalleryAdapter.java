@@ -24,6 +24,7 @@ import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.MixOperations;
 
@@ -127,12 +128,33 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             holder.recyclerView.setVisibility(View.GONE);
         }
 
+        holder.txt_drop_deletevideo.setVisibility(View.GONE);
+        holder.viewDeleteVideo.setVisibility(View.GONE);
+        holder.iv_delete.setVisibility(View.GONE);
+
         if (item.canEdit) {
             holder.txt_drop_delete.setVisibility(View.VISIBLE);
             holder.iv_delete.setVisibility(View.VISIBLE);
+
+            if (item.fileName != null && item.fileName.size() > 0) {
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+                {
+                    holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+                    holder.viewDeleteVideo.setVisibility(View.VISIBLE);
+                    holder.iv_delete.setVisibility(View.VISIBLE);
+                }
+            }
         } else {
             holder.txt_drop_delete.setVisibility(View.GONE);
             holder.iv_delete.setVisibility(View.GONE);
+            if (item.fileName != null && item.fileName.size() > 0) {
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+                {
+                    holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+                    holder.viewDeleteVideo.setVisibility(View.VISIBLE);
+                    holder.iv_delete.setVisibility(View.VISIBLE);
+                }
+            }
         }
 
     }
@@ -161,6 +183,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         @Bind(R.id.txt_drop_delete)
         TextView txt_drop_delete;
 
+        @Bind(R.id.txt_drop_deletevideo)
+        TextView txt_drop_deletevideo;
+        @Bind(R.id.viewDeleteVideo)
+        View viewDeleteVideo;
+
         @Bind(R.id.lin_drop)
         LinearLayout lin_drop;
 
@@ -184,7 +211,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     new SpacesItemDecoration(mContext.getResources().getDimensionPixelSize(R.dimen.padding_3dp)));
         }
 
-        @OnClick({R.id.iv_delete,R.id.txt_drop_delete,R.id.rel})
+        @OnClick({R.id.iv_delete,R.id.txt_drop_delete,R.id.rel,R.id.txt_drop_deletevideo})
         public void onClick(View view)
         {
             switch (view.getId())
@@ -208,6 +235,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     lin_drop.setVisibility(View.GONE);
                     listener.onDeleteClick(listData.get(getAdapterPosition()));
                     break;
+                case R.id.txt_drop_deletevideo:
+                    lin_drop.setVisibility(View.GONE);
+                    listener.onDeleteVideoClick(listData.get(getAdapterPosition()) , getAdapterPosition());
+                    break;
             }
 
         }
@@ -217,5 +248,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     {
         public void onPostClick(GalleryPostRes.GalleryData galleryData);
         public void onDeleteClick(GalleryPostRes.GalleryData galleryData);
+        void onDeleteVideoClick(GalleryPostRes.GalleryData galleryData, int adapterPosition);
     }
 }

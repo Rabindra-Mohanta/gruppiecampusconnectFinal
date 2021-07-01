@@ -237,7 +237,7 @@
                 android:textColor="@color/colorTextLight"
                 android:visibility="gone" />
 
-            <LinearLayout
+            <FrameLayout
                 android:id="@+id/llAction"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/padding_10dp"
@@ -245,50 +245,51 @@
                 android:layout_height="wrap_content">
                 <FrameLayout
                     android:id="@+id/btnYes"
-                    android:layout_width="70dp"
-                    android:background="@drawable/assignement_yes"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
                     android:layout_marginStart="@dimen/padding_10dp"
                     android:layout_height="35dp">
-                    <ImageView
-                        android:id="@+id/imgYes"
-                        android:layout_width="20dp"
+                     <TextView
+                        android:layout_width="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/icon_tick"
-                        android:layout_height="20dp"
-                        app:tint="@color/color_green" />
+                        android:textColor="@android:color/holo_green_dark"
+                        android:text="Verified"
+                         android:textSize="@dimen/text_size_16sp"
+                        android:layout_height="20dp" />
                 </FrameLayout>
                 <FrameLayout
                     android:id="@+id/btnNo"
-                    android:layout_width="70dp"
-                    android:background="@drawable/assignement_no"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
                     android:layout_marginStart="@dimen/padding_10dp"
                     android:layout_height="35dp">
-                    <ImageView
-                        android:id="@+id/imgNo"
-                        android:layout_width="20dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_close"
-                        android:layout_height="20dp"
-                        app:tint="@android:color/holo_red_dark" />
+                        android:textSize="@dimen/text_size_16sp"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:text="Reassigned"
+                        android:layout_height="20dp" />
                 </FrameLayout>
                 <TextView
                     android:id="@+id/txt_NotVerify"
-                    style="@style/LabelNormal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:autoLink="web"
                     android:ellipsize="end"
                     android:maxLength="200"
-                    android:layout_marginStart="@dimen/padding_10dp"
+                    android:textStyle="bold"
                     android:paddingLeft="@dimen/padding_10dp"
                     android:paddingTop="@dimen/padding_5dp"
                     android:paddingRight="@dimen/padding_10dp"
                     android:paddingBottom="@dimen/padding_5dp"
-                    android:layout_marginBottom="@dimen/padding_5dp"
-                    android:textColor="@color/colorTextDark"
+                    android:text="Not Verified"
+                    android:textSize="@dimen/text_size_16sp"
+                    android:textColor="@android:color/holo_orange_light"
                     android:textColorLink="@color/colorPrimary"
                     android:visibility="visible" />
-            </LinearLayout>
+            </FrameLayout>
             <TextView
                 android:id="@+id/txt_comments"
                 style="@style/LabelNormal"

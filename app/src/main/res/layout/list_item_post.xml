@@ -419,6 +419,16 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
+            <View
+                android:id="@+id/viewDeleteVideo"
+                android:layout_width="120dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_marginRight="@dimen/padding_10dp"
+                android:background="@color/black_semi_transparent"
+                android:paddingLeft="@dimen/padding_20dp"
+                android:paddingRight="@dimen/padding_20dp"
+                android:visibility="gone" />
             <TextView
                 android:id="@+id/txt_drop_deletevideo"
                 android:layout_width="match_parent"

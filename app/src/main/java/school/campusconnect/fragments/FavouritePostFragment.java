@@ -14,6 +14,7 @@ import school.campusconnect.activities.AddQuestionActivity;
 import school.campusconnect.activities.FullScreenActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.ViewPDFActivity;
+import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 
@@ -457,6 +458,15 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     @Override
     public void onMoreOptionClick(PostItem item) {
 
+    }
+
+    @Override
+    public void onDeleteVideoClick(PostItem item, int adapterPosition) {
+        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
+        if(item.fileName!=null && item.fileName.size()>0){
+            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+            mAdapter.notifyItemChanged(adapterPosition);
+        }
     }
 
     @Override

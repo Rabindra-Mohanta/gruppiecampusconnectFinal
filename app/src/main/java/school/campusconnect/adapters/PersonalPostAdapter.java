@@ -19,6 +19,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -329,6 +330,22 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
             holder.linComments.setVisibility(View.VISIBLE);
         else
             holder.linComments.setVisibility(View.GONE);
+
+        if (item.fileName != null && item.fileName.size() > 0) {
+            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+            {
+                holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+                holder.viewDeleteVideo.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.txt_drop_deletevideo.setVisibility(View.GONE);
+                holder.viewDeleteVideo.setVisibility(View.GONE);
+            }
+        }else {
+            holder.txt_drop_deletevideo.setVisibility(View.GONE);
+            holder.viewDeleteVideo.setVisibility(View.GONE);
+        }
     }
 
 
@@ -374,6 +391,11 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
 
         @Bind(R.id.txt_drop_report)
         TextView txt_drop_report;
+
+        @Bind(R.id.txt_drop_deletevideo)
+        TextView txt_drop_deletevideo;
+        @Bind(R.id.viewDeleteVideo)
+        View viewDeleteVideo;
 
         @Bind(R.id.txt_name)
         TextView txtName;
@@ -470,7 +492,7 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
 
 
         @OnClick({R.id.txt_like, R.id.txt_fav, R.id.rel, R.id.txt_readmore, R.id.iv_delete,
-                R.id.txt_comments, R.id.txt_drop_delete, R.id.txt_drop_report, R.id.txt_drop_share,
+                R.id.txt_comments, R.id.txt_drop_delete, R.id.txt_drop_report,R.id.txt_drop_deletevideo, R.id.txt_drop_share,
                 R.id.txt_que, R.id.txt_push, R.id.txt_name, R.id.txt_like_list, R.id.img_comments, R.id.img_like})
         public void OnLikeClick(View v) {
             try {
@@ -562,6 +584,15 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
                     }
                     break;
 
+                case R.id.txt_drop_deletevideo:
+                    lin_drop.setVisibility(View.GONE);
+                    if (isConnectionAvailable()) {
+                        listener.onDeleteVideoClick(item , getAdapterPosition());
+                    } else {
+                        showNoNetworkMsg();
+                    }
+                    break;
+
                 case R.id.txt_drop_share:
                     lin_drop.setVisibility(View.GONE);
                     if (isConnectionAvailable()) {
@@ -606,6 +637,8 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
         void onShareClick(PostItem item);
 
         void onPushClick(PostItem item);
+
+        void onDeleteVideoClick(PostItem item, int adapterPosition);
     }
 
     public boolean isConnectionAvailable() {

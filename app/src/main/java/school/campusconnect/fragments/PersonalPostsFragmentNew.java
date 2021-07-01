@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.activities.ChatActivity;
 import school.campusconnect.activities.PersonalSettingsActivity;
+import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 
@@ -605,6 +606,15 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         intent.putExtra("id", mGroupId);
         intent.putExtra("post_id", item.id);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteVideoClick(PostItem item, int adapterPosition) {
+        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
+        if(item.fileName!=null && item.fileName.size()>0){
+            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+            mAdapter2.notifyItemChanged(adapterPosition);
+        }
     }
 
 

@@ -141,21 +141,6 @@ public class MixOperations {
     {
 
         AppLog.e(TAG , "deleteVideoFile called : "+filepath );
-        /*final String where = MediaStore.MediaColumns.DATA + "=?";
-        final String[] selectionArgs = new String[] {
-                filepath
-        };
-        final ContentResolver contentResolver = GroupDashboardActivityNew.this.getContentResolver();
-        final Uri filesUri = MediaStore.Files.getContentUri("external");
-
-        //contentResolver.delete(filesUri, where, selectionArgs);
-
-        filepath = RealPathUtil.getRealPath(GroupDashboardActivityNew.this , Uri.parse(filepath));
-
-        AppLog.e(TAG, "filepath : "+filepath);
-
-        if(filepath == null)
-        return;*/
         if(filepath ==null)
         {
             return;

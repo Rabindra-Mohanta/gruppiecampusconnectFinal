@@ -65,7 +65,7 @@ import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class ReadMoreActivity extends BaseActivity implements LeafManager.OnCommunicationListener, DialogInterface.OnClickListener, LeafManager.OnAddUpdateListener<AddPostValidationError>, PostAdapter.OnItemClickListener {
+public class ReadMoreActivity extends BaseActivity implements LeafManager.OnCommunicationListener, DialogInterface.OnClickListener, LeafManager.OnAddUpdateListener<AddPostValidationError>{
     private static final String TAG = "ReadMoreActivity";
     @Bind(R.id.view)
     View view;
@@ -1009,7 +1009,6 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         liked = false;
     }
 
-    @Override
     public void onFavClick(PostItem item, int pos) {
         progressBar.setVisibility(View.VISIBLE);
         int fav = 0;
@@ -1059,7 +1058,6 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     }
 
 
-    @Override
     public void onLikeClick(PostItem item, int pos) {
 
 
@@ -1084,7 +1082,6 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         }
     }
 
-    @Override
     public void onPostClick(PostItem item) {
         AppLog.e(TAG, "onPostClick() :" + item);
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
@@ -1106,37 +1103,33 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         }
     }
 
-    @Override
     public void onReadMoreClick(PostItem item) {
 
     }
 
-    @Override
+
     public void onEditClick(PostItem item) {
 
     }
 
-    @Override
+
     public void onDeleteClick(PostItem item) {
         SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete ?", this);
     }
 
-    @Override
+
     public void onReportClick(PostItem item) {
         showReportDialog();
     }
 
-    @Override
     public void onShareClick(PostItem item) {
 
     }
 
-    @Override
     public void onQueClick(PostItem item) {
 
     }
 
-    @Override
     public void onPushClick(PostItem item) {
         GroupDashboardActivityNew.is_share_edit = true;
         GroupDashboardActivityNew.share_type = type;
@@ -1168,12 +1161,11 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         startActivity(intent);
     }
 
-    @Override
+
     public void onNameClick(PostItem item) {
 
     }
 
-    @Override
     public void onLikeListClick(PostItem item) {
         if (type.equals("group")) {
             if (isConnectionAvailable()) {
@@ -1199,7 +1191,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         }
     }
 
-    @Override
+
     public void onMoreOptionClick(PostItem item) {
 
     }

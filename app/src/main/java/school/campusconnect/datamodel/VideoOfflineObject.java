@@ -47,4 +47,12 @@ public class VideoOfflineObject
         public String video_date;
 
 
+    @Override
+    public String toString() {
+        return "VideoOfflineObject{" +
+                "video_filename='" + video_filename + '\'' +
+                ", video_filepath='" + video_filepath + '\'' +
+                ", video_date='" + video_date + '\'' +
+                '}';
+    }
 }

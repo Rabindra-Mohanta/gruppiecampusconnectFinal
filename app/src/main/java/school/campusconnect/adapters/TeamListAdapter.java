@@ -328,13 +328,16 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
             if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
             {
                 holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+                holder.viewDeleteVideo.setVisibility(View.VISIBLE);
             }
             else
             {
                 holder.txt_drop_deletevideo.setVisibility(View.GONE);
+                holder.viewDeleteVideo.setVisibility(View.GONE);
             }
         }else {
             holder.txt_drop_deletevideo.setVisibility(View.GONE);
+            holder.viewDeleteVideo.setVisibility(View.GONE);
         }
 
         holder.txtLike.setVisibility(View.VISIBLE);
@@ -377,6 +380,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         TextView txt_drop_report;
         @Bind(R.id.txt_drop_deletevideo)
         TextView txt_drop_deletevideo;
+        @Bind(R.id.viewDeleteVideo)
+        View viewDeleteVideo;
+
 
         @Bind(R.id.view1)
         View view1;

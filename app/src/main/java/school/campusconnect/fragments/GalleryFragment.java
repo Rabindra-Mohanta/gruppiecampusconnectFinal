@@ -33,6 +33,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GalleryPostRes;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
@@ -323,6 +324,15 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     public void onDeleteClick(GalleryPostRes.GalleryData item) {
         currentItem = item;
         SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+    }
+
+    @Override
+    public void onDeleteVideoClick(GalleryPostRes.GalleryData item, int adapterPosition) {
+        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
+        if(item.fileName!=null && item.fileName.size()>0){
+            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+            galleryAdapter.notifyItemChanged(adapterPosition);
+        }
     }
 
     @Override

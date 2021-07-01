@@ -43,6 +43,7 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
@@ -130,7 +131,11 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             getChapters();
             LeafPreference.getInstance(getActivity()).setBoolean("is_topic_added", false);
         }
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }
     }
+
 
     @Override
     public void onStop() {
@@ -276,6 +281,15 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             startActivity(i);
         }
 
+    }
+
+    @Override
+    public void onDeleteVideoClick(ChapterRes.TopicData item, int adapterPosition) {
+        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
+        if(item.fileName!=null && item.fileName.size()>0){
+            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+            adapter.notifyItemChanged(adapterPosition);
+        }
     }
 
     @Override
