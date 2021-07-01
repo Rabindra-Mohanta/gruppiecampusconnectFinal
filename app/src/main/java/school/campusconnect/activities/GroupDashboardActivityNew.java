@@ -207,6 +207,13 @@ public class GroupDashboardActivityNew extends BaseActivity
     public static String groupCategory = "";
     private AlertDialog editDialog;
 
+    public static final String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.RECORD_AUDIO,
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,9 +249,21 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
         // sendNotification("Message","Title");
 
+        if(!hasPermission(permissions)){
+            ActivityCompat.requestPermissions(this,permissions, 222);
+        }
     }
 
+    public boolean hasPermission(String[] permissions) {
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
+                    return false;
+            }
+        }
+        return true;
+    }
 
     /*private void sendNotification(String messageBody, String title) {
         AppLog.e(TAG,"sendNotification() called");
