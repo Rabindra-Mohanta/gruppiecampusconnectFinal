@@ -25,14 +25,14 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-                applicationId "school.campusconnect"
+              /*  applicationId "school.campusconnect"
                 versionCode 5
                 versionName "1.0"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
 
                 // [ 2. RPES :  Campus Copy]
@@ -113,6 +113,15 @@ android {
               buildConfigField("String", "AppType",  '"CAMPUS"')
               buildConfigField("String", "APP_ID",  '"school"')*/
 
+              applicationId "shahbaaz.gruppie"
+              versionCode 1
+              versionName "1.0"
+              resValue "string", "app_name", '"shahbaaz"'
+              buildConfigField("String", "AppName", '"shahbaaz"')
+              buildConfigField("String", "AppCategory", '"CAMPUS"')
+              buildConfigField("String", "AppType",  '"CAMPUS"')
+              buildConfigField("String", "APP_ID",  '"school"')
+
                 ndk {
                     // Specifies the ABI configurations of your native
                     // libraries Gradle should build and package with your APK.
@@ -156,6 +165,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    android {
+        ndkVersion '21.3.6528147'
     }
 
 
@@ -270,7 +283,7 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 

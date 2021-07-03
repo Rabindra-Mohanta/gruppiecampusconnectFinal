@@ -612,6 +612,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     {
         if(!videoClassClicked)
         {
+            progressBar.setVisibility(View.VISIBLE);
             Log.e(TAG , "onTreeClick  : "+videoClassClicked);
             videoClassClicked = true;
             startMeeting(selectedClassdata);

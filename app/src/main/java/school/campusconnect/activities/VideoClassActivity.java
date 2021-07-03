@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.format.DateUtils;
 import android.widget.TextView;
@@ -238,7 +239,14 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
                 hbRecorder.enableCustomSettings();
 
                 hbRecorder.setAudioSource("DEFAULT");
-                hbRecorder.setVideoBitrate(900000);
+
+                if(hbRecorder.getDefaultWidth() > 1000)
+                hbRecorder.setVideoBitrate(2000000);
+                else if(hbRecorder.getDefaultWidth() > 650)
+                    hbRecorder.setVideoBitrate(1000000);
+                else
+                    hbRecorder.setVideoBitrate(1000000);
+
                 hbRecorder.setVideoEncoder("H264");
                // hbRecorder.setVideoFrameRate(24);
 
@@ -256,11 +264,20 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
                     // use directory.mkdirs(); here instead.
                 }
 
-                AppLog.e(TAG , "Recorder OutputPath : "+Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
-                hbRecorder.startScreenRecording(data ,resultCode, this);
+
 
                 if(classListFragment !=null)
                     classListFragment.startMeetingFromActivity();
+
+                AppLog.e(TAG , "Recorder OutputPath : "+Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
+
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        hbRecorder.startScreenRecording(data ,resultCode, VideoClassActivity.this);
+                    }
+                });
+
 
             }
             else

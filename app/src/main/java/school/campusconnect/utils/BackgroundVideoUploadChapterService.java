@@ -354,7 +354,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
             public void onCancelled() {
                 // On Cancelled
             }
-        }, VideoQuality.LOW, true, true);
+        }, VideoQuality.MEDIUM, false, true);
 
 
     }

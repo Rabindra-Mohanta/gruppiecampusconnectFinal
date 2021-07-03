@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-vdo5se2bgd42mv71pqjinciq5mntq83v.apps.googleusercontent.com",
+          "client_id": "337951586049-ki80borlats272496gbout5r2inafvmj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "abm.gruppie",
-            "certificate_hash": "7b3ccd40419ceb2f2f07fe39067b8277b3f82371"
+            "certificate_hash": "8bfa173529de19f169b850a29263db7f2d08a3c3"
           }
         },
         {
@@ -364,42 +364,6 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:e16be688abaf62fe",
-        "android_client_info": {
-          "package_name": "ksb.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "cuddles.greenage.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:337951586049:android:57ce5199937c6f81",
         "android_client_info": {
           "package_name": "kscaa.gruppie"
@@ -486,42 +450,6 @@
             "certificate_hash": "9f753fdcc0597d0cce011656d9f90d4489cdc589"
           }
         },
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "cuddles.greenage.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:4d55e56b87543437",
-        "android_client_info": {
-          "package_name": "mogadlaser.gruppie"
-        }
-      },
-      "oauth_client": [
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
@@ -1006,6 +934,42 @@
             "certificate_hash": "8d586c08a4b019c7dc4263624238a2c6b93f22a1"
           }
         },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cuddles.greenage.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:1e4248962d3ee6ca340d00",
+        "android_client_info": {
+          "package_name": "shahbaaz.gruppie"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
