@@ -1218,6 +1218,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         public void onZoomSDKLogoutResult(long result) {
             AppLog.e(TAG , "logoutZoomBeforeJoining , onZOomSDKLogoutResult : "+result);
 
+            ZoomSDK.getInstance().removeAuthenticationListener(this);
             joinZoomMeeting(item.zoomName.get(0) , item.zoomMeetingPassword , item.className , item.jitsiToken);
         }
 
@@ -1227,10 +1228,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         }
 
         @Override
-        public void onZoomAuthIdentityExpired() {
-
+        public void onZoomAuthIdentityExpired()
+        {
             AppLog.e(TAG , "onZoomAuthIdentityExpired");
-
         }
 
     };
@@ -1241,11 +1241,12 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             Log.e(TAG ,"startmeeting , onZoomLogin Result : "+result);
             if(result ==0 )
             {
+
+                ZoomSDK.getInstance().removeAuthenticationListener(this);
                 InstantMeetingOptions opts = new InstantMeetingOptions();
                 opts.custom_meeting_id = item.className;
                 opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID ;
                 opts.no_invite = true;
-
 
                 //opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
                 if(getActivity() ==null)
@@ -1264,6 +1265,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         @Override
         public void onZoomSDKLogoutResult(long result) {
             AppLog.e(TAG , "startmeeting, onZOomSDKLogoutResult : "+result);
+
             ZoomSDK.getInstance().loginWithZoom(item.zoomMail, item.zoomPassword);
         }
 

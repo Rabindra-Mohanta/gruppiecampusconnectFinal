@@ -25,25 +25,25 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-              /*  applicationId "school.campusconnect"
-                versionCode 5
+          /*      applicationId "school.campusconnect"
+                versionCode 9
                 versionName "1.0"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
-
+                buildConfigField("String", "APP_ID",  '"school"')
+*/
 
                 // [ 2. RPES :  Campus Copy]
-//                applicationId "rpes.campusconnect"
-//                versionCode 2
-//                versionName "1.1"
-//                resValue "string", "app_name", '"RPES"'
-//                buildConfigField("String", "AppName", '"RPES"')
-//                buildConfigField("String", "AppCategory", '"CAMPUS"')
-//                buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
-//                buildConfigField("String", "APP_ID",  '"school"')
+              /*  applicationId "rpes.campusconnect"
+                versionCode 6
+                versionName "6.0"
+                resValue "string", "app_name", '"RPES"'
+                buildConfigField("String", "AppName", '"RPES"')
+                buildConfigField("String", "AppCategory", '"CAMPUS"')
+                buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
                 // [ 2. R.P.A : Single]
 //                applicationId "rpa.gruppie"
@@ -114,19 +114,18 @@ android {
               buildConfigField("String", "APP_ID",  '"school"')*/
 
               applicationId "shahbaaz.gruppie"
-              versionCode 1
-              versionName "1.0"
-              resValue "string", "app_name", '"shahbaaz"'
-              buildConfigField("String", "AppName", '"shahbaaz"')
+              versionCode 3
+              versionName "3.0"
+              resValue "string", "app_name", '"SHAHBAAZ"'
+              buildConfigField("String", "AppName", '"SHAHBAAZ"')
               buildConfigField("String", "AppCategory", '"CAMPUS"')
               buildConfigField("String", "AppType",  '"CAMPUS"')
               buildConfigField("String", "APP_ID",  '"school"')
-
-                ndk {
+             /*   ndk {
                     // Specifies the ABI configurations of your native
                     // libraries Gradle should build and package with your APK.
-//                    abiFilters 'arm64-v8a' //'armeabi-v7a'//
-                }
+                    abiFilters 'arm64-v8a','armeabi-v7a'//
+                }*/
             }
     buildTypes {
         release {
