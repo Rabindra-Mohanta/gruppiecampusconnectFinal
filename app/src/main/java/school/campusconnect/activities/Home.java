@@ -33,8 +33,7 @@ public class Home extends BaseActivity {
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_CONTACTS,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_CALENDAR,
-            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_CALENDAR
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -226,7 +226,14 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         if(apiId == LeafManager.API_SUBJECT_STAFF){
             SubjectStaffResponse subjectStaffResponse = (SubjectStaffResponse) response;
             subjectList = subjectStaffResponse.getData();
-            showSubjectSelectDialog();
+            try {
+                showSubjectSelectDialog();
+            }
+            catch(Exception ex)
+            {
+
+            }
+
         }
     }
 
@@ -588,15 +595,16 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     {
         selectedClassdata = classData;
 
-        if(classData.canPost && !classData.alreadyOnJitsiLive) {
+       /* if(classData.canPost && !classData.alreadyOnJitsiLive)
+        {
             ((VideoClassActivity) getActivity()).startRecordingScreen(selectedClassdata);
         }
         else
-        {
+        {*/
             videoClassClicked = true;
             startMeeting(selectedClassdata);
             progressBarZoom.setVisibility(View.VISIBLE);
-        }
+       // }
 
        /* if(!videoClassClicked)
         {
@@ -686,11 +694,17 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 AppLog.e(TAG , "Zoom SDK initialized : "+i+" , "+i1+" , "+startOrJoin);
 
+                try
+                {
                 ZoomSDK.getInstance().getMeetingSettingsHelper().setMuteMyMicrophoneWhenJoinMeeting(true);
                 ZoomSDK.getInstance().getMeetingSettingsHelper().disableCopyMeetingUrl(true);
                 ZoomSDK.getInstance().getMeetingSettingsHelper().setClaimHostWithHostKeyActionEnabled(false);
                 ZoomSDK.getInstance().getMeetingSettingsHelper().disableShowVideoPreviewWhenJoinMeeting(true);
+                }
+                catch(Exception ex)
+                {
 
+                }
 
                 if(startOrJoin)
                     startZoomMeeting(zoomMail , zoomPassword , zoomName, className,  meetingId);
@@ -732,11 +746,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 return;
             }
 
-            if(!item.canPost && item.alreadyOnJitsiLive){
+       /*     if(!item.canPost && item.alreadyOnJitsiLive){
                 LeafManager leafManager = new LeafManager();
                 leafManager.joinMeeting(this, GroupDashboardActivityNew.groupId, item.getId(),new JoinLiveClassReq(item.meetingIdOnLive));
             }
-
+*/
             // showJitsiOptions(meetIntent  , item.getJitsiToken() );
            /* if(item.canPost && !item.alreadyOnJitsiLive)
                 initializeZoom(item.zoomKey , item.zoomSecret , item.zoomMail, item.zoomPassword , item.jitsiToken  ,  item.zoomName.get(0)  , item.className , true);
@@ -1184,6 +1198,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             {
                 progressBar.setVisibility(View.GONE);
                 progressBarZoom.setVisibility(View.GONE);
+
+                ((VideoClassActivity) getActivity()).startBubbleService();
             }
 
 
@@ -1194,7 +1210,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 if(getActivity() !=null && item.canPost && !item.alreadyOnJitsiLive)
                 {
                     ((VideoClassActivity)getActivity()).stopRecording();
+
                 }
+
+                ((VideoClassActivity) getActivity()).removeBubble();
 
 
                 if (item.canPost && meetingCreatedBy && !isSentNotification ) {
