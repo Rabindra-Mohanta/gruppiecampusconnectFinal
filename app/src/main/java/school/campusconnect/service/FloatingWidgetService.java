@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.andremion.counterfab.CounterFab;
 
 import school.campusconnect.R;
 import school.campusconnect.activities.VideoClassActivity;

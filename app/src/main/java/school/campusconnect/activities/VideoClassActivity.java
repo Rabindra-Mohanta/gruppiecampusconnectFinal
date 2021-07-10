@@ -87,6 +87,8 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people);
 
+        LeafPreference.getInstance(this).setBoolean("video_class_navigation", true);
+
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);

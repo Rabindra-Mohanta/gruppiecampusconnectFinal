@@ -642,7 +642,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     private void stopMeeting(VideoClassResponse.ClassData classData)
     {
         this.item = classData;
-        getSubjectList(classData.getId());
+
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(),null);
+//        getSubjectList(classData.getId());
     }
 
     private void showSubjectSelectDialog() {
@@ -1199,7 +1203,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 progressBar.setVisibility(View.GONE);
                 progressBarZoom.setVisibility(View.GONE);
 
-                ((VideoClassActivity) getActivity()).startBubbleService();
+                if(getActivity()!=null){
+                    ((VideoClassActivity) getActivity()).startBubbleService();
+                }
             }
 
 

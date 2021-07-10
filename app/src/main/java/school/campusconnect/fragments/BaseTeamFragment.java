@@ -349,8 +349,15 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
         ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
         ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
-        getTeams();
-        manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
+
+        if(getActivity()!=null){
+            if(LeafPreference.getInstance(getActivity()).getBoolean("video_class_navigation")){
+                LeafPreference.getInstance(getActivity()).setBoolean("video_class_navigation", false);
+            }else {
+                getTeams();
+                manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
+            }
+        }
     }
 
     @Override
