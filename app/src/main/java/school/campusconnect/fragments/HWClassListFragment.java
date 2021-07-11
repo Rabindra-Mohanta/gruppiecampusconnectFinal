@@ -152,7 +152,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             holder.txt_name.setText(item.getName());
             holder.txt_count.setVisibility(View.GONE);
 
-            if(item.canPost || item.alreadyOnJitsiLive){
+            if(item.canPost || item.isLive){
                 holder.img_tree.setVisibility(View.VISIBLE);
             }else {
                 holder.img_tree.setVisibility(View.GONE);

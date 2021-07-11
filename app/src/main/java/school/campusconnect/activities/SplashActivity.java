@@ -68,6 +68,8 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         manager = new LeafManager();
 
         handleIntent(getIntent());
+
+        LeafPreference.getInstance(this).setBoolean("video_class_navigation", false);
     }
 
     @Override

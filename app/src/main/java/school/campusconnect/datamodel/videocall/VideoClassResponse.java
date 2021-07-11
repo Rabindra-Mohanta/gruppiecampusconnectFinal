@@ -153,21 +153,19 @@ public class VideoClassResponse extends BaseResponse {
         @Expose
         public boolean meetingCreatedBy;
 
-        public String getMeetingCreatedByName() {
-            return meetingCreatedByName;
-        }
-
-        public void setMeetingCreatedByName(String meetingCreatedByName) {
-            this.meetingCreatedByName = meetingCreatedByName;
-        }
-
-        @SerializedName(value = "meetingCreatedByName")
+        @SerializedName(value = "createdId")
         @Expose
-        public String meetingCreatedByName;
+        public String createdName;
+
 
         @SerializedName(value = "alreadyOnJitsiLive")
         @Expose
         public boolean alreadyOnJitsiLive;
+
+        @SerializedName(value = "isLive")
+        @Expose
+        public boolean isLive;
+
 
         public String getJitsiToken() {
             return jitsiToken;

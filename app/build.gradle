@@ -25,14 +25,14 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-                /*applicationId "school.campusconnect"
+                applicationId "school.campusconnect"
                 versionCode 10
                 versionName "1.1"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
+                buildConfigField("String", "APP_ID",  '"school"')
 
                 // [ 2. RPES :  Campus Copy]
               /*  applicationId "rpes.campusconnect"
@@ -85,7 +85,7 @@ android {
                 buildConfigField("String", "APP_ID",  '"60a9e7f0a0ccf76a8e79a0a6"')*/
 //
                 // [ 4. NPHPS ]
-                applicationId "nphps.gruppie"
+              /*  applicationId "nphps.gruppie"
                 versionCode 3
                 versionName "1.2"
                 resValue "string", "app_name", '"NPHPS"'
@@ -93,7 +93,7 @@ android {
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
 //                buildConfigField("String", "APP_ID",  '"60c32761a0ccf705c27ae019"')
-                buildConfigField("String", "APP_ID",  '"school"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
               /*  applicationId "hoysala.gruppie"
                 versionCode 6
@@ -139,11 +139,11 @@ android {
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
         debug {
-//           buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
+           buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prod.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://hoysala.gruppie.in"'
-            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
+//            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
             buildConfigField("String", "API_KEY_FIREBASE1", '"key=AAAATq979wE:APA91bEw0Dh3Ju0phxXjisU4z0eEmC90mi8ciomV-4S9X38UM8eMaB72bRpgGrGvv_"')
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
@@ -291,7 +291,7 @@ dependencies {
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
     implementation 'com.google.firebase:firebase-crashlytics:18.0.0'
-
-
+    implementation 'com.google.firebase:firebase-database:20.0.0'
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
 }
 apply plugin: 'com.google.gms.google-services'
