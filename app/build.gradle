@@ -86,13 +86,14 @@ android {
 //
                 // [ 4. NPHPS ]
                 applicationId "nphps.gruppie"
-                versionCode 2
-                versionName "1.1"
+                versionCode 3
+                versionName "1.2"
                 resValue "string", "app_name", '"NPHPS"'
                 buildConfigField("String", "AppName", '"NPHPS"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
-                buildConfigField("String", "APP_ID",  '"60c32761a0ccf705c27ae019"')
+//                buildConfigField("String", "APP_ID",  '"60c32761a0ccf705c27ae019"')
+                buildConfigField("String", "APP_ID",  '"school"')
 
               /*  applicationId "hoysala.gruppie"
                 versionCode 6
