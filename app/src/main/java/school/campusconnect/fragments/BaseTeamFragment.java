@@ -26,6 +26,7 @@ import school.campusconnect.activities.ChangePasswordActivity;
 import id.zelory.compressor.Compressor;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.datamodel.GroupDetailResponse;
+import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 
@@ -41,6 +42,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -76,7 +78,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     ArrayList<MyTeamData> teamList = new ArrayList<>();
     private LeafManager manager;
     private TeamListAdapterNew mAdapter;
-
+    PullRefreshLayout swipeRefreshLayout;
     DatabaseHandler databaseHandler;
     LeafPreference pref;
 
@@ -88,6 +90,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     private MenuItem menuItem;
     SharedPreferences wallPref;
     private MenuItem removeWallMenu;
+    private GroupItem mGroupItem;
 
     @Nullable
     @Override
@@ -328,6 +331,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
     private void init() {
         pref = LeafPreference.getInstance(getActivity());
+        mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
         wallPref = getActivity().getSharedPreferences(BuildConfig.APPLICATION_ID + ".wall", Context.MODE_PRIVATE);
 
         databaseHandler = new DatabaseHandler(getActivity());
@@ -336,10 +340,26 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         rvTeams = view.findViewById(R.id.rvTeams);
         imgBackground = view.findViewById(R.id.imgBackground);
         progressBar = view.findViewById(R.id.progressBar);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         rvTeams.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAdapter = new TeamListAdapterNew(teamList, this);
         rvTeams.setAdapter(mAdapter);
+
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    getTeams();
+                    if(mGroupItem.canPost){
+                        manager.getGroupDetail(BaseTeamFragment.this, GroupDashboardActivityNew.groupId + "");
+                    }
+                } else {
+                    showNoNetworkMsg();
+                }
+            }
+        });
 
     }
 
@@ -351,11 +371,13 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
 
         if(getActivity()!=null){
-            if(LeafPreference.getInstance(getActivity()).getBoolean("video_class_navigation")){
-                LeafPreference.getInstance(getActivity()).setBoolean("video_class_navigation", false);
-            }else {
+            if(GroupDashboardActivityNew.isOnCreate){
+                GroupDashboardActivityNew.isOnCreate = false;
                 getTeams();
-                manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
+
+                if(mGroupItem.canPost) {
+                    manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
+                }
             }
         }
     }

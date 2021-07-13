@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -59,6 +61,9 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,17 +71,38 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new GridLayoutManager(getContext(), 4, LinearLayoutManager.VERTICAL, false));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        _init();
 
         return view;
+    }
+
+    private void _init() {
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    getGroupList();
+                    swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    showNoNetworkMsg();
+                }
+            }
+        });
+    }
+    private void getGroupList(){
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getGroups(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        LeafManager leafManager = new LeafManager();
-        leafManager.getGroups(this);
+        if(isConnectionAvailable()){
+            getGroupList();
+        }else {
+            showNoNetworkMsg();
+        }
     }
 
     @Override

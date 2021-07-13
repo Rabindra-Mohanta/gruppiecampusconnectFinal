@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -102,6 +103,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Bind(R.id.progressBarZoom)
     public ProgressBar progressBarZoom;
 
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;
+
+
     VideoClassResponse.ClassData item;
 
     boolean isSentNotification = false;
@@ -136,7 +141,25 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         getVideoClassList();
 
+        init();
+
         return view;
+    }
+
+    private void init() {
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    LeafManager leafManager = new LeafManager();
+                    progressBar.setVisibility(View.VISIBLE);
+                    leafManager.getVideoClasses(VideoClassListFragment.this, GroupDashboardActivityNew.groupId);
+                } else {
+                    showNoNetworkMsg();
+                }
+            }
+        });
     }
 
     private void initFirebase() {

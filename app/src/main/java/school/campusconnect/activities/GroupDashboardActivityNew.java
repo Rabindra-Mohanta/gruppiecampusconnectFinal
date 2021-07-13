@@ -190,13 +190,14 @@ public class GroupDashboardActivityNew extends BaseActivity
     public CircleImageView tv_toolbar_icon;
     public ImageView tv_toolbar_default;
     public static String groupId = "";
+    public static boolean isOnCreate = false;
     public static String total_user = "";
 
     int prevTabPos = 0;
 
-    String[] tabText = new String[2];
-    int[] tabIcon = new int[2];
-    int[] tabIcongray = new int[2];
+    String[] tabText;
+    int[] tabIcon;
+    int[] tabIcongray;
     public TextView tv_Desc;
     private int windowCount = 1;
     private ShowTipsView showtips;
@@ -383,26 +384,27 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     private void setTabLayout() {
+        if(mGroupItem.canPost){
+            tabText = new String[2];
+            tabIcon = new int[2];
+            tabIcongray = new int[2];
+        }else {
+            tabText = new String[1];
+            tabIcon = new int[1];
+            tabIcongray = new int[1];
+        }
+
         tabIcon[0] = R.drawable.icon_home;
-        //tabIcon[1] = R.drawable.icon_personal;
-        //tabIcon[2]=R.drawable.icon_group;
-        tabIcon[1] = R.drawable.icon_more_tab;
-
         tabIcongray[0] = R.drawable.icon_home_gray;
-        //tabIcongray[1] = R.drawable.icon_personal_gray;
-        //tabIcongray[2]=R.drawable.icon_group_gray;
-        tabIcongray[1] = R.drawable.icon_more_tab_gray;
-
         tabText[0] = getResources().getString(R.string.lbl_home);
-        //tabText[1] = getResources().getString(R.string.lbl_personal);
-        //tabText[2]=getResources().getString(R.string.lbl_app_name_tab);
-        tabText[1] = getResources().getString(R.string.lbl_more);
-
         tabLayout.addTab(tabLayout.newTab().setText(tabText[0]));
-        tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
-        //tabLayout.addTab(tabLayout.newTab().setText(tabText[2]));
-        //tabLayout.addTab(tabLayout.newTab().setText(tabText[3]));
 
+        if(mGroupItem.canPost){
+            tabIcon[1] = R.drawable.icon_more_tab;
+            tabIcongray[1] = R.drawable.icon_more_tab_gray;
+            tabText[1] = getResources().getString(R.string.lbl_more);
+            tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
+        }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -903,6 +905,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     public void HomeClick() {
+
+        isOnCreate = true;
+
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

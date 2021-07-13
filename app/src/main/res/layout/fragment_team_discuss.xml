@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTeams"
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        app:refreshColor="@color/colorPrimary">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTeams"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.baoyz.widget.PullRefreshLayout>
+
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -68,8 +68,6 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         manager = new LeafManager();
 
         handleIntent(getIntent());
-
-        LeafPreference.getInstance(this).setBoolean("video_class_navigation", false);
     }
 
     @Override
@@ -183,20 +181,18 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
             }, 1500);
         } else {
             mHandler.postDelayed(new Runnable() {
-
-
                 @Override
                 public void run() {
-                    if (!isConnectionAvailable())
+//                    if (!isConnectionAvailable())
                         gotoHomeScreen();
-                    else {
+                   /* else {
                         if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
                             SplashActivity.this.manager.getGroups(SplashActivity.this);
                         }else {
                             SplashActivity.this.manager.getGroupDetail(SplashActivity.this, BuildConfig.APP_ID);
                         }
 
-                    }
+                    }*/
                 }
             }, 1000);
         }
@@ -249,7 +245,7 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+       /* if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
             GroupResponse res = (GroupResponse) response;
             AppLog.e(TAG, "ClassResponse " + res.data);
             LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, res.data.size());
@@ -260,14 +256,14 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
                 AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
                 saveGroupDetails(gRes);
             }
-        }
+        }*/
     }
     //save group detail
-    private void saveGroupDetails(GroupDetailResponse gRes) {
+   /* private void saveGroupDetails(GroupDetailResponse gRes) {
         LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
         LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
         gotoHomeScreen();
-    }
+    }*/
     private void gotoHomeScreen()
     {
         if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
