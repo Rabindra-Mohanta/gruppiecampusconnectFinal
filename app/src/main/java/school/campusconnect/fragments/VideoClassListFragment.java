@@ -216,11 +216,14 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     MeetingStatusModel val = liveTeamIds.get(result.get(i).getId());
                     if (myId.equalsIgnoreCase(val.createdId)) {
                         result.get(i).meetingCreatedBy = true;
+                    }else {
+                        result.get(i).meetingCreatedBy = false;
                     }
                     result.get(i).createdName = val.createdName;
                 } else {
                     result.get(i).isLive = false;
                     result.get(i).createdName = "";
+                    result.get(i).meetingCreatedBy = false;
                 }
             }
             classesAdapter.notifyDataSetChanged();

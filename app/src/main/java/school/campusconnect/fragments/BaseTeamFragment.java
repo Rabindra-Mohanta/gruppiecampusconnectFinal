@@ -27,6 +27,7 @@ import id.zelory.compressor.Compressor;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupItem;
+import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 
@@ -162,8 +163,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         }
         if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
-        }
-        else {
+        } else {
             menu.findItem(R.id.menu_logout).setVisible(true);
         }
         menuItem = menu.findItem(R.id.action_notification_list);
@@ -352,7 +352,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 if (isConnectionAvailable()) {
                     swipeRefreshLayout.setRefreshing(false);
                     getTeams();
-                    if(mGroupItem.canPost){
+                    if (mGroupItem.canPost) {
                         manager.getGroupDetail(BaseTeamFragment.this, GroupDashboardActivityNew.groupId + "");
                     }
                 } else {
@@ -370,14 +370,22 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
         ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
 
-        if(getActivity()!=null){
-            if(GroupDashboardActivityNew.isOnCreate){
-                GroupDashboardActivityNew.isOnCreate = false;
+        if (getActivity() != null) {
+            if (!LeafPreference.getInstance(getActivity()).getBoolean("home_api")) {
+                LeafPreference.getInstance(getActivity()).setBoolean("home_api", true);
                 getTeams();
-
-                if(mGroupItem.canPost) {
+                if (mGroupItem.canPost) {
                     manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
                 }
+            }else {
+                String re = LeafPreference.getInstance(getActivity()).getString(LeafPreference.HOME_LIST_OFFLINE);
+                if (!TextUtils.isEmpty(re)) {
+                    List<MyTeamData> result  = new Gson().fromJson(re, new TypeToken<List<MyTeamData>>() {
+                    }.getType());
+                    teamList.addAll(result);
+                    mAdapter.notifyDataSetChanged();
+                }
+
             }
         }
     }
@@ -391,7 +399,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
         if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
-        }else {
+        } else {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(false);
         }
 
@@ -487,6 +495,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
                 }
 
+                LeafPreference.getInstance(getActivity()).setString(LeafPreference.HOME_LIST_OFFLINE, new Gson().toJson(result));
+
                 teamList.addAll(result);
                 mAdapter.notifyDataSetChanged();
 
@@ -502,7 +512,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 if (menuItem != null) {
                     menuItem.setIcon(buildCounterDrawable(GroupDashboardActivityNew.notificationUnseenCount));
                 }
-                if(((GroupDashboardActivityNew)getActivity()).isBaseFragment()){
+                if (((GroupDashboardActivityNew) getActivity()).isBaseFragment()) {
                     ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
                 }
 //                checkVersionUpdate(gRes.data.get(0).appVersion);
@@ -512,10 +522,10 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     }
 
     private void checkVersionUpdate(int appVersion) {
-        if(getActivity()!=null){
-            AppLog.e(TAG,"appVersion : "+appVersion);
-            AppLog.e(TAG,"BuildConfig.VERSION_CODE : "+BuildConfig.VERSION_CODE);
-            if(BuildConfig.VERSION_CODE<appVersion){
+        if (getActivity() != null) {
+            AppLog.e(TAG, "appVersion : " + appVersion);
+            AppLog.e(TAG, "BuildConfig.VERSION_CODE : " + BuildConfig.VERSION_CODE);
+            if (BuildConfig.VERSION_CODE < appVersion) {
                 AppDialog.showUpdateDialog(getActivity(), "New version is available. download new version from play store", new AppDialog.AppUpdateDialogListener() {
                     @Override
                     public void onUpdateClick(DialogInterface dialog) {
@@ -527,8 +537,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                         }
                     }
                 });
-            }else {
-                AppLog.e(TAG,"checkVersionUpdate : latest");
+            } else {
+                AppLog.e(TAG, "checkVersionUpdate : latest");
             }
         }
     }

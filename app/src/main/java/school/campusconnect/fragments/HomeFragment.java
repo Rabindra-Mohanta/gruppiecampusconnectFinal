@@ -282,6 +282,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     }
 
     private void onGroupSelect(GroupItem groupItem) {
+        LeafPreference.getInstance(getActivity()).setBoolean("home_api", false);
         LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER,groupItem.totalUsers);
         LeafPreference.getInstance(getActivity()).setString(Constants.GROUP_DATA, new Gson().toJson(groupItem));
 

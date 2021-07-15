@@ -190,7 +190,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     public CircleImageView tv_toolbar_icon;
     public ImageView tv_toolbar_default;
     public static String groupId = "";
-    public static boolean isOnCreate = false;
     public static String total_user = "";
 
     int prevTabPos = 0;
@@ -214,6 +213,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_CALENDAR
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -249,8 +249,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
         // sendNotification("Message","Title");
 
-        if(!hasPermission(permissions)){
-            ActivityCompat.requestPermissions(this,permissions, 222);
+        if (!hasPermission(permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, 222);
         }
     }
 
@@ -377,34 +377,23 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         manager = new LeafManager();
 
-
         setTabLayout();
-
-
     }
 
     private void setTabLayout() {
-        if(mGroupItem.canPost){
-            tabText = new String[2];
-            tabIcon = new int[2];
-            tabIcongray = new int[2];
-        }else {
-            tabText = new String[1];
-            tabIcon = new int[1];
-            tabIcongray = new int[1];
-        }
+        tabText = new String[2];
+        tabIcon = new int[2];
+        tabIcongray = new int[2];
 
         tabIcon[0] = R.drawable.icon_home;
         tabIcongray[0] = R.drawable.icon_home_gray;
         tabText[0] = getResources().getString(R.string.lbl_home);
         tabLayout.addTab(tabLayout.newTab().setText(tabText[0]));
 
-        if(mGroupItem.canPost){
-            tabIcon[1] = R.drawable.icon_more_tab;
-            tabIcongray[1] = R.drawable.icon_more_tab_gray;
-            tabText[1] = getResources().getString(R.string.lbl_more);
-            tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
-        }
+        tabIcon[1] = R.drawable.icon_more_tab;
+        tabIcongray[1] = R.drawable.icon_more_tab_gray;
+        tabText[1] = getResources().getString(R.string.lbl_more);
+        tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -427,6 +416,12 @@ public class GroupDashboardActivityNew extends BaseActivity
             }
         });
         createTabIcons();
+
+        if(mGroupItem.canPost){
+            tabLayout.setVisibility(View.VISIBLE);
+        }else {
+            tabLayout.setVisibility(View.GONE);
+        }
     }
 
     @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llEBook, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
@@ -786,7 +781,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (fm.getBackStackEntryCount() > 0) {
 
             if (fm.getBackStackEntryCount() == 1) {
-                tabLayout.setVisibility(View.VISIBLE);
+                if(mGroupItem.canPost)
+                    tabLayout.setVisibility(View.VISIBLE);
             }
             super.onBackPressed();
         } else {
@@ -802,7 +798,9 @@ public class GroupDashboardActivityNew extends BaseActivity
                     });
                 }
             } else {
-                tabLayout.getTabAt(0).select();
+                if(tabLayout.getTabAt(0)!=null){
+                    tabLayout.getTabAt(0).select();
+                }
             }
 
         }
@@ -905,8 +903,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     public void HomeClick() {
-
-        isOnCreate = true;
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.VISIBLE);
@@ -1206,7 +1202,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase("")) {
             ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {
             }.getType());
-            AppLog.e(TAG,"list before : "+list);
+            AppLog.e(TAG, "list before : " + list);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, -7);
             String sevendayDate = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
@@ -1226,7 +1222,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     break;
                 }
             }
-            AppLog.e(TAG,"list after : "+list);
+            AppLog.e(TAG, "list after : " + list);
             leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
         }
     }

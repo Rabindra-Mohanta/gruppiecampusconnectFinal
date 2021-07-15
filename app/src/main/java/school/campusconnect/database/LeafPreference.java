@@ -21,6 +21,7 @@ public class LeafPreference {
     public static final String ISTIME_TABLE_UPDATED = "ISTIME_TABLE_UPDATED";
     public static final String GROUP_COUNT = "GROUP_COUNT";
     public static final String VIDEO_CLASS_LIST_OFFLINE = "VIDEO_CLASS_LIST_OFFLINE";
+    public static final String HOME_LIST_OFFLINE = "HOME_LIST_OFFLINE";
     private static LeafPreference sInstance;
     private static SharedPreferences sPref;
     private static SharedPreferences.Editor sEditor;
