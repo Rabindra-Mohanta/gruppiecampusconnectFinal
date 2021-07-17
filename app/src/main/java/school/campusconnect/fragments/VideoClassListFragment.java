@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,6 +64,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VideoClassActivity;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.databinding.DialogMeetingOnOffBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.videocall.MeetingStatusModel;
@@ -119,6 +122,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private ArrayList<SubjectStaffResponse.SubjectData> subjectList;
     private ArrayList<VideoClassResponse.ClassData> result;
+    private VideoClassResponse.ClassData listItemData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -216,7 +220,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     MeetingStatusModel val = liveTeamIds.get(result.get(i).getId());
                     if (myId.equalsIgnoreCase(val.createdId)) {
                         result.get(i).meetingCreatedBy = true;
-                    }else {
+                    } else {
                         result.get(i).meetingCreatedBy = false;
                     }
                     result.get(i).createdName = val.createdName;
@@ -528,7 +532,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
+
+                        listItemData = list.get(getAdapterPosition());
+                        onTreeClick(listItemData);
                     }
                 });
 
@@ -571,7 +577,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         return;
 
     }
-
 
     private void stopMeeting(VideoClassResponse.ClassData classData) {
         this.item = classData;
@@ -650,8 +655,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     // joinZoomMeeting(zoomName, zoomPassword, className, meetingId);
                     logoutZoomBeforeJoining(zoomName, zoomPassword, className, meetingId);
                 }
-
-
             }
 
             @Override
@@ -1098,7 +1101,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     MeetingServiceListener JoinMeetListener = new MeetingServiceListener() {
         @Override
         public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
-            Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
+            Log.e(TAG, "meetinsstatusChanged Join: " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
                 progressBar.setVisibility(View.GONE);
                 progressBarZoom.setVisibility(View.GONE);
@@ -1122,7 +1125,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 }
             }
 
-
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING")) {
 //                AppLog.e(TAG, "meeting Disconnecting : " + item.canPost + " , " + meetingCreatedBy);
 
@@ -1136,17 +1138,65 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     e.printStackTrace();
                 }
 
+                dialogMeetingConfirmation();
+            }
+        }
+    };
 
-                if (item.canPost && item.meetingCreatedBy && !isSentNotification) {
+    private void dialogMeetingConfirmation() {
+
+        Dialog dialog = new Dialog(getActivity(), R.style.FragmentDialog);
+        DialogMeetingOnOffBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_meeting_on_off, null, false);
+        dialog.setContentView(binding.getRoot());
+
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        binding.tvYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                joinZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, item.className, item.jitsiToken);
+            }
+        });
+
+        binding.tvNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopMeeting(item);
+                dialog.dismiss();
+            }
+        });
+
+        new CountDownTimer(11000, 1000) {
+            @Override
+            public void onTick(long l) {
+
+                binding.circularProgressBar.setProgressMax(11000);
+                binding.circularProgressBar.setProgress(l);
+                binding.tvTime.setText("" + l / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                binding.circularProgressBar.setProgress(0);
+                binding.tvTime.setText("00");
+
+                stopMeeting(item);
+                dialog.dismiss();
+
+                /*if (item.canPost && item.meetingCreatedBy && !isSentNotification) {
                     isSentNotification = true;
                     stopMeeting(item);
                 } else {
 
-                }
+                }*/
             }
+        }.start();
 
-        }
-    };
+    }
 
     ZoomSDKAuthenticationListener ZoomAuthLogoutListener = new ZoomSDKAuthenticationListener() {
         @Override

@@ -25,14 +25,14 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-              /*  applicationId "school.campusconnect"
+                applicationId "school.campusconnect"
                 versionCode 11
                 versionName "1.2"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
+                buildConfigField("String", "APP_ID",  '"school"')
 
                 // [ 2. RPES :  Campus Copy]
               /*  applicationId "rpes.campusconnect"
@@ -122,14 +122,14 @@ android {
 //              buildConfigField("String", "AppType",  '"CAMPUS"')
 //              buildConfigField("String", "APP_ID",  '"school"')
 
-              applicationId "vidyaniketan.gruppie"
-              versionCode 1
+              /*applicationId "vidyaniketan.gruppie"
+              versionCode 2
               versionName "1.0"
               resValue "string", "app_name", '"VIDYANIKETAN"'
               buildConfigField("String", "AppName", '"VIDYANIKETAN"')
               buildConfigField("String", "AppCategory", '"CAMPUS"')
               buildConfigField("String", "AppType",  '"CAMPUS"')
-              buildConfigField("String", "APP_ID",  '"school"')
+              buildConfigField("String", "APP_ID",  '"school"')*/
 
 
              /*   ndk {
@@ -151,12 +151,12 @@ android {
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
         debug {
-//           buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
+           buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prod.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://hoysala.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
-            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
+//            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
             buildConfigField("String", "API_KEY_FIREBASE1", '"key=AAAATq979wE:APA91bEw0Dh3Ju0phxXjisU4z0eEmC90mi8ciomV-4S9X38UM8eMaB72bRpgGrGvv_"')
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
@@ -293,13 +293,15 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
 
+    implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
+
     /*Excelsheet*/
     implementation 'com.opencsv:opencsv:3.7'
     implementation 'org.apache.poi:poi:3.16'
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 

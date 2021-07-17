@@ -382,6 +382,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 if (!TextUtils.isEmpty(re)) {
                     List<MyTeamData> result  = new Gson().fromJson(re, new TypeToken<List<MyTeamData>>() {
                     }.getType());
+                    teamList.clear();
                     teamList.addAll(result);
                     mAdapter.notifyDataSetChanged();
                 }
