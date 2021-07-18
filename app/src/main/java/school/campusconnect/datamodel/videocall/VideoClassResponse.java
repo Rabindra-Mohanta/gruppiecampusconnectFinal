@@ -66,6 +66,8 @@ public class VideoClassResponse extends BaseResponse {
         @Expose
         public String meetingIdOnLive;
 
+        public boolean isJoining;
+
 
         public String getZoomMeetingPassword() {
             return zoomMeetingPassword;
@@ -165,6 +167,8 @@ public class VideoClassResponse extends BaseResponse {
         @SerializedName(value = "isLive")
         @Expose
         public boolean isLive;
+
+        public MeetingStatusModel firebaseLive;
 
 
         public String getJitsiToken() {

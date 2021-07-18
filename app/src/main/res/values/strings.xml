@@ -507,6 +507,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="not_verified"><u>Not Verified</u></string>
     <string name="reassigned"><u>Reassigned</u></string>
     <string name="verified"><u>Verified</u></string>
+    <string name="lbl_subject_name">Enter Subject Name</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

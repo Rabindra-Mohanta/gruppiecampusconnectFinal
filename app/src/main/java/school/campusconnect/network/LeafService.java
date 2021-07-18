@@ -128,6 +128,7 @@ import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
 import school.campusconnect.datamodel.versioncheck.VersionCheckResponse;
 import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
+import school.campusconnect.datamodel.videocall.MeetingStatusModel;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
 import school.campusconnect.datamodel.videocall.StopMeetingReq;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
@@ -493,6 +494,10 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/stop")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<StartMeetingRes> stopMeetingNoBody(@Path("group_id") String group_id, @Path("teamId") String teamId);
+
+    @POST("/api/v1/groups/{groupId}/team/{teamId}/online/attendance/push")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> attendancePush(@Path("groupId") String group_id, @Path("teamId") String teamId, @Body MeetingStatusModel req);
 
 
     @GET("/api/v1/groups/{group_id}/ebooks/get")
