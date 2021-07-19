@@ -26,4 +26,19 @@ public class MeetingStatusModel {
             meetingJoinedAtTime = new ArrayList<>();
         }
     }
+
+    @Override
+    public String toString() {
+        return "MeetingStatusModel{" +
+                "meetingCreatedAtTime='" + meetingCreatedAtTime + '\'' +
+                ", meetingEndedAtTime='" + meetingEndedAtTime + '\'' +
+                ", teamId='" + teamId + '\'' +
+                ", meetingCreatedById='" + meetingCreatedById + '\'' +
+                ", meetingCreatedByName='" + meetingCreatedByName + '\'' +
+                ", subjectName='" + subjectName + '\'' +
+                ", attendance=" + attendance +
+                ", month='" + month + '\'' +
+                ", autoJoinForStudent=" + autoJoinForStudent +
+                '}';
+    }
 }

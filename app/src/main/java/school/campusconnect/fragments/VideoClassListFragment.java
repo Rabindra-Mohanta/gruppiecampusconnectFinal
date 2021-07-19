@@ -354,8 +354,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
         }
         if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
-            myRef.child("live_class").child(item.getId()).removeValue();
-            new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            myRef.child("live_class").child(item.getId()).removeValue();
+//            new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -465,23 +465,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             holder.tv_stop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    final SMBAlterDialog dialog =
-                            new SMBAlterDialog(getActivity());
-                    dialog.setTitle(R.string.app_name);
-                    dialog.setMessage("Are You Sure Want To End Meeting ?");
-                    dialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                            stopMeeting(list.get(position));
-                            VideoClassListFragment.this.item = list.get(position);
-                            dialogMeetingConfirmation();
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
-
-
+                    VideoClassListFragment.this.item = list.get(position);
+                    dialogMeetingConfirmation();
                 }
             });
 
@@ -559,8 +544,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     @Override
                     public void onClick(View view) {
 
-                        listItemData = list.get(getAdapterPosition());
-                        onTreeClick(listItemData);
+                        try {
+                            listItemData = list.get(getAdapterPosition());
+                            onTreeClick(listItemData);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                     }
                 });
 
@@ -641,6 +631,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), item.firebaseLive);
+
+                myRef.child("live_class").child(item.getId()).removeValue();
+                new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
         dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
@@ -660,6 +653,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), item.firebaseLive);
+
+                myRef.child("live_class").child(item.getId()).removeValue();
+                new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
         dialog.show();
@@ -765,7 +761,26 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             Log.e(TAG, "On Click To startMeeting called : " + item.getMeetingCreatedBy());
             if (isConnectionAvailable()) {
 
-                if (item.canPost && !item.isLive) {
+                if(item.canPost && item.isLive && item.meetingCreatedBy){
+//                    MeetingStatusModel model = new MeetingStatusModel();
+//                    model.teamId = item.getId();
+//                    SimpleDateFormat format = new SimpleDateFormat(
+//                            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+//                    format.setTimeZone(TimeZone.getTimeZone("UTC"));
+//                    model.meetingCreatedAtTime = format.format(Calendar.getInstance().getTime());
+//                    model.meetingEndedAtTime = "";
+//                    model.subjectName = "";
+//                    model.month = "";
+//                    model.meetingCreatedById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+//                    model.meetingCreatedByName = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
+//                    myRef.child("live_class").child(item.getId()).setValue(model);
+
+                    initializeZoom(item.zoomKey, item.zoomSecret, item.zoomMail, item.zoomPassword, item.jitsiToken, item.zoomName.get(0), item.className, true);
+
+                    AppLog.e(TAG, "SENDNOTIICATION CODE REACEDH");
+                    new SendNotification(true, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    isSentNotification = true;
+                } else if (item.canPost && !item.isLive) {
                 /* LeafManager leafManager = new LeafManager();
                 leafManager.startMeeting(this, GroupDashboardActivityNew.groupId, item.getId());*/
                     MeetingStatusModel model = new MeetingStatusModel();
@@ -1283,6 +1298,12 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         if (getActivity() == null) {
             return;
         }
+
+        if (item.firebaseLive != null) {
+            item.firebaseLive.autoJoinForStudent = false;
+            myRef.child("live_class").child(item.getId()).setValue(item.firebaseLive);
+        }
+
         timeOfStopMeeting = System.currentTimeMillis();
         Dialog dialog = new Dialog(getActivity(), R.style.AppDialog);
         DialogMeetingOnOffBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_meeting_on_off, null, false);
