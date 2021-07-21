@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,7 +77,7 @@ import school.campusconnect.databinding.DialogMeetingOnOffBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.videocall.MeetingStatusModel;
-import school.campusconnect.datamodel.videocall.StopMeetingReq;
+import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -228,21 +227,21 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     result.get(i).isLive = true;
                     MeetingStatusModel val = liveTeamIds.get(result.get(i).getId());
                     result.get(i).firebaseLive = val;
-                    if (myId.equalsIgnoreCase(val.meetingCreatedById)) {
+                    if (myId.equalsIgnoreCase(val.tech_id)) {
                         result.get(i).meetingCreatedBy = true;
                     } else {
                         result.get(i).meetingCreatedBy = false;
-                        if (val.autoJoinForStudent && !result.get(i).isJoining) {
+                        if (val.auto_join && !result.get(i).isJoining) {
                             result.get(i).isJoining = true;
                             item = result.get(i);
                             // TODO : AUTO JOIN STUDENT
                             startMeeting();
                         }
-                        if (!val.autoJoinForStudent) {
+                        if (!val.auto_join) {
                             result.get(i).isJoining = false;
                         }
                     }
-                    result.get(i).createdName = val.meetingCreatedByName;
+                    result.get(i).createdName = val.tech_name;
                 } else {
                     result.get(i).isJoining = false;
                     result.get(i).isLive = false;
@@ -284,56 +283,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        /*if (apiId == API_JISTI_MEETING_START) {
-            Log.e(TAG, "OnSuccess called ");
-
-            myRef.child("live_class").child(item.getId()).setValue(true);
-
-            StartMeetingRes startMeetingRes = (StartMeetingRes) response;
-
-            if (startMeetingRes.data != null && !("".equalsIgnoreCase(startMeetingRes.data.get(0).jitsiToken))) {
-
-                //startActivity(meetIntent);
-                //showJitsiOptions(meetIntent , startMeetingRes.data.get(0).jitsiToken);
-
-                meetingCreatedBy = startMeetingRes.data.get(0).isMeetingCreatedBy();
-
-                Log.e(TAG, "meetingCreatedBy after startMeeting API call :" + startMeetingRes.data.get(0).isMeetingCreatedBy());
-
-                if (item.canPost && meetingCreatedBy) {
-                    // startZoomMeeting(item.zoomMail ,item.zoomPassword , item.jitsiToken , item.zoomName.get(0));
-                    initializeZoom(item.zoomKey, item.zoomSecret, item.zoomMail, item.zoomPassword, item.jitsiToken, item.zoomName.get(0), item.className, true);
-                } else {
-                    //joinZoomMeeting(item.zoomMail , item.zoomPassword , item.jitsiToken , item.zoomName.get(0));
-                    initializeZoom(item.zoomKey, item.zoomSecret, item.zoomMail, item.zoomPassword, item.jitsiToken, item.zoomName.get(0), item.className, false);
-                }
-
-                if (startMeetingRes.data.get(0).isMeetingCreatedBy() && !isSentNotification) {
-                    AppLog.e(TAG, "SENDNOTIICATION CODE REACEDH");
-                    new SendNotification(true, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    isSentNotification = true;
-                }
-
-            }
-            return;
-        } else if (apiId == API_JISTI_MEETING_STOP) {
-            myRef.child("live_class").child(item.getId()).removeValue();
-            StartMeetingRes startMeetingRes = (StartMeetingRes) response;
-            if (startMeetingRes.data != null && startMeetingRes.data.size() > 0) {
-                AppLog.e(TAG, "SENDNOTIFICAITNO CODE ReACHED AT STOP");
-                new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-
-            LeafManager leafManager = new LeafManager();
-
-            leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
-
-            if (getActivity() != null) {
-                ((VideoClassActivity) getActivity()).showSharePopup();
-            }
-            return;
-
-        }*/
         progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_Video_Class) {
             VideoClassResponse res = (VideoClassResponse) response;
@@ -354,8 +303,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
         }
         if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
-//            myRef.child("live_class").child(item.getId()).removeValue();
-//            new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -547,7 +494,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         try {
                             listItemData = list.get(getAdapterPosition());
                             onTreeClick(listItemData);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -596,14 +543,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     private void stopMeeting(VideoClassResponse.ClassData classData) {
         this.item = classData;
 
-//        myRef.child("live_class").child(item.getId()).removeValue();
-//
-//        new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-//        progressBar.setVisibility(View.VISIBLE);
-//        LeafManager leafManager = new LeafManager();
-//        leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), null);
-//        getSubjectList(item.getId());
         EnterSubjectDialog();
     }
 
@@ -621,101 +560,93 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                item.firebaseLive.month = "" + Calendar.getInstance().get(Calendar.MONTH) + 1;
-                item.firebaseLive.subjectName = etName.getText().toString();
-                SimpleDateFormat format = new SimpleDateFormat(
-                        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                item.firebaseLive.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
-                AppLog.e(TAG, "stopMeetingReq : " + item.firebaseLive);
                 progressBar.setVisibility(View.VISIBLE);
-                LeafManager leafManager = new LeafManager();
-                leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), item.firebaseLive);
 
-                myRef.child("live_class").child(item.getId()).removeValue();
-                new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                        MeetingStatusModel model = task.getResult().getValue(MeetingStatusModel.class);
+
+                        MeetingStatusModelApi apiModel = new MeetingStatusModelApi();
+                        apiModel.teamId = model.t_id;
+                        apiModel.meetingCreatedAtTime = model.create_at;
+                        apiModel.meetingCreatedById = model.tech_id;
+                        apiModel.meetingCreatedByName = model.tech_name;
+
+                        for (int i = 0; i < model.attendance.size(); i++) {
+                            MeetingStatusModelApi.AttendanceLiveClass ca = new MeetingStatusModelApi.AttendanceLiveClass();
+                            ca.userId = model.attendance.get(i).uid;
+                            ca.studentName = model.attendance.get(i).sname;
+                            ca.meetingJoinedAtTime = model.attendance.get(i).joinAt;
+                            apiModel.attendance.add(ca);
+                        }
+
+                        apiModel.month = "" + (Calendar.getInstance().get(Calendar.MONTH) + 1);
+                        apiModel.subjectName = etName.getText().toString();
+                        SimpleDateFormat format = new SimpleDateFormat(
+                                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        apiModel.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
+                        AppLog.e(TAG, "apiModel : " + apiModel);
+
+                        LeafManager leafManager = new LeafManager();
+                        leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
+
+                        myRef.child("live_class").child(item.getId()).removeValue();
+                        myRef.child("attendance").child(item.getId()).removeValue();
+
+                        new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                    }
+                });
             }
         });
         dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                if(item.firebaseLive==null){
-                    return;
-                }
-                item.firebaseLive.month = "" + Calendar.getInstance().get(Calendar.MONTH) + 1;
-                item.firebaseLive.subjectName = etName.getText().toString();
-                SimpleDateFormat format = new SimpleDateFormat(
-                        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                item.firebaseLive.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
-                AppLog.e(TAG, "stopMeetingReq : " + item.firebaseLive);
-                progressBar.setVisibility(View.VISIBLE);
-                LeafManager leafManager = new LeafManager();
-                leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), item.firebaseLive);
 
-                myRef.child("live_class").child(item.getId()).removeValue();
-                new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                        MeetingStatusModel model = task.getResult().getValue(MeetingStatusModel.class);
+
+                        MeetingStatusModelApi apiModel = new MeetingStatusModelApi();
+                        apiModel.teamId = model.t_id;
+                        apiModel.meetingCreatedAtTime = model.create_at;
+                        apiModel.meetingCreatedById = model.tech_id;
+                        apiModel.meetingCreatedByName = model.tech_name;
+
+                        for (int i=0;i<model.attendance.size();i++){
+                            MeetingStatusModelApi.AttendanceLiveClass ca=new MeetingStatusModelApi.AttendanceLiveClass();
+                            ca.userId = model.attendance.get(i).uid;
+                            ca.studentName = model.attendance.get(i).sname;
+                            ca.meetingJoinedAtTime = model.attendance.get(i).joinAt;
+                            apiModel.attendance.add(ca);
+                        }
+
+                        apiModel.month = "" + (Calendar.getInstance().get(Calendar.MONTH) + 1);
+                        apiModel.subjectName = etName.getText().toString();
+                        SimpleDateFormat format = new SimpleDateFormat(
+                                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        apiModel.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
+                        AppLog.e(TAG, "apiModel : " + apiModel);
+
+                        LeafManager leafManager = new LeafManager();
+                        leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
+
+                        myRef.child("live_class").child(item.getId()).removeValue();
+                        myRef.child("attendance").child(item.getId()).removeValue();
+
+                        new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                    }
+                });
             }
         });
         dialog.show();
     }
-
-    /*private void showSubjectSelectDialog() {
-        final Dialog dialog = new Dialog(getActivity(), R.style.FragmentDialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_select_subject);
-        Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
-        RecyclerView rvSubject = dialog.findViewById(R.id.rvSubjects);
-
-        AttendanceSubjectAdapter subjectAdapter = new AttendanceSubjectAdapter(subjectList);
-        rvSubject.setAdapter(subjectAdapter);
-
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                if (!TextUtils.isEmpty(subjectAdapter.getSelected())) {
-//                    StopMeetingReq stopMeetingReq = new StopMeetingReq(item.meetingIdOnLive, subjectAdapter.getSelected());
-                    item.firebaseLive.month = ""+Calendar.getInstance().get(Calendar.MONTH)+1;
-                    item.firebaseLive.subjectName = subjectAdapter.getSelected();
-                    SimpleDateFormat format = new SimpleDateFormat(
-                            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                    format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    item.firebaseLive.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
-                    AppLog.e(TAG, "stopMeetingReq : " + item.firebaseLive);
-                    progressBar.setVisibility(View.VISIBLE);
-                    LeafManager leafManager = new LeafManager();
-//                    leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), stopMeetingReq);
-                    leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), item.firebaseLive);
-                } else {
-                    Toast.makeText(getActivity(), "Select Subject", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-//                progressBar.setVisibility(View.VISIBLE);
-//                LeafManager leafManager = new LeafManager();
-//                leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), null);
-
-                item.firebaseLive.month = ""+Calendar.getInstance().get(Calendar.MONTH)+1;
-                item.firebaseLive.subjectName = "";
-                SimpleDateFormat format = new SimpleDateFormat(
-                        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                item.firebaseLive.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
-                AppLog.e(TAG, "stopMeetingReq : " + item.firebaseLive);
-                progressBar.setVisibility(View.VISIBLE);
-                LeafManager leafManager = new LeafManager();
-//                    leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), stopMeetingReq);
-                leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), item.firebaseLive);
-            }
-        });
-        dialog.show();
-    }*/
 
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
 
@@ -761,40 +692,23 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             Log.e(TAG, "On Click To startMeeting called : " + item.getMeetingCreatedBy());
             if (isConnectionAvailable()) {
 
-                if(item.canPost && item.isLive && item.meetingCreatedBy){
-//                    MeetingStatusModel model = new MeetingStatusModel();
-//                    model.teamId = item.getId();
-//                    SimpleDateFormat format = new SimpleDateFormat(
-//                            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-//                    format.setTimeZone(TimeZone.getTimeZone("UTC"));
-//                    model.meetingCreatedAtTime = format.format(Calendar.getInstance().getTime());
-//                    model.meetingEndedAtTime = "";
-//                    model.subjectName = "";
-//                    model.month = "";
-//                    model.meetingCreatedById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
-//                    model.meetingCreatedByName = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
-//                    myRef.child("live_class").child(item.getId()).setValue(model);
-
+                if (item.canPost && item.isLive && item.meetingCreatedBy) {
                     initializeZoom(item.zoomKey, item.zoomSecret, item.zoomMail, item.zoomPassword, item.jitsiToken, item.zoomName.get(0), item.className, true);
 
                     AppLog.e(TAG, "SENDNOTIICATION CODE REACEDH");
                     new SendNotification(true, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     isSentNotification = true;
                 } else if (item.canPost && !item.isLive) {
-                /* LeafManager leafManager = new LeafManager();
-                leafManager.startMeeting(this, GroupDashboardActivityNew.groupId, item.getId());*/
                     MeetingStatusModel model = new MeetingStatusModel();
-                    model.teamId = item.getId();
+                    model.t_id = item.getId();
                     SimpleDateFormat format = new SimpleDateFormat(
                             "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
                     format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    model.meetingCreatedAtTime = format.format(Calendar.getInstance().getTime());
-                    model.meetingEndedAtTime = "";
-                    model.subjectName = "";
-                    model.month = "";
-                    model.meetingCreatedById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
-                    model.meetingCreatedByName = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
+                    model.create_at = format.format(Calendar.getInstance().getTime());
+                    model.tech_id = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+                    model.tech_name = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
                     myRef.child("live_class").child(item.getId()).setValue(model);
+                    myRef.child("attendance").child(item.getId()).setValue(model);
 
                     initializeZoom(item.zoomKey, item.zoomSecret, item.zoomMail, item.zoomPassword, item.jitsiToken, item.zoomName.get(0), item.className, true);
 
@@ -804,7 +718,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 } else {
                     initializeZoom(item.zoomKey, item.zoomSecret, item.zoomMail, item.zoomMeetingPassword, item.jitsiToken, item.zoomName.get(0), item.className, false);
-                    myRef.child("live_class").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
                             MeetingStatusModel model = task.getResult().getValue(MeetingStatusModel.class);
@@ -818,21 +732,21 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                                 MeetingStatusModel.AttendanceLiveClass selected = null;
                                 for (int i = 0; i < model.attendance.size(); i++) {
                                     MeetingStatusModel.AttendanceLiveClass att = model.attendance.get(i);
-                                    if (loginID.equalsIgnoreCase(att.userId)) {
+                                    if (loginID.equalsIgnoreCase(att.uid)) {
                                         selected = att;
                                         break;
                                     }
                                 }
                                 if (selected != null) {
-                                    selected.meetingJoinedAtTime.add(format.format(Calendar.getInstance().getTime()).toUpperCase());
+                                    selected.joinAt.add(format.format(Calendar.getInstance().getTime()).toUpperCase());
                                 } else {
                                     selected = new MeetingStatusModel.AttendanceLiveClass();
-                                    selected.userId = loginID;
-                                    selected.studentName = loginName;
-                                    selected.meetingJoinedAtTime.add(format.format(Calendar.getInstance().getTime()).toUpperCase());
+                                    selected.uid = loginID;
+                                    selected.sname = loginName;
+                                    selected.joinAt.add(format.format(Calendar.getInstance().getTime()).toUpperCase());
                                     model.attendance.add(selected);
                                 }
-                                myRef.child("live_class").child(item.getId()).setValue(model);
+                                myRef.child("attendance").child(item.getId()).setValue(model);
                             }
                         }
                     });
@@ -1300,7 +1214,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         }
 
         if (item.firebaseLive != null) {
-            item.firebaseLive.autoJoinForStudent = false;
+            item.firebaseLive.auto_join = false;
             myRef.child("live_class").child(item.getId()).setValue(item.firebaseLive);
         }
 
@@ -1325,7 +1239,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 long diffSec = (curr - timeOfStopMeeting) / 1000;
                 if (diffSec > 10) {
                     if (item.firebaseLive != null) {
-                        item.firebaseLive.autoJoinForStudent = true;
+                        item.firebaseLive.auto_join = true;
                         myRef.child("live_class").child(item.getId()).setValue(item.firebaseLive);
                     }
                 } else {
@@ -1334,7 +1248,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         @Override
                         public void run() {
                             if (item.firebaseLive != null) {
-                                item.firebaseLive.autoJoinForStudent = true;
+                                item.firebaseLive.auto_join = true;
                                 myRef.child("live_class").child(item.getId()).setValue(item.firebaseLive);
                             }
                         }

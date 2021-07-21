@@ -3,42 +3,36 @@ package school.campusconnect.datamodel.videocall;
 import java.util.ArrayList;
 
 public class MeetingStatusModel {
-    public String meetingCreatedAtTime;
-    public String meetingEndedAtTime;
-    public String teamId;
-    public String meetingCreatedById;
-    public String meetingCreatedByName;
-    public String subjectName;
+    public String create_at;
+    public String t_id;
+    public String tech_id;
+    public String tech_name;
     public ArrayList<AttendanceLiveClass> attendance;
-    public String month;
-    public boolean autoJoinForStudent;
+    public boolean auto_join;
 
     public MeetingStatusModel() {
         attendance = new ArrayList<>();
     }
 
     public static class AttendanceLiveClass {
-        public String userId;
-        public String studentName;
-        public ArrayList<String> meetingJoinedAtTime;
+        public String uid;
+        public String sname;
+        public ArrayList<String> joinAt;
 
         public AttendanceLiveClass() {
-            meetingJoinedAtTime = new ArrayList<>();
+            joinAt = new ArrayList<>();
         }
     }
 
     @Override
     public String toString() {
         return "MeetingStatusModel{" +
-                "meetingCreatedAtTime='" + meetingCreatedAtTime + '\'' +
-                ", meetingEndedAtTime='" + meetingEndedAtTime + '\'' +
-                ", teamId='" + teamId + '\'' +
-                ", meetingCreatedById='" + meetingCreatedById + '\'' +
-                ", meetingCreatedByName='" + meetingCreatedByName + '\'' +
-                ", subjectName='" + subjectName + '\'' +
+                "meetingCreatedAtTime='" + create_at + '\'' +
+                ", teamId='" + t_id + '\'' +
+                ", meetingCreatedById='" + tech_id + '\'' +
+                ", meetingCreatedByName='" + tech_name + '\'' +
                 ", attendance=" + attendance +
-                ", month='" + month + '\'' +
-                ", autoJoinForStudent=" + autoJoinForStudent +
+                ", autoJoinForStudent=" + auto_join +
                 '}';
     }
 }

@@ -53,6 +53,7 @@ import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
 import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
 import school.campusconnect.datamodel.videocall.MeetingStatusModel;
+import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
 import school.campusconnect.datamodel.videocall.StopMeetingReq;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
@@ -3318,7 +3319,7 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
-    public void attendancePush(OnCommunicationListener listListener, String group_id, String teamId, MeetingStatusModel req) {
+    public void attendancePush(OnCommunicationListener listListener, String group_id, String teamId, MeetingStatusModelApi req) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
