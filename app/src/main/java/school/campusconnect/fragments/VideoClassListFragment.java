@@ -39,6 +39,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -78,6 +79,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.videocall.MeetingStatusModel;
 import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
+import school.campusconnect.datamodel.videocall.MeetingStatusModelForAttendance;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -132,6 +134,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     private ArrayList<VideoClassResponse.ClassData> result;
     private VideoClassResponse.ClassData listItemData;
 
+    DatabaseReference myRef;
+    ArrayList<Query> myClasRef;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,7 +145,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         isSentNotification = false;
     }
 
-    DatabaseReference myRef;
+
 
     @Nullable
     @Override
@@ -174,7 +180,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         });
     }
 
-    private void initFirebase() {
+    private void initFirebase()
+    {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -184,7 +191,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 if (task.isSuccessful()) {
                     AppLog.e(TAG, "isSuccessful : true");
                     setListener();
-                } else {
+
+                }
+                else
+                {
                     AppLog.e(TAG, "isSuccessful : false");
                 }
             }
@@ -192,32 +202,94 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     }
 
-    private void setListener() {
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                AppLog.e(TAG, "onDataChange");
-                HashMap<String, MeetingStatusModel> liveTeamIds = new HashMap<>();
-                // Get Post object and use the values to update the UI
-                Iterable<DataSnapshot> list = dataSnapshot.getChildren();
-                // ..
-                Iterator<DataSnapshot> itr = list.iterator();
-                while (itr.hasNext()) {
-                    DataSnapshot val = itr.next();
-                    AppLog.e(TAG, "key : " + val.getKey());
-                    liveTeamIds.put((val.getKey() + ""), val.getValue(MeetingStatusModel.class));
-                }
-                refreshAdapter(liveTeamIds);
+
+
+    private void setListener()
+    {
+        AppLog.e(TAG , "setListener is called");
+        if(result!=null)
+        {
+            if(myClasRef != null)
+            {
+                removeListener();
+                myClasRef.clear();
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            myClasRef = new ArrayList<>();
+
+            for(VideoClassResponse.ClassData cd: result)
+            {
+                try
+                {
+                    Query query = myRef.child("live_class").orderByKey().equalTo(cd.getId());
+                    query.addValueEventListener(postListener);
+                    myClasRef.add(query);
+
+                    AppLog.e(TAG , "query set : "+query.getSpec().getParams());
+                }
+                catch(Exception ex)
+                {
+                    AppLog.e(TAG , "ex : "+ex.getLocalizedMessage());
+                }
             }
-        };
-        myRef.child("live_class").addValueEventListener(postListener);
+        }
+        else
+        {
+            AppLog.e(TAG , "result is null");
+        }
     }
+
+
+    private void removeListener()
+    {
+        AppLog.e(TAG , "remove listener called ");
+        if(result!=null)
+        {
+
+            for(Query q : myClasRef)
+            {
+                try {
+                    q.removeEventListener(postListener);
+                }
+                catch(Exception ex)
+                {
+                    AppLog.e(TAG , "ex : "+ex.getLocalizedMessage());
+                }
+            }
+
+        }
+        else
+        {
+
+        }
+    }
+
+    ValueEventListener postListener = new ValueEventListener()
+    {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            AppLog.e(TAG, "onDataChange called , key : "+dataSnapshot.getKey()+"  , childCount : "+dataSnapshot.getChildrenCount());
+            HashMap<String, MeetingStatusModel> liveTeamIds = new HashMap<>();
+            // Get Post object and use the values to update the UI
+            Iterable<DataSnapshot> list = dataSnapshot.getChildren();
+            // ..
+            Iterator<DataSnapshot> itr = list.iterator();
+            while (itr.hasNext())
+            {
+                DataSnapshot val = itr.next();
+                AppLog.e(TAG, "teamclass key changed : " + val.getKey());
+                liveTeamIds.put((val.getKey() + ""), val.getValue(MeetingStatusModel.class));
+            }
+
+            refreshAdapter(liveTeamIds);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+        }
+    };
 
     private void refreshAdapter(HashMap<String, MeetingStatusModel> liveTeamIds) {
         String myId = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
@@ -274,11 +346,21 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onStart() {
         super.onStart();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+       // setListener();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AppLog.e(TAG , "onDestroy called");
+        removeListener();
     }
 
     @Override
@@ -362,6 +444,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             if (item.createdName != null && !item.createdName.equalsIgnoreCase("")) {
                 holder.tvInfo.setVisibility(View.VISIBLE);
+                holder.tvInfo.setText(item.createdName);
             } else
                 holder.tvInfo.setVisibility(View.GONE);
 
@@ -418,7 +501,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             });
 
 
-            holder.tvInfo.setOnClickListener(new View.OnClickListener() {
+           /* holder.tvInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -436,7 +519,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
 
                 }
-            });
+            });*/
 
 
         }
@@ -564,8 +647,18 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
-                        MeetingStatusModel model = task.getResult().getValue(MeetingStatusModel.class);
+                    public void onComplete(@NonNull @NotNull Task<DataSnapshot> task)
+                    {
+                        MeetingStatusModelForAttendance model = task.getResult().getValue(MeetingStatusModelForAttendance.class);
+
+                        ArrayList<String> uids = new ArrayList<>();
+                        for(DataSnapshot ds : task.getResult().child("attendance").getChildren())
+                        {
+                            uids.add(ds.getKey());
+                        }
+
+                        for(String uid : uids)
+                        AppLog.e(TAG , "uid : "+uid);
 
                         MeetingStatusModelApi apiModel = new MeetingStatusModelApi();
                         apiModel.teamId = model.t_id;
@@ -573,21 +666,22 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         apiModel.meetingCreatedById = model.tech_id;
                         apiModel.meetingCreatedByName = model.tech_name;
 
-                        for (int i = 0; i < model.attendance.size(); i++) {
+                        for (int i = 0; i < model.attendance.size(); i++)
+                        {
                             MeetingStatusModelApi.AttendanceLiveClass ca = new MeetingStatusModelApi.AttendanceLiveClass();
-                            ca.userId = model.attendance.get(i).uid;
-                            ca.studentName = model.attendance.get(i).sname;
-                            ca.meetingJoinedAtTime = model.attendance.get(i).joinAt;
+                            ca.userId = uids.get(i);//model.attendance.get(i).uid;
+                            ca.studentName = model.attendance.get(uids.get(i)).sname;
+                            ca.meetingJoinedAtTime = model.attendance.get(uids.get(i)).joinAt;
                             apiModel.attendance.add(ca);
                         }
 
                         apiModel.month = "" + (Calendar.getInstance().get(Calendar.MONTH) + 1);
                         apiModel.subjectName = etName.getText().toString();
-                        SimpleDateFormat format = new SimpleDateFormat(
-                                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
                         format.setTimeZone(TimeZone.getTimeZone("UTC"));
                         apiModel.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
                         AppLog.e(TAG, "apiModel : " + apiModel);
+                        AppLog.e(TAG, "apiModel attendance : " + new Gson().toJson(apiModel.attendance));
 
                         LeafManager leafManager = new LeafManager();
                         leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
@@ -609,7 +703,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
-                        MeetingStatusModel model = task.getResult().getValue(MeetingStatusModel.class);
+                      /*  MeetingStatusModelForAttendance model = task.getResult().getValue(MeetingStatusModelForAttendance.class);
 
                         MeetingStatusModelApi apiModel = new MeetingStatusModelApi();
                         apiModel.teamId = model.t_id;
@@ -617,7 +711,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         apiModel.meetingCreatedById = model.tech_id;
                         apiModel.meetingCreatedByName = model.tech_name;
 
-                        for (int i=0;i<model.attendance.size();i++){
+                        for (int i=0;i<model.attendance.size();i++)
+                        {
                             MeetingStatusModelApi.AttendanceLiveClass ca=new MeetingStatusModelApi.AttendanceLiveClass();
                             ca.userId = model.attendance.get(i).uid;
                             ca.studentName = model.attendance.get(i).sname;
@@ -631,10 +726,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
                         format.setTimeZone(TimeZone.getTimeZone("UTC"));
                         apiModel.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
-                        AppLog.e(TAG, "apiModel : " + apiModel);
+                        AppLog.e(TAG, "apiModel : " + apiModel);*/
 
-                        LeafManager leafManager = new LeafManager();
-                        leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
+                  //      LeafManager leafManager = new LeafManager();
+                   //     leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
 
                         myRef.child("live_class").child(item.getId()).removeValue();
                         myRef.child("attendance").child(item.getId()).removeValue();
@@ -648,7 +743,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         dialog.show();
     }
 
-    private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
+    private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin)
+    {
 
         progressBar.setVisibility(View.VISIBLE);
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
@@ -659,13 +755,15 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 AppLog.e(TAG, "Zoom SDK initialized : " + i + " , " + i1 + " , " + startOrJoin);
 
-                try {
+                try
+                {
                     ZoomSDK.getInstance().getMeetingSettingsHelper().setMuteMyMicrophoneWhenJoinMeeting(true);
                     ZoomSDK.getInstance().getMeetingSettingsHelper().disableCopyMeetingUrl(true);
                     ZoomSDK.getInstance().getMeetingSettingsHelper().setClaimHostWithHostKeyActionEnabled(false);
                     ZoomSDK.getInstance().getMeetingSettingsHelper().disableShowVideoPreviewWhenJoinMeeting(true);
-                } catch (Exception ex) {
-
+                }
+                catch (Exception ex)
+                {
                 }
 
                 if (startOrJoin)
@@ -718,6 +816,23 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 } else {
                     initializeZoom(item.zoomKey, item.zoomSecret, item.zoomMail, item.zoomMeetingPassword, item.jitsiToken, item.zoomName.get(0), item.className, false);
+
+                    String loginID = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+                    String loginName = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
+
+                    SimpleDateFormat format = new SimpleDateFormat(
+                            "hh:mma", Locale.getDefault());
+                    format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                    MeetingStatusModel.AttendanceLiveClass selected = null;
+                    selected = new MeetingStatusModel.AttendanceLiveClass();
+                    selected.sname = loginName;
+                    selected.joinAt.add(format.format(Calendar.getInstance().getTime()).toUpperCase());
+
+                    myRef.child("attendance").child(item.getId()).child("attendance").child(loginID).setValue(selected);
+               /* }
+                myRef.child("attendance").child(item.getId()).setValue(model);
+
                     myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
@@ -728,7 +843,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                             String loginID = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
                             String loginName = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
-                            if (model != null) {
+                            if (model != null)
+                            {
                                 MeetingStatusModel.AttendanceLiveClass selected = null;
                                 for (int i = 0; i < model.attendance.size(); i++) {
                                     MeetingStatusModel.AttendanceLiveClass att = model.attendance.get(i);
@@ -737,7 +853,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                                         break;
                                     }
                                 }
-                                if (selected != null) {
+                                if (selected != null)
+                                {
                                     selected.joinAt.add(format.format(Calendar.getInstance().getTime()).toUpperCase());
                                 } else {
                                     selected = new MeetingStatusModel.AttendanceLiveClass();
@@ -749,7 +866,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                                 myRef.child("attendance").child(item.getId()).setValue(model);
                             }
                         }
-                    });
+                    });*/
                 }
             } else {
                 showNoNetworkMsg();
@@ -1233,7 +1350,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 dialog.dismiss();
                 timer.cancel();
 
-                joinZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, item.className, item.jitsiToken);
+               // joinZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, item.className, item.jitsiToken);
+                 startZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword,"", item.className, item.jitsiToken);
 
                 long curr = System.currentTimeMillis();
                 long diffSec = (curr - timeOfStopMeeting) / 1000;
