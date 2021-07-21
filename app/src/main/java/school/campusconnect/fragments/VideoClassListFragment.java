@@ -626,6 +626,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     private void stopMeeting(VideoClassResponse.ClassData classData) {
         this.item = classData;
 
+        myRef.child("live_class").child(item.getId()).removeValue();
         EnterSubjectDialog();
     }
 
@@ -644,6 +645,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             public void onClick(View v) {
                 dialog.dismiss();
                 progressBar.setVisibility(View.VISIBLE);
+
 
                 myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
@@ -686,7 +688,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         LeafManager leafManager = new LeafManager();
                         leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
 
-                        myRef.child("live_class").child(item.getId()).removeValue();
                         myRef.child("attendance").child(item.getId()).removeValue();
 
                         new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
