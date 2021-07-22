@@ -130,7 +130,11 @@ public class BaseFragment extends Fragment {
     public boolean isConnectionAvailable() {
         ConnectivityManager connectivityManager;
         NetworkInfo networkinfo;
+        if(getActivity() !=null)
         connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        else
+        return false;
+
         networkinfo = connectivityManager.getActiveNetworkInfo();
 
         return (networkinfo != null && networkinfo.isConnectedOrConnecting());

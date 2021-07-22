@@ -952,6 +952,12 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 if (postType.equalsIgnoreCase("group")) {
                     LeafPreference.getInstance(AddPostActivity.this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
                     new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference();
+                    AddPostResponse addPostResponse = (AddPostResponse) response;
+                    AppLog.e(TAG, "AddPostResponse : " + addPostResponse);
+                    myRef.child("group_post").child(group_id).child(addPostResponse.data.get(0).postId).setValue("");
+
                 } else if (postType.equalsIgnoreCase("team")) {
                     LeafPreference.getInstance(AddPostActivity.this).setBoolean(LeafPreference.ISTEAMPOSTUPDATED, true);
                     new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

@@ -52,6 +52,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -124,6 +125,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private ReportAdapter mAdapter3;
     private boolean liked;
     private boolean isFromMain;
+
+    private Query query;
 
     public TeamPostsFragmentNew() {
 
@@ -398,26 +401,32 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mBinding.progressBar2.setVisibility(View.GONE);
         }
     }
-    private void firebaseListen(String lastIdFromDB) {
-        if(!TextUtils.isEmpty(lastIdFromDB)){
+    private void firebaseListen(String lastIdFromDB)
+    {
+        AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
+        if(TextUtils.isEmpty(lastIdFromDB)){
             callApi(false);
         }else {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference();
-            myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    AppLog.e(TAG, "data changed : " + snapshot);
-                    callApi(true);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+            query = myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
+            query.addListenerForSingleValueEvent(firebaseNewPostListener);
         }
     }
+
+    ValueEventListener firebaseNewPostListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            AppLog.e(TAG, "data changed : " + snapshot);
+            if(snapshot.getValue() !=null)
+                callApi(true);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    };
 
     private void startMeeting() {
         /*ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
@@ -561,6 +570,16 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onStart() {
         super.onStart();
         mAdapter2.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        if(query !=null)
+            query.removeEventListener(firebaseNewPostListener);
+
     }
 
     private void init() {

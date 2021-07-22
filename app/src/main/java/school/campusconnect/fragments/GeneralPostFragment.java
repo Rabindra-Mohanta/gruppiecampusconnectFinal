@@ -4,6 +4,8 @@ package school.campusconnect.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -30,6 +32,12 @@ import com.baoyz.widget.PullRefreshLayout;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -93,6 +101,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     DatabaseHandler databaseHandler;
     private LinearLayoutManager layoutManager;
+
+    private Query query;
 
     public GeneralPostFragment() {
 
@@ -197,7 +207,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 AppLog.e(TAG, "firstVisibleItemPosition " + firstVisibleItemPosition);
                 AppLog.e(TAG, "lastVisibleItemPosition " + lastVisibleItemPosition);
 */
-                if (!mIsLoading && totalPages > currentPage) {
+                if (!mIsLoading && totalPages > currentPage)
+                {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0
                             ) {
@@ -206,6 +217,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                         getData(false);
                     }
                 }
+
             }
         });
 
@@ -232,8 +244,19 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        if(query !=null)
+            query.removeEventListener(firebaseNewPostListener);
+
+    }
+
     private void getGroupPostLocaly() {
         List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId+"");
+        String lastId = null;
         if (dataItemList.size() != 0)
         {
             showLoadingBar(mBinding.progressBar);
@@ -241,6 +264,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 PostItem postItem = new PostItem();
                 postItem.id = dataItemList.get(i).id;
+
+                if(i==0){
+                    lastId = dataItemList.get(i).id;
+                }
+
                 postItem.createdById = dataItemList.get(i).createdById;
                 postItem.createdBy = dataItemList.get(i).createdBy;
                 postItem.createdByImage = dataItemList.get(i).createdByImage;
@@ -268,12 +296,21 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             AppLog.e(TAG, "DataFromLocal");
             mAdapter.notifyDataSetChanged();
 
-            if (isConnectionAvailable()) {
+            mBinding.setSize(mAdapter.getItemCount());
+            firebaseListen(lastId);
+
+        } else {
+            firebaseListen("");
+            mBinding.setSize(0);
+        }
+
+        /*    if (isConnectionAvailable()) {
                 AppLog.e(TAG, "DataFromAPI BG");
                 getData(true);
             } else {
                 mBinding.setSize(mAdapter.getItemCount());
             }
+
 
         } else {
             if (isConnectionAvailable()) {
@@ -282,8 +319,37 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             } else {
                 mBinding.setSize(0);
             }
+        }*/
+    }
+
+    private void firebaseListen(String lastIdFromDB)
+    {
+        AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
+        if(TextUtils.isEmpty(lastIdFromDB))
+        {
+            getData(false);
+        }else
+        {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference();
+            query = myRef.child("group_post").child(mGroupId).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
+            query.addListenerForSingleValueEvent(firebaseNewPostListener);
         }
     }
+
+    ValueEventListener firebaseNewPostListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            AppLog.e(TAG, "data changed : " + snapshot);
+            if(snapshot.getValue() !=null)
+                getData(true);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    };
 
     private void init() {
         liked = false;
@@ -309,19 +375,21 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
 
        AppLog.e(TAG, "onResume : " + LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED));
-        if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED)) {
+     /*   if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED)) {
             mAdapter.clear();
             currentPage = 1;
             getData(false);
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, false);
-        }
-
+        }*/
     }
+
     private void getData(boolean isInBackground) {
+        AppLog.e(TAG , "getData called");
         if(!isInBackground)
         {
             showLoadingBar(mBinding.progressBar);
