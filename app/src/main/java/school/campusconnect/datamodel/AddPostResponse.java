@@ -6,6 +6,7 @@ public class AddPostResponse extends BaseResponse{
     public ArrayList<AddPostData> data;
 
     public class AddPostData {
+        public String postId;
         public String deviceType;
         public String deviceToken;
     }

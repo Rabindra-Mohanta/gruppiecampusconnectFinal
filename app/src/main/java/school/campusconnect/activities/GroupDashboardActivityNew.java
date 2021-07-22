@@ -14,6 +14,8 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
@@ -46,6 +48,8 @@ import android.widget.Toast;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -378,6 +382,22 @@ public class GroupDashboardActivityNew extends BaseActivity
         manager = new LeafManager();
 
         setTabLayout();
+
+    }
+    private void initFirebaseAuth(){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    AppLog.e(TAG, "isSuccessful : true");
+                }
+                else
+                {
+                    AppLog.e(TAG, "isSuccessful : false");
+                }
+            }
+        });
     }
 
     private void setTabLayout() {

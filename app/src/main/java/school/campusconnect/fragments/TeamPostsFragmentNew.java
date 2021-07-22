@@ -3,8 +3,12 @@ package school.campusconnect.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,6 +48,11 @@ import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.baoyz.widget.PullRefreshLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -151,19 +160,18 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 menu.findItem(R.id.menu_archive_team).setVisible(true);
                 if (GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL))
                     menu.findItem(R.id.menu_add_time_table).setVisible(true);
-            }else {
-                if(teamData.isClass && !teamData.allowTeamPostAll){
+            } else {
+                if (teamData.isClass && !teamData.allowTeamPostAll) {
                     menu.findItem(R.id.menu_leave_team).setVisible(false);
-                }else {
+                } else {
                     menu.findItem(R.id.menu_leave_team).setVisible(true);
                 }
             }
 
 
-
-            if (teamData.canAddUser || teamData.isTeamAdmin){
+            if (teamData.canAddUser || teamData.isTeamAdmin) {
                 menu.findItem(R.id.menu_add_friend).setVisible(true);
-            }else {
+            } else {
                 menu.findItem(R.id.menu_add_friend).setVisible(false);
             }
 
@@ -174,7 +182,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 menu.findItem(R.id.menu_leave_request).setVisible(false);
             }
 
-            if(!teamData.isTeamAdmin && teamData.isClass && !teamData.allowTeamPostAll && !teamData.leaveRequest){
+            if (!teamData.isTeamAdmin && teamData.isClass && !teamData.allowTeamPostAll && !teamData.leaveRequest) {
                 menu.findItem(R.id.menu_more).setVisible(false);
             }
            /* if (teamData.isTeamAdmin && teamData.enableAttendance) {
@@ -189,7 +197,6 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
         menu.findItem(R.id.menu_add_time_table).setVisible(false);
-
 
 
     }
@@ -213,21 +220,21 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 break;
             case R.id.menu_add_friend:
                 final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                CharSequence items[] = new CharSequence[] {"Add Staff", "Add Students"};
+                CharSequence items[] = new CharSequence[]{"Add Staff", "Add Students"};
                 adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface d, int n) {
-                        AppLog.e(TAG,"ss : "+n);
+                        AppLog.e(TAG, "ss : " + n);
                         d.dismiss();
-                        if(n==0){
+                        if (n == 0) {
                             Intent intent = new Intent(getActivity(), AddTeamStaffActivity.class);
                             intent.putExtra("id", mGroupId);
                             intent.putExtra("invite", true);
                             intent.putExtra("from_team", true);
                             intent.putExtra("team_id", team_id);
                             startActivity(intent);
-                        }else {
+                        } else {
                             Intent intent = new Intent(getActivity(), AddTeamStudentActivity.class);
                             intent.putExtra("id", mGroupId);
                             intent.putExtra("invite", true);
@@ -354,13 +361,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         mBinding.fabAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if("preschool".equalsIgnoreCase(teamData.category)){
+                if ("preschool".equalsIgnoreCase(teamData.category)) {
                     Intent intent = new Intent(getActivity(), AttendancePareSchool.class);
                     intent.putExtra("isTeamAdmin", teamData.isTeamAdmin);
                     intent.putExtra("team_id", teamData.teamId);
                     intent.putExtra("group_id", teamData.groupId);
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(getActivity(), AttendanceActivity.class);
                     intent.putExtra("isTeamAdmin", teamData.isTeamAdmin);
                     intent.putExtra("team_id", teamData.teamId);
@@ -382,9 +389,37 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         return mBinding.getRoot();
     }
+    private void callApi(boolean isInBackground){
+        if (isConnectionAvailable()) {
+            getData2(team_id, isInBackground);
+            AppLog.e("TeamPostFrag", "DataFromAPI");
+        } else {
+            mBinding.setSize(0);
+            mBinding.progressBar2.setVisibility(View.GONE);
+        }
+    }
+    private void firebaseListen(String lastIdFromDB) {
+        if(!TextUtils.isEmpty(lastIdFromDB)){
+            callApi(false);
+        }else {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference();
+            myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    AppLog.e(TAG, "data changed : " + snapshot);
+                    callApi(true);
+                }
 
-    private void startMeeting()
-    {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    private void startMeeting() {
         /*ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
 
         String number = "88529395648";
@@ -435,11 +470,16 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "");
         AppLog.e(TAG, "local list size is " + dataItemList.size());
         showLoadingBar(mBinding.progressBar2);
+        String lastId = null;
         if (dataItemList.size() != 0) {
 
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 TeamPostGetData teamPostGetdata = new TeamPostGetData();
+
+                if(i==0){
+                    lastId = dataItemList.get(i).id;
+                }
 
                 teamPostGetdata.id = dataItemList.get(i).id;
                 teamPostGetdata.createdById = dataItemList.get(i).createdById;
@@ -468,22 +508,12 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             hideLoadingBar();
             AppLog.e(TAG, "DataFromLocal");
             mAdapter2.notifyDataSetChanged();
+            mBinding.setSize(mAdapter2.getItemCount());
 
-            if (isConnectionAvailable()) {
-                AppLog.e(TAG, "DataFromAPI BG");
-                getData2(team_id, true);
-            } else {
-                mBinding.setSize(mAdapter2.getItemCount());
+            firebaseListen(lastId);
 
-            }
         } else {
-            if (isConnectionAvailable()) {
-                getData2(team_id, false);
-                AppLog.e("TeamPostFrag", "DataFromAPI");
-            } else {
-                mBinding.setSize(0);
-                mBinding.progressBar2.setVisibility(View.GONE);
-            }
+           firebaseListen("");
         }
 
 
@@ -1050,11 +1080,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     }
 
     @Override
-    public void onDeleteVideoClick(TeamPostGetData item , int position)
-    {
-        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
-        if(item.fileName!=null && item.fileName.size()>0){
-            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+    public void onDeleteVideoClick(TeamPostGetData item, int position) {
+        AppLog.e(TAG, "onDeleteVideoClick : " + item.fileName.get(0));
+        if (item.fileName != null && item.fileName.size() > 0) {
+            AmazoneDownload.removeVideo(getActivity(), item.fileName.get(0));
             mAdapter2.notifyItemChanged(position);
         }
     }
