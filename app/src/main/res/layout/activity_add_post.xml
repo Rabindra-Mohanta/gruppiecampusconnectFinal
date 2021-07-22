@@ -118,6 +118,7 @@
                     style="@style/LabelHeader1"
                     android:paddingLeft="@dimen/padding_5dp"
                     android:text="@string/lbl_attechment"
+                    android:visibility="gone"
                     android:textColor="@color/colorPrimary"
                     android:layout_height="wrap_content" />
 
@@ -126,6 +127,7 @@
                     app:cardElevation="4dp"
                     android:layout_margin="@dimen/padding_5dp"
                     app:cardCornerRadius="@dimen/padding_25dp"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/white"
                     android:layout_height="wrap_content">
 
@@ -240,6 +242,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvImages"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
