@@ -90,6 +90,11 @@ public class PostTeamDataItem extends Model {
         return new Select().from(PostTeamDataItem.class).where("group_id = ?", group_id).where("team_id = ?", team_id).execute();
     }
 
+    public static List<PostTeamDataItem> getLastTeamPost(String group_id, String team_id) {
+        AppLog.e("CHECKK", "query is " + new Select().from(PostTeamDataItem.class).where("group_id = ?", group_id).where("team_id = ?", team_id).toSql() + " " + group_id + " " + team_id);
+        return new Select().from(PostTeamDataItem.class).where("group_id = ?", group_id).where("team_id = ?", team_id).limit(1).execute();
+    }
+
     public static PostTeamDataItem getPost(String post_id) {
         return new Select().from(PostTeamDataItem.class).where("post_id = ?", post_id).executeSingle();
     }

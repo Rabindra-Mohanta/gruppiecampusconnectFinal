@@ -1208,7 +1208,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     }
 
-    public boolean isBaseFragment() {
+    public boolean isBaseFragment()
+    {
         if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof BaseFragment) {
             return true;
         } else {

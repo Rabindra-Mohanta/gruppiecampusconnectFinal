@@ -27,6 +27,8 @@ import id.zelory.compressor.Compressor;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupItem;
+import school.campusconnect.datamodel.PostDataItem;
+import school.campusconnect.datamodel.PostTeamDataItem;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
@@ -46,6 +48,12 @@ import android.widget.Toast;
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -79,7 +87,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     ArrayList<MyTeamData> teamList = new ArrayList<>();
     private LeafManager manager;
     private TeamListAdapterNew mAdapter;
-    PullRefreshLayout swipeRefreshLayout;
+   // PullRefreshLayout swipeRefreshLayout;
     DatabaseHandler databaseHandler;
     LeafPreference pref;
 
@@ -92,6 +100,9 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     SharedPreferences wallPref;
     private MenuItem removeWallMenu;
     private GroupItem mGroupItem;
+
+    DatabaseReference database;
+    ArrayList<Query> teamsRef;
 
     @Nullable
     @Override
@@ -340,15 +351,17 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         rvTeams = view.findViewById(R.id.rvTeams);
         imgBackground = view.findViewById(R.id.imgBackground);
         progressBar = view.findViewById(R.id.progressBar);
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+      //  swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         rvTeams.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAdapter = new TeamListAdapterNew(teamList, this);
         rvTeams.setAdapter(mAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+       /* swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener()
+        {
             @Override
-            public void onRefresh() {
+            public void onRefresh()
+            {
                 if (isConnectionAvailable()) {
                     swipeRefreshLayout.setRefreshing(false);
                     getTeams();
@@ -359,7 +372,9 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                     showNoNetworkMsg();
                 }
             }
-        });
+        });*/
+
+        database = FirebaseDatabase.getInstance().getReference();
 
     }
 
@@ -385,11 +400,64 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                     teamList.clear();
                     teamList.addAll(result);
                     mAdapter.notifyDataSetChanged();
+
+                   /* for(int i = 0 ; i < result.size() ; i++)
+                    {
+                            if(result.get(i).type !=null && result.get(i).type.equalsIgnoreCase(""))
+                            {
+                                if(result.get(i).teamId !=null && !result.get(i).teamId.equalsIgnoreCase(""))
+                                {
+                                    final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupItem.getGroupId() + "", result.get(i).teamId + "");
+
+                                    Query query = database.child("team_post").child(result.get(i).teamId).orderByKey().equalTo(dataItemList.get(0).id);
+                                    query.addValueEventListener(firebaseNewPostListener);
+                                    teamsRef.add(query);
+                                }
+                                else
+                                {
+                                    List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupItem.getGroupId()+"");
+
+                                    Query query = database.child("group_post").child(mGroupItem.getGroupId()).orderByKey().equalTo(dataItemList.get(0).id);
+                                    query.addValueEventListener(firebaseNewPostListener);
+                                    teamsRef.add(query);
+                                }
+                            }
+                    }*/
+
                 }
 
             }
         }
     }
+
+
+
+    private void firebaseListen(String lastIdFromDB)
+    {
+        AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
+        if(TextUtils.isEmpty(lastIdFromDB)){
+          //  callApi(false);
+        }else {
+
+          //  query = myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
+           // query.addListenerForSingleValueEvent(firebaseNewPostListener);
+        }
+    }
+
+    ValueEventListener firebaseNewPostListener = new ValueEventListener()
+    {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            AppLog.e(TAG, "data changed : " + snapshot);
+          //  if(snapshot.getValue() !=null)
+           //     callApi(true);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
+    };
 
     @Override
     public void onResume() {

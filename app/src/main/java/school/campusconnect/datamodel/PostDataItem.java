@@ -87,6 +87,10 @@ public class PostDataItem extends Model {
         return new Select().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).execute();
     }
 
+    public static List<PostDataItem> getLastGeneralPost(String group_id) {
+        return new Select().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).limit(1).execute();
+    }
+
     public static List<PostDataItem> getTeamPosts(String group_id) {
         return new Select().from(PostDataItem.class).where("type = ?", "team").where("group_id = ?", group_id).execute();
     }

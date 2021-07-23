@@ -49,6 +49,7 @@
                         android:text="@string/download"
                         android:layout_marginEnd="@dimen/padding_20dp"
                         android:textColor="@color/white"
+                        android:visibility="gone"
                         android:textSize="@dimen/text_size_18sp" />
                     <TextView
                         android:id="@+id/tvShare"

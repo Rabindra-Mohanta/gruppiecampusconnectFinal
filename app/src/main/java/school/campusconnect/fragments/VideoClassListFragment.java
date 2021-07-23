@@ -136,8 +136,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Bind(R.id.progressBarZoom)
     public ProgressBar progressBarZoom;
 
-    @Bind(R.id.swipeRefreshLayout)
-    public PullRefreshLayout swipeRefreshLayout;
+    /*@Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;*/
 
 
     VideoClassResponse.ClassData item;
@@ -165,7 +165,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -184,7 +183,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void init() {
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+     /*   swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -196,7 +195,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     showNoNetworkMsg();
                 }
             }
-        });
+        });*/
     }
 
     private void initFirebase()
@@ -207,10 +206,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
+                if (task.isSuccessful())
+                {
                     AppLog.e(TAG, "isSuccessful : true");
                     setListener();
-
                 }
                 else
                 {
@@ -220,8 +219,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         });
 
     }
-
-
 
     private void setListener()
     {
@@ -251,6 +248,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     AppLog.e(TAG , "ex : "+ex.getLocalizedMessage());
                 }
             }
+
         }
         else
         {
