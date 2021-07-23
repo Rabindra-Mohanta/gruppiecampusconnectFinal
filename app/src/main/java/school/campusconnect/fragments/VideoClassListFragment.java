@@ -1,13 +1,19 @@
 package school.campusconnect.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -22,9 +28,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,11 +57,16 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -70,12 +85,15 @@ import java.util.TimeZone;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VideoClassActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.DialogMeetingOnOffBinding;
+import school.campusconnect.databinding.DialogVideoAttendanceShareBinding;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.videocall.MeetingStatusModel;
 import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
@@ -86,6 +104,7 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBAlterDialog;
 import us.zoom.sdk.FreeMeetingNeedUpgradeType;
 import us.zoom.sdk.InMeetingAudioController;
@@ -684,10 +703,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         apiModel.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
                         AppLog.e(TAG, "apiModel : " + apiModel);
                         AppLog.e(TAG, "apiModel attendance : " + new Gson().toJson(apiModel.attendance));
-
-                        LeafManager leafManager = new LeafManager();
-                        leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
-
+                        progressBar.setVisibility(View.GONE);
+//                        LeafManager leafManager = new LeafManager();
+//                        leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
+                        showExcelShareDialog(apiModel);
                         myRef.child("attendance").child(item.getId()).removeValue();
 
                         new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -739,6 +758,37 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                     }
                 });
+            }
+        });
+        dialog.show();
+    }
+
+    private void showExcelShareDialog(MeetingStatusModelApi apiModel) {
+        Dialog dialog = new Dialog(getActivity(), R.style.AppDialog);
+        DialogVideoAttendanceShareBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_video_attendance_share, null, false);
+        dialog.setContentView(binding.getRoot());
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        binding.tvDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                exportDataToCSV(apiModel,true);
+            }
+        });
+        binding.tvShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                exportDataToCSV(apiModel,false);
+            }
+        });
+        binding.tvNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
         dialog.show();
@@ -1554,6 +1604,129 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
+    }
+
+
+    private boolean checkPermissionForWriteExternal() {
+        int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            AppLog.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            AppLog.e("External" + "permission", "checkpermission , denied");
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
+            }
+            return false;
+        }
+    }
+
+    public void exportDataToCSV(MeetingStatusModelApi apiModel,boolean isDownload) {
+        if (!checkPermissionForWriteExternal()) {
+            return;
+        }
+
+        File mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        File csvFolder = new File(mainFolder,"Excel");
+        if (!csvFolder.exists()) {
+            csvFolder.mkdir();
+        }
+
+        String fileName = item.getName()+"_live_"+MixOperations.convertDate(Calendar.getInstance().getTime(),"yyyyMMddHHmmss");
+
+        File file = new File(csvFolder,  fileName+ ".xls");
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet firstSheet = workbook.createSheet(item.getName());
+
+            int indexRow = 0;
+
+            HSSFRow row1 = firstSheet.createRow(indexRow);
+            row1.createCell(0).setCellValue("Class Name");
+            row1.createCell(1).setCellValue(item.getName());
+            indexRow = indexRow+1;
+
+            HSSFRow row11 = firstSheet.createRow(indexRow);
+            row11.createCell(0).setCellValue("Subject Name");
+            row11.createCell(1).setCellValue(apiModel.subjectName+"");
+            indexRow = indexRow+1;
+
+            HSSFRow row2 = firstSheet.createRow(indexRow);
+            row2.createCell(0).setCellValue("Teacher Name");
+            row2.createCell(1).setCellValue(apiModel.meetingCreatedByName);
+            indexRow = indexRow+1;
+
+            HSSFRow row3 = firstSheet.createRow(indexRow);
+            row3.createCell(0).setCellValue("Class Started At");
+            row3.createCell(1).setCellValue(MixOperations.getFormattedDateOnly(apiModel.meetingCreatedAtTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'","dd MMM yyyy hh:mm a"));
+            indexRow = indexRow+1;
+
+            HSSFRow row4 = firstSheet.createRow(indexRow);
+            row4.createCell(0).setCellValue("Class Ended At");
+            row4.createCell(1).setCellValue(MixOperations.getFormattedDateOnly(apiModel.meetingEndedAtTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'","dd MMM yyyy hh:mm a"));
+            indexRow = indexRow+2;
+
+            HSSFRow rowA = firstSheet.createRow(indexRow);
+            rowA.createCell(0).setCellValue("Student Name");
+            rowA.createCell(1).setCellValue("Join At");
+            indexRow = indexRow+1;
+
+            if(apiModel.attendance!=null){
+                for(int i=0;i<apiModel.attendance.size();i++){
+                    MeetingStatusModelApi.AttendanceLiveClass att = apiModel.attendance.get(i);
+                    HSSFRow rowData = firstSheet.createRow(i + indexRow);
+                    rowData.createCell(0).setCellValue(att.studentName);
+                    rowData.createCell(1).setCellValue(MixOperations.getFormattedDateOnly(att.meetingJoinedAtTime.get(0), "hh:mma","hh:mm a"));
+                }
+            }
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file);
+                workbook.write(fos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if(isDownload){
+                Toast.makeText(getActivity(), "Attendance Report Save successfully", Toast.LENGTH_SHORT).show();
+            }else {
+                shareFile(file);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void shareFile(File file) {
+        Uri uriFile;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            uriFile = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
+        } else {
+            uriFile = Uri.fromFile(file);
+        }
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile) ;
+        sharingIntent.setType("text/csv");
+        startActivity(Intent.createChooser(sharingIntent, "share file with"));
     }
 
 }

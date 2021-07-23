@@ -508,6 +508,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="reassigned"><u>Reassigned</u></string>
     <string name="verified"><u>Verified</u></string>
     <string name="lbl_subject_name">Enter Subject Name</string>
+    <string name="student_attendance_report">Student Attendance Report</string>
+    <string name="download">Download</string>
+    <string name="share_">Share</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>
