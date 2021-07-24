@@ -139,6 +139,8 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                         // allow canceling with back button
                         if (isCancelled()) {
                             input.close();
+                            AppLog.e(TAG, "Is Cancelled:::::: ");
+                            file.delete();
                             return "Cancel Download";
                         }
                         total += count;
@@ -176,6 +178,10 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
         // if we get here, length is known, now set indeterminate to false'
         if (listenerSignle != null) {
             listenerSignle.progressUpdate(values[0], 100);
+
+            if (values[0] != 100){
+
+            }
         }
     }
 

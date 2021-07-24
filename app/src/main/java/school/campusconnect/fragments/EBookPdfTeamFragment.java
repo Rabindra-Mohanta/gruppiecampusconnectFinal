@@ -29,6 +29,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 
@@ -44,6 +45,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     public ProgressBar progressBar;
 
     private String team_id;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,38 +54,46 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
+        ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        init();
 
         return view;
     }
-    private void init(){
-        if(getArguments()!=null){
-            team_id=getArguments().getString("team_id");
+
+    private void init() {
+        if (getArguments() != null) {
+            team_id = getArguments().getString("team_id");
             LeafManager leafManager = new LeafManager();
             progressBar.setVisibility(View.VISIBLE);
-            leafManager.getEBooksForTeam(this,GroupDashboardActivityNew.groupId,team_id);
+            leafManager.getEBooksForTeam(this, GroupDashboardActivityNew.groupId, team_id);
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        init();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if(ebookPdfAdapter!=null){
+        if (ebookPdfAdapter != null) {
             ebookPdfAdapter.notifyDataSetChanged();
         }
     }
 
     ClassesAdapter ebookPdfAdapter;
+
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        if(getActivity()==null){
+        if (getActivity() == null) {
             return;
         }
+
+        AppLog.e(TAG, "apiId-------: " + apiId);
         progressBar.setVisibility(View.GONE);
         EBooksTeamResponse eBooksTeamResponse = (EBooksTeamResponse) response;
         ebookPdfAdapter = new ClassesAdapter(eBooksTeamResponse.getData());
@@ -100,8 +110,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         progressBar.setVisibility(View.GONE);
     }
 
-    public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
-    {
+    public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder> {
         ArrayList<EBooksTeamResponse.SubjectBook> list;
         private Context mContext;
 
@@ -112,7 +121,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         @Override
         public ClassesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_pdf,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_pdf, parent, false);
             return new ViewHolder(view);
         }
 
@@ -121,15 +130,14 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             final EBooksTeamResponse.SubjectBook item = list.get(position);
             holder.txt_title.setText(item.getSubjectName());
             holder.txt_content.setText(item.getDescription());
-            if(item.fileName.size()>1){
-                holder.tvCount.setText("+"+(item.fileName.size()-1));
+            if (item.fileName.size() > 1) {
+                holder.tvCount.setText("+" + (item.fileName.size() - 1));
                 holder.tvCount.setVisibility(View.VISIBLE);
                 holder.constThumb.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.constThumb.setVisibility(View.VISIBLE);
                 holder.tvCount.setVisibility(View.GONE);
-                if(item.thumbnailImage!=null && item.thumbnailImage.size()>0)
-                {
+                if (item.thumbnailImage != null && item.thumbnailImage.size() > 0) {
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
 
                 }
@@ -145,20 +153,15 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
 
         @Override
         public int getItemCount() {
-            if(list!=null)
-            {
-                if(list.size()==0)
-                {
+            if (list != null) {
+                if (list.size() == 0) {
                     txtEmpty.setText("No E-Book Found.");
-                }
-                else {
+                } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
-            }
-            else
-            {
+            } else {
                 txtEmpty.setText("No E-Book Found.");
                 return 0;
             }
@@ -180,21 +183,22 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             ImageView imageThumb;
             @Bind(R.id.imgDownloadPdf)
             ImageView imgDownloadPdf;
+
             public ViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this,itemView);
+                ButterKnife.bind(this, itemView);
 
                 image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(list.get(getAdapterPosition()).fileName.size()>1){
+                        if (list.get(getAdapterPosition()).fileName.size() > 1) {
                             Intent i = new Intent(getActivity(), EBookReadMoreActivity.class);
                             i.putExtra("fileName", list.get(getAdapterPosition()).fileName);
                             i.putExtra("thumbnailImage", list.get(getAdapterPosition()).thumbnailImage);
                             i.putExtra("subjectName", list.get(getAdapterPosition()).subjectName);
                             i.putExtra("description", list.get(getAdapterPosition()).description);
                             startActivity(i);
-                        }else {
+                        } else {
                             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
                             i.putExtra("pdf", list.get(getAdapterPosition()).fileName.get(0));
                             i.putExtra("name", list.get(getAdapterPosition()).subjectName);
@@ -205,10 +209,11 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             }
         }
     }
-    public class EbookPdfAdapter extends RecyclerView.Adapter<EbookPdfAdapter.ViewHolder>
-    {
+
+    public class EbookPdfAdapter extends RecyclerView.Adapter<EbookPdfAdapter.ViewHolder> {
         ArrayList<String> list;
         private Context mContext;
+
         public EbookPdfAdapter(ArrayList<String> fileName) {
             list = fileName;
         }
@@ -216,32 +221,27 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         @Override
         public EbookPdfAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final EbookPdfAdapter.ViewHolder holder, final int position) {
-            holder.txt_name.setText((position+1)+" Book");
+            holder.txt_name.setText((position + 1) + " Book");
             list.get(position);
         }
 
         @Override
         public int getItemCount() {
-            if(list!=null)
-            {
-                if(list.size()==0)
-                {
+            if (list != null) {
+                if (list.size() == 0) {
                     txtEmpty.setText("No Pdf Found.");
-                }
-                else {
+                } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
-            }
-            else
-            {
+            } else {
                 txtEmpty.setText("No Pdf Found.");
                 return 0;
             }
@@ -255,13 +255,13 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this,itemView);
+                ButterKnife.bind(this, itemView);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(getActivity(), ViewPDFActivity.class);
                         i.putExtra("pdf", list.get(getAdapterPosition()));
-                        i.putExtra("name", (getAdapterPosition()+1)+" Book");
+                        i.putExtra("name", (getAdapterPosition() + 1) + " Book");
                         startActivity(i);
                     }
                 });
