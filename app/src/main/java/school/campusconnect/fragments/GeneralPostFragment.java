@@ -221,7 +221,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             }
         });
 
-        mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        mBinding.swipeRefreshLayout.setEnabled(false);
+
+       /* mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -233,7 +235,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     mBinding.swipeRefreshLayout.setRefreshing(false);
                 }
             }
-        });
+        });*/
 
 
     }
@@ -380,12 +382,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         super.onResume();
 
        AppLog.e(TAG, "onResume : " + LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED));
-     /*   if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED)) {
+        if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED)) {
             mAdapter.clear();
             currentPage = 1;
             getData(false);
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, false);
-        }*/
+        }
     }
 
     private void getData(boolean isInBackground) {

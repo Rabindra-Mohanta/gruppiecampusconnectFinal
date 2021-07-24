@@ -920,6 +920,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:0a3e174d8fd67a29340d00",
+        "android_client_info": {
+          "package_name": "school.campusconnectlite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cuddles.greenage.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:337951586049:android:a8a055c8bbca8e25",
         "android_client_info": {
           "package_name": "school.gruppie"
@@ -1130,6 +1166,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "337951586049-m1hbetv4phv1s2or8iqe4nn4moui69da.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vidyaniketan.gruppie",
+            "certificate_hash": "7a1f404e72f243ccd7ac828c8c3fba6601c57e43"
+          }
+        },
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3

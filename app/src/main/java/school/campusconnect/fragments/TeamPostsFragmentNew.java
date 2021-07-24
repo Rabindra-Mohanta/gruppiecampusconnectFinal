@@ -551,7 +551,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             }
         });
 
-        mBinding.swipeRefreshLayout2.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        mBinding.swipeRefreshLayout2.setEnabled(false);
+       /* mBinding.swipeRefreshLayout2.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -563,7 +564,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     mBinding.swipeRefreshLayout2.setRefreshing(false);
                 }
             }
-        });
+        });*/
     }
 
     @Override
