@@ -139,7 +139,6 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
                 holder.tvCount.setVisibility(View.GONE);
                 if (item.thumbnailImage != null && item.thumbnailImage.size() > 0) {
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
-
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
                     if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
@@ -165,7 +164,6 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
                 txtEmpty.setText("No E-Book Found.");
                 return 0;
             }
-
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

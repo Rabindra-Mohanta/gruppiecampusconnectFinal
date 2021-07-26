@@ -6,14 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-
-import androidx.annotation.NonNull;
-
-import school.campusconnect.BuildConfig;
-import school.campusconnect.datamodel.OtpVerifyReq;
-import school.campusconnect.datamodel.OtpVerifyRes;
-import school.campusconnect.utils.AppLog;
-
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -25,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
@@ -48,6 +42,7 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.database.RememberPref;
@@ -58,7 +53,10 @@ import school.campusconnect.datamodel.ForgotPasswordValidationError;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.LoginRequest;
 import school.campusconnect.datamodel.LoginResponse;
+import school.campusconnect.datamodel.OtpVerifyReq;
+import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.AppSignatureHelper;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.PassWordMask;
@@ -302,11 +300,11 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             request.deviceType = "Android";
             try {
                 PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                request.appVersion = pInfo.versionCode+"";
+                request.appVersion = pInfo.versionCode + "";
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-            request.osVersion = Build.VERSION.SDK_INT+"";
+            request.osVersion = Build.VERSION.SDK_INT + "";
             request.deviceModel = Build.MODEL;
             request.deviceToken = LeafPreference.getInstance(UserExistActivity.this).getString(LeafPreference.GCM_TOKEN);
             request.password = edtPassword/*.editText*/.getText().toString();
@@ -432,20 +430,20 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
             hide_keyboard();
 
-            if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
+            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
                 AppLog.e("UserExist->", "join group api called");
                 LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
-                if(response1.groupCount>1){
+                if (response1.groupCount > 1) {
                     Intent login = new Intent(this, Home.class);
                     login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(login);
                     finish();
-                }else {
+                } else {
                     manager = new LeafManager();
                     manager.getGroupDetail(this, response1.groupId);
                 }
-            }else {
-                AppLog.e("UserExist->", "join group api called");
+            } else {
+                AppLog.e("UserExist->", "join Direct group api called");
                 manager = new LeafManager();
 
                 manager.joinGroupDirect(this, BuildConfig.APP_ID);
@@ -475,11 +473,9 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                AppLog.e(TAG,"subscribeToTopic : Successful()");
-                            }
-                            else
-                            {
-                                AppLog.e(TAG,"subscribeToTopic : Fail()");
+                                AppLog.e(TAG, "subscribeToTopic : Successful()");
+                            } else {
+                                AppLog.e(TAG, "subscribeToTopic : Fail()");
                             }
 
                         }
@@ -562,16 +558,13 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
 
-        if(apiId==LeafManager.API_JOIN_GROUP)
-        {
-            AppLog.e("UserExist-> on Failure","join group api response");
+        if (apiId == LeafManager.API_JOIN_GROUP) {
+            AppLog.e("UserExist-> on Failure", "join group api response");
 
             AppLog.e("UserExist->", "getGroupDetail api called");
             manager.getGroupDetail(this, BuildConfig.APP_ID);
 
-        }
-        else
-        {
+        } else {
             Toast.makeText(this, "Invalid OTP/Password", Toast.LENGTH_LONG).show();
         }
     }

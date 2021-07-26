@@ -22,6 +22,8 @@ public class LeafPreference {
     public static final String GROUP_COUNT = "GROUP_COUNT";
     public static final String VIDEO_CLASS_LIST_OFFLINE = "VIDEO_CLASS_LIST_OFFLINE";
     public static final String HOME_LIST_OFFLINE = "HOME_LIST_OFFLINE";
+    public static final String SCHOOL_LIST = "SCHOOL_LIST";
+    public static final String GROUP_ID_LIST = "GROUP_ID_LIST";
     private static LeafPreference sInstance;
     private static SharedPreferences sPref;
     private static SharedPreferences.Editor sEditor;

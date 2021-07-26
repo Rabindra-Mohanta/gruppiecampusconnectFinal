@@ -7,13 +7,18 @@
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent"
         app:refreshColor="@color/colorPrimary">
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTeams"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.baoyz.widget.PullRefreshLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTeams"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
     <ProgressBar

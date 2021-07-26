@@ -13,26 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import school.campusconnect.BuildConfig;
-import school.campusconnect.activities.ChangePasswordActivity;
-import id.zelory.compressor.Compressor;
-import school.campusconnect.activities.CreateTeamActivity;
-import school.campusconnect.datamodel.GroupDetailResponse;
-import school.campusconnect.datamodel.GroupItem;
-import school.campusconnect.datamodel.PostDataItem;
-import school.campusconnect.datamodel.PostTeamDataItem;
-import school.campusconnect.datamodel.videocall.VideoClassResponse;
-import school.campusconnect.utils.AppDialog;
-import school.campusconnect.utils.AppLog;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.widget.PullRefreshLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -65,16 +51,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.zelory.compressor.Compressor;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.ChangePasswordActivity;
+import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.adapters.TeamListAdapterNew;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.GroupDetailResponse;
+import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamListItem;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppDialog;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
@@ -87,7 +81,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     ArrayList<MyTeamData> teamList = new ArrayList<>();
     private LeafManager manager;
     private TeamListAdapterNew mAdapter;
-   // PullRefreshLayout swipeRefreshLayout;
+    // PullRefreshLayout swipeRefreshLayout;
     DatabaseHandler databaseHandler;
     LeafPreference pref;
 
@@ -351,7 +345,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         rvTeams = view.findViewById(R.id.rvTeams);
         imgBackground = view.findViewById(R.id.imgBackground);
         progressBar = view.findViewById(R.id.progressBar);
-      //  swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        //  swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         rvTeams.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAdapter = new TeamListAdapterNew(teamList, this);
@@ -386,22 +380,42 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
 
         if (getActivity() != null) {
-            if (!LeafPreference.getInstance(getActivity()).getBoolean("home_api")) {
+
+            String re = LeafPreference.getInstance(getActivity()).getString("" + GroupDashboardActivityNew.groupId);
+
+            if (re != null && !TextUtils.isEmpty(re)) {
+
+                List<MyTeamData> result = new Gson().fromJson(re, new TypeToken<List<MyTeamData>>() {
+                }.getType());
+                teamList.clear();
+                teamList.addAll(result);
+                mAdapter.notifyDataSetChanged();
+
+            } else {
+
+                getTeams();
+                if (mGroupItem.canPost) {
+                    manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
+                }
+            }
+
+            /*if (!LeafPreference.getInstance(getActivity()).getBoolean("home_api")) {
                 LeafPreference.getInstance(getActivity()).setBoolean("home_api", true);
                 getTeams();
                 if (mGroupItem.canPost) {
                     manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
                 }
-            }else {
-                String re = LeafPreference.getInstance(getActivity()).getString(LeafPreference.HOME_LIST_OFFLINE);
-                if (!TextUtils.isEmpty(re)) {
-                    List<MyTeamData> result  = new Gson().fromJson(re, new TypeToken<List<MyTeamData>>() {
-                    }.getType());
+            } else {
+
+                List<MyTeamData> result = new Gson().fromJson(re, new TypeToken<List<MyTeamData>>() {
+                }.getType());
+
+                if (re != null && !TextUtils.isEmpty(re)) {
                     teamList.clear();
                     teamList.addAll(result);
                     mAdapter.notifyDataSetChanged();
 
-                   /* for(int i = 0 ; i < result.size() ; i++)
+                   *//* for(int i = 0 ; i < result.size() ; i++)
                     {
                             if(result.get(i).type !=null && result.get(i).type.equalsIgnoreCase(""))
                             {
@@ -422,35 +436,31 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                                     teamsRef.add(query);
                                 }
                             }
-                    }*/
+                    }*//*
 
                 }
-
-            }
+            }*/
         }
     }
 
 
+    private void firebaseListen(String lastIdFromDB) {
+        AppLog.e(TAG, "firebaseListen called : " + lastIdFromDB);
+        if (TextUtils.isEmpty(lastIdFromDB)) {
+            //  callApi(false);
+        } else {
 
-    private void firebaseListen(String lastIdFromDB)
-    {
-        AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
-        if(TextUtils.isEmpty(lastIdFromDB)){
-          //  callApi(false);
-        }else {
-
-          //  query = myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
-           // query.addListenerForSingleValueEvent(firebaseNewPostListener);
+            //  query = myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
+            // query.addListenerForSingleValueEvent(firebaseNewPostListener);
         }
     }
 
-    ValueEventListener firebaseNewPostListener = new ValueEventListener()
-    {
+    ValueEventListener firebaseNewPostListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             AppLog.e(TAG, "data changed : " + snapshot);
-          //  if(snapshot.getValue() !=null)
-           //     callApi(true);
+            //  if(snapshot.getValue() !=null)
+            //     callApi(true);
         }
 
         @Override
@@ -564,7 +574,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
                 }
 
-                LeafPreference.getInstance(getActivity()).setString(LeafPreference.HOME_LIST_OFFLINE, new Gson().toJson(result));
+                //LeafPreference.getInstance(getActivity()).setString(LeafPreference.HOME_LIST_OFFLINE, new Gson().toJson(result));
+                LeafPreference.getInstance(getActivity()).setString("" + GroupDashboardActivityNew.groupId, new Gson().toJson(result));
 
                 teamList.addAll(result);
                 mAdapter.notifyDataSetChanged();

@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,10 +26,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -67,8 +70,8 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_groups_new,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_groups_new, container, false);
+        ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new GridLayoutManager(getContext(), 4, LinearLayoutManager.VERTICAL, false));
 
         _init();
@@ -89,7 +92,8 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             }
         });
     }
-    private void getGroupList(){
+
+    private void getGroupList() {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getGroups(this);
@@ -98,9 +102,17 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Override
     public void onStart() {
         super.onStart();
-        if(isConnectionAvailable()){
-            getGroupList();
-        }else {
+        if (isConnectionAvailable()) {
+
+            String groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
+            if (groupList != null && !TextUtils.isEmpty(groupList)) {
+                List<GroupItem> result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
+                }.getType());
+                rvClass.setAdapter(new GroupAdapterNew(result));
+            } else {
+                getGroupList();
+            }
+        } else {
             showNoNetworkMsg();
         }
     }
@@ -110,20 +122,19 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         progressBar.setVisibility(View.GONE);
         GroupResponse res = (GroupResponse) response;
         AppLog.e(TAG, "ClassResponse " + res.data);
+        LeafPreference.getInstance(getActivity()).setString(LeafPreference.SCHOOL_LIST, new Gson().toJson(res.data));
 
         rvClass.setAdapter(new GroupAdapterNew(res.data));
 
-        for (int i=0;i<res.data.size();i++){
+        for (int i = 0; i < res.data.size(); i++) {
             FirebaseMessaging.getInstance().subscribeToTopic(res.data.get(i).getGroupId())
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                AppLog.e(TAG,"subscribeToTopic : Successful()");
-                            }
-                            else
-                            {
-                                AppLog.e(TAG,"subscribeToTopic : Fail()");
+                                AppLog.e(TAG, "subscribeToTopic : Successful()");
+                            } else {
+                                AppLog.e(TAG, "subscribeToTopic : Fail()");
                             }
 
                         }
@@ -134,10 +145,10 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     }
 
     private void checkVersionUpdate(int appVersion) {
-        if(getActivity()!=null){
-            AppLog.e(TAG,"appVersion : "+appVersion);
-            AppLog.e(TAG,"BuildConfig.VERSION_CODE : "+ BuildConfig.VERSION_CODE);
-            if(BuildConfig.VERSION_CODE<appVersion){
+        if (getActivity() != null) {
+            AppLog.e(TAG, "appVersion : " + appVersion);
+            AppLog.e(TAG, "BuildConfig.VERSION_CODE : " + BuildConfig.VERSION_CODE);
+            if (BuildConfig.VERSION_CODE < appVersion) {
                 AppDialog.showUpdateDialog(getActivity(), "New version is available. download new version from play store", new AppDialog.AppUpdateDialogListener() {
                     @Override
                     public void onUpdateClick(DialogInterface dialog) {
@@ -149,8 +160,8 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
                         }
                     }
                 });
-            }else {
-                AppLog.e(TAG,"checkVersionUpdate : latest");
+            } else {
+                AppLog.e(TAG, "checkVersionUpdate : latest");
             }
         }
     }
@@ -165,8 +176,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         progressBar.setVisibility(View.GONE);
     }
 
-    public class GroupAdapterNew extends RecyclerView.Adapter<GroupAdapterNew.ViewHolder>
-    {
+    public class GroupAdapterNew extends RecyclerView.Adapter<GroupAdapterNew.ViewHolder> {
         List<GroupItem> list;
         private Context mContext;
 
@@ -177,7 +187,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         @Override
         public GroupAdapterNew.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_group,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_group, parent, false);
             return new ViewHolder(view);
         }
 
@@ -186,7 +196,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             final GroupItem item = list.get(position);
 
             if (!TextUtils.isEmpty(item.getImage())) {
-                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(200,200).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgGroupNew,
+                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(200, 200).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgGroupNew,
                         new Callback() {
                             @Override
                             public void onSuccess() {
@@ -195,7 +205,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
                             @Override
                             public void onError() {
-                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(200,200).into(holder.imgGroupNew, new Callback() {
+                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(200, 200).into(holder.imgGroupNew, new Callback() {
                                     @Override
                                     public void onSuccess() {
                                         holder.imgGroupNewDefault.setVisibility(View.INVISIBLE);
@@ -205,7 +215,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
                                     public void onError() {
                                         holder.imgGroupNewDefault.setVisibility(View.VISIBLE);
                                         TextDrawable drawable = TextDrawable.builder()
-                                                .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position) );
+                                                .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
                                         holder.imgGroupNewDefault.setImageDrawable(drawable);
                                         AppLog.e("Picasso", "Error : ");
                                     }
@@ -215,7 +225,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             } else {
                 holder.imgGroupNewDefault.setVisibility(View.VISIBLE);
                 TextDrawable drawable = TextDrawable.builder()
-                        .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position) );
+                        .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
                 holder.imgGroupNewDefault.setImageDrawable(drawable);
             }
 
@@ -229,20 +239,15 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
         @Override
         public int getItemCount() {
-            if(list!=null)
-            {
-                if(list.size()==0)
-                {
+            if (list != null) {
+                if (list.size() == 0) {
                     txtEmpty.setText("No Group found.");
-                }
-                else {
+                } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
-            }
-            else
-            {
+            } else {
                 txtEmpty.setText("No Group found.");
                 return 0;
             }
@@ -265,7 +270,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this,itemView);
+                ButterKnife.bind(this, itemView);
             }
 
             @OnClick({R.id.relative})
@@ -281,9 +286,37 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         }
     }
 
+    private class GroupIdModel implements Serializable {
+
+        private String groupId;
+        private boolean added = false;
+
+        public GroupIdModel(String groupId, boolean added) {
+            this.groupId = groupId;
+            this.added = added;
+        }
+
+        public String getGroupId() {
+            return groupId;
+        }
+
+        public void setGroupId(String groupId) {
+            this.groupId = groupId;
+        }
+
+        public boolean isAdded() {
+            return added;
+        }
+
+        public void setAdded(boolean added) {
+            this.added = added;
+        }
+    }
+
     private void onGroupSelect(GroupItem groupItem) {
+
         LeafPreference.getInstance(getActivity()).setBoolean("home_api", false);
-        LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER,groupItem.totalUsers);
+        LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER, groupItem.totalUsers);
         LeafPreference.getInstance(getActivity()).setString(Constants.GROUP_DATA, new Gson().toJson(groupItem));
 
         Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
