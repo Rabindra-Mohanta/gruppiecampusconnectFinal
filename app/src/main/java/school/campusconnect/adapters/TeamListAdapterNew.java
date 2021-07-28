@@ -79,6 +79,17 @@ public class TeamListAdapterNew extends RecyclerView.Adapter<TeamListAdapterNew.
             holder.tvPostCount.setText(postUnseenCount + "");
             holder.tvPostCount.setVisibility(postUnseenCount != 0 ? View.VISIBLE : View.GONE);
 
+            int postUnseenCount = 0;
+            if(team.teamId != null && !team.teamId.equalsIgnoreCase(""))
+            postUnseenCount = leafPreference.getInt(team.teamId+"_post");
+            else if(team.name.equalsIgnoreCase("notice board"))
+            {
+                postUnseenCount = leafPreference.getInt(team.groupId+"_post");
+            }
+
+            holder.tvPostCount.setText(postUnseenCount + "");
+            holder.tvPostCount.setVisibility(postUnseenCount != 0 ? View.VISIBLE : View.GONE);
+
             if (!TextUtils.isEmpty(team.image)) {
                 holder.imgTeam.setVisibility(View.VISIBLE);
                 holder.imgDefault.setVisibility(View.GONE);
