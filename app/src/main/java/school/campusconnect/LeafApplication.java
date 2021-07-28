@@ -1,12 +1,13 @@
 package school.campusconnect;
 
 import android.app.Application;
+
+import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 import androidx.appcompat.app.AppCompatDelegate;
 import school.campusconnect.utils.AppLog;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
-
 import java.util.ArrayList;
 
 import school.campusconnect.network.LeafApiClient;
@@ -49,6 +50,30 @@ public class LeafApplication extends Application  {
         Picasso.setSingletonInstance(built);*/
 
         TypeFaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/lato_regular.ttf");
+
+        //NOFIREBASEDATABASE
+       /* FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        AppLog.e(TAG, "firebase logged in : +"+(mAuth.getCurrentUser()!=null));
+        if(mAuth.getCurrentUser()==null)
+        {
+            mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task)
+                {
+                    if (task.isSuccessful())
+                    {
+                        AppLog.e(TAG, "isSuccessful : true");
+                    }
+                    else
+                    {
+                        AppLog.e(TAG, "isSuccessful : false");
+                    }
+                }
+            });
+        }*/
+
+
 /*
 
         ZoomSDK zoomSDK = ZoomSDK.getInstance();

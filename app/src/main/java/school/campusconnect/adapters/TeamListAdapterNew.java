@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.utils.AppLog;
 
@@ -31,10 +32,12 @@ public class TeamListAdapterNew extends RecyclerView.Adapter<TeamListAdapterNew.
     Context context;
     OnTeamClickListener listener;
     int selectedPos = 0;
+    LeafPreference leafPreference;
 
     public TeamListAdapterNew(ArrayList<MyTeamData> teamList, OnTeamClickListener listener) {
         this.teamList = teamList;
         this.listener = listener;
+
     }
 
     public void setSelectedPos(int selectedPos) {
@@ -44,6 +47,7 @@ public class TeamListAdapterNew extends RecyclerView.Adapter<TeamListAdapterNew.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
+        leafPreference = LeafPreference.getInstance(context);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_team_list, parent, false);
         return new ViewHolder(view);
     }
@@ -63,8 +67,17 @@ public class TeamListAdapterNew extends RecyclerView.Adapter<TeamListAdapterNew.
 
             AppLog.e("TeamListAdapterNew", "item ; " + new Gson().toJson(team));
             holder.tvTeamName.setText(team.name);
-            holder.tvPostCount.setText(team.postUnseenCount + "");
-            holder.tvPostCount.setVisibility(team.postUnseenCount != 0 ? View.VISIBLE : View.GONE);
+
+            int postUnseenCount = 0;
+            if(team.teamId != null && !team.teamId.equalsIgnoreCase(""))
+            postUnseenCount = leafPreference.getInt(team.teamId+"_post");
+            else if(team.type.equalsIgnoreCase("notice board"))
+            {
+                postUnseenCount = leafPreference.getInt(team.groupId+"_post");
+            }
+
+            holder.tvPostCount.setText(postUnseenCount + "");
+            holder.tvPostCount.setVisibility(postUnseenCount != 0 ? View.VISIBLE : View.GONE);
 
             if (!TextUtils.isEmpty(team.image)) {
                 holder.imgTeam.setVisibility(View.VISIBLE);
