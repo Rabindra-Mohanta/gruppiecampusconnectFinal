@@ -25,15 +25,14 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-           /*     applicationId "school.campusconnect"
+              /*  applicationId "school.campusconnect"
                 versionCode 11
                 versionName "1.2"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
-*/
+                buildConfigField("String", "APP_ID",  '"school"')*/
                 // [ 2. RPES :  Campus Copy]
               /*  applicationId "rpes.campusconnect"
                 versionCode 6
@@ -317,7 +316,7 @@ dependencies {
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
     implementation 'com.google.firebase:firebase-crashlytics:18.0.0'
-    implementation 'com.google.firebase:firebase-database:20.0.0'
-    implementation 'com.google.firebase:firebase-auth:21.0.1'
+   // implementation 'com.google.firebase:firebase-database:20.0.0'
+   // implementation 'com.google.firebase:firebase-auth:21.0.1'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -48,12 +48,6 @@ import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.baoyz.widget.PullRefreshLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -126,7 +120,9 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private boolean liked;
     private boolean isFromMain;
 
-    private Query query;
+    LeafPreference leafPreference;
+
+    //private Query query;
 
     public TeamPostsFragmentNew() {
 
@@ -136,6 +132,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        leafPreference = LeafPreference.getInstance(TeamPostsFragmentNew.this.getActivity());
     }
 
     @Override
@@ -393,7 +391,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         return mBinding.getRoot();
     }
     private void callApi(boolean isInBackground){
-        if (isConnectionAvailable()) {
+        if (isConnectionAvailable())
+        {
             getData2(team_id, isInBackground);
             AppLog.e("TeamPostFrag", "DataFromAPI");
         } else {
@@ -404,17 +403,19 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private void firebaseListen(String lastIdFromDB)
     {
         AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
-        if(TextUtils.isEmpty(lastIdFromDB)){
+        //NOFIREBASEDATABASE
+        if(TextUtils.isEmpty(lastIdFromDB) ||  leafPreference.getInt(team_id+"_post") >0)
             callApi(false);
-        }else {
+      /*  }else {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference();
             query = myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
             query.addListenerForSingleValueEvent(firebaseNewPostListener);
-        }
+        }*/
     }
 
-    ValueEventListener firebaseNewPostListener = new ValueEventListener() {
+    //NOFIREBASEDATABASE
+  /*  ValueEventListener firebaseNewPostListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             AppLog.e(TAG, "data changed : " + snapshot);
@@ -426,7 +427,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         public void onCancelled(@NonNull DatabaseError error) {
 
         }
-    };
+    };*/
 
     private void startMeeting() {
         /*ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
@@ -578,8 +579,9 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     {
         super.onDestroy();
 
-        if(query !=null)
-            query.removeEventListener(firebaseNewPostListener);
+        //NOFIREBASEDATABASE
+     /*   if(query !=null)
+            query.removeEventListener(firebaseNewPostListener);*/
 
     }
 
@@ -924,6 +926,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mIsLoading = true;
         }
         manager.teamPostGetApi(this, mGroupId + "", team_id + "", getActivity(), currentPage2);
+        leafPreference.remove(team_id+"_post");
 
     }
 

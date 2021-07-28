@@ -34,12 +34,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -95,8 +89,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     private MenuItem removeWallMenu;
     private GroupItem mGroupItem;
 
-    DatabaseReference database;
-    ArrayList<Query> teamsRef;
+  //  DatabaseReference database;
+  //  ArrayList<Query> teamsRef;
 
     @Nullable
     @Override
@@ -368,7 +362,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             }
         });*/
 
-        database = FirebaseDatabase.getInstance().getReference();
+       // database = FirebaseDatabase.getInstance().getReference();
 
     }
 
@@ -455,7 +449,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         }
     }
 
-    ValueEventListener firebaseNewPostListener = new ValueEventListener() {
+   /* ValueEventListener firebaseNewPostListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             AppLog.e(TAG, "data changed : " + snapshot);
@@ -467,7 +461,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         public void onCancelled(@NonNull DatabaseError error) {
 
         }
-    };
+    };*/
 
     @Override
     public void onResume() {

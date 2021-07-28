@@ -42,9 +42,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.CannedAccessControlList;/*
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.FirebaseDatabase;*/
 import com.google.gson.Gson;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.squareup.picasso.Callback;
@@ -952,20 +952,22 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 if (postType.equalsIgnoreCase("group")) {
                     LeafPreference.getInstance(AddPostActivity.this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
                     new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    //NOFIREBASEDATABASE
+                 /*   FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
                     AddPostResponse addPostResponse = (AddPostResponse) response;
                     AppLog.e(TAG, "AddPostResponse : " + addPostResponse);
-                    myRef.child("group_post").child(group_id).child(addPostResponse.data.get(0).postId).setValue("");
+                    myRef.child("group_post").child(group_id).child(addPostResponse.data.get(0).postId).setValue("");*/
 
                 } else if (postType.equalsIgnoreCase("team")) {
                     LeafPreference.getInstance(AddPostActivity.this).setBoolean(LeafPreference.ISTEAMPOSTUPDATED, true);
                     new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    //NOFIREBASEDATABASE
+                   /* FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
                     AddPostResponse addPostResponse = (AddPostResponse) response;
                     AppLog.e(TAG, "AddPostResponse : " + addPostResponse);
-                    myRef.child("team_post").child(team_id).child(addPostResponse.data.get(0).postId).setValue("");
+                    myRef.child("team_post").child(team_id).child(addPostResponse.data.get(0).postId).setValue("");*/
                 } else {
                     LeafPreference.getInstance(AddPostActivity.this).setBoolean(LeafPreference.ISPERSONALPOSTUPDATED, true);
                     LeafPreference.getInstance(this).setBoolean(LeafPreference.PERSONAL_POST_ADDED_2, true);
@@ -1474,7 +1476,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     JSONObject notificationObj = new JSONObject();
                     notificationObj.put("title", title);
                     notificationObj.put("body", message);
-                    object.put("notification", notificationObj);
+                 //   object.put("notification", notificationObj);
 
                     JSONObject dataObj = new JSONObject();
                     dataObj.put("groupId", group_id);

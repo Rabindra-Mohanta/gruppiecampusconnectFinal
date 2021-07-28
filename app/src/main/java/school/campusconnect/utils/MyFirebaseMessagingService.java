@@ -27,6 +27,7 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.activeandroid.ActiveAndroid;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -95,10 +96,41 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (!LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.TOKEN).isEmpty()) {
                     AppLog.e(TAG, "if...if...");
                     sendNotification(data.get("body"), data.get("title"));
-                    if ("videoEnd".equals(data.get("Notification_type"))) {
-                        Intent intent = new Intent("SCHOOL_JISTI_MEETING");
+                    if ("videoEnd".equals(data.get("Notification_type")))
+                    {
+                        Intent intent = new Intent("MEETING_END");
                         sendBroadcast(intent);
                     }
+                    else if ("videoStart".equals(data.get("Notification_type")))
+                    {
+                        AppLog.e(TAG, "if...if...if...");
+                        Intent intent = new Intent("MEETING_START");
+                        intent.putExtra("teamId" ,data.get("teamId"));
+                        intent.setAction("MEETING_START");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                    }
+                    else if ("videoResume".equals(data.get("Notification_type")))
+                    {
+                        AppLog.e(TAG, "if...if...if...");
+                        Intent intent = new Intent("MEETING_RESUME");
+                        intent.putExtra("teamId" ,data.get("teamId"));
+                        intent.setAction("MEETING_RESUME");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                    }
+                    else if("post".equalsIgnoreCase(data.get("Notification_type")))
+                    {
+                        if("team".equalsIgnoreCase(data.get("postType")))
+                        {
+                            LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
+                            leafPreference.setInt(data.get("teamId")+"_post" , leafPreference.getInt(data.get("teamId")+"_post" )+1);
+                        }
+                        else if("group".equalsIgnoreCase(data.get("postType")))
+                        {
+                            LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
+                            leafPreference.setInt(data.get("groupId")+"_post" , leafPreference.getInt(data.get("groupId")+"_post" )+1);
+                        }
+                    }
+
                 }
 //                BaseActivity.updateMyActivity(this);
             }
