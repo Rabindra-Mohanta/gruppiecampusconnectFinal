@@ -15,9 +15,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,6 +30,7 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.ViewPDFActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
+import school.campusconnect.datamodel.EBookItem;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
@@ -45,6 +49,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     public ProgressBar progressBar;
 
     private String team_id;
+    private ArrayList<EBooksTeamResponse.SubjectBook> eBookList=new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,23 +63,44 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        init();
+
         return view;
     }
 
     private void init() {
         if (getArguments() != null) {
             team_id = getArguments().getString("team_id");
-            LeafManager leafManager = new LeafManager();
-            progressBar.setVisibility(View.VISIBLE);
-            leafManager.getEBooksForTeam(this, GroupDashboardActivityNew.groupId, team_id);
         }
-
+    }
+    private void getDataLocally(){
+        List<EBookItem> list = EBookItem.getAll(team_id, GroupDashboardActivityNew.groupId);
+        if(list.size()!=0){
+            for (int i=0;i<list.size();i++){
+                EBookItem currentItem = list.get(i);
+                EBooksTeamResponse.SubjectBook item=new EBooksTeamResponse.SubjectBook();
+                item.subjectName = currentItem.subjectName;
+                item.description = currentItem.description;
+                item.fileName = new Gson().fromJson(currentItem.fileName,new TypeToken<ArrayList<String>>(){}.getType());
+                item.thumbnailImage = new Gson().fromJson(currentItem.thumbnailImage,new TypeToken<ArrayList<String>>(){}.getType());
+                eBookList.add(item);
+            }
+            ebookPdfAdapter = new ClassesAdapter(eBookList);
+            rvClass.setAdapter(ebookPdfAdapter);
+        }else {
+            getEBooksList();
+        }
+    }
+    private void getEBooksList(){
+        LeafManager leafManager = new LeafManager();
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getEBooksForTeam(this, GroupDashboardActivityNew.groupId, team_id);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        init();
+        getDataLocally();
     }
 
     @Override
@@ -96,8 +122,28 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         AppLog.e(TAG, "apiId-------: " + apiId);
         progressBar.setVisibility(View.GONE);
         EBooksTeamResponse eBooksTeamResponse = (EBooksTeamResponse) response;
-        ebookPdfAdapter = new ClassesAdapter(eBooksTeamResponse.getData());
+        eBookList.clear();
+        eBookList.addAll(eBooksTeamResponse.getData());
+        ebookPdfAdapter = new ClassesAdapter(eBookList);
         rvClass.setAdapter(ebookPdfAdapter);
+        saveToDB(eBooksTeamResponse.getData());
+    }
+
+    private void saveToDB(ArrayList<EBooksTeamResponse.SubjectBook> data) {
+        if(data==null)
+            return;
+
+        for (int i=0;i<data.size();i++){
+            EBooksTeamResponse.SubjectBook currentItem = data.get(i);
+            EBookItem eBookItem = new EBookItem();
+            eBookItem.subjectName = currentItem.subjectName;
+            eBookItem.description = currentItem.description;
+            eBookItem.fileName = new Gson().toJson(currentItem.fileName);
+            eBookItem.thumbnailImage = new Gson().toJson(currentItem.thumbnailImage);
+            eBookItem.teamId = team_id;
+            eBookItem.groupId = GroupDashboardActivityNew.groupId;
+            eBookItem.save();
+        }
     }
 
     @Override

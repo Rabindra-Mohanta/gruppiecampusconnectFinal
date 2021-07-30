@@ -311,7 +311,7 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
