@@ -47,7 +47,7 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
-
+    String role;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,6 +55,9 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        if(getArguments()!=null){
+            role = getArguments().getString("role","");
+        }
 
         return view;
     }
@@ -214,6 +217,7 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
         intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
         intent.putExtra("team_id", classData.getId());
         intent.putExtra("title", classData.className);
+        intent.putExtra("role", role);
         startActivity(intent);
     }
 

@@ -1052,17 +1052,20 @@ public class GroupDashboardActivityNew extends BaseActivity
                 Intent intent = new Intent(this, EBookClassActivity.class);
                 intent.putExtra("group_id", groupId);
                 intent.putExtra("title", group.name);
+                intent.putExtra("role", group.role);
                 startActivity(intent);
             } else if (group.count == 1) {
                 Intent intent = new Intent(this, EBookPdfForTeamActivity.class);
                 intent.putExtra("group_id", groupId);
                 intent.putExtra("team_id", group.details.teamId);
                 intent.putExtra("title", group.details.teamName);
+                intent.putExtra("role", group.role);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(this, ParentKidsForEBookActivity.class);
                 intent.putExtra("group_id", groupId);
                 intent.putExtra("title", group.name);
+                intent.putExtra("role", group.role);
                 startActivity(intent);
             }
         } else if (group.type.equals("Code Of Conduct")) {

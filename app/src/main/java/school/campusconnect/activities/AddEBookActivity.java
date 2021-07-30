@@ -260,7 +260,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
         switch (apiId) {
             case LeafManager.API_EBOOK_REGISTER:
 
-               // new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 finish();
                 break;
 
@@ -298,7 +298,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                     String topic;
                     String title = getResources().getString(R.string.app_name);
                     String name = LeafPreference.getInstance(AddEBookActivity.this).getString(LeafPreference.NAME);
-                    String message = name + " has added new vendor." ;
+                    String message = name + " has added new ebook." ;
                     topic = GroupDashboardActivityNew.groupId ;
                     object.put("to", "/topics/" + topic);
 
@@ -312,7 +312,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                     dataObj.put("createdById", LeafPreference.getInstance(AddEBookActivity.this).getString(LeafPreference.LOGIN_ID));
                     dataObj.put("teamId", "");
                     dataObj.put("title", title);
-                    dataObj.put("Notification_type",  "VendorAdd");
+                    dataObj.put("Notification_type",  "EBookAdd");
                     dataObj.put("body", message);
                     object.put("data", dataObj);
                     wr.writeBytes(object.toString());

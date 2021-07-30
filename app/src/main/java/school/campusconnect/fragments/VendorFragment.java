@@ -84,6 +84,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
         manager=new LeafManager();
 
+        leafPreference = LeafPreference.getInstance(VendorFragment.this.getActivity());
+
         mGroupId=GroupDashboardActivityNew.groupId;
 
         layoutManager=new LinearLayoutManager(getActivity());
@@ -200,7 +202,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
             totalPages = response.totalNumberOfPages;
 
-            leafPreference = LeafPreference.getInstance(VendorFragment.this.getActivity());
+
             //NOFIREBASEDATABASE
             if(leafPreference.getInt(mGroupId+"_vendorpush") >0)
             {

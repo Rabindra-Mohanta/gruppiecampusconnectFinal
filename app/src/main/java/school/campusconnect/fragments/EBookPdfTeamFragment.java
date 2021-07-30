@@ -28,6 +28,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.EBookReadMoreActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.ViewPDFActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.EBookItem;
@@ -49,6 +50,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     public ProgressBar progressBar;
 
     private String team_id;
+    private String role="";
     private ArrayList<EBooksTeamResponse.SubjectBook> eBookList=new ArrayList<>();
 
     @Override
@@ -71,6 +73,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     private void init() {
         if (getArguments() != null) {
             team_id = getArguments().getString("team_id");
+            role = getArguments().getString("role");
         }
     }
     private void getDataLocally(){
@@ -87,6 +90,14 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             }
             ebookPdfAdapter = new ClassesAdapter(eBookList);
             rvClass.setAdapter(ebookPdfAdapter);
+
+            if("admin".equalsIgnoreCase(role)){
+                getEBooksList();
+            }else {
+                if(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId+"_ebookpush") >0){
+                    getEBooksList();
+                }
+            }
         }else {
             getEBooksList();
         }
@@ -127,6 +138,8 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         ebookPdfAdapter = new ClassesAdapter(eBookList);
         rvClass.setAdapter(ebookPdfAdapter);
         saveToDB(eBooksTeamResponse.getData());
+
+        LeafPreference.getInstance(getContext()).remove(GroupDashboardActivityNew.groupId+"_ebookpush");
     }
 
     private void saveToDB(ArrayList<EBooksTeamResponse.SubjectBook> data) {

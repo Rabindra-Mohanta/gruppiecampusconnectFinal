@@ -106,6 +106,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         AppLog.e(TAG, "if...if...if...");
                         Intent intent = new Intent("MEETING_START");
                         intent.putExtra("teamId" ,data.get("teamId"));
+                        intent.putExtra("createdByName" ,data.get("createdByName"));
                         intent.setAction("MEETING_START");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
@@ -137,6 +138,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             leafPreference.setInt(data.get("groupId")+"_vendorpush" , leafPreference.getInt(data.get("groupId")+"_vendorpush" )+1);
                         AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving completed. key : "+(data.get("groupId")+"_vendorpush"));
 
+                    }else if("EBookAdd".equalsIgnoreCase(data.get("Notification_type")))
+                    {
+                            LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
+                            leafPreference.setInt(data.get("groupId")+"_ebookpush" , leafPreference.getInt(data.get("groupId")+"_ebookpush" )+1);
                     }
 
                 }

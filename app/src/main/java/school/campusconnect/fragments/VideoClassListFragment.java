@@ -407,6 +407,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     if(position >= 0)
                     {
                         listItemData.isLive = true;
+                        listItemData.createdName = intent.getExtras().getString("createdByName");
                         classesAdapter.notifyDataSetChanged();
                     }
                 }
@@ -1072,6 +1073,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     JSONObject dataObj = new JSONObject();
                     dataObj.put("groupId", GroupDashboardActivityNew.groupId);
                     dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("createdByName", name);
                     dataObj.put("teamId", item.getId());
                     dataObj.put("title", title);
                     dataObj.put("Notification_type", isStart ? "videoStart" : "videoEnd");
