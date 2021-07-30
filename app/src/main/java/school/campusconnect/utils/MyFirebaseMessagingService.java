@@ -130,6 +130,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             leafPreference.setInt(data.get("groupId")+"_post" , leafPreference.getInt(data.get("groupId")+"_post" )+1);
                         }
                     }
+                    else if("VendorAdd".equalsIgnoreCase(data.get("Notification_type")))
+                    {
+                        AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving started.");
+                            LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
+                            leafPreference.setInt(data.get("groupId")+"_vendorpush" , leafPreference.getInt(data.get("groupId")+"_vendorpush" )+1);
+                        AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving completed. key : "+(data.get("groupId")+"_vendorpush"));
+
+                    }
 
                 }
 //                BaseActivity.updateMyActivity(this);

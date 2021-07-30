@@ -75,6 +75,10 @@ public class TeamListAdapterNew extends RecyclerView.Adapter<TeamListAdapterNew.
             {
                 postUnseenCount = leafPreference.getInt(team.groupId+"_post");
             }
+            else if(team.name.equalsIgnoreCase("vendor connect"))
+            {
+                postUnseenCount = leafPreference.getInt(team.groupId+"_vendorpush");
+            }
 
             holder.tvPostCount.setText(postUnseenCount + "");
             holder.tvPostCount.setVisibility(postUnseenCount != 0 ? View.VISIBLE : View.GONE);

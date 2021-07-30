@@ -19,8 +19,10 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +35,7 @@ import school.campusconnect.adapters.VendorAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.VendorPostResponse;
+import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -70,6 +73,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     private LeafManager manager;
     private String mGroupId;
     private VendorPostResponse.VendorPostData currentItem;
+
+    LeafPreference leafPreference;
 
     @Nullable
     @Override
@@ -146,6 +151,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
             }
         });
 
+        swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -164,16 +170,83 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     }
     private void getData()
     {
-        if(isConnectionAvailable())
+
+        String re = LeafPreference.getInstance(getActivity()).getString( GroupDashboardActivityNew.groupId+"_vendor");
+
+        if (re != null && !TextUtils.isEmpty(re))
         {
-            showLoadingBar(progressBar);
-            mIsLoading = true;
-            manager.getVendorPost(this, mGroupId+"", currentPage);
+            AppLog.e(TAG, "Api Calling::: if ");
+            VendorPostResponse response = new Gson().fromJson(re, new TypeToken<VendorPostResponse>()
+            {}.getType());
+            if (currentPage == 1)
+            {
+                listData.clear();
+
+                listData.addAll(response.data);
+                AppLog.e(TAG, "current page 1");
+            }
+            else
+            {
+                listData.addAll(response.data);
+                AppLog.e(TAG, "current page " + currentPage);
+            }
+
+            if(listData.size()==0)
+                txtEmpty.setVisibility(View.VISIBLE);
+            else
+                txtEmpty.setVisibility(View.GONE);
+
+            vendorAdapter.notifyDataSetChanged();
+
+            totalPages = response.totalNumberOfPages;
+
+            leafPreference = LeafPreference.getInstance(VendorFragment.this.getActivity());
+            //NOFIREBASEDATABASE
+            if(leafPreference.getInt(mGroupId+"_vendorpush") >0)
+            {
+                if(isConnectionAvailable())
+                {
+                    showLoadingBar(progressBar);
+                    mIsLoading = true;
+                    manager.getVendorPost(this, mGroupId+"", currentPage);
+                }
+                else
+                {
+                    showNoNetworkMsg();
+                }
+            }
+            //initFirebase();
         }
         else
         {
-            showNoNetworkMsg();
+            if(isConnectionAvailable())
+            {
+                showLoadingBar(progressBar);
+                mIsLoading = true;
+                manager.getVendorPost(this, mGroupId+"", currentPage);
+            }
+            else
+            {
+                showNoNetworkMsg();
+            }
         }
+
+    }
+
+    private void getDataFromAPI()
+    {
+
+            if(isConnectionAvailable())
+            {
+                showLoadingBar(progressBar);
+                mIsLoading = true;
+                manager.getVendorPost(this, mGroupId+"", currentPage);
+            }
+            else
+            {
+                showNoNetworkMsg();
+            }
+
 
     }
 
@@ -199,11 +272,13 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
         if(getActivity()==null)
             return;
 
+        AppLog.e(TAG , "onreSume called");
+
         if(LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.IS_VENDOR_POST_UPDATED))
         {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.IS_VENDOR_POST_UPDATED, false);
             currentPage=1;
-            getData();
+            getDataFromAPI();
         }
     }
 
@@ -230,6 +305,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
                 VendorPostResponse res = (VendorPostResponse) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
+                LeafPreference.getInstance(getActivity()).setString(GroupDashboardActivityNew.groupId+"_vendor", new Gson().toJson(res));
+
                 if (currentPage == 1) {
                     listData.clear();
 
@@ -240,6 +317,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
                     listData.addAll(res.data);
                     AppLog.e(TAG, "current page " + currentPage);
                 }
+
+                leafPreference.remove(mGroupId+"_vendorpush");
 
                 if(listData.size()==0)
                     txtEmpty.setVisibility(View.VISIBLE);
