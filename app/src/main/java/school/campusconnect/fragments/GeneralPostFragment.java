@@ -7,16 +7,20 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +39,16 @@ import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -869,7 +883,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             showLoadingBar(mBinding.progressBar);
             LeafManager manager = new LeafManager();
             manager.deletePost(this, mGroupId+"", currentItem.id, "group");
-
+            new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             showNoNetworkMsg();
         }
@@ -930,6 +944,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public void onClick(View v) {
     }
 
+
+
     private void showContextMenu(View view, boolean isModifyMenu) {
 
 
@@ -947,6 +963,119 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         }
 
 
+    }
+
+    private class SendNotification extends AsyncTask<String, String, String> {
+        String receiverToken;
+        private String server_response;
+
+        public SendNotification(String token) {
+            receiverToken = token;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1+BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String message = "";
+                    String userName = LeafPreference.getInstance(GeneralPostFragment.this.getActivity()).getString(LeafPreference.NAME);
+
+
+                    message = userName + " has deleted a post.";
+                    object.put("to", receiverToken);
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                    //   object.put("notification", notificationObj);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", mGroupId);
+                    dataObj.put("createdById", LeafPreference.getInstance(GeneralPostFragment.this.getActivity()).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("postId", "");
+                    dataObj.put("teamId", mGroupId);
+                    dataObj.put("title", title);
+                    dataObj.put("postType", "group");
+                    dataObj.put("Notification_type", "post");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+
+                    wr.writeBytes(object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
     }
 
 

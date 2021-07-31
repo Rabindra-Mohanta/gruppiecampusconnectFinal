@@ -75,13 +75,18 @@ public class TeamListAdapterNew extends RecyclerView.Adapter<TeamListAdapterNew.
             {
                 postUnseenCount = leafPreference.getInt(team.groupId+"_post");
             }
-            else if(team.name.equalsIgnoreCase("vendor connect"))
+            /*else if(team.name.equalsIgnoreCase("vendor connect"))
             {
                 postUnseenCount = leafPreference.getInt(team.groupId+"_vendorpush");
-            }else if(team.name.equalsIgnoreCase("E-Books"))
+            }*/
+         /*   else if(team.name.equalsIgnoreCase("E-Books"))
             {
                 postUnseenCount = leafPreference.getInt(team.groupId+"_ebookpush");
             }
+            else if(team.type.equalsIgnoreCase("Code Of Conduct"))
+            {
+                postUnseenCount = leafPreference.getInt(team.groupId+"_cocpush");
+            }*/
 
             holder.tvPostCount.setText(postUnseenCount + "");
             holder.tvPostCount.setVisibility(postUnseenCount != 0 ? View.VISIBLE : View.GONE);

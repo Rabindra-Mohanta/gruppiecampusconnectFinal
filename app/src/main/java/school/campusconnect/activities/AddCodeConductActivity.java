@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -42,8 +43,17 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -256,7 +266,6 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
                     Log.e(TAG, "send data " + new Gson().toJson(request));
                     mainRequest=request;
                     manager.addCodeOfConduct(this, group_id, request);
-
                 }
             }
         } else {
@@ -508,7 +517,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
             default:
                 Toast.makeText(AddCodeConductActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.IS_CODE_CONDUCT_UPDATED, true);
-                //new SendNotification(mainRequest).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 finish();
 
@@ -605,6 +614,115 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
             return false;
         }
     }
+
+    private class SendNotification extends AsyncTask<String, String, String> {
+        private String server_response;
+
+        public SendNotification()
+        {
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String name = LeafPreference.getInstance(AddCodeConductActivity.this).getString(LeafPreference.NAME);
+                    String message = name + " has added rule." ;
+                    topic = GroupDashboardActivityNew.groupId ;
+                    object.put("to", "/topics/" + topic);
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                    // object.put("notification", notificationObj);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", GroupDashboardActivityNew.groupId);
+                    dataObj.put("createdById", LeafPreference.getInstance(AddCodeConductActivity.this).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("teamId", group_id);
+                    dataObj.put("title", title);
+                    dataObj.put("Notification_type",  "RuleAdd");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+                    wr.writeBytes(object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
+    }
+
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

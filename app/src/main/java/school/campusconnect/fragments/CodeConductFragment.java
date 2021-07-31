@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
@@ -33,6 +36,7 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.CodeConductResponse;
 import school.campusconnect.datamodel.PostDataItem;
+import school.campusconnect.datamodel.VendorPostResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -71,6 +75,9 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     private String mGroupId;
     private CodeConductResponse.CodeConductData currentItem;
 
+    LeafPreference leafPreference;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,6 +85,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
         ButterKnife.bind(this,view);
 
         manager=new LeafManager();
+
+        leafPreference = LeafPreference.getInstance(CodeConductFragment.this.getActivity());
 
         mGroupId=GroupDashboardActivityNew.groupId;
 
@@ -146,6 +155,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             }
         });
 
+        swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -160,18 +170,87 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             }
         });
 
+    }
+
+
+    private void getData()
+    {
+
+        String re = LeafPreference.getInstance(getActivity()).getString( GroupDashboardActivityNew.groupId+"_coc");
+
+        if (re != null && !TextUtils.isEmpty(re))
+        {
+            AppLog.e(TAG, "Api Calling::: if ");
+            CodeConductResponse res = new Gson().fromJson(re, new TypeToken<CodeConductResponse>()
+            {}.getType());
+            AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
+
+            if (currentPage == 1) {
+                PostDataItem.deleteGeneralPosts(mGroupId+"");
+                listData.clear();
+
+                listData.addAll(res.data);
+                AppLog.e(TAG, "current page 1");
+
+            } else {
+                listData.addAll(res.data);
+                AppLog.e(TAG, "current page " + currentPage);
+            }
+
+            if(listData.size()==0)
+                txtEmpty.setVisibility(View.VISIBLE);
+            else
+                txtEmpty.setVisibility(View.GONE);
+
+            codeConductAdapter.notifyDataSetChanged();
+
+            totalPages = res.totalNumberOfPages;
+            mIsLoading = false;
+
+            //NOFIREBASEDATABASE
+            if(leafPreference.getInt(mGroupId+"_cocpush") >0)
+            {
+                if(isConnectionAvailable())
+                {
+                    showLoadingBar(progressBar);
+                    mIsLoading = true;
+                    manager.getCodeOfConductPost(this, mGroupId+"", currentPage);
+                }
+                else {
+                    showNoNetworkMsg();
+                }
+
+            }
+            //initFirebase();
+        }
+        else
+        {
+            if(isConnectionAvailable())
+            {
+                showLoadingBar(progressBar);
+                mIsLoading = true;
+                manager.getCodeOfConductPost(this, mGroupId+"", currentPage);
+            }
+            else {
+                showNoNetworkMsg();
+            }
+
+        }
+
 
     }
-    private void getData()
+
+    private void getDataFromAPI()
     {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
-            mIsLoading = true;
-            manager.getCodeOfConductPost(this, mGroupId+"", currentPage);
+        showLoadingBar(progressBar);
+        mIsLoading = true;
+        manager.getCodeOfConductPost(this, mGroupId+"", currentPage);
         }
-        else {
-            showNoNetworkMsg();
+        else
+        {
+        showNoNetworkMsg();
         }
 
     }
@@ -193,16 +272,18 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
+
         if(getActivity()==null)
-            return;
+        return;
 
         if(LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.IS_CODE_CONDUCT_UPDATED))
         {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.IS_CODE_CONDUCT_UPDATED, false);
             currentPage=1;
-            getData();
+            getDataFromAPI();
         }
     }
 
@@ -229,6 +310,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                 CodeConductResponse res = (CodeConductResponse) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
+                LeafPreference.getInstance(getActivity()).setString(GroupDashboardActivityNew.groupId+"_coc", new Gson().toJson(res));
+
                 if (currentPage == 1) {
                     PostDataItem.deleteGeneralPosts(mGroupId+"");
                     listData.clear();
@@ -245,6 +328,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                     txtEmpty.setVisibility(View.VISIBLE);
                 else
                     txtEmpty.setVisibility(View.GONE);
+
+                leafPreference.remove(GroupDashboardActivityNew.groupId+"_cocpush");
 
                 codeConductAdapter.notifyDataSetChanged();
 

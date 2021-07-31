@@ -95,7 +95,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 AppLog.e(TAG, "if...");
                 if (!LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.TOKEN).isEmpty()) {
                     AppLog.e(TAG, "if...if...");
-                    sendNotification(data.get("body"), data.get("title"));
+
                     if ("videoEnd".equals(data.get("Notification_type")))
                     {
                         Intent intent = new Intent("MEETING_END");
@@ -138,11 +138,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             leafPreference.setInt(data.get("groupId")+"_vendorpush" , leafPreference.getInt(data.get("groupId")+"_vendorpush" )+1);
                         AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving completed. key : "+(data.get("groupId")+"_vendorpush"));
 
-                    }else if("EBookAdd".equalsIgnoreCase(data.get("Notification_type")))
+                    }
+                    else if("VendorDelete".equalsIgnoreCase(data.get("Notification_type")))
+                    {
+                        AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving started.");
+                        LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
+                        leafPreference.setInt(data.get("groupId")+"_vendorpush" , leafPreference.getInt(data.get("groupId")+"_vendorpush" )+1);
+                        AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving completed. key : "+(data.get("groupId")+"_vendorpush"));
+
+                        return;
+                    }
+                    else if("RuleAdd".equalsIgnoreCase(data.get("Notification_type")))
+                    {
+                        LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
+                        leafPreference.setInt(data.get("groupId")+"_cocpush" , leafPreference.getInt(data.get("groupId")+"_cocpush" )+1);
+                    }
+                    else if("EBookAdd".equalsIgnoreCase(data.get("Notification_type")))
                     {
                             LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
                             leafPreference.setInt(data.get("groupId")+"_ebookpush" , leafPreference.getInt(data.get("groupId")+"_ebookpush" )+1);
                     }
+
+                    sendNotification(data.get("body"), data.get("title"));
 
                 }
 //                BaseActivity.updateMyActivity(this);
