@@ -122,9 +122,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.llClass)
     LinearLayout llClass;
 
-    @Bind(R.id.llEBook)
-    LinearLayout llEBook;
-
     @Bind(R.id.llSubject)
     LinearLayout llSubject;
 
@@ -449,7 +446,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llEBook, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -567,21 +564,6 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
-            case R.id.llEBook:
-                if (isConnectionAvailable()) {
-                    startActivity(new Intent(this, EBookActivity.class));
-                } else {
-                    showNoNetworkMsg();
-                }
-                break;
-
-          /*  case R.id.llSubject:
-                if (isConnectionAvailable()) {
-                    startActivity(new Intent(this, SubjectActivity.class));
-                } else {
-                    showNoNetworkMsg();
-                }
-                break;*/
             case R.id.llSubject2:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, ClassActivity2.class));
@@ -726,7 +708,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (mGroupItem.isAdmin || mGroupItem.canPost) {
             llClass.setVisibility(View.VISIBLE);
-            llEBook.setVisibility(View.VISIBLE);
 //            llSubject.setVisibility(View.VISIBLE);
             llSubject2.setVisibility(View.VISIBLE);
             llStaffReg.setVisibility(View.VISIBLE);

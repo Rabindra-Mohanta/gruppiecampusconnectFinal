@@ -25,6 +25,7 @@ import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.classs.ParentKidsResponse;
 import school.campusconnect.datamodel.ebook.AddEbookReq;
+import school.campusconnect.datamodel.ebook.AddEbookReq2;
 import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.fees.FeesRes;
@@ -513,6 +514,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addEBook(@Path("group_id") String group_id, @Body AddEbookReq addEbookReq);
 
+    @POST("/api/v1/groups/{groupId}/team/{teamId}/ebooks/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addEBook2(@Path("groupId") String group_id,@Path("teamId") String teamId, @Body AddEbookReq2 addEbookReq);
+
     @POST("/api/v1/groups/{group_id}/team/{teamId}/jitsi/token/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addJitiToken(@Path("group_id") String group_id, @Path("teamId") String teamId);
@@ -521,6 +526,10 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/ebook/{book_id}/delete")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> deleteEBook(@Path("group_id") String group_id, @Path("book_id") String book_id);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/ebook/{ebook_id}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteEBookTeam(@Path("group_id") String group_id,@Path("team_id") String team_id, @Path("ebook_id") String ebook_id);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/ebook/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

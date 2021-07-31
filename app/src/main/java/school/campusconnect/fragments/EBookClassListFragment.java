@@ -17,10 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -29,8 +32,12 @@ import school.campusconnect.R;
 import school.campusconnect.activities.EBookPdfForTeamActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.SelectEBookActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.EBookClassItem;
+import school.campusconnect.datamodel.EBookItem;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
@@ -48,6 +55,7 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
     String role;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,13 +67,36 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
             role = getArguments().getString("role","");
         }
 
+        getDataLocally();
+
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getClassList();
+    }
+    private void getDataLocally() {
+        List<EBookClassItem> list = EBookClassItem.getAll(GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            ArrayList<ClassResponse.ClassData> classList= new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                EBookClassItem currentItem = list.get(i);
+                ClassResponse.ClassData item = new ClassResponse.ClassData();
+                item.category = currentItem.category;
+                item.classImage = currentItem.classImage;
+                item.className = currentItem.className;
+                item.countryCode = currentItem.countryCode;
+                item.members = currentItem.members;
+                item.phone = currentItem.phone;
+                item.teacherName = currentItem.teacherName;
+                item.setId(currentItem.teamId);
+                classList.add(item);
+            }
+            rvClass.setAdapter(new ClassesAdapter(classList));
+        } else {
+            getClassList();
+        }
     }
 
     private void getClassList() {
@@ -82,6 +113,28 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
         AppLog.e(TAG, "ClassResponse " + result);
 
         rvClass.setAdapter(new ClassesAdapter(result));
+
+        saveToDB(result);
+    }
+
+    private void saveToDB(List<ClassResponse.ClassData> result) {
+        if (result == null)
+            return;
+
+        for (int i = 0; i < result.size(); i++) {
+            ClassResponse.ClassData currentItem = result.get(i);
+            EBookClassItem classItem = new EBookClassItem();
+            classItem.category = currentItem.category;
+            classItem.classImage = currentItem.classImage;
+            classItem.className = currentItem.className;
+            classItem.countryCode = currentItem.countryCode;
+            classItem.members = currentItem.members;
+            classItem.teacherName = currentItem.teacherName;
+            classItem.phone = currentItem.phone;
+            classItem.teamId = currentItem.getId();
+            classItem.groupId = GroupDashboardActivityNew.groupId;
+            classItem.save();
+        }
     }
 
     @Override
@@ -149,13 +202,13 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
 
             holder.txt_name.setText(item.getName());
 
-            if (item.ebookId.equals("false")) {
+           /* if (item.ebookId.equals("false")) {
                 holder.btnUpload.setVisibility(View.VISIBLE);
                 holder.img_tree.setVisibility(View.GONE);
-            } else {
+            } else {*/
                 holder.btnUpload.setVisibility(View.GONE);
                 holder.img_tree.setVisibility(View.VISIBLE);
-            }
+//            }
         }
 
         @Override
@@ -196,18 +249,18 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
-                img_tree.setOnClickListener(new View.OnClickListener() {
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         onTreeClick(list.get(getAdapterPosition()));
                     }
                 });
-                btnUpload.setOnClickListener(new View.OnClickListener() {
+               /* btnUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         add(list.get(getAdapterPosition()));
                     }
-                });
+                });*/
             }
         }
     }
@@ -226,13 +279,5 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
         intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
         intent.putExtra("team_id", classData.getId());
         startActivityForResult(intent, 201);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 201 && resultCode == Activity.RESULT_OK) {
-            getClassList();
-        }
     }
 }

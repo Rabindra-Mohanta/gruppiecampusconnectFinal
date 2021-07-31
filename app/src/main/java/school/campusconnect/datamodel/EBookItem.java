@@ -3,12 +3,16 @@ package school.campusconnect.datamodel;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
 import java.util.List;
 
 @Table(name = "EBookItem")
 public class EBookItem extends Model {
+    @Column(name = "ebookId")
+    public String ebookId;
+
     @Column(name = "subjectName")
     public String subjectName;
 
@@ -33,5 +37,8 @@ public class EBookItem extends Model {
 
     public static List<EBookItem> getAll(String teamId,String groupId) {
         return new Select().from(EBookItem.class).where("teamId = ?", teamId).where("groupId = ?", groupId).execute();
+    }
+    public static void deleteAll() {
+        new Delete().from(EBookItem.class).execute();
     }
 }

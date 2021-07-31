@@ -1,6 +1,9 @@
 package school.campusconnect.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +20,8 @@ public class EBookPdfForTeamActivity extends BaseActivity {
 
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
+    String team_id;
+    String role;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +33,8 @@ public class EBookPdfForTeamActivity extends BaseActivity {
 
         if(getIntent().getExtras()!=null){
             setTitle(getIntent().getStringExtra("title"));
+            role = getIntent().getStringExtra("role");
+            team_id = getIntent().getStringExtra("team_id");
         }
 
         EBookPdfTeamFragment classListFragment=new EBookPdfTeamFragment();
@@ -42,4 +49,22 @@ public class EBookPdfForTeamActivity extends BaseActivity {
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if("admin".equalsIgnoreCase(role))
+            getMenuInflater().inflate(R.menu.menu_add, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menuAdd) {
+            Intent intent = new Intent(this, AddEBookActivity2.class);
+            intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
+            intent.putExtra("team_id", team_id);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

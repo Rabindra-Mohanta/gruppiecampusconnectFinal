@@ -411,6 +411,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_add_class">Add Class</string>
     <string name="lbl_teacher_name">Class Teacher</string>
     <string name="lbl_students">Students</string>
+    <string name="lbl_class_register_student">Class/Student Register</string>
     <string name="lbl_register_student">Student Register</string>
     <string name="lbl_register_subject">Subject Register</string>
     <string name="lbl_student_id">Student Id</string>

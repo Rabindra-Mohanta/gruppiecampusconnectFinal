@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,17 +21,21 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddEBookActivity2;
 import school.campusconnect.activities.EBookReadMoreActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.ViewPDFActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.EBookClassItem;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.EBookItem;
 import school.campusconnect.network.LeafManager;
@@ -37,6 +43,7 @@ import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.views.SMBDialogUtils;
 
 public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "TeamDiscussFragment";
@@ -50,8 +57,8 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     public ProgressBar progressBar;
 
     private String team_id;
-    private String role="";
-    private ArrayList<EBooksTeamResponse.SubjectBook> eBookList=new ArrayList<>();
+    private String role = "";
+    private ArrayList<EBooksTeamResponse.SubjectBook> eBookList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,39 +77,55 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getDataLocally();
+    }
+
     private void init() {
         if (getArguments() != null) {
             team_id = getArguments().getString("team_id");
             role = getArguments().getString("role");
         }
     }
-    private void getDataLocally(){
+
+    private void getDataLocally() {
+        eBookList.clear();
         List<EBookItem> list = EBookItem.getAll(team_id, GroupDashboardActivityNew.groupId);
-        if(list.size()!=0){
-            for (int i=0;i<list.size();i++){
+        if (list.size() != 0) {
+            for (int i = 0; i < list.size(); i++) {
                 EBookItem currentItem = list.get(i);
-                EBooksTeamResponse.SubjectBook item=new EBooksTeamResponse.SubjectBook();
+                EBooksTeamResponse.SubjectBook item = new EBooksTeamResponse.SubjectBook();
                 item.subjectName = currentItem.subjectName;
+                item.ebookId = currentItem.ebookId;
                 item.description = currentItem.description;
-                item.fileName = new Gson().fromJson(currentItem.fileName,new TypeToken<ArrayList<String>>(){}.getType());
-                item.thumbnailImage = new Gson().fromJson(currentItem.thumbnailImage,new TypeToken<ArrayList<String>>(){}.getType());
+                item.fileName = new Gson().fromJson(currentItem.fileName, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                item.thumbnailImage = new Gson().fromJson(currentItem.thumbnailImage, new TypeToken<ArrayList<String>>() {
+                }.getType());
                 eBookList.add(item);
             }
             ebookPdfAdapter = new ClassesAdapter(eBookList);
             rvClass.setAdapter(ebookPdfAdapter);
 
-            if("admin".equalsIgnoreCase(role)){
+            if ("admin".equalsIgnoreCase(role)) {
                 getEBooksList();
-            }else {
-                if(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId+"_ebookpush") >0){
+            } else {
+                if (LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_ebookpush") > 0) {
                     getEBooksList();
                 }
             }
-        }else {
+        } else {
             getEBooksList();
         }
     }
-    private void getEBooksList(){
+
+    private void getEBooksList() {
+        if(!isConnectionAvailable()){
+            showNoNetworkMsg();
+        }
         LeafManager leafManager = new LeafManager();
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getEBooksForTeam(this, GroupDashboardActivityNew.groupId, team_id);
@@ -111,14 +134,14 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     @Override
     public void onResume() {
         super.onResume();
-        getDataLocally();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (ebookPdfAdapter != null) {
-            ebookPdfAdapter.notifyDataSetChanged();
+        if (LeafPreference.getInstance(getContext()).getBoolean("is_ebook_added")) {
+            LeafPreference.getInstance(getContext()).setBoolean("is_ebook_added", false);
+            getEBooksList();
         }
     }
 
@@ -130,26 +153,33 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             return;
         }
 
-        AppLog.e(TAG, "apiId-------: " + apiId);
-        progressBar.setVisibility(View.GONE);
-        EBooksTeamResponse eBooksTeamResponse = (EBooksTeamResponse) response;
-        eBookList.clear();
-        eBookList.addAll(eBooksTeamResponse.getData());
-        ebookPdfAdapter = new ClassesAdapter(eBookList);
-        rvClass.setAdapter(ebookPdfAdapter);
-        saveToDB(eBooksTeamResponse.getData());
+        if(apiId==LeafManager.API_EBOOK_DELETE){
+            getEBooksList();
+        }else {
+            AppLog.e(TAG, "apiId-------: " + apiId);
+            progressBar.setVisibility(View.GONE);
+            EBooksTeamResponse eBooksTeamResponse = (EBooksTeamResponse) response;
+            eBookList.clear();
+            eBookList.addAll(eBooksTeamResponse.getData());
+            ebookPdfAdapter = new ClassesAdapter(eBookList);
+            rvClass.setAdapter(ebookPdfAdapter);
+            saveToDB(eBooksTeamResponse.getData());
 
-        LeafPreference.getInstance(getContext()).remove(GroupDashboardActivityNew.groupId+"_ebookpush");
+            LeafPreference.getInstance(getContext()).remove(GroupDashboardActivityNew.groupId + "_ebookpush");
+        }
     }
 
     private void saveToDB(ArrayList<EBooksTeamResponse.SubjectBook> data) {
-        if(data==null)
+        if (data == null)
             return;
 
-        for (int i=0;i<data.size();i++){
+        EBookItem.deleteAll();
+
+        for (int i = 0; i < data.size(); i++) {
             EBooksTeamResponse.SubjectBook currentItem = data.get(i);
             EBookItem eBookItem = new EBookItem();
             eBookItem.subjectName = currentItem.subjectName;
+            eBookItem.ebookId = currentItem.ebookId;
             eBookItem.description = currentItem.description;
             eBookItem.fileName = new Gson().toJson(currentItem.fileName);
             eBookItem.thumbnailImage = new Gson().toJson(currentItem.thumbnailImage);
@@ -207,6 +237,11 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
                     }
                 }
             }
+            if ("admin".equalsIgnoreCase(role)) {
+                holder.iv_delete.setVisibility(View.VISIBLE);
+            } else {
+                holder.iv_delete.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -240,10 +275,34 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             ImageView imageThumb;
             @Bind(R.id.imgDownloadPdf)
             ImageView imgDownloadPdf;
+            @Bind(R.id.iv_delete)
+            ImageView iv_delete;
+            @Bind(R.id.txt_drop_delete)
+            TextView txt_drop_delete;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+
+                iv_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        txt_drop_delete.setVisibility(View.VISIBLE);
+                    }
+                });
+                txt_drop_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        txt_drop_delete.setVisibility(View.GONE);
+                        deletePost(list.get(getAdapterPosition()));
+                    }
+                });
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        txt_drop_delete.setVisibility(View.GONE);
+                    }
+                });
 
                 image.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -265,6 +324,20 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
                 });
             }
         }
+    }
+
+    private void deletePost(EBooksTeamResponse.SubjectBook subjectBook) {
+        if(!isConnectionAvailable()){
+            showNoNetworkMsg();
+        }
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this E-Books.?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressBar.setVisibility(View.VISIBLE);
+                LeafManager leafManager = new LeafManager();
+                leafManager.deleteEBookTeam(EBookPdfTeamFragment.this, GroupDashboardActivityNew.groupId, team_id,subjectBook.ebookId);
+            }
+        });
     }
 
     public class EbookPdfAdapter extends RecyclerView.Adapter<EbookPdfAdapter.ViewHolder> {
