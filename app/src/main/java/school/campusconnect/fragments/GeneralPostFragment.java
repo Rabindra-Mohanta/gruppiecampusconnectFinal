@@ -10,11 +10,15 @@ import androidx.databinding.DataBindingUtil;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -141,9 +145,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         menu.findItem(R.id.action_notification_list).setVisible(false);
         menu.findItem(R.id.action_notification1).setVisible(false);
         if (GroupDashboardActivityNew.isPost)
-           menu.findItem(R.id.menu_add_post).setVisible(true);
+            menu.findItem(R.id.menu_add_post).setVisible(true);
         else
-           menu.findItem(R.id.menu_add_post).setVisible(false);
+            menu.findItem(R.id.menu_add_post).setVisible(false);
 
         menu.findItem(R.id.menu_add_friend).setVisible(false);
     }
@@ -152,8 +156,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_post:
-                 if(getActivity()!=null)
-                {
+                if (getActivity() != null) {
                     Intent intent = new Intent(getActivity(), AddPostActivity.class);
                     intent.putExtra("id", mGroupId);
                     intent.putExtra("type", "group");
@@ -208,7 +211,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
 
                 if (firstVisibleItemPosition != 0) {
-                   // AppLog.i(TAG, "RecyclerView scrolled: scroll up!");
+                    // AppLog.i(TAG, "RecyclerView scrolled: scroll up!");
                     mBinding.imgTop.setVisibility(View.VISIBLE);
                 } else {
 //                    AppLog.i(TAG, " RecyclerView scrolled: scroll down!");
@@ -219,11 +222,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 AppLog.e(TAG, "firstVisibleItemPosition " + firstVisibleItemPosition);
                 AppLog.e(TAG, "lastVisibleItemPosition " + lastVisibleItemPosition);
 */
-                if (!mIsLoading && totalPages > currentPage)
-                {
+                if (!mIsLoading && totalPages > currentPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0
-                            ) {
+                    ) {
                         currentPage = currentPage + 1;
                         AppLog.e(TAG, "onScrollCalled " + currentPage);
                         getData(false);
@@ -259,8 +261,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
 
         //NOFIREBASEDATABASE
@@ -270,17 +271,16 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getGroupPostLocaly() {
-        List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId+"");
+        List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId + "");
         String lastId = null;
-        if (dataItemList.size() != 0)
-        {
+        if (dataItemList.size() != 0) {
             showLoadingBar(mBinding.progressBar);
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 PostItem postItem = new PostItem();
                 postItem.id = dataItemList.get(i).id;
 
-                if(i==0){
+                if (i == 0) {
                     lastId = dataItemList.get(i).id;
                 }
 
@@ -290,7 +290,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 postItem.createdAt = dataItemList.get(i).createdAt;
                 postItem.title = dataItemList.get(i).title;
                 postItem.fileType = dataItemList.get(i).fileType;
-                postItem.fileName = new Gson().fromJson(dataItemList.get(i).fileName,new TypeToken<ArrayList<String>>(){}.getType());
+                postItem.fileName = new Gson().fromJson(dataItemList.get(i).fileName, new TypeToken<ArrayList<String>>() {
+                }.getType());
                 postItem.updatedAt = dataItemList.get(i).updatedAt;
                 postItem.text = dataItemList.get(i).text;
                 postItem.imageWidth = dataItemList.get(i).imageWidth;
@@ -303,7 +304,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 postItem.isFavourited = dataItemList.get(i).isFavourited;
                 postItem.canEdit = dataItemList.get(i).canEdit;
                 postItem.phone = dataItemList.get(i).phone;
-                postItem.thumbnail=dataItemList.get(i).thumbnail;
+                postItem.thumbnail = dataItemList.get(i).thumbnail;
 
                 PostList.add(postItem);
             }
@@ -337,40 +338,22 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         }*/
     }
 
-    private void firebaseListen(String lastIdFromDB)
-    {
-        AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
-        //NOFIREBASEDATABASE
-        if(TextUtils.isEmpty(lastIdFromDB) ||  leafPreference.getInt(mGroupId+"_post") >0)
+    private void firebaseListen(String lastIdFromDB) {
+        AppLog.e(TAG, "firebaseListen called : " + lastIdFromDB);
+
+        if (TextUtils.isEmpty(lastIdFromDB) || leafPreference.getInt(mGroupId + "_post") > 0
+                || leafPreference.getBoolean(mGroupId + "_post_delete")){
+            leafPreference.setBoolean(mGroupId + "_post_delete",false);
             getData(false);
-      /*  }else
-        {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference();
-            query = myRef.child("group_post").child(mGroupId).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
-            query.addListenerForSingleValueEvent(firebaseNewPostListener);
-        }*/
+        }
+
+
     }
-
-    //NOFIREBASEDATABASE
-   /* ValueEventListener firebaseNewPostListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            AppLog.e(TAG, "data changed : " + snapshot);
-            if(snapshot.getValue() !=null)
-                getData(true);
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-
-        }
-    };*/
 
     private void init() {
         liked = false;
 
-        databaseHandler= new DatabaseHandler(getActivity());
+        databaseHandler = new DatabaseHandler(getActivity());
         count = databaseHandler.getCount();
 
         mBinding.setSize(1);
@@ -391,11 +374,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
-       AppLog.e(TAG, "onResume : " + LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED));
+        AppLog.e(TAG, "onResume : " + LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED));
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED)) {
             mAdapter.clear();
             currentPage = 1;
@@ -405,15 +387,14 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getData(boolean isInBackground) {
-        AppLog.e(TAG , "getData called");
-        if(!isInBackground)
-        {
+        AppLog.e(TAG, "getData called");
+        if (!isInBackground) {
             showLoadingBar(mBinding.progressBar);
             mIsLoading = true;
         }
 
-        manager.getGeneralPosts(this, mGroupId+"", currentPage);
-        leafPreference.remove(mGroupId+"_post");
+        manager.getGeneralPosts(this, mGroupId + "", currentPage);
+        leafPreference.remove(mGroupId + "_post");
     }
 
     @Override
@@ -422,62 +403,57 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         switch (apiId) {
             case LeafManager.API_ID_GENERAL_POST:
                 PostResponse res = (PostResponse) response;
-               AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.getResults()));
+                AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.getResults()));
 
                 if (currentPage == 1) {
-                    PostDataItem.deleteGeneralPosts(mGroupId+"");
+                    PostDataItem.deleteGeneralPosts(mGroupId + "");
                     PostList.clear();
 
                     PostList.addAll(res.getResults());
-                   AppLog.e(TAG, "current page 1");
+                    AppLog.e(TAG, "current page 1");
 
                 } else {
                     PostList.addAll(res.getResults());
-                   AppLog.e(TAG, "current page " + currentPage);
+                    AppLog.e(TAG, "current page " + currentPage);
                 }
                 mBinding.setSize(mAdapter.getItemCount());
                 mAdapter.notifyDataSetChanged();
 
                 totalPages = res.totalNumberOfPages;
                 mIsLoading = false;
-                
+
                 savePostData(res.getResults());
 
                 break;
 
             case LeafManager.API_ID_FAV:
-                if(response.status.equalsIgnoreCase("favourite"))
-                {
-                    PostList.get(position).isFavourited=true;
-                }
-                else
-                {
-                    PostList.get(position).isFavourited=false;
+                if (response.status.equalsIgnoreCase("favourite")) {
+                    PostList.get(position).isFavourited = true;
+                } else {
+                    PostList.get(position).isFavourited = false;
                 }
                 mAdapter.notifyItemChanged(position);
                 break;
 
             case LeafManager.API_ID_LIKE:
-                    if(response.status.equalsIgnoreCase("liked"))
-                    {
-                        PostList.get(position).isLiked=true;
-                        PostList.get(position).likes++;
-                    }
-                    else
-                    {
-                        PostList.get(position).isLiked=false;
-                        PostList.get(position).likes--;
-                    }
-                    mAdapter.notifyItemChanged(position);
-                    liked = false;
+                if (response.status.equalsIgnoreCase("liked")) {
+                    PostList.get(position).isLiked = true;
+                    PostList.get(position).likes++;
+                } else {
+                    PostList.get(position).isLiked = false;
+                    PostList.get(position).likes--;
+                }
+                mAdapter.notifyItemChanged(position);
+                liked = false;
                 break;
 
             case LeafManager.API_ID_DELETE_POST:
                 Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
                 PostList.clear();
-                currentPage=1;
+                currentPage = 1;
                 getData(false);
                 AmazoneRemove.remove(currentItem.fileName);
+                sendNotification(currentItem);
                 break;
 
             case LeafManager.API_REPORT_LIST:
@@ -492,8 +468,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 }
                 ReportAdapter.selected_position = -1;
                 mAdapter2 = new ReportAdapter(list);
-               AppLog.e("adas ", mAdapter2.getItemCount() + "");
-               AppLog.e("ReportResponse", "onSucces  ,, msg : " + ((ReportResponse) response).data.toString());
+                AppLog.e("adas ", mAdapter2.getItemCount() + "");
+                AppLog.e("ReportResponse", "onSucces  ,, msg : " + ((ReportResponse) response).data.toString());
                 dialogRecyclerView.setAdapter(mAdapter2);
                 break;
 
@@ -503,6 +479,22 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 break;
         }
 
+    }
+
+    private void sendNotification(PostItem currentItem) {
+
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + mGroupId;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "Group Post deleted";
+        notificationModel.data.Notification_type = "DELETE_POST";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = mGroupId;
+        notificationModel.data.teamId = "";
+        notificationModel.data.createdById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = currentItem.id;
+        notificationModel.data.postType = "group";
+        SendNotificationGlobal.send(notificationModel);
     }
 
     private void savePostData(List<PostItem> results) {
@@ -535,8 +527,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             postItem.canEdit = item.canEdit;
             postItem.phone = item.phone;
             postItem.type = "group";
-            postItem.group_id = mGroupId+"";
-            postItem.thumbnail=item.thumbnail;
+            postItem.group_id = mGroupId + "";
+            postItem.thumbnail = item.thumbnail;
 
             postItem.save();
         }
@@ -552,7 +544,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             currentPage = 1;
         }
 
-       AppLog.e("GeneralPostFragment", "onFailure  ,, msg : " + error);
+        AppLog.e("GeneralPostFragment", "onFailure  ,, msg : " + error);
         if (error.status.equals("401")) {
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
@@ -615,7 +607,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         } else {
             fav = 1;
         }
-        manager.setFav(this, mGroupId+"", item.id);
+        manager.setFav(this, mGroupId + "", item.id);
 
         cleverTapFav(item, fav);
     }
@@ -624,7 +616,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         if (isConnectionAvailable()) {
             try {
                 CleverTapAPI cleverTap = CleverTapAPI.getInstance(getActivity());
-               AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
+                AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
                 if (fav == 1) {
                     HashMap<String, Object> favAction = new HashMap<String, Object>();
                     favAction.put("id", mGroupId);
@@ -640,13 +632,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     favAction.put("post_title", item.title);
                     cleverTap.event.push("Remove Favorite", favAction);
                 }
-               AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
+                AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
 
             } catch (CleverTapMetaDataNotFoundException e) {
-               AppLog.e("GeneralPost", "CleverTapMetaDataNotFoundException=>" + e.toString());
+                AppLog.e("GeneralPost", "CleverTapMetaDataNotFoundException=>" + e.toString());
                 // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
             } catch (CleverTapPermissionsNotSatisfied e) {
-               AppLog.e("GeneralPost", "CleverTapPermissionsNotSatisfied=>" + e.toString());
+                AppLog.e("GeneralPost", "CleverTapPermissionsNotSatisfied=>" + e.toString());
                 // thrown if you haven’t requested the required permissions in your AndroidManifest.xml
             } catch (Exception ignored) {
             }
@@ -660,7 +652,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             liked = true;
             this.position = position;
             showLoadingBar(mBinding.progressBar);
-            manager.setLikes(this, mGroupId+"", item.id);
+            manager.setLikes(this, mGroupId + "", item.id);
 
 
             int fav = 0;
@@ -677,7 +669,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         if (isConnectionAvailable()) {
             try {
                 CleverTapAPI cleverTap = CleverTapAPI.getInstance(getActivity());
-               AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
+                AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
 
                 HashMap<String, Object> likeAction = new HashMap<String, Object>();
                 likeAction.put("id", mGroupId);
@@ -689,13 +681,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     likeAction.put("isLiked", false);
                 }
                 cleverTap.event.push("Liked", likeAction);
-               AppLog.e("GeneralPost", "Success");
+                AppLog.e("GeneralPost", "Success");
 
             } catch (CleverTapMetaDataNotFoundException e) {
-               AppLog.e("GeneralPost", "CleverTapMetaDataNotFoundException=>" + e.toString());
+                AppLog.e("GeneralPost", "CleverTapMetaDataNotFoundException=>" + e.toString());
                 // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
             } catch (CleverTapPermissionsNotSatisfied e) {
-               AppLog.e("GeneralPost", "CleverTapPermissionsNotSatisfied=>" + e.toString());
+                AppLog.e("GeneralPost", "CleverTapPermissionsNotSatisfied=>" + e.toString());
                 // thrown if you haven’t requested the required permissions in your AndroidManifest.xml
             }
 
@@ -794,10 +786,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         GroupDashboardActivityNew.share_image = item.image;
         GroupDashboardActivityNew.imageHeight = item.imageHeight;
         GroupDashboardActivityNew.imageWidth = item.imageWidth;
-        if(TextUtils.isEmpty(item.fileType)){
+        if (TextUtils.isEmpty(item.fileType)) {
             GroupDashboardActivityNew.share_image_type = 4;
-        }
-        else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+        } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
             GroupDashboardActivityNew.share_image_type = 1;
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             GroupDashboardActivityNew.share_image_type = 2;
@@ -815,12 +806,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onNameClick(PostItem item) {
-       if (item.createdById.equals(LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID))) {
-           AppLog.e("onNameClick", "else if called");
+        if (item.createdById.equals(LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID))) {
+            AppLog.e("onNameClick", "else if called");
             Intent intent = new Intent(getActivity(), ProfileActivity2.class);
             startActivity(intent);
         } else {
-           AppLog.e("onNameClick", "else called");
+            AppLog.e("onNameClick", "else called");
         }
     }
 
@@ -839,13 +830,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onMoreOptionClick(PostItem item) {
-        currentItem=item;
+        currentItem = item;
         mBinding.rlPush.setVisibility(View.VISIBLE);
         mBinding.llReport.setVisibility(View.VISIBLE);
         mBinding.llRemovePost.setVisibility(View.VISIBLE);
         mBinding.llAskDoubt.setVisibility(View.VISIBLE);
-        if(!item.canEdit)
-        {
+        if (!item.canEdit) {
             mBinding.llRemovePost.setVisibility(View.GONE);
         }
 
@@ -857,9 +847,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onDeleteVideoClick(PostItem item, int adapterPosition) {
-        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
-        if(item.fileName!=null && item.fileName.size()>0){
-            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+        AppLog.e(TAG, "onDeleteVideoClick : " + item.fileName.get(0));
+        if (item.fileName != null && item.fileName.size() > 0) {
+            AmazoneDownload.removeVideo(getActivity(), item.fileName.get(0));
             mAdapter.notifyItemChanged(adapterPosition);
         }
     }
@@ -878,11 +868,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-       AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
+        AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
             showLoadingBar(mBinding.progressBar);
             LeafManager manager = new LeafManager();
-            manager.deletePost(this, mGroupId+"", currentItem.id, "group");
+            manager.deletePost(this, mGroupId + "", currentItem.id, "group");
             new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             showNoNetworkMsg();
@@ -915,7 +905,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 try {
                     sendReport(list.get(ReportAdapter.selected_position).type);
                 } catch (ArrayIndexOutOfBoundsException e) {
-                   AppLog.e("Report", "error is " + e.toString());
+                    AppLog.e("Report", "error is " + e.toString());
                 }
                 dialog.dismiss();
             }
@@ -937,13 +927,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
         showLoadingBar(mBinding.progressBar);
-        mManager.reportPost(this, mGroupId+"",  currentItem.id, report_id);
+        mManager.reportPost(this, mGroupId + "", currentItem.id, report_id);
     }
 
     @Override
     public void onClick(View v) {
     }
-
 
 
     private void showContextMenu(View view, boolean isModifyMenu) {
@@ -985,7 +974,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 urlConnection.setDoOutput(true);
                 urlConnection.setDoInput(true);
                 urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1+BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
                 urlConnection.setRequestProperty("Content-Type", "application/json");
 
                 DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
@@ -1077,7 +1066,6 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             }
         }
     }
-
 
 
 }

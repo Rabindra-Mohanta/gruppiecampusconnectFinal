@@ -432,8 +432,25 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 if(intent.getExtras().containsKey("teamId"))
                 {
                     int position = getPositionOf(intent.getExtras().getString("teamId"));
-                    if(position >= 0 && !listItemData.canPost)
-                        onTreeClick(listItemData);
+                    if(position >= 0 && !listItemData.canPost){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(getActivity()==null){
+                                    return;
+                                }
+
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        onTreeClick(listItemData);
+                                    }
+                                });
+                            }
+                        },7000);
+
+                    }
+
                 }
             }
 

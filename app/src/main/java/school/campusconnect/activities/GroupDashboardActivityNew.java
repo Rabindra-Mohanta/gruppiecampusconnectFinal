@@ -1027,7 +1027,10 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("role", group.role);
             startActivity(intent);
         } else if (group.type.equals("Vendor Connect")) {
-            startActivity(new Intent(this, VendorActivity.class));
+            Intent intent = new Intent(this, VendorActivity.class);
+            intent.putExtra("group_id", groupId);
+            intent.putExtra("role", group.role);
+            startActivity(intent);
         } else if (group.type.equals("E-Books")) {
             if (group.count == 0) {
                 Intent intent = new Intent(this, EBookClassActivity.class);
@@ -1050,7 +1053,11 @@ public class GroupDashboardActivityNew extends BaseActivity
                 startActivity(intent);
             }
         } else if (group.type.equals("Code Of Conduct")) {
-            startActivity(new Intent(this, CodeConductActivity.class));
+            Intent intent = new Intent(this, CodeConductActivity.class);
+            intent.putExtra("group_id", groupId);
+            intent.putExtra("role", group.role);
+            startActivity(intent);
+
         } else if (group.type.equals("Attendance")) {
             if ("teacher".equalsIgnoreCase(group.role) && group.count == 1) {
                 if ("preschool".equalsIgnoreCase(group.details.category)) {

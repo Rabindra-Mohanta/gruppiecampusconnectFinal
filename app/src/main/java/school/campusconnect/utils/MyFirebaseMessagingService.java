@@ -32,12 +32,17 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.activeandroid.ActiveAndroid;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.util.Map;
 
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.firebase.SendNotificationModel;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -51,118 +56,108 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // [START_EXCLUDE]
-        // There are two types of messages data messages and notification messages. Data messages are handled
-        // here in onMessageReceived whether the app is in the foreground or background. Data messages are the type
-        // traditionally used with GCM. Notification messages are only received here in onMessageReceived when the app
-        // is in the foreground. When the app is in the background an automatically generated notification is displayed.
-        // When the user taps on the notification they are returned to the app. Messages containing both notification
-        // and data payloads are treated as notification messages. The Firebase console always sends notification
-        // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
-        // [END_EXCLUDE]
 
         AppLog.e(TAG, "From: " + "onMessageReceived");
         AppLog.e(TAG, "From: " + remoteMessage.getFrom());
 
-        if (remoteMessage.getData().size() > 0) {
-            AppLog.e(TAG, "Message data payload: " + remoteMessage.getData());
+        if (LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.TOKEN).isEmpty()) {
+            return;
+        }
 
-            Map<String, String> data = remoteMessage.getData();
+        if (remoteMessage.getData().size() > 0) {
 
             ActiveAndroid.initialize(this);
 
-            AppLog.e(TAG, "Message Notification groupId: " + data.get("groupId"));
-            AppLog.e(TAG, "Message Notification createdById: " + data.get("createdById"));
-            AppLog.e(TAG, "Message Notification postId: " + data.get("postId"));
-            AppLog.e(TAG, "Message Notification dateTime: " + data.get("teamId"));
+            AppLog.e(TAG, "Message data payload: " + remoteMessage.getData());
+            try {
 
-            AppLog.e(TAG, "Message Notification Title: " + data.get("title"));
-            AppLog.e(TAG, "Message Notification Body: " + data.get("body"));
-            AppLog.e(TAG, "Message Notification postType: " + data.get("postType"));
-            AppLog.e(TAG, "Message Notification Notification_type: " + data.get("Notification_type"));
-
-           /* AppLog.e(TAG, "Message Notification icon: " + data.get("icon"));
-            AppLog.e(TAG, "Message Notification type: " + data.get("type"));
-            AppLog.e(TAG, "Message Notification dateTime: " + data.get("dateTime"));*/
-
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            SendNotificationModel.SendNotiData data = new Gson().fromJson(new JSONObject(remoteMessage.getData()).toString(), SendNotificationModel.SendNotiData.class);
+            AppLog.e(TAG, "Data Notification: " + data);
 
             String loginId = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID);
-            AppLog.e(TAG, "Login Id: " + loginId);
-            String createdId = data.get("createdById");
 
+            if (!loginId.equals(data.createdById)) {
 
-            if (!loginId.equals(createdId)) {
-                AppLog.e(TAG, "if...");
-                if (!LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.TOKEN).isEmpty()) {
-                    AppLog.e(TAG, "if...if...");
+                LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
 
-                    if ("videoEnd".equals(data.get("Notification_type")))
-                    {
+                switch (data.Notification_type) {
+                    case "videoEnd": {
                         Intent intent = new Intent("MEETING_END");
                         sendBroadcast(intent);
                     }
-                    else if ("videoStart".equals(data.get("Notification_type")))
-                    {
-                        AppLog.e(TAG, "if...if...if...");
+                    break;
+
+                    case "videoStart": {
                         Intent intent = new Intent("MEETING_START");
-                        intent.putExtra("teamId" ,data.get("teamId"));
-                        intent.putExtra("createdByName" ,data.get("createdByName"));
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("createdByName", data.createdByName);
                         intent.setAction("MEETING_START");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
-                    else if ("videoResume".equals(data.get("Notification_type")))
-                    {
-                        AppLog.e(TAG, "if...if...if...");
+                    break;
+
+                    case "videoResume": {
                         Intent intent = new Intent("MEETING_RESUME");
-                        intent.putExtra("teamId" ,data.get("teamId"));
+                        intent.putExtra("teamId", data.teamId);
                         intent.setAction("MEETING_RESUME");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
-                    else if("post".equalsIgnoreCase(data.get("Notification_type")))
-                    {
-                        if("team".equalsIgnoreCase(data.get("postType")))
-                        {
-                            LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
-                            leafPreference.setInt(data.get("teamId")+"_post" , leafPreference.getInt(data.get("teamId")+"_post" )+1);
-                        }
-                        else if("group".equalsIgnoreCase(data.get("postType")))
-                        {
-                            LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
-                            leafPreference.setInt(data.get("groupId")+"_post" , leafPreference.getInt(data.get("groupId")+"_post" )+1);
+                    break;
+
+                    case "post": {
+                        if ("team".equalsIgnoreCase(data.postType)) {
+                            leafPreference.setInt(data.teamId + "_post", leafPreference.getInt(data.teamId + "_post") + 1);
+                        } else if ("group".equalsIgnoreCase(data.postType)) {
+                            leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
                         }
                     }
-                    else if("VendorAdd".equalsIgnoreCase(data.get("Notification_type")))
-                    {
-                        AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving started.");
-                            LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
-                            leafPreference.setInt(data.get("groupId")+"_vendorpush" , leafPreference.getInt(data.get("groupId")+"_vendorpush" )+1);
-                        AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving completed. key : "+(data.get("groupId")+"_vendorpush"));
+                    break;
+                    case "VendorAdd":{
+                        AppLog.e(TAG, "vendorAdd type notifcation .,, preference saving started.");
+                        leafPreference.setInt(data.groupId + "_vendorpush", leafPreference.getInt(data.groupId + "_vendorpush") + 1);
+                    }
+                    break;
 
+                    case "RuleAdd": {
+                        leafPreference.setInt(data.groupId + "_cocpush", leafPreference.getInt(data.groupId + "_cocpush") + 1);
                     }
-                    else if("VendorDelete".equalsIgnoreCase(data.get("Notification_type")))
-                    {
-                        AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving started.");
-                        LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
-                        leafPreference.setInt(data.get("groupId")+"_vendorpush" , leafPreference.getInt(data.get("groupId")+"_vendorpush" )+1);
-                        AppLog.e(TAG , "vendorAdd type notifcation .,, preference saving completed. key : "+(data.get("groupId")+"_vendorpush"));
+                    break;
 
-                        return;
+                    case "EBookAdd": {
+                        leafPreference.setInt(data.teamId + "_ebookpush", leafPreference.getInt(data.teamId + "_ebookpush") + 1);
                     }
-                    else if("RuleAdd".equalsIgnoreCase(data.get("Notification_type")))
-                    {
-                        LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
-                        leafPreference.setInt(data.get("groupId")+"_cocpush" , leafPreference.getInt(data.get("groupId")+"_cocpush" )+1);
-                    }
-                    else if("EBookAdd".equalsIgnoreCase(data.get("Notification_type")))
-                    {
-                            LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
-                            leafPreference.setInt(data.get("groupId")+"_ebookpush" , leafPreference.getInt(data.get("groupId")+"_ebookpush" )+1);
-                    }
+                    break;
 
-                    sendNotification(data.get("body"), data.get("title"));
+                    case "DELETE_EBOOK": {
+                        leafPreference.setBoolean(data.teamId + "_ebook_delete", true);
+                    }
+                    break;
+                    case "DELETE_VENDOR": {
+                        leafPreference.setBoolean(data.groupId + "_vendor_delete", true);
+                    }
+                    break;
+                    case "DELETE_RULE": {
+                        leafPreference.setBoolean(data.groupId + "_rule_delete", true);
+                    }
+                    break;
+
+                    case "DELETE_POST": {
+                        if ("team".equalsIgnoreCase(data.postType)) {
+                            leafPreference.setBoolean(data.teamId + "_post_delete", true);
+                        } else if ("group".equalsIgnoreCase(data.postType)) {
+                            leafPreference.setBoolean(data.groupId + "_post_delete", true);
+                        }
+                    }
+                    break;
+
 
                 }
-//                BaseActivity.updateMyActivity(this);
+                if (!data.iSNotificationSilent) {
+                    sendNotification(data.body, data.title);
+                }
             }
         }
 

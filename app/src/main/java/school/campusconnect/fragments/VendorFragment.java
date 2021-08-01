@@ -49,6 +49,8 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.VendorPostResponse;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -85,6 +87,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     private int currentPage=1;
     private LeafManager manager;
     private String mGroupId;
+    private String role;
     private VendorPostResponse.VendorPostData currentItem;
 
     LeafPreference leafPreference;
@@ -95,6 +98,11 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
         view=inflater.inflate(R.layout.fragment_vendor,container,false);
         ButterKnife.bind(this,view);
 
+
+        if(getArguments()!=null){
+            role = getArguments().getString("role");
+        }
+
         manager=new LeafManager();
 
         leafPreference = LeafPreference.getInstance(VendorFragment.this.getActivity());
@@ -103,7 +111,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
         layoutManager=new LinearLayoutManager(getActivity());
         rvGallery.setLayoutManager(layoutManager);
-        vendorAdapter=new VendorAdapter(listData,this);
+        vendorAdapter=new VendorAdapter(listData,this,role);
         rvGallery.setAdapter(vendorAdapter);
 
         scrollListener();
@@ -215,22 +223,19 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
             totalPages = response.totalNumberOfPages;
 
-
-            //NOFIREBASEDATABASE
-            if(leafPreference.getInt(mGroupId+"_vendorpush") >0)
-            {
-                if(isConnectionAvailable())
-                {
-                    showLoadingBar(progressBar);
-                    mIsLoading = true;
-                    manager.getVendorPost(this, mGroupId+"", currentPage);
-                }
-                else
-                {
-                    showNoNetworkMsg();
-                }
+            if (!isConnectionAvailable()) {
+                showNoNetworkMsg();
             }
-            //initFirebase();
+            if ("admin".equalsIgnoreCase(role) || leafPreference.getInt(mGroupId + "_vendorpush") > 0
+                    || LeafPreference.getInstance(getContext()).getBoolean(mGroupId + "_vendor_delete")) {
+
+                LeafPreference.getInstance(getContext()).setBoolean(mGroupId + "_vendor_delete", false);
+
+                showLoadingBar(progressBar);
+                mIsLoading = true;
+                manager.getVendorPost(this, mGroupId+"", currentPage);
+
+            }
         }
         else
         {
@@ -275,7 +280,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (GroupDashboardActivityNew.isPost)
+        if ("admin".equalsIgnoreCase(role))
             menu.findItem(R.id.menu_add_post).setVisible(true);
         else
             menu.findItem(R.id.menu_add_post).setVisible(false);
@@ -351,116 +356,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
                 currentPage=1;
                 getDataFromAPI();
                 AmazoneRemove.remove(currentItem.fileName);
-                new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                sendNotification();
                 break;
-        }
-    }
-
-    private class SendNotification extends AsyncTask<String, String, String> {
-        private String server_response;
-
-        public SendNotification()
-        {
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            URL url;
-            HttpURLConnection urlConnection = null;
-
-            try {
-                url = new URL("https://fcm.googleapis.com/fcm/send");
-                urlConnection = (HttpURLConnection) url.openConnection();
-
-                urlConnection.setDoOutput(true);
-                urlConnection.setDoInput(true);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-
-                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
-
-                try {
-                    JSONObject object = new JSONObject();
-
-                    String topic;
-                    String title = getResources().getString(R.string.app_name);
-                    String name = LeafPreference.getInstance(VendorFragment.this.getActivity()).getString(LeafPreference.NAME);
-                    String message = name + " has deleted a vendor." ;
-                    topic = GroupDashboardActivityNew.groupId ;
-                    object.put("to", "/topics/" + topic);
-
-                    JSONObject notificationObj = new JSONObject();
-                    notificationObj.put("title", title);
-                    notificationObj.put("body", message);
-                    // object.put("notification", notificationObj);
-
-                    JSONObject dataObj = new JSONObject();
-                    dataObj.put("groupId", GroupDashboardActivityNew.groupId);
-                    dataObj.put("createdById", LeafPreference.getInstance(VendorFragment.this.getActivity()).getString(LeafPreference.LOGIN_ID));
-                    dataObj.put("teamId", mGroupId);
-                    dataObj.put("title", title);
-                    dataObj.put("Notification_type",  "VendorDelete");
-                    dataObj.put("body", message);
-                    object.put("data", dataObj);
-                    wr.writeBytes(object.toString());
-                    Log.e(TAG, " JSON input : " + object.toString());
-                    wr.flush();
-                    wr.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                urlConnection.connect();
-
-                int responseCode = urlConnection.getResponseCode();
-                AppLog.e(TAG, "responseCode :" + responseCode);
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    server_response = readStream(urlConnection.getInputStream());
-                }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return server_response;
-        }
-
-        private String readStream(InputStream in) {
-            BufferedReader reader = null;
-            StringBuffer response = new StringBuffer();
-            try {
-                reader = new BufferedReader(new InputStreamReader(in));
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return response.toString();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            AppLog.e(TAG, "server_response :" + server_response);
-
-            if (!TextUtils.isEmpty(server_response)) {
-                AppLog.e(TAG, "Notification Sent");
-            } else {
-                AppLog.e(TAG, "Notification Send Fail");
-            }
         }
     }
 
@@ -543,5 +440,19 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     public void onDeleteClick(VendorPostResponse.VendorPostData item) {
         currentItem = item;
         SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+    }
+    private void sendNotification() {
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "Vendor deleted";
+        notificationModel.data.Notification_type = "DELETE_VENDOR";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+        notificationModel.data.teamId = "";
+        notificationModel.data.createdById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = "";
+        notificationModel.data.postType = "";
+        SendNotificationGlobal.send(notificationModel);
     }
 }

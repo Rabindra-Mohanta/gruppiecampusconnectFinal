@@ -31,11 +31,13 @@ import school.campusconnect.utils.MixOperations;
 
 public class CodeConductAdapter extends RecyclerView.Adapter<CodeConductAdapter.ViewHolder> {
     private final ArrayList<CodeConductResponse.CodeConductData> listData;
+    private final String role;
     private Context mContext;
     CodeConductListener listener;
-    public CodeConductAdapter(ArrayList<CodeConductResponse.CodeConductData> listData, CodeConductListener listener) {
+    public CodeConductAdapter(ArrayList<CodeConductResponse.CodeConductData> listData, CodeConductListener listener, String role) {
         this.listData=listData;
         this.listener=listener;
+        this.role=role;
     }
 
     @Override
@@ -128,7 +130,7 @@ public class CodeConductAdapter extends RecyclerView.Adapter<CodeConductAdapter.
             holder.recyclerView.setVisibility(View.GONE);
         }
 
-        if (item.canEdit) {
+        if ("admin".equalsIgnoreCase(role)) {
             holder.txt_drop_delete.setVisibility(View.VISIBLE);
             holder.iv_delete.setVisibility(View.VISIBLE);
         } else {

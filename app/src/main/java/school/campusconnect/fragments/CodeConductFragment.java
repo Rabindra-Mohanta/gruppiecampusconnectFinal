@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +38,8 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.CodeConductResponse;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.VendorPostResponse;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -44,7 +47,7 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class CodeConductFragment extends BaseFragment implements LeafManager.OnCommunicationListener,DialogInterface.OnClickListener, CodeConductAdapter.CodeConductListener {
+public class CodeConductFragment extends BaseFragment implements LeafManager.OnCommunicationListener, DialogInterface.OnClickListener, CodeConductAdapter.CodeConductListener {
 
     private static final String TAG = "GalleryFragment";
     @Bind(R.id.rvGallery)
@@ -67,12 +70,13 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     private View view;
     private LinearLayoutManager layoutManager;
 
-    ArrayList<CodeConductResponse.CodeConductData> listData=new ArrayList<>();
+    ArrayList<CodeConductResponse.CodeConductData> listData = new ArrayList<>();
     CodeConductAdapter codeConductAdapter;
-    private int totalPages=0;
-    private int currentPage=1;
+    private int totalPages = 0;
+    private int currentPage = 1;
     private LeafManager manager;
     private String mGroupId;
+    private String role;
     private CodeConductResponse.CodeConductData currentItem;
 
     LeafPreference leafPreference;
@@ -81,18 +85,23 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_code_conduct,container,false);
-        ButterKnife.bind(this,view);
+        view = inflater.inflate(R.layout.fragment_code_conduct, container, false);
+        ButterKnife.bind(this, view);
 
-        manager=new LeafManager();
+        manager = new LeafManager();
+
+
+        if (getArguments() != null) {
+            role = getArguments().getString("role");
+        }
 
         leafPreference = LeafPreference.getInstance(CodeConductFragment.this.getActivity());
 
-        mGroupId=GroupDashboardActivityNew.groupId;
+        mGroupId = GroupDashboardActivityNew.groupId;
 
-        layoutManager=new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getActivity());
         rvGallery.setLayoutManager(layoutManager);
-        codeConductAdapter=new CodeConductAdapter(listData,this);
+        codeConductAdapter = new CodeConductAdapter(listData, this, role);
         rvGallery.setAdapter(codeConductAdapter);
 
         scrollListener();
@@ -146,7 +155,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                 if (!mIsLoading && totalPages > currentPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0
-                            ) {
+                    ) {
                         currentPage = currentPage + 1;
                         AppLog.e(TAG, "onScrollCalled " + currentPage);
                         getData();
@@ -173,20 +182,18 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     }
 
 
-    private void getData()
-    {
+    private void getData() {
 
-        String re = LeafPreference.getInstance(getActivity()).getString( GroupDashboardActivityNew.groupId+"_coc");
+        String re = LeafPreference.getInstance(getActivity()).getString(GroupDashboardActivityNew.groupId + "_coc");
 
-        if (re != null && !TextUtils.isEmpty(re))
-        {
+        if (re != null && !TextUtils.isEmpty(re)) {
             AppLog.e(TAG, "Api Calling::: if ");
-            CodeConductResponse res = new Gson().fromJson(re, new TypeToken<CodeConductResponse>()
-            {}.getType());
+            CodeConductResponse res = new Gson().fromJson(re, new TypeToken<CodeConductResponse>() {
+            }.getType());
             AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
             if (currentPage == 1) {
-                PostDataItem.deleteGeneralPosts(mGroupId+"");
+                PostDataItem.deleteGeneralPosts(mGroupId + "");
                 listData.clear();
 
                 listData.addAll(res.data);
@@ -197,7 +204,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                 AppLog.e(TAG, "current page " + currentPage);
             }
 
-            if(listData.size()==0)
+            if (listData.size() == 0)
                 txtEmpty.setVisibility(View.VISIBLE);
             else
                 txtEmpty.setVisibility(View.GONE);
@@ -208,30 +215,27 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             mIsLoading = false;
 
             //NOFIREBASEDATABASE
-            if(leafPreference.getInt(mGroupId+"_cocpush") >0)
-            {
-                if(isConnectionAvailable())
-                {
-                    showLoadingBar(progressBar);
-                    mIsLoading = true;
-                    manager.getCodeOfConductPost(this, mGroupId+"", currentPage);
-                }
-                else {
-                    showNoNetworkMsg();
-                }
+
+            if (!isConnectionAvailable()) {
+                showNoNetworkMsg();
+            }
+            if ("admin".equalsIgnoreCase(role) || leafPreference.getInt(mGroupId + "_cocpush") > 0
+                    || LeafPreference.getInstance(getContext()).getBoolean(mGroupId + "_rule_delete")) {
+
+                LeafPreference.getInstance(getContext()).setBoolean(mGroupId + "_rule_delete", false);
+
+                showLoadingBar(progressBar);
+                mIsLoading = true;
+                manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
 
             }
             //initFirebase();
-        }
-        else
-        {
-            if(isConnectionAvailable())
-            {
+        } else {
+            if (isConnectionAvailable()) {
                 showLoadingBar(progressBar);
                 mIsLoading = true;
-                manager.getCodeOfConductPost(this, mGroupId+"", currentPage);
-            }
-            else {
+                manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
+            } else {
                 showNoNetworkMsg();
             }
 
@@ -240,17 +244,13 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
     }
 
-    private void getDataFromAPI()
-    {
-        if(isConnectionAvailable())
-        {
-        showLoadingBar(progressBar);
-        mIsLoading = true;
-        manager.getCodeOfConductPost(this, mGroupId+"", currentPage);
-        }
-        else
-        {
-        showNoNetworkMsg();
+    private void getDataFromAPI() {
+        if (isConnectionAvailable()) {
+            showLoadingBar(progressBar);
+            mIsLoading = true;
+            manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
+        } else {
+            showNoNetworkMsg();
         }
 
     }
@@ -264,7 +264,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (GroupDashboardActivityNew.isPost)
+        if ("admin".equalsIgnoreCase(role))
             menu.findItem(R.id.menu_add_post).setVisible(true);
         else
             menu.findItem(R.id.menu_add_post).setVisible(false);
@@ -272,17 +272,15 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
-        if(getActivity()==null)
-        return;
+        if (getActivity() == null)
+            return;
 
-        if(LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.IS_CODE_CONDUCT_UPDATED))
-        {
+        if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.IS_CODE_CONDUCT_UPDATED)) {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.IS_CODE_CONDUCT_UPDATED, false);
-            currentPage=1;
+            currentPage = 1;
             getDataFromAPI();
         }
     }
@@ -291,8 +289,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_post:
-                if(getActivity()!=null)
-                {
+                if (getActivity() != null) {
                     Intent intent = new Intent(getActivity(), AddCodeConductActivity.class);
                     startActivity(intent);
                 }
@@ -310,10 +307,10 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                 CodeConductResponse res = (CodeConductResponse) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
-                LeafPreference.getInstance(getActivity()).setString(GroupDashboardActivityNew.groupId+"_coc", new Gson().toJson(res));
+                LeafPreference.getInstance(getActivity()).setString(GroupDashboardActivityNew.groupId + "_coc", new Gson().toJson(res));
 
                 if (currentPage == 1) {
-                    PostDataItem.deleteGeneralPosts(mGroupId+"");
+                    PostDataItem.deleteGeneralPosts(mGroupId + "");
                     listData.clear();
 
                     listData.addAll(res.data);
@@ -324,12 +321,12 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                     AppLog.e(TAG, "current page " + currentPage);
                 }
 
-                if(listData.size()==0)
+                if (listData.size() == 0)
                     txtEmpty.setVisibility(View.VISIBLE);
                 else
                     txtEmpty.setVisibility(View.GONE);
 
-                leafPreference.remove(GroupDashboardActivityNew.groupId+"_cocpush");
+                leafPreference.remove(GroupDashboardActivityNew.groupId + "_cocpush");
 
                 codeConductAdapter.notifyDataSetChanged();
 
@@ -338,9 +335,10 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                 break;
             case LeafManager.API_CODE_CONDUCT_DELETE:
                 Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
-                currentPage=1;
+                currentPage = 1;
                 getData();
                 AmazoneRemove.remove(currentItem.fileName);
+                sendNotification();
                 break;
         }
     }
@@ -386,7 +384,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
         if (isConnectionAvailable()) {
             showLoadingBar(progressBar);
             LeafManager manager = new LeafManager();
-            manager.deleteCodeConduct(this, mGroupId+"",currentItem.cocId);
+            manager.deleteCodeConduct(this, mGroupId + "", currentItem.cocId);
 
         } else {
             showNoNetworkMsg();
@@ -402,7 +400,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             browserIntent.putExtra("url", item.video);
             startActivity(browserIntent);
 
-        } else*/ if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+        } else*/
+        if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
             i.putExtra("name", item.title);
@@ -419,5 +418,20 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     public void onDeleteClick(CodeConductResponse.CodeConductData item) {
         currentItem = item;
         SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+    }
+
+    private void sendNotification() {
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "Rule deleted";
+        notificationModel.data.Notification_type = "DELETE_RULE";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+        notificationModel.data.teamId = "";
+        notificationModel.data.createdById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = "";
+        notificationModel.data.postType = "";
+        SendNotificationGlobal.send(notificationModel);
     }
 }

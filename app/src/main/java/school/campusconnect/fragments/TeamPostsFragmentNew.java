@@ -27,10 +27,13 @@ import school.campusconnect.activities.LikesListActivity;
 import school.campusconnect.activities.TeamSettingsActivity;
 import school.campusconnect.activities.TeamUsersActivity;
 import school.campusconnect.adapters.ReportAdapter;
+import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -404,30 +407,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     {
         AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
         //NOFIREBASEDATABASE
-        if(TextUtils.isEmpty(lastIdFromDB) ||  leafPreference.getInt(team_id+"_post") >0)
+        if(TextUtils.isEmpty(lastIdFromDB) ||  leafPreference.getInt(team_id+"_post") >0
+                || leafPreference.getBoolean(team_id + "_post_delete")) {
+            leafPreference.setBoolean(team_id + "_post_delete", false);
             callApi(false);
-      /*  }else {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference();
-            query = myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
-            query.addListenerForSingleValueEvent(firebaseNewPostListener);
-        }*/
+        }
+
     }
-
-    //NOFIREBASEDATABASE
-  /*  ValueEventListener firebaseNewPostListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            AppLog.e(TAG, "data changed : " + snapshot);
-            if(snapshot.getValue() !=null)
-                callApi(true);
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-
-        }
-    };*/
 
     private void startMeeting() {
         /*ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
@@ -739,6 +725,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 currentPage2 = 1;
                 getData2(team_id, false);
                 AmazoneRemove.remove(currentItem.fileName);
+                sendNotification(currentItem);
                 break;
 
             case LeafManager.API_REPORT_LIST:
@@ -810,6 +797,22 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(teamData.members + " users");
         }
 
+    }
+
+    private void sendNotification(TeamPostGetData currentItem) {
+
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + mGroupId+"_"+team_id;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "Team Post deleted";
+        notificationModel.data.Notification_type = "DELETE_POST";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = mGroupId;
+        notificationModel.data.teamId = team_id;
+        notificationModel.data.createdById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = currentItem.id;
+        notificationModel.data.postType = "team";
+        SendNotificationGlobal.send(notificationModel);
     }
 
     private void saveTeamPost(List<TeamPostGetData> results) {

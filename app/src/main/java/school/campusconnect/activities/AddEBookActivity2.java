@@ -255,7 +255,7 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
                     String title = getResources().getString(R.string.app_name);
                     String name = LeafPreference.getInstance(AddEBookActivity2.this).getString(LeafPreference.NAME);
                     String message = name + " has added new ebook.";
-                    topic = GroupDashboardActivityNew.groupId;
+                    topic = GroupDashboardActivityNew.groupId+"_"+team_id;
                     object.put("to", "/topics/" + topic);
 
                     JSONObject notificationObj = new JSONObject();
@@ -361,9 +361,6 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
 
     private void selectPdf() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        }
         intent.setType("application/pdf");
         startActivityForResult(intent, REQUEST_LOAD_PDF);
     }

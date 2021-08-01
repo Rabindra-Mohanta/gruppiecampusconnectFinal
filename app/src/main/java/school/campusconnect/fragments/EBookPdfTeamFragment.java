@@ -36,8 +36,11 @@ import school.campusconnect.activities.ViewPDFActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.EBookClassItem;
+import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.EBookItem;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
@@ -113,7 +116,10 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             if ("admin".equalsIgnoreCase(role)) {
                 getEBooksList();
             } else {
-                if (LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_ebookpush") > 0) {
+                if (LeafPreference.getInstance(getContext()).getInt(team_id + "_ebookpush") > 0
+                        || LeafPreference.getInstance(getContext()).getBoolean(team_id + "_ebook_delete")) {
+
+                    LeafPreference.getInstance(getContext()).setBoolean(team_id + "_ebook_delete", false);
                     getEBooksList();
                 }
             }
@@ -123,7 +129,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     }
 
     private void getEBooksList() {
-        if(!isConnectionAvailable()){
+        if (!isConnectionAvailable()) {
             showNoNetworkMsg();
         }
         LeafManager leafManager = new LeafManager();
@@ -153,9 +159,10 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             return;
         }
 
-        if(apiId==LeafManager.API_EBOOK_DELETE){
+        if (apiId == LeafManager.API_EBOOK_DELETE) {
             getEBooksList();
-        }else {
+            sendNotification();
+        } else {
             AppLog.e(TAG, "apiId-------: " + apiId);
             progressBar.setVisibility(View.GONE);
             EBooksTeamResponse eBooksTeamResponse = (EBooksTeamResponse) response;
@@ -165,7 +172,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             rvClass.setAdapter(ebookPdfAdapter);
             saveToDB(eBooksTeamResponse.getData());
 
-            LeafPreference.getInstance(getContext()).remove(GroupDashboardActivityNew.groupId + "_ebookpush");
+            LeafPreference.getInstance(getContext()).remove(team_id + "_ebookpush");
         }
     }
 
@@ -327,7 +334,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
     }
 
     private void deletePost(EBooksTeamResponse.SubjectBook subjectBook) {
-        if(!isConnectionAvailable()){
+        if (!isConnectionAvailable()) {
             showNoNetworkMsg();
         }
         SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this E-Books.?", new DialogInterface.OnClickListener() {
@@ -335,7 +342,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
-                leafManager.deleteEBookTeam(EBookPdfTeamFragment.this, GroupDashboardActivityNew.groupId, team_id,subjectBook.ebookId);
+                leafManager.deleteEBookTeam(EBookPdfTeamFragment.this, GroupDashboardActivityNew.groupId, team_id, subjectBook.ebookId);
             }
         });
     }
@@ -398,4 +405,21 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
             }
         }
     }
+
+    private void sendNotification() {
+
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId+"_"+team_id;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "E-Book deleted";
+        notificationModel.data.Notification_type = "DELETE_EBOOK";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+        notificationModel.data.teamId = team_id;
+        notificationModel.data.createdById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = "";
+        notificationModel.data.postType = "";
+        SendNotificationGlobal.send(notificationModel);
+    }
+
 }
