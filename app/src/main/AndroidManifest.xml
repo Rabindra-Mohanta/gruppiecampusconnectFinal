@@ -644,10 +644,23 @@
             android:name=".activities.AddEBookActivity2"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".activities.HomeWorkEditActivity"
+            android:screenOrientation="portrait" >
+            <!--   <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <action android:name="android.intent.action.VIEW" />
+               </activity>
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>-->
+
+        </activity>
+
         <service
             android:name=".service.FloatingWidgetService"
             android:enabled="true"
             android:exported="false" />
+
 
     </application>
 

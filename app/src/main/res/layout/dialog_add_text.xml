@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/padding_10dp"
+    android:layout_height="wrap_content">
+    <RadioGroup
+        android:id="@+id/rbtGroup"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbt1"
+            android:text="Write Properly"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbt2"
+            android:text="Spelling Mistakes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbt3"
+            android:text="Improve Handwriting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbt4"
+            android:text="Custom Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/etTitle"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:layout_height="@dimen/login_button_height"
+        android:inputType="textCapWords"
+        android:imeOptions="actionDone"
+        style="@style/RegEditText" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="@dimen/login_button_width"
+        style="@style/AddPostButton"
+        android:layout_marginTop="@dimen/padding_20dp"
+        android:text="@string/lbl_add"
+        android:layout_height="@dimen/login_button_height" />
+</LinearLayout>

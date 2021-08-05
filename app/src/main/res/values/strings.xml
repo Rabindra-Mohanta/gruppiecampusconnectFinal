@@ -512,6 +512,11 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="student_attendance_report">Student Attendance Report</string>
     <string name="download">Download</string>
     <string name="share_">Share</string>
+    <string name="strDrawing">Drawing</string>
+    <string name="strText">Text</string>
+    <string name="strEraser">Eraser</string>
+    <string name="lbl_enter_text">Enter Text</string>
+    <string name="strBox">Box</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

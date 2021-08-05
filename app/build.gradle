@@ -162,7 +162,8 @@ android {
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
         debug {
-           buildConfigField "String", "BASE_URL", '"https://lite.gruppie.in"'
+           buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
+//           buildConfigField "String", "BASE_URL", '"https://lite.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prod.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://hoysala.gruppie.in"'
@@ -319,5 +320,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.0.0'
    // implementation 'com.google.firebase:firebase-database:20.0.0'
    // implementation 'com.google.firebase:firebase-auth:21.0.1'
+
+    implementation 'com.burhanrashid52:photoeditor:1.5.1'
 }
 apply plugin: 'com.google.gms.google-services'

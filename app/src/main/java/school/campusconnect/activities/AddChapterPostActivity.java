@@ -334,7 +334,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     Log.e(TAG, "send data " + new Gson().toJson(mainRequest));
 
                     if (isEdit) {
-                        mainRequest.fileType = Constants.FILE_TYPE_VIDEO;
+                        mainRequest.fileType = Constants.FILE_TYPE_YOUTUBE;
                         mainRequest.fileName = new ArrayList<>();
                         mainRequest.fileName.add(videoUrl);
                         manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
