@@ -35,11 +35,40 @@
             android:src="@drawable/icon_redu"
             android:layout_height="@dimen/padding_30dp"/>
     </LinearLayout>
+
+    <com.otaliastudios.zoom.ZoomLayout
+        android:id="@+id/zoomLayout"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:scrollbars="vertical|horizontal"
+        app:transformation="centerInside"
+        app:transformationGravity="auto"
+        app:alignment="center"
+        app:overScrollHorizontal="true"
+        app:overScrollVertical="true"
+        app:overPinchable="true"
+        app:horizontalPanEnabled="true"
+        app:verticalPanEnabled="true"
+        app:zoomEnabled="true"
+        app:flingEnabled="true"
+        app:scrollEnabled="true"
+        app:oneFingerScrollEnabled="true"
+        app:twoFingersScrollEnabled="true"
+        app:threeFingersScrollEnabled="true"
+        app:minZoom="0.7"
+        app:minZoomType="zoom"
+        app:maxZoom="2.5"
+        app:maxZoomType="zoom"
+        app:animationDuration="280"
+        app:hasClickableChildren="true">
+
     <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/photoEditorView"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"/>
+        android:layout_height="match_parent"/>
+
+    </com.otaliastudios.zoom.ZoomLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -49,13 +78,12 @@
         android:background="@color/white"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        app:tabIconTint="@color/colorPrimary"
         app:tabSelectedTextColor="@color/colorPrimary"
         app:tabTextAppearance="?android:attr/textAppearanceSmall"
-        app:tabTextColor="@color/colorTextLight">
+        app:tabTextColor="@color/colorTextDark">
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
-            android:icon="@drawable/icon_brush"
+            android:icon="@drawable/icon_pencin"
             android:text="@string/strDrawing"
             android:layout_height="wrap_content"/>
         <com.google.android.material.tabs.TabItem
@@ -65,7 +93,7 @@
             android:layout_height="wrap_content"/>
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
-            android:icon="@drawable/icon_add_text"
+            android:icon="@drawable/icon_txt"
             android:text="@string/strText"
             android:layout_height="wrap_content"/>
         <com.google.android.material.tabs.TabItem
@@ -73,6 +101,12 @@
             android:icon="@drawable/icon_eraser"
             android:text="@string/strEraser"
             android:layout_height="wrap_content"/>
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:icon="@drawable/icon_zoom"
+            android:text="@string/strZoom"
+            android:layout_height="wrap_content"/>
+
     </com.google.android.material.tabs.TabLayout>
 
     <Button

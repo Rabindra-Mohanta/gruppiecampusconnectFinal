@@ -86,7 +86,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 switch (data.Notification_type) {
                     case "videoEnd": {
                         Intent intent = new Intent("MEETING_END");
-                        sendBroadcast(intent);
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("createdByName", data.createdByName);
+                        intent.setAction("MEETING_END");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
                     break;
 

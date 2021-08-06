@@ -54,5 +54,8 @@
 
     <color name="colorAddBookButton">#E4E4ED</color>
 
+    <color name="colorBrushBox">#FF0000</color>
+    <color name="colorTransparent">#0000</color>
+
 </resources>
 

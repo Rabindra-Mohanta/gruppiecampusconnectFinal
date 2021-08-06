@@ -133,8 +133,8 @@ android {
 
 
                 applicationId "school.campusconnectlite"
-                versionCode 1
-                versionName "1.0"
+                versionCode 11
+                versionName "1.2"
                 resValue "string", "app_name", '"Gruppie Lite"'
                 buildConfigField("String", "AppName", '"Gruppie Lite"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
@@ -156,8 +156,7 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://hoysala.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
-//            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
-            buildConfigField "String", "BASE_URL", '"https://lite.gruppie.in"'
+            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
             buildConfigField("String", "API_KEY_FIREBASE1", '"key=AAAATq979wE:APA91bEw0Dh3Ju0phxXjisU4z0eEmC90mi8ciomV-4S9X38UM8eMaB72bRpgGrGvv_"')
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
@@ -313,14 +312,15 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
     implementation 'com.google.firebase:firebase-crashlytics:18.0.0'
    // implementation 'com.google.firebase:firebase-database:20.0.0'
    // implementation 'com.google.firebase:firebase-auth:21.0.1'
-
     implementation 'com.burhanrashid52:photoeditor:1.5.1'
+    implementation 'com.otaliastudios:zoomlayout:1.8.0'
+
 }
 apply plugin: 'com.google.gms.google-services'

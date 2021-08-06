@@ -44,6 +44,7 @@
         android:imeOptions="actionDone"
         style="@style/RegEditText" />
 
+
     <Button
         android:id="@+id/btnAdd"
         android:layout_width="@dimen/login_button_width"
@@ -51,4 +52,39 @@
         android:layout_marginTop="@dimen/padding_20dp"
         android:text="@string/lbl_add"
         android:layout_height="@dimen/login_button_height" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Sticker"
+        android:layout_marginTop="@dimen/padding_30dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        >
+
+    <ImageView
+        android:layout_width="@dimen/size_img_trophy"
+        android:layout_height="@dimen/size_img_trophy"
+        android:id="@+id/iv_trophy"
+        android:layout_marginEnd="@dimen/padding_30dp"
+        android:src="@drawable/icon_trophy"
+        />
+
+    <ImageView
+        android:layout_width="@dimen/size_img_trophy"
+        android:layout_height="@dimen/size_img_trophy"
+        android:id="@+id/iv_crown"
+        android:layout_marginStart="@dimen/padding_30dp"
+        android:src="@drawable/icon_crown"
+
+        />
+
+    </LinearLayout>
+
 </LinearLayout>

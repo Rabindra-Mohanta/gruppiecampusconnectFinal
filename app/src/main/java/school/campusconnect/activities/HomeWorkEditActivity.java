@@ -2,16 +2,21 @@ package school.campusconnect.activities;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -25,13 +30,21 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
+import com.otaliastudios.zoom.ZoomLayout;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -55,8 +68,12 @@ import school.campusconnect.R;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.ImageUtil;
+
+import static school.campusconnect.utils.Constants.FILE_TYPE_IMAGE;
 
 public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorListener {
 
@@ -68,6 +85,10 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
 
     PhotoEditor mPhotoEditor;
     AssignmentRes.AssignmentData assignmentData;
+    ZoomLayout zoomLayout;
+
+    private TransferUtility transferUtility;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +97,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
         ButterKnife.bind(this);
 
         assignmentData = new Gson().fromJson(getIntent().getStringExtra("item"), AssignmentRes.AssignmentData.class);
-        AppLog.e(TAG, "assignmentData : " + assignmentData);
+        AppLog.e(TAG, "assignmentData : " + new Gson().toJson(assignmentData));
         if (assignmentData.fileName != null && assignmentData.fileName.size() > 0) {
             Picasso.with(this).load(Constants.decodeUrlToBase64(assignmentData.fileName.get(0))).into(ivImage.getSource());
         }
@@ -94,6 +115,10 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             }
         });
 
+        transferUtility = AmazoneHelper.getTransferUtility(this);
+
+        zoomLayout = findViewById(R.id.zoomLayout);
+        setZoom(false);
 
         setupPhotoEditor();
 
@@ -115,6 +140,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                 .build();
         mPhotoEditor.setOnPhotoEditorListener(this);
 
+
         findViewById(R.id.imgUndo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,59 +161,88 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                 .withShapeSize(10);
         mPhotoEditor.setBrushDrawingMode(true);
         mPhotoEditor.setShape(mShapeBuilder);
-        mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorPrimary));
+        mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorBrushBox));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 AppLog.e(TAG, "onTabSelected() :" + tab.getPosition());
+                //zoomLayout.setEnabled(false);
+
                 selectTab(tab.getPosition());
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 AppLog.e(TAG, "onTabUnselected() :" + tab.getPosition());
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 AppLog.e(TAG, "onTabReselected() :" + tab.getPosition());
+
                 selectTab(tab.getPosition());
             }
         });
 
     }
 
+    private void setZoom(boolean value) {
+        zoomLayout.setZoomEnabled(value);
+        zoomLayout.setHorizontalPanEnabled(value);
+        zoomLayout.setVerticalPanEnabled(value);
+    }
+
     private void selectTab(int position) {
         switch (position) {
             case 0: {
+
+                setZoom(false);
+
                 ShapeBuilder mShapeBuilder = new ShapeBuilder()
                         .withShapeOpacity(100)
                         .withShapeType(ShapeType.BRUSH)
                         .withShapeSize(10);
                 mPhotoEditor.setShape(mShapeBuilder);
                 mPhotoEditor.setBrushDrawingMode(true);
-                mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorPrimary));
+
+                mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorBrushBox));
                 break;
             }
             case 1: {
+
+                setZoom(false);
                 ShapeBuilder mShapeBuilder = new ShapeBuilder()
                         .withShapeOpacity(100)
                         .withShapeType(ShapeType.RECTANGLE)
                         .withShapeSize(10);
                 mPhotoEditor.setBrushDrawingMode(true);
                 mPhotoEditor.setShape(mShapeBuilder);
-                mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorPrimary));
+                mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorBrushBox));
                 break;
             }
             case 2: {
+                setZoom(false);
                 showAddTextDialog();
                 break;
             }
             case 3: {
+                setZoom(false);
+                AppLog.e(TAG, "Eraser Size : " + mPhotoEditor.getBrushSize());
+
+
+                mPhotoEditor.setBrushSize(getResources().getDimensionPixelSize(R.dimen.erasersize));
                 mPhotoEditor.brushEraser();
-                mPhotoEditor.setBrushEraserSize(100);
+                AppLog.e(TAG, "Eraser Size After Setting : " + mPhotoEditor.getEraserSize());
+
                 break;
+            }
+
+            case 4: {
+                setZoom(true);
+                mPhotoEditor.setBrushSize(0);
+                mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorTransparent));
             }
 
         }
@@ -233,6 +288,9 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
         RadioButton rbt3 = dialog.findViewById(R.id.rbt3);
         RadioButton rbt4 = dialog.findViewById(R.id.rbt4);
 
+        ImageView ivTrophy = dialog.findViewById(R.id.iv_trophy);
+        ImageView ivCrown = dialog.findViewById(R.id.iv_crown);
+
         rbt1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -274,17 +332,48 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                     }
                 } else {
                     if (rbt1.isChecked()) {
-                        mPhotoEditor.addText("Write Properly", getResources().getColor(R.color.colorPrimary));
+                        mPhotoEditor.addText("Write Properly", getResources().getColor(R.color.pink));
                     } else if (rbt2.isChecked()) {
-                        mPhotoEditor.addText("Spelling Mistakes", getResources().getColor(R.color.colorPrimary));
+                        mPhotoEditor.addText("Spelling Mistakes", getResources().getColor(R.color.pink));
                     } else if (rbt3.isChecked()) {
-                        mPhotoEditor.addText("Improve Handwriting", getResources().getColor(R.color.colorPrimary));
+                        mPhotoEditor.addText("Improve Handwriting", getResources().getColor(R.color.pink));
                     }
                     dialog.dismiss();
                 }
             }
         });
+
+        ivTrophy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPhotoEditor.addImage(getBitmapFromVectorDrawable(HomeWorkEditActivity.this, R.drawable.icon_trophy));
+
+                dialog.dismiss();
+            }
+        });
+
+        ivCrown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPhotoEditor.addImage(getBitmapFromVectorDrawable(HomeWorkEditActivity.this, R.drawable.icon_crown));
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
+    }
+
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     private void notVerifyAssignment() {
@@ -330,12 +419,36 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             @Override
             public void onClick(View v) {
                 if (chkVerify.isChecked()) {
+
+                    if (ActivityCompat.checkSelfPermission(HomeWorkEditActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath(), new PhotoEditor.OnSaveListener() {
+                        @Override
+                        public void onSuccess(@NonNull String imagePath)
+                        {
+                            AppLog.e(TAG , "Image Saved Successfully at : "+imagePath);
+                            uploadImageOnCloud(imagePath);
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Exception exception)
+                        {
+                            AppLog.e(TAG , "onFailure called with exception : "+exception.getLocalizedMessage());
+                            Toast.makeText(HomeWorkEditActivity.this , "Failed to save Image. " , Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
                     dialog.dismiss();
-                    Intent intent = new Intent();
-                    intent.putExtra("isVerify", true);
-                    intent.putExtra("comments", "");
-                    setResult(RESULT_OK, intent);
-                    finish();
+
                 } else {
                     if (!TextUtils.isEmpty(etTitle.getText().toString().trim())) {
                         dialog.dismiss();
@@ -351,6 +464,51 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             }
         });
         dialog.show();
+    }
+
+    private void uploadImageOnCloud(String imagePath)
+    {
+        final String key = Constants.decodeUrlToBase64(assignmentData.fileName.get(0)).replace("https://gruppiemedia.sgp1.digitaloceanspaces.com/" ,"");
+
+        AppLog.e(TAG , "uploadImageOnCloud called with key : "+key);
+        File file = new File(imagePath);
+        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
+                file, CannedAccessControlList.PublicRead);
+
+        observer.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                    Intent intent = new Intent();
+                    intent.putExtra("isVerify", true);
+                    intent.putExtra("comments", "");
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+                if (TransferState.FAILED.equals(state)) {
+                    Toast.makeText(HomeWorkEditActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                int percentDone = (int) percentDonef;
+
+
+                AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+
+                AppLog.e(TAG, "Upload Error : " + ex);
+                Toast.makeText(HomeWorkEditActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

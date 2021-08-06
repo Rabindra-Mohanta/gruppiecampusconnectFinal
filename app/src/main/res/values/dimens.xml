@@ -84,5 +84,9 @@
     <dimen name="padding_3dp">3dp</dimen>
     <dimen name="home_image_size">60dp</dimen>
 
+    <dimen name="erasersize">30dp</dimen>
+
+    <dimen name="size_img_trophy">60dp</dimen>
+
     <dimen name="pdf_download_icon_size">50dp</dimen>
 </resources>

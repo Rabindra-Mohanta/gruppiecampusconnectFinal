@@ -515,6 +515,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strDrawing">Drawing</string>
     <string name="strText">Text</string>
     <string name="strEraser">Eraser</string>
+    <string name="strZoom">Zoom</string>
     <string name="lbl_enter_text">Enter Text</string>
     <string name="strBox">Box</string>
 
