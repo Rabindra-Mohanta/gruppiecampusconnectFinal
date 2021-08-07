@@ -11,15 +11,22 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -28,6 +35,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWClassSubjectActivity;
 import school.campusconnect.activities.RecClassSubjectActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.network.LeafManager;
@@ -47,6 +55,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,11 +70,49 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
-
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getVideoClassList();
+        init();
+    }
+
+    private void init() {
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    apiCall();
+                    swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    showNoNetworkMsg();
+                }
+            }
+        });
+    }
+
+    private void getVideoClassList() {
+        String re = LeafPreference.getInstance(getActivity()).getString("video_class_group_id_" + GroupDashboardActivityNew.groupId);
+        if (re != null && !TextUtils.isEmpty(re)) {
+            AppLog.e(TAG, "Api Calling::: if ");
+            ArrayList<VideoClassResponse.ClassData> result = new Gson().fromJson(re, new TypeToken<List<VideoClassResponse.ClassData>>() {
+            }.getType());
+            rvClass.setAdapter(new ClassesAdapter(result));
+        } else {
+            AppLog.e(TAG, "Api Calling::: else ");
+            apiCall();
+        }
+    }
+
+    private void apiCall() {
+        LeafManager leafManager = new LeafManager();
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -81,7 +129,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         VideoClassResponse res = (VideoClassResponse) response;
         List<VideoClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
-
+        LeafPreference.getInstance(getActivity()).setString("video_class_group_id_" + GroupDashboardActivityNew.groupId, new Gson().toJson(result));
         rvClass.setAdapter(new ClassesAdapter(result));
     }
 

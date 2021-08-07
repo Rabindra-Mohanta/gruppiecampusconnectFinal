@@ -42,6 +42,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
@@ -89,6 +90,8 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.videocall.MeetingStatusModel;
 import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
+import school.campusconnect.datamodel.videocall.StartMeetingRes;
+import school.campusconnect.datamodel.videocall.StopMeetingReq;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -111,6 +114,8 @@ import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 import us.zoom.sdk.ZoomSDKInitializeListener;
 
+import static school.campusconnect.network.LeafManager.API_JISTI_MEETING_STOP;
+
 public class VideoClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "VideoClassListFragment";
     @Bind(R.id.rvTeams)
@@ -125,8 +130,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Bind(R.id.progressBarZoom)
     public ProgressBar progressBarZoom;
 
-    /*@Bind(R.id.swipeRefreshLayout)
-    public PullRefreshLayout swipeRefreshLayout;*/
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;
 
 
     VideoClassResponse.ClassData item;
@@ -137,7 +142,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
 
     ClassesAdapter classesAdapter = new ClassesAdapter();
-
     private ArrayList<SubjectStaffResponse.SubjectData> subjectList;
     private ArrayList<VideoClassResponse.ClassData> result;
     private VideoClassResponse.ClassData listItemData;
@@ -145,15 +149,15 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     boolean isZoomStarted;
 
     //NOFIREBASEDATABASE
-   // DatabaseReference myRef;
-   // ArrayList<Query> myClasRef;
+    // DatabaseReference myRef;
+    // ArrayList<Query> myClasRef;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AppLog.e(TAG , "onCreate called");
+        AppLog.e(TAG, "onCreate called");
 
         isSentNotification = false;
         isZoomStarted = false;
@@ -162,9 +166,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
-        AppLog.e(TAG , "onCreateView called");
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        AppLog.e(TAG, "onCreateView called");
 
         View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
         ButterKnife.bind(this, view);
@@ -181,19 +184,17 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void init() {
-     /*   swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
                     swipeRefreshLayout.setRefreshing(false);
-                    LeafManager leafManager = new LeafManager();
-                    progressBar.setVisibility(View.VISIBLE);
-                    leafManager.getVideoClasses(VideoClassListFragment.this, GroupDashboardActivityNew.groupId);
+                    calApi();
                 } else {
                     showNoNetworkMsg();
                 }
             }
-        });*/
+        });
     }
 
 
@@ -230,82 +231,82 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     }*/
 
-   /* private void setListener() {
-        AppLog.e(TAG, "setListener is called");
-        if (result != null) {
-            if (myClasRef != null) {
-                removeListener();
-                myClasRef.clear();
-            }
+    /* private void setListener() {
+         AppLog.e(TAG, "setListener is called");
+         if (result != null) {
+             if (myClasRef != null) {
+                 removeListener();
+                 myClasRef.clear();
+             }
 
-            myClasRef = new ArrayList<>();
+             myClasRef = new ArrayList<>();
 
-            //TEMPORARY
-           // myRef.child("live_class").child("6069a681a0ccf704e78a720c").addListenerForSingleValueEvent(postListener);
-
-
-           for (VideoClassResponse.ClassData cd : result) {
-                try {
-                    Query query = myRef.child("live_class").orderByKey().equalTo(cd.getId());
-                    query.addValueEventListener(postListener);
-                    myClasRef.add(query);
-
-                    AppLog.e(TAG, "query set : " + query.getSpec().getParams());
-                } catch (Exception ex) {
-                    AppLog.e(TAG, "ex : " + ex.getLocalizedMessage());
-                }
-            }
-
-        } else {
-            AppLog.e(TAG, "result is null");
-        }
-    }
+             //TEMPORARY
+            // myRef.child("live_class").child("6069a681a0ccf704e78a720c").addListenerForSingleValueEvent(postListener);
 
 
-    private void removeListener() {
-        AppLog.e(TAG, "remove listener called ");
-        if (result != null) {
+            for (VideoClassResponse.ClassData cd : result) {
+                 try {
+                     Query query = myRef.child("live_class").orderByKey().equalTo(cd.getId());
+                     query.addValueEventListener(postListener);
+                     myClasRef.add(query);
 
-            for (Query q : myClasRef) {
-                try {
-                    q.removeEventListener(postListener);
-                } catch (Exception ex) {
-                    AppLog.e(TAG, "ex : " + ex.getLocalizedMessage());
-                }
-            }
+                     AppLog.e(TAG, "query set : " + query.getSpec().getParams());
+                 } catch (Exception ex) {
+                     AppLog.e(TAG, "ex : " + ex.getLocalizedMessage());
+                 }
+             }
 
-        } else {
+         } else {
+             AppLog.e(TAG, "result is null");
+         }
+     }
 
-        }
 
-       // myRef.child("live_class").child("6069a681a0ccf704e78a720c").removeEventListener(postListener);
-    }
+     private void removeListener() {
+         AppLog.e(TAG, "remove listener called ");
+         if (result != null) {
 
-    ValueEventListener postListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            AppLog.e(TAG, "onDataChange called , key : " + dataSnapshot.getKey() + "  , childCount : " + dataSnapshot.getChildrenCount());
-            HashMap<String, MeetingStatusModel> liveTeamIds = new HashMap<>();
-            // Get Post object and use the values to update the UI
-            Iterable<DataSnapshot> list = dataSnapshot.getChildren();
-            // ..
-            Iterator<DataSnapshot> itr = list.iterator();
-            while (itr.hasNext()) {
-                DataSnapshot val = itr.next();
-                AppLog.e(TAG, "teamclass key changed : " + val.getKey());
-                liveTeamIds.put((val.getKey() + ""), val.getValue(MeetingStatusModel.class));
-            }
+             for (Query q : myClasRef) {
+                 try {
+                     q.removeEventListener(postListener);
+                 } catch (Exception ex) {
+                     AppLog.e(TAG, "ex : " + ex.getLocalizedMessage());
+                 }
+             }
 
-            refreshAdapter(liveTeamIds);
-        }
+         } else {
 
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            // Getting Post failed, log a message
-            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-        }
-    };
-*/
+         }
+
+        // myRef.child("live_class").child("6069a681a0ccf704e78a720c").removeEventListener(postListener);
+     }
+
+     ValueEventListener postListener = new ValueEventListener() {
+         @Override
+         public void onDataChange(DataSnapshot dataSnapshot) {
+             AppLog.e(TAG, "onDataChange called , key : " + dataSnapshot.getKey() + "  , childCount : " + dataSnapshot.getChildrenCount());
+             HashMap<String, MeetingStatusModel> liveTeamIds = new HashMap<>();
+             // Get Post object and use the values to update the UI
+             Iterable<DataSnapshot> list = dataSnapshot.getChildren();
+             // ..
+             Iterator<DataSnapshot> itr = list.iterator();
+             while (itr.hasNext()) {
+                 DataSnapshot val = itr.next();
+                 AppLog.e(TAG, "teamclass key changed : " + val.getKey());
+                 liveTeamIds.put((val.getKey() + ""), val.getValue(MeetingStatusModel.class));
+             }
+
+             refreshAdapter(liveTeamIds);
+         }
+
+         @Override
+         public void onCancelled(DatabaseError databaseError) {
+             // Getting Post failed, log a message
+             Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+         }
+     };
+ */
     private void refreshAdapter(HashMap<String, MeetingStatusModel> liveTeamIds) {
         String myId = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
         if (result != null && result.size() > 0) {
@@ -354,26 +355,30 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             //initFirebase();
         } else {
             AppLog.e(TAG, "Api Calling::: else ");
-            LeafManager leafManager = new LeafManager();
-            progressBar.setVisibility(View.VISIBLE);
-            leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
+           calApi();
         }
+    }
+
+    private void calApi() {
+        LeafManager leafManager = new LeafManager();
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        AppLog.e(TAG , "onStart called");
+        AppLog.e(TAG, "onStart called");
 
-        LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).registerReceiver(mMessageReceiver , new IntentFilter("MEETING_START"));
+        LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("MEETING_START"));
         LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("MEETING_RESUME"));
-        LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).registerReceiver(mMessageReceiver , new IntentFilter("MEETING_END"));
+        LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("MEETING_END"));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        AppLog.e(TAG , "onResume called");
+        AppLog.e(TAG, "onResume called");
 
         // setListener();
     }
@@ -382,61 +387,51 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     public void onStop() {
         super.onStop();
 
-        AppLog.e(TAG , "onStop called");
+        AppLog.e(TAG, "onStop called");
 
         LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).unregisterReceiver(mMessageReceiver);
     }
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver()
-    {
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent)
-        {
+        public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
 
             String message = intent.getAction();
 
-            AppLog.e(TAG , "onReceive called with action : "+message);
+            AppLog.e(TAG, "onReceive called with action : " + message);
 
-            if(message.equalsIgnoreCase("MEETING_START"))
-            {
+            if (message.equalsIgnoreCase("MEETING_START")) {
 
-                if(intent.getExtras().containsKey("teamId"))
-                {
+                if (intent.getExtras().containsKey("teamId")) {
                     int position = getPositionOf(intent.getExtras().getString("teamId"));
-                    if(position >= 0)
-                    {
+                    if (position >= 0) {
                         listItemData.isLive = true;
                         listItemData.createdName = intent.getExtras().getString("createdByName");
                         classesAdapter.notifyDataSetChanged();
                     }
                 }
             }
-            if(message.equalsIgnoreCase("MEETING_END"))
-            {
+            if (message.equalsIgnoreCase("MEETING_END")) {
 
-                if(intent.getExtras().containsKey("teamId"))
-                {
+                if (intent.getExtras().containsKey("teamId")) {
                     int position = getPositionOf(intent.getExtras().getString("teamId"));
-                    if(position >= 0)
-                    {
+                    if (position >= 0) {
                         listItemData.isLive = false;
                         classesAdapter.notifyDataSetChanged();
                     }
                 }
             }
 
-            if(message.equalsIgnoreCase("MEETING_RESUME"))
-            {
+            if (message.equalsIgnoreCase("MEETING_RESUME")) {
 
-                if(intent.getExtras().containsKey("teamId"))
-                {
+                if (intent.getExtras().containsKey("teamId")) {
                     int position = getPositionOf(intent.getExtras().getString("teamId"));
-                    if(position >= 0 && !listItemData.canPost){
+                    if (position >= 0 && !listItemData.canPost) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(getActivity()==null){
+                                if (getActivity() == null) {
                                     return;
                                 }
 
@@ -447,7 +442,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                                     }
                                 });
                             }
-                        },7000);
+                        }, 7000);
 
                     }
 
@@ -457,12 +452,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         }
     };
 
-    private int getPositionOf(String teamId)
-    {
-        for(int i = 0 ; i < result.size() ; i++)
-        {
-            if(result.get(i).getId().equalsIgnoreCase(teamId))
-            {
+    private int getPositionOf(String teamId) {
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i).getId().equalsIgnoreCase(teamId)) {
                 listItemData = result.get(i);
                 return i;
             }
@@ -476,7 +468,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         super.onDestroy();
         AppLog.e(TAG, "onDestroy called");
         isZoomStarted = false;
-      //  removeListener();
+        //  removeListener();
     }
 
     @Override
@@ -491,19 +483,20 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             LeafPreference.getInstance(getActivity()).setString("video_class_group_id_" + GroupDashboardActivityNew.groupId, new Gson().toJson(result));
             //LeafPreference.getInstance(getActivity()).setString(LeafPreference.VIDEO_CLASS_LIST_OFFLINEx, new Gson().toJson(result));
 
-          //  initFirebase();
-        }
-        if (apiId == LeafManager.API_SUBJECT_STAFF)
-        {
+            //  initFirebase();
+        } else if (apiId == LeafManager.API_SUBJECT_STAFF) {
             SubjectStaffResponse subjectStaffResponse = (SubjectStaffResponse) response;
             subjectList = subjectStaffResponse.getData();
             try {
-                //showSubjectSelectDialog();
+                showSubjectSelectDialog();
             } catch (Exception ex) {
 
             }
-        }
-        if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
+        } else if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
+        } else if (apiId == API_JISTI_MEETING_STOP) {
+            if (getActivity() != null) {
+                ((VideoClassActivity) getActivity()).showSharePopup();
+            }
         }
     }
 
@@ -537,8 +530,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         }
 
         @Override
-        public ClassesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-        {
+        public ClassesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video_class, parent, false);
             return new ViewHolder(view);
@@ -548,24 +540,20 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         public void onBindViewHolder(final ClassesAdapter.ViewHolder holder, final int position) {
             final VideoClassResponse.ClassData item = list.get(position);
 
-            if (item.canPost && item.isLive)
-            {
+            if (item.canPost && item.isLive) {
                 holder.imgOnline.setVisibility(View.VISIBLE);
                 if (item.getMeetingCreatedBy()) {
                     holder.tv_stop.setVisibility(View.VISIBLE);
                 } else {
                     holder.tv_stop.setVisibility(View.GONE);
                 }
-            }
-            else
-            {
+            } else {
                 holder.imgOnline.setVisibility(View.GONE);
                 holder.tv_stop.setVisibility(View.GONE);
             }
 
 
-            if (item.createdName != null && !item.createdName.equalsIgnoreCase(""))
-            {
+            if (item.createdName != null && !item.createdName.equalsIgnoreCase("")) {
                 holder.tvInfo.setVisibility(View.VISIBLE);
                 holder.tvInfo.setText(item.createdName);
             } else
@@ -575,16 +563,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50, 50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
                         new Callback() {
                             @Override
-                            public void onSuccess()
-                            {
+                            public void onSuccess() {
                                 holder.img_lead_default.setVisibility(View.INVISIBLE);
                             }
 
                             @Override
-                            public void onError()
-                            {
-                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50, 50).into(holder.imgTeam, new Callback()
-                                {
+                            public void onError() {
+                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50, 50).into(holder.imgTeam, new Callback() {
                                     @Override
                                     public void onSuccess() {
                                         holder.img_lead_default.setVisibility(View.INVISIBLE);
@@ -612,13 +597,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             holder.txt_count.setVisibility(View.GONE);
 
             /// NEW CHANGE NOFIREBASEDATABASE
-          //  if (item.canPost || item.isLive) {
-                holder.img_tree.setVisibility(View.VISIBLE);
+            //  if (item.canPost || item.isLive) {
+            holder.img_tree.setVisibility(View.VISIBLE);
            /* } else {
                 holder.img_tree.setVisibility(View.GONE);
             }*/
-            if(item.isLive)
-            holder.imgOnline.setVisibility(View.VISIBLE);
+            if (item.isLive)
+                holder.imgOnline.setVisibility(View.VISIBLE);
             else
                 holder.imgOnline.setVisibility(View.GONE);
 
@@ -728,12 +713,19 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void onTreeClick(VideoClassResponse.ClassData classData) {
-        AppLog.e(TAG , "onTreeClick : "+classData.getId());
+        AppLog.e(TAG, "onTreeClick : " + classData.getId());
         this.item = classData;
-        videoClassClicked = true;
 
-        startMeeting();
-        progressBarZoom.setVisibility(View.VISIBLE);
+
+        if (classData.canPost && !classData.alreadyOnJitsiLive) {
+            ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
+        } else {
+            videoClassClicked = true;
+            startMeeting();
+            progressBarZoom.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
     public void startMeetingFromActivity() {
@@ -759,9 +751,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         this.item = classData;
 
         //NOFIREBASEDATABASE
-       // myRef.child("live_class").child(item.getId()).removeValue();
+        // myRef.child("live_class").child(item.getId()).removeValue();
         new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-     //   EnterSubjectDialog();
+        //   EnterSubjectDialog();
+        getSubjectList(classData.getId());
     }
 
     private void EnterSubjectDialog() {
@@ -1190,21 +1183,21 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     String topic;
                     String title = getResources().getString(R.string.app_name);
                     String name = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
-                  //  String message = isStart ? name + " teacher has started live class" : name + " teacher has ended live class";
+                    //  String message = isStart ? name + " teacher has started live class" : name + " teacher has ended live class";
                     topic = GroupDashboardActivityNew.groupId + "_" + item.getId();
                     object.put("to", "/topics/" + topic);
 
                     JSONObject notificationObj = new JSONObject();
                     notificationObj.put("title", title);
-                 //   notificationObj.put("body", message);
-                   // object.put("notification", notificationObj);
+                    //   notificationObj.put("body", message);
+                    // object.put("notification", notificationObj);
 
                     JSONObject dataObj = new JSONObject();
                     dataObj.put("groupId", GroupDashboardActivityNew.groupId);
                     dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
                     dataObj.put("teamId", item.getId());
                     dataObj.put("title", title);
-                    dataObj.put("Notification_type","videoResume");
+                    dataObj.put("Notification_type", "videoResume");
                     dataObj.put("body", "");
                     dataObj.put("roomName", roomName);
                     object.put("data", dataObj);
@@ -1267,8 +1260,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
         }
     }
-
-
 
 
     private void startZoomMeeting(String zoomMail, String password, String name, String className, String meetingId) {
@@ -1633,7 +1624,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 dialog.dismiss();
                 timer.cancel();
 
-                new SendNotificationResume( item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new SendNotificationResume(item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 // joinZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, item.className, item.jitsiToken);
                 startZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, "", item.className, item.jitsiToken);
                 //NOFIREBASEDATABASE
@@ -1773,75 +1764,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     };
 
-    public class AttendanceSubjectAdapter extends RecyclerView.Adapter<AttendanceSubjectAdapter.ViewHolder> {
-        String selectedId = "";
-        private final ArrayList<SubjectStaffResponse.SubjectData> listSubject;
-        private Context mContext;
-
-        public AttendanceSubjectAdapter(ArrayList<SubjectStaffResponse.SubjectData> listSubject) {
-            this.listSubject = listSubject;
-        }
-
-        @Override
-        public AttendanceSubjectAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_attendance_subject_1, parent, false);
-            return new AttendanceSubjectAdapter.ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final AttendanceSubjectAdapter.ViewHolder holder, final int position) {
-            SubjectStaffResponse.SubjectData itemList = subjectList.get(position);
-            holder.tvName.setText(itemList.getName());
-            holder.tvStaff.setText("[" + itemList.getStaffNameFormatted() + "]");
-            if (selectedId.equalsIgnoreCase(itemList.getSubjectId())) {
-                holder.chkAttendance.setChecked(true);
-            } else {
-                holder.chkAttendance.setChecked(false);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return listSubject != null ? listSubject.size() : 0;
-        }
-
-        public String getSelected() {
-            return selectedId;
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            @Bind(R.id.chkAttendance)
-            CheckBox chkAttendance;
-
-            @Bind(R.id.tvName)
-            TextView tvName;
-
-            @Bind(R.id.tvStaff)
-            TextView tvStaff;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                ButterKnife.bind(this, itemView);
-                chkAttendance.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        selectedId = listSubject.get(getAdapterPosition()).subjectId;
-                        notifyDataSetChanged();
-                    }
-                });
-            }
-        }
-
-    }
-
-    private void getSubjectList(String teamId) {
-        progressBar.setVisibility(View.VISIBLE);
-        LeafManager leafManager = new LeafManager();
-        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
-    }
-
-
     private boolean checkPermissionForWriteExternal() {
         int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (result == PackageManager.PERMISSION_GRANTED) {
@@ -1962,6 +1884,111 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile);
         sharingIntent.setType("text/csv");
         startActivity(Intent.createChooser(sharingIntent, "share file with"));
+    }
+
+    private void showSubjectSelectDialog() {
+        final Dialog dialog = new Dialog(getActivity(), R.style.FragmentDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_select_subject);
+        Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
+        RecyclerView rvSubject = dialog.findViewById(R.id.rvSubjects);
+
+        AttendanceSubjectAdapter subjectAdapter = new AttendanceSubjectAdapter(subjectList);
+        rvSubject.setAdapter(subjectAdapter);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (!TextUtils.isEmpty(subjectAdapter.getSelected())) {
+                    StopMeetingReq stopMeetingReq = new StopMeetingReq(item.meetingIdOnLive, subjectAdapter.getSelected());
+                    AppLog.e(TAG, "stopMeetingReq : " + stopMeetingReq);
+                    progressBar.setVisibility(View.VISIBLE);
+                    LeafManager leafManager = new LeafManager();
+                    leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), stopMeetingReq);
+                } else {
+                    Toast.makeText(getActivity(), "Select Subject", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                progressBar.setVisibility(View.VISIBLE);
+                LeafManager leafManager = new LeafManager();
+                leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), null);
+            }
+        });
+        dialog.show();
+    }
+
+    public class AttendanceSubjectAdapter extends RecyclerView.Adapter<AttendanceSubjectAdapter.ViewHolder> {
+        String selectedId = "";
+        private final ArrayList<SubjectStaffResponse.SubjectData> listSubject;
+        private Context mContext;
+
+        public AttendanceSubjectAdapter(ArrayList<SubjectStaffResponse.SubjectData> listSubject) {
+            this.listSubject = listSubject;
+        }
+
+        @Override
+        public AttendanceSubjectAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_attendance_subject_1, parent, false);
+            return new AttendanceSubjectAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final AttendanceSubjectAdapter.ViewHolder holder, final int position) {
+            SubjectStaffResponse.SubjectData itemList = subjectList.get(position);
+            holder.tvName.setText(itemList.getName());
+            holder.tvStaff.setText("[" + itemList.getStaffNameFormatted() + "]");
+            if (selectedId.equalsIgnoreCase(itemList.getSubjectId())) {
+                holder.chkAttendance.setChecked(true);
+            } else {
+                holder.chkAttendance.setChecked(false);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return listSubject != null ? listSubject.size() : 0;
+        }
+
+        public String getSelected() {
+            return selectedId;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            @Bind(R.id.chkAttendance)
+            CheckBox chkAttendance;
+
+            @Bind(R.id.tvName)
+            TextView tvName;
+
+            @Bind(R.id.tvStaff)
+            TextView tvStaff;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
+                chkAttendance.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectedId = listSubject.get(getAdapterPosition()).subjectId;
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+
+    }
+
+    private void getSubjectList(String teamId) {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
     }
 
 }

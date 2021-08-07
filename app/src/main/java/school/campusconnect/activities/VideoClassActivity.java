@@ -126,6 +126,7 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
             public void okPositiveClick(DialogInterface dialog)
             {
                 dialog.dismiss();
+                AppLog.e(TAG,"hbRecorder.getFilePath() : "+hbRecorder.getFilePath());
                 Intent intent = new Intent(VideoClassActivity.this, RecClassSubjectActivity.class);
                 intent.putExtra("team_id",selectedClassData.getId());
                 intent.putExtra("title",selectedClassData.className);

@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -339,13 +340,13 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         rvTeams = view.findViewById(R.id.rvTeams);
         imgBackground = view.findViewById(R.id.imgBackground);
         progressBar = view.findViewById(R.id.progressBar);
-        //  swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        PullRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         rvTeams.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAdapter = new TeamListAdapterNew(teamList, this);
         rvTeams.setAdapter(mAdapter);
 
-       /* swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener()
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
@@ -360,7 +361,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                     showNoNetworkMsg();
                 }
             }
-        });*/
+        });
 
        // database = FirebaseDatabase.getInstance().getReference();
 

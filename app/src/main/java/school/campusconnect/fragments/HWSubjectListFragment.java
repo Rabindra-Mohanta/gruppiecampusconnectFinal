@@ -15,6 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -25,6 +29,9 @@ import school.campusconnect.activities.ChapterActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWListActivity;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.EBookClassItem;
+import school.campusconnect.datamodel.SubjectItem;
+import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -54,16 +61,34 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
         team_id = getArguments().getString("team_id");
         className = getArguments().getString("title");
 
-        progressBar.setVisibility(View.VISIBLE);
+        getDataLocally();
 
         return view;
+    }
+    private void getDataLocally() {
+        List<SubjectItem> list = SubjectItem.getAll(team_id,GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            ArrayList<SubjectStaffResponse.SubjectData> subList= new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                SubjectItem currentItem = list.get(i);
+                SubjectStaffResponse.SubjectData item = new SubjectStaffResponse.SubjectData();
+                item.staffName = new Gson().fromJson(currentItem.staffName,new TypeToken<ArrayList<SubjectStaffResponse.SubjectStaff>>() {}.getType());
+                item.subjectId = currentItem.subjectId;
+                item.name = currentItem.subjectName;
+                item.canPost = currentItem.canPost;
+                subList.add(item);
+            }
+            rvClass.setAdapter(new SubjectAdapter(subList));
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+            LeafManager leafManager = new LeafManager();
+            leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,"");
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        LeafManager leafManager = new LeafManager();
-        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,"");
     }
 
     @Override
@@ -74,7 +99,26 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
         AppLog.e(TAG, "ClassResponse " + result);
 
         rvClass.setAdapter(new SubjectAdapter(result));
+
+        saveToDB(result);
     }
+    private void saveToDB(List<SubjectStaffResponse.SubjectData> result) {
+        if (result == null)
+            return;
+
+        for (int i = 0; i < result.size(); i++) {
+            SubjectStaffResponse.SubjectData currentItem = result.get(i);
+            SubjectItem classItem = new SubjectItem();
+            classItem.staffName = new Gson().toJson(currentItem.staffName);
+            classItem.subjectId = currentItem.subjectId;
+            classItem.subjectName = currentItem.name;
+            classItem.canPost = currentItem.canPost;
+            classItem.teamId = team_id;
+            classItem.groupId = GroupDashboardActivityNew.groupId;
+            classItem.save();
+        }
+    }
+
 
     @Override
     public void onFailure(int apiId, String msg) {

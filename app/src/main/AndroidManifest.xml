@@ -341,7 +341,7 @@
             android:value="1" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="school.campusconnect.datamodel.EBookItem,school.campusconnect.datamodel.EBookClassItem, school.campusconnect.datamodel.GroupDataItem, school.campusconnect.datamodel.PostDataItem, school.campusconnect.datamodel.notifications.NotificationModel, school.campusconnect.datamodel.TeamListItem, school.campusconnect.datamodel.PostTeamDataItem, school.campusconnect.datamodel.personalchat.PersonalContactsModel,  school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel,  school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel,  school.campusconnect.datamodel.gruppiecontacts.AllContactModel" /> <!-- rajini.gruppie.datamodel.gruppiecontacts.GruppieContactAddressModel, -->
+            android:value="school.campusconnect.datamodel.HwItem,school.campusconnect.datamodel.SubjectItem,school.campusconnect.datamodel.EBookItem,school.campusconnect.datamodel.EBookClassItem, school.campusconnect.datamodel.GroupDataItem, school.campusconnect.datamodel.PostDataItem, school.campusconnect.datamodel.notifications.NotificationModel, school.campusconnect.datamodel.TeamListItem, school.campusconnect.datamodel.PostTeamDataItem, school.campusconnect.datamodel.personalchat.PersonalContactsModel,  school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel,  school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel,  school.campusconnect.datamodel.gruppiecontacts.AllContactModel" /> <!-- rajini.gruppie.datamodel.gruppiecontacts.GruppieContactAddressModel, -->
         <activity
             android:name="school.campusconnect.activities.CommentsLikeActivity"
             android:screenOrientation="portrait"

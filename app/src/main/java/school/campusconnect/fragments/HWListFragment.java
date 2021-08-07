@@ -15,6 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -25,6 +29,8 @@ import school.campusconnect.activities.HWParentActivity;
 import school.campusconnect.activities.HWStudentActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.HwItem;
+import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.network.LeafManager;
@@ -64,9 +70,41 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
         canPost = getArguments().getBoolean("canPost");
 
 
-        getChapters();
+        getDataLocally();
 
         return view;
+    }
+    private void getDataLocally() {
+        List<HwItem> list = HwItem.getAll(subject_id,team_id,GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            ArrayList<HwRes.HwData> result= new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                HwItem currentItem = list.get(i);
+                HwRes.HwData item = new HwRes.HwData();
+                item.topic = currentItem.topic;
+                item.subjectId = currentItem.subjectId;
+                item.lastSubmissionDate = currentItem.lastSubmissionDate;
+                item.teamId = currentItem.teamId;
+                item.groupId = currentItem.groupId;
+                item.description = currentItem.description;
+                item.createdByName = currentItem.createdByName;
+                item.postedAt = currentItem.postedAt;
+                item.createdByImage = currentItem.createdByImage;
+                item.createdById = currentItem.createdById;
+                item.canPost = currentItem.canPost;
+                item.assignmentId = currentItem.assignmentId;
+                item.studentAssignmentId = currentItem.studentAssignmentId;
+                item.fileType = currentItem.fileType;
+                item.fileName =new Gson().fromJson(currentItem.fileName,new TypeToken<ArrayList<String>>() {}.getType());
+                item.thumbnailImage =new Gson().fromJson(currentItem.thumbnailImage,new TypeToken<ArrayList<String>>() {}.getType());
+                item.thumbnail = currentItem.thumbnail;
+                item.video = currentItem.video;
+                result.add(item);
+            }
+            rvClass.setAdapter(new HwAdapter(result));
+        } else {
+            getChapters();
+        }
     }
 
     @Override
@@ -92,7 +130,41 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
         AppLog.e(TAG, "HwRes " + result);
 
         rvClass.setAdapter(new HwAdapter(result));
+
+        saveToDB(result);
     }
+    private void saveToDB(List<HwRes.HwData> result) {
+        if (result == null)
+            return;
+
+        for (int i = 0; i < result.size(); i++) {
+            HwRes.HwData currentItem = result.get(i);
+            HwItem classItem = new HwItem();
+            classItem.topic = currentItem.topic;
+            classItem.subjectId = currentItem.subjectId;
+            classItem.lastSubmissionDate = currentItem.lastSubmissionDate;
+            classItem.teamId = currentItem.teamId;
+            classItem.groupId = currentItem.groupId;
+            classItem.description = currentItem.description;
+            classItem.createdByName = currentItem.createdByName;
+            classItem.postedAt = currentItem.postedAt;
+            classItem.createdByImage = currentItem.createdByImage;
+            classItem.createdById = currentItem.createdById;
+            classItem.canPost = currentItem.canPost;
+            classItem.assignmentId = currentItem.assignmentId;
+            classItem.studentAssignmentId = currentItem.studentAssignmentId;
+            classItem.fileType = currentItem.fileType;
+            classItem.fileName =new Gson().toJson(currentItem.fileName);
+            classItem.thumbnailImage =new Gson().toJson(currentItem.thumbnailImage);
+            classItem.thumbnail = currentItem.thumbnail;
+            classItem.video = currentItem.video;
+            classItem.teamId = team_id;
+            classItem.groupId = GroupDashboardActivityNew.groupId;
+            classItem.save();
+        }
+    }
+
+
 
     @Override
     public void onFailure(int apiId, String msg) {
