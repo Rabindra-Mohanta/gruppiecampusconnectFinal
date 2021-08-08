@@ -717,13 +717,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         this.item = classData;
 
 
-        if (classData.canPost && !classData.alreadyOnJitsiLive) {
+       /* if (classData.canPost && !classData.alreadyOnJitsiLive) {
             ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
-        } else {
+        } else {*/
             videoClassClicked = true;
             startMeeting();
             progressBarZoom.setVisibility(View.VISIBLE);
-        }
+//        }
 
 
     }

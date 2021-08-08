@@ -38,6 +38,9 @@ public class AssignmentRes extends BaseResponse {
         @SerializedName("description")
         @Expose
         public String description;
+        @SerializedName("verifiedComment")
+        @Expose
+        public String verifiedComment;
         @SerializedName("reassignComment")
         @Expose
         public String reassignComment;

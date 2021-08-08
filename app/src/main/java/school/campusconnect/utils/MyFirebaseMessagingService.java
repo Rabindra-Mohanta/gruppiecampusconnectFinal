@@ -118,7 +118,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         }
                     }
                     break;
-                    case "VendorAdd":{
+                    case "VendorAdd": {
                         AppLog.e(TAG, "vendorAdd type notifcation .,, preference saving started.");
                         leafPreference.setInt(data.groupId + "_vendorpush", leafPreference.getInt(data.groupId + "_vendorpush") + 1);
                     }
@@ -131,6 +131,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                     case "EBookAdd": {
                         leafPreference.setInt(data.teamId + "_ebookpush", leafPreference.getInt(data.teamId + "_ebookpush") + 1);
+                    }
+                    break;
+                    case "ASSIGNMENT_STATUS": {
+                        leafPreference.setInt(data.teamId + "_ass_count_noti", leafPreference.getInt(data.teamId + "_ass_count_noti") + 1);
                     }
                     break;
 

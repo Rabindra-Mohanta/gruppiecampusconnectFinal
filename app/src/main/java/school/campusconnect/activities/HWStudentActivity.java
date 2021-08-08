@@ -28,7 +28,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -48,11 +50,15 @@ import school.campusconnect.adapters.ChildVideoAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.EBookItem;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
+import school.campusconnect.datamodel.StudAssignementItem;
 import school.campusconnect.datamodel.chapter.ChapterRes;
+import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.HwRes;
+import school.campusconnect.fragments.EBookPdfTeamFragment;
 import school.campusconnect.fragments.HWListFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
@@ -103,6 +109,10 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     @Bind(R.id.txt_date)
     TextView txt_date;
 
+
+    @Bind(R.id.swipeRefreshLayout)
+    PullRefreshLayout swipeRefreshLayout;
+
     private String group_id;
     private String team_id;
     private String subject_id;
@@ -119,13 +129,61 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         setBackEnabled(true);
 
         _init();
-        String nTopic = item.topic.length()>15?item.topic.substring(0,15):item.topic;
+        String nTopic = item.topic.length() > 15 ? item.topic.substring(0, 15) : item.topic;
         setTitle(nTopic + " (" + className + ")");
 
         showData();
 
-        getAssignment();
+        getDataLocally();
+
     }
+
+    private void getDataLocally() {
+        List<StudAssignementItem> list = StudAssignementItem.getAll(item.assignmentId, team_id, GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            ArrayList<AssignmentRes.AssignmentData> result = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                StudAssignementItem currentItem = list.get(i);
+
+                AssignmentRes.AssignmentData item = new AssignmentRes.AssignmentData();
+                item.assignmentReassigned = currentItem.assignmentReassigned;
+                item.assignmentVerified = currentItem.assignmentVerified;
+                item.studentName = currentItem.studentName;
+                item.description = currentItem.description;
+                item.fileName = new Gson().fromJson(currentItem.fileName, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                item.thumbnailImage = new Gson().fromJson(currentItem.thumbnailImage, new TypeToken<ArrayList<String>>() {
+                }.getType());
+
+                item.fileType = currentItem.fileType;
+                item.insertedAt = currentItem.insertedAt;
+                item.reassignComment = currentItem.reassignComment;
+                item.reassignedAt = currentItem.reassignedAt;
+                item.rollNumber = currentItem.rollNumber;
+                item.studentAssignmentId = currentItem.studentAssignmentId;
+                item.studentDbId = currentItem.studentDbId;
+                item.studentDbId = currentItem.studentDbId;
+                item.submittedById = currentItem.submittedById;
+                item.thumbnail = currentItem.thumbnail;
+                item.userId = currentItem.userId;
+                item.verifiedComment = currentItem.verifiedComment;
+                item.video = currentItem.video;
+
+                result.add(item);
+            }
+            rvAssignment.setAdapter(new AssignmentAdapter(result));
+
+            if (LeafPreference.getInstance(this).getInt(team_id + "_ass_count_noti") > 0) {
+
+                LeafPreference.getInstance(this).setBoolean(team_id + "_ass_count_noti", false);
+                getAssignment();
+            }
+
+        } else {
+            getAssignment();
+        }
+    }
+
 
     private void _init() {
         group_id = getIntent().getStringExtra("group_id");
@@ -134,12 +192,25 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         subject_name = getIntent().getStringExtra("subject_name");
         className = getIntent().getStringExtra("className");
         item = (HwRes.HwData) getIntent().getSerializableExtra("data");
+
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    getAssignment();
+                    swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    showNoNetworkMsg();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     private void showData() {
         txt_title.setText(item.topic);
         txt_teacher.setText(item.createdByName);
-        txt_date.setText(MixOperations.getFormattedDateOnly(item.postedAt, Constants.DATE_FORMAT,"dd MMM yyyy\nhh:mm a"));
+        txt_date.setText(MixOperations.getFormattedDateOnly(item.postedAt, Constants.DATE_FORMAT, "dd MMM yyyy\nhh:mm a"));
         if (!TextUtils.isEmpty(item.description)) {
             txtContent.setVisibility(View.VISIBLE);
             if (item.description.length() > 200) {
@@ -165,10 +236,10 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             txtContent.setVisibility(View.GONE);
             txt_readmore.setVisibility(View.GONE);
         }
-        if(!TextUtils.isEmpty(item.lastSubmissionDate)){
+        if (!TextUtils.isEmpty(item.lastSubmissionDate)) {
             txt_lastDate.setVisibility(View.VISIBLE);
-            txt_lastDate.setText("Last Submission Date : "+item.lastSubmissionDate);
-        }else {
+            txt_lastDate.setText("Last Submission Date : " + item.lastSubmissionDate);
+        } else {
             txt_lastDate.setVisibility(View.GONE);
             txt_lastDate.setText("");
         }
@@ -325,10 +396,52 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             case LeafManager.API_ASSIGNMENT_LIST:
                 AssignmentRes assignmentRes = (AssignmentRes) response;
                 rvAssignment.setAdapter(new AssignmentAdapter(assignmentRes.getData()));
+                LeafPreference.getInstance(this).remove(team_id + "_ass_count_noti");
+                saveToDB(assignmentRes.getData());
                 break;
             case LeafManager.API_DELETE_ASSIGNMENT_STUDENT:
                 getAssignment();
                 break;
+        }
+    }
+
+    private void saveToDB(ArrayList<AssignmentRes.AssignmentData> data) {
+        if (data == null)
+            return;
+
+        StudAssignementItem.deleteAll();
+
+        for (int i = 0; i < data.size(); i++) {
+            AssignmentRes.AssignmentData currentItem = data.get(i);
+            StudAssignementItem item = new StudAssignementItem();
+
+            item.description = currentItem.description;
+            item.fileName = new Gson().toJson(currentItem.fileName);
+            item.thumbnailImage = new Gson().toJson(currentItem.thumbnailImage);
+
+            item.assignmentReassigned = currentItem.assignmentReassigned;
+            item.assignmentVerified = currentItem.assignmentVerified;
+            item.studentName = currentItem.studentName;
+            item.description = currentItem.description;
+
+            item.fileType = currentItem.fileType;
+            item.insertedAt = currentItem.insertedAt;
+            item.reassignComment = currentItem.reassignComment;
+            item.reassignedAt = currentItem.reassignedAt;
+            item.rollNumber = currentItem.rollNumber;
+            item.studentAssignmentId = currentItem.studentAssignmentId;
+            item.studentDbId = currentItem.studentDbId;
+            item.studentDbId = currentItem.studentDbId;
+            item.submittedById = currentItem.submittedById;
+            item.thumbnail = currentItem.thumbnail;
+            item.userId = currentItem.userId;
+            item.verifiedComment = currentItem.verifiedComment;
+            item.video = currentItem.video;
+
+            item.AssignId = this.item.assignmentId;
+            item.teamId = team_id;
+            item.groupId = GroupDashboardActivityNew.groupId;
+            item.save();
         }
     }
 
@@ -369,7 +482,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         public void onBindViewHolder(final AssignmentAdapter.ViewHolder holder, final int position) {
             final AssignmentRes.AssignmentData item = list.get(position);
             holder.txtName.setText(item.studentName);
-            holder.txtDate.setText(MixOperations.getFormattedDateOnly(item.insertedAt, Constants.DATE_FORMAT,"dd MMM yyyy\nhh:mm a"));
+            holder.txtDate.setText(MixOperations.getFormattedDateOnly(item.insertedAt, Constants.DATE_FORMAT, "dd MMM yyyy\nhh:mm a"));
 
             holder.constThumb.setVisibility(View.GONE);
             final String name = item.studentName;
@@ -488,16 +601,18 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 holder.txt_NotVerify.setVisibility(View.GONE);
                 if (item.assignmentVerified) {
                     holder.btnYes.setVisibility(View.VISIBLE);
+                    holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                    holder.txt_comments.setVisibility(View.VISIBLE);
                 } else {
                     holder.btnYes.setVisibility(View.GONE);
-                }
-                if (item.assignmentReassigned) {
-                    holder.txt_comments.setText("Comment :\n" + item.reassignComment);
-                    holder.txt_comments.setVisibility(View.VISIBLE);
-                    holder.btnNo.setVisibility(View.VISIBLE);
-                } else {
-                    holder.txt_comments.setVisibility(View.GONE);
-                    holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
+                    if (item.assignmentReassigned) {
+                        holder.txt_comments.setText("Comment :\n" + item.reassignComment);
+                        holder.txt_comments.setVisibility(View.VISIBLE);
+                        holder.btnNo.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.txt_comments.setVisibility(View.GONE);
+                        holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
+                    }
                 }
             }
 
@@ -668,7 +783,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
-                leafManager.deleteAssignmentStudent(HWStudentActivity.this,group_id,team_id,subject_id,HWStudentActivity.this.item.assignmentId,item.studentAssignmentId);
+                leafManager.deleteAssignmentStudent(HWStudentActivity.this, group_id, team_id, subject_id, HWStudentActivity.this.item.assignmentId, item.studentAssignmentId);
             }
         });
     }

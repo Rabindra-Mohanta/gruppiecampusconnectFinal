@@ -58,6 +58,8 @@ import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
@@ -379,8 +381,23 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             case LeafManager.API_VERIFY_ASSIGNMENT:
             case LeafManager.API_REASSIGN_ASSIGNMENT:
                 getAssignment();
+                sendNotification();
                 break;
         }
+    }
+    private void sendNotification() {
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId+"_"+team_id;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "";
+        notificationModel.data.Notification_type = "ASSIGNMENT_STATUS";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+        notificationModel.data.teamId = team_id;
+        notificationModel.data.createdById = LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = "";
+        notificationModel.data.postType = "";
+        SendNotificationGlobal.send(notificationModel);
     }
 
     @Override
@@ -589,19 +606,20 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                     holder.txt_NotVerify.setVisibility(View.GONE);
                     if (item.assignmentVerified) {
                         holder.btnYes.setVisibility(View.VISIBLE);
+                        holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                        holder.txt_comments.setVisibility(View.VISIBLE);
                     } else {
                         holder.btnYes.setVisibility(View.GONE);
-                    }
-                    if (item.assignmentReassigned) {
-                        holder.txt_comments.setText("Comment :\n" + item.reassignComment);
-                        holder.txt_comments.setVisibility(View.VISIBLE);
-                        holder.btnNo.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.txt_comments.setVisibility(View.GONE);
-                        holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
+                        if (item.assignmentReassigned) {
+                            holder.txt_comments.setText("Comment :\n" + item.reassignComment);
+                            holder.txt_comments.setVisibility(View.VISIBLE);
+                            holder.btnNo.setVisibility(View.VISIBLE);
+                        } else {
+                            holder.txt_comments.setVisibility(View.GONE);
+                            holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
+                        }
                     }
                 }
-
             }
 
         }

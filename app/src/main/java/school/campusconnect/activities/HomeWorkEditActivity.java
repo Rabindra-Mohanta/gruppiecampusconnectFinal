@@ -327,7 +327,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             public void onClick(View v) {
                 if (rbt4.isChecked()) {
                     if (!TextUtils.isEmpty(etTitle.getText().toString().trim())) {
-                        mPhotoEditor.addText(etTitle.getText().toString(), getResources().getColor(R.color.colorPrimary));
+                        mPhotoEditor.addText(etTitle.getText().toString(), getResources().getColor(R.color.pink));
                         dialog.dismiss();
                     } else {
                         Toast.makeText(HomeWorkEditActivity.this, "Please Add Text", Toast.LENGTH_SHORT).show();

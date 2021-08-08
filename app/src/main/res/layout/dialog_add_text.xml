@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"/>
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rbt4"
-            android:text="Custom Text"
+            android:text="Write your own"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RadioGroup>
@@ -37,6 +37,7 @@
     <EditText
         android:id="@+id/etTitle"
         android:visibility="gone"
+        android:maxLength="50"
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/padding_5dp"
         android:layout_height="@dimen/login_button_height"
