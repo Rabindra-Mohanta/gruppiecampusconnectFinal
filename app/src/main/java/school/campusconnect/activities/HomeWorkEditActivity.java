@@ -2,6 +2,7 @@ package school.campusconnect.activities;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -64,6 +65,7 @@ import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import ja.burhanrashid52.photoeditor.ViewType;
 import ja.burhanrashid52.photoeditor.shape.ShapeBuilder;
 import ja.burhanrashid52.photoeditor.shape.ShapeType;
+import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
@@ -88,7 +90,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
     ZoomLayout zoomLayout;
 
     private TransferUtility transferUtility;
-
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -389,7 +391,6 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             public void onClick(View v) {
                 chkVerify.setChecked(true);
                 chkReAssign.setChecked(false);
-                etTitle.setVisibility(View.GONE);
                 tvComment.setVisibility(View.GONE);
             }
         });
@@ -398,7 +399,6 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             public void onClick(View v) {
                 chkVerify.setChecked(false);
                 chkReAssign.setChecked(true);
-                etTitle.setVisibility(View.VISIBLE);
                 tvComment.setVisibility(View.VISIBLE);
             }
         });
@@ -407,10 +407,8 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    etTitle.setVisibility(View.GONE);
                     tvComment.setVisibility(View.GONE);
                 } else {
-                    etTitle.setVisibility(View.VISIBLE);
                     tvComment.setVisibility(View.VISIBLE);
                 }
             }
@@ -435,7 +433,11 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                         public void onSuccess(@NonNull String imagePath)
                         {
                             AppLog.e(TAG , "Image Saved Successfully at : "+imagePath);
-                            uploadImageOnCloud(imagePath);
+
+                            progressDialog = new ProgressDialog(HomeWorkEditActivity.this);
+                            progressDialog.setMessage("Uploading Image...");
+                            progressDialog.show();
+                            uploadImageOnCloud(imagePath,etTitle.getText().toString().trim());
                         }
 
                         @Override
@@ -466,10 +468,9 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
         dialog.show();
     }
 
-    private void uploadImageOnCloud(String imagePath)
+    private void uploadImageOnCloud(String imagePath,String comments)
     {
-        final String key = Constants.decodeUrlToBase64(assignmentData.fileName.get(0)).replace("https://gruppiemedia.sgp1.digitaloceanspaces.com/" ,"");
-
+        final String key = AmazoneHelper.getAmazonS3KeyThumbnail(FILE_TYPE_IMAGE);
         AppLog.e(TAG , "uploadImageOnCloud called with key : "+key);
         File file = new File(imagePath);
         TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
@@ -480,9 +481,19 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             public void onStateChanged(int id, TransferState state) {
                 AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
                 if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                    progressDialog.dismiss();
+                    String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+                    Log.e("FINALURL", "url is " + _finalUrl);
+
+                    _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+                    Log.e("FINALURL", "encoded url is " + _finalUrl);
+
                     Intent intent = new Intent();
                     intent.putExtra("isVerify", true);
-                    intent.putExtra("comments", "");
+                    intent.putExtra("comments", comments);
+                    intent.putExtra("_finalUrl", _finalUrl);
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -497,6 +508,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                 float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                 int percentDone = (int) percentDonef;
 
+                progressDialog.setMessage("Uploading Image " + percentDone + "% , please wait...");
 
                 AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                         + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
@@ -504,7 +516,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
 
             @Override
             public void onError(int id, Exception ex) {
-
+                progressDialog.dismiss();
                 AppLog.e(TAG, "Upload Error : " + ex);
                 Toast.makeText(HomeWorkEditActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
             }

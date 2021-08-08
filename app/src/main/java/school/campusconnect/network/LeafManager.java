@@ -9097,12 +9097,12 @@ public class LeafManager {
 
     }
 
-    public void verifyAssignment(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String assignment_id, String student_assignment_id, boolean verify) {
+    public void verifyAssignment(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String assignment_id, String student_assignment_id, boolean verify,ReassignReq reassignReq) {
         mListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
 
-        Call<BaseResponse> model = service.verifyAssignment(groupId, team_id, subject_id, assignment_id, student_assignment_id, verify);
+        Call<BaseResponse> model = service.verifyAssignment(groupId, team_id, subject_id, assignment_id, student_assignment_id, verify,reassignReq);
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
         }.getType();

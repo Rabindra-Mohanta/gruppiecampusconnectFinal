@@ -50,7 +50,7 @@ import school.campusconnect.service.FloatingWidgetService;
 import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 
-public class VideoClassActivity extends BaseActivity  implements HBRecorderListener {
+public class VideoClassActivity extends BaseActivity implements HBRecorderListener {
 
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -63,14 +63,14 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
     public static int SCREEN_RECORD_REQUEST_CODE = 321;
     public static String TAG = VideoClassActivity.class.getName();
 
-    VideoClassListFragment classListFragment=new VideoClassListFragment();
+    VideoClassListFragment classListFragment = new VideoClassListFragment();
 
-    Intent recorderIntent ;
+    Intent recorderIntent;
     int resultcode;
     private VideoClassResponse.ClassData selectedClassData;
 
     Uri mUri;
-    private boolean isRecordingStarted=false;
+    private boolean isRecordingStarted = false;
 
     private static final int DRAW_OVER_OTHER_APP_PERMISSION = 123;
 
@@ -78,12 +78,11 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     private boolean mBound;
 
-    Intent getRecorderIntent ;
+    Intent getRecorderIntent;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people);
 
@@ -92,9 +91,9 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
         setBackEnabled(true);
         setTitle(getIntent().getStringExtra("title"));
 
-    //    VideoClassListFragment classListFragment=new VideoClassListFragment();
+        //    VideoClassListFragment classListFragment=new VideoClassListFragment();
         classListFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
 
 
         //Init HBRecorder
@@ -110,28 +109,28 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     @Override
     public void HBRecorderOnStart() {
-        AppLog.e(TAG,"AAA HBRecorderOnStart()");
+        AppLog.e(TAG, "AAA HBRecorderOnStart()");
     }
 
     @Override
     public void HBRecorderOnComplete() {
-        AppLog.e(TAG,"AAA HBRecorderOnComplete()");
+        AppLog.e(TAG, "AAA HBRecorderOnComplete()");
     }
-    public void showSharePopup(){
-        if(selectedClassData==null || !isRecordingStarted){
+
+    public void showSharePopup() {
+        if (selectedClassData == null || !isRecordingStarted) {
             return;
         }
         AppDialog.showConfirmDialog(this, "Do you want to share this live class?", new AppDialog.AppDialogListener() {
             @Override
-            public void okPositiveClick(DialogInterface dialog)
-            {
+            public void okPositiveClick(DialogInterface dialog) {
                 dialog.dismiss();
-                AppLog.e(TAG,"hbRecorder.getFilePath() : "+hbRecorder.getFilePath());
+                AppLog.e(TAG, "hbRecorder.getFilePath() : " + hbRecorder.getFilePath());
                 Intent intent = new Intent(VideoClassActivity.this, RecClassSubjectActivity.class);
-                intent.putExtra("team_id",selectedClassData.getId());
-                intent.putExtra("title",selectedClassData.className);
+                intent.putExtra("team_id", selectedClassData.getId());
+                intent.putExtra("title", selectedClassData.className);
 
-                intent.putExtra("path",hbRecorder.getFilePath());
+                intent.putExtra("path", hbRecorder.getFilePath());
                 startActivity(intent);
             }
 
@@ -144,22 +143,20 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     @Override
     public void HBRecorderOnError(int errorCode, String reason) {
-        AppLog.e(TAG,"AAA HBRecorderOnError() : "+reason);
+        AppLog.e(TAG, "AAA HBRecorderOnError() : " + reason);
     }
 
-    public void startRecordingScreen(VideoClassResponse.ClassData selectedClassData)
-    {
+    public void startRecordingScreen(VideoClassResponse.ClassData selectedClassData) {
 
-            this.selectedClassData = selectedClassData;
-            AppLog.e(TAG, "StartRecordingScreen called ");
-            MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-            Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
-            startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
+        this.selectedClassData = selectedClassData;
+        AppLog.e(TAG, "StartRecordingScreen called ");
+        MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+        Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
+        startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
     }
 
-    public void requestOverlayPermission()
-    {
-        AppLog.e(TAG , "StartRecordingScreen called ");
+    public void requestOverlayPermission() {
+        AppLog.e(TAG, "StartRecordingScreen called ");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
 
             //If the draw over permission is not available open the settings screen
@@ -171,11 +168,10 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
     }
 
-    public void startBubbleService()
-    {
-        AppLog.e(TAG,"startBubbleService()");
+    public void startBubbleService() {
+        AppLog.e(TAG, "startBubbleService()");
 
-        if(!isRecordingStarted)
+        if (!isRecordingStarted)
             return;
 
         Intent uploadIntent2 = new Intent(this, FloatingWidgetService.class);
@@ -190,14 +186,13 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
-        public void onServiceConnected(ComponentName className, IBinder service)
-        {
+        public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             FloatingWidgetService.LocalBinder binder = (FloatingWidgetService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
 
-            LocalBroadcastManager.getInstance(VideoClassActivity.this).registerReceiver(mMessageReceiver , new IntentFilter("recording"));
+            LocalBroadcastManager.getInstance(VideoClassActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("recording"));
         }
 
         @Override
@@ -206,27 +201,25 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
         }
     };
 
-     //(VideoClassActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("intentKey"));
+    //(VideoClassActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("intentKey"));
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver()
-    {
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
 
 
             String message = intent.getStringExtra("action");
-            AppLog.e(TAG , "onReceive called with action : "+message);
+            AppLog.e(TAG, "onReceive called with action : " + message);
 
 
-            if(message.equalsIgnoreCase("start"))
-            startActuallRecording();
+            if (message.equalsIgnoreCase("start"))
+                startActuallRecording();
             // Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
     };
 
-    public void removeBubble()
-    {
+    public void removeBubble() {
         AppLog.e("BubbleService", "removeView Activity");
         if (mService != null) {
             mService.removeBubble();
@@ -242,26 +235,23 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
     }
 
 
-    public void stopRecording()
-    {
-        if(hbRecorder !=null && selectedClassData!=null)
-        {
+    public void stopRecording() {
+        if (hbRecorder != null && selectedClassData != null) {
             hbRecorder.stopScreenRecording();
-            AppLog.e(TAG,"hbRecorder.getFilePath() : "+hbRecorder.getFilePath());
-          //  AppLog.e(TAG,"mUri : "+mUri.toString());
+            AppLog.e(TAG, "hbRecorder.getFilePath() : " + hbRecorder.getFilePath());
+            //  AppLog.e(TAG,"mUri : "+mUri.toString());
 
-            AppLog.e(TAG,"hbRecorder.getFileName() : "+hbRecorder.getFileName());
-            AppLog.e(TAG,"selected ClassData : "+selectedClassData.getId());
+            AppLog.e(TAG, "hbRecorder.getFileName() : " + hbRecorder.getFileName());
+            AppLog.e(TAG, "selected ClassData : " + selectedClassData.getId());
 
-            if(mUri !=null)
-            saveVideoNameOffline(hbRecorder.getFileName() ,mUri.toString());
+            if (mUri != null)
+                saveVideoNameOffline(hbRecorder.getFileName(), mUri.toString());
             else
-            saveVideoNameOffline(hbRecorder.getFileName() ,hbRecorder.getFilePath());
+                saveVideoNameOffline(hbRecorder.getFileName(), hbRecorder.getFilePath());
         }
     }
 
-    public void saveVideoNameOffline(String fileName, String filePath)
-    {
+    public void saveVideoNameOffline(String fileName, String filePath) {
         VideoOfflineObject offlineObject = new VideoOfflineObject();
         offlineObject.setVideo_filename(fileName);
         offlineObject.setVideo_filepath(filePath);
@@ -269,42 +259,36 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
         LeafPreference preference = LeafPreference.getInstance(VideoClassActivity.this);
 
-        if(!preference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase(""))
-        {
+        if (!preference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase("")) {
             ArrayList<VideoOfflineObject> offlineObjects = new Gson().fromJson(preference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {
             }.getType());
 
             offlineObjects.add(offlineObject);
-            preference.setString(LeafPreference.OFFLINE_VIDEONAMES , new Gson().toJson(offlineObjects));
+            preference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(offlineObjects));
 
-        }
-        else
-        {
+        } else {
             ArrayList<VideoOfflineObject> offlineObjects = new ArrayList<>();
             offlineObjects.add(offlineObject);
-            preference.setString(LeafPreference.OFFLINE_VIDEONAMES , new Gson().toJson(offlineObjects));
+            preference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(offlineObjects));
         }
 
     }
 
 
-    public void startRecording()
-    {
-        if(hbRecorder == null)
-        {
+    public void startRecording() {
+        if (hbRecorder == null) {
             return;
         }
         //Start screen recording
         hbRecorder.setAudioSource("DEFAULT");
         hbRecorder.setOutputPath(Environment.getExternalStorageDirectory().getPath());
-        if(recorderIntent !=null)
-            hbRecorder.startScreenRecording(recorderIntent ,resultcode, this);
+        if (recorderIntent != null)
+            hbRecorder.startScreenRecording(recorderIntent, resultcode, this);
     }
 
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         AppLog.e(TAG , "onActivityResult called ");
@@ -402,37 +386,31 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
 
         if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION) {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(this)) {
                     //Permission is not available. Display error text.
 
-                        Toast.makeText(VideoClassActivity.this , "Draw over permission not available." , Toast.LENGTH_SHORT).show();
-                        isRecordingStarted = false;
+                    Toast.makeText(VideoClassActivity.this, "Draw over permission not available.", Toast.LENGTH_SHORT).show();
+                    isRecordingStarted = false;
 
-                        if (classListFragment != null)
+                    if (classListFragment != null)
                         classListFragment.startMeetingFromActivity();
-                        }
-
-                else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(VideoClassActivity.this))
-                {
-                   // startService(new Intent(VideoClassActivity.this, FloatingWidgetService.class));
+                } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(VideoClassActivity.this)) {
+                    // startService(new Intent(VideoClassActivity.this, FloatingWidgetService.class));
 
                     isRecordingStarted = true;
                     if (classListFragment != null)
                         classListFragment.startMeetingFromActivity();
 
                 }
-                    //finish();
+                //finish();
 
-            }
-            else
-            {
+            } else {
                 isRecordingStarted = true;
                 if (classListFragment != null)
                     classListFragment.startMeetingFromActivity();
             }
-        }  else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -445,12 +423,11 @@ public class VideoClassActivity extends BaseActivity  implements HBRecorderListe
     }
 
 
-    private void createFolder()
-    {
+    private void createFolder() {
         File f1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "HBRecorder");
         if (!f1.exists()) {
             if (f1.mkdirs()) {
-                AppLog.e(TAG, "folder created : "+f1.getAbsolutePath());
+                AppLog.e(TAG, "folder created : " + f1.getAbsolutePath());
             }
         }
     }

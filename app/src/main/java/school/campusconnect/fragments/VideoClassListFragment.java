@@ -1899,8 +1899,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
                 if (!TextUtils.isEmpty(subjectAdapter.getSelected())) {
+                    dialog.dismiss();
                     StopMeetingReq stopMeetingReq = new StopMeetingReq(item.meetingIdOnLive, subjectAdapter.getSelected());
                     AppLog.e(TAG, "stopMeetingReq : " + stopMeetingReq);
                     progressBar.setVisibility(View.VISIBLE);

@@ -27,7 +27,7 @@
         android:paddingLeft="@dimen/padding_10dp"
         style="@style/LabelNormal"
         android:textAllCaps="true"
-        android:visibility="gone"
+        android:visibility="visible"
         android:textColor="@color/colorPrimary"
         android:layout_height="wrap_content" />
 
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/padding_5dp"
         android:minLines="4"
-        android:visibility="gone"
+        android:visibility="visible"
         style="@style/RegEditText"
         android:layout_height="wrap_content"/>
 

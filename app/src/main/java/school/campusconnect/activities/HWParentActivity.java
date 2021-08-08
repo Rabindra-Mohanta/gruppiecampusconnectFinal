@@ -287,7 +287,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==99 && resultCode==RESULT_OK){
-            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"));
+            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"),data.getStringExtra("_finalUrl"));
         }
     }
 
@@ -797,7 +797,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                     dialog.dismiss();
                     progressBar.setVisibility(View.VISIBLE);
                     LeafManager leafManager = new LeafManager();
-                    leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentVerified);
+                    leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentVerified,new ReassignReq(etTitle.getText().toString()));
                 } else {
                     if (!TextUtils.isEmpty(etTitle.getText().toString().trim())) {
                         dialog.dismiss();
@@ -813,12 +813,15 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         dialog.show();
     }
 
-    private void notVerifyAssignmentFromActResult(boolean isVerify, String comments) {
+    private void notVerifyAssignmentFromActResult(boolean isVerify, String comments,String _finalUrl) {
 
         if (isVerify) {
             progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
-            leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true);
+            ReassignReq reassignReq = new ReassignReq(comments);
+            reassignReq.fileName = new ArrayList<>();
+            reassignReq.fileName.add(_finalUrl);
+            leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true,reassignReq);
         } else {
             progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
@@ -833,7 +836,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
-                leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentVerified);
+                leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentVerified,new ReassignReq("text"));
             }
         });
     }

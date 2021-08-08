@@ -152,7 +152,7 @@ public interface LeafService {
 
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
-    Call<LoginResponse> loginCampusCopy(@Body LoginRequest request, @Query("category") String category,@Query("appName") String appName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+    Call<LoginResponse> loginCampusCopy(@Body LoginRequest request, @Query("category") String category, @Query("appName") String appName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
     @POST("/api/v1/login/individual?")
     @Headers({"Content-Type: application/json"})
@@ -196,7 +196,7 @@ public interface LeafService {
 
     @POST("/api/v1/register/individual?")
     @Headers({"Content-Type: application/json"})
-        Call<SignUpResponse> signupIndividual(@Body SignUpRequest request, @Query("appId") String group_id);
+    Call<SignUpResponse> signupIndividual(@Body SignUpRequest request, @Query("appId") String group_id);
 
     @PUT("/api/v1/number/change")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -491,7 +491,7 @@ public interface LeafService {
 
     @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/stop")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<StartMeetingRes> stopMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId,@Body StopMeetingReq req);
+    Call<StartMeetingRes> stopMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId, @Body StopMeetingReq req);
 
     @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/stop")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -516,7 +516,7 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{groupId}/team/{teamId}/ebooks/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addEBook2(@Path("groupId") String group_id,@Path("teamId") String teamId, @Body AddEbookReq2 addEbookReq);
+    Call<BaseResponse> addEBook2(@Path("groupId") String group_id, @Path("teamId") String teamId, @Body AddEbookReq2 addEbookReq);
 
     @POST("/api/v1/groups/{group_id}/team/{teamId}/jitsi/token/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -529,7 +529,7 @@ public interface LeafService {
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/ebook/{ebook_id}/remove")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> deleteEBookTeam(@Path("group_id") String group_id,@Path("team_id") String team_id, @Path("ebook_id") String ebook_id);
+    Call<BaseResponse> deleteEBookTeam(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("ebook_id") String ebook_id);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/ebook/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -548,7 +548,7 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<SubjectStaffResponse> getSubjectStaffMore(@Path("group_id") String group_id, @Path("team_id") String team_id,
-                                                    @Query("option") String option);
+                                                   @Query("option") String option);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1328,7 +1328,7 @@ public interface LeafService {
 
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<GroupResponse> getGroups(@Query("category") String category,@Query("appName") String appName);
+    Call<GroupResponse> getGroups(@Query("category") String category, @Query("appName") String appName);
 
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/posts/get")
@@ -1358,9 +1358,9 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/topic/{topic_id}/completed")
     @Headers({"Content-Type: application/json"})
     Call<BaseResponse> topicCompleteStatus(@Path("group_id") String group_id, @Path("team_id") String team_id,
-                                     @Path("subject_id") String subject_id,
-                                     @Path("chapter_id") String chapter_id,
-                                     @Path("topic_id") String topic_id);
+                                           @Path("subject_id") String subject_id,
+                                           @Path("chapter_id") String chapter_id,
+                                           @Path("topic_id") String topic_id);
 
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/remove")
     @Headers({"Content-Type: application/json"})
@@ -1368,7 +1368,7 @@ public interface LeafService {
 
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/remove")
     @Headers({"Content-Type: application/json"})
-    Call<BaseResponse> deleteTTNewByDay(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("day") String day);
+    Call<BaseResponse> deleteTTNewByDay(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("day") String day);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/student/fee/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1384,7 +1384,7 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/student/{student_id}/fee/paid/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addStudentPaidFees(@Path("group_id") String group_id, @Path("team_id") String team_id,@Path("student_id") String student_id, @Body UpdateStudentFees req);
+    Call<BaseResponse> addStudentPaidFees(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("student_id") String student_id, @Body UpdateStudentFees req);
 
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/get")
@@ -1402,26 +1402,28 @@ public interface LeafService {
                                             @Path("subject_id") String subject_id,
                                             @Path("assignment_id") String assignment_id,
                                             @Body AddHwPostRequest request);
+
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/get")
     @Headers({"Content-Type: application/json"})
     Call<AssignmentRes> getAssignment(@Path("group_id") String group_id, @Path("team_id") String team_id,
                                       @Path("subject_id") String subject_id,
                                       @Path("assignment_id") String assignment_id);
 
-   @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/get")
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/get")
     @Headers({"Content-Type: application/json"})
     Call<AssignmentRes> getAssignmentForTeacher(@Path("group_id") String group_id, @Path("team_id") String team_id,
-                                      @Path("subject_id") String subject_id,
-                                      @Path("assignment_id") String assignment_id,
-                                      @Query("list") String param);
+                                                @Path("subject_id") String subject_id,
+                                                @Path("assignment_id") String assignment_id,
+                                                @Query("list") String param);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/verify/{studentAssignment_id}")
     @Headers({"Content-Type: application/json"})
     Call<BaseResponse> verifyAssignment(@Path("group_id") String group_id, @Path("team_id") String team_id,
-                                      @Path("subject_id") String subject_id,
-                                      @Path("assignment_id") String assignment_id,
-                                      @Path("studentAssignment_id") String studentAssignment_id,
-                                      @Query("verify") boolean verify);
+                                        @Path("subject_id") String subject_id,
+                                        @Path("assignment_id") String assignment_id,
+                                        @Path("studentAssignment_id") String studentAssignment_id,
+                                        @Query("verify") boolean verify,
+                                        @Body ReassignReq reassignReq);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/verify/{studentAssignment_id}")
     @Headers({"Content-Type: application/json"})
@@ -1435,14 +1437,14 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/delete")
     @Headers({"Content-Type: application/json"})
     Call<BaseResponse> deleteAssignmentTeacher(@Path("group_id") String group_id, @Path("team_id") String team_id,
-                                      @Path("subject_id") String subject_id,
-                                      @Path("assignment_id") String assignment_id);
+                                               @Path("subject_id") String subject_id,
+                                               @Path("assignment_id") String assignment_id);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/delete/{studentAssignmentId}")
     @Headers({"Content-Type: application/json"})
     Call<BaseResponse> deleteAssignmentStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,
-                                      @Path("subject_id") String subject_id,
-                                      @Path("assignment_id") String assignment_id,
-                                      @Path("studentAssignmentId") String studentAssignmentId);
+                                               @Path("subject_id") String subject_id,
+                                               @Path("assignment_id") String assignment_id,
+                                               @Path("studentAssignmentId") String studentAssignmentId);
 
 }
