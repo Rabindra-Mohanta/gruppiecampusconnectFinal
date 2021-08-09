@@ -717,13 +717,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         this.item = classData;
 
 
-       /* if (classData.canPost && !classData.alreadyOnJitsiLive) {
+        if (classData.canPost && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ) {
             ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
-        } else {*/
+        } else {
             videoClassClicked = true;
             startMeeting();
             progressBarZoom.setVisibility(View.VISIBLE);
-//        }
+        }
 
 
     }
@@ -755,6 +755,12 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         //   EnterSubjectDialog();
         getSubjectList(classData.getId());
+
+        if (getActivity() != null && item.canPost && !item.isLive) {
+            ((VideoClassActivity) getActivity()).stopRecording();
+        }
+
+
     }
 
     private void EnterSubjectDialog() {
@@ -1570,25 +1576,25 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 progressBar.setVisibility(View.GONE);
                 progressBarZoom.setVisibility(View.GONE);
 
-                if (getActivity() != null) {
+                /*if (getActivity() != null) {
                     ((VideoClassActivity) getActivity()).startBubbleService();
-                }
+                }*/
             }
 
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING")) {
 //                AppLog.e(TAG, "meeting Disconnecting : " + item.canPost + " , " + meetingCreatedBy);
 
-                if (getActivity() != null && item.canPost && !item.isLive) {
+              /*  if (getActivity() != null && item.canPost && !item.isLive) {
                     ((VideoClassActivity) getActivity()).stopRecording();
-                }
+                }*/
 
                 isZoomStarted = false;
 
-                try {
+          /*      try {
                     ((VideoClassActivity) getActivity()).removeBubble();
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 dialogMeetingConfirmation();
             }

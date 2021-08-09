@@ -235,8 +235,10 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
     }
 
 
-    public void stopRecording() {
-        if (hbRecorder != null && selectedClassData != null) {
+    public void stopRecording()
+    {
+        if (hbRecorder != null && selectedClassData != null)
+        {
             hbRecorder.stopScreenRecording();
             AppLog.e(TAG, "hbRecorder.getFilePath() : " + hbRecorder.getFilePath());
             //  AppLog.e(TAG,"mUri : "+mUri.toString());
@@ -294,14 +296,14 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
         AppLog.e(TAG , "onActivityResult called ");
         if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-               /* AppLog.e(TAG , "startScreenRecording called ");
+                AppLog.e(TAG , "startScreenRecording called ");
                 isRecordingStarted = true;
                 resultcode = resultCode;
                 recorderIntent = data;
 
                 String path = "";
 
-              *//*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+          /*     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 {
                     ContentResolver resolver;
                     ContentValues contentValues;
@@ -322,13 +324,13 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
                 {
                     createFolder();
                     hbRecorder.setOutputPath(Environment.getExternalStorageDirectory().getPath()+"/Gruppie");
-                }*//*
+                }*/
 
                 //Start screen recording
 
                 hbRecorder.enableCustomSettings();
 
-                hbRecorder.setAudioSource("DEFAULT");
+               // hbRecorder.setAudioSource("DEFAULT");
 
                 if(hbRecorder.getDefaultWidth() > 1000)
                 hbRecorder.setVideoBitrate(2000000);
@@ -340,20 +342,19 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
                 hbRecorder.setVideoEncoder("H264");
                // hbRecorder.setVideoFrameRate(24);
 
-
-
                 hbRecorder.setOutputPath(Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
                 hbRecorder.setFileName("video_"+new SimpleDateFormat("yyyyMMdd_hhmmss").format(new Date()));
 
 
                 File directory = new File(Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
-                if (! directory.exists()){
+                if (! directory.exists())
+                {
                     directory.mkdir();
                     // If you require it to make the entire directory path including parents,
                     // use directory.mkdirs(); here instead.
                 }
-*/
-                getRecorderIntent = data;
+
+               /* getRecorderIntent = data;
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)) {
                     isRecordingStarted = true;
@@ -363,9 +364,12 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
                 else
                 {
                     requestOverlayPermission();
-                }
+                }*/
 
-            /*    AppLog.e(TAG , "Recorder OutputPath : "+Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
+                AppLog.e(TAG , "Recorder OutputPath : "+Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
+
+                if (classListFragment != null)
+                    classListFragment.startMeetingFromActivity();
 
                 new Handler().post(new Runnable() {
                     @Override
@@ -373,18 +377,20 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
                         hbRecorder.startScreenRecording(data ,resultCode, VideoClassActivity.this);
                     }
                 });
-*/
+
             }
             else
             {
                 isRecordingStarted = false;
+
                 if(classListFragment !=null)
-                    classListFragment.startMeetingFromActivity();
+                classListFragment.startMeetingFromActivity();
 
             }
         }
 
-        if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION) {
+        if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION)
+        {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(this)) {
