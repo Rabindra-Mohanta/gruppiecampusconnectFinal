@@ -309,7 +309,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                        et_date.setText(format.format(calendar.getTime()));
+                        et_time.setText(format.format(calendar.getTime()));
                     }
                 },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
                 fragment.show();
