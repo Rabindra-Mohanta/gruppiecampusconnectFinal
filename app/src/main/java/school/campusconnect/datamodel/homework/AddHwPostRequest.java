@@ -13,6 +13,7 @@ public class AddHwPostRequest implements Serializable {
     public ArrayList<String> fileName;
     public ArrayList<String> thumbnailImage;
     public String lastSubmissionDate;
+    public String lastSubmissionTime;
 
 
     @Override

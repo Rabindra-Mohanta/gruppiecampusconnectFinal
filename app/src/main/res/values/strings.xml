@@ -518,6 +518,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strZoom">Zoom</string>
     <string name="lbl_enter_text">Enter Text</string>
     <string name="strBox">Box</string>
+    <string name="hint_time">Select Time</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

@@ -44,6 +44,7 @@
             android:textColor="@color/colorTextDark"
             android:textAllCaps="false"
             android:textStyle="bold"
+            android:textSize="@dimen/text_size_18sp"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
