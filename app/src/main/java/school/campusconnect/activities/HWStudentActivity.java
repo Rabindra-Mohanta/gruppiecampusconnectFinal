@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -108,6 +109,8 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     TextView txt_teacher;
     @Bind(R.id.txt_date)
     TextView txt_date;
+    @Bind(R.id.btnSubmit)
+    Button btnSubmit;
 
 
     @Bind(R.id.swipeRefreshLayout)
@@ -170,6 +173,10 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 item.video = currentItem.video;
 
                 result.add(item);
+
+                if(i==list.size()-1 && currentItem.assignmentReassigned){
+                    btnSubmit.setVisibility(View.VISIBLE);
+                }
             }
             rvAssignment.setAdapter(new AssignmentAdapter(result));
 
@@ -205,6 +212,14 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 }
             }
         });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submit();
+            }
+        });
+        btnSubmit.setVisibility(View.GONE);
     }
 
     private void showData() {
@@ -346,28 +361,15 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         }
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_add, menu);
-        return super.onCreateOptionsMenu(menu);
+    private void submit(){
+        Intent intent = new Intent(this, SubmitAssignmentActivity.class);
+        intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
+        intent.putExtra("team_id", team_id);
+        intent.putExtra("subject_id", subject_id);
+        intent.putExtra("subject_name", subject_name);
+        intent.putExtra("assignmentId", this.item.assignmentId);
+        startActivity(intent);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menuAdd) {
-            Intent intent = new Intent(this, SubmitAssignmentActivity.class);
-            intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
-            intent.putExtra("team_id", team_id);
-            intent.putExtra("subject_id", subject_id);
-            intent.putExtra("subject_name", subject_name);
-            intent.putExtra("assignmentId", this.item.assignmentId);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -406,8 +408,11 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     }
 
     private void saveToDB(ArrayList<AssignmentRes.AssignmentData> data) {
-        if (data == null)
+        btnSubmit.setVisibility(View.GONE);
+        if (data == null || data.size()==0){
+            btnSubmit.setVisibility(View.VISIBLE);
             return;
+        }
 
         StudAssignementItem.deleteAll();
 
@@ -442,6 +447,10 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             item.teamId = team_id;
             item.groupId = GroupDashboardActivityNew.groupId;
             item.save();
+
+            if(i==data.size()-1 && currentItem.assignmentReassigned){
+                btnSubmit.setVisibility(View.VISIBLE);
+            }
         }
     }
 

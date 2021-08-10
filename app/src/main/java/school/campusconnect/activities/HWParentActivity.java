@@ -577,12 +577,12 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                     reAssignment(item);
                 }
             });
-            holder.txt_NotVerify.setOnClickListener(new View.OnClickListener() {
+           /* holder.txt_NotVerify.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     notVerifyAssignment(item);
                 }
-            });
+            });*/
 
             if (spStatus.getSelectedItemPosition() == 2) {
                 holder.imgChat.setVisibility(View.VISIBLE);
@@ -600,10 +600,10 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                 if (!item.assignmentVerified && !item.assignmentReassigned) {
                     holder.btnYes.setVisibility(View.GONE);
                     holder.btnNo.setVisibility(View.GONE);
-                    holder.txt_NotVerify.setVisibility(View.VISIBLE);
+//                    holder.txt_NotVerify.setVisibility(View.VISIBLE);
                     holder.txt_comments.setVisibility(View.GONE);
                 } else {
-                    holder.txt_NotVerify.setVisibility(View.GONE);
+//                    holder.txt_NotVerify.setVisibility(View.GONE);
                     if (item.assignmentVerified) {
                         holder.btnYes.setVisibility(View.VISIBLE);
                         holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
@@ -769,7 +769,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         startActivity(intent);
     }
 
-    private void notVerifyAssignment(AssignmentRes.AssignmentData item) {
+   /* private void notVerifyAssignment(AssignmentRes.AssignmentData item) {
         final Dialog dialog = new Dialog(this, R.style.AppTheme_AlertDialogStyle);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_add_comment);
@@ -830,7 +830,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         });
         dialog.show();
     }
-
+*/
     private void notVerifyAssignmentFromActResult(boolean isVerify, String comments,String _finalUrl) {
 
         if (isVerify) {
@@ -839,6 +839,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             ReassignReq reassignReq = new ReassignReq(comments);
             reassignReq.fileName = new ArrayList<>();
             reassignReq.fileName.add(_finalUrl);
+            AppLog.e(TAG,"reassignReq :"+reassignReq);
             leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true,reassignReq);
         } else {
             progressBar.setVisibility(View.VISIBLE);

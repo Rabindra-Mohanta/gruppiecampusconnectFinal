@@ -66,7 +66,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss_refresh, container, false);
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 

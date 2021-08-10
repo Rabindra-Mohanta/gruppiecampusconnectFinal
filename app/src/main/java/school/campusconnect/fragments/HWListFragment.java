@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -56,10 +57,13 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
     String subject_name;
     boolean canPost;
 
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss_refresh, container, false);
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -69,11 +73,27 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
         className = getArguments().getString("className");
         canPost = getArguments().getBoolean("canPost");
 
+        init();
 
         getDataLocally();
 
         return view;
     }
+
+    private void init() {
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    getChapters();
+                    swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    showNoNetworkMsg();
+                }
+            }
+        });
+    }
+
     private void getDataLocally() {
         List<HwItem> list = HwItem.getAll(subject_id,team_id,GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
@@ -136,6 +156,8 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
     private void saveToDB(List<HwRes.HwData> result) {
         if (result == null)
             return;
+
+        HwItem.deleteAll();
 
         for (int i = 0; i < result.size(); i++) {
             HwRes.HwData currentItem = result.get(i);

@@ -289,7 +289,7 @@
                     android:textSize="@dimen/text_size_16sp"
                     android:textColor="@android:color/holo_orange_light"
                     android:textColorLink="@color/colorPrimary"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
             </FrameLayout>
             <TextView
                 android:id="@+id/txt_comments"

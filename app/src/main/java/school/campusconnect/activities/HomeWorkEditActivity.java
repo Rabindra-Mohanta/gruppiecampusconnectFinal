@@ -156,14 +156,14 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             }
         });
 
-        // default Brush
+        /*// default Brush
         ShapeBuilder mShapeBuilder = new ShapeBuilder()
                 .withShapeOpacity(100)
                 .withShapeType(ShapeType.RECTANGLE)
                 .withShapeSize(10);
         mPhotoEditor.setBrushDrawingMode(true);
         mPhotoEditor.setShape(mShapeBuilder);
-        mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorBrushBox));
+        mPhotoEditor.setBrushColor(getResources().getColor(R.color.colorBrushBox));*/
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -188,6 +188,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             }
         });
 
+        tabLayout.getTabAt(4).select();
     }
 
     private void setZoom(boolean value) {
@@ -452,16 +453,12 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                     dialog.dismiss();
 
                 } else {
-                    if (!TextUtils.isEmpty(etTitle.getText().toString().trim())) {
                         dialog.dismiss();
                         Intent intent = new Intent();
                         intent.putExtra("isVerify", false);
                         intent.putExtra("comments", etTitle.getText().toString().trim());
                         setResult(RESULT_OK, intent);
                         finish();
-                    } else {
-                        Toast.makeText(HomeWorkEditActivity.this, "Please Add Comment", Toast.LENGTH_SHORT).show();
-                    }
                 }
             }
         });

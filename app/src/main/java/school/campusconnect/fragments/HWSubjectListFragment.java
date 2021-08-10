@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -51,20 +52,41 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     String team_id;
     String className;
 
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss_refresh, container, false);
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         team_id = getArguments().getString("team_id");
         className = getArguments().getString("title");
 
+        init();
+
         getDataLocally();
 
         return view;
     }
+
+    private void init() {
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    callAPi();
+                    swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    showNoNetworkMsg();
+                }
+            }
+        });
+    }
+
     private void getDataLocally() {
         List<SubjectItem> list = SubjectItem.getAll(team_id,GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
@@ -80,10 +102,14 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
             }
             rvClass.setAdapter(new SubjectAdapter(subList));
         } else {
-            progressBar.setVisibility(View.VISIBLE);
-            LeafManager leafManager = new LeafManager();
-            leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,"");
+           callAPi();
         }
+    }
+
+    private void callAPi() {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,"");
     }
 
     @Override
@@ -105,7 +131,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     private void saveToDB(List<SubjectStaffResponse.SubjectData> result) {
         if (result == null)
             return;
-
+        SubjectItem.deleteAll();
         for (int i = 0; i < result.size(); i++) {
             SubjectStaffResponse.SubjectData currentItem = result.get(i);
             SubjectItem classItem = new SubjectItem();

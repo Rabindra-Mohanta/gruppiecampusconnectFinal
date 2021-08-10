@@ -21,9 +21,14 @@ import school.campusconnect.activities.LoginActivity2;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.database.RememberPref;
+import school.campusconnect.datamodel.EBookClassItem;
+import school.campusconnect.datamodel.EBookItem;
 import school.campusconnect.datamodel.GroupDataItem;
+import school.campusconnect.datamodel.HwItem;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostTeamDataItem;
+import school.campusconnect.datamodel.StudAssignementItem;
+import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamListItem;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
@@ -208,6 +213,13 @@ public class BaseFragment extends Fragment {
             GruppieContactGroupIdModel.deleteAll();
             getActivity().getSharedPreferences("pref_noti_count", Context.MODE_PRIVATE).edit().clear().commit();
             new DatabaseHandler(getActivity()).deleteAll();
+
+            HwItem.deleteAll();
+            StudAssignementItem.deleteAll();
+            SubjectItem.deleteAll();
+            EBookItem.deleteAll();
+            EBookClassItem.deleteAll();
+
             Intent intent = new Intent(getActivity(), LoginActivity2.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

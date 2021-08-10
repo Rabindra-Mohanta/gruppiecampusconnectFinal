@@ -169,7 +169,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AppLog.e(TAG, "onCreateView called");
 
-        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss_refresh, container, false);
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -307,6 +307,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
          }
      };
  */
+/*
     private void refreshAdapter(HashMap<String, MeetingStatusModel> liveTeamIds) {
         String myId = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
         if (result != null && result.size() > 0) {
@@ -342,6 +343,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             LeafPreference.getInstance(getActivity()).setString("video_class_group_id_" + GroupDashboardActivityNew.groupId, new Gson().toJson(result));
         }
     }
+*/
 
     private void getVideoClassList() {
         videoClassClicked = false;
