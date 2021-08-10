@@ -56,6 +56,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -92,6 +93,11 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
     private TransferUtility transferUtility;
     private ProgressDialog progressDialog;
 
+    int currentPage = 0;
+    ArrayList<String> editedPaths ;
+
+    String comments;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +106,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
 
         assignmentData = new Gson().fromJson(getIntent().getStringExtra("item"), AssignmentRes.AssignmentData.class);
         AppLog.e(TAG, "assignmentData : " + new Gson().toJson(assignmentData));
-        if (assignmentData.fileName != null && assignmentData.fileName.size() > 0) {
-            Picasso.with(this).load(Constants.decodeUrlToBase64(assignmentData.fileName.get(0))).into(ivImage.getSource());
-        }
+
 
         findViewById(R.id.iconBack).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,21 +114,75 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                 onBackPressed();
             }
         });
+
         findViewById(R.id.btnSubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notVerifyAssignment();
+                currentPage++;
+                if ((currentPage) >= assignmentData.fileName.size()) /// IF CURRENT PAGE WAS LAST THEN , SHOW POPUP AND COMPLETE API CALL.
+                    notVerifyAssignment();
+                else {
+                    setNextPage();  // RESET PHOTOEDITOR WITH NEXT PAGE IMAGE FROM ASSIGNMENT.
+                }
             }
         });
 
         transferUtility = AmazoneHelper.getTransferUtility(this);
 
         zoomLayout = findViewById(R.id.zoomLayout);
+
+        if (assignmentData.fileName != null && assignmentData.fileName.size() > 0) {
+            Picasso.with(this).load(Constants.decodeUrlToBase64(assignmentData.fileName.get(0))).into(ivImage.getSource());
+            currentPage = 0;
+            editedPaths = new ArrayList<>();
+
+            if (assignmentData.fileName.size() > 1) {
+                ((TextView) findViewById(R.id.btnSubmit)).setText("Next");
+            }
+        }
+
+
         setZoom(false);
 
         setupPhotoEditor();
 
     }
+
+    private void setNextPage() {
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            return;
+        }
+        mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath(), new PhotoEditor.OnSaveListener() {
+            @Override
+            public void onSuccess(@NonNull String imagePath)
+            {
+                AppLog.e(TAG, "Image Saved Successfully at : " + imagePath);
+
+                editedPaths.add(imagePath);
+
+                Picasso.with(HomeWorkEditActivity.this).load(Constants.decodeUrlToBase64(assignmentData.fileName.get(currentPage))).into(ivImage.getSource());
+                setZoom(false);
+                mPhotoEditor.clearAllViews();
+                tabLayout.getTabAt(0).select();
+
+                if (currentPage == assignmentData.fileName.size() - 1)
+                {
+                    ((TextView) findViewById(R.id.btnSubmit)).setText("Done");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Exception exception)
+            {
+                AppLog.e(TAG, "onFailure called with exception : " + exception.getLocalizedMessage());
+                Toast.makeText(HomeWorkEditActivity.this, "Failed to save Image. ", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void setupPhotoEditor() {
 
@@ -438,7 +496,11 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                             progressDialog = new ProgressDialog(HomeWorkEditActivity.this);
                             progressDialog.setMessage("Uploading Image...");
                             progressDialog.show();
-                            uploadImageOnCloud(imagePath,etTitle.getText().toString().trim());
+
+                            editedPaths.add(imagePath);
+
+                           // uploadImageOnCloud(imagePath,etTitle.getText().toString().trim());
+                            uploadThumbnail(editedPaths,0);
                         }
 
                         @Override
@@ -449,10 +511,10 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                         }
                     });
 
-
                     dialog.dismiss();
 
-                } else {
+                } else
+                    {
                         dialog.dismiss();
                         Intent intent = new Intent();
                         intent.putExtra("isVerify", false);
@@ -465,7 +527,74 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
         dialog.show();
     }
 
-    private void uploadImageOnCloud(String imagePath,String comments)
+
+    private void uploadThumbnail(ArrayList<String> listThumbnails, int index) {
+        if (index == listThumbnails.size())
+        {
+
+            Intent intent = new Intent();
+            intent.putExtra("isVerify", true);
+            intent.putExtra("comments", comments);
+            intent.putExtra("_finalUrl", editedPaths);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+        else {
+            final String key = AmazoneHelper.getAmazonS3KeyThumbnail(FILE_TYPE_IMAGE);
+            AppLog.e(TAG , "uploadImageOnCloud called with key : "+key);
+            File file = new File(listThumbnails.get(index));
+            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
+                    file, CannedAccessControlList.PublicRead);
+
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                    if (state.toString().equalsIgnoreCase("COMPLETED"))
+                    {
+                        progressDialog.dismiss();
+                        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+                        Log.e("FINALURL", "url is " + _finalUrl);
+
+                        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+                        Log.e("FINALURL", "encoded url is " + _finalUrl);
+
+                        editedPaths.set(index,_finalUrl);
+
+                        uploadThumbnail(editedPaths , index+1);
+                    }
+                    if (TransferState.FAILED.equals(state)) {
+                        Toast.makeText(HomeWorkEditActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+
+                    progressDialog.setMessage("Uploading Image " + percentDone + "% , please wait...");
+
+                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    progressDialog.dismiss();
+                    AppLog.e(TAG, "Upload Error : " + ex);
+                    Toast.makeText(HomeWorkEditActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+
+
+    private void uploadImageOnCloud(String imagePath)
     {
         final String key = AmazoneHelper.getAmazonS3KeyThumbnail(FILE_TYPE_IMAGE);
         AppLog.e(TAG , "uploadImageOnCloud called with key : "+key);
@@ -479,20 +608,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                 AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
                 if (state.toString().equalsIgnoreCase("COMPLETED")) {
                     progressDialog.dismiss();
-                    String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                    Log.e("FINALURL", "url is " + _finalUrl);
-
-                    _finalUrl = Constants.encodeStringToBase64(_finalUrl);
-
-                    Log.e("FINALURL", "encoded url is " + _finalUrl);
-
-                    Intent intent = new Intent();
-                    intent.putExtra("isVerify", true);
-                    intent.putExtra("comments", comments);
-                    intent.putExtra("_finalUrl", _finalUrl);
-                    setResult(RESULT_OK, intent);
-                    finish();
                 }
                 if (TransferState.FAILED.equals(state)) {
                     Toast.makeText(HomeWorkEditActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();

@@ -289,7 +289,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==99 && resultCode==RESULT_OK){
-            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"),data.getStringExtra("_finalUrl"));
+            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"),data.getStringArrayListExtra("_finalUrl"));
         }
     }
 
@@ -839,6 +839,23 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             ReassignReq reassignReq = new ReassignReq(comments);
             reassignReq.fileName = new ArrayList<>();
             reassignReq.fileName.add(_finalUrl);
+            AppLog.e(TAG,"reassignReq :"+reassignReq);
+            leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true,reassignReq);
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+            LeafManager leafManager = new LeafManager();
+            leafManager.reassignAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true, new ReassignReq(comments));
+        }
+    }
+
+    private void notVerifyAssignmentFromActResult(boolean isVerify, String comments,ArrayList<String> _finalUrl) {
+
+        if (isVerify) {
+            progressBar.setVisibility(View.VISIBLE);
+            LeafManager leafManager = new LeafManager();
+            ReassignReq reassignReq = new ReassignReq(comments);
+            reassignReq.fileName = new ArrayList<>();
+            reassignReq.fileName = _finalUrl;
             AppLog.e(TAG,"reassignReq :"+reassignReq);
             leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true,reassignReq);
         } else {
