@@ -47,11 +47,16 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
     <com.otaliastudios.zoom.ZoomLayout
         android:id="@+id/zoomLayout"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:scrollbars="vertical|horizontal"
         app:transformation="centerInside"
         app:transformationGravity="auto"
@@ -79,7 +84,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+
     </com.otaliastudios.zoom.ZoomLayout>
+
+
+        <ImageView
+            android:id="@+id/iconPrev"
+            android:layout_width="@dimen/padding_40dp"
+            android:src="@drawable/icon_previous"
+            android:padding="@dimen/padding_3dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/padding_10dp"
+            android:layout_height="@dimen/padding_40dp"/>
+
+        <ImageView
+            android:id="@+id/iconNext"
+            android:layout_width="@dimen/padding_40dp"
+            android:src="@drawable/icon_next"
+            android:padding="@dimen/padding_3dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/padding_10dp"
+            android:layout_height="@dimen/padding_40dp"/>
+
+    </RelativeLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

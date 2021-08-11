@@ -118,12 +118,12 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
         findViewById(R.id.btnSubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentPage++;
-                if ((currentPage) >= assignmentData.fileName.size()) /// IF CURRENT PAGE WAS LAST THEN , SHOW POPUP AND COMPLETE API CALL.
+              //  currentPage++;
+             //   if ((currentPage) >= assignmentData.fileName.size()) /// IF CURRENT PAGE WAS LAST THEN , SHOW POPUP AND COMPLETE API CALL.
                     notVerifyAssignment();
-                else {
+             /*   else {
                     setNextPage();  // RESET PHOTOEDITOR WITH NEXT PAGE IMAGE FROM ASSIGNMENT.
-                }
+                }*/
             }
         });
 
@@ -136,10 +136,44 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             currentPage = 0;
             editedPaths = new ArrayList<>();
 
-            if (assignmentData.fileName.size() > 1) {
-                ((TextView) findViewById(R.id.btnSubmit)).setText("Next");
+            findViewById(R.id.iconPrev).setVisibility(View.GONE);
+
+
+             if(currentPage+1 >= assignmentData.fileName.size())
+             {
+                    findViewById(R.id.iconNext).setVisibility(View.GONE);
+                    findViewById(R.id.btnSubmit).setVisibility(View.VISIBLE);
+             }
+             else
+             {
+                 findViewById(R.id.iconNext).setVisibility(View.VISIBLE);
+                 findViewById(R.id.btnSubmit).setVisibility(View.GONE);
+             }
+
+            for(String s : assignmentData.fileName)
+            {
+                editedPaths.add("xxx");
             }
+
+
         }
+
+
+        findViewById(R.id.iconPrev).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                setPrevPage();
+            }
+        });
+
+        findViewById(R.id.iconNext).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                setNextPage();
+            }
+        });
 
 
         setZoom(false);
@@ -161,17 +195,86 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
             {
                 AppLog.e(TAG, "Image Saved Successfully at : " + imagePath);
 
-                editedPaths.add(imagePath);
+                editedPaths.set(currentPage ,imagePath);
 
+                currentPage++;
+
+                if(currentPage >= assignmentData.fileName.size()-1)
+                {
+                    findViewById(R.id.iconNext).setVisibility(View.GONE);
+                    findViewById(R.id.btnSubmit).setVisibility(View.VISIBLE);
+                }
+
+                findViewById(R.id.iconPrev).setVisibility(View.VISIBLE);
+
+                if(!editedPaths.get(currentPage).equalsIgnoreCase("xxx"))
+                    Picasso.with(HomeWorkEditActivity.this).load(new File(editedPaths.get(currentPage))).into(ivImage.getSource());
+                else
                 Picasso.with(HomeWorkEditActivity.this).load(Constants.decodeUrlToBase64(assignmentData.fileName.get(currentPage))).into(ivImage.getSource());
+
                 setZoom(false);
                 mPhotoEditor.clearAllViews();
                 tabLayout.getTabAt(0).select();
 
-                if (currentPage == assignmentData.fileName.size() - 1)
+             /*   if (currentPage == assignmentData.fileName.size() - 1)
                 {
                     ((TextView) findViewById(R.id.btnSubmit)).setText("Done");
+                }*/
+            }
+
+            @Override
+            public void onFailure(@NonNull Exception exception)
+            {
+                AppLog.e(TAG, "onFailure called with exception : " + exception.getLocalizedMessage());
+                Toast.makeText(HomeWorkEditActivity.this, "Failed to save Image. ", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+    private void setPrevPage()
+    {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            return;
+        }
+        mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath(), new PhotoEditor.OnSaveListener() {
+            @Override
+            public void onSuccess(@NonNull String imagePath)
+            {
+                AppLog.e(TAG, "Image Saved Successfully at : " + imagePath);
+
+                editedPaths.set(currentPage ,imagePath);
+
+                currentPage--;
+
+                if(currentPage == 0)
+                findViewById(R.id.iconPrev).setVisibility(View.GONE);
+
+                if(currentPage+1 >= assignmentData.fileName.size())
+                {
+                    findViewById(R.id.iconNext).setVisibility(View.GONE);
+                    findViewById(R.id.btnSubmit).setVisibility(View.VISIBLE);
                 }
+                else
+                {
+                    findViewById(R.id.iconNext).setVisibility(View.VISIBLE);
+                    findViewById(R.id.btnSubmit).setVisibility(View.GONE);
+                }
+
+                AppLog.e(TAG , "editepath to be load : "+editedPaths.get(currentPage)+" at "+currentPage);
+                mPhotoEditor.clearAllViews();
+
+                Picasso.with(HomeWorkEditActivity.this).load(new File(editedPaths.get(currentPage))).into(ivImage.getSource());
+                setZoom(false);
+                tabLayout.getTabAt(0).select();
+
+             /*   if (currentPage == assignmentData.fileName.size() - 1)
+                {
+                    ((TextView) findViewById(R.id.btnSubmit)).setText("Done");
+                }*/
             }
 
             @Override
@@ -497,7 +600,7 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                             progressDialog.setMessage("Uploading Image...");
                             progressDialog.show();
 
-                            editedPaths.add(imagePath);
+                            editedPaths.set(currentPage , imagePath);
 
                            // uploadImageOnCloud(imagePath,etTitle.getText().toString().trim());
                             uploadThumbnail(editedPaths,0);
