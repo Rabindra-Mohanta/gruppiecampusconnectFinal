@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,18 +26,23 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -149,6 +155,18 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Bind(R.id.et_date)
     EditText et_date;
+
+    @Bind(R.id.et_time)
+    EditText et_time;
+
+    @Bind(R.id.cardDate)
+    CardView cardDate;
+
+    @Bind(R.id.cardTime)
+    CardView cardTime;
+
+    @Bind(R.id.switchDate)
+    SwitchCompat switchDate;
 
     TextView btn_ok;
     TextView btn_cancel;
@@ -281,6 +299,35 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                 fragment.show();
             }
         });
+        et_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                TimePickerDialog fragment = new TimePickerDialog(AddHwPostActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                        et_time.setText(format.format(calendar.getTime()));
+                    }
+                },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
+                fragment.show();
+            }
+        });
+
+        switchDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    cardDate.setVisibility(View.VISIBLE);
+                    cardTime.setVisibility(View.VISIBLE);
+                }else {
+                    cardDate.setVisibility(View.GONE);
+                    cardTime.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void init() {
@@ -328,6 +375,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                 mainRequest.title = edtTitle.getText().toString();
                 mainRequest.text = edtDesc.getText().toString();
                 mainRequest.lastSubmissionDate = et_date.getText().toString();
+                mainRequest.lastSubmissionTime = et_date.getText().toString();
 
                 if (!TextUtils.isEmpty(videoUrl)) {
                     mainRequest.video = videoUrl;

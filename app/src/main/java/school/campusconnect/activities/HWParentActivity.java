@@ -606,14 +606,22 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
 //                    holder.txt_NotVerify.setVisibility(View.GONE);
                     if (item.assignmentVerified) {
                         holder.btnYes.setVisibility(View.VISIBLE);
-                        holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
-                        holder.txt_comments.setVisibility(View.VISIBLE);
+                        if(!TextUtils.isEmpty(item.verifiedComment)){
+                            holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                            holder.txt_comments.setVisibility(View.VISIBLE);
+                        }else {
+                            holder.txt_comments.setVisibility(View.GONE);
+                        }
                     } else {
                         holder.btnYes.setVisibility(View.GONE);
                         if (item.assignmentReassigned) {
-                            holder.txt_comments.setText("Comment :\n" + item.reassignComment);
-                            holder.txt_comments.setVisibility(View.VISIBLE);
                             holder.btnNo.setVisibility(View.VISIBLE);
+                            if(!TextUtils.isEmpty(item.reassignComment)){
+                                holder.txt_comments.setText("Comment :\n" + item.reassignComment);
+                                holder.txt_comments.setVisibility(View.VISIBLE);
+                            }else {
+                                holder.txt_comments.setVisibility(View.GONE);
+                            }
                         } else {
                             holder.txt_comments.setVisibility(View.GONE);
                             holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
@@ -861,7 +869,11 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         } else {
             progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
-            leafManager.reassignAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true, new ReassignReq(comments));
+            ReassignReq reassignReq = new ReassignReq(comments);
+            reassignReq.fileName = new ArrayList<>();
+            reassignReq.fileName = _finalUrl;
+            AppLog.e(TAG,"reassignReq :"+reassignReq);
+            leafManager.reassignAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true, reassignReq);
         }
     }
 

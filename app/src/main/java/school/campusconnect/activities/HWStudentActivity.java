@@ -610,14 +610,22 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 holder.txt_NotVerify.setVisibility(View.GONE);
                 if (item.assignmentVerified) {
                     holder.btnYes.setVisibility(View.VISIBLE);
-                    holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
-                    holder.txt_comments.setVisibility(View.VISIBLE);
+                    if(!TextUtils.isEmpty(item.verifiedComment)){
+                        holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                        holder.txt_comments.setVisibility(View.VISIBLE);
+                    }else {
+                        holder.txt_comments.setVisibility(View.GONE);
+                    }
                 } else {
                     holder.btnYes.setVisibility(View.GONE);
                     if (item.assignmentReassigned) {
-                        holder.txt_comments.setText("Comment :\n" + item.reassignComment);
-                        holder.txt_comments.setVisibility(View.VISIBLE);
                         holder.btnNo.setVisibility(View.VISIBLE);
+                        if(!TextUtils.isEmpty(item.reassignComment)){
+                            holder.txt_comments.setText("Comment :\n" + item.reassignComment);
+                            holder.txt_comments.setVisibility(View.VISIBLE);
+                        }else {
+                            holder.txt_comments.setVisibility(View.GONE);
+                        }
                     } else {
                         holder.txt_comments.setVisibility(View.GONE);
                         holder.btnNo.setBackgroundResource(R.drawable.assignement_no);
