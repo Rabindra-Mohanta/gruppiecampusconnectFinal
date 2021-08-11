@@ -364,12 +364,100 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:7a6ddba17f85abf3340d00",
+        "android_client_info": {
+          "package_name": "jnana.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-4039dmkdttotg5k731i9cv45m39oarra.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jnana.gruppie",
+            "certificate_hash": "c0886c3062d37992268e7f174ae264a32fc3ec3d"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cuddles.greenage.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:337951586049:android:57ce5199937c6f81",
         "android_client_info": {
           "package_name": "kscaa.gruppie"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-0iu52o1ms8obc49gbu7k3rfqj1m9pd21.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cuddles.greenage.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:ccbaeaea88310e7c340d00",
+        "android_client_info": {
+          "package_name": "ktsv.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-ipi78hag105lij472hi09t0ff0ni6e1o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ktsv.gruppie",
+            "certificate_hash": "f5bfeabf0b0a4b0d456fcf8092dbb456ba0852ce"
+          }
+        },
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
@@ -1210,22 +1298,6 @@
         }
       },
       "oauth_client": [
-        {
-          "client_id": "337951586049-7mp9pnm8lsqv3lgs9e4sck01h55kq6cv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "vivid.gruppie",
-            "certificate_hash": "f9807c028ac4daf8b6b51fcd2ce05216da1d53bd"
-          }
-        },
-        {
-          "client_id": "337951586049-o4h1kkvlmch8ks9vepgi9i8ub8ln0ijr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "vivid.gruppie",
-            "certificate_hash": "00404857c05ce1ce3167f9c7c7efe46356741f4c"
-          }
-        },
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
