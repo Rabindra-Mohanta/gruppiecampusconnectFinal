@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import android.os.AsyncTask;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.BuildConfig;
-import school.campusconnect.LeafApplication;
+import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.firebase.SendNotificationGlobal;
 import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.utils.AmazoneDownload;
@@ -36,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
-import com.baoyz.widget.PullRefreshLayout;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
@@ -85,6 +83,7 @@ import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
 //import com.google.api.services.samples.youtube.cmdline.Auth;
@@ -116,6 +115,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     LeafPreference leafPreference;
 
+    EventTBL eventTBL;
 
     //private Query query;
 
@@ -271,6 +271,17 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getGroupPostLocaly() {
+        eventTBL = EventTBL.getByEventType(1, mGroupId);
+        boolean apiEvent = false;
+        if(eventTBL!=null){
+            if(eventTBL.now==0){
+                apiEvent = true;
+            }
+            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL.now)){
+                apiEvent = true;
+            }
+
+        }
         List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId + "");
         String lastId = null;
         if (dataItemList.size() != 0) {
@@ -313,10 +324,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             mAdapter.notifyDataSetChanged();
 
             mBinding.setSize(mAdapter.getItemCount());
-            firebaseListen(lastId);
+            firebaseListen(lastId,apiEvent);
 
         } else {
-            firebaseListen("");
+            firebaseListen("", apiEvent);
             mBinding.setSize(0);
         }
 
@@ -338,11 +349,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         }*/
     }
 
-    private void firebaseListen(String lastIdFromDB) {
+    private void firebaseListen(String lastIdFromDB, boolean apiEvent) {
         AppLog.e(TAG, "firebaseListen called : " + lastIdFromDB);
 
         if (TextUtils.isEmpty(lastIdFromDB) || leafPreference.getInt(mGroupId + "_post") > 0
-                || leafPreference.getBoolean(mGroupId + "_post_delete")){
+                || leafPreference.getBoolean(mGroupId + "_post_delete") || apiEvent){
             leafPreference.setBoolean(mGroupId + "_post_delete",false);
             getData(false);
         }
@@ -424,6 +435,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 savePostData(res.getResults());
 
+                if(eventTBL!=null){
+                    eventTBL.now = System.currentTimeMillis();
+                    eventTBL.save();
+                }
                 break;
 
             case LeafManager.API_ID_FAV:

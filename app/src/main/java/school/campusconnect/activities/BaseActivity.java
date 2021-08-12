@@ -32,6 +32,7 @@ import androidx.appcompat.widget.Toolbar;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import school.campusconnect.datamodel.EBookClassItem;
 import school.campusconnect.datamodel.EBookItem;
+import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.HwItem;
 import school.campusconnect.datamodel.StudAssignementItem;
 import school.campusconnect.datamodel.SubjectItem;
@@ -621,6 +622,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         new DatabaseHandler(this).deleteAll();
 
         HwItem.deleteAll();
+        EventTBL.deleteAll();
         StudAssignementItem.deleteAll();
         SubjectItem.deleteAll();
         EBookItem.deleteAll();

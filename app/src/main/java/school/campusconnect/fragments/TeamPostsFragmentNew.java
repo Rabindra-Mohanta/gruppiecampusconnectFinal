@@ -27,6 +27,7 @@ import school.campusconnect.activities.LikesListActivity;
 import school.campusconnect.activities.TeamSettingsActivity;
 import school.campusconnect.activities.TeamUsersActivity;
 import school.campusconnect.adapters.ReportAdapter;
+import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
@@ -403,12 +404,12 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mBinding.progressBar2.setVisibility(View.GONE);
         }
     }
-    private void firebaseListen(String lastIdFromDB)
+    private void firebaseListen(String lastIdFromDB, boolean apiEvent)
     {
         AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
         //NOFIREBASEDATABASE
         if(TextUtils.isEmpty(lastIdFromDB) ||  leafPreference.getInt(team_id+"_post") >0
-                || leafPreference.getBoolean(team_id + "_post_delete")) {
+                || leafPreference.getBoolean(team_id + "_post_delete") || apiEvent) {
             leafPreference.setBoolean(team_id + "_post_delete", false);
             callApi(false);
         }
@@ -461,8 +462,20 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mBinding.fabAttendance.setVisibility(View.GONE);
         }*/
     }
-
+    EventTBL eventTBL;
     private void getDataLocaly() {
+        eventTBL = EventTBL.getByEventType(1, mGroupId);
+        boolean apiEvent = false;
+        if(eventTBL!=null){
+            if(eventTBL.now==0){
+                apiEvent = true;
+            }
+            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL.now)){
+                apiEvent = true;
+            }
+
+        }
+
         final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "");
         AppLog.e(TAG, "local list size is " + dataItemList.size());
         showLoadingBar(mBinding.progressBar2);
@@ -506,10 +519,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mAdapter2.notifyDataSetChanged();
             mBinding.setSize(mAdapter2.getItemCount());
 
-            firebaseListen(lastId);
+            firebaseListen(lastId,apiEvent);
 
         } else {
-           firebaseListen("");
+           firebaseListen("",apiEvent);
         }
 
 
@@ -706,6 +719,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 saveTeamPost(res2.getResults());
 
+                if(eventTBL!=null){
+                    eventTBL.now = System.currentTimeMillis();
+                    eventTBL.save();
+                }
                 break;
 
             case LeafManager.API_ID_LIKE_TEAM:

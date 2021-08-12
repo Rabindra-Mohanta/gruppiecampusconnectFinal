@@ -142,14 +142,14 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')
 */
 
-            applicationId "ktsv.gruppie"
+         /*   applicationId "ktsv.gruppie"
             versionCode 2
             versionName "1.0"
             resValue "string", "app_name", '"K.T.S.V"'
             buildConfigField("String", "AppName", '"K.T.S.V"')
             buildConfigField("String", "AppCategory", '"CAMPUS"')
             buildConfigField("String", "AppType",  '"CAMPUS"')
-            buildConfigField("String", "APP_ID",  '"school"')
+            buildConfigField("String", "APP_ID",  '"school"')*/
 
 
 
@@ -324,7 +324,7 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 

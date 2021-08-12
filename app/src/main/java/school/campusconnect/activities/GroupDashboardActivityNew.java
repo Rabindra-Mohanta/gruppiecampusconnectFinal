@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -30,7 +31,9 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
+import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
@@ -250,6 +253,49 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (!hasPermission(permissions)) {
             ActivityCompat.requestPermissions(this, permissions, 222);
+        }
+        new EventAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    class EventAsync extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            LeafManager leafManager = new LeafManager();
+            leafManager.getUpdateEventList(new LeafManager.OnCommunicationListener() {
+                @Override
+                public void onSuccess(int apiId, BaseResponse response) {
+                    AppLog.e(TAG,"onSuccess : "+response.status);
+                    UpdateDataEventRes res = (UpdateDataEventRes) response;
+                    for (int i=0;i<res.data.size();i++){
+                        UpdateDataEventRes.EventResData curr = res.data.get(i);
+
+                        EventTBL fnd = EventTBL.get(curr.insertedId);
+                        if(fnd == null){
+                            EventTBL eventTBL = new EventTBL();
+                            eventTBL.insertedId = curr.insertedId;
+                            eventTBL.groupId = curr.groupId;
+                            eventTBL.eventType = curr.eventType;
+                            eventTBL.eventName = curr.eventName;
+                            eventTBL.eventAt = curr.eventAt;
+                            eventTBL.save();
+                        }else{
+                            fnd.eventAt = curr.eventAt;
+                            fnd.save();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(int apiId, String msg) {
+                    AppLog.e(TAG,"onFailure : "+msg);
+                }
+
+                @Override
+                public void onException(int apiId, String msg) {
+                    AppLog.e(TAG,"onException : "+msg);
+                }
+            },groupId);
+            return null;
         }
     }
 

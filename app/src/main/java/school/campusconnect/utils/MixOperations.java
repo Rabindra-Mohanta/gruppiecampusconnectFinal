@@ -106,6 +106,21 @@ public class MixOperations {
             return "";
         }
     }
+    public static boolean isNewEvent(String eventAt, String inputPattern,long now)
+    {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            long eventAtMillisec = inputFormat.parse(eventAt).getTime();
+            if(now<eventAtMillisec){
+                return true;
+            }
+        } catch (Exception e) {
+            AppLog.e(TAG,e.toString());
+            return false;
+        }
+        return false;
+    }
     public static String convertBase64(Bitmap bitmap)
     {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -23,6 +23,7 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.database.RememberPref;
 import school.campusconnect.datamodel.EBookClassItem;
 import school.campusconnect.datamodel.EBookItem;
+import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.GroupDataItem;
 import school.campusconnect.datamodel.HwItem;
 import school.campusconnect.datamodel.PostDataItem;
@@ -215,6 +216,7 @@ public class BaseFragment extends Fragment {
             new DatabaseHandler(getActivity()).deleteAll();
 
             HwItem.deleteAll();
+            EventTBL.deleteAll();
             StudAssignementItem.deleteAll();
             SubjectItem.deleteAll();
             EBookItem.deleteAll();

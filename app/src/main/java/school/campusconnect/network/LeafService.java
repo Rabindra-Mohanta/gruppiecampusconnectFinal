@@ -28,6 +28,7 @@ import school.campusconnect.datamodel.ebook.AddEbookReq;
 import school.campusconnect.datamodel.ebook.AddEbookReq2;
 import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
+import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.fees.FeesRes;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.fees.UpdateStudentFees;
@@ -129,7 +130,6 @@ import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
 import school.campusconnect.datamodel.versioncheck.VersionCheckResponse;
 import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
-import school.campusconnect.datamodel.videocall.MeetingStatusModel;
 import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
 import school.campusconnect.datamodel.videocall.StopMeetingReq;
@@ -1446,5 +1446,9 @@ public interface LeafService {
                                                @Path("subject_id") String subject_id,
                                                @Path("assignment_id") String assignment_id,
                                                @Path("studentAssignmentId") String studentAssignmentId);
+
+    @GET("/api/v1/groups/{group_id}/events")
+    @Headers({"Content-Type: application/json"})
+    Call<UpdateDataEventRes> getUpdateEventList(@Path("group_id") String group_id);
 
 }

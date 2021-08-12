@@ -29,6 +29,7 @@ import school.campusconnect.datamodel.ebook.AddEbookReq;
 import school.campusconnect.datamodel.ebook.AddEbookReq2;
 import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
+import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.fees.FeesRes;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.fees.UpdateStudentFees;
@@ -375,6 +376,7 @@ public class LeafManager {
     public static final int API_JISTI_MEETING_JOIN = 233;
     public static final int API_ONLINE_ATTENDANCE_REPORT = 234;
     public static final int API_ONLINE_ATTENDANCE_PUSH = 236;
+    public static final int API_UPDATE_EVENT_LIST = 240;
 
 
     public LeafManager() {
@@ -1356,6 +1358,41 @@ public class LeafManager {
         wrapper.execute(API_GET_EVENTS, new ResponseWrapper.ResponseHandler<EventListRes, ErrorResponseModel<GroupValidationError>>() {
             @Override
             public void handle200(int apiId, EventListRes response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<GroupValidationError> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.message);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+  public void getUpdateEventList(OnCommunicationListener listListener, String group_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<UpdateDataEventRes> model = service.getUpdateEventList(group_id);
+        ResponseWrapper<UpdateDataEventRes> wrapper = new ResponseWrapper<>(model);
+
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<GroupValidationError>>() {
+        }.getType();
+        wrapper.execute(API_UPDATE_EVENT_LIST, new ResponseWrapper.ResponseHandler<UpdateDataEventRes, ErrorResponseModel<GroupValidationError>>() {
+            @Override
+            public void handle200(int apiId, UpdateDataEventRes response) {
                 if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }
