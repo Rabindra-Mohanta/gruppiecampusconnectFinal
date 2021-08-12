@@ -371,8 +371,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     public void onStart() {
         super.onStart();
         ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
-        ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
-        ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
+      //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
+     //   ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
 
         if (getActivity() != null) {
 
@@ -588,7 +588,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                     menuItem.setIcon(buildCounterDrawable(GroupDashboardActivityNew.notificationUnseenCount));
                 }
                 if (((GroupDashboardActivityNew) getActivity()).isBaseFragment()) {
-                    ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
+                   // ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
                 }
 //                checkVersionUpdate(gRes.data.get(0).appVersion);
                 break;

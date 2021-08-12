@@ -598,7 +598,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         mBinding.recyclerView2.setAdapter(mAdapter2);
 
         if (getActivity() instanceof GroupDashboardActivityNew) {
-            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setOnClickListener(new View.OnClickListener() {
+          /*  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
@@ -615,7 +615,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         AppLog.e("floating", "error is " + e.toString());
                     }
                 }
-            });
+            });*/
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -794,7 +794,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         setFloatingButton();
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(teamData.name);
-            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(teamData.members + " users");
+          //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(teamData.members + " users");
         }
 
     }

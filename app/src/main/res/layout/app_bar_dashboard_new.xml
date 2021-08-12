@@ -76,7 +76,7 @@
                         android:text="0 users"
                         style="@style/LabelSmall"
                         android:textColor="@color/colorTextWhiteLight"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </LinearLayout>
 

@@ -206,8 +206,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                 if (item.fileName != null) {
 
                     ChildAdapter adapter;
-                    if (item.fileName.size() == 3) {
-                        adapter = new ChildAdapter(2, item.fileName.size(), this, item.fileName);
+                    if (item.fileName.size() <= 2) {
+                        adapter = new ChildAdapter(1, item.fileName.size(), this, item.fileName);
                     } else {
                         adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
                     }
@@ -479,11 +479,11 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                     if (item.fileName != null) {
 
                         ChildHwAdapter adapter;
-                        if (item.fileName.size() == 3) {
+                      /*  if (item.fileName.size() == 3) {
                             adapter = new ChildHwAdapter(2, item.fileName.size(), mContext, item.fileName, HWParentActivity.this, item);
-                        } else {
+                        } else {*/
                             adapter = new ChildHwAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName, HWParentActivity.this, item);
-                        }
+                        //}
                         holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                         holder.recyclerView.setVisibility(View.VISIBLE);
                     }

@@ -196,7 +196,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     String[] tabText;
     int[] tabIcon;
     int[] tabIcongray;
-    public TextView tv_Desc;
+   // public TextView tv_Desc;
     private int windowCount = 1;
     private ShowTipsView showtips;
 
@@ -362,7 +362,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_toolbar_icon = findViewById(R.id.iv_toolbar_icon);
         tv_toolbar_default = findViewById(R.id.iv_toolbar_default);
         tvToolbar = findViewById(R.id.tv_toolbar_title_dashboard);
-        tv_Desc = findViewById(R.id.tv_Desc);
+       // tv_Desc = findViewById(R.id.tv_Desc);
         setSupportActionBar(mToolBar);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -682,8 +682,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (isToolBarTextSet) {
             tvToolbar.setText(mGroupItem.name);
-            tv_Desc.setText(LeafPreference.getInstance(this).getInt(Constants.TOTAL_MEMBER) + " users");
-            tv_Desc.setVisibility(View.VISIBLE);
+          //  tv_Desc.setText(LeafPreference.getInstance(this).getInt(Constants.TOTAL_MEMBER) + " users");
+         //   tv_Desc.setVisibility(View.GONE);
         }
 
     }
@@ -911,7 +911,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void HomeClick() {
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
-        tv_Desc.setVisibility(View.VISIBLE);
+       // tv_Desc.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         BaseTeamFragment baseTeamFragment = new BaseTeamFragment();
@@ -922,8 +922,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void onTeamSelected(MyTeamData team) {
         setBackEnabled(true);
         tvToolbar.setText(team.name);
-        tv_Desc.setText(team.members + " users");
-        tv_Desc.setVisibility(View.VISIBLE);
+      //  tv_Desc.setText(team.members + " users");
+      //  tv_Desc.setVisibility(View.VISIBLE);
         AppLog.e("getActivity", "team name is =>" + team.name);
 
         TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
@@ -1142,8 +1142,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         } else {
             setBackEnabled(true);
             tvToolbar.setText(group.name);
-            tv_Desc.setText(group.members + " users");
-            tv_Desc.setVisibility(View.VISIBLE);
+          //  tv_Desc.setText(group.members + " users");
+         //   tv_Desc.setVisibility(View.VISIBLE);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(group.groupId)).addToBackStack("home").commitAllowingStateLoss();
             tabLayout.setVisibility(View.GONE);
         }
