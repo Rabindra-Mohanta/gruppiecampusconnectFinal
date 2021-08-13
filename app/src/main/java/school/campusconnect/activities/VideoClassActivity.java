@@ -1,5 +1,6 @@
 package school.campusconnect.activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
@@ -20,10 +22,14 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
@@ -146,13 +152,16 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
         AppLog.e(TAG, "AAA HBRecorderOnError() : " + reason);
     }
 
-    public void startRecordingScreen(VideoClassResponse.ClassData selectedClassData) {
+    public void startRecordingScreen(VideoClassResponse.ClassData selectedClassData)
+    {
 
         this.selectedClassData = selectedClassData;
         AppLog.e(TAG, "StartRecordingScreen called ");
+
         MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
         startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
+
     }
 
     public void requestOverlayPermission() {
@@ -296,10 +305,33 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
         AppLog.e(TAG , "onActivityResult called ");
         if (requestCode == SCREEN_RECORD_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+
+
                 AppLog.e(TAG , "startScreenRecording called ");
                 isRecordingStarted = true;
                 resultcode = resultCode;
                 recorderIntent = data;
+
+                int result = ContextCompat.checkSelfPermission(VideoClassActivity.this, Manifest.permission.RECORD_AUDIO);
+                if (result == PackageManager.PERMISSION_GRANTED)
+                {
+                    AppLog.e("External" + "permission", "checkpermission , granted");
+
+                }
+                else
+                {
+                    AppLog.e("External" + "permission", "checkpermission , denied");
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(VideoClassActivity.this, Manifest.permission.RECORD_AUDIO))
+                    {
+                        Toast.makeText(VideoClassActivity.this, "Microphone permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        ActivityCompat.requestPermissions(VideoClassActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 23);
+                    }
+
+                    return;
+                }
 
                 String path = "";
 
@@ -421,6 +453,20 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 23) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+              startActuallRecording();
+
+            } else {
+                Log.e("AddPost" + "permission", "denied camera");
+            }
+        }
+    }
+
     //Generate a timestamp to be used as a file name
     private String generateFileName() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault());
@@ -442,47 +488,55 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
     public void startActuallRecording()
     {
             AppLog.e(TAG , "startScreenRecording called ");
-            isRecordingStarted = true;
-            resultcode = RESULT_OK;
-            recorderIntent = getRecorderIntent;
+        hbRecorder.enableCustomSettings();
 
-            hbRecorder.enableCustomSettings();
+        // hbRecorder.setAudioSource("DEFAULT");
 
-            hbRecorder.setAudioSource("DEFAULT");
+        if(hbRecorder.getDefaultWidth() > 1000)
+            hbRecorder.setVideoBitrate(2000000);
+        else if(hbRecorder.getDefaultWidth() > 650)
+            hbRecorder.setVideoBitrate(1000000);
+        else
+            hbRecorder.setVideoBitrate(1000000);
 
-            if(hbRecorder.getDefaultWidth() > 1000)
-                hbRecorder.setVideoBitrate(2000000);
-            else if(hbRecorder.getDefaultWidth() > 650)
-                hbRecorder.setVideoBitrate(1000000);
-            else
-                hbRecorder.setVideoBitrate(1000000);
+        hbRecorder.setVideoEncoder("H264");
+        // hbRecorder.setVideoFrameRate(24);
 
-            hbRecorder.setVideoEncoder("H264");
-            // hbRecorder.setVideoFrameRate(24);
-
+        hbRecorder.setOutputPath(Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
+        hbRecorder.setFileName("video_"+new SimpleDateFormat("yyyyMMdd_hhmmss").format(new Date()));
 
 
-            hbRecorder.setOutputPath(Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
-            hbRecorder.setFileName("video_"+new SimpleDateFormat("yyyyMMdd_hhmmss").format(new Date()));
+        File directory = new File(Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
+        if (! directory.exists())
+        {
+            directory.mkdir();
+            // If you require it to make the entire directory path including parents,
+            // use directory.mkdirs(); here instead.
+        }
 
+               /* getRecorderIntent = data;
 
-            File directory = new File(Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
-            if (! directory.exists()){
-                directory.mkdir();
-                // If you require it to make the entire directory path including parents,
-                // use directory.mkdirs(); here instead.
-            }
-
-
-            AppLog.e(TAG , "Recorder OutputPath : "+Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
-
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    hbRecorder.startScreenRecording(getRecorderIntent ,RESULT_OK, VideoClassActivity.this);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)) {
+                    isRecordingStarted = true;
+                    if (classListFragment != null)
+                        classListFragment.startMeetingFromActivity();
                 }
-            });
+                else
+                {
+                    requestOverlayPermission();
+                }*/
 
+        AppLog.e(TAG , "Recorder OutputPath : "+Environment.getExternalStorageDirectory().getPath()+"/gruppie_videos");
+
+        if (classListFragment != null)
+            classListFragment.startMeetingFromActivity();
+
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                hbRecorder.startScreenRecording(getRecorderIntent ,RESULT_OK, VideoClassActivity.this);
+            }
+        });
 
 
     }

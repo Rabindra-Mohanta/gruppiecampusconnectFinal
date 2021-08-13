@@ -93,6 +93,7 @@ import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
 import school.campusconnect.datamodel.videocall.StopMeetingReq;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
@@ -152,6 +153,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     // DatabaseReference myRef;
     // ArrayList<Query> myClasRef;
 
+    LeafPreference leafPreference;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -179,6 +181,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         getVideoClassList();
 
         init();
+
+        leafPreference = LeafPreference.getInstance(getActivity());
 
         return view;
     }
@@ -371,7 +375,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     public void onStart() {
         super.onStart();
         AppLog.e(TAG, "onStart called");
-
+        videoClassClicked = false;
         LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("MEETING_START"));
         LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("MEETING_RESUME"));
         LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("MEETING_END"));
@@ -381,6 +385,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     public void onResume() {
         super.onResume();
         AppLog.e(TAG, "onResume called");
+
 
         // setListener();
     }
@@ -561,6 +566,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             } else
                 holder.tvInfo.setVisibility(View.GONE);
 
+            AppLog.e(TAG , "class adapter liveclass preference : "+leafPreference.getString(item.getId()+"_liveclass"));
+
+
+
             if (!TextUtils.isEmpty(item.getImage())) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50, 50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
                         new Callback() {
@@ -610,6 +619,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 holder.imgOnline.setVisibility(View.GONE);
 
 
+
             holder.tv_stop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -617,6 +627,21 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     dialogMeetingConfirmation();
                 }
             });
+
+            if(!leafPreference.getString(item.getId()+"_liveclass").equalsIgnoreCase(""))
+            {
+                SendNotificationModel.SendNotiData notiData = new Gson().fromJson(leafPreference.getString(item.getId()+"_liveclass") , SendNotificationModel.SendNotiData.class);
+
+                AppLog.e(TAG , "class adapter notidata : "+notiData.createdByName);
+
+                if (notiData.createdByName != null && !notiData.createdByName.equalsIgnoreCase(""))
+                {
+                    AppLog.e(TAG , "class adapter notidata  set ");
+                    holder.tvInfo.setVisibility(View.VISIBLE);
+                    holder.tvInfo.setText(notiData.createdByName);
+                }
+            }
+
 
 
            /* holder.tvInfo.setOnClickListener(new View.OnClickListener() {

@@ -49,6 +49,7 @@ import butterknife.ButterKnife;
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
+import ja.burhanrashid52.photoeditor.SaveSettings;
 import ja.burhanrashid52.photoeditor.ViewType;
 import ja.burhanrashid52.photoeditor.shape.ShapeBuilder;
 import ja.burhanrashid52.photoeditor.shape.ShapeType;
@@ -172,7 +173,9 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
         {
             return;
         }
-        mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath(), new PhotoEditor.OnSaveListener() {
+
+        SaveSettings saveSettings = new SaveSettings.Builder().setCompressQuality(50).setCompressFormat(Bitmap.CompressFormat.JPEG).build();
+        mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath() , saveSettings, new PhotoEditor.OnSaveListener() {
             @Override
             public void onSuccess(@NonNull String imagePath)
             {
@@ -223,7 +226,9 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
         {
             return;
         }
-        mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath(), new PhotoEditor.OnSaveListener() {
+
+        SaveSettings saveSettings = new SaveSettings.Builder().setCompressQuality(50).setCompressFormat(Bitmap.CompressFormat.JPEG).build();
+        mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath() , saveSettings, new PhotoEditor.OnSaveListener() {
             @Override
             public void onSuccess(@NonNull String imagePath)
             {
@@ -564,7 +569,8 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
-                    mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath(), new PhotoEditor.OnSaveListener() {
+                SaveSettings saveSettings = new SaveSettings.Builder().setCompressQuality(50).setCompressFormat(Bitmap.CompressFormat.JPEG).build();
+                mPhotoEditor.saveAsFile(ImageUtil.getOutputMediaFile().getAbsolutePath() , saveSettings, new PhotoEditor.OnSaveListener() {
                         @Override
                         public void onSuccess(@NonNull String imagePath)
                         {

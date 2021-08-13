@@ -90,6 +90,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.putExtra("createdByName", data.createdByName);
                         intent.setAction("MEETING_END");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        leafPreference.remove(data.teamId + "_liveclass");
                     }
                     break;
 
@@ -99,6 +100,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.putExtra("createdByName", data.createdByName);
                         intent.setAction("MEETING_START");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        leafPreference.setString(data.teamId + "_liveclass", new Gson().toJson(data));
+                        AppLog.e(TAG , "onMessageReceived : videoStart "+new Gson().toJson(data));
                     }
                     break;
 
