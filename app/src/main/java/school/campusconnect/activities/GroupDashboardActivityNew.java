@@ -21,6 +21,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
@@ -28,10 +29,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.SubjectCountTBL;
+import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
@@ -199,7 +203,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     String[] tabText;
     int[] tabIcon;
     int[] tabIcongray;
-   // public TextView tv_Desc;
+    // public TextView tv_Desc;
     private int windowCount = 1;
     private ShowTipsView showtips;
 
@@ -257,46 +261,121 @@ public class GroupDashboardActivityNew extends BaseActivity
         new EventAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    class EventAsync extends AsyncTask<Void,Void,Void>{
+    class EventAsync extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             LeafManager leafManager = new LeafManager();
             leafManager.getUpdateEventList(new LeafManager.OnCommunicationListener() {
                 @Override
                 public void onSuccess(int apiId, BaseResponse response) {
-                    AppLog.e(TAG,"onSuccess : "+response.status);
+                    AppLog.e(TAG, "onSuccess : " + response.status);
                     UpdateDataEventRes res = (UpdateDataEventRes) response;
-                    for (int i=0;i<res.data.size();i++){
-                        UpdateDataEventRes.EventResData curr = res.data.get(i);
+                    if (res.data == null || res.data.size() == 0)
+                        return;
 
-                        EventTBL fnd = EventTBL.get(curr.insertedId);
-                        if(fnd == null){
-                            EventTBL eventTBL = new EventTBL();
-                            eventTBL.insertedId = curr.insertedId;
+                    ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
+                    for (int i = 0; i < eventList.size(); i++) {
+                        UpdateDataEventRes.EventResData curr = eventList.get(i);
+                        EventTBL eventTBL;
+                        if (curr.eventType.equalsIgnoreCase("1")) {
+                            eventTBL = EventTBL.getGroupEvent(curr.groupId);
+                        } else {
+                            eventTBL = EventTBL.getTeamEvent(curr.groupId,curr.teamId);
+                        }
+                        if (eventTBL == null) {
+                            eventTBL = new EventTBL();
                             eventTBL.groupId = curr.groupId;
+                            eventTBL.teamId = curr.teamId;
                             eventTBL.eventType = curr.eventType;
                             eventTBL.eventName = curr.eventName;
-                            eventTBL.eventAt = curr.eventAt;
-                            eventTBL.save();
-                        }else{
-                            fnd.eventAt = curr.eventAt;
-                            fnd.save();
                         }
+                        eventTBL.insertedId = curr.insertedId;
+                        eventTBL.eventAt = curr.eventAt;
+                        eventTBL.save();
+
                     }
+
+                    ArrayList<UpdateDataEventRes.SubjectCountList> subCountList = res.data.get(0).subjectCountList;
+                    for (int i = 0; i < subCountList.size(); i++) {
+                        UpdateDataEventRes.SubjectCountList curr = subCountList.get(i);
+                        SubjectCountTBL tbl = SubjectCountTBL.getTeamCount(curr.teamId, groupId);
+                        if (tbl == null) {
+                            tbl = new SubjectCountTBL();
+                            tbl.teamId = curr.teamId;
+                            tbl.groupId = GroupDashboardActivityNew.groupId;
+                            tbl.oldSubjectCount = curr.subjectCount;
+                        }
+                        tbl.subjectCount = curr.subjectCount;
+                        tbl.save();
+                    }
+
+                    UpdateDataEventRes.TeamListCount teamCount = res.data.get(0).teamsListCount;
+                    TeamCountTBL liveCount = TeamCountTBL.getByTypeAndGroup("LIVE", groupId);
+                    if (liveCount == null) {
+                        liveCount = new TeamCountTBL();
+                        liveCount.typeOfTeam = "LIVE";
+                        liveCount.oldCount = teamCount.liveClassTeamCount;
+                    }
+                    liveCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
+                    liveCount.count = teamCount.liveClassTeamCount;
+                    liveCount.groupId = groupId;
+                    liveCount.save();
+
+
+                    TeamCountTBL allCount = TeamCountTBL.getByTypeAndGroup("ALL", groupId);
+                    if (allCount == null) {
+                        allCount = new TeamCountTBL();
+                        allCount.typeOfTeam = "ALL";
+                        allCount.oldCount = teamCount.getAllClassTeamCount;
+                    }
+                    allCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
+                    allCount.count = teamCount.getAllClassTeamCount;
+                    allCount.groupId = groupId;
+                    allCount.save();
+
+
+                    TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("DASHBOARD", groupId);
+                    if (dashboardCount == null) {
+                        dashboardCount = new TeamCountTBL();
+                        dashboardCount.typeOfTeam = "DASHBOARD";
+                        dashboardCount.oldCount = teamCount.dashboardTeamCount;
+                    }
+                    dashboardCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
+                    dashboardCount.count = teamCount.dashboardTeamCount;
+                    dashboardCount.groupId = groupId;
+
+                    Fragment currFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    if (currFrag instanceof BaseTeamFragment) {
+                        boolean apiCall = false;
+                        if (dashboardCount.lastApiCalled != 0) {
+                            if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
+                                apiCall = true;
+                            }
+                        }
+
+                        if (dashboardCount.oldCount != dashboardCount.count) {
+                            dashboardCount.oldCount = dashboardCount.count;
+                            dashboardCount.save();
+                            apiCall = true;
+                        }
+                        ((BaseTeamFragment) currFrag).checkAndRefresh(apiCall);
+                    }
+                    dashboardCount.save();
                 }
 
                 @Override
                 public void onFailure(int apiId, String msg) {
-                    AppLog.e(TAG,"onFailure : "+msg);
+                    AppLog.e(TAG, "onFailure : " + msg);
                 }
 
                 @Override
                 public void onException(int apiId, String msg) {
-                    AppLog.e(TAG,"onException : "+msg);
+                    AppLog.e(TAG, "onException : " + msg);
                 }
-            },groupId);
+            }, groupId);
             return null;
         }
+
     }
 
     public boolean hasPermission(String[] permissions) {
@@ -408,7 +487,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_toolbar_icon = findViewById(R.id.iv_toolbar_icon);
         tv_toolbar_default = findViewById(R.id.iv_toolbar_default);
         tvToolbar = findViewById(R.id.tv_toolbar_title_dashboard);
-       // tv_Desc = findViewById(R.id.tv_Desc);
+        // tv_Desc = findViewById(R.id.tv_Desc);
         setSupportActionBar(mToolBar);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -485,9 +564,9 @@ public class GroupDashboardActivityNew extends BaseActivity
         });
         createTabIcons();
 
-        if(mGroupItem.canPost){
+        if (mGroupItem.canPost) {
             tabLayout.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             tabLayout.setVisibility(View.GONE);
         }
     }
@@ -728,8 +807,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (isToolBarTextSet) {
             tvToolbar.setText(mGroupItem.name);
-          //  tv_Desc.setText(LeafPreference.getInstance(this).getInt(Constants.TOTAL_MEMBER) + " users");
-         //   tv_Desc.setVisibility(View.GONE);
+            //  tv_Desc.setText(LeafPreference.getInstance(this).getInt(Constants.TOTAL_MEMBER) + " users");
+            //   tv_Desc.setVisibility(View.GONE);
         }
 
     }
@@ -743,11 +822,11 @@ public class GroupDashboardActivityNew extends BaseActivity
             llAuthorizedUser.setVisibility(View.GONE);
         }
 
-        if (mGroupItem.isAdmin) {
+       /* if (mGroupItem.isAdmin) {
             llDiscuss.setVisibility(View.VISIBLE);
         } else {
             llDiscuss.setVisibility(View.GONE);
-        }
+        }*/
 
         if (!mGroupItem.canPost || !mGroupItem.allowPostQuestion)
             llDoubt.setVisibility(View.GONE);
@@ -755,10 +834,10 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (mGroupItem.isAdmin || mGroupItem.canPost) {
             llClass.setVisibility(View.VISIBLE);
 //            llSubject.setVisibility(View.VISIBLE);
-            llSubject2.setVisibility(View.VISIBLE);
+//            llSubject2.setVisibility(View.VISIBLE);
             llStaffReg.setVisibility(View.VISIBLE);
-            llAttendanceReport.setVisibility(View.VISIBLE);
-            llBusRegister.setVisibility(View.VISIBLE);
+//            llAttendanceReport.setVisibility(View.VISIBLE);
+//            llBusRegister.setVisibility(View.VISIBLE);
         }
     }
 
@@ -833,7 +912,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (fm.getBackStackEntryCount() > 0) {
 
             if (fm.getBackStackEntryCount() == 1) {
-                if(mGroupItem.canPost)
+                if (mGroupItem.canPost)
                     tabLayout.setVisibility(View.VISIBLE);
             }
             super.onBackPressed();
@@ -850,7 +929,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     });
                 }
             } else {
-                if(tabLayout.getTabAt(0)!=null){
+                if (tabLayout.getTabAt(0) != null) {
                     tabLayout.getTabAt(0).select();
                 }
             }
@@ -957,7 +1036,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void HomeClick() {
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
-       // tv_Desc.setVisibility(View.VISIBLE);
+        // tv_Desc.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         BaseTeamFragment baseTeamFragment = new BaseTeamFragment();
@@ -968,8 +1047,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void onTeamSelected(MyTeamData team) {
         setBackEnabled(true);
         tvToolbar.setText(team.name);
-      //  tv_Desc.setText(team.members + " users");
-      //  tv_Desc.setVisibility(View.VISIBLE);
+        //  tv_Desc.setText(team.members + " users");
+        //  tv_Desc.setVisibility(View.VISIBLE);
         AppLog.e("getActivity", "team name is =>" + team.name);
 
         TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
@@ -985,7 +1064,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             Intent intent = new Intent(this, VideoClassActivity.class);
             intent.putExtra("title", group.name);
             startActivity(intent);
-        } else if (group.type.equals("Recorded Class")) {
+        }
+        /*else if (group.type.equals("Recorded Class")) {
             Intent intent;
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, RecordedClassActivity.class);
@@ -1001,32 +1081,37 @@ public class GroupDashboardActivityNew extends BaseActivity
                     intent.putExtra("title", group.name);
                 }
             }
+            intent.putExtra("type", group.type);
             intent.putExtra("role", group.role);
             startActivity(intent);
 
-        } else if (group.type.equals("Home Work")) {
+        }*/
+        else if (group.type.equals("Home Work") || group.type.equals("Recorded Class")
+                || group.type.equals("Time Table")) {
             Intent intent;
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, HWClassActivity.class);
                 intent.putExtra("title", group.name);
             } else {
                 if (group.count == 1) {
-                    intent = new Intent(this, HWClassSubjectActivity.class);
+                    if (group.type.equals("Home Work") || group.type.equals("Recorded Class")) {
+                        intent = new Intent(this, HWClassSubjectActivity.class);
+                    } else {
+                        intent = new Intent(this, TimeTabelActivity2.class);
+                    }
                     intent.putExtra("group_id", groupId);
                     intent.putExtra("team_id", group.details.teamId);
                     intent.putExtra("title", group.details.studentName);
+
                 } else {
                     intent = new Intent(this, HWClassActivity.class);
                     intent.putExtra("title", group.name);
                 }
             }
+            intent.putExtra("type", group.type);
             intent.putExtra("role", group.role);
             startActivity(intent);
-        } else if (group.type.equals("Gallery")) {
-            startActivity(new Intent(this, GalleryActivity.class));
-        } else if (group.type.equalsIgnoreCase("Calendar")) {
-            startActivity(new Intent(this, CalendarActivity.class));
-        } else if (group.type.equals("Time Table")) {
+        }/*else if (group.type.equals("Time Table")) {
             Intent intent;
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, TimeTableClassActivity2.class);
@@ -1045,6 +1130,10 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("role", group.role);
             startActivity(intent);
 
+        }*/ else if (group.type.equals("Gallery")) {
+            startActivity(new Intent(this, GalleryActivity.class));
+        } else if (group.type.equalsIgnoreCase("Calendar")) {
+            startActivity(new Intent(this, CalendarActivity.class));
         } else if (group.type.equals("Fees")) {
 
             if ("admin".equalsIgnoreCase(group.role)) {
@@ -1188,8 +1277,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         } else {
             setBackEnabled(true);
             tvToolbar.setText(group.name);
-          //  tv_Desc.setText(group.members + " users");
-         //   tv_Desc.setVisibility(View.VISIBLE);
+            //  tv_Desc.setText(group.members + " users");
+            //   tv_Desc.setVisibility(View.VISIBLE);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(group.groupId)).addToBackStack("home").commitAllowingStateLoss();
             tabLayout.setVisibility(View.GONE);
         }
@@ -1250,8 +1339,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     }
 
-    public boolean isBaseFragment()
-    {
+    public boolean isBaseFragment() {
         if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof BaseFragment) {
             return true;
         } else {

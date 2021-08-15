@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
@@ -28,8 +27,6 @@ import school.campusconnect.activities.TeamSettingsActivity;
 import school.campusconnect.activities.TeamUsersActivity;
 import school.campusconnect.adapters.ReportAdapter;
 import school.campusconnect.datamodel.EventTBL;
-import school.campusconnect.datamodel.PostItem;
-import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
@@ -51,15 +48,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
-import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import school.campusconnect.R;
@@ -166,11 +158,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 if (GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL))
                     menu.findItem(R.id.menu_add_time_table).setVisible(true);
             } else {
-                if (teamData.isClass && !teamData.allowTeamPostAll) {
+               /* if (teamData.isClass && !teamData.allowTeamPostAll) {
                     menu.findItem(R.id.menu_leave_team).setVisible(false);
                 } else {
                     menu.findItem(R.id.menu_leave_team).setVisible(true);
-                }
+                }*/
             }
 
 
@@ -464,13 +456,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     }
     EventTBL eventTBL;
     private void getDataLocaly() {
-        eventTBL = EventTBL.getByEventType(1, mGroupId);
+        eventTBL = EventTBL.getTeamEvent( mGroupId,team_id);
         boolean apiEvent = false;
         if(eventTBL!=null){
-            if(eventTBL.now==0){
+            if(eventTBL._now ==0){
                 apiEvent = true;
             }
-            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL.now)){
+            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
                 apiEvent = true;
             }
 
@@ -720,7 +712,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 saveTeamPost(res2.getResults());
 
                 if(eventTBL!=null){
-                    eventTBL.now = System.currentTimeMillis();
+                    eventTBL._now = System.currentTimeMillis();
                     eventTBL.save();
                 }
                 break;

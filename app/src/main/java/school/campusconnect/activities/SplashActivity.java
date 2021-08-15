@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
+
+import com.activeandroid.ActiveAndroid;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -69,6 +71,8 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         manager = new LeafManager();
 
         handleIntent(getIntent());
+
+        ActiveAndroid.initialize(this);
     }
 
     @Override

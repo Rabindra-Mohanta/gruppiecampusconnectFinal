@@ -30,12 +30,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.EBookClassItem;
 import school.campusconnect.datamodel.EBookItem;
 import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.HwItem;
+import school.campusconnect.datamodel.LiveClassListTBL;
 import school.campusconnect.datamodel.StudAssignementItem;
+import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.SubjectItem;
+import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.fragments.BaseTeamFragment;
 import school.campusconnect.utils.AppLog;
 import android.util.TypedValue;
@@ -623,6 +627,10 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
         HwItem.deleteAll();
         EventTBL.deleteAll();
+        ClassListTBL.deleteAll();
+        LiveClassListTBL.deleteAll();
+        TeamCountTBL.deleteAll();
+        SubjectCountTBL.deleteAll();
         StudAssignementItem.deleteAll();
         SubjectItem.deleteAll();
         EBookItem.deleteAll();

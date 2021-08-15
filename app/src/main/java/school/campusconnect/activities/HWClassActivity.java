@@ -9,7 +9,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.fragments.HWClassListFragment;
-import school.campusconnect.fragments.RecordedClassListFragment;
 
 public class HWClassActivity extends BaseActivity {
 

@@ -55,7 +55,6 @@ public class TimeTabelClassListFragment extends BaseFragment implements LeafMana
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         role = getArguments().getString("role");
-        progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -63,6 +62,7 @@ public class TimeTabelClassListFragment extends BaseFragment implements LeafMana
     @Override
     public void onStart() {
         super.onStart();
+        progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getClasses(this,GroupDashboardActivityNew.groupId);
     }

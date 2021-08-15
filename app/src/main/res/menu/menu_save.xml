@@ -166,9 +166,14 @@
         android:visible="false"
         android:title="Add Team"/>
 
+    <item android:id="@+id/menu_profile"
+        android:visible="false"
+        android:title="Profile"/>
+
     <item android:id="@+id/menu_change_pass"
         android:visible="false"
         android:title="Change Password"/>
+
 
 
     <item android:id="@+id/menu_set_wallpaper"

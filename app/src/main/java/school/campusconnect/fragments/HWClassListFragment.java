@@ -35,16 +35,22 @@ import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWClassSubjectActivity;
 import school.campusconnect.activities.RecClassSubjectActivity;
+import school.campusconnect.activities.TimeTabelActivity2;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.videocall.VideoClassResponse;
+import school.campusconnect.datamodel.ClassListTBL;
+import school.campusconnect.datamodel.SubjectItem;
+import school.campusconnect.datamodel.TeamCountTBL;
+import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 
-public class HWClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
+public class HWClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "VideoClassListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
@@ -58,6 +64,9 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;
 
+    String role;
+    String type;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,14 +79,19 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        role = getArguments().getString("role");
+        type = getArguments().getString("type");
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getVideoClassList();
+
         init();
+
+        getDataLocally();
     }
 
     private void init() {
@@ -85,8 +99,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
-                    apiCall();
                     swipeRefreshLayout.setRefreshing(false);
+                    apiCall();
                 } else {
                     showNoNetworkMsg();
                 }
@@ -94,15 +108,45 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         });
     }
 
-    private void getVideoClassList() {
-        String re = LeafPreference.getInstance(getActivity()).getString("video_class_group_id_" + GroupDashboardActivityNew.groupId);
-        if (re != null && !TextUtils.isEmpty(re)) {
-            AppLog.e(TAG, "Api Calling::: if ");
-            ArrayList<VideoClassResponse.ClassData> result = new Gson().fromJson(re, new TypeToken<List<VideoClassResponse.ClassData>>() {
-            }.getType());
+    private void getDataLocally() {
+        List<ClassListTBL> list = ClassListTBL.getAll(GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            ArrayList<ClassResponse.ClassData> result = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                ClassListTBL currentItem = list.get(i);
+                ClassResponse.ClassData item = new ClassResponse.ClassData();
+                item.id = currentItem.teamId;
+                item.teacherName = currentItem.teacherName;
+                item.phone = currentItem.phone;
+                item.members = currentItem.members;
+                item.countryCode = currentItem.countryCode;
+                item.className = currentItem.name;
+                item.classImage = currentItem.image;
+                item.category = currentItem.category;
+                item.jitsiToken = currentItem.jitsiToken;
+                result.add(item);
+            }
             rvClass.setAdapter(new ClassesAdapter(result));
+
+            TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
+            if (dashboardCount != null) {
+                boolean apiCall = false;
+                if (dashboardCount.lastApiCalled != 0) {
+                    if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
+                        apiCall = true;
+                    }
+                }
+                if (dashboardCount.oldCount != dashboardCount.count) {
+                    dashboardCount.oldCount = dashboardCount.count;
+                    dashboardCount.save();
+                    apiCall = true;
+                }
+
+                if (apiCall) {
+                    apiCall();
+                }
+            }
         } else {
-            AppLog.e(TAG, "Api Calling::: else ");
             apiCall();
         }
     }
@@ -110,27 +154,56 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     private void apiCall() {
         LeafManager leafManager = new LeafManager();
         progressBar.setVisibility(View.VISIBLE);
-        leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
+        if ("teacher".equalsIgnoreCase(role)) {
+            leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
+        } else {
+            leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        LeafManager leafManager = new LeafManager();
-
-        leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
-
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
-        VideoClassResponse res = (VideoClassResponse) response;
-        List<VideoClassResponse.ClassData> result = res.getData();
+        ClassResponse res = (ClassResponse) response;
+        List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
         LeafPreference.getInstance(getActivity()).setString("video_class_group_id_" + GroupDashboardActivityNew.groupId, new Gson().toJson(result));
         rvClass.setAdapter(new ClassesAdapter(result));
+
+        TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
+        if(dashboardCount!=null){
+            dashboardCount.lastApiCalled = System.currentTimeMillis();
+            dashboardCount.save();
+        }
+
+        saveToDB(result);
+    }
+
+    private void saveToDB(List<ClassResponse.ClassData> result) {
+        if (result == null)
+            return;
+
+        ClassListTBL.deleteAll();
+        for (int i = 0; i < result.size(); i++) {
+            ClassResponse.ClassData currentItem = result.get(i);
+            ClassListTBL item = new ClassListTBL();
+            item.teamId = currentItem.id;
+            item.teacherName = currentItem.teacherName;
+            item.phone = currentItem.phone;
+            item.members = currentItem.members;
+            item.countryCode = currentItem.countryCode;
+            item.name = currentItem.className;
+            item.image = currentItem.classImage;
+            item.category = currentItem.category;
+            item.jitsiToken = currentItem.jitsiToken;
+            item.groupId = GroupDashboardActivityNew.groupId;
+            item.save();
+        }
     }
 
     @Override
@@ -145,10 +218,10 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder> {
-        List<VideoClassResponse.ClassData> list;
+        List<ClassResponse.ClassData> list;
         private Context mContext;
 
-        public ClassesAdapter(List<VideoClassResponse.ClassData> list) {
+        public ClassesAdapter(List<ClassResponse.ClassData> list) {
             this.list = list;
         }
 
@@ -161,7 +234,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            final VideoClassResponse.ClassData item = list.get(position);
+            final ClassResponse.ClassData item = list.get(position);
 
             if (!TextUtils.isEmpty(item.getImage())) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50, 50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
@@ -199,12 +272,6 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
             holder.txt_name.setText(item.getName());
             holder.txt_count.setVisibility(View.GONE);
-
-            if(item.canPost || item.isLive){
-                holder.img_tree.setVisibility(View.VISIBLE);
-            }else {
-                holder.img_tree.setVisibility(View.GONE);
-            }
         }
 
         @Override
@@ -256,12 +323,20 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         }
     }
 
-    private void onTreeClick(VideoClassResponse.ClassData classData)
-    {
-        Intent intent = new Intent(getContext(), HWClassSubjectActivity.class);
-        intent.putExtra("team_id",classData.getId());
-        intent.putExtra("title",classData.className);
-        startActivity(intent);
+    private void onTreeClick(ClassResponse.ClassData classData) {
+        if(type.equals("Home Work") || type.equals("Recorded Class")){
+            Intent intent = new Intent(getContext(), HWClassSubjectActivity.class);
+            intent.putExtra("team_id", classData.getId());
+            intent.putExtra("title", classData.className);
+            intent.putExtra("type", type);
+            startActivity(intent);
+        }else if("Time Table".equalsIgnoreCase(type)){
+            Intent intent = new Intent(getActivity(), TimeTabelActivity2.class);
+            intent.putExtra("team_id",classData.getId());
+            intent.putExtra("team_name",classData.getName());
+            intent.putExtra("role",role);
+            startActivity(intent);
+        }
 
     }
 }

@@ -40,7 +40,7 @@ public class ClassResponse extends BaseResponse {
 
         @SerializedName("teamId")
         @Expose
-        private String id;
+        public String id;
 
         @SerializedName(value = "members",alternate = "studentCount")
         @Expose

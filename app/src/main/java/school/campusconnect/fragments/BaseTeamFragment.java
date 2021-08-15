@@ -52,12 +52,14 @@ import school.campusconnect.R;
 import school.campusconnect.activities.ChangePasswordActivity;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.adapters.TeamListAdapterNew;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupItem;
+import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.TeamListItem;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
@@ -90,8 +92,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     private MenuItem removeWallMenu;
     private GroupItem mGroupItem;
 
-  //  DatabaseReference database;
-  //  ArrayList<Query> teamsRef;
+    //  DatabaseReference database;
+    //  ArrayList<Query> teamsRef;
 
     @Nullable
     @Override
@@ -102,6 +104,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         init();
 
         setBackgroundImage();
+
+        getTeams();
 
         return view;
     }
@@ -155,6 +159,13 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
         menu.findItem(R.id.menu_change_pass).setVisible(true);
         menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
+
+        if(mGroupItem.canPost){
+            menu.findItem(R.id.menu_profile).setVisible(false);
+        }else {
+            menu.findItem(R.id.menu_profile).setVisible(true);
+        }
+
         removeWallMenu = menu.findItem(R.id.menu_remove_wallpaper);
         if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
             removeWallMenu.setVisible(true);
@@ -220,6 +231,15 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 wallPref.edit().clear().commit();
                 setBackgroundImage();
                 break;
+            case R.id.menu_profile:{
+                if (isConnectionAvailable()) {
+                    Intent intent2 = new Intent(getActivity(), ProfileActivity2.class);
+                    startActivity(intent2);
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -295,38 +315,41 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     }
 
     private void getTeams() {
-        teamList.clear();
         List<TeamListItem> dataItemList = TeamListItem.getTeamList(GroupDashboardActivityNew.groupId);
-        AppLog.e(TAG, "DATABASE size is not 0 --> " + dataItemList.size());
+        if (dataItemList != null && dataItemList.size() > 0) {
+            teamList.clear();
+            for (int i = 0; i < dataItemList.size(); i++) {
+                MyTeamData myTeamData = new MyTeamData();
+                myTeamData.teamId = dataItemList.get(i).team_id;
+                myTeamData.isClass = dataItemList.get(i).isClass;
+                myTeamData.name = dataItemList.get(i).name;
+                myTeamData.phone = dataItemList.get(i).phone;
+                myTeamData.image = dataItemList.get(i).image;
+                myTeamData.groupId = dataItemList.get(i).group_id;
+                myTeamData.members = dataItemList.get(i).members;
+                myTeamData.canAddUser = dataItemList.get(i).canAddUser;
+                myTeamData.teamType = dataItemList.get(i).teamType;
+                myTeamData.type = dataItemList.get(i).type;
+                myTeamData.enableGps = dataItemList.get(i).enableGps;
+                myTeamData.enableAttendance = dataItemList.get(i).enableAttendance;
+                myTeamData.isTeamAdmin = dataItemList.get(i).isTeamAdmin;
+                myTeamData.allowTeamPostAll = dataItemList.get(i).allowTeamPostAll;
+                myTeamData.allowTeamPostCommentAll = dataItemList.get(i).allowTeamPostCommentAll;
 
-        for (int i = 0; i < dataItemList.size(); i++) {
-
-            MyTeamData myTeamData = new MyTeamData();
-            myTeamData.teamId = dataItemList.get(i).team_id;
-            myTeamData.name = dataItemList.get(i).name;
-            myTeamData.phone = dataItemList.get(i).phone;
-            myTeamData.image = dataItemList.get(i).image;
-            myTeamData.groupId = dataItemList.get(i).group_id;
-            myTeamData.members = dataItemList.get(i).members;
-            myTeamData.canAddUser = dataItemList.get(i).canAddUser;
-            myTeamData.teamType = dataItemList.get(i).teamType;
-            myTeamData.type = dataItemList.get(i).type;
-            myTeamData.enableGps = dataItemList.get(i).enableGps;
-            myTeamData.enableAttendance = dataItemList.get(i).enableAttendance;
-            myTeamData.isTeamAdmin = dataItemList.get(i).isTeamAdmin;
-            myTeamData.allowTeamPostAll = dataItemList.get(i).allowTeamPostAll;
-            myTeamData.allowTeamPostCommentAll = dataItemList.get(i).allowTeamPostCommentAll;
-            teamList.add(myTeamData);
-
-        }
-        if (teamList.size() > 0) {
+                teamList.add(myTeamData);
+            }
             mAdapter.notifyDataSetChanged();
+        } else {
+            apiCall();
         }
+    }
 
-        if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
-            manager.myTeamList(this, GroupDashboardActivityNew.groupId);
+    private void apiCall() {
+        if (!isConnectionAvailable()) {
+            return;
         }
+        showLoadingBar(progressBar);
+        manager.myTeamList(this, GroupDashboardActivityNew.groupId);
     }
 
     private void init() {
@@ -346,14 +369,12 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         mAdapter = new TeamListAdapterNew(teamList, this);
         rvTeams.setAdapter(mAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener()
-        {
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh()
-            {
+            public void onRefresh() {
                 if (isConnectionAvailable()) {
                     swipeRefreshLayout.setRefreshing(false);
-                    getTeams();
+                    apiCall();
                     if (mGroupItem.canPost) {
                         manager.getGroupDetail(BaseTeamFragment.this, GroupDashboardActivityNew.groupId + "");
                     }
@@ -363,7 +384,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             }
         });
 
-       // database = FirebaseDatabase.getInstance().getReference();
+        // database = FirebaseDatabase.getInstance().getReference();
 
     }
 
@@ -371,98 +392,10 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     public void onStart() {
         super.onStart();
         ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
-      //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
-     //   ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
+        //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
+        //   ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
 
-        if (getActivity() != null) {
-
-            String re = LeafPreference.getInstance(getActivity()).getString("" + GroupDashboardActivityNew.groupId);
-
-            if (re != null && !TextUtils.isEmpty(re)) {
-
-                List<MyTeamData> result = new Gson().fromJson(re, new TypeToken<List<MyTeamData>>() {
-                }.getType());
-                teamList.clear();
-                teamList.addAll(result);
-                mAdapter.notifyDataSetChanged();
-
-            } else {
-
-                getTeams();
-                if (mGroupItem.canPost) {
-                    manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
-                }
-            }
-
-            /*if (!LeafPreference.getInstance(getActivity()).getBoolean("home_api")) {
-                LeafPreference.getInstance(getActivity()).setBoolean("home_api", true);
-                getTeams();
-                if (mGroupItem.canPost) {
-                    manager.getGroupDetail(this, GroupDashboardActivityNew.groupId + "");
-                }
-            } else {
-
-                List<MyTeamData> result = new Gson().fromJson(re, new TypeToken<List<MyTeamData>>() {
-                }.getType());
-
-                if (re != null && !TextUtils.isEmpty(re)) {
-                    teamList.clear();
-                    teamList.addAll(result);
-                    mAdapter.notifyDataSetChanged();
-
-                   *//* for(int i = 0 ; i < result.size() ; i++)
-                    {
-                            if(result.get(i).type !=null && result.get(i).type.equalsIgnoreCase(""))
-                            {
-                                if(result.get(i).teamId !=null && !result.get(i).teamId.equalsIgnoreCase(""))
-                                {
-                                    final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupItem.getGroupId() + "", result.get(i).teamId + "");
-
-                                    Query query = database.child("team_post").child(result.get(i).teamId).orderByKey().equalTo(dataItemList.get(0).id);
-                                    query.addValueEventListener(firebaseNewPostListener);
-                                    teamsRef.add(query);
-                                }
-                                else
-                                {
-                                    List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupItem.getGroupId()+"");
-
-                                    Query query = database.child("group_post").child(mGroupItem.getGroupId()).orderByKey().equalTo(dataItemList.get(0).id);
-                                    query.addValueEventListener(firebaseNewPostListener);
-                                    teamsRef.add(query);
-                                }
-                            }
-                    }*//*
-
-                }
-            }*/
-        }
     }
-
-
-    private void firebaseListen(String lastIdFromDB) {
-        AppLog.e(TAG, "firebaseListen called : " + lastIdFromDB);
-        if (TextUtils.isEmpty(lastIdFromDB)) {
-            //  callApi(false);
-        } else {
-
-            //  query = myRef.child("team_post").child(team_id).orderByKey().startAfter(lastIdFromDB).limitToFirst(1);
-            // query.addListenerForSingleValueEvent(firebaseNewPostListener);
-        }
-    }
-
-   /* ValueEventListener firebaseNewPostListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            AppLog.e(TAG, "data changed : " + snapshot);
-            //  if(snapshot.getValue() !=null)
-            //     callApi(true);
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-
-        }
-    };*/
 
     @Override
     public void onResume() {
@@ -526,6 +459,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
                     teamListItem.group_id = item.groupId;
                     teamListItem.team_id = item.teamId;
+                    teamListItem.isClass = item.isClass;
                     teamListItem.phone = item.phone;
                     teamListItem.image = item.image;
                     teamListItem.members = item.members;
@@ -569,11 +503,14 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
                 }
 
-                //LeafPreference.getInstance(getActivity()).setString(LeafPreference.HOME_LIST_OFFLINE, new Gson().toJson(result));
-                LeafPreference.getInstance(getActivity()).setString("" + GroupDashboardActivityNew.groupId, new Gson().toJson(result));
-
                 teamList.addAll(result);
                 mAdapter.notifyDataSetChanged();
+
+                TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
+                if(dashboardCount!=null){
+                    dashboardCount.lastApiCalled = System.currentTimeMillis();
+                    dashboardCount.save();
+                }
 
                 subscribeUnsubscribeTeam(currentTopics);
 
@@ -588,7 +525,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                     menuItem.setIcon(buildCounterDrawable(GroupDashboardActivityNew.notificationUnseenCount));
                 }
                 if (((GroupDashboardActivityNew) getActivity()).isBaseFragment()) {
-                   // ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
+                    // ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
                 }
 //                checkVersionUpdate(gRes.data.get(0).appVersion);
                 break;
@@ -732,12 +669,10 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             Toast.makeText(getActivity(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 
-    public void reloadData() {
-       /* rvTeams.scrollToPosition(0);
-        mAdapter.setSelectedPos(0);
-        if(isConnectionAvailable())
-            manager.myTeamList(this, GroupDashboardActivityNew.groupId);
-        else
-            showNoNetworkMsg();*/
+    public void checkAndRefresh(boolean apiCall) {
+        if (apiCall) {
+            AppLog.e(TAG, "---- Refresh Team -----");
+            apiCall();
+        }
     }
 }

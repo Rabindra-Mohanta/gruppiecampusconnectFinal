@@ -29,14 +29,18 @@ import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.ChapterActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWListActivity;
+import school.campusconnect.activities.TimeTabelActivity2;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.EBookClassItem;
+import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.SubjectItem;
+import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
+import school.campusconnect.utils.MixOperations;
 
 public class HWSubjectListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "TeamDiscussFragment";
@@ -51,6 +55,8 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
 
     String team_id;
     String className;
+    String type;
+    String path;
 
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;
@@ -65,6 +71,8 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
 
         team_id = getArguments().getString("team_id");
         className = getArguments().getString("title");
+        type = getArguments().getString("type");
+        path = getArguments().getString("path"); // For Recorded Class only
 
         init();
 
@@ -88,28 +96,39 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     }
 
     private void getDataLocally() {
-        List<SubjectItem> list = SubjectItem.getAll(team_id,GroupDashboardActivityNew.groupId);
+        List<SubjectItem> list = SubjectItem.getAll(team_id, GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
-            ArrayList<SubjectStaffResponse.SubjectData> subList= new ArrayList<>();
+            ArrayList<SubjectStaffResponse.SubjectData> subList = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 SubjectItem currentItem = list.get(i);
                 SubjectStaffResponse.SubjectData item = new SubjectStaffResponse.SubjectData();
-                item.staffName = new Gson().fromJson(currentItem.staffName,new TypeToken<ArrayList<SubjectStaffResponse.SubjectStaff>>() {}.getType());
+                item.staffName = new Gson().fromJson(currentItem.staffName, new TypeToken<ArrayList<SubjectStaffResponse.SubjectStaff>>() {
+                }.getType());
                 item.subjectId = currentItem.subjectId;
                 item.name = currentItem.subjectName;
                 item.canPost = currentItem.canPost;
                 subList.add(item);
             }
             rvClass.setAdapter(new SubjectAdapter(subList));
+
+            SubjectCountTBL subjectCountTBL = SubjectCountTBL.getTeamCount(team_id, GroupDashboardActivityNew.groupId);
+            if (subjectCountTBL != null) {
+                if (subjectCountTBL.oldSubjectCount != subjectCountTBL.subjectCount) {
+                    subjectCountTBL.oldSubjectCount = subjectCountTBL.subjectCount;
+                    subjectCountTBL.save();
+                    callAPi();
+                }
+            }
+
         } else {
-           callAPi();
+            callAPi();
         }
     }
 
     private void callAPi() {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,"");
+        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id, "");
     }
 
     @Override
@@ -128,10 +147,11 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
 
         saveToDB(result);
     }
+
     private void saveToDB(List<SubjectStaffResponse.SubjectData> result) {
         if (result == null)
             return;
-        SubjectItem.deleteAll();
+        SubjectItem.deleteAll(team_id,GroupDashboardActivityNew.groupId);
         for (int i = 0; i < result.size(); i++) {
             SubjectStaffResponse.SubjectData currentItem = result.get(i);
             SubjectItem classItem = new SubjectItem();
@@ -228,13 +248,35 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     }
 
     private void onTreeClick(SubjectStaffResponse.SubjectData classData) {
-        Intent intent = new Intent(getActivity(), HWListActivity.class);
-        intent.putExtra("team_id",team_id);
-        intent.putExtra("className",className);
-        intent.putExtra("subject_id",classData.subjectId);
-        intent.putExtra("subject_name",classData.name);
-        intent.putExtra("canPost",classData.canPost);
-        intent.putExtra("title",classData.name);
-        startActivity(intent);
+        if ("Home Work".equalsIgnoreCase(type)) {
+            Intent intent = new Intent(getActivity(), HWListActivity.class);
+            intent.putExtra("team_id", team_id);
+            intent.putExtra("className", className);
+            intent.putExtra("subject_id", classData.subjectId);
+            intent.putExtra("subject_name", classData.name);
+            intent.putExtra("canPost", classData.canPost);
+            intent.putExtra("title", classData.name);
+            startActivity(intent);
+        } else if ("Recorded Class".equalsIgnoreCase(type)) {
+            if (!TextUtils.isEmpty(path)) {
+                Intent intent = new Intent(getActivity(), AddChapterPostActivity.class);
+                intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
+                intent.putExtra("team_id", team_id);
+                intent.putExtra("subject_id", classData.subjectId);
+                intent.putExtra("subject_name", classData.name);
+                intent.putExtra("path", path);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getActivity(), ChapterActivity.class);
+                intent.putExtra("team_id", team_id);
+                intent.putExtra("className", className);
+                intent.putExtra("subject_id", classData.subjectId);
+                intent.putExtra("subject_name", classData.name);
+                intent.putExtra("canPost", classData.canPost);
+                intent.putExtra("title", classData.name);
+                startActivity(intent);
+            }
+        }
+
     }
 }

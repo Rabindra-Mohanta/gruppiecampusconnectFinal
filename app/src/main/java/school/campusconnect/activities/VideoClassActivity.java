@@ -132,11 +132,12 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
             public void okPositiveClick(DialogInterface dialog) {
                 dialog.dismiss();
                 AppLog.e(TAG, "hbRecorder.getFilePath() : " + hbRecorder.getFilePath());
-                Intent intent = new Intent(VideoClassActivity.this, RecClassSubjectActivity.class);
+                Intent intent = new Intent(VideoClassActivity.this, HWClassSubjectActivity.class);
                 intent.putExtra("team_id", selectedClassData.getId());
                 intent.putExtra("title", selectedClassData.className);
 
                 intent.putExtra("path", hbRecorder.getFilePath());
+                intent.putExtra("type","Recorded Class");
                 startActivity(intent);
             }
 

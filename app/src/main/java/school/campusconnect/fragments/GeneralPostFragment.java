@@ -271,13 +271,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getGroupPostLocaly() {
-        eventTBL = EventTBL.getByEventType(1, mGroupId);
+        eventTBL = EventTBL.getGroupEvent(mGroupId);
         boolean apiEvent = false;
         if(eventTBL!=null){
-            if(eventTBL.now==0){
+            if(eventTBL._now ==0){
                 apiEvent = true;
             }
-            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL.now)){
+            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
                 apiEvent = true;
             }
 
@@ -436,7 +436,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 savePostData(res.getResults());
 
                 if(eventTBL!=null){
-                    eventTBL.now = System.currentTimeMillis();
+                    eventTBL._now = System.currentTimeMillis();
                     eventTBL.save();
                 }
                 break;

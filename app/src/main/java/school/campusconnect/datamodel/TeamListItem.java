@@ -21,6 +21,9 @@ public class TeamListItem extends Model {
     @Column(name = "team_id")
     public String team_id;
 
+    @Column(name = "isClass")
+    public boolean isClass;
+
     @Column(name = "name")
     public String name;
 

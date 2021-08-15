@@ -38,4 +38,7 @@ public class SubjectItem extends Model {
     public static void deleteAll() {
         new Delete().from(SubjectItem.class).execute();
     }
+    public static void deleteAll(String teamId, String groupId) {
+        new Delete().from(SubjectItem.class).where("teamId = ?", teamId).where("groupId = ?", groupId).execute();
+    }
 }

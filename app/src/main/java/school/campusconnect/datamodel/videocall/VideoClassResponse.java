@@ -40,7 +40,7 @@ public class VideoClassResponse extends BaseResponse {
 
         @SerializedName("teamId")
         @Expose
-        private String id;
+        public String id;
 
         @SerializedName(value = "members",alternate = "studentCount")
         @Expose
@@ -65,6 +65,10 @@ public class VideoClassResponse extends BaseResponse {
         @SerializedName(value = "meetingIdOnLive")
         @Expose
         public String meetingIdOnLive;
+
+        @SerializedName(value = "groupId")
+        @Expose
+        public String groupId;
 
         public boolean isJoining;
 

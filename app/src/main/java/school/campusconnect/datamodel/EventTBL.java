@@ -16,6 +16,9 @@ public class EventTBL extends Model {
     @Column(name = "groupId")
     public String groupId;
 
+    @Column(name = "teamId")
+    public String teamId;
+
     @Column(name = "eventType")
     public String eventType;
 
@@ -25,24 +28,25 @@ public class EventTBL extends Model {
     @Column(name = "eventAt")
     public String eventAt;
 
-    @Column(name = "now")
-    public long now;
+    @Column(name = "_now")
+    public long _now;
 
     public EventTBL(){
         super();
     }
 
-    public static List<EventTBL> getAll(int eventType,String groupId) {
-        return new Select().from(EventTBL.class).where("eventType = ?", eventType).where("groupId = ?", groupId).execute();
-    }
-    public static EventTBL get(String insertedId) {
-        List<EventTBL> list = new Select().from(EventTBL.class).where("insertedId = ?", insertedId).execute();
+   public static EventTBL getGroupEvent(String groupId) {
+        List<EventTBL> list = new Select().from(EventTBL.class).where("eventType = ?", "1").where("groupId = ?", groupId).execute();
         if(list!=null && list.size()>0){
-           return list.get(list.size()-1);
+           return list.get(0);
         }
         return null;
-    } public static EventTBL getByEventType(int eventType,String groupId) {
-        List<EventTBL> list = new Select().from(EventTBL.class).where("eventType = ?", eventType).where("groupId = ?", groupId).orderBy("eventType DESC").limit(1).execute();
+    }
+    public static EventTBL getTeamEvent(String groupId,String teamId) {
+        List<EventTBL> list = new Select().from(EventTBL.class).
+                where("eventType = ?", "2").
+                where("groupId = ?", groupId).
+                where("teamId = ?", teamId).execute();
         if(list!=null && list.size()>0){
            return list.get(0);
         }
