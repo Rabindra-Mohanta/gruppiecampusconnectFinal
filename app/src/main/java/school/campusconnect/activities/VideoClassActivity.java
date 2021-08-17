@@ -159,9 +159,30 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
         this.selectedClassData = selectedClassData;
         AppLog.e(TAG, "StartRecordingScreen called ");
 
-        MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
-        startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
+
+        int result = ContextCompat.checkSelfPermission(VideoClassActivity.this, Manifest.permission.RECORD_AUDIO);
+        if (result == PackageManager.PERMISSION_GRANTED)
+        {
+            AppLog.e("External" + "permission", "checkpermission , granted");
+            MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+            Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
+            startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
+
+        }
+        else
+        {
+            AppLog.e("External" + "permission", "checkpermission , denied");
+            if (ActivityCompat.shouldShowRequestPermissionRationale(VideoClassActivity.this, Manifest.permission.RECORD_AUDIO))
+            {
+                Toast.makeText(VideoClassActivity.this, "Microphone permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(VideoClassActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 23);
+            }
+
+            return;
+        }
 
     }
 
@@ -313,26 +334,7 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
                 resultcode = resultCode;
                 recorderIntent = data;
 
-                int result = ContextCompat.checkSelfPermission(VideoClassActivity.this, Manifest.permission.RECORD_AUDIO);
-                if (result == PackageManager.PERMISSION_GRANTED)
-                {
-                    AppLog.e("External" + "permission", "checkpermission , granted");
 
-                }
-                else
-                {
-                    AppLog.e("External" + "permission", "checkpermission , denied");
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(VideoClassActivity.this, Manifest.permission.RECORD_AUDIO))
-                    {
-                        Toast.makeText(VideoClassActivity.this, "Microphone permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        ActivityCompat.requestPermissions(VideoClassActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 23);
-                    }
-
-                    return;
-                }
 
                 String path = "";
 
@@ -460,7 +462,10 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
         if (requestCode == 23) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-              startActuallRecording();
+              //startActuallRecording();
+                MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+                Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
+                startActivityForResult(permissionIntent, SCREEN_RECORD_REQUEST_CODE);
 
             } else {
                 Log.e("AddPost" + "permission", "denied camera");
