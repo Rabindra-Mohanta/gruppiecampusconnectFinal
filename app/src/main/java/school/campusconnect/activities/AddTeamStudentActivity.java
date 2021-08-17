@@ -3,6 +3,8 @@ package school.campusconnect.activities;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -35,12 +37,33 @@ public class AddTeamStudentActivity extends BaseActivity {
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
 
+
+
     }
+    AddTeamStudentListFragment classListFragment;
     public void next(Bundle bundle){
-        AddTeamStudentListFragment classListFragment=new AddTeamStudentListFragment();
+        classListFragment=new AddTeamStudentListFragment();
         classListFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).addToBackStack("aa").commit();
     }
+    public void enableSelection(boolean isShow){
+        if(isShow){
+            findViewById(R.id.cardAll).setVisibility(View.VISIBLE);
+        }else {
+            findViewById(R.id.cardAll).setVisibility(View.GONE);
+        }
+
+        CheckBox chkAll = findViewById(R.id.chkAll);
+        chkAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(classListFragment!=null){
+                    classListFragment.selectAll(chkAll.isChecked());
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onBackPressed() {

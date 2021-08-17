@@ -60,9 +60,9 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
-
+/*
     @Bind(R.id.swipeRefreshLayout)
-    public PullRefreshLayout swipeRefreshLayout;
+    public PullRefreshLayout swipeRefreshLayout;*/
 
     String role;
     String type;
@@ -75,7 +75,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss_refresh, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -95,7 +95,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void init() {
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+      /*  swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -105,7 +105,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                     showNoNetworkMsg();
                 }
             }
-        });
+        });*/
     }
 
     private void getDataLocally() {

@@ -28,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddTeamStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
@@ -86,6 +87,10 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
         super.onStart();
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this, groupId+"", teamId+"",false);
+
+        if(getActivity()!=null){
+            ((AddTeamStudentActivity)getActivity()).enableSelection(true);
+        }
     }
 
     @Override
@@ -146,6 +151,9 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+    }
+    public void selectAll(boolean checked) {
+        adapter.selectAll(checked);
     }
 
     public class AddTeamStudentAdapter extends RecyclerView.Adapter<AddTeamStudentAdapter.ViewHolder> {
@@ -251,6 +259,15 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
                 }
             }
             return stringBuffer.length() > 0 ? stringBuffer.substring(0, stringBuffer.length() - 1) : "";
+        }
+
+        public void selectAll(boolean checked) {
+            if(list!=null){
+                for (int i=0;i<list.size();i++){
+                    list.get(i).isSelected = checked;
+                }
+            }
+            notifyDataSetChanged();
         }
 
 

@@ -381,6 +381,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         mBinding.recyclerView.setLayoutManager(layoutManager);
         mAdapter = new PostAdapter(PostList, this, "group", databaseHandler, count);
         mBinding.recyclerView.setAdapter(mAdapter);
+
     }
 
 

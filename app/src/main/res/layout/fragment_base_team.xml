@@ -20,19 +20,19 @@
             android:scaleType="centerCrop"
             android:src="@drawable/app_icon" />
     </FrameLayout>
-
+<!--
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:refreshColor="@color/colorPrimary">
+        app:refreshColor="@color/colorPrimary">-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTeams"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/item_team_list" />
-    </com.baoyz.widget.PullRefreshLayout>
+<!--    </com.baoyz.widget.PullRefreshLayout>-->
 
 
     <ProgressBar

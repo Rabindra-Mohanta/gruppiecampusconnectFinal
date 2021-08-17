@@ -71,6 +71,10 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
         super.onStart();
         LeafManager leafManager = new LeafManager();
         leafManager.getClasses(this,GroupDashboardActivityNew.groupId);
+
+        if(getActivity()!=null){
+            ((AddTeamStudentActivity)getActivity()).enableSelection(false);
+        }
     }
 
     @Override

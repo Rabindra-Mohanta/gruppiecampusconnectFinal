@@ -144,6 +144,10 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
         progressBar.setVisibility(View.GONE);
     }
 
+    public void selectAll(boolean checked) {
+        adapter.selectAll(checked);
+    }
+
     public class AddTeamStaffAdapter extends RecyclerView.Adapter<AddTeamStaffAdapter.ViewHolder> {
         List<StaffResponse.StaffData> list;
         private Context mContext;
@@ -248,6 +252,15 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
                 }
             }
             return stringBuffer.length() > 0 ? stringBuffer.substring(0, stringBuffer.length() - 1) : "";
+        }
+
+        public void selectAll(boolean checked) {
+            if(list!=null){
+                for (int i=0;i<list.size();i++){
+                    list.get(i).isSelected = checked;
+                }
+            }
+            notifyDataSetChanged();
         }
 
 

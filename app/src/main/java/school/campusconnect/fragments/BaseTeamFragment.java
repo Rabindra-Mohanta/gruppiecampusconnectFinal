@@ -41,6 +41,8 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -255,6 +257,11 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         }
     }
 
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
@@ -363,26 +370,26 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         rvTeams = view.findViewById(R.id.rvTeams);
         imgBackground = view.findViewById(R.id.imgBackground);
         progressBar = view.findViewById(R.id.progressBar);
-        PullRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+//        PullRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         rvTeams.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAdapter = new TeamListAdapterNew(teamList, this);
         rvTeams.setAdapter(mAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (isConnectionAvailable()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    apiCall();
-                    if (mGroupItem.canPost) {
-                        manager.getGroupDetail(BaseTeamFragment.this, GroupDashboardActivityNew.groupId + "");
-                    }
-                } else {
-                    showNoNetworkMsg();
-                }
-            }
-        });
+//        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (isConnectionAvailable()) {
+//                    swipeRefreshLayout.setRefreshing(false);
+//                    apiCall();
+//                    if (mGroupItem.canPost) {
+//                        manager.getGroupDetail(BaseTeamFragment.this, GroupDashboardActivityNew.groupId + "");
+//                    }
+//                } else {
+//                    showNoNetworkMsg();
+//                }
+//            }
+//        });
 
         // database = FirebaseDatabase.getInstance().getReference();
 
@@ -391,7 +398,11 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     @Override
     public void onStart() {
         super.onStart();
-        ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
+        if(getActivity()!=null){
+            ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
+            ((GroupDashboardActivityNew) getActivity()).callEventApi();
+        }
+
         //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
         //   ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
 

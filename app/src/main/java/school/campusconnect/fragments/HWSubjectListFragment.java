@@ -57,15 +57,15 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     String className;
     String type;
     String path;
-
+/*
     @Bind(R.id.swipeRefreshLayout)
-    public PullRefreshLayout swipeRefreshLayout;
+    public PullRefreshLayout swipeRefreshLayout;*/
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss_refresh, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -82,7 +82,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     }
 
     private void init() {
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        /*swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -92,7 +92,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
                     showNoNetworkMsg();
                 }
             }
-        });
+        });*/
     }
 
     private void getDataLocally() {

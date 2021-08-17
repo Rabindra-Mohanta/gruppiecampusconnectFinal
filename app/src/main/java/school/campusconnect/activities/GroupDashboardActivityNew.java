@@ -258,6 +258,9 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (!hasPermission(permissions)) {
             ActivityCompat.requestPermissions(this, permissions, 222);
         }
+    }
+
+    public void callEventApi() {
         new EventAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -822,11 +825,11 @@ public class GroupDashboardActivityNew extends BaseActivity
             llAuthorizedUser.setVisibility(View.GONE);
         }
 
-       /* if (mGroupItem.isAdmin) {
+        if (mGroupItem.isAdmin) {
             llDiscuss.setVisibility(View.VISIBLE);
         } else {
             llDiscuss.setVisibility(View.GONE);
-        }*/
+        }
 
         if (!mGroupItem.canPost || !mGroupItem.allowPostQuestion)
             llDoubt.setVisibility(View.GONE);
@@ -834,10 +837,10 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (mGroupItem.isAdmin || mGroupItem.canPost) {
             llClass.setVisibility(View.VISIBLE);
 //            llSubject.setVisibility(View.VISIBLE);
-//            llSubject2.setVisibility(View.VISIBLE);
+            llSubject2.setVisibility(View.VISIBLE);
             llStaffReg.setVisibility(View.VISIBLE);
-//            llAttendanceReport.setVisibility(View.VISIBLE);
-//            llBusRegister.setVisibility(View.VISIBLE);
+            llAttendanceReport.setVisibility(View.VISIBLE);
+            llBusRegister.setVisibility(View.VISIBLE);
         }
     }
 

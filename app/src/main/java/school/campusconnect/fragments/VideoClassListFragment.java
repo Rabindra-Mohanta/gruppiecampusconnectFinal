@@ -136,9 +136,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     @Bind(R.id.progressBarZoom)
     public ProgressBar progressBarZoom;
-
+/*
     @Bind(R.id.swipeRefreshLayout)
-    public PullRefreshLayout swipeRefreshLayout;
+    public PullRefreshLayout swipeRefreshLayout;*/
 
 
     VideoClassResponse.ClassData item;
@@ -174,7 +174,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         AppLog.e(TAG, "onCreateView called");
 
-        View view = inflater.inflate(R.layout.fragment_team_discuss_refresh, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -191,7 +191,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void init() {
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+       /* swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -201,7 +201,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     showNoNetworkMsg();
                 }
             }
-        });
+        });*/
     }
 
     private void getDataLocally() {

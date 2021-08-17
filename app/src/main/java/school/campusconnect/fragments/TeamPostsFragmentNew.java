@@ -664,7 +664,6 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             });
         }*/
 
-
     }
 
 
