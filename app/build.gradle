@@ -141,9 +141,9 @@ android {
                 buildConfigField("String", "AppType",  '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')
 */
-
-         /*   applicationId "ktsv.gruppie"
-            versionCode 2
+/*
+            applicationId "ktsv.gruppie"
+            versionCode 3
             versionName "1.0"
             resValue "string", "app_name", '"K.T.S.V"'
             buildConfigField("String", "AppName", '"K.T.S.V"')
@@ -151,14 +151,20 @@ android {
             buildConfigField("String", "AppType",  '"CAMPUS"')
             buildConfigField("String", "APP_ID",  '"school"')*/
 
+           /*     applicationId "jnana.gruppie"
+                versionCode 2
+                versionName "2.0"
+                resValue "string", "app_name", '"JNANA"'
+                buildConfigField("String", "AppName", '"JNANA"')
+                buildConfigField("String", "AppCategory", '"CAMPUS"')
+                buildConfigField("String", "AppType",  '"CAMPUS"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
-
-
-                /*   ndk {
+                   ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
                        abiFilters 'arm64-v8a','armeabi-v7a'//
-                   }*/
+                   }
             }
     buildTypes {
         release {
@@ -324,7 +330,7 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 

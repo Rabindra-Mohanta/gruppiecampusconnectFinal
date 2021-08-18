@@ -38,6 +38,7 @@ import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
+import school.campusconnect.datamodel.homework.ReassignReq;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
@@ -276,7 +277,10 @@ public class GroupDashboardActivityNew extends BaseActivity
                     if (res.data == null || res.data.size() == 0)
                         return;
 
+
                     ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
+
+                    boolean ifNeedToLogout = false;
                     for (int i = 0; i < eventList.size(); i++) {
                         UpdateDataEventRes.EventResData curr = eventList.get(i);
                         EventTBL eventTBL = null;
@@ -289,7 +293,24 @@ public class GroupDashboardActivityNew extends BaseActivity
                         }else if (curr.eventType.equalsIgnoreCase("4")) {
                             eventTBL = EventTBL.getAssignmentEvent(curr.groupId,curr.teamId,curr.subjectId);
                         }
-                        if (eventTBL == null) {
+                        else if(curr.eventType.equalsIgnoreCase("5"))
+                        {
+                            eventTBL = EventTBL.getAdminEvents(curr.groupId);
+
+                            if(eventTBL == null)
+                            AppLog.e(TAG , "eventTBL is  nulll ");
+                            else
+                            AppLog.e(TAG , "eventTBL eventat : "+eventTBL.eventAt);
+
+                            if(eventTBL == null || MixOperations.isNewEvent(curr.eventAt , "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" , eventTBL.eventAt))
+                            {
+                               ifNeedToLogout = true;
+                            }
+
+                        }
+
+                        if (eventTBL == null)
+                        {
                             eventTBL = new EventTBL();
                             eventTBL.groupId = curr.groupId;
                             eventTBL.subjectId = curr.subjectId;
@@ -301,6 +322,12 @@ public class GroupDashboardActivityNew extends BaseActivity
                         eventTBL.eventAt = curr.eventAt;
                         eventTBL.save();
 
+                    }
+
+                    if(ifNeedToLogout)
+                    {
+                        showLogoutPopup();
+                        return;
                     }
 
                     ArrayList<UpdateDataEventRes.SubjectCountList> subCountList = res.data.get(0).subjectCountList;
@@ -384,6 +411,18 @@ public class GroupDashboardActivityNew extends BaseActivity
             return null;
         }
 
+    }
+
+    private void showLogoutPopup()
+    {
+
+            SMBDialogUtils.showSMBDialogOK(GroupDashboardActivityNew.this, "Your Account permissions have been changed , Please logout and login again.", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                  logoutWithoutEvents();
+                }
+            });
     }
 
     public boolean hasPermission(String[] permissions) {

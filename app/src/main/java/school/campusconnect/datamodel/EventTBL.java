@@ -46,6 +46,14 @@ public class EventTBL extends Model {
         return null;
     }
 
+    public static EventTBL getAdminEvents(String groupId) {
+        List<EventTBL> list = new Select().from(EventTBL.class).where("eventType = ?", "5").where("groupId = ?", groupId).execute();
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
     public static EventTBL getTeamEvent(String groupId, String teamId) {
         List<EventTBL> list = new Select().from(EventTBL.class).
                 where("eventType = ?", "2").

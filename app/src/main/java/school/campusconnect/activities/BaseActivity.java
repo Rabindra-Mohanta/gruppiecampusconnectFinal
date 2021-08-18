@@ -643,6 +643,40 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         startActivity(intent);
     }
 
+    public void logoutWithoutEvents() {
+        AppLog.e("Logout", "onSuccessCalled");
+        LeafPreference.getInstance(this).clearData();
+        RememberPref.getInstance(this).clearData();
+        AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
+        GroupDataItem.deleteAll();
+        PostDataItem.deleteAllPosts();
+        NotificationModel.deleteAll();
+        BaseTeamTable.deleteAll();
+        PostTeamDataItem.deleteAllPosts();
+        PersonalContactsModel.deleteAll();
+        GruppieContactsModel.deleteAll();
+//        GruppieContactAddressModel.deleteAll();
+        GruppieContactGroupIdModel.deleteAll();
+        this.getSharedPreferences("pref_noti_count", MODE_PRIVATE).edit().clear().commit();
+        new DatabaseHandler(this).deleteAll();
+
+        HwItem.deleteAll();
+        ChapterTBL.deleteAll();
+        //EventTBL.deleteAll();
+        ClassListTBL.deleteAll();
+        LiveClassListTBL.deleteAll();
+        TeamCountTBL.deleteAll();
+        SubjectCountTBL.deleteAll();
+        StudAssignementItem.deleteAll();
+        SubjectItem.deleteAll();
+        EBookItem.deleteAll();
+        EBookClassItem.deleteAll();
+
+        Intent intent = new Intent(this, LoginActivity2.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
     // call the updating code on the main thread,
 // so we can call this asynchronously
     public void updateHotCount(final int new_hot_number) {
