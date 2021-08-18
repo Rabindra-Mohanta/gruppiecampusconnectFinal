@@ -32,7 +32,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.baoyz.widget.PullRefreshLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -62,7 +61,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamCountTBL;
-import school.campusconnect.datamodel.TeamListItem;
+import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.network.LeafManager;
@@ -322,7 +321,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     }
 
     private void getTeams() {
-        List<TeamListItem> dataItemList = TeamListItem.getTeamList(GroupDashboardActivityNew.groupId);
+        List<BaseTeamTable> dataItemList = BaseTeamTable.getTeamList(GroupDashboardActivityNew.groupId);
         if (dataItemList != null && dataItemList.size() > 0) {
             teamList.clear();
             for (int i = 0; i < dataItemList.size(); i++) {
@@ -342,6 +341,13 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 myTeamData.isTeamAdmin = dataItemList.get(i).isTeamAdmin;
                 myTeamData.allowTeamPostAll = dataItemList.get(i).allowTeamPostAll;
                 myTeamData.allowTeamPostCommentAll = dataItemList.get(i).allowTeamPostCommentAll;
+                myTeamData.category = dataItemList.get(i).category;
+                myTeamData.postUnseenCount = dataItemList.get(i).postUnseenCount;
+                myTeamData.role = dataItemList.get(i).role;
+                myTeamData.count = dataItemList.get(i).count;
+                myTeamData.allowedToAddTeamPost = dataItemList.get(i).allowedToAddTeamPost;
+                myTeamData.leaveRequest = dataItemList.get(i).leaveRequest;
+                myTeamData.details = new Gson().fromJson(dataItemList.get(i).details,MyTeamData.TeamDetails.class);
 
                 teamList.add(myTeamData);
             }
@@ -460,28 +466,35 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 List<MyTeamData> result = res.getResults();
                 AppLog.e("API", "data " + new Gson().toJson(result));
 
-                TeamListItem.deleteAll();
+                BaseTeamTable.deleteAll();
                 teamList.clear();
                 ArrayList<String> currentTopics = new ArrayList<>();
                 for (int i = 0; i < result.size(); i++) {
 
-                    TeamListItem teamListItem = new TeamListItem();
+                    BaseTeamTable baseTeamTable = new BaseTeamTable();
                     MyTeamData item = result.get(i);
 
-                    teamListItem.group_id = item.groupId;
-                    teamListItem.team_id = item.teamId;
-                    teamListItem.isClass = item.isClass;
-                    teamListItem.phone = item.phone;
-                    teamListItem.image = item.image;
-                    teamListItem.members = item.members;
-                    teamListItem.canAddUser = item.canAddUser;
-                    teamListItem.teamType = item.teamType;
-                    teamListItem.type = item.type;
-                    teamListItem.enableGps = item.enableGps;
-                    teamListItem.enableAttendance = item.enableAttendance;
-                    teamListItem.isTeamAdmin = item.isTeamAdmin;
-                    teamListItem.allowTeamPostAll = item.allowTeamPostAll;
-                    teamListItem.allowTeamPostCommentAll = item.allowTeamPostCommentAll;
+                    baseTeamTable.group_id = item.groupId;
+                    baseTeamTable.team_id = item.teamId;
+                    baseTeamTable.isClass = item.isClass;
+                    baseTeamTable.phone = item.phone;
+                    baseTeamTable.image = item.image;
+                    baseTeamTable.members = item.members;
+                    baseTeamTable.canAddUser = item.canAddUser;
+                    baseTeamTable.teamType = item.teamType;
+                    baseTeamTable.type = item.type;
+                    baseTeamTable.enableGps = item.enableGps;
+                    baseTeamTable.enableAttendance = item.enableAttendance;
+                    baseTeamTable.isTeamAdmin = item.isTeamAdmin;
+                    baseTeamTable.allowTeamPostAll = item.allowTeamPostAll;
+                    baseTeamTable.allowTeamPostCommentAll = item.allowTeamPostCommentAll;
+                    baseTeamTable.category = item.category;
+                    baseTeamTable.postUnseenCount = item.postUnseenCount;
+                    baseTeamTable.role = item.role;
+                    baseTeamTable.count = item.count;
+                    baseTeamTable.allowedToAddTeamPost = item.allowedToAddTeamPost;
+                    baseTeamTable.leaveRequest = item.leaveRequest;
+                    baseTeamTable.details = new Gson().toJson(item.details);
 
                     try {
                         if (!item.name.equalsIgnoreCase("My Team")) {
@@ -499,8 +512,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                         AppLog.e("CONTACTSS", "error is " + e.toString());
                     }
 
-                    teamListItem.name = item.name;
-                    teamListItem.save();
+                    baseTeamTable.name = item.name;
+                    baseTeamTable.save();
 
                     if (!TextUtils.isEmpty(result.get(i).teamId)) {
                         String topics = result.get(i).groupId + "_" + result.get(i).teamId;

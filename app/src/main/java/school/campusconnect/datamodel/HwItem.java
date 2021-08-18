@@ -65,15 +65,19 @@ public class HwItem extends Model {
     public String video;
 
 
-
-    public HwItem(){
+    public HwItem() {
         super();
     }
 
     public static List<HwItem> getAll(String subjectId, String teamId, String groupId) {
         return new Select().from(HwItem.class).where("subjectId = ?", subjectId).where("teamId = ?", teamId).where("groupId = ?", groupId).execute();
     }
+
     public static void deleteAll() {
         new Delete().from(HwItem.class).execute();
+    }
+
+    public static void deleteAll(String subjectId) {
+        new Delete().from(HwItem.class).where("subjectId = ?", subjectId).execute();
     }
 }

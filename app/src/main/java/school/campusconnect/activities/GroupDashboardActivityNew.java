@@ -279,15 +279,20 @@ public class GroupDashboardActivityNew extends BaseActivity
                     ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
                     for (int i = 0; i < eventList.size(); i++) {
                         UpdateDataEventRes.EventResData curr = eventList.get(i);
-                        EventTBL eventTBL;
+                        EventTBL eventTBL = null;
                         if (curr.eventType.equalsIgnoreCase("1")) {
                             eventTBL = EventTBL.getGroupEvent(curr.groupId);
-                        } else {
+                        } else if (curr.eventType.equalsIgnoreCase("2")) {
                             eventTBL = EventTBL.getTeamEvent(curr.groupId,curr.teamId);
+                        }else if (curr.eventType.equalsIgnoreCase("3")) {
+                            eventTBL = EventTBL.getNotesVideoEvent(curr.groupId,curr.teamId,curr.subjectId);
+                        }else if (curr.eventType.equalsIgnoreCase("4")) {
+                            eventTBL = EventTBL.getAssignmentEvent(curr.groupId,curr.teamId,curr.subjectId);
                         }
                         if (eventTBL == null) {
                             eventTBL = new EventTBL();
                             eventTBL.groupId = curr.groupId;
+                            eventTBL.subjectId = curr.subjectId;
                             eventTBL.teamId = curr.teamId;
                             eventTBL.eventType = curr.eventType;
                             eventTBL.eventName = curr.eventName;

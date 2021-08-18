@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import school.campusconnect.datamodel.ChapterTBL;
 import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.EBookClassItem;
 import school.campusconnect.datamodel.EBookItem;
@@ -70,7 +71,7 @@ import school.campusconnect.datamodel.GroupDataItem;
 import school.campusconnect.datamodel.PhoneContactsItems;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostTeamDataItem;
-import school.campusconnect.datamodel.TeamListItem;
+import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
 import school.campusconnect.datamodel.notifications.NotificationModel;
@@ -616,7 +617,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         GroupDataItem.deleteAll();
         PostDataItem.deleteAllPosts();
         NotificationModel.deleteAll();
-        TeamListItem.deleteAll();
+        BaseTeamTable.deleteAll();
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();
@@ -626,6 +627,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         new DatabaseHandler(this).deleteAll();
 
         HwItem.deleteAll();
+        ChapterTBL.deleteAll();
         EventTBL.deleteAll();
         ClassListTBL.deleteAll();
         LiveClassListTBL.deleteAll();

@@ -33,6 +33,9 @@ public class UpdateDataEventRes extends BaseResponse {
         @SerializedName("groupId")
         @Expose
         public String groupId;
+        @SerializedName("subjectId")
+        @Expose
+        public String subjectId;
         @SerializedName("teamId")
         @Expose
         public String teamId;

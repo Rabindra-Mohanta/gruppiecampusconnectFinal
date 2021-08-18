@@ -21,6 +21,7 @@ import school.campusconnect.activities.LoginActivity2;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.database.RememberPref;
+import school.campusconnect.datamodel.ChapterTBL;
 import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.EBookClassItem;
 import school.campusconnect.datamodel.EBookItem;
@@ -34,7 +35,7 @@ import school.campusconnect.datamodel.StudAssignementItem;
 import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
-import school.campusconnect.datamodel.TeamListItem;
+import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
 import school.campusconnect.datamodel.notifications.NotificationModel;
@@ -210,7 +211,7 @@ public class BaseFragment extends Fragment {
             GroupDataItem.deleteAll();
             PostDataItem.deleteAllPosts();
             NotificationModel.deleteAll();
-            TeamListItem.deleteAll();
+            BaseTeamTable.deleteAll();
             PostTeamDataItem.deleteAllPosts();
             PersonalContactsModel.deleteAll();
             GruppieContactsModel.deleteAll();
@@ -220,6 +221,7 @@ public class BaseFragment extends Fragment {
             new DatabaseHandler(getActivity()).deleteAll();
 
             HwItem.deleteAll();
+            ChapterTBL.deleteAll();
             EventTBL.deleteAll();
             ClassListTBL.deleteAll();
             LiveClassListTBL.deleteAll();

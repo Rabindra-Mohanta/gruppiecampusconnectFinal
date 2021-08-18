@@ -30,6 +30,7 @@ import school.campusconnect.activities.HWParentActivity;
 import school.campusconnect.activities.HWStudentActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.HwItem;
 import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.homework.HwRes;
@@ -93,8 +94,19 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
             }
         });*/
     }
-
+    EventTBL eventTBL;
     private void getDataLocally() {
+        eventTBL = EventTBL.getAssignmentEvent(GroupDashboardActivityNew.groupId,team_id,subject_id);
+        boolean apiEvent = false;
+        if(eventTBL!=null){
+            if(eventTBL._now ==0){
+                apiEvent = true;
+            }
+            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
+                apiEvent = true;
+            }
+        }
+
         List<HwItem> list = HwItem.getAll(subject_id,team_id,GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
             ArrayList<HwRes.HwData> result= new ArrayList<>();
@@ -122,6 +134,10 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
                 result.add(item);
             }
             rvClass.setAdapter(new HwAdapter(result));
+
+            if(apiEvent){
+                getChapters();
+            }
         } else {
             getChapters();
         }
@@ -152,12 +168,17 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
         rvClass.setAdapter(new HwAdapter(result));
 
         saveToDB(result);
+
+        if(eventTBL!=null){
+            eventTBL._now = System.currentTimeMillis();
+            eventTBL.save();
+        }
     }
     private void saveToDB(List<HwRes.HwData> result) {
         if (result == null)
             return;
 
-        HwItem.deleteAll();
+        HwItem.deleteAll(subject_id);
 
         for (int i = 0; i < result.size(); i++) {
             HwRes.HwData currentItem = result.get(i);

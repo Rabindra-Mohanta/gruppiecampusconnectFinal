@@ -179,7 +179,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 menu.findItem(R.id.menu_leave_request).setVisible(false);
             }
 
-            if (!teamData.isTeamAdmin && teamData.isClass && !teamData.allowTeamPostAll && !teamData.leaveRequest) {
+            if (!teamData.isTeamAdmin && teamData.isClass && /*!teamData.allowTeamPostAll &&*/ !teamData.leaveRequest) {
                 menu.findItem(R.id.menu_more).setVisible(false);
             }
            /* if (teamData.isTeamAdmin && teamData.enableAttendance) {

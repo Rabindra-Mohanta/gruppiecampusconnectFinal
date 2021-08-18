@@ -145,7 +145,9 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     }
 
     public void selectAll(boolean checked) {
-        adapter.selectAll(checked);
+        if(adapter!=null){
+            adapter.selectAll(checked);
+        }
     }
 
     public class AddTeamStaffAdapter extends RecyclerView.Adapter<AddTeamStaffAdapter.ViewHolder> {

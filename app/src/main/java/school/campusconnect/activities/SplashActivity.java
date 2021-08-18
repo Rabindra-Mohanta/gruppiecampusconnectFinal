@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
@@ -17,10 +16,8 @@ import com.activeandroid.ActiveAndroid;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
-import school.campusconnect.datamodel.GroupResponse;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -31,9 +28,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.iceteck.silicompressorr.RealPathUtils;
-
 import java.util.ArrayList;
 
 import school.campusconnect.R;
@@ -42,10 +36,9 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.database.RememberPref;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupDataItem;
-import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostTeamDataItem;
-import school.campusconnect.datamodel.TeamListItem;
+import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
 import school.campusconnect.datamodel.notifications.NotificationModel;
@@ -326,7 +319,7 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         GroupDataItem.deleteAll();
         PostDataItem.deleteAllPosts();
         NotificationModel.deleteAll();
-        TeamListItem.deleteAll();
+        BaseTeamTable.deleteAll();
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();

@@ -16,6 +16,9 @@ public class EventTBL extends Model {
     @Column(name = "groupId")
     public String groupId;
 
+    @Column(name = "subjectId")
+    public String subjectId;
+
     @Column(name = "teamId")
     public String teamId;
 
@@ -31,27 +34,53 @@ public class EventTBL extends Model {
     @Column(name = "_now")
     public long _now;
 
-    public EventTBL(){
+    public EventTBL() {
         super();
     }
 
-   public static EventTBL getGroupEvent(String groupId) {
+    public static EventTBL getGroupEvent(String groupId) {
         List<EventTBL> list = new Select().from(EventTBL.class).where("eventType = ?", "1").where("groupId = ?", groupId).execute();
-        if(list!=null && list.size()>0){
-           return list.get(0);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
         }
         return null;
     }
-    public static EventTBL getTeamEvent(String groupId,String teamId) {
+
+    public static EventTBL getTeamEvent(String groupId, String teamId) {
         List<EventTBL> list = new Select().from(EventTBL.class).
                 where("eventType = ?", "2").
                 where("groupId = ?", groupId).
                 where("teamId = ?", teamId).execute();
-        if(list!=null && list.size()>0){
-           return list.get(0);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
         }
         return null;
     }
+
+    public static EventTBL getAssignmentEvent(String groupId, String teamId, String subjectId) {
+        List<EventTBL> list = new Select().from(EventTBL.class).
+                where("eventType = ?", "4").
+                where("subjectId = ?", subjectId).
+                where("groupId = ?", groupId).
+                where("teamId = ?", teamId).execute();
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public static EventTBL getNotesVideoEvent(String groupId, String teamId, String subjectId) {
+        List<EventTBL> list = new Select().from(EventTBL.class).
+                where("eventType = ?", "3").
+                where("subjectId = ?", subjectId).
+                where("groupId = ?", groupId).
+                where("teamId = ?", teamId).execute();
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
     public static void deleteAll() {
         new Delete().from(EventTBL.class).execute();
     }

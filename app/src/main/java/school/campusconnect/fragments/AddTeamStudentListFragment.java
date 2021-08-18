@@ -153,7 +153,9 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
         progressBar.setVisibility(View.GONE);
     }
     public void selectAll(boolean checked) {
-        adapter.selectAll(checked);
+        if(adapter!=null){
+            adapter.selectAll(checked);
+        }
     }
 
     public class AddTeamStudentAdapter extends RecyclerView.Adapter<AddTeamStudentAdapter.ViewHolder> {

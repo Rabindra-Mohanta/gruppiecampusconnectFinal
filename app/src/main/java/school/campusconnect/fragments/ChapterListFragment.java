@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.stmt.query.In;
 
 import java.util.ArrayList;
@@ -41,12 +42,17 @@ import school.campusconnect.activities.ViewPDFActivity;
 import school.campusconnect.adapters.TopicPostAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.ChapterTBL;
+import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.HwItem;
 import school.campusconnect.datamodel.chapter.ChapterRes;
+import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class ChapterListFragment extends BaseFragment implements LeafManager.OnCommunicationListener, TopicPostAdapter.OnItemClickListener, DialogInterface.OnClickListener {
@@ -88,7 +94,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         subject_name = getArguments().getString("subject_name");
         canPost = getArguments().getBoolean("canPost");
 
-        progressBar.setVisibility(View.VISIBLE);
+
 
         return view;
     }
@@ -97,24 +103,45 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getChapters();
-
-
+        getDataLocally();
     }
+    EventTBL eventTBL;
+    private void getDataLocally() {
+        eventTBL = EventTBL.getNotesVideoEvent(GroupDashboardActivityNew.groupId,team_id,subject_id);
+        boolean apiEvent = false;
+        if(eventTBL!=null){
+            if(eventTBL._now ==0){
+                apiEvent = true;
+            }
+            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
+                apiEvent = true;
+            }
+        }
 
-   /* private void addNewTopic() {
-        Intent intent = new Intent(getActivity(), AddChapterPostActivity.class);
-        intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
-        intent.putExtra("team_id", team_id);
-        intent.putExtra("subject_id", subject_id);
-        intent.putExtra("subject_name", subject_name);
-        intent.putExtra("isEdit", true);
-        intent.putExtra("chapter_id", chapterList.get(spChapter.getSelectedItemPosition()).chapterId);
-        intent.putExtra("chapter_name", chapterList.get(spChapter.getSelectedItemPosition()).chapterName);
-        startActivity(intent);
-    }*/
+        List<ChapterTBL> list = ChapterTBL.getAll(subject_id,team_id,GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            chapterList= new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                ChapterTBL currentItem = list.get(i);
+                ChapterRes.ChapterData item = new ChapterRes.ChapterData();
+                item.chapterId = currentItem.chapterId;
+                item.chapterName = currentItem.chapterName;
+                item.createdByName = currentItem.createdByName;
+                item.topicList = new Gson().fromJson(currentItem.topics,new TypeToken<ArrayList<ChapterRes.TopicData>>() {}.getType());
+                chapterList.add(item);
+            }
 
+            bindChapter();
+
+            if(apiEvent){
+                getChapters();
+            }
+        } else {
+            getChapters();
+        }
+    }
     public void getChapters() {
+        progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
@@ -163,8 +190,34 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 AppLog.e(TAG, "ChapterRes " + chapterList);
                 bindChapter();
 
+                saveToDB(chapterList);
+
+                if(eventTBL!=null){
+                    eventTBL._now = System.currentTimeMillis();
+                    eventTBL.save();
+                }
+
         }
 
+    }
+    private void saveToDB(ArrayList<ChapterRes.ChapterData> result) {
+        if (result == null)
+            return;
+
+        ChapterTBL.deleteAll(subject_id);
+
+        for (int i = 0; i < result.size(); i++) {
+            ChapterRes.ChapterData currentItem = result.get(i);
+            ChapterTBL item = new ChapterTBL();
+            item.chapterId = currentItem.chapterId;
+            item.chapterName = currentItem.chapterName;
+            item.createdByName = currentItem.createdByName;
+            item.topics = new Gson().toJson(currentItem.topicList);
+            item.subjectId = subject_id;
+            item.teamId = team_id;
+            item.groupId = GroupDashboardActivityNew.groupId;
+            item.save();
+        }
     }
 
     private void bindChapter() {
