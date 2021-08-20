@@ -287,30 +287,26 @@ public class GroupDashboardActivityNew extends BaseActivity
                         if (curr.eventType.equalsIgnoreCase("1")) {
                             eventTBL = EventTBL.getGroupEvent(curr.groupId);
                         } else if (curr.eventType.equalsIgnoreCase("2")) {
-                            eventTBL = EventTBL.getTeamEvent(curr.groupId,curr.teamId);
-                        }else if (curr.eventType.equalsIgnoreCase("3")) {
-                            eventTBL = EventTBL.getNotesVideoEvent(curr.groupId,curr.teamId,curr.subjectId);
-                        }else if (curr.eventType.equalsIgnoreCase("4")) {
-                            eventTBL = EventTBL.getAssignmentEvent(curr.groupId,curr.teamId,curr.subjectId);
-                        }
-                        else if(curr.eventType.equalsIgnoreCase("5"))
-                        {
+                            eventTBL = EventTBL.getTeamEvent(curr.groupId, curr.teamId);
+                        } else if (curr.eventType.equalsIgnoreCase("3")) {
+                            eventTBL = EventTBL.getNotesVideoEvent(curr.groupId, curr.teamId, curr.subjectId);
+                        } else if (curr.eventType.equalsIgnoreCase("4")) {
+                            eventTBL = EventTBL.getAssignmentEvent(curr.groupId, curr.teamId, curr.subjectId);
+                        } else if (curr.eventType.equalsIgnoreCase("5")) {
                             eventTBL = EventTBL.getAdminEvents(curr.groupId);
 
-                            if(eventTBL == null)
-                            AppLog.e(TAG , "eventTBL is  nulll ");
+                            if (eventTBL == null)
+                                AppLog.e(TAG, "eventTBL is  nulll ");
                             else
-                            AppLog.e(TAG , "eventTBL eventat : "+eventTBL.eventAt);
+                                AppLog.e(TAG, "eventTBL eventat : " + eventTBL.eventAt);
 
-                            if(eventTBL == null || MixOperations.isNewEvent(curr.eventAt , "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" , eventTBL.eventAt))
-                            {
-                               ifNeedToLogout = true;
+                            if (eventTBL == null || MixOperations.isNewEvent(curr.eventAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", eventTBL.eventAt)) {
+                                ifNeedToLogout = true;
                             }
 
                         }
 
-                        if (eventTBL == null)
-                        {
+                        if (eventTBL == null) {
                             eventTBL = new EventTBL();
                             eventTBL.groupId = curr.groupId;
                             eventTBL.subjectId = curr.subjectId;
@@ -324,8 +320,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                     }
 
-                    if(ifNeedToLogout)
-                    {
+                    if (ifNeedToLogout) {
                         showLogoutPopup();
                         return;
                     }
@@ -413,16 +408,14 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     }
 
-    private void showLogoutPopup()
-    {
+    private void showLogoutPopup() {
 
-            SMBDialogUtils.showSMBDialogOK(GroupDashboardActivityNew.this, "Your Account permissions have been changed , Please logout and login again.", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                  logoutWithoutEvents();
-                }
-            });
+        SMBDialogUtils.showSMBDialogOK(GroupDashboardActivityNew.this, "Your Account permissions have been changed , Please logout and login again.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                logoutWithoutEvents();
+            }
+        });
     }
 
     public boolean hasPermission(String[] permissions) {
@@ -1158,7 +1151,28 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("type", group.type);
             intent.putExtra("role", group.role);
             startActivity(intent);
-        }/*else if (group.type.equals("Time Table")) {
+        } else if (group.type.equals("Test")) {
+            Intent intent;
+            if ("admin".equalsIgnoreCase(group.role)) {
+                intent = new Intent(this, TestClassActivity.class);
+                intent.putExtra("title", group.name);
+            } else {
+                if (group.count == 1) {
+                    intent = new Intent(this, TestClassSubjectActivity.class);
+                    intent.putExtra("group_id", groupId);
+                    intent.putExtra("team_id", group.details.teamId);
+                    intent.putExtra("title", group.details.studentName);
+
+                } else {
+                    intent = new Intent(this, TestClassActivity.class);
+                    intent.putExtra("title", group.name);
+                }
+            }
+            intent.putExtra("role", group.role);
+            startActivity(intent);
+        }
+
+        /*else if (group.type.equals("Time Table")) {
             Intent intent;
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, TimeTableClassActivity2.class);
@@ -1177,7 +1191,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("role", group.role);
             startActivity(intent);
 
-        }*/ else if (group.type.equals("Gallery")) {
+        }*/
+        else if (group.type.equals("Gallery")) {
             startActivity(new Intent(this, GalleryActivity.class));
         } else if (group.type.equalsIgnoreCase("Calendar")) {
             startActivity(new Intent(this, CalendarActivity.class));

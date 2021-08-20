@@ -50,6 +50,8 @@ import school.campusconnect.datamodel.subjects.AbsentSubjectReq;
 import school.campusconnect.datamodel.subjects.AddSubjectStaffReq;
 import school.campusconnect.datamodel.subjects.SubjectResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
+import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
+import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
@@ -377,7 +379,9 @@ public class LeafManager {
     public static final int API_ONLINE_ATTENDANCE_REPORT = 234;
     public static final int API_ONLINE_ATTENDANCE_PUSH = 236;
     public static final int API_UPDATE_EVENT_LIST = 240;
-
+    public static final int API_TEST_EXAM_LIST = 241;
+    public static final int API_TEST_EXAM_ADD = 242;
+    public static final int API_TEST_EXAM_REMOVE = 243;
 
     public LeafManager() {
 
@@ -9273,6 +9277,115 @@ public class LeafManager {
 
 
     }
+
+
+    public void getTestExamList(final OnCommunicationListener listListener, String groupId, String teamId, String subjectId) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<TestExamRes> model = service.getTestExamList(groupId, teamId, subjectId);
+        ResponseWrapper<TestExamRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_TEST_EXAM_LIST, new ResponseWrapper.ResponseHandler<TestExamRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, TestExamRes response) {
+                AppLog.e("LeafManager", "ChapterRes : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void addTestExam(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, AddTestExamPostRequest request) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.addTestExam(groupId, team_id, subject_id, request);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_TEST_EXAM_ADD, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
+    public void deleteTestExam(OnCommunicationListener listListener, String groupId, String team_id, String subject_id, String testexam_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.deleteTestExam(groupId, team_id, subject_id, testexam_id);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+
+        wrapper.execute(API_TEST_EXAM_REMOVE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
 
     public interface OnCommunicationListener {
         void onSuccess(int apiId, BaseResponse response);

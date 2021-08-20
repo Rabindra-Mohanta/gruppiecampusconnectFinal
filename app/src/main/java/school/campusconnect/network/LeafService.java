@@ -125,6 +125,8 @@ import school.campusconnect.datamodel.subjects.SubjectResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetResponse;
+import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
+import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
@@ -1451,4 +1453,19 @@ public interface LeafService {
     @Headers({"Content-Type: application/json"})
     Call<UpdateDataEventRes> getUpdateEventList(@Path("group_id") String group_id);
 
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TestExamRes> getTestExamList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/add")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> addTestExam(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body AddTestExamPostRequest request);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/delete")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteTestExam(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                     @Path("subject_id") String subject_id,
+                                     @Path("testexam_id") String testexam_id);
 }
