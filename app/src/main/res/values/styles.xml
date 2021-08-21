@@ -225,6 +225,13 @@
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
+    <style name="RegEditTextWhite" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:textColorHint">@color/colorTextLight</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:background">@color/white</item>
+    </style>
 
     <style name="CommentEditText">
         <item name="android:textColor">@color/colorTextDark</item>

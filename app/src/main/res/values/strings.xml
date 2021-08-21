@@ -519,6 +519,11 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_enter_text">Enter Text</string>
     <string name="strBox">Box</string>
     <string name="hint_time">Select Time</string>
+    <string name="hint_test_date">Test Date</string>
+    <string name="hint_test_start_time">Test Start Time</string>
+    <string name="hint_test_end_time">Test End Time</string>
+    <string name="strLastSubTime">Last Submission Time</string>
+    <string name="strProctoring">Proctoring</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>
@@ -541,6 +546,39 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
         <item>Select Gender</item>
         <item>Male</item>
         <item>Female</item>
+    </string-array>
+
+    <string-array name="lastSubTime">
+        <item>1min</item>
+        <item>2min</item>
+        <item>3min</item>
+        <item>4min</item>
+        <item>5min</item>
+        <item>6min</item>
+        <item>7min</item>
+        <item>8min</item>
+        <item>9min</item>
+        <item>10min</item>
+        <item>11min</item>
+        <item>12min</item>
+        <item>13min</item>
+        <item>14min</item>
+        <item>15min</item>
+        <item>16min</item>
+        <item>17min</item>
+        <item>18min</item>
+        <item>19min</item>
+        <item>20min</item>
+        <item>21min</item>
+        <item>22min</item>
+        <item>23min</item>
+        <item>24min</item>
+        <item>25min</item>
+        <item>26min</item>
+        <item>27min</item>
+        <item>28min</item>
+        <item>29min</item>
+        <item>30min</item>
     </string-array>
 
 </resources>

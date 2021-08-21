@@ -25,9 +25,15 @@ public class TestExamRes extends BaseResponse {
         @SerializedName("topic")
         @Expose
         public String topicName;
+        @SerializedName("description")
+        @Expose
+        public String description;
         @SerializedName("createdByName")
         @Expose
         public String createdByName;
+        @SerializedName("createdByImage")
+        @Expose
+        public String createdByImage;
         @SerializedName("testExamId")
         @Expose
         public String testExamId;
@@ -43,9 +49,6 @@ public class TestExamRes extends BaseResponse {
         @SerializedName("teamId")
         @Expose
         public String teamId;
-        @SerializedName("groupId")
-        @Expose
-        public String groupId;
         @SerializedName("subjectId")
         @Expose
         public String subjectId;

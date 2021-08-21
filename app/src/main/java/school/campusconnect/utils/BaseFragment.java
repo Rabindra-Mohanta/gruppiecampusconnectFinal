@@ -36,6 +36,7 @@ import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.BaseTeamTable;
+import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
 import school.campusconnect.datamodel.notifications.NotificationModel;
@@ -221,6 +222,7 @@ public class BaseFragment extends Fragment {
             new DatabaseHandler(getActivity()).deleteAll();
 
             HwItem.deleteAll();
+            TestExamTBL.deleteAll();
             ChapterTBL.deleteAll();
             EventTBL.deleteAll();
             ClassListTBL.deleteAll();

@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorTextWhiteLight"
+    android:orientation="vertical"
+    tools:context=".activities.AddPostActivity">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/layout_toolbar" />
+
+            <Button
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center"
+                android:background="@android:color/transparent"
+                android:text="Share"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/padding_10dp"
+            android:paddingTop="@dimen/padding_10dp"
+            android:paddingRight="@dimen/padding_10dp">
+
+            <TextView
+                android:id="@+id/tvLabelTitle"
+                style="@style/LabelHeader1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_10dp"
+                android:paddingStart="@dimen/padding_5dp"
+                android:text="@string/lbl_topic_name"
+                android:textColor="@color/colorPrimary"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardChapterName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="@dimen/padding_5dp"
+                    app:cardElevation="4dp">
+
+                    <EditText
+                        android:id="@+id/et_title"
+                        style="@style/CommentEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_margin="@dimen/padding_5dp"
+                        android:background="@null"
+                        android:gravity="start|center"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:maxLength="200"
+                        android:scrollbars="vertical"
+                        android:visibility="visible" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    style="@style/LabelHeader1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/strDescription"
+                    android:textColor="@color/colorPrimary" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    app:cardCornerRadius="@dimen/padding_5dp"
+                    app:cardElevation="4dp">
+
+                    <EditText
+                        android:id="@+id/et_description"
+                        style="@style/CommentEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_margin="@dimen/padding_5dp"
+                        android:background="@null"
+                        android:gravity="top"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:scrollbars="vertical"
+                        android:visibility="visible" />
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="@dimen/padding_5dp"
+                    app:cardElevation="4dp">
+
+                    <EditText
+                        android:id="@+id/et_date"
+                        style="@style/CommentEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_margin="@dimen/padding_5dp"
+                        android:background="@null"
+                        android:drawableEnd="@drawable/icon_time_table"
+                        android:focusable="false"
+                        android:gravity="start|center"
+                        android:hint="@string/hint_test_date"
+                        android:maxLength="200"
+                        android:paddingStart="@dimen/padding_10dp"
+                        android:paddingEnd="@dimen/padding_10dp"
+                        android:scrollbars="vertical"
+                        android:visibility="visible" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="@dimen/padding_5dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/et_time_start"
+                            style="@style/CommentEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="35dp"
+                            android:layout_margin="@dimen/padding_5dp"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:drawableEnd="@drawable/icon_time_table"
+                            android:focusable="false"
+                            android:gravity="start|center"
+                            android:hint="@string/hint_test_start_time"
+                            android:maxLength="200"
+                            android:paddingStart="@dimen/padding_10dp"
+                            android:paddingEnd="@dimen/padding_10dp"
+                            android:scrollbars="vertical"
+                            android:visibility="visible" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/divider_post" />
+
+                        <EditText
+                            android:id="@+id/et_time_end"
+                            style="@style/CommentEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="35dp"
+                            android:layout_margin="@dimen/padding_5dp"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:drawableEnd="@drawable/icon_time_table"
+                            android:focusable="false"
+                            android:gravity="start|center"
+                            android:hint="@string/hint_test_end_time"
+                            android:maxLength="200"
+                            android:paddingStart="@dimen/padding_10dp"
+                            android:paddingEnd="@dimen/padding_10dp"
+                            android:scrollbars="vertical"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="@dimen/padding_5dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/LabelHeader1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:paddingLeft="@dimen/padding_5dp"
+                            android:text="@string/strLastSubTime"
+                            android:textColor="@color/colorPrimary" />
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content">
+                            <Spinner
+                                android:id="@+id/spLastSubTime"
+                                style="@style/RegEditTextWhite"
+                                android:layout_marginStart="@dimen/padding_20dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/login_button_height" />
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:src="@drawable/icon_down_white"
+                                android:layout_marginEnd="@dimen/padding_10dp"
+                                android:layout_gravity="right|center"
+                                android:layout_height="25dp"
+                                app:tint="@color/colorTextDark" />
+                        </FrameLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="@dimen/padding_5dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/LabelHeader1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:paddingLeft="@dimen/padding_5dp"
+                            android:text="@string/strProctoring"
+                            android:textColor="@color/colorPrimary" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switchPro"
+                            style="@style/CommentEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="35dp"
+                            android:layout_marginStart="@dimen/padding_20dp"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:layout_marginEnd="@dimen/padding_5dp"
+                            android:layout_marginBottom="@dimen/padding_5dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:focusable="false"
+                            android:gravity="start|center"
+                            android:maxLength="200"
+                            android:paddingStart="@dimen/padding_10dp"
+                            android:paddingEnd="@dimen/padding_10dp"
+                            android:scrollbars="vertical"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    style="@style/LabelHeader1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/lbl_attechment"
+                    android:textColor="@color/colorPrimary" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/padding_25dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/padding_10dp"
+                        android:paddingBottom="@dimen/padding_5dp">
+
+                        <LinearLayout
+                            android:id="@+id/llImage"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/img_image"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/icon_gallery" />
+
+                                <ProgressBar
+                                    android:id="@+id/pbImgLoading"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:background="@color/white"
+                                    android:visibility="gone" />
+                            </FrameLayout>
+
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_5dp"
+                                android:text="@string/lbl_image" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llVideo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/img_video"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/icon_youtube" />
+
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_5dp"
+                                android:text="@string/lbl_video" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llYoutubeLink"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/img_youtube"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/icon_popup_youtube" />
+
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_5dp"
+                                android:text="@string/lbl_youtube" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llDoc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/imgDoc"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/icon_doc" />
+
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_5dp"
+                                android:text="@string/lbl_documents" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/llPersonalSetting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:padding="@dimen/padding_5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="@dimen/padding_10dp"
+                        android:gravity="center"
+                        android:text="Allow Post" />
+
+                    <Switch
+                        android:id="@+id/switch_reply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:checked="true" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:padding="@dimen/padding_5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="@dimen/padding_10dp"
+                        android:gravity="center"
+                        android:text="Allow Comments" />
+
+                    <Switch
+                        android:id="@+id/switch_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:checked="true"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

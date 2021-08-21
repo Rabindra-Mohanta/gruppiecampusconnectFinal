@@ -38,7 +38,10 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ChapterTBL;
 import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.HwItem;
+import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.chapter.ChapterRes;
+import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
@@ -81,7 +84,6 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         canPost = getArguments().getBoolean("canPost");
 
 
-
         return view;
     }
 
@@ -89,8 +91,61 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getTestExam();
+        getDataLocally();
     }
+
+    //    EventTBL eventTBL;
+    private void getDataLocally() {
+       /* eventTBL = EventTBL.getAssignmentEvent(GroupDashboardActivityNew.groupId,team_id,subject_id);
+        boolean apiEvent = false;
+        if(eventTBL!=null){
+            if(eventTBL._now ==0){
+                apiEvent = true;
+            }
+            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
+                apiEvent = true;
+            }
+        }*/
+
+        List<TestExamTBL> list = TestExamTBL.getAll(subject_id, team_id, GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            testList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                TestExamTBL currentItem = list.get(i);
+                TestExamRes.TestExamData item = new TestExamRes.TestExamData();
+                item.topicName = currentItem.topic;
+                item.testStartTime = currentItem.testStartTime;
+                item.testEndTime = currentItem.testEndTime;
+                item.testExamId = currentItem.testExamId;
+                item.testDate = currentItem.testDate;
+                item.lastSubmissionTime = currentItem.lastSubmissionTime;
+                item.description = currentItem.description;
+                item.createdByName = currentItem.createdByName;
+                item.createdById = currentItem.createdById;
+                item.createdByImage = currentItem.createdByImage;
+                item.canPost = currentItem.canPost;
+                item.fileType = currentItem.fileType;
+                item.fileName = new Gson().fromJson(currentItem.fileName, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                item.thumbnailImage = new Gson().fromJson(currentItem.thumbnailImage, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                item.thumbnail = currentItem.thumbnail;
+                item.video = currentItem.video;
+
+                item.subjectId = currentItem.subjectId;
+                item.teamId = currentItem.teamId;
+                testList.add(item);
+            }
+            setData();
+
+//            if(apiEvent){
+            getTestExam();
+//            }
+        } else {
+            getTestExam();
+        }
+    }
+
     public void getTestExam() {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
@@ -126,17 +181,61 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
                 AppLog.e(TAG, "TestExamRes " + testList);
                 setData();
 
+                saveToDB(testList);
+
+               /* if(eventTBL!=null){
+                    eventTBL._now = System.currentTimeMillis();
+                    eventTBL.save();
+                }*/
         }
 
     }
+
+    private void saveToDB(ArrayList<TestExamRes.TestExamData> result) {
+        if (result == null)
+            return;
+
+        TestExamTBL.deleteAll(subject_id);
+
+        for (int i = 0; i < result.size(); i++) {
+            TestExamRes.TestExamData currentItem = result.get(i);
+            TestExamTBL item = new TestExamTBL();
+            item.topic = currentItem.topicName;
+            item.testStartTime = currentItem.testStartTime;
+            item.testEndTime = currentItem.testEndTime;
+            item.testExamId = currentItem.testExamId;
+            item.testDate = currentItem.testDate;
+            item.lastSubmissionTime = currentItem.lastSubmissionTime;
+            item.description = currentItem.description;
+            item.createdByName = currentItem.createdByName;
+            item.createdById = currentItem.createdById;
+            item.createdByImage = currentItem.createdByImage;
+            item.canPost = currentItem.canPost;
+            item.fileType = currentItem.fileType;
+            item.fileName = new Gson().toJson(currentItem.fileName);
+            item.thumbnailImage = new Gson().toJson(currentItem.thumbnailImage);
+            item.thumbnail = currentItem.thumbnail;
+            item.video = currentItem.video;
+
+            item.subjectId = currentItem.subjectId;
+            item.teamId = currentItem.teamId;
+            item.groupId = GroupDashboardActivityNew.groupId;
+
+
+            item.save();
+        }
+    }
+
     private void setData() {
         adapter = new TestExamPostAdapter(testList, this, canPost);
         rvClass.setAdapter(adapter);
 
         if (testList != null && testList.size() > 0) {
             txtEmpty.setVisibility(View.GONE);
+            txtEmpty.setText("");
         } else {
             txtEmpty.setVisibility(View.VISIBLE);
+            txtEmpty.setText("No Test/Exam Found");
         }
 
     }
@@ -168,6 +267,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
             }
         });
     }
+
     @Override
     public void onPostClick(TestExamRes.TestExamData item) {
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {

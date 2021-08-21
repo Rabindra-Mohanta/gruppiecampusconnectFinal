@@ -15,6 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.fragments.ChapterListFragment;
+import school.campusconnect.fragments.TestExamListFragment;
 
 public class TestExamActivity extends BaseActivity {
 
@@ -44,7 +45,7 @@ public class TestExamActivity extends BaseActivity {
         subject_name = getIntent().getStringExtra("subject_name");
 
 
-        ChapterListFragment classListFragment=new ChapterListFragment();
+        TestExamListFragment classListFragment=new TestExamListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
 
@@ -67,7 +68,7 @@ public class TestExamActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_add_post) {
-            Intent intent = new Intent(this,AddChapterPostActivity.class);
+            Intent intent = new Intent(this,AddTestPostActivity.class);
             intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
             intent.putExtra("team_id",team_id);
             intent.putExtra("subject_id",subject_id);

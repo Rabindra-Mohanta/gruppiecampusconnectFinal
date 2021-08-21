@@ -169,8 +169,16 @@ public class TestExamPostAdapter extends RecyclerView.Adapter<TestExamPostAdapte
         }
 
         holder.txt_title.setText(item.topicName);
+
+        if (!TextUtils.isEmpty(item.description)) {
+            holder.txtContent.setText(item.description);
+            holder.txtContent.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtContent.setVisibility(View.GONE);
+            holder.txt_readmore.setVisibility(View.GONE);
+        }
         holder.txt_createdBy.setText(item.createdByName);
-        holder.txtDate.setText(item.testDate);
+        holder.txtDate.setText("Test Date : "+item.testDate);
     }
 
 
