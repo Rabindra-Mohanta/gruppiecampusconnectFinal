@@ -127,6 +127,7 @@ import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetResponse;
 import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
+import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
@@ -1468,4 +1469,41 @@ public interface LeafService {
     Call<BaseResponse> deleteTestExam(@Path("group_id") String group_id, @Path("team_id") String team_id,
                                      @Path("subject_id") String subject_id,
                                      @Path("testexam_id") String testexam_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/get")
+    @Headers({"Content-Type: application/json"})
+    Call<TestPaperRes> getTestPaper(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                      @Path("subject_id") String subject_id,
+                                      @Path("testexam_id") String testexam_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/get")
+    @Headers({"Content-Type: application/json"})
+    Call<TestPaperRes> getTestPaperForTeacher(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                              @Path("subject_id") String subject_id,
+                                              @Path("testexam_id") String testexam_id,
+                                              @Query("list") String param);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/delete/{studentTestExamId}")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteTestPaperStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                               @Path("subject_id") String subject_id,
+                                               @Path("testexam_id") String testexam_id,
+                                               @Path("studentTestExamId") String studentTestExamId);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/verify/{studentTestExam_id}")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> verifyTestPaper(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                        @Path("subject_id") String subject_id,
+                                        @Path("testexam_id") String testexam_id,
+                                        @Path("studentTestExam_id") String studentTestExam_id,
+                                        @Query("verify") boolean verify,
+                                        @Body ReassignReq reassignReq);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/submit")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> submitTestPaperPost(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                            @Path("subject_id") String subject_id,
+                                            @Path("testexam_id") String testexam_id,
+                                            @Body AddHwPostRequest request);
+
 }

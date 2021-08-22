@@ -1,8 +1,10 @@
 package school.campusconnect.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +32,11 @@ import school.campusconnect.R;
 import school.campusconnect.activities.CompletedTopicUserActivity;
 import school.campusconnect.activities.FullScreenActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.HWParentActivity;
+import school.campusconnect.activities.HWStudentActivity;
 import school.campusconnect.activities.TestActivity;
+import school.campusconnect.activities.TestParentActivity;
+import school.campusconnect.activities.TestStudentActivity;
 import school.campusconnect.activities.ViewPDFActivity;
 import school.campusconnect.adapters.TestExamPostAdapter;
 import school.campusconnect.adapters.TopicPostAdapter;
@@ -63,12 +69,10 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
     public ProgressBar progressBar;
 
     String team_id;
+    String className;
     String subject_id;
     String subject_name;
     boolean canPost;
-    private TestExamRes.TestExamData currentItem;
-    private int adapterPosition;
-    private TestExamPostAdapter adapter;
     private ArrayList<TestExamRes.TestExamData> testList;
 
     @Nullable
@@ -79,6 +83,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         team_id = getArguments().getString("team_id");
+        className = getArguments().getString("className");
         subject_id = getArguments().getString("subject_id");
         subject_name = getArguments().getString("subject_name");
         canPost = getArguments().getBoolean("canPost");
@@ -227,8 +232,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
     }
 
     private void setData() {
-        adapter = new TestExamPostAdapter(testList, this, canPost);
-        rvClass.setAdapter(adapter);
+        rvClass.setAdapter(new TestAdapter(testList));
 
         if (testList != null && testList.size() > 0) {
             txtEmpty.setVisibility(View.GONE);
@@ -252,20 +256,6 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
 
     @Override
     public void onDeleteClick(TestExamRes.TestExamData item, int adapterPosition) {
-        currentItem = item;
-        this.adapterPosition = adapterPosition;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this Test/Exam?", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (isConnectionAvailable()) {
-                    progressBar.setVisibility(View.VISIBLE);
-                    LeafManager manager = new LeafManager();
-                    manager.deleteTestExam(TestExamListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
-                } else {
-                    showNoNetworkMsg();
-                }
-            }
-        });
     }
 
     @Override
@@ -286,5 +276,88 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
             i.putExtra("image", item.fileName);
             startActivity(i);
         }
+    }
+
+    public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
+        List<TestExamRes.TestExamData> list;
+        private Context mContext;
+
+        public TestAdapter(ArrayList<TestExamRes.TestExamData> list) {
+            this.list = list;
+        }
+
+        @Override
+        public TestAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hw, parent, false);
+            return new TestAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final TestAdapter.ViewHolder holder, final int position) {
+            final TestExamRes.TestExamData item = list.get(position);
+            holder.txt_name.setText(item.topicName);
+            if(!TextUtils.isEmpty(item.testDate))
+            {
+                holder.txt_date.setVisibility(View.VISIBLE);
+                holder.txt_date.setText(item.testDate);
+            }else {
+                holder.txt_date.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (list != null) {
+                if (list.size() == 0) {
+                    txtEmpty.setText("No Homework found.");
+                } else {
+                    txtEmpty.setText("");
+                }
+
+                return list.size();
+            } else {
+                txtEmpty.setText("No Homework found.");
+                return 0;
+            }
+
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            @Bind(R.id.txt_name)
+            TextView txt_name;
+            @Bind(R.id.txt_date)
+            TextView txt_date;
+
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onTreeClick(list.get(getAdapterPosition()));
+                    }
+                });
+
+            }
+        }
+    }
+
+    private void onTreeClick(TestExamRes.TestExamData data) {
+        Intent intent;
+        if (data.canPost) {
+            intent = new Intent(getActivity(), TestParentActivity.class);
+        } else {
+            intent = new Intent(getActivity(), TestStudentActivity.class);
+        }
+        intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
+        intent.putExtra("team_id", team_id);
+        intent.putExtra("subject_id", subject_id);
+        intent.putExtra("subject_name", subject_name);
+        intent.putExtra("className", className);
+        intent.putExtra("data", data);
+        startActivity(intent);
     }
 }

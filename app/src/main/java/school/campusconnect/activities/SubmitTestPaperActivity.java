@@ -2,10 +2,8 @@ package school.campusconnect.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,26 +21,18 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -70,10 +60,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,17 +72,13 @@ import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.adapters.UploadImageAdapter;
 import school.campusconnect.database.LeafPreference;
-import school.campusconnect.datamodel.AddGalleryPostRequest;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
-import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.homework.AddHwPostRequest;
-import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
-import school.campusconnect.utils.BackgroundVideoUploadChapterService;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
@@ -103,7 +86,7 @@ import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
 
 
-public class AddTestPostActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener, UploadImageAdapter.UploadImageListener {
+public class SubmitTestPaperActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener, UploadImageAdapter.UploadImageListener {
 
     private static final String TAG = "AddPostActivity";
     @Bind(R.id.toolbar)
@@ -154,22 +137,6 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
     @Bind(R.id.rvImages)
     RecyclerView rvImages;
 
-    @Bind(R.id.et_date)
-    EditText et_date;
-
-    @Bind(R.id.et_time_start)
-    EditText et_time_start;
-
-    @Bind(R.id.et_time_end)
-    EditText et_time_end;
-
-    @Bind(R.id.spLastSubTime)
-    Spinner spLastSubTime;
-
-    @Bind(R.id.switchPro)
-    SwitchCompat switchPro;
-
-
     TextView btn_ok;
     TextView btn_cancel;
     TextView btn_upload;
@@ -182,7 +149,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
     String team_id;
     String subject_id;
     String subject_name;
-    String className;
+    String testExamId;
 
     public Uri imageCaptureFile;
 
@@ -201,7 +168,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
     ArrayList<String> listImages = new ArrayList<>();
     private String pdfPath = "";
     private TransferUtility transferUtility;
-    private AddTestExamPostRequest mainRequest;
+    private AddHwPostRequest mainRequest;
     private File cameraFile;
     private UploadImageAdapter imageAdapter;
     private String receiverToken = "";
@@ -211,7 +178,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_test_post);
+        setContentView(R.layout.activity_submit_assignment);
         ButterKnife.bind(this);
 
         init();
@@ -219,22 +186,22 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         setListener();
 
         String fileType = LeafApplication.getInstance().getType();
-        if (Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType) || Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)) {
+        if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType) || Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
             ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
-            if (shareList != null && shareList.size() > 0) {
+            if(shareList!=null && shareList.size()>0){
                 SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
 
                         String fileType = LeafApplication.getInstance().getType();
-                        if (Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)) {
+                        if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)){
                             listImages.addAll(shareList);
                             fileTypeImageOrVideo = fileType;
                             showLastImage();
-                        } else if (Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)) {
+                        }else if(Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
                             pdfPath = shareList.get(0);
-                            Picasso.with(AddTestPostActivity.this).load(R.drawable.pdf_thumbnail).into(imgDoc);
+                            Picasso.with(SubmitTestPaperActivity.this).load(R.drawable.pdf_thumbnail).into(imgDoc);
                         }
                     }
                 });
@@ -282,57 +249,6 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
 
             }
         });
-
-        et_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                DatePickerDialog fragment = new DatePickerDialog(AddTestPostActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        et_date.setText(format.format(calendar.getTime()));
-                    }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
-            }
-        });
-        et_time_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                TimePickerDialog fragment = new TimePickerDialog(AddTestPostActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar.set(Calendar.MINUTE, minute);
-                        SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                        et_time_start.setText(format.format(calendar.getTime()));
-                    }
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                fragment.show();
-            }
-        });
-        et_time_end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                TimePickerDialog fragment = new TimePickerDialog(AddTestPostActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar.set(Calendar.MINUTE, minute);
-                        SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                        et_time_end.setText(format.format(calendar.getTime()));
-                    }
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                fragment.show();
-            }
-        });
     }
 
     private void init() {
@@ -344,21 +260,18 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         transferUtility = AmazoneHelper.getTransferUtility(this);
-        setTitle("Add Test/Exam");
+        setTitle("Submit Assignment");
         if (getIntent() != null) {
             group_id = getIntent().getStringExtra("group_id");
             team_id = getIntent().getStringExtra("team_id");
             subject_id = getIntent().getStringExtra("subject_id");
             subject_name = getIntent().getStringExtra("subject_name");
-            className = getIntent().getStringExtra("className");
+            testExamId = getIntent().getStringExtra("testExamId");
+            AppLog.e(TAG,"assignmentId : "+testExamId);
         }
         rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new UploadImageAdapter(listImages, this);
         rvImages.setAdapter(imageAdapter);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.lastSubTime));
-        spLastSubTime.setAdapter(adapter);
-        spLastSubTime.setSelection(9);
 
     }
 
@@ -379,15 +292,10 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     progressBar.setVisibility(View.VISIBLE);
                 btnShare.setEnabled(false);
 
-                mainRequest = new AddTestExamPostRequest();
+                mainRequest = new AddHwPostRequest();
 
                 mainRequest.title = edtTitle.getText().toString();
                 mainRequest.text = edtDesc.getText().toString();
-                mainRequest.testDate = et_date.getText().toString();
-                mainRequest.testStartTime = et_time_start.getText().toString();
-                mainRequest.testEndTime = et_time_end.getText().toString();
-                mainRequest.lastSubmissionTime = spLastSubTime.getSelectedItem().toString();
-                mainRequest.proctoring = switchPro.isChecked();
 
                 if (!TextUtils.isEmpty(videoUrl)) {
                     mainRequest.video = videoUrl;
@@ -401,7 +309,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                         mainRequest.fileName.add(videoUrl);
                         manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
                     } else {*/
-                    manager.addTestExam(this, group_id, team_id, subject_id, mainRequest);
+                        manager.submitTestPaperPost(this, group_id, team_id, subject_id,testExamId, mainRequest);
 //                    }
 
                 } else if (!TextUtils.isEmpty(pdfPath)) {
@@ -426,7 +334,6 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         }
 
     }
-
     public void startService() {
 
       /*  Intent serviceIntent = new Intent(this, BackgroundVideoUploadChapterService.class);
@@ -447,9 +354,9 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
     }
 
     public class VideoCompressor extends AsyncTask<Void, Integer, Boolean> {
-        private AddTestExamPostRequest addPostRequest;
+        private AddHwPostRequest addPostRequest;
 
-        public VideoCompressor(AddTestExamPostRequest addPostRequest) {
+        public VideoCompressor(AddHwPostRequest addPostRequest) {
             this.addPostRequest = addPostRequest;
         }
 
@@ -503,12 +410,12 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
 
                     AppLog.e(TAG, "fileSizeInMB : " + fileSizeInMB);
                     if (fileSizeInMB > 10) {
-                        listImages.set(i, SiliCompressor.with(AddTestPostActivity.this).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath(), w, h, 950000));
+                        listImages.set(i, SiliCompressor.with(SubmitTestPaperActivity.this).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath() , w ,h , 950000));
                         Log.e(TAG, "compressPath : " + videoUrl);
                     }
                 }
             } catch (Exception e) {
-                Toast.makeText(AddTestPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SubmitTestPaperActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
@@ -528,7 +435,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
     }
 
 
-    private void uploadToAmazone(AddTestExamPostRequest request) {
+    private void uploadToAmazone(AddHwPostRequest request) {
         mainRequest = request;
         //request.fileName = listAmazonS3Url;
         Log.e(TAG, "send data " + new Gson().toJson(request));
@@ -543,7 +450,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddTestPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubmitTestPaperActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -556,7 +463,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddTestPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubmitTestPaperActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -607,10 +514,10 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     }
                     if (TransferState.FAILED.equals(state)) {
                         progressBar.setVisibility(View.GONE);
-                        if (progressDialog != null) {
+                        if (progressDialog!=null) {
                             progressDialog.dismiss();
                         }
-                        Toast.makeText(AddTestPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubmitTestPaperActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -630,11 +537,11 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                 @Override
                 public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
-                    if (progressDialog != null) {
+                    if (progressDialog!=null) {
                         progressDialog.dismiss();
                     }
                     AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -643,7 +550,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
     private void upLoadImageOnCloud(final int pos) {
 
         if (pos == listImages.size()) {
-            if (progressDialog != null) {
+            if (progressDialog!=null) {
                 progressDialog.dismiss();
             }
             mainRequest.fileName = listAmazonS3Url;
@@ -651,7 +558,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
           /*  if (isEdit) {
                 manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
             } else {*/
-            manager.addTestExam(this, group_id, team_id, subject_id, mainRequest);
+                manager.submitTestPaperPost(this, group_id, team_id, subject_id,testExamId, mainRequest);
 //            }
 
         } else {
@@ -669,8 +576,8 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                         updateList(pos, key);
                     }
                     if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddTestPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-                        if (progressDialog != null)
+                        Toast.makeText(SubmitTestPaperActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        if(progressDialog!=null)
                             progressDialog.dismiss();
                     }
                 }
@@ -698,7 +605,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                         progressDialog.dismiss();
                     }
                     AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -728,30 +635,20 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         Log.e("videoUrl : ", videoUrl);
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
-        if (!isValueValidOnly(edtTitle)) {
+       /* if (!isValueValidOnly(edtTitle)) {
             if (showToast)
                 Toast.makeText(this, "Please Enter Topic Name", Toast.LENGTH_SHORT).show();
             return false;
-        }/*
-        if (!isValueValidOnly(edtDesc)) {
+        }*/
+       if (!isValueValidOnly(edtDesc)) {
             if (showToast)
                 Toast.makeText(this, "Please Enter Description", Toast.LENGTH_SHORT).show();
             return false;
-        }*/ if (!isValueValidOnly(et_date)) {
+        }/*  if (!isValueValidOnly(et_date)) {
             if (showToast)
-                Toast.makeText(this, "Please Select Test Date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please Select Date", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        if (!isValueValidOnly(et_time_start)) {
-            if (showToast)
-                Toast.makeText(this, "Please Select Test Time", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!isValueValidOnly(et_time_end)) {
-            if (showToast)
-                Toast.makeText(this, "Please Select Test Time", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+        }*/
 
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
             if (showToast)
@@ -830,14 +727,14 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
             progressBar.setVisibility(View.GONE);
         switch (apiId) {
 
-            case LeafManager.API_TEST_EXAM_ADD:
-                Toast.makeText(AddTestPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+            case LeafManager.API_SUBMIT_TEST_PAPER:
+                Toast.makeText(SubmitTestPaperActivity.this, "Successfully Submitted", Toast.LENGTH_SHORT).show();
                /* if (isEdit) {
-                    LeafPreference.getInstance(AddTestPostActivity.this).setBoolean("is_topic_added", true);
+                    LeafPreference.getInstance(AddHwPostActivity.this).setBoolean("is_topic_added", true);
                     new SendNotification(edtTitle.getText().toString(), false).execute();
                 } else {*/
-                LeafPreference.getInstance(AddTestPostActivity.this).setBoolean("is_test_added", true);
-                new SendNotification(subject_name + " (" + className + ")").execute();
+                    LeafPreference.getInstance(SubmitTestPaperActivity.this).setBoolean("is_paper_added", true);
+//                    new SendNotification(edtTitle.getText().toString()).execute();
 //                }
                 finish();
                 break;
@@ -877,13 +774,13 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
-        Toast.makeText(AddTestPostActivity.this, error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(SubmitTestPaperActivity.this, error, Toast.LENGTH_SHORT).show();
 
     }
 
 
     public void showPhotoDialog(int resId) {
-        SMBDialogUtils.showSMBSingleChoiceDialog(AddTestPostActivity.this,
+        SMBDialogUtils.showSMBSingleChoiceDialog(SubmitTestPaperActivity.this,
                 R.string.lbl_select_img, resId, 0,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -1118,7 +1015,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddTestPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SubmitTestPaperActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -1132,7 +1029,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
 
                     Log.e("img_url is->", "" + img_url);
 
-                    Picasso.with(AddTestPostActivity.this)
+                    Picasso.with(SubmitTestPaperActivity.this)
                             .load(img_url)
                             .placeholder(R.drawable.icon_popup_youtube)
                             .into(img_youtube, new Callback() {
@@ -1146,7 +1043,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddTestPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SubmitTestPaperActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();
@@ -1169,7 +1066,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                 GroupDashboardActivityNew.enteredTitle = edtTitle.getText().toString();
                 GroupDashboardActivityNew.enteredDesc = edtDesc.getText().toString();
 
-                startActivity(new Intent(AddTestPostActivity.this, MainActivity.class));
+                startActivity(new Intent(SubmitTestPaperActivity.this, MainActivity.class));
             }
         });
 
@@ -1230,7 +1127,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     String title = getResources().getString(R.string.app_name);
                     String message = "";
 
-                    message = "New Homework added to " + chapterName;
+                        message = "New Homework added to " + chapterName;
 
                     topic = group_id + "_" + team_id;
                     object.put("to", "/topics/" + topic);
@@ -1242,12 +1139,12 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
 
                     JSONObject dataObj = new JSONObject();
                     dataObj.put("groupId", group_id);
-                    dataObj.put("createdById", LeafPreference.getInstance(AddTestPostActivity.this).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("createdById", LeafPreference.getInstance(SubmitTestPaperActivity.this).getString(LeafPreference.LOGIN_ID));
                     dataObj.put("postId", "");
                     dataObj.put("teamId", team_id);
                     dataObj.put("title", title);
-                    dataObj.put("postType", "test_exam");
-                    dataObj.put("Notification_type", "ADD_TEST_EXAM");
+                    dataObj.put("postType", "homework");
+                    dataObj.put("Notification_type", "homework");
                     dataObj.put("body", message);
                     object.put("data", dataObj);
 

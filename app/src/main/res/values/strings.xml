@@ -520,8 +520,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strBox">Box</string>
     <string name="hint_time">Select Time</string>
     <string name="hint_test_date">Test Date</string>
-    <string name="hint_test_start_time">Test Start Time</string>
-    <string name="hint_test_end_time">Test End Time</string>
+    <string name="hint_test_start_time">Start Time</string>
+    <string name="hint_test_end_time">End Time</string>
     <string name="strLastSubTime">Last Submission Time</string>
     <string name="strProctoring">Proctoring</string>
 

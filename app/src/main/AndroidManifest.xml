@@ -646,7 +646,7 @@
 
         <activity
             android:name=".activities.HomeWorkEditActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <!--   <intent-filter>
                           <action android:name="android.intent.action.MAIN" />
                           <action android:name="android.intent.action.VIEW" />
@@ -662,11 +662,20 @@
         <activity
             android:name=".activities.TestClassSubjectActivity"
             android:screenOrientation="portrait" />
-    <activity
+        <activity
             android:name=".activities.TestExamActivity"
             android:screenOrientation="portrait" />
-    <activity
+        <activity
             android:name=".activities.AddTestPostActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TestParentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TestStudentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SubmitTestPaperActivity"
             android:screenOrientation="portrait" />
 
         <service

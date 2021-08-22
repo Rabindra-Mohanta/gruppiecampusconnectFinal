@@ -52,6 +52,7 @@ import school.campusconnect.datamodel.subjects.SubjectResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
+import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
@@ -382,6 +383,10 @@ public class LeafManager {
     public static final int API_TEST_EXAM_LIST = 241;
     public static final int API_TEST_EXAM_ADD = 242;
     public static final int API_TEST_EXAM_REMOVE = 243;
+    public static final int API_SUBMIT_TEST_PAPER = 244;
+    public static final int API_TEST_EXAM_PAPER_LIST = 245;
+    public static final int API_TEST_EXAM_PAPER_DELETE_STUDENT = 246;
+    public static final int API_TEST_EXAM_PAPER_VERIFY = 247;
 
     public LeafManager() {
 
@@ -9386,6 +9391,152 @@ public class LeafManager {
 
     }
 
+
+    public void getTestPaper(final OnCommunicationListener listListener, String groupId, String teamId, String subjectId, String testexam_id, String param) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<TestPaperRes> model;
+        if (!TextUtils.isEmpty(param)) {
+            model = service.getTestPaperForTeacher(groupId, teamId, subjectId, testexam_id, param);
+        } else {
+            model = service.getTestPaper(groupId, teamId, subjectId, testexam_id);
+        }
+
+        ResponseWrapper<TestPaperRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_TEST_EXAM_PAPER_LIST, new ResponseWrapper.ResponseHandler<TestPaperRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, TestPaperRes response) {
+                AppLog.e("LeafManager", "ChapterRes : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void deleteTestPaperStudent(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String testexam_id, String studentTestExamId) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.deleteTestPaperStudent(groupId, team_id, subject_id, testexam_id, studentTestExamId);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_TEST_EXAM_PAPER_DELETE_STUDENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
+    public void verifyTestPaper(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String testexam_id, String studentTestExam_id, boolean verify,ReassignReq reassignReq) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.verifyTestPaper(groupId, team_id, subject_id, testexam_id, studentTestExam_id, verify,reassignReq);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_TEST_EXAM_PAPER_VERIFY, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
+    public void submitTestPaperPost(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String assignment_id, AddHwPostRequest request) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.submitTestPaperPost(groupId, team_id, subject_id, assignment_id, request);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_SUBMIT_TEST_PAPER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
 
     public interface OnCommunicationListener {
         void onSuccess(int apiId, BaseResponse response);

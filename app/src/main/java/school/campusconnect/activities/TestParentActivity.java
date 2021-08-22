@@ -1,0 +1,803 @@
+package school.campusconnect.activities;
+
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
+import school.campusconnect.Assymetric.AsymmetricRecyclerView;
+import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
+import school.campusconnect.R;
+import school.campusconnect.adapters.ChildAdapter;
+import school.campusconnect.adapters.ChildHwAdapter;
+import school.campusconnect.adapters.ChildTestAdapter;
+import school.campusconnect.adapters.ChildVideoAdapter;
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.AddPostValidationError;
+import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.ErrorResponseModel;
+import school.campusconnect.datamodel.GroupValidationError;
+import school.campusconnect.datamodel.chapter.ChapterRes;
+import school.campusconnect.datamodel.homework.AssignmentRes;
+import school.campusconnect.datamodel.homework.HwRes;
+import school.campusconnect.datamodel.homework.ReassignReq;
+import school.campusconnect.datamodel.test_exam.TestExamRes;
+import school.campusconnect.datamodel.test_exam.TestPaperRes;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
+import school.campusconnect.fragments.TestExamListFragment;
+import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
+import school.campusconnect.views.SMBDialogUtils;
+
+public class TestParentActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError> {
+
+    private static final String TAG = TestParentActivity.class.getSimpleName();
+    @Bind(R.id.toolbar)
+    public Toolbar mToolBar;
+
+    @Bind(R.id.tv_toolbar_title)
+    public TextView tvTitle;
+
+    @Bind(R.id.txt_title)
+    TextView txt_title;
+    @Bind(R.id.txt_content)
+    TextView txtContent;
+    @Bind(R.id.txt_readmore)
+    TextView txt_readmore;
+    @Bind(R.id.recyclerView)
+    AsymmetricRecyclerView recyclerView;
+    @Bind(R.id.img_play)
+    ImageView imgPlay;
+    @Bind(R.id.image)
+    ImageView imgPhoto;
+    @Bind(R.id.constThumb)
+    ConstraintLayout constThumb;
+    @Bind(R.id.imageThumb)
+    ImageView imageThumb;
+    @Bind(R.id.imgDownloadPdf)
+    ImageView imgDownloadPdf;
+    @Bind(R.id.spStatus)
+    public Spinner spStatus;
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
+    @Bind(R.id.rvAssignment)
+    RecyclerView rvAssignment;
+    @Bind(R.id.txtEmpty)
+    TextView txtEmpty;
+    @Bind(R.id.txt_lastDate)
+    TextView txt_lastDate;
+    @Bind(R.id.txt_teacher)
+    TextView txt_teacher;
+
+
+    private String group_id;
+    private String team_id;
+    private String subject_id;
+    private String subject_name;
+    private String className;
+    private TestExamRes.TestExamData item;
+    private AssignmentRes.AssignmentData selectedAssignment;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test_parent);
+        ButterKnife.bind(this);
+        setSupportActionBar(mToolBar);
+        setBackEnabled(true);
+
+        _init();
+
+        String nTopic = item.topicName.length() > 15 ? item.topicName.substring(0, 15) : item.topicName;
+        setTitle(nTopic + " (" + className + ")");
+
+        showData();
+
+    }
+
+    private void _init() {
+        group_id = getIntent().getStringExtra("group_id");
+        team_id = getIntent().getStringExtra("team_id");
+        subject_id = getIntent().getStringExtra("subject_id");
+        subject_name = getIntent().getStringExtra("subject_name");
+        className = getIntent().getStringExtra("className");
+        item = (TestExamRes.TestExamData) getIntent().getSerializableExtra("data");
+
+        String[] strStatus = new String[3];
+        strStatus[0] = "Not Verified";
+        strStatus[1] = "Verified";
+        strStatus[2] = "Not Submitted";
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner, strStatus);
+        spStatus.setAdapter(adapter);
+
+        spStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                AppLog.e(TAG, "onItemSelected : " + position);
+                getAssignment();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void showData() {
+        txt_title.setText(item.topicName);
+        txt_teacher.setText(item.createdByName);
+        if (!TextUtils.isEmpty(item.description)) {
+            txtContent.setVisibility(View.VISIBLE);
+            if (item.description.length() > 200) {
+                StringBuilder stringBuilder = new StringBuilder(item.description);
+                stringBuilder.setCharAt(197, '.');
+                stringBuilder.setCharAt(198, '.');
+                stringBuilder.setCharAt(199, '.');
+                txtContent.setText(stringBuilder);
+                txt_readmore.setVisibility(View.VISIBLE);
+                txt_readmore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        txtContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(item.description.length())});
+                        txtContent.setText(item.description);
+                        txt_readmore.setVisibility(View.GONE);
+                    }
+                });
+            } else {
+                txtContent.setText(item.description);
+                txt_readmore.setVisibility(View.GONE);
+            }
+        } else {
+            txtContent.setVisibility(View.GONE);
+            txt_readmore.setVisibility(View.GONE);
+        }
+        String details = "Test/Exam Date : "+item.testDate+"\n"
+                +"Start Time : "+item.testStartTime+", End Time : "+item.testEndTime+"\n";
+        if (!TextUtils.isEmpty(item.lastSubmissionTime)) {
+            details = details+"Last Submission Time : " + item.lastSubmissionTime;
+        }
+        txt_lastDate.setText(details);
+
+        if (!TextUtils.isEmpty(item.fileType)) {
+            if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+                if (item.fileName != null) {
+
+                    ChildAdapter adapter;
+                    if (item.fileName.size() <= 2) {
+                        adapter = new ChildAdapter(1, item.fileName.size(), this, item.fileName);
+                    } else {
+                        adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
+                    }
+                    recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(this, recyclerView, adapter));
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                imgPlay.setVisibility(View.GONE);
+                imgPhoto.setVisibility(View.GONE);
+            } else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
+                if (item.fileName != null) {
+                    ChildVideoAdapter adapter;
+                    if (item.fileName.size() == 3) {
+                        adapter = new ChildVideoAdapter(2, this, item.fileName, item.thumbnailImage);
+                    } else {
+                        adapter = new ChildVideoAdapter(Constants.MAX_IMAGE_NUM, this, item.fileName, item.thumbnailImage);
+                    }
+                    recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(this, recyclerView, adapter));
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                imgPlay.setVisibility(View.GONE);
+                imgPhoto.setVisibility(View.GONE);
+            } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+                constThumb.setVisibility(View.VISIBLE);
+                imgPhoto.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                imgPlay.setVisibility(View.GONE);
+                if (item.thumbnailImage != null && item.thumbnailImage.size() > 0) {
+                    Picasso.with(this).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(imageThumb);
+
+                }
+                if (item.fileName != null && item.fileName.size() > 0) {
+                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                        imgDownloadPdf.setVisibility(View.GONE);
+                    } else {
+                        imgDownloadPdf.setVisibility(View.VISIBLE);
+                    }
+                }
+
+            } else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+                imgPhoto.getLayoutParams().height = (Constants.screen_width * 204) / 480;
+                imgPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Picasso.with(this).load(item.thumbnail).into(imgPhoto);
+                imgPhoto.setVisibility(View.VISIBLE);
+                imgPlay.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                imgPhoto.setVisibility(View.GONE);
+                imgPlay.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+            }
+        } else {
+            imgPhoto.setVisibility(View.GONE);
+            imgPlay.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    public void onPostClick(ChapterRes.TopicData item) {
+        if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            Intent browserIntent = new Intent(this, TestActivity.class);
+            browserIntent.putExtra("url", item.video);
+            startActivity(browserIntent);
+
+        } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+            Intent i = new Intent(this, ViewPDFActivity.class);
+            i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("name", item.topicName);
+            startActivity(i);
+
+        } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+            Intent i = new Intent(this, FullScreenActivity.class);
+            i.putExtra("image", item.fileName);
+            startActivity(i);
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==99 && resultCode==RESULT_OK){
+//            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"),data.getStringArrayListExtra("_finalUrl"));
+        }
+    }
+
+    public void onPostClick(TestPaperRes.TestPaperData item) {
+//        this.selectedAssignment =item;
+     /*   if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            Intent browserIntent = new Intent(this, TestActivity.class);
+            browserIntent.putExtra("url", item.video);
+            startActivity(browserIntent);
+
+        } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+            Intent i = new Intent(this, ViewPDFActivity.class);
+            i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("name", ""*//*item.studentName*//*);
+            startActivity(i);
+
+        } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+            if (item.fileName != null && item.fileName.size() > 0) {
+                Intent i = new Intent(this, HomeWorkEditActivity.class);
+                i.putExtra("item", new Gson().toJson(item));
+                startActivityForResult(i,99);
+            }
+        }*/
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_delete, menu);
+        menu.findItem(R.id.menuDelete).setTitle("Delete Test/Exam");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuDelete:
+                deletePost();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void deletePost() {
+        SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete this Test/Exam?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (isConnectionAvailable()) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    LeafManager manager = new LeafManager();
+                    manager.deleteTestExam(TestParentActivity.this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
+                } else {
+                    showNoNetworkMsg();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+
+    public void getAssignment() {
+        int pos = spStatus.getSelectedItemPosition();
+        String filter = "notVerified";
+        if (pos == 0) {
+            filter = "notVerified";
+        } else if (pos == 1) {
+            filter = "verified";
+        } else {
+            filter = "notSubmitted";
+        }
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getTestPaper(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId, filter);
+    }
+
+    @Override
+    public void onSuccess(int apiId, BaseResponse response) {
+        super.onSuccess(apiId, response);
+        progressBar.setVisibility(View.GONE);
+        switch (apiId) {
+            case LeafManager.API_TEST_EXAM_PAPER_LIST:
+                TestPaperRes assignmentRes = (TestPaperRes) response;
+                rvAssignment.setAdapter(new AssignmentAdapter(assignmentRes.getData()));
+                break;/*
+            case LeafManager.API_TEST_EXAM_REMOVE:
+                LeafPreference.getInstance(TestParentActivity.this).setBoolean("is_test_added", true);
+                finish();
+                break;*/
+            case LeafManager.API_VERIFY_ASSIGNMENT:
+//            case LeafManager.API_REASSIGN_ASSIGNMENT:
+                getAssignment();
+                sendNotification();
+                break;
+        }
+    }
+    private void sendNotification() {
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId+"_"+team_id;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "";
+        notificationModel.data.Notification_type = "TEST_PAPER_STATUS";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+        notificationModel.data.teamId = team_id;
+        notificationModel.data.createdById = LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = "";
+        notificationModel.data.postType = "";
+        SendNotificationGlobal.send(notificationModel);
+    }
+
+    @Override
+    public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
+
+        if (error.status.equals("401")) {
+            Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
+            logout();
+        } else {
+            if (apiId == LeafManager.API_ID_DELETE_TEAM) {
+                GroupValidationError groupValidationError = (GroupValidationError) error;
+                Toast.makeText(this, groupValidationError.message, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, error.title, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.ViewHolder> {
+        ArrayList<TestPaperRes.TestPaperData> list;
+        private Context mContext;
+
+        public AssignmentAdapter(ArrayList<TestPaperRes.TestPaperData> data) {
+            list = data;
+        }
+
+        @Override
+        public AssignmentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_paper, parent, false);
+            return new AssignmentAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final AssignmentAdapter.ViewHolder holder, final int position) {
+            final TestPaperRes.TestPaperData item = list.get(position);
+            holder.txtName.setText(item.studentName);
+            holder.txtDate.setText(MixOperations.getFormattedDateOnly(item.insertedAt, Constants.DATE_FORMAT, "dd MMM yyyy\nhh:mm a"));
+
+            holder.constThumb.setVisibility(View.GONE);
+            final String name = item.studentName;
+            if (!TextUtils.isEmpty(item.studentImage)) {
+                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.studentImage)).resize(dpToPx(), dpToPx()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgLead,
+                        new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.imgLead_default.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.studentImage)).resize(dpToPx(), dpToPx()).into(holder.imgLead, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        holder.imgLead_default.setVisibility(View.INVISIBLE);
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        holder.imgLead_default.setVisibility(View.VISIBLE);
+                                        TextDrawable drawable = TextDrawable.builder()
+                                                .buildRound(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(position));
+                                        holder.imgLead_default.setImageDrawable(drawable);
+                                        AppLog.e("Picasso", "Error : ");
+                                    }
+                                });
+                            }
+                        });
+            } else {
+                holder.imgLead_default.setVisibility(View.VISIBLE);
+                TextDrawable drawable = TextDrawable.builder()
+                        .buildRound(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(position));
+                holder.imgLead_default.setImageDrawable(drawable);
+            }
+            if (!TextUtils.isEmpty(item.fileType)) {
+                if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+                    if (item.fileName != null) {
+
+                        ChildTestAdapter adapter;
+                      /*  if (item.fileName.size() == 3) {
+                            adapter = new ChildHwAdapter(2, item.fileName.size(), mContext, item.fileName, this, item);
+                        } else {*/
+                        adapter = new ChildTestAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName, TestParentActivity.this, item);
+                        //}
+                        holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
+                        holder.recyclerView.setVisibility(View.VISIBLE);
+                    }
+                    holder.imgPlay.setVisibility(View.GONE);
+                    holder.imgPhoto.setVisibility(View.GONE);
+                } else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
+                    if (item.fileName != null) {
+                        ChildVideoAdapter adapter;
+                        if (item.fileName.size() == 3) {
+                            adapter = new ChildVideoAdapter(2, mContext, item.fileName, item.thumbnailImage);
+                        } else {
+                            adapter = new ChildVideoAdapter(Constants.MAX_IMAGE_NUM, mContext, item.fileName, item.thumbnailImage);
+                        }
+                        holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
+                        holder.recyclerView.setVisibility(View.VISIBLE);
+                    }
+                    holder.imgPlay.setVisibility(View.GONE);
+                    holder.imgPhoto.setVisibility(View.GONE);
+                } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+                    holder.constThumb.setVisibility(View.VISIBLE);
+                    holder.imgPhoto.setVisibility(View.GONE);
+                    holder.recyclerView.setVisibility(View.GONE);
+                    holder.imgPlay.setVisibility(View.GONE);
+                    if (item.thumbnailImage != null && item.thumbnailImage.size() > 0) {
+                        Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
+
+                    }
+                    if (item.fileName != null && item.fileName.size() > 0) {
+                        if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                            holder.imgDownloadPdf.setVisibility(View.GONE);
+                        } else {
+                            holder.imgDownloadPdf.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                } else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+                    holder.imgPhoto.getLayoutParams().height = (Constants.screen_width * 204) / 480;
+                    holder.imgPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    Picasso.with(mContext).load(item.thumbnail).into(holder.imgPhoto);
+                    holder.imgPhoto.setVisibility(View.VISIBLE);
+                    holder.imgPlay.setVisibility(View.VISIBLE);
+                    holder.recyclerView.setVisibility(View.GONE);
+                } else {
+                    holder.imgPhoto.setVisibility(View.GONE);
+                    holder.imgPlay.setVisibility(View.GONE);
+                    holder.recyclerView.setVisibility(View.GONE);
+                }
+            } else {
+
+                holder.imgPhoto.setVisibility(View.GONE);
+                holder.imgPlay.setVisibility(View.GONE);
+                holder.recyclerView.setVisibility(View.GONE);
+            }
+
+
+            if (!TextUtils.isEmpty(item.description)) {
+                holder.txtContent.setVisibility(View.VISIBLE);
+                if (item.description.length() > 200) {
+                    StringBuilder stringBuilder = new StringBuilder(item.description);
+                    stringBuilder.setCharAt(197, '.');
+                    stringBuilder.setCharAt(198, '.');
+                    stringBuilder.setCharAt(199, '.');
+                    holder.txtContent.setText(stringBuilder);
+                    holder.txt_readmore.setVisibility(View.VISIBLE);
+                    holder.txt_readmore.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            holder.txtContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(item.description.length())});
+                            holder.txtContent.setText(item.description);
+                            holder.txt_readmore.setVisibility(View.GONE);
+                        }
+                    });
+                } else {
+                    holder.txtContent.setText(item.description);
+                    holder.txt_readmore.setVisibility(View.GONE);
+                }
+            } else {
+                holder.txtContent.setVisibility(View.GONE);
+                holder.txt_readmore.setVisibility(View.GONE);
+            }
+
+            holder.btnYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    verifyAssignment(item);
+                }
+            });
+            holder.btnNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reAssignment(item);
+                }
+            });
+
+            if (spStatus.getSelectedItemPosition() == 2) {
+                holder.imgChat.setVisibility(View.VISIBLE);
+                holder.llAction.setVisibility(View.GONE);
+                holder.imgChat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onChatClick(item);
+                    }
+                });
+            } else {
+                holder.imgChat.setVisibility(View.GONE);
+                holder.llAction.setVisibility(View.VISIBLE);
+
+                if (!item.testexamVerified) {
+                    holder.btnYes.setVisibility(View.GONE);
+                    holder.btnNo.setVisibility(View.GONE);
+//                    holder.txt_NotVerify.setVisibility(View.VISIBLE);
+                    holder.txt_comments.setVisibility(View.GONE);
+                } else {
+                    holder.btnYes.setVisibility(View.VISIBLE);
+                    if(!TextUtils.isEmpty(item.verifiedComment)){
+                        holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                        holder.txt_comments.setVisibility(View.VISIBLE);
+                    }else {
+                        holder.txt_comments.setVisibility(View.GONE);
+                    }
+                }
+
+            }
+
+        }
+
+        private int dpToPx() {
+            return mContext.getResources().getDimensionPixelSize(R.dimen.group_list_image_size);
+        }
+
+        @Override
+        public int getItemCount() {
+            if (list != null) {
+                if (list.size() == 0) {
+                    txtEmpty.setText("No Test Paper found.");
+                    txtEmpty.setVisibility(View.VISIBLE);
+                } else {
+                    txtEmpty.setText("");
+                    txtEmpty.setVisibility(View.GONE);
+                }
+                return list.size();
+            } else {
+                txtEmpty.setText("No Test Paper found.");
+                txtEmpty.setVisibility(View.VISIBLE);
+                return 0;
+            }
+
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            @Bind(R.id.txt_name)
+            TextView txtName;
+
+            @Bind(R.id.txt_content)
+            TextView txtContent;
+
+            @Bind(R.id.txt_readmore)
+            TextView txt_readmore;
+
+            @Bind(R.id.txt_drop_delete)
+            TextView txt_drop_delete;
+
+            @Bind(R.id.img_lead)
+            CircleImageView imgLead;
+
+            @Bind(R.id.img_lead_default)
+            ImageView imgLead_default;
+
+            @Bind(R.id.txt_date)
+            TextView txtDate;
+
+            @Bind(R.id.image)
+            ImageView imgPhoto;
+
+            @Bind(R.id.constThumb)
+            ConstraintLayout constThumb;
+
+            @Bind(R.id.imageThumb)
+            ImageView imageThumb;
+
+            @Bind(R.id.imageLoading)
+            ImageView imageLoading;
+
+            @Bind(R.id.img_play)
+            ImageView imgPlay;
+
+            @Bind(R.id.iv_delete)
+            ImageView ivDelete;
+
+            @Bind(R.id.rel)
+            RelativeLayout rel;
+
+            @Bind(R.id.recyclerView)
+            AsymmetricRecyclerView recyclerView;
+
+            @Bind(R.id.imgDownloadPdf)
+            ImageView imgDownloadPdf;
+
+            @Bind(R.id.lin_drop)
+            LinearLayout lin_drop;
+
+            @Bind(R.id.txt_comments)
+            TextView txt_comments;
+
+            @Bind(R.id.btnYes)
+            FrameLayout btnYes;
+
+            @Bind(R.id.btnNo)
+            FrameLayout btnNo;
+
+            @Bind(R.id.txt_NotVerify)
+            TextView txt_NotVerify;
+
+            @Bind(R.id.imgChat)
+            ImageView imgChat;
+
+            @Bind(R.id.llAction)
+            FrameLayout llAction;
+
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
+                ivDelete.setVisibility(View.GONE);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (lin_drop.getVisibility() == View.VISIBLE)
+                            lin_drop.setVisibility(View.GONE);
+                    }
+                });
+
+
+            }
+
+            @OnClick({R.id.rel, R.id.txt_readmore, R.id.iv_delete,
+                    R.id.txt_drop_delete, R.id.txt_name})
+            public void OnLikeClick(View v) {
+                switch (v.getId()) {
+                    case R.id.rel:
+                        if (lin_drop.getVisibility() == View.VISIBLE)
+                            lin_drop.setVisibility(View.GONE);
+                        else if (isConnectionAvailable()) {
+                            onPostClick(list.get(getAdapterPosition()));
+                        } else {
+                            showNoNetworkMsg();
+                        }
+                        break;
+                    case R.id.iv_delete:
+                        if (lin_drop.getVisibility() == View.VISIBLE)
+                            lin_drop.setVisibility(View.GONE);
+                        else
+                            lin_drop.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        }
+    }
+
+    private void onChatClick(TestPaperRes.TestPaperData item) {
+        Intent intent = new Intent(this, AddPostActivity.class);
+        intent.putExtra("id", GroupDashboardActivityNew.groupId);
+        intent.putExtra("friend_id", item.userId);
+        intent.putExtra("type", "personal");
+        intent.putExtra("team_id", "");
+        intent.putExtra("friend_name", item.studentName);
+        intent.putExtra("from_chat", true);
+        startActivity(intent);
+    }
+
+    /*
+    private void notVerifyAssignmentFromActResult(boolean isVerify, String comments,ArrayList<String> _finalUrl) {
+
+        if (isVerify) {
+            progressBar.setVisibility(View.VISIBLE);
+            LeafManager leafManager = new LeafManager();
+            ReassignReq reassignReq = new ReassignReq(comments);
+            reassignReq.fileName = new ArrayList<>();
+            reassignReq.fileName = _finalUrl;
+            AppLog.e(TAG,"reassignReq :"+reassignReq);
+            leafManager.verifyAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, testExamData.studentAssignmentId, true,reassignReq);
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+            LeafManager leafManager = new LeafManager();
+            ReassignReq reassignReq = new ReassignReq(comments);
+            reassignReq.fileName = new ArrayList<>();
+            reassignReq.fileName = _finalUrl;
+            AppLog.e(TAG,"reassignReq :"+reassignReq);
+            leafManager.reassignAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, testExamData.studentAssignmentId, true, reassignReq);
+        }
+    }*/
+
+    private void verifyAssignment(TestPaperRes.TestPaperData item) {
+      /*  String msg = "Are You Sure Want To un-verify " + item.studentName + " Assignment?";
+        SMBDialogUtils.showSMBDialogOKCancel(this, msg, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressBar.setVisibility(View.VISIBLE);
+                LeafManager leafManager = new LeafManager();
+                leafManager.verifyAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentVerified,new ReassignReq("text"));
+            }
+        });*/
+    }
+
+    private void reAssignment(TestPaperRes.TestPaperData item) {
+       /* SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To move " + item.studentName + " assignment to not verified?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressBar.setVisibility(View.VISIBLE);
+                LeafManager leafManager = new LeafManager();
+                leafManager.reassignAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentReassigned, new ReassignReq("text"));
+            }
+        });*/
+    }
+}
