@@ -77,5 +77,8 @@ public class TestExamRes extends BaseResponse {
         @SerializedName("canPost")
         @Expose
         public boolean canPost;
+        @SerializedName("proctoring")
+        @Expose
+        public boolean proctoring;
     }
 }

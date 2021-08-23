@@ -52,6 +52,9 @@ public class TestExamTBL extends Model {
     @Column(name = "canPost")
     public boolean canPost;
 
+    @Column(name = "proctoring")
+    public boolean proctoring;
+
     @Column(name = "fileType")
     public String fileType;
 

@@ -246,6 +246,7 @@ public class TestSubjectListFragment extends BaseFragment implements LeafManager
         intent.putExtra("subject_name", classData.name);
         intent.putExtra("canPost", classData.canPost);
         intent.putExtra("title", classData.name);
+        intent.putExtra("liveClass", getArguments().getString("liveClass"));
         startActivity(intent);
 
     }

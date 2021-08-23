@@ -66,7 +66,15 @@
                             android:text=" "
                             android:textColor="@color/colorTextLight" />
                     </LinearLayout>
-
+                    <Button
+                        android:id="@+id/btnStart"
+                        android:layout_width="120dp"
+                        android:text="Start"
+                        android:layout_marginStart="@dimen/padding_5dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/white"
+                        android:background="@drawable/start_button_bg"
+                        android:layout_height="35dp" />
                 </LinearLayout>
 
                 <RelativeLayout
@@ -164,6 +172,28 @@
                         android:focusable="false"
                         android:visibility="visible"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/tvQPaperHide"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="Question paper will be \navailable after exam start"
+                            android:textColor="@color/colorPrimary"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="H,1:1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:paddingStart="@dimen/padding_20dp"
+                            android:paddingEnd="@dimen/padding_20dp"
+                            android:textSize="@dimen/text_size_20sp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_height="0dp"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </RelativeLayout>
 

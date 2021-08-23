@@ -326,6 +326,7 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
             Intent intent = new Intent(getContext(), TestClassSubjectActivity.class);
             intent.putExtra("team_id", classData.getId());
             intent.putExtra("title", classData.className);
+            intent.putExtra("liveClass", new Gson().toJson(classData));
             startActivity(intent);
     }
 }

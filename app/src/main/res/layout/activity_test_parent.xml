@@ -55,6 +55,15 @@
                         android:text=" "
                         android:textColor="@color/colorTextLight" />
                 </LinearLayout>
+                <Button
+                    android:id="@+id/btnStart"
+                    android:layout_width="120dp"
+                    android:text="Start"
+                    android:layout_marginStart="@dimen/padding_5dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/start_button_bg"
+                    android:layout_height="35dp" />
             </LinearLayout>
 
 

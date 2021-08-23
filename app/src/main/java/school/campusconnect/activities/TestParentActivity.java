@@ -1,11 +1,21 @@
 package school.campusconnect.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.provider.Settings;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +35,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -32,7 +44,11 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,16 +72,33 @@ import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
+import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.firebase.SendNotificationGlobal;
 import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.fragments.TestExamListFragment;
+import school.campusconnect.fragments.VideoClassListFragment;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.service.FloatingWidgetExamService;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
+import us.zoom.sdk.FreeMeetingNeedUpgradeType;
+import us.zoom.sdk.InMeetingAudioController;
+import us.zoom.sdk.InMeetingChatMessage;
+import us.zoom.sdk.InMeetingEventHandler;
+import us.zoom.sdk.InMeetingServiceListener;
+import us.zoom.sdk.InstantMeetingOptions;
+import us.zoom.sdk.JoinMeetingOptions;
+import us.zoom.sdk.JoinMeetingParams;
+import us.zoom.sdk.MeetingServiceListener;
+import us.zoom.sdk.MeetingStatus;
+import us.zoom.sdk.MeetingViewsOptions;
+import us.zoom.sdk.ZoomSDK;
+import us.zoom.sdk.ZoomSDKAuthenticationListener;
+import us.zoom.sdk.ZoomSDKInitializeListener;
 
 public class TestParentActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError> {
 
@@ -106,7 +139,10 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     TextView txt_lastDate;
     @Bind(R.id.txt_teacher)
     TextView txt_teacher;
+    @Bind(R.id.btnStart)
+    Button btnStart;
 
+    private static final int DRAW_OVER_OTHER_APP_PERMISSION = 123;
 
     private String group_id;
     private String team_id;
@@ -114,7 +150,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     private String subject_name;
     private String className;
     private TestExamRes.TestExamData item;
-    private AssignmentRes.AssignmentData selectedAssignment;
+    VideoClassResponse.ClassData videClassData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +170,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     }
 
     private void _init() {
+        videClassData = new Gson().fromJson(getIntent().getStringExtra("liveClass"), VideoClassResponse.ClassData.class);
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
         subject_id = getIntent().getStringExtra("subject_id");
@@ -160,9 +197,27 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
             }
         });
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(TestParentActivity.this)) {
+                    startMeeting();
+                    startBubbleService();
+                } else {
+                    requestOverlayPermission();
+                }
+            }
+        });
     }
 
     private void showData() {
+        if (item.proctoring) {
+            btnStart.setVisibility(View.VISIBLE);
+        } else {
+            btnStart.setVisibility(View.GONE);
+        }
+
         txt_title.setText(item.topicName);
         txt_teacher.setText(item.createdByName);
         if (!TextUtils.isEmpty(item.description)) {
@@ -190,10 +245,10 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             txtContent.setVisibility(View.GONE);
             txt_readmore.setVisibility(View.GONE);
         }
-        String details = "Test/Exam Date : "+item.testDate+"\n"
-                +"Start Time : "+item.testStartTime+", End Time : "+item.testEndTime+"\n";
+        String details = "Test/Exam Date : " + item.testDate + "\n"
+                + "Start Time : " + item.testStartTime + ", End Time : " + item.testEndTime + "\n";
         if (!TextUtils.isEmpty(item.lastSubmissionTime)) {
-            details = details+"Last Submission Time : " + item.lastSubmissionTime;
+            details = details + "Last Submission Time : " + item.lastSubmissionTime;
         }
         txt_lastDate.setText(details);
 
@@ -284,8 +339,26 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==99 && resultCode==RESULT_OK){
+        if (requestCode == 99 && resultCode == RESULT_OK) {
 //            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"),data.getStringArrayListExtra("_finalUrl"));
+        }
+
+        if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(this)) {
+                    //Permission is not available. Display error text.
+
+                    Toast.makeText(TestParentActivity.this, "Draw over permission not available.", Toast.LENGTH_SHORT).show();
+
+                    startMeeting();
+                } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(TestParentActivity.this)) {
+                    startMeeting();
+                    startBubbleService();
+                }
+            } else {
+                startMeeting();
+            }
         }
     }
 
@@ -374,21 +447,22 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             case LeafManager.API_TEST_EXAM_PAPER_LIST:
                 TestPaperRes assignmentRes = (TestPaperRes) response;
                 rvAssignment.setAdapter(new AssignmentAdapter(assignmentRes.getData()));
-                break;/*
+                break;
             case LeafManager.API_TEST_EXAM_REMOVE:
                 LeafPreference.getInstance(TestParentActivity.this).setBoolean("is_test_added", true);
                 finish();
-                break;*/
-            case LeafManager.API_VERIFY_ASSIGNMENT:
+                break;
+    /*        case LeafManager.API_VERIFY_ASSIGNMENT:
 //            case LeafManager.API_REASSIGN_ASSIGNMENT:
                 getAssignment();
                 sendNotification();
-                break;
+                break;*/
         }
     }
+
     private void sendNotification() {
         SendNotificationModel notificationModel = new SendNotificationModel();
-        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId+"_"+team_id;
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId + "_" + team_id;
         notificationModel.data.title = getResources().getString(R.string.app_name);
         notificationModel.data.body = "";
         notificationModel.data.Notification_type = "TEST_PAPER_STATUS";
@@ -599,10 +673,10 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                     holder.txt_comments.setVisibility(View.GONE);
                 } else {
                     holder.btnYes.setVisibility(View.VISIBLE);
-                    if(!TextUtils.isEmpty(item.verifiedComment)){
+                    if (!TextUtils.isEmpty(item.verifiedComment)) {
                         holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
                         holder.txt_comments.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         holder.txt_comments.setVisibility(View.GONE);
                     }
                 }
@@ -799,5 +873,552 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 leafManager.reassignAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentReassigned, new ReassignReq("text"));
             }
         });*/
+    }
+
+
+    /***
+     * ======================= ZOOM Related CDE ==========================
+     */
+
+
+    private void startMeeting() {
+        try {
+            if (isConnectionAvailable()) {
+
+                // TEACHER SIDE START ZOOM
+                initializeZoom(videClassData.zoomKey, videClassData.zoomSecret, videClassData.zoomMail, videClassData.zoomPassword, videClassData.jitsiToken, videClassData.zoomName.get(0), videClassData.className, true);
+
+            } else {
+                showNoNetworkMsg();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
+
+        progressBar.setVisibility(View.VISIBLE);
+        ZoomSDK zoomSDK = ZoomSDK.getInstance();
+
+        zoomSDK.initialize(this, zoomKey, zoomSecret, new ZoomSDKInitializeListener() {
+            @Override
+            public void onZoomSDKInitializeResult(int i, int i1) {
+
+                AppLog.e(TAG, "Zoom SDK initialized : " + i + " , " + i1 + " , " + startOrJoin);
+
+                try {
+                    ZoomSDK.getInstance().getMeetingSettingsHelper().setMuteMyMicrophoneWhenJoinMeeting(true);
+                    ZoomSDK.getInstance().getMeetingSettingsHelper().disableCopyMeetingUrl(true);
+                    ZoomSDK.getInstance().getMeetingSettingsHelper().setClaimHostWithHostKeyActionEnabled(false);
+                    ZoomSDK.getInstance().getMeetingSettingsHelper().disableShowVideoPreviewWhenJoinMeeting(true);
+                } catch (Exception ex) {
+                }
+
+                if (startOrJoin)
+                    startZoomMeeting(zoomMail, zoomPassword, zoomName, className, meetingId);
+                else {
+                    AppLog.e(TAG, "after initialize : isLogged IN Zoom : " + ZoomSDK.getInstance().isLoggedIn());
+                    // joinZoomMeeting(zoomName, zoomPassword, className, meetingId);
+                    logoutZoomBeforeJoining(zoomName, zoomPassword, className, meetingId);
+                }
+            }
+
+            @Override
+            public void onZoomAuthIdentityExpired() {
+                progressBar.setVisibility(View.GONE);
+
+            }
+        });///APP_KEY , APP_SECRET
+
+
+    }
+
+    private void startZoomMeeting(String zoomMail, String password, String name, String className, String meetingId) {
+//        ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
+
+        AppLog.e(TAG, "startzoommeeting called " + zoomMail + ", " + password + " , " + name + ", " + meetingId);
+
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthListener);
+
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthLogoutListener);
+
+        ZoomSDK.getInstance().addAuthenticationListener(ZoomAuthListener);
+
+
+        if (!ZoomSDK.getInstance().isLoggedIn()) {
+            //  ZoomSDK.getInstance().logoutZoom();
+            Log.e(TAG, "loginwithzoom Called from startmeeting , not logged in already ");
+            ZoomSDK.getInstance().loginWithZoom(zoomMail, password);
+        } else {
+            Log.e(TAG, "logoutzoom Called from startmeeting , already loggedIn");
+            ZoomSDK.getInstance().logoutZoom();
+        }
+
+    }
+
+
+    private void logoutZoomBeforeJoining(String name, String zoomPassword, String className, String meetingID) {
+
+        AppLog.e(TAG, "logoutZoomBeforeJoining called " + name + ", " + className + ", " + meetingID);
+
+
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthLogoutListener);
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthListener);
+        ZoomSDK.getInstance().addAuthenticationListener(ZoomAuthLogoutListener);
+        ZoomSDK.getInstance().logoutZoom();
+
+    }
+
+    ZoomSDKAuthenticationListener ZoomAuthLogoutListener = new ZoomSDKAuthenticationListener() {
+        @Override
+        public void onZoomSDKLoginResult(long result) {
+            AppLog.e(TAG, "logoutZoomBeforeJoining , onZoomSDKLoginResult : " + result);
+        }
+
+        @Override
+        public void onZoomSDKLogoutResult(long result) {
+            AppLog.e(TAG, "logoutZoomBeforeJoining , onZOomSDKLogoutResult : " + result);
+
+            ZoomSDK.getInstance().removeAuthenticationListener(this);
+            joinZoomMeeting(videClassData.zoomName.get(0), videClassData.zoomMeetingPassword, videClassData.className, videClassData.jitsiToken);
+        }
+
+        @Override
+        public void onZoomIdentityExpired() {
+            AppLog.e(TAG, "onZOomIdentityExpired");
+        }
+
+        @Override
+        public void onZoomAuthIdentityExpired() {
+            AppLog.e(TAG, "onZoomAuthIdentityExpired");
+        }
+
+    };
+
+    private void joinZoomMeeting(String name, String zoomPassword, String className, String meetingID) {
+        JoinMeetingParams params = new JoinMeetingParams();
+
+        AppLog.e(TAG, "joinzoommeeting called " + " , " + name + ", " + meetingID + " ");
+
+
+        params.meetingNo = meetingID;
+        params.password = zoomPassword;
+
+        params.displayName = name;
+
+
+//        ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
+
+
+        JoinMeetingOptions opts = new JoinMeetingOptions();
+        opts.no_driving_mode = true;
+        //opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
+        // opts.no_meeting_end_message = true;
+        // opts.no_titlebar = false;
+        // opts.meeting_views_options = MeetingViewsOptions.NO_BUTTON_PARTICIPANTS;
+        opts.no_bottom_toolbar = false;
+        opts.no_invite = true;
+        opts.no_video = false;//true
+        opts.no_share = true;//false;
+        opts.custom_meeting_id = className;
+
+
+        opts.no_disconnect_audio = true;
+        opts.no_audio = true;// set true
+
+
+        opts.meeting_views_options = MeetingViewsOptions.NO_BUTTON_PARTICIPANTS + MeetingViewsOptions.NO_TEXT_MEETING_ID;// + MeetingViewsOptions.NO_BUTTON_AUDIO;//+ MeetingViewsOptions.NO_BUTTON_VIDEO +
+
+
+      /*  StartMeetingOptions startMeetingOptions = new StartMeetingOptions();
+        startMeetingOptions.no_video = false;*/
+
+
+        ZoomSDK.getInstance().getMeetingService().removeListener(JoinMeetListener);
+        ZoomSDK.getInstance().getMeetingService().removeListener(StartMeetListener);
+        ZoomSDK.getInstance().getMeetingService().addListener(JoinMeetListener);
+
+        ZoomSDK.getInstance().getMeetingService().joinMeetingWithParams(this, params, opts);
+
+    }
+
+    MeetingServiceListener JoinMeetListener = new MeetingServiceListener() {
+        @Override
+        public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
+            Log.e(TAG, "meetinsstatusChanged Join: " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
+                progressBar.setVisibility(View.GONE);
+            }
+
+        }
+    };
+
+    MeetingServiceListener StartMeetListener = new MeetingServiceListener() {
+        @Override
+        public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
+            Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
+
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
+                progressBar.setVisibility(View.GONE);
+
+                /*if (getActivity() != null) {
+                    ((VideoClassActivity) getActivity()).startBubbleService();
+                }*/
+            }
+
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING")) {
+                // Stop Meeting
+                removeBubble();
+            }
+        }
+    };
+
+    ZoomSDKAuthenticationListener ZoomAuthListener = new ZoomSDKAuthenticationListener() {
+        @Override
+        public void onZoomSDKLoginResult(long result) {
+            Log.e(TAG, "startmeeting , onZoomLogin Result : " + result);
+            if (result == 0) {
+
+                ZoomSDK.getInstance().removeAuthenticationListener(this);
+                InstantMeetingOptions opts = new InstantMeetingOptions();
+                opts.custom_meeting_id = videClassData.className;
+                opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
+                opts.no_invite = true;
+
+                //opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
+
+                ZoomSDK.getInstance().getMeetingService().startInstantMeeting(TestParentActivity.this, opts);
+
+                ZoomSDK.getInstance().getMeetingService().removeListener(StartMeetListener);
+                ZoomSDK.getInstance().getMeetingService().removeListener(JoinMeetListener);
+                ZoomSDK.getInstance().getMeetingService().addListener(StartMeetListener);
+                ZoomSDK.getInstance().getInMeetingService().addListener(inMeetingListener);
+            }
+
+        }
+
+        @Override
+        public void onZoomSDKLogoutResult(long result) {
+            AppLog.e(TAG, "startmeeting, onZOomSDKLogoutResult : " + result);
+
+            ZoomSDK.getInstance().loginWithZoom(videClassData.zoomMail, videClassData.zoomPassword);
+        }
+
+        @Override
+        public void onZoomIdentityExpired() {
+            AppLog.e(TAG, "onZOomIdentityExpired");
+        }
+
+        @Override
+        public void onZoomAuthIdentityExpired() {
+
+            AppLog.e(TAG, "onZoomAuthIdentityExpired");
+
+        }
+
+    };
+
+    InMeetingServiceListener inMeetingListener = new InMeetingServiceListener() {
+        @Override
+        public void onMeetingNeedPasswordOrDisplayName(boolean b, boolean b1, InMeetingEventHandler inMeetingEventHandler) {
+
+        }
+
+        @Override
+        public void onWebinarNeedRegister() {
+
+        }
+
+        @Override
+        public void onJoinWebinarNeedUserNameAndEmail(InMeetingEventHandler inMeetingEventHandler) {
+
+        }
+
+        @Override
+        public void onMeetingNeedColseOtherMeeting(InMeetingEventHandler inMeetingEventHandler) {
+
+        }
+
+        @Override
+        public void onMeetingFail(int i, int i1) {
+
+        }
+
+        @Override
+        public void onMeetingLeaveComplete(long l) {
+            AppLog.e(TAG, "onMeetingLeaveComplete");
+
+        }
+
+        @Override
+        public void onMeetingUserJoin(List<Long> list) {
+
+        }
+
+        @Override
+        public void onMeetingUserLeave(List<Long> list) {
+            AppLog.e(TAG, "onMeetingUserLeave");
+        }
+
+        @Override
+        public void onMeetingUserUpdated(long l) {
+
+        }
+
+        @Override
+        public void onMeetingHostChanged(long l) {
+            AppLog.e(TAG, "onMeetingHostChanged");
+        }
+
+        @Override
+        public void onMeetingCoHostChanged(long l) {
+
+        }
+
+        @Override
+        public void onActiveVideoUserChanged(long l) {
+
+        }
+
+        @Override
+        public void onActiveSpeakerVideoUserChanged(long l) {
+
+        }
+
+        @Override
+        public void onSpotlightVideoChanged(boolean b) {
+
+        }
+
+        @Override
+        public void onUserVideoStatusChanged(long l) {
+
+        }
+
+        @Override
+        public void onUserVideoStatusChanged(long l, VideoStatus videoStatus) {
+
+        }
+
+        @Override
+        public void onUserNetworkQualityChanged(long l) {
+
+        }
+
+        @Override
+        public void onMicrophoneStatusError(InMeetingAudioController.MobileRTCMicrophoneError mobileRTCMicrophoneError) {
+
+        }
+
+        @Override
+        public void onUserAudioStatusChanged(long l) {
+
+        }
+
+        @Override
+        public void onUserAudioStatusChanged(long l, AudioStatus audioStatus) {
+
+        }
+
+        @Override
+        public void onHostAskUnMute(long l) {
+
+        }
+
+        @Override
+        public void onHostAskStartVideo(long l) {
+
+        }
+
+        @Override
+        public void onUserAudioTypeChanged(long l) {
+
+        }
+
+        @Override
+        public void onMyAudioSourceTypeChanged(int i) {
+
+        }
+
+        @Override
+        public void onLowOrRaiseHandStatusChanged(long l, boolean b) {
+
+        }
+
+        @Override
+        public void onMeetingSecureKeyNotification(byte[] bytes) {
+
+        }
+
+        @Override
+        public void onChatMessageReceived(InMeetingChatMessage inMeetingChatMessage) {
+
+        }
+
+        @Override
+        public void onSilentModeChanged(boolean b) {
+
+        }
+
+        @Override
+        public void onFreeMeetingReminder(boolean b, boolean b1, boolean b2) {
+
+        }
+
+        @Override
+        public void onMeetingActiveVideo(long l) {
+
+        }
+
+        @Override
+        public void onSinkAttendeeChatPriviledgeChanged(int i) {
+
+        }
+
+        @Override
+        public void onSinkAllowAttendeeChatNotification(int i) {
+
+        }
+
+        @Override
+        public void onUserNameChanged(long l, String s) {
+
+        }
+
+        @Override
+        public void onFreeMeetingNeedToUpgrade(FreeMeetingNeedUpgradeType freeMeetingNeedUpgradeType, String s) {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToGiftFreeTrialStart() {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToGiftFreeTrialStop() {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToProMeeting() {
+
+        }
+
+        @Override
+        public void onClosedCaptionReceived(String s) {
+
+        }
+
+        @Override
+        public void onRecordingStatus(RecordingStatus recordingStatus) {
+
+        }
+    };
+
+
+    public void requestOverlayPermission() {
+        AppLog.e(TAG, "StartRecordingScreen called ");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+
+            //If the draw over permission is not available open the settings screen
+            //to grant the permission.
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, DRAW_OVER_OTHER_APP_PERMISSION);
+        }
+
+    }
+
+    public void startBubbleService() {
+        AppLog.e(TAG, "startBubbleService()");
+
+        Intent uploadIntent2 = new Intent(this, FloatingWidgetExamService.class);
+        uploadIntent2.putExtra("data",new Gson().toJson(item));
+        bindService(uploadIntent2, mConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    private FloatingWidgetExamService mService;
+
+    private boolean mBound;
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            FloatingWidgetExamService.LocalBinder binder = (FloatingWidgetExamService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+
+            LocalBroadcastManager.getInstance(TestParentActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("recording"));
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
+    //(VideoClassActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("intentKey"));
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+
+
+            String message = intent.getStringExtra("action");
+            AppLog.e(TAG, "onReceive called with action : " + message);
+            AppLog.e(TAG, "onReceive called with action : " + intent.getStringExtra("data"));
+
+
+            if (message.equalsIgnoreCase("start")) {
+                // Navigate to QA Paper
+                openpaper(intent.getStringExtra("data"));
+            }
+
+        }
+    };
+
+    private void openpaper(String data) {
+        TestExamRes.TestExamData item = new Gson().fromJson(data,TestExamRes.TestExamData.class);
+        if (Constants.FILE_TYPE_PDF.equals(item.fileType)) {
+            Intent i = new Intent(this, ViewPDFActivity.class);
+            i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("name", item.topicName);
+            startActivity(i);
+
+        } else if (Constants.FILE_TYPE_IMAGE.equals(item.fileType)) {
+            Intent i = new Intent(this, FullScreenMultiActivity.class);
+            i.putExtra("image_list", item.fileName);
+            startActivity(i);
+        }
+    }
+
+    public void removeBubble() {
+        AppLog.e("BubbleService", "removeView Activity");
+        if (mService != null) {
+            mService.removeBubble();
+            if (mBound) {
+                try {
+                    unbindService(mConnection);
+                    AppLog.e("BubbleService", "unbindService Activity");
+                } catch (Exception e) {
+                    AppLog.e("BubbleService", "unbindService error is " + e.toString());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        removeBubble();
     }
 }

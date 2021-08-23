@@ -129,6 +129,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
                 item.createdById = currentItem.createdById;
                 item.createdByImage = currentItem.createdByImage;
                 item.canPost = currentItem.canPost;
+                item.proctoring = currentItem.proctoring;
                 item.fileType = currentItem.fileType;
                 item.fileName = new Gson().fromJson(currentItem.fileName, new TypeToken<ArrayList<String>>() {
                 }.getType());
@@ -216,6 +217,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
             item.createdById = currentItem.createdById;
             item.createdByImage = currentItem.createdByImage;
             item.canPost = currentItem.canPost;
+            item.proctoring = currentItem.proctoring;
             item.fileType = currentItem.fileType;
             item.fileName = new Gson().toJson(currentItem.fileName);
             item.thumbnailImage = new Gson().toJson(currentItem.thumbnailImage);
@@ -358,6 +360,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         intent.putExtra("subject_name", subject_name);
         intent.putExtra("className", className);
         intent.putExtra("data", data);
+        intent.putExtra("liveClass", getArguments().getString("liveClass"));
         startActivity(intent);
     }
 }
