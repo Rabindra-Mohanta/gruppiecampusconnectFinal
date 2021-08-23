@@ -124,6 +124,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                 item.classImage = currentItem.image;
                 item.category = currentItem.category;
                 item.jitsiToken = currentItem.jitsiToken;
+                item.userId = currentItem.userId;
+                item.rollNumber = currentItem.rollNumber;
                 result.add(item);
             }
             rvClass.setAdapter(new ClassesAdapter(result));
@@ -156,6 +158,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         progressBar.setVisibility(View.VISIBLE);
         if ("teacher".equalsIgnoreCase(role)) {
             leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
+        }else if ("parent".equalsIgnoreCase(role)) {
+            leafManager.getParentKidsNew(this, GroupDashboardActivityNew.groupId);
         } else {
             leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
         }

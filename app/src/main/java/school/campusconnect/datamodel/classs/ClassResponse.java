@@ -62,6 +62,17 @@ public class ClassResponse extends BaseResponse {
         @Expose
         public String jitsiToken;
 
+        // My Kids Api for
+        @SerializedName(value = "userId")
+        @Expose
+        public String userId;
+
+        @SerializedName(value = "rollNumber")
+        @Expose
+        public String rollNumber;
+
+
+
         public String getJitsiToken() {
             return jitsiToken;
         }

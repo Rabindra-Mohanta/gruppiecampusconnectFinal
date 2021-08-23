@@ -67,7 +67,13 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
-        leafManager.getClasses(this,GroupDashboardActivityNew.groupId);
+     /*   if ("teacher".equalsIgnoreCase(role)) {
+            leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
+        }else if ("parent".equalsIgnoreCase(role)) {
+            leafManager.getParentKidsNew(this, GroupDashboardActivityNew.groupId);
+        } else {*/
+            leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
+//        }
     }
 
     @Override

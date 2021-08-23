@@ -609,6 +609,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ParentKidsResponse> getParentKids(@Path("group_id") String group_id);
 
+    @GET("/api/v1/groups/{group_id}/my/kids")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassResponse> getParentKidsNew(@Path("group_id") String group_id);
+
 
     @GET("/api/v1/groups/{group_id}/staff/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

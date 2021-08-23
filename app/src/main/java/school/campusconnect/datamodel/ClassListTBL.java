@@ -40,6 +40,12 @@ public class ClassListTBL extends Model {
     @Column(name = "groupId")
     public String groupId;
 
+    @Column(name = "userId")
+    public String userId;
+
+    @Column(name = "rollNumber")
+    public String rollNumber;
+
     public ClassListTBL() {
         super();
     }
@@ -47,6 +53,7 @@ public class ClassListTBL extends Model {
     public static List<ClassListTBL> getAll(String groupId) {
         return new Select().from(ClassListTBL.class).where("groupId = ?", groupId).execute();
     }
+
     public static void deleteAll() {
         new Delete().from(ClassListTBL.class).execute();
     }
