@@ -52,6 +52,7 @@ import school.campusconnect.datamodel.subjects.SubjectResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
+import school.campusconnect.datamodel.test_exam.TestLiveEventRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
@@ -387,6 +388,10 @@ public class LeafManager {
     public static final int API_TEST_EXAM_PAPER_LIST = 245;
     public static final int API_TEST_EXAM_PAPER_DELETE_STUDENT = 246;
     public static final int API_TEST_EXAM_PAPER_VERIFY = 247;
+    public static final int API_TEST_PAPER_START_EVENT = 248;
+    public static final int API_TEST_PAPER_STOP_EVENT = 249;
+    public static final int API_TEST_PAPER_LIVE_EVENTS = 250;
+
 
     public LeafManager() {
 
@@ -9433,6 +9438,9 @@ public class LeafManager {
 
     }
 
+
+
+
     public void deleteTestPaperStudent(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String testexam_id, String studentTestExamId) {
         mListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
@@ -9537,6 +9545,119 @@ public class LeafManager {
 
 
     }
+
+
+    public void startTestPaperEvent(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String assignment_id) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.startTestPaperLive(groupId, team_id, subject_id, assignment_id);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_TEST_PAPER_START_EVENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
+    public void stopTestPaperEvent(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, String assignment_id) {
+        mListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        Call<BaseResponse> model = service.stopTestPaperLive(groupId, team_id, subject_id, assignment_id);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<AddPostValidationError>>() {
+        }.getType();
+        wrapper.execute(API_TEST_PAPER_STOP_EVENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<AddLeadValidationError>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mListener != null) {
+                    mListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<AddLeadValidationError> error) {
+                if (mListener != null) {
+                    mListener.onFailure(apiId, error);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mListener != null) {
+                    mListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+
+    }
+
+    public void getTestLiveEvents(final OnCommunicationListener listListener, String groupId) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<TestLiveEventRes> model;
+
+            model = service.getLivePaperEvents(groupId);
+
+
+        ResponseWrapper<TestLiveEventRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_TEST_PAPER_LIVE_EVENTS, new ResponseWrapper.ResponseHandler<TestLiveEventRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, TestLiveEventRes response) {
+                AppLog.e("LeafManager", "ChapterRes : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+
+
 
     public interface OnCommunicationListener {
         void onSuccess(int apiId, BaseResponse response);

@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.text.InputFilter;
@@ -32,14 +33,21 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amazonaws.http.HttpClient;
+import com.amazonaws.http.HttpResponse;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.instacart.library.truetime.TrueTime;
+import com.instacart.library.truetime.TrueTimeRx;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.net.time.TimeTCPClient;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -132,6 +140,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
     @Bind(R.id.btnStart)
     Button btnStart;
+
     @Bind(R.id.tvQPaperHide)
     ConstraintLayout tvQPaperHide;
 
@@ -144,7 +153,9 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     private String subject_id;
     private String subject_name;
     private String className;
+    private boolean showStart;
     private TestExamRes.TestExamData item;
+    private long currentTimeFromServer;
 
     VideoClassResponse.ClassData videClassData;
     @Override
@@ -154,6 +165,9 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
+
+        currentTimeFromServer = TrueTimeRx.now().getTime();
+        AppLog.e(TAG , "Date : "+currentTimeFromServer);
 
         _init();
 
@@ -165,7 +179,29 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 //        getDataLocally();
         getAssignment();
 
+
     }
+
+    private void getTime()
+    {
+      /*  try {
+            TimeTCPClient client = new TimeTCPClient();
+            try {
+                // Set timeout of 60 seconds
+                client.setDefaultTimeout(60000);
+                // Connecting to time server
+                // Other time servers can be found at : http://tf.nist.gov/tf-cgi/servers.cgi#
+                // Make sure that your program NEVER queries a server more frequently than once every 4 seconds
+                client.connect("time.nist.gov");
+                AppLog.e(TAG , "current date : "+client.getDate());
+            } finally {
+                client.disconnect();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+    }
+
 
 //    private void getDataLocally() {
 //        List<StudAssignementItem> list = StudAssignementItem.getAll(item.assignmentId, team_id, GroupDashboardActivityNew.groupId);
@@ -225,6 +261,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         subject_id = getIntent().getStringExtra("subject_id");
         subject_name = getIntent().getStringExtra("subject_name");
         className = getIntent().getStringExtra("className");
+        showStart = getIntent().getBooleanExtra("start" , false);
         item = (TestExamRes.TestExamData) getIntent().getSerializableExtra("data");
 
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
@@ -259,23 +296,42 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 }
             }
         });
+
     }
 
     private void showData() {
 
-        if (item.proctoring) {
-            btnStart.setVisibility(View.VISIBLE);
+        if (item.proctoring)
+        {
+            if(showStart) {
+                btnStart.setVisibility(View.VISIBLE);
+                btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
+                btnStart.setEnabled(true);
+            }
+            else
+            {
+                btnStart.setVisibility(View.VISIBLE);
+                btnStart.setEnabled(false);
+                btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
+            }
+
             long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
             dtExamStart = dtExamStart + (5 * 60000);
-            if (System.currentTimeMillis() > dtExamStart) {
+
+            AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
+            if (currentTimeFromServer > dtExamStart) {
                 tvQPaperHide.setVisibility(View.GONE);
             }else {
                 tvQPaperHide.setVisibility(View.VISIBLE);
             }
-        } else {
+        }
+        else
+        {
             btnStart.setVisibility(View.GONE);
             long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
-            if (System.currentTimeMillis() > dtExamStart) {
+            AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
+
+            if (currentTimeFromServer > dtExamStart) {
                 tvQPaperHide.setVisibility(View.GONE);
             }else {
                 tvQPaperHide.setVisibility(View.VISIBLE);
@@ -441,6 +497,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         leafManager.getTestPaper(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId, "");
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -448,10 +505,12 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             getAssignment();
             LeafPreference.getInstance(this).setBoolean("is_paper_added", false);
         }
+
     }
 
     @Override
-    public void onSuccess(int apiId, BaseResponse response) {
+    public void onSuccess(int apiId, BaseResponse response)
+    {
         super.onSuccess(apiId, response);
         progressBar.setVisibility(View.GONE);
         switch (apiId) {
@@ -1367,19 +1426,28 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         }
     };
 
-    private void openpaper(String data) {
+    private void openpaper(String data)
+    {
+
         TestExamRes.TestExamData item = new Gson().fromJson(data,TestExamRes.TestExamData.class);
-        if (Constants.FILE_TYPE_PDF.equals(item.fileType)) {
+        if (Constants.FILE_TYPE_PDF.equals(item.fileType))
+        {
             Intent i = new Intent(this, ViewPDFActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("pdf", item.fileName.get(0));
             i.putExtra("name", item.topicName);
-            startActivity(i);
-
-        } else if (Constants.FILE_TYPE_IMAGE.equals(item.fileType)) {
-            Intent i = new Intent(this, FullScreenMultiActivity.class);
-            i.putExtra("image_list", item.fileName);
-            startActivity(i);
+            i.putExtra("from" ,"floatservice");
+            startActivity(i );
         }
+        else if (Constants.FILE_TYPE_IMAGE.equals(item.fileType))
+        {
+            Intent i = new Intent(this, FullScreenMultiActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.putExtra("image_list", item.fileName);
+            i.putExtra("from" ,"floatservice");
+            startActivity(i );
+        }
+
     }
 
     public void removeBubble() {
@@ -1401,5 +1469,13 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     protected void onRestart() {
         super.onRestart();
         removeBubble();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        AppLog.e(TAG , "onActivityReult called  : "+requestCode+" , "+resultCode);
+
     }
 }

@@ -26,6 +26,7 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
     ArrayList<String> listImages;
 
     MultiImageAdapter adapter;
+    boolean isFromFloatService = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,13 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
 
         listImages = getIntent().getStringArrayListExtra("image_list");
 
+        if(getIntent().hasExtra("from"))
+        isFromFloatService = getIntent().getStringExtra("from").equalsIgnoreCase("floatservice");
+        else
+        isFromFloatService = false;
+
         for (String s : listImages) {
-            Log.e("Imagesssss", s);
+            Log.e("Images", s);
         }
 
         final LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -59,6 +65,17 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
         Intent i = new Intent(this, FullScreenActivity.class);
         i.putExtra("image", imagePath);
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!isFromFloatService)
+        super.onBackPressed();
+        else
+        {
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 }
 

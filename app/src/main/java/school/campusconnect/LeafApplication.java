@@ -1,13 +1,21 @@
 package school.campusconnect;
 
 import android.app.Application;
+import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import io.reactivex.schedulers.Schedulers;
 import school.campusconnect.utils.AppLog;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
+import com.instacart.library.truetime.TrueTime;
+import com.instacart.library.truetime.TrueTimeRx;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import school.campusconnect.network.LeafApiClient;
@@ -106,6 +114,14 @@ public class LeafApplication extends Application  {
         });
 */
 
+        TrueTimeRx.build()
+                .initializeRx("time.google.com")
+                .subscribeOn(Schedulers.io())
+                .subscribe(date -> {
+                    Log.v(TAG, "TrueTime was initialized and we have a time: " + date);
+                }, throwable -> {
+                    throwable.printStackTrace();
+                });
 
     }
 
@@ -113,6 +129,8 @@ public class LeafApplication extends Application  {
         AppLog.e(TAG,"getInstance()");
         return sIntance;
     }
+
+
 
 
     public synchronized LeafApiClient getApiClient() {

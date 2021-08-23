@@ -127,6 +127,7 @@ import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetResponse;
 import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
+import school.campusconnect.datamodel.test_exam.TestLiveEventRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
@@ -1505,5 +1506,25 @@ public interface LeafService {
                                             @Path("subject_id") String subject_id,
                                             @Path("testexam_id") String testexam_id,
                                             @Body AddHwPostRequest request);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testExam_id}/start/event")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> startTestPaperLive(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                           @Path("subject_id") String subject_id,
+                                           @Path("testExam_id") String testexam_id);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testExam_id}/end/event")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> stopTestPaperLive(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                          @Path("subject_id") String subject_id,
+                                          @Path("testExam_id") String testexam_id);
+
+
+    @GET("/api/v1/groups/{group_id}/live/testexam/events")
+    @Headers({"Content-Type: application/json"})
+    Call<TestLiveEventRes> getLivePaperEvents(@Path("group_id") String group_id);
+
+
 
 }

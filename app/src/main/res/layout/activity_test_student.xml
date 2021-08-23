@@ -175,9 +175,11 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/tvQPaperHide"
+                        android:clickable="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:clickable="true"
                             android:layout_width="0dp"
                             android:text="Question paper will be \navailable after exam start"
                             android:textColor="@color/colorPrimary"

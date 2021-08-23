@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.gson.Gson;
+import com.instacart.library.truetime.TrueTimeRx;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -152,6 +153,9 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     private TestExamRes.TestExamData item;
     VideoClassResponse.ClassData videClassData;
 
+    private long currentTimeFromServer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,6 +163,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
+
+        currentTimeFromServer = TrueTimeRx.now().getTime();
 
         _init();
 
@@ -209,11 +215,25 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 }
             }
         });
+
     }
 
     private void showData() {
         if (item.proctoring) {
-            btnStart.setVisibility(View.VISIBLE);
+
+            long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+
+            AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
+            if (currentTimeFromServer > dtExamStart)
+            {
+                btnStart.setVisibility(View.VISIBLE);
+                btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
+                btnStart.setEnabled(true);
+            }else {
+                btnStart.setVisibility(View.VISIBLE);
+                btnStart.setEnabled(false);
+                btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
+            }
         } else {
             btnStart.setVisibility(View.GONE);
         }
@@ -1062,12 +1082,15 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
                 progressBar.setVisibility(View.GONE);
 
+                startLiveTest();
                 /*if (getActivity() != null) {
                     ((VideoClassActivity) getActivity()).startBubbleService();
                 }*/
             }
 
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING")) {
+
+                stopLiveTest();
                 // Stop Meeting
                 removeBubble();
             }
@@ -1340,6 +1363,21 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     }
 
+    public void startLiveTest()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.startTestPaperEvent(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
+    }
+
+    public void stopLiveTest()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.stopTestPaperEvent(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
+    }
+
+
     private FloatingWidgetExamService mService;
 
     private boolean mBound;
@@ -1390,12 +1428,14 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         TestExamRes.TestExamData item = new Gson().fromJson(data,TestExamRes.TestExamData.class);
         if (Constants.FILE_TYPE_PDF.equals(item.fileType)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("pdf", item.fileName.get(0));
             i.putExtra("name", item.topicName);
             startActivity(i);
 
         } else if (Constants.FILE_TYPE_IMAGE.equals(item.fileType)) {
             Intent i = new Intent(this, FullScreenMultiActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("image_list", item.fileName);
             startActivity(i);
         }

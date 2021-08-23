@@ -49,6 +49,7 @@ import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
+import school.campusconnect.datamodel.test_exam.TestLiveEventRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
@@ -74,6 +75,8 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
     String subject_name;
     boolean canPost;
     private ArrayList<TestExamRes.TestExamData> testList;
+
+    private ArrayList<TestLiveEventRes.TestLiveEvent> testLiveEvents;
 
     @Nullable
     @Override
@@ -146,16 +149,26 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
 
 //            if(apiEvent){
             getTestExam();
+            getTestLiveEvents();
 //            }
         } else {
             getTestExam();
+            getTestLiveEvents();
         }
     }
 
-    public void getTestExam() {
+    public void getTestExam()
+    {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestExamList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
+    }
+
+    public void getTestLiveEvents()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getTestLiveEvents(this, GroupDashboardActivityNew.groupId);
     }
 
     @Override
@@ -180,6 +193,9 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         switch (apiId) {
             case LeafManager.API_TEST_EXAM_REMOVE:
                 getTestExam();
+                break;
+            case LeafManager.API_TEST_PAPER_LIVE_EVENTS:
+                testLiveEvents = ((TestLiveEventRes) response).getData();
                 break;
             default:
                 TestExamRes res = (TestExamRes) response;
@@ -261,19 +277,25 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
     }
 
     @Override
-    public void onPostClick(TestExamRes.TestExamData item) {
-        if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+    public void onPostClick(TestExamRes.TestExamData item)
+    {
+        if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE))
+        {
             Intent browserIntent = new Intent(getActivity(), TestActivity.class);
             browserIntent.putExtra("url", item.video);
             startActivity(browserIntent);
 
-        } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_PDF))
+        {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
             i.putExtra("name", item.topicName);
             startActivity(i);
 
-        } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE))
+        {
             Intent i = new Intent(getActivity(), FullScreenActivity.class);
             i.putExtra("image", item.fileName);
             startActivity(i);
@@ -347,13 +369,30 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         }
     }
 
-    private void onTreeClick(TestExamRes.TestExamData data) {
+    private void onTreeClick(TestExamRes.TestExamData data)
+    {
+        AppLog.e(TAG , "onTreeClick : data  :"+ new Gson().toJson(data));
+
         Intent intent;
-        if (data.canPost) {
+        if (data.canPost)
+        {
             intent = new Intent(getActivity(), TestParentActivity.class);
-        } else {
-            intent = new Intent(getActivity(), TestStudentActivity.class);
         }
+        else
+        {
+            intent = new Intent(getActivity(), TestStudentActivity.class);
+
+            for(int i =0 ; i < testLiveEvents.size() ; i++)
+            {
+                AppLog.e(TAG , "testLiveEvents For Loop  : data  :"+ new Gson().toJson(testLiveEvents.get(i)));
+                if(testLiveEvents.get(i).testExamId !=null && testLiveEvents.get(i).testExamId.equalsIgnoreCase(data.testExamId))
+                {
+                    intent.putExtra("start" , true);
+                }
+            }
+
+        }
+
         intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
         intent.putExtra("team_id", team_id);
         intent.putExtra("subject_id", subject_id);
