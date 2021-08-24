@@ -414,7 +414,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             return;
         }
 
-        StudAssignementItem.deleteAll();
+        StudAssignementItem.deleteAll(item.assignmentId,team_id,group_id);
 
         for (int i = 0; i < data.size(); i++) {
             AssignmentRes.AssignmentData currentItem = data.get(i);

@@ -114,4 +114,10 @@ public class LeafPreference {
     public String getString(String key) {
         return sPref.getString(key, "");
     }
+    public String getUserId(){
+        return getString(LeafPreference.LOGIN_ID);
+    }
+    public String getUserName(){
+        return getString(LeafPreference.NAME);
+    }
 }

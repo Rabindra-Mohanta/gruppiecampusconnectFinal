@@ -76,6 +76,17 @@ public class EventTBL extends Model {
         }
         return null;
     }
+    public static EventTBL getTestEvent(String groupId, String teamId, String subjectId) {
+        List<EventTBL> list = new Select().from(EventTBL.class).
+                where("eventType = ?", "6").
+                where("subjectId = ?", subjectId).
+                where("groupId = ?", groupId).
+                where("teamId = ?", teamId).execute();
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 
     public static EventTBL getNotesVideoEvent(String groupId, String teamId, String subjectId) {
         List<EventTBL> list = new Select().from(EventTBL.class).

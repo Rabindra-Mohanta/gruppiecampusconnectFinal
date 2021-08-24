@@ -94,6 +94,7 @@ import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
+import school.campusconnect.datamodel.videocall.LiveClassEventRes;
 import school.campusconnect.datamodel.videocall.MeetingStatusModel;
 import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
@@ -120,8 +121,6 @@ import us.zoom.sdk.MeetingViewsOptions;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 import us.zoom.sdk.ZoomSDKInitializeListener;
-
-import static school.campusconnect.network.LeafManager.API_JISTI_MEETING_STOP;
 
 public class VideoClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "VideoClassListFragment";
@@ -158,6 +157,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     LeafPreference leafPreference;
 
+    LeafManager leafManager;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,9 +182,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         classesAdapter = new ClassesAdapter();
         rvClass.setAdapter(classesAdapter);
 
-        getDataLocally();
-
         init();
+
+        getDataLocally();
 
         leafPreference = LeafPreference.getInstance(getActivity());
 
@@ -191,6 +192,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void init() {
+        leafManager = new LeafManager();
        /* swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -237,7 +239,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     }
                 }
 
-               if (dashboardCount.oldCount != dashboardCount.count) {
+                if (dashboardCount.oldCount != dashboardCount.count) {
                     dashboardCount.oldCount = dashboardCount.count;
                     dashboardCount.save();
                     apiCall = true;
@@ -245,16 +247,25 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 if (apiCall) {
                     calApi();
+                } else {
+                    getLiveClassEventApi();
                 }
+            } else {
+                getLiveClassEventApi();
             }
         } else {
             calApi();
         }
     }
 
+    private void getLiveClassEventApi() {
+        if (isConnectionAvailable()) {
+            leafManager.getLiveClassEvents(this, GroupDashboardActivityNew.groupId);
+        }
+    }
+
 
     private void calApi() {
-        LeafManager leafManager = new LeafManager();
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
     }
@@ -296,23 +307,24 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             AppLog.e(TAG, "onReceive called with action : " + message);
 
-            if (message.equalsIgnoreCase("MEETING_START")) {
+           /* if (message.equalsIgnoreCase("MEETING_START")) {
 
                 if (intent.getExtras().containsKey("teamId")) {
                     int position = getPositionOf(intent.getExtras().getString("teamId"));
                     if (position >= 0) {
                         listItemData.isLive = true;
-                        listItemData.createdName = intent.getExtras().getString("createdByName");
+                        listItemData.createdByName = intent.getExtras().getString("createdByName");
                         classesAdapter.notifyDataSetChanged();
                     }
                 }
-            }
+            }*/
             if (message.equalsIgnoreCase("MEETING_END")) {
 
                 if (intent.getExtras().containsKey("teamId")) {
                     int position = getPositionOf(intent.getExtras().getString("teamId"));
                     if (position >= 0) {
                         listItemData.isLive = false;
+                        listItemData.createdByName = "";
                         classesAdapter.notifyDataSetChanged();
                     }
                 }
@@ -384,6 +396,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             saveToDB(result);
 
+            getLiveClassEventApi();
+
             //  initFirebase();
         } else if (apiId == LeafManager.API_SUBJECT_STAFF) {
             SubjectStaffResponse subjectStaffResponse = (SubjectStaffResponse) response;
@@ -394,11 +408,54 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             }
         } else if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
-        } else if (apiId == API_JISTI_MEETING_STOP) {
+        } else if (apiId == LeafManager.API_LIVE_CLASS_START) {
+            if (item != null) {
+                item.createdById = leafPreference.getUserId();
+                item.createdByName = leafPreference.getUserName();
+                if (classesAdapter != null) {
+                    classesAdapter.notifyDataSetChanged();
+                }
+            }
+        } else if (apiId == LeafManager.API_LIVE_CLASS_END) {
             if (getActivity() != null) {
+                if (item != null) {
+                    item.isLive = false;
+                    item.meetingIdOnLive = "";
+                    item.createdByName = "";
+                    item.createdById = "";
+                    if (classesAdapter != null) {
+                        classesAdapter.notifyDataSetChanged();
+                    }
+                }
                 ((VideoClassActivity) getActivity()).showSharePopup();
             }
+        } else if (apiId == LeafManager.API_LIVE_CLASS_EVENTS) {
+            LiveClassEventRes res = (LiveClassEventRes) response;
+            refreshLiveClassBaseOnEventList(res.data);
         }
+    }
+
+    private void refreshLiveClassBaseOnEventList(ArrayList<LiveClassEventRes.LiveClassEventData> liveClassData) {
+        if (result != null && result.size() > 0 && liveClassData != null && liveClassData.size() > 0) {
+            for (int i = 0; i < result.size(); i++) {
+                VideoClassResponse.ClassData iData = result.get(i);
+                for (int j = 0; j < liveClassData.size(); j++) {
+                    LiveClassEventRes.LiveClassEventData jData = liveClassData.get(j);
+                    if (iData.id.equalsIgnoreCase(jData.teamId) && iData.groupId.equalsIgnoreCase(jData.groupId)) {
+                        iData.meetingIdOnLive = jData.meetingOnLiveId;
+                        iData.createdByName = jData.createdByName;
+                        iData.createdById = jData.createdById;
+                        iData.isLive = true;
+                    } else {
+                        iData.isLive = false;
+                    }
+                }
+            }
+
+            if (classesAdapter != null)
+                classesAdapter.notifyDataSetChanged();
+        }
+
     }
 
     private void saveToDB(ArrayList<VideoClassResponse.ClassData> result) {
@@ -466,7 +523,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             if (item.canPost && item.isLive) {
                 holder.imgOnline.setVisibility(View.VISIBLE);
-                if (item.getMeetingCreatedBy()) {
+                if (item.isCreatedByMe()) {
                     holder.tv_stop.setVisibility(View.VISIBLE);
                 } else {
                     holder.tv_stop.setVisibility(View.GONE);
@@ -477,9 +534,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
 
 
-            if (item.createdName != null && !item.createdName.equalsIgnoreCase("")) {
+            if (!TextUtils.isEmpty(item.createdByName)) {
                 holder.tvInfo.setVisibility(View.VISIBLE);
-                holder.tvInfo.setText(item.createdName);
+                holder.tvInfo.setText(item.createdByName);
             } else
                 holder.tvInfo.setVisibility(View.GONE);
 
@@ -523,12 +580,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             holder.txt_name.setText(item.getName());
             holder.txt_count.setVisibility(View.GONE);
 
-            /// NEW CHANGE NOFIREBASEDATABASE
-            //  if (item.canPost || item.isLive) {
-            holder.img_tree.setVisibility(View.VISIBLE);
-           /* } else {
+            if (item.canPost || item.isLive) {
+                holder.img_tree.setVisibility(View.VISIBLE);
+            } else {
                 holder.img_tree.setVisibility(View.GONE);
-            }*/
+            }
             if (item.isLive)
                 holder.imgOnline.setVisibility(View.VISIBLE);
             else
@@ -634,12 +690,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                             listItemData = list.get(getAdapterPosition());
                             onTreeClick(listItemData);
 
-                            if(listItemData.canPost && !listItemData.isLive){
-                                LeafManager leafManager = new LeafManager();
-                                leafManager.startMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, listItemData.getId());
+                            if (listItemData.canPost && !listItemData.isLive) {
+                                leafManager.startLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, listItemData.getId());
                             }
-                            if(!listItemData.canPost){
-                               randomJoin(listItemData);
+                            if (!listItemData.canPost) {
+                                randomJoin(listItemData);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -665,11 +720,12 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                AppLog.e(TAG,"---- Join called ----");
-                LeafManager leafManager = new LeafManager();
-                leafManager.joinMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, listItemData.getId(),new JoinLiveClassReq(listItemData.jitsiToken));
+                AppLog.e(TAG, "---- run  Join called ----");
+                if (!TextUtils.isEmpty(listItemData.meetingIdOnLive)) {
+                    leafManager.joinLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, listItemData.getId(), new JoinLiveClassReq(listItemData.meetingIdOnLive));
+                }
             }
-        },new Random().nextInt(15000));
+        }, new Random().nextInt(15000));
 
     }
 
@@ -727,149 +783,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     }
 
-    private void EnterSubjectDialog() {
-        final Dialog dialog = new Dialog(getActivity(), R.style.AppDialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.dialog_enter_subject);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
-        EditText etName = dialog.findViewById(R.id.etName);
-
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                progressBar.setVisibility(View.VISIBLE);
-
-                // NOFIREBASEDATABASE
-               /* myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
-                        MeetingStatusModelForAttendance model = task.getResult().getValue(MeetingStatusModelForAttendance.class);
-
-                        ArrayList<String> uids = new ArrayList<>();
-                        for (DataSnapshot ds : task.getResult().child("attendance").getChildren()) {
-                            uids.add(ds.getKey());
-                        }
-
-                        for (String uid : uids)
-                            AppLog.e(TAG, "uid : " + uid);
-
-                        MeetingStatusModelApi apiModel = new MeetingStatusModelApi();
-                        apiModel.teamId = model.t_id;
-                        apiModel.meetingCreatedAtTime = model.create_at;
-                        apiModel.meetingCreatedById = model.tech_id;
-                        apiModel.meetingCreatedByName = model.tech_name;
-
-                        for (int i = 0; i < model.attendance.size(); i++) {
-                            MeetingStatusModelApi.AttendanceLiveClass ca = new MeetingStatusModelApi.AttendanceLiveClass();
-                            ca.userId = uids.get(i);//model.attendance.get(i).uid;
-                            ca.studentName = model.attendance.get(uids.get(i)).sname;
-                            ca.meetingJoinedAtTime = model.attendance.get(uids.get(i)).joinAt;
-                            apiModel.attendance.add(ca);
-                        }
-
-                        apiModel.month = "" + (Calendar.getInstance().get(Calendar.MONTH) + 1);
-                        apiModel.subjectName = etName.getText().toString();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        apiModel.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
-                        AppLog.e(TAG, "apiModel : " + apiModel);
-                        AppLog.e(TAG, "apiModel attendance : " + new Gson().toJson(apiModel.attendance));
-                        progressBar.setVisibility(View.GONE);
-//                        LeafManager leafManager = new LeafManager();
-//                        leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
-                        showExcelShareDialog(apiModel);
-                        myRef.child("attendance").child(item.getId()).removeValue();
-
-                        new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                    }
-                });*/
-            }
-        });
-        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-
-                //NOFIREBASEDATABASE
-              /*  myRef.child("attendance").child(item.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
-                      *//*  MeetingStatusModelForAttendance model = task.getResult().getValue(MeetingStatusModelForAttendance.class);
-
-                        MeetingStatusModelApi apiModel = new MeetingStatusModelApi();
-                        apiModel.teamId = model.t_id;
-                        apiModel.meetingCreatedAtTime = model.create_at;
-                        apiModel.meetingCreatedById = model.tech_id;
-                        apiModel.meetingCreatedByName = model.tech_name;
-
-                        for (int i=0;i<model.attendance.size();i++)
-                        {
-                            MeetingStatusModelApi.AttendanceLiveClass ca=new MeetingStatusModelApi.AttendanceLiveClass();
-                            ca.userId = model.attendance.get(i).uid;
-                            ca.studentName = model.attendance.get(i).sname;
-                            ca.meetingJoinedAtTime = model.attendance.get(i).joinAt;
-                            apiModel.attendance.add(ca);
-                        }
-
-                        apiModel.month = "" + (Calendar.getInstance().get(Calendar.MONTH) + 1);
-                        apiModel.subjectName = etName.getText().toString();
-                        SimpleDateFormat format = new SimpleDateFormat(
-                                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        apiModel.meetingEndedAtTime = format.format(Calendar.getInstance().getTime());
-                        AppLog.e(TAG, "apiModel : " + apiModel);*//*
-
-                        //      LeafManager leafManager = new LeafManager();
-                        //     leafManager.attendancePush(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), apiModel);
-
-                        myRef.child("live_class").child(item.getId()).removeValue();
-                        myRef.child("attendance").child(item.getId()).removeValue();
-
-                        new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                    }
-                });*/
-            }
-        });
-        dialog.show();
-    }
-
-    private void showExcelShareDialog(MeetingStatusModelApi apiModel) {
-        Dialog dialog = new Dialog(getActivity(), R.style.AppDialog);
-        DialogVideoAttendanceShareBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_video_attendance_share, null, false);
-        dialog.setContentView(binding.getRoot());
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-
-        binding.tvDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                exportDataToCSV(apiModel, true);
-            }
-        });
-        binding.tvShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                exportDataToCSV(apiModel, false);
-            }
-        });
-        binding.tvNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
 
         progressBar.setVisibility(View.VISIBLE);
@@ -910,13 +823,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void startMeeting() {
         try {
-            Log.e(TAG, "On Click To startMeeting called : " + item.getMeetingCreatedBy());
+            Log.e(TAG, "On Click To startMeeting called : " + item.createdByName);
 
             isZoomStarted = true;
 
             if (isConnectionAvailable()) {
 
-                if (item.canPost && item.isLive && item.meetingCreatedBy) {
+                if (item.canPost && item.isLive && item.isCreatedByMe()) {
                     initializeZoom(item.zoomKey, item.zoomSecret, item.zoomMail, item.zoomPassword, item.jitsiToken, item.zoomName.get(0), item.className, true);
 
                     AppLog.e(TAG, "SENDNOTIICATION CODE REACEDH");
@@ -1874,8 +1787,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     StopMeetingReq stopMeetingReq = new StopMeetingReq(item.meetingIdOnLive, subjectAdapter.getSelected());
                     AppLog.e(TAG, "stopMeetingReq : " + stopMeetingReq);
                     progressBar.setVisibility(View.VISIBLE);
-                    LeafManager leafManager = new LeafManager();
-                    leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), stopMeetingReq);
+
+                    leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), stopMeetingReq);
                 } else {
                     Toast.makeText(getActivity(), "Select Subject", Toast.LENGTH_SHORT).show();
                 }
@@ -1886,8 +1799,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             public void onClick(View v) {
                 dialog.dismiss();
                 progressBar.setVisibility(View.VISIBLE);
-                LeafManager leafManager = new LeafManager();
-                leafManager.stopMeeting(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), null);
+                leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
             }
         });
         dialog.show();
@@ -1957,7 +1869,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void getSubjectList(String teamId) {
         progressBar.setVisibility(View.VISIBLE);
-        LeafManager leafManager = new LeafManager();
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
     }
 

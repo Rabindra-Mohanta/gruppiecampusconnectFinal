@@ -82,7 +82,9 @@ public class StudAssignementItem extends Model {
     public static List<StudAssignementItem> getAll(String AssignId,String teamId, String groupId) {
         return new Select().from(StudAssignementItem.class).where("AssignId = ?", AssignId).where("teamId = ?", teamId).where("groupId = ?", groupId).execute();
     }
-    public static void deleteAll() {
+    public static void deleteAll(String AssignId,String teamId, String groupId) {
+        new Delete().from(StudAssignementItem.class).where("AssignId = ?", AssignId).where("teamId = ?", teamId).where("groupId = ?", groupId).execute();
+    } public static void deleteAll() {
         new Delete().from(StudAssignementItem.class).execute();
     }
 }

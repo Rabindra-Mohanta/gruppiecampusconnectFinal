@@ -292,6 +292,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                             eventTBL = EventTBL.getNotesVideoEvent(curr.groupId, curr.teamId, curr.subjectId);
                         } else if (curr.eventType.equalsIgnoreCase("4")) {
                             eventTBL = EventTBL.getAssignmentEvent(curr.groupId, curr.teamId, curr.subjectId);
+                        }else if (curr.eventType.equalsIgnoreCase("6")) {
+                            eventTBL = EventTBL.getTestEvent(curr.groupId, curr.teamId, curr.subjectId);
                         } else if (curr.eventType.equalsIgnoreCase("5")) {
                             eventTBL = EventTBL.getAdminEvents(curr.groupId);
 

@@ -71,8 +71,6 @@ import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 import us.zoom.sdk.ZoomSDKInitializeListener;
 
-import static school.campusconnect.network.LeafManager.API_JISTI_MEETING_START;
-import static school.campusconnect.network.LeafManager.API_JISTI_MEETING_STOP;
 
 public class RecordedClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
     private static final String TAG = "VideoClassListFragment";
@@ -190,11 +188,11 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
             holder.txt_name.setText(item.getName());
             holder.txt_count.setVisibility(View.GONE);
 
-            if(item.canPost || item.isLive){
+//            if(item.canPost || item.isLive){
                 holder.img_tree.setVisibility(View.VISIBLE);
-            }else {
+            /*}else {
                 holder.img_tree.setVisibility(View.GONE);
-            }
+            }*/
         }
 
         @Override

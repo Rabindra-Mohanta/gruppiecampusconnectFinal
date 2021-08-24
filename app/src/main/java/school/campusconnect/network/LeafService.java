@@ -134,6 +134,7 @@ import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
 import school.campusconnect.datamodel.versioncheck.VersionCheckResponse;
 import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
+import school.campusconnect.datamodel.videocall.LiveClassEventRes;
 import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
 import school.campusconnect.datamodel.videocall.StartMeetingRes;
 import school.campusconnect.datamodel.videocall.StopMeetingReq;
@@ -484,22 +485,6 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/class/video/conference")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<VideoClassResponse> getVideoClasses(@Path("group_id") String group_id);
-
-    @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/start")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<StartMeetingRes> startMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId);
-
-    @PUT("/api/v1/groups/{group_id}/team/{team_id}/jitsi/join")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> joinMeeting(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body JoinLiveClassReq req);
-
-    @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/stop")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<StartMeetingRes> stopMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId, @Body StopMeetingReq req);
-
-    @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/stop")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<StartMeetingRes> stopMeetingNoBody(@Path("group_id") String group_id, @Path("teamId") String teamId);
 
     @POST("/api/v1/groups/{groupId}/team/{teamId}/online/attendance/push")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1530,5 +1515,21 @@ public interface LeafService {
     Call<TestLiveEventRes> getLivePaperEvents(@Path("group_id") String group_id);
 
 
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/live/start")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> startLiveClass(@Path("group_id") String group_id, @Path("team_id") String teamId);
+
+    @GET("/api/v1/groups/{group_id}/live/class/events")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<LiveClassEventRes> getLiveClassEvents(@Path("group_id") String group_id);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/live/join")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> joinLiveClass(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body JoinLiveClassReq req);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/live/end")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> endLiveClass(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body StopMeetingReq req);
 
 }

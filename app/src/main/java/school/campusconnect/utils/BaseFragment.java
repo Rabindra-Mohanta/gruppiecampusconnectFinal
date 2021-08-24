@@ -32,6 +32,7 @@ import school.campusconnect.datamodel.LiveClassListTBL;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostTeamDataItem;
 import school.campusconnect.datamodel.StudAssignementItem;
+import school.campusconnect.datamodel.StudTestPaperItem;
 import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
@@ -230,6 +231,7 @@ public class BaseFragment extends Fragment {
             TeamCountTBL.deleteAll();
             SubjectCountTBL.deleteAll();
             StudAssignementItem.deleteAll();
+            StudTestPaperItem.deleteAll();
             SubjectItem.deleteAll();
             EBookItem.deleteAll();
             EBookClassItem.deleteAll();
