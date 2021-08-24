@@ -1225,7 +1225,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     dataObj.put("teamId", team_id);
                     dataObj.put("title", title);
                     dataObj.put("postType", isChapter ? "chapter" : "topic");
-                    dataObj.put("Notification_type", "VideoClass");
+                    dataObj.put("Notification_type", "NOTES_VIDEO");
                     dataObj.put("body", message);
                     object.put("data", dataObj);
 

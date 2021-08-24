@@ -582,8 +582,12 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             if (item.canPost || item.isLive) {
                 holder.img_tree.setVisibility(View.VISIBLE);
+                holder.img_tree.setEnabled(true);
+                holder.img_tree.setColorFilter(ContextCompat.getColor(mContext, R.color.color_green), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
-                holder.img_tree.setVisibility(View.GONE);
+                holder.img_tree.setVisibility(View.VISIBLE);
+                holder.img_tree.setEnabled(false);
+                holder.img_tree.setColorFilter(ContextCompat.getColor(mContext, R.color.color_divider), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             if (item.isLive)
                 holder.imgOnline.setVisibility(View.VISIBLE);

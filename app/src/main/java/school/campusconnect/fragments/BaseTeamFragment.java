@@ -179,7 +179,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             menu.findItem(R.id.menu_logout).setVisible(true);
         }
         menuItem = menu.findItem(R.id.action_notification_list);
-        menuItem.setIcon(buildCounterDrawable(GroupDashboardActivityNew.notificationUnseenCount));
+        menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
         menuItem.setVisible(true);
     }
 
@@ -409,6 +409,9 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             ((GroupDashboardActivityNew) getActivity()).callEventApi();
         }
 
+        if(getContext()!=null && menuItem!=null){
+            menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
+        }
         //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
         //   ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
 
@@ -543,11 +546,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 GroupDetailResponse gRes = (GroupDetailResponse) response;
 
                 AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
-                GroupDashboardActivityNew.notificationUnseenCount = gRes.data.get(0).notificationUnseenCount;
                 GroupDashboardActivityNew.total_user = gRes.data.get(0).totalUsers + "";
-                if (menuItem != null) {
-                    menuItem.setIcon(buildCounterDrawable(GroupDashboardActivityNew.notificationUnseenCount));
-                }
                 if (((GroupDashboardActivityNew) getActivity()).isBaseFragment()) {
                     // ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
                 }

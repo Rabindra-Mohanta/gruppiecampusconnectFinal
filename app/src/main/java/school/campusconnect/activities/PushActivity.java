@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddPostRequestDescription;
 import school.campusconnect.datamodel.LeadResponse;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -148,9 +152,11 @@ public class PushActivity extends BaseActivity implements
         getPersonalList();
 
     }
+
     private void getPersonalList() {
-        leafManager.getTeamMember(this, GroupDashboardActivityNew.groupId,"",true);
+        leafManager.getTeamMember(this, GroupDashboardActivityNew.groupId, "", true);
     }
+
     private void getData() {
         //mAdapter.clear();
         mIsLoading = true;
@@ -170,13 +176,12 @@ public class PushActivity extends BaseActivity implements
                 List<MyTeamData> result = res.getResults();
                 AppLog.e("DATABASE", "Team name is " + res.getResults().toString());
                 for (int i = 0; i < result.size(); i++) {
-                    if(i==0)
+                    if (i == 0)
                         continue;
 
                     AppLog.e("DATABASE", "Team name is " + result.get(i).name);
 
-                    if(result.get(i).allowTeamPostAll)
-                    {
+                    if (result.get(i).allowTeamPostAll) {
                         ShareGroupItemList itemList = new ShareGroupItemList(result.get(i).teamId + "",
                                 result.get(i).name, result.get(i).image,
                                 result.get(i).phone, false);
@@ -189,7 +194,7 @@ public class PushActivity extends BaseActivity implements
             case LeafManager.API_ID_LEAD_LIST:
                 mAdapter2.clear();
                 LeadResponse res2 = (LeadResponse) response;
-                AppLog.e(TAG,"PersonalInbox Response :"+new Gson().toJson(res2));
+                AppLog.e(TAG, "PersonalInbox Response :" + new Gson().toJson(res2));
                 for (int i = 0; i < res2.getResults().size(); i++) {
                     ShareGroupItemList itemList = new ShareGroupItemList(res2.getResults().get(i).id + "",
                             res2.getResults().get(i).name, res2.getResults().get(i).image,
@@ -218,10 +223,65 @@ public class PushActivity extends BaseActivity implements
                 if (ShareInPersonalActivity.shareInPersonalActivity != null)
                     ShareInPersonalActivity.shareInPersonalActivity.finish();
 
+                sendNotification();
+
                 if (PushActivity.pushActivity != null)
                     PushActivity.pushActivity.finish();
                 break;
         }
+    }
+
+    private void sendNotification() {
+        AppLog.e(TAG,"Share sendNotification()");
+        try {
+            String userName = LeafPreference.getInstance(this).getUserName();
+            if (postTypeForPush.equals("group")) {
+                SendNotificationModel notificationModel = new SendNotificationModel();
+
+                notificationModel.data.title = getResources().getString(R.string.app_name);
+
+                String message = userName + " Has Shared Post in " + GroupDashboardActivityNew.group_name;
+                notificationModel.to = "/topics/" + selected_g_id_push;
+
+                notificationModel.data.body = message;
+                notificationModel.data.Notification_type = "post";
+                notificationModel.data.iSNotificationSilent = false;
+                notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+                notificationModel.data.teamId = "";
+                notificationModel.data.createdById = LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID);
+                notificationModel.data.postId = "";
+                notificationModel.data.postType = postTypeForPush;
+                SendNotificationGlobal.send(notificationModel);
+
+                LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
+            } else if (postTypeForPush.equals("team")) {
+                String[] teamsId = selected_ids_push.split(",");
+                if (teamsId.length > 0) {
+                    for (int i = 0; i < teamsId.length; i++) {
+                        SendNotificationModel notificationModel = new SendNotificationModel();
+
+                        notificationModel.data.title = getResources().getString(R.string.app_name);
+
+                        String message = userName + " Has Shared Post in " + GroupDashboardActivityNew.group_name;
+                        notificationModel.to = "/topics/" + selected_g_id_push + "_" + teamsId[i];
+
+                        notificationModel.data.body = message;
+                        notificationModel.data.Notification_type = "post";
+                        notificationModel.data.iSNotificationSilent = false;
+                        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+                        notificationModel.data.teamId = teamsId[i];
+                        notificationModel.data.createdById = LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID);
+                        notificationModel.data.postId = "";
+                        notificationModel.data.postType = postTypeForPush;
+                        SendNotificationGlobal.send(notificationModel);
+                    }
+                }
+                LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMPOSTUPDATED, true);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -315,7 +375,7 @@ public class PushActivity extends BaseActivity implements
 
             case R.id.relative_group:
                 progressBar.setVisibility(View.VISIBLE);
-                addPost("group",mGroupId,String.valueOf(mGroupId));
+                addPost("group", mGroupId, String.valueOf(mGroupId));
                 break;
 
             case R.id.btn_share:
@@ -325,73 +385,79 @@ public class PushActivity extends BaseActivity implements
 
         }
     }
+
     public void isValid() {
         if (indiShow) {
             if (!mAdapter2.getSelectedgroups().equals("")) {
                 progressBar2.setVisibility(View.VISIBLE);
-                addPost("personal",mGroupId,mAdapter2.getSelectedgroups());
+                addPost("personal", mGroupId, mAdapter2.getSelectedgroups());
             } else {
                 Toast.makeText(this, "Please select any friend first", Toast.LENGTH_SHORT).show();
             }
         } else {
             if (!mAdapter.getSelectedgroups().equals("")) {
                 progressBar.setVisibility(View.VISIBLE);
-                addPost("team",mGroupId, mAdapter.getSelectedgroups());
+                addPost("team", mGroupId, mAdapter.getSelectedgroups());
             } else {
                 Toast.makeText(this, "Please select any team first", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    String postTypeForPush = "";
+    String selected_g_id_push = "";
+    String selected_ids_push = "";
 
-    public void addPost(String postType,String selected_g_id,String selected_ids) {
+    public void addPost(String postType, String selected_g_id, String selected_ids) {
+        postTypeForPush = postType;
+        selected_g_id_push = selected_g_id;
+        selected_ids_push = selected_ids;
+        LeafManager manager = new LeafManager();
+        AddPostRequestDescription request = new AddPostRequestDescription();
+        request.text = GroupDashboardActivityNew.share_desc;
+        request.title = GroupDashboardActivityNew.share_title;
 
-            LeafManager manager = new LeafManager();
-            AddPostRequestDescription request = new AddPostRequestDescription();
-            request.text = GroupDashboardActivityNew.share_desc;
-            request.title = GroupDashboardActivityNew.share_title;
-
-            switch (GroupDashboardActivityNew.share_type) {
-                case "group":
-                    switch (postType) {
-                        case "team":
-                            manager.shareGroupPost(this, request, mGroupId+"", postId+"", selected_ids, selected_g_id+"", "team_edit");
-                            break;
-                        case "group":
-                            manager.shareGroupPost(this, request, mGroupId+"", postId+"", selected_ids, selected_g_id+"", "group_edit");
-                            break;
-                        case "personal":
-                            manager.shareGroupPost(this, request, mGroupId+"", postId+"", selected_ids, selected_g_id+"", "personal_edit");
-                            break;
-                    }
-                    break;
-                case "team":
-                    switch (postType) {
-                        case "team":
-                            manager.shareTeamPost(this, request, mGroupId+"", GroupDashboardActivityNew.team_id+"", postId+"", selected_ids, selected_g_id+"", "team_edit");
-                            break;
-                        case "group":
-                            manager.shareTeamPost(this, request, mGroupId+"", GroupDashboardActivityNew.team_id+"", postId+"", selected_ids, selected_g_id+"", "group_edit");
-                            break;
-                        case "personal":
-                            manager.shareTeamPost(this, request, mGroupId+"", GroupDashboardActivityNew.team_id+"", postId+"", selected_ids, selected_g_id+"", "personal_edit");
-                            break /*label*/;
-                    }
-                    break;
-                case "personal":
-                    switch (postType) {
-                        case "team":
-                            manager.sharePersonalPost(this, request, mGroupId+"", postId+"", selected_ids, selected_g_id+"", "team_edit");
-                            break;
-                        case "group":
-                            manager.sharePersonalPost(this, request, mGroupId+"", postId+"", selected_ids, selected_g_id+"", "group_edit");
-                            break;
-                        case "personal":
-                            manager.sharePersonalPost(this, request, mGroupId+"", postId+"", selected_ids, selected_g_id+"", "personal_edit");
-                            break /*label*/;
-                    }
-                    break;
-            }
+        switch (GroupDashboardActivityNew.share_type) {
+            case "group":
+                switch (postType) {
+                    case "team":
+                        manager.shareGroupPost(this, request, mGroupId + "", postId + "", selected_ids, selected_g_id + "", "team_edit");
+                        break;
+                    case "group":
+                        manager.shareGroupPost(this, request, mGroupId + "", postId + "", selected_ids, selected_g_id + "", "group_edit");
+                        break;
+                    case "personal":
+                        manager.shareGroupPost(this, request, mGroupId + "", postId + "", selected_ids, selected_g_id + "", "personal_edit");
+                        break;
+                }
+                break;
+            case "team":
+                switch (postType) {
+                    case "team":
+                        manager.shareTeamPost(this, request, mGroupId + "", GroupDashboardActivityNew.team_id + "", postId + "", selected_ids, selected_g_id + "", "team_edit");
+                        break;
+                    case "group":
+                        manager.shareTeamPost(this, request, mGroupId + "", GroupDashboardActivityNew.team_id + "", postId + "", selected_ids, selected_g_id + "", "group_edit");
+                        break;
+                    case "personal":
+                        manager.shareTeamPost(this, request, mGroupId + "", GroupDashboardActivityNew.team_id + "", postId + "", selected_ids, selected_g_id + "", "personal_edit");
+                        break /*label*/;
+                }
+                break;
+            case "personal":
+                switch (postType) {
+                    case "team":
+                        manager.sharePersonalPost(this, request, mGroupId + "", postId + "", selected_ids, selected_g_id + "", "team_edit");
+                        break;
+                    case "group":
+                        manager.sharePersonalPost(this, request, mGroupId + "", postId + "", selected_ids, selected_g_id + "", "group_edit");
+                        break;
+                    case "personal":
+                        manager.sharePersonalPost(this, request, mGroupId + "", postId + "", selected_ids, selected_g_id + "", "personal_edit");
+                        break /*label*/;
+                }
+                break;
+        }
     }
 
 
@@ -445,6 +511,6 @@ public class PushActivity extends BaseActivity implements
 
     @Override
     public void onNameClick(PersonalPostItem item) {
-        addPost("personal",mGroupId,mAdapter2.getSelectedgroups());
+        addPost("personal", mGroupId, mAdapter2.getSelectedgroups());
     }
 }

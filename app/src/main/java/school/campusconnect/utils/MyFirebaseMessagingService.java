@@ -112,6 +112,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
                     break;
+                    case "NOTES_VIDEO":
+                    case "ADD_TEST_EXAM":
+                    case "attendance":
+                    case "homework": {
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                    }
+                    break;
 
                     case "post": {
                         if ("team".equalsIgnoreCase(data.postType)) {
@@ -119,6 +126,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         } else if ("group".equalsIgnoreCase(data.postType)) {
                             leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
                         }
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
                     }
                     break;
                     case "VendorAdd": {

@@ -7,6 +7,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.fragments.NotificationListFragment;
 
 public class NotificationListActivity extends BaseActivity {
@@ -42,6 +43,7 @@ public class NotificationListActivity extends BaseActivity {
         notificationListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,notificationListFragment).commit();
 
+        LeafPreference.getInstance(this).remove(GroupDashboardActivityNew.groupId + "_notification_count");
     }
 
     @Override

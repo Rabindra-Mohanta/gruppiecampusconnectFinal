@@ -1230,7 +1230,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     String title = getResources().getString(R.string.app_name);
                     String message = "";
 
-                    message = "New Homework added to " + chapterName;
+                    message = "New Test added to " + chapterName;
 
                     topic = group_id + "_" + team_id;
                     object.put("to", "/topics/" + topic);

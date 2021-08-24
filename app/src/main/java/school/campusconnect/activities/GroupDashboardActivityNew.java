@@ -96,7 +96,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     public static final String EXTRA_GROUP_ITEM = "extra_group_item";
     private static final String TAG = "GroupDashboardActNew";
     public static String selectedUserInChat = "";
-    public static int notificationUnseenCount = 0;
 
     @Bind(R.id.toolbar_dashboard)
     public Toolbar mToolBar;
@@ -840,7 +839,6 @@ public class GroupDashboardActivityNew extends BaseActivity
         groupCategory = mGroupItem.category;
 
         GroupDashboardActivityNew.isAdmin = mGroupItem.isAdmin;
-        GroupDashboardActivityNew.notificationUnseenCount = mGroupItem.notificationUnseenCount;
         GroupDashboardActivityNew.isPost = mGroupItem.isAdmin || mGroupItem.canPost || mGroupItem.allowPostAll;
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -852,7 +850,6 @@ public class GroupDashboardActivityNew extends BaseActivity
             //  tv_Desc.setText(LeafPreference.getInstance(this).getInt(Constants.TOTAL_MEMBER) + " users");
             //   tv_Desc.setVisibility(View.GONE);
         }
-
     }
 
     private void hideMoreOption() {
