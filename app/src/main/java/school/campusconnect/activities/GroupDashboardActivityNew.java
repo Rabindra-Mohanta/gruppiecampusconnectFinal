@@ -1131,9 +1131,13 @@ public class GroupDashboardActivityNew extends BaseActivity
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, HWClassActivity.class);
                 intent.putExtra("title", group.name);
-            } else {
-                if (group.count == 1) {
-                    if (group.type.equals("Home Work") || group.type.equals("Recorded Class")) {
+            }
+            else
+            {
+                if (group.count == 1)
+                {
+                    if (group.type.equals("Home Work") || group.type.equals("Recorded Class"))
+                    {
                         intent = new Intent(this, HWClassSubjectActivity.class);
                     } else {
                         intent = new Intent(this, TimeTabelActivity2.class);
@@ -1147,6 +1151,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     intent.putExtra("title", group.name);
                 }
             }
+
             intent.putExtra("type", group.type);
             intent.putExtra("role", group.role);
             startActivity(intent);
