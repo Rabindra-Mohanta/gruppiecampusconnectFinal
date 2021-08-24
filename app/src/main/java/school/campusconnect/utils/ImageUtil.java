@@ -639,14 +639,19 @@ public class ImageUtil {
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
+                else {
+                    contentUri = MediaStore.Files.getContentUri("external");
+                }
 
                 final String selection = "_id=?";
                 final String[] selectionArgs = new String[] {
                         split[1]
                 };
 
+
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
+
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
