@@ -38,6 +38,7 @@ import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.HwItem;
 import school.campusconnect.datamodel.LiveClassListTBL;
 import school.campusconnect.datamodel.StudAssignementItem;
+import school.campusconnect.datamodel.StudTestPaperItem;
 import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
@@ -636,6 +637,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         TeamCountTBL.deleteAll();
         SubjectCountTBL.deleteAll();
         StudAssignementItem.deleteAll();
+        StudTestPaperItem.deleteAll();
         SubjectItem.deleteAll();
         EBookItem.deleteAll();
         EBookClassItem.deleteAll();
@@ -671,6 +673,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         TeamCountTBL.deleteAll();
         SubjectCountTBL.deleteAll();
         StudAssignementItem.deleteAll();
+        StudTestPaperItem.deleteAll();
         SubjectItem.deleteAll();
         EBookItem.deleteAll();
         EBookClassItem.deleteAll();

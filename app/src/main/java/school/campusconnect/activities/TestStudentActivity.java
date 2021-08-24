@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -45,8 +46,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.net.time.TimeTCPClient;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,6 +66,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
 import school.campusconnect.datamodel.StudAssignementItem;
+import school.campusconnect.datamodel.StudTestPaperItem;
 import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.HwRes;
@@ -138,6 +138,12 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     @Bind(R.id.btnSubmit)
     Button btnSubmit;
 
+    @Bind(R.id.tvTimer)
+    TextView tvTimer;
+
+    @Bind(R.id.llSubmit)
+    FrameLayout llSubmit;
+
     @Bind(R.id.btnStart)
     Button btnStart;
 
@@ -154,10 +160,11 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     private String subject_name;
     private String className;
     private boolean showStart;
-    private TestExamRes.TestExamData item;
+    TestExamRes.TestExamData item;
     private long currentTimeFromServer;
 
     VideoClassResponse.ClassData videClassData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,7 +174,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         setBackEnabled(true);
 
         currentTimeFromServer = TrueTimeRx.now().getTime();
-        AppLog.e(TAG , "Date : "+currentTimeFromServer);
+        AppLog.e(TAG, "Date : " + currentTimeFromServer);
 
         _init();
 
@@ -176,92 +183,68 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
         showData();
 
-//        getDataLocally();
-        getAssignment();
-
+        getDataLocally();
 
     }
 
-    private void getTime()
-    {
-      /*  try {
-            TimeTCPClient client = new TimeTCPClient();
-            try {
-                // Set timeout of 60 seconds
-                client.setDefaultTimeout(60000);
-                // Connecting to time server
-                // Other time servers can be found at : http://tf.nist.gov/tf-cgi/servers.cgi#
-                // Make sure that your program NEVER queries a server more frequently than once every 4 seconds
-                client.connect("time.nist.gov");
-                AppLog.e(TAG , "current date : "+client.getDate());
-            } finally {
-                client.disconnect();
+
+    private void getDataLocally() {
+        List<StudTestPaperItem> list = StudTestPaperItem.getAll(item.testExamId, team_id, GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            ArrayList<TestPaperRes.TestPaperData> result = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                StudTestPaperItem currentItem = list.get(i);
+
+                TestPaperRes.TestPaperData item = new TestPaperRes.TestPaperData();
+
+                item.submittedById = currentItem.submittedById;
+                item.testexamVerified = currentItem.testexamVerified;
+                item.studentTestExamId = currentItem.studentTestExamId;
+                item.studentName = currentItem.studentName;
+                item.studentImage = currentItem.studentImage;
+                item.description = currentItem.description;
+                item.insertedAt = currentItem.insertedAt;
+                item.fileType = currentItem.fileType;
+                item.fileName = new Gson().fromJson(currentItem.fileName, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                item.thumbnailImage = new Gson().fromJson(currentItem.thumbnailImage, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                item.rollNumber = currentItem.rollNumber;
+                item.studentDbId = currentItem.studentDbId;
+                item.studentDbId = currentItem.studentDbId;
+                item.submittedById = currentItem.submittedById;
+                item.thumbnail = currentItem.thumbnail;
+                item.userId = currentItem.userId;
+                item.verifiedComment = currentItem.verifiedComment;
+                item.video = currentItem.video;
+
+                result.add(item);
+//
+
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+            rvAssignment.setAdapter(new AssignmentAdapter(result));
+            showHideSubmitButton(result);
+//
+            if (LeafPreference.getInstance(this).getInt(team_id + "_test_count_noti") > 0) {
+//
+                LeafPreference.getInstance(this).setBoolean(team_id + "_test_count_noti", false);
+                getAssignment();
+            }
+//
+        } else {
+            getAssignment();
+        }
     }
-
-
-//    private void getDataLocally() {
-//        List<StudAssignementItem> list = StudAssignementItem.getAll(item.assignmentId, team_id, GroupDashboardActivityNew.groupId);
-//        if (list.size() != 0) {
-//            ArrayList<AssignmentRes.AssignmentData> result = new ArrayList<>();
-//            for (int i = 0; i < list.size(); i++) {
-//                StudAssignementItem currentItem = list.get(i);
-//
-//                AssignmentRes.AssignmentData item = new AssignmentRes.AssignmentData();
-//                item.assignmentReassigned = currentItem.assignmentReassigned;
-//                item.assignmentVerified = currentItem.assignmentVerified;
-//                item.studentName = currentItem.studentName;
-//                item.description = currentItem.description;
-//                item.fileName = new Gson().fromJson(currentItem.fileName, new TypeToken<ArrayList<String>>() {
-//                }.getType());
-//                item.thumbnailImage = new Gson().fromJson(currentItem.thumbnailImage, new TypeToken<ArrayList<String>>() {
-//                }.getType());
-//
-//                item.fileType = currentItem.fileType;
-//                item.insertedAt = currentItem.insertedAt;
-//                item.reassignComment = currentItem.reassignComment;
-//                item.reassignedAt = currentItem.reassignedAt;
-//                item.rollNumber = currentItem.rollNumber;
-//                item.studentAssignmentId = currentItem.studentAssignmentId;
-//                item.studentDbId = currentItem.studentDbId;
-//                item.studentDbId = currentItem.studentDbId;
-//                item.submittedById = currentItem.submittedById;
-//                item.thumbnail = currentItem.thumbnail;
-//                item.userId = currentItem.userId;
-//                item.verifiedComment = currentItem.verifiedComment;
-//                item.video = currentItem.video;
-//
-//                result.add(item);
-//
-//                if(i==list.size()-1 && currentItem.assignmentReassigned){
-//                    btnSubmit.setVisibility(View.VISIBLE);
-//                }
-//            }
-//            rvAssignment.setAdapter(new AssignmentAdapter(result));
-//
-//            if (LeafPreference.getInstance(this).getInt(team_id + "_ass_count_noti") > 0) {
-//
-//                LeafPreference.getInstance(this).setBoolean(team_id + "_ass_count_noti", false);
-//                getAssignment();
-//            }
-//
-//        } else {
-//            getAssignment();
-//        }
-//    }
 
 
     private void _init() {
-        videClassData = new Gson().fromJson(getIntent().getStringExtra("liveClass"),VideoClassResponse.ClassData.class);
+        videClassData = new Gson().fromJson(getIntent().getStringExtra("liveClass"), VideoClassResponse.ClassData.class);
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
         subject_id = getIntent().getStringExtra("subject_id");
         subject_name = getIntent().getStringExtra("subject_name");
         className = getIntent().getStringExtra("className");
-        showStart = getIntent().getBooleanExtra("start" , false);
+        showStart = getIntent().getBooleanExtra("start", false);
         item = (TestExamRes.TestExamData) getIntent().getSerializableExtra("data");
 
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
@@ -283,7 +266,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 submit();
             }
         });
-        btnSubmit.setVisibility(View.GONE);
+        llSubmit.setVisibility(View.GONE);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -301,15 +284,12 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
     private void showData() {
 
-        if (item.proctoring)
-        {
-            if(showStart) {
+        if (item.proctoring) {
+            if (showStart) {
                 btnStart.setVisibility(View.VISIBLE);
                 btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
                 btnStart.setEnabled(true);
-            }
-            else
-            {
+            } else {
                 btnStart.setVisibility(View.VISIBLE);
                 btnStart.setEnabled(false);
                 btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
@@ -318,22 +298,20 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
             dtExamStart = dtExamStart + (5 * 60000);
 
-            AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
+            AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
             if (currentTimeFromServer > dtExamStart) {
                 tvQPaperHide.setVisibility(View.GONE);
-            }else {
+            } else {
                 tvQPaperHide.setVisibility(View.VISIBLE);
             }
-        }
-        else
-        {
+        } else {
             btnStart.setVisibility(View.GONE);
             long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
-            AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
+            AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
 
             if (currentTimeFromServer > dtExamStart) {
                 tvQPaperHide.setVisibility(View.GONE);
-            }else {
+            } else {
                 tvQPaperHide.setVisibility(View.VISIBLE);
             }
         }
@@ -377,8 +355,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 if (item.fileName != null) {
 
                     ChildAdapter adapter;
-                    if (item.fileName.size() <=2) {
-                        adapter = new ChildAdapter(1, item.fileName.size(), this, item.fileName);
+                    if (item.fileName.size() == 3) {
+                        adapter = new ChildAdapter(2, item.fileName.size(), this, item.fileName);
                     } else {
                         adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
                     }
@@ -509,15 +487,14 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     }
 
     @Override
-    public void onSuccess(int apiId, BaseResponse response)
-    {
+    public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_TEST_EXAM_PAPER_LIST:
                 TestPaperRes assignmentRes = (TestPaperRes) response;
                 rvAssignment.setAdapter(new AssignmentAdapter(assignmentRes.getData()));
-                LeafPreference.getInstance(this).remove(team_id + "_ass_count_noti");
+                LeafPreference.getInstance(this).remove(team_id + "_test_count_noti");
                 saveToDB(assignmentRes.getData());
                 break;
             case LeafManager.API_TEST_EXAM_PAPER_DELETE_STUDENT:
@@ -527,42 +504,25 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     }
 
     private void saveToDB(ArrayList<TestPaperRes.TestPaperData> data) {
-        btnSubmit.setVisibility(View.GONE);
-       /* item.testDate = "22-08-2021";
-        item.testEndTime = "9:00 AM";*/
-        long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
-        try {
-            dtExamEnd = dtExamEnd + (Integer.parseInt(item.lastSubmissionTime.replace("min", "") + "") * 60000);
-        } catch (Exception e) {
+        showHideSubmitButton(data);
 
-        }
-        if (data == null || data.size() == 0) {
-            if (System.currentTimeMillis() < dtExamEnd) {
-                btnSubmit.setVisibility(View.VISIBLE);
-            }
-        }
-
-        /*StudAssignementItem.deleteAll();
+        StudTestPaperItem.deleteAll(item.testExamId, team_id, group_id);
 
         for (int i = 0; i < data.size(); i++) {
-            AssignmentRes.AssignmentData currentItem = data.get(i);
-            StudAssignementItem item = new StudAssignementItem();
+            TestPaperRes.TestPaperData currentItem = data.get(i);
+            StudTestPaperItem item = new StudTestPaperItem();
 
+            item.submittedById = currentItem.submittedById;
+            item.testexamVerified = currentItem.testexamVerified;
+            item.studentTestExamId = currentItem.studentTestExamId;
+            item.studentName = currentItem.studentName;
+            item.studentImage = currentItem.studentImage;
             item.description = currentItem.description;
+            item.insertedAt = currentItem.insertedAt;
+            item.fileType = currentItem.fileType;
             item.fileName = new Gson().toJson(currentItem.fileName);
             item.thumbnailImage = new Gson().toJson(currentItem.thumbnailImage);
-
-            item.assignmentReassigned = currentItem.assignmentReassigned;
-            item.assignmentVerified = currentItem.assignmentVerified;
-            item.studentName = currentItem.studentName;
-            item.description = currentItem.description;
-
-            item.fileType = currentItem.fileType;
-            item.insertedAt = currentItem.insertedAt;
-            item.reassignComment = currentItem.reassignComment;
-            item.reassignedAt = currentItem.reassignedAt;
             item.rollNumber = currentItem.rollNumber;
-            item.studentAssignmentId = currentItem.studentAssignmentId;
             item.studentDbId = currentItem.studentDbId;
             item.studentDbId = currentItem.studentDbId;
             item.submittedById = currentItem.submittedById;
@@ -571,15 +531,62 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             item.verifiedComment = currentItem.verifiedComment;
             item.video = currentItem.video;
 
-            item.AssignId = this.item.assignmentId;
+            item.TestId = TestStudentActivity.this.item.testExamId;
             item.teamId = team_id;
             item.groupId = GroupDashboardActivityNew.groupId;
             item.save();
+        }
+    }
 
-            if(i==data.size()-1 && currentItem.assignmentReassigned){
-                btnSubmit.setVisibility(View.VISIBLE);
+    CountDownTimer countDownTimer;
+    private void showHideSubmitButton(ArrayList<TestPaperRes.TestPaperData> data) {
+        long now = TrueTimeRx.now().getTime();
+        item.testDate = "24-08-2021";
+        item.testEndTime = "5:40 PM";
+
+        if (data != null && data.size() > 0) {
+            llSubmit.setVisibility(View.GONE);
+            if(countDownTimer!=null){
+                countDownTimer.cancel();
             }
-        }*/
+        } else {
+            long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
+            long dtExamEndSubmitTime = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
+            try {
+                dtExamEndSubmitTime = dtExamEndSubmitTime + (Integer.parseInt(item.lastSubmissionTime.replace("min", "") + "") * 60000);
+            } catch (Exception e) {
+
+            }
+
+            if (now > dtExamEnd && now < dtExamEndSubmitTime) {
+                llSubmit.setVisibility(View.VISIBLE);
+                long diffMillisec = dtExamEndSubmitTime - now;
+                countDownTimer = new CountDownTimer(diffMillisec,1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        long sec = millisUntilFinished / 1000;
+                        if(sec>60){
+                            long min = sec/60;
+                            sec = sec%60;
+                            tvTimer.setText(min+"m\n"+sec+"s");
+                        }else {
+                            tvTimer.setText(sec+"s");
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        llSubmit.setVisibility(View.GONE);
+                    }
+                };
+                countDownTimer.start();
+            } else {
+                llSubmit.setVisibility(View.GONE);
+                if(countDownTimer!=null){
+                    countDownTimer.cancel();
+                }
+            }
+        }
     }
 
     @Override
@@ -731,7 +738,6 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
             if (!item.testexamVerified) {
                 holder.btnYes.setVisibility(View.GONE);
-                holder.btnNo.setVisibility(View.GONE);
                 holder.txt_NotVerify.setVisibility(View.VISIBLE);
                 holder.txt_comments.setVisibility(View.GONE);
             } else {
@@ -856,9 +862,6 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             @Bind(R.id.btnYes)
             FrameLayout btnYes;
 
-            @Bind(R.id.btnNo)
-            FrameLayout btnNo;
-
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
@@ -917,10 +920,6 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     }
 
 
-
-
-
-
     /***
      * ======================= ZOOM Related CDE ==========================
      */
@@ -940,6 +939,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             e.printStackTrace();
         }
     }
+
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
 
         progressBar.setVisibility(View.VISIBLE);
@@ -977,6 +977,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
 
     }
+
     private void startZoomMeeting(String zoomMail, String password, String name, String className, String meetingId) {
 //        ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
 
@@ -1358,6 +1359,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
         }
     };
+
     public void requestOverlayPermission() {
         AppLog.e(TAG, "StartRecordingScreen called ");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
@@ -1375,7 +1377,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         AppLog.e(TAG, "startBubbleService()");
 
         Intent uploadIntent2 = new Intent(this, FloatingWidgetExamService.class);
-        uploadIntent2.putExtra("data",new Gson().toJson(item));
+        uploadIntent2.putExtra("data", new Gson().toJson(item));
         bindService(uploadIntent2, mConnection, Context.BIND_AUTO_CREATE);
 
     }
@@ -1426,26 +1428,22 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         }
     };
 
-    private void openpaper(String data)
-    {
+    private void openpaper(String data) {
 
-        TestExamRes.TestExamData item = new Gson().fromJson(data,TestExamRes.TestExamData.class);
-        if (Constants.FILE_TYPE_PDF.equals(item.fileType))
-        {
+        TestExamRes.TestExamData item = new Gson().fromJson(data, TestExamRes.TestExamData.class);
+        if (Constants.FILE_TYPE_PDF.equals(item.fileType)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("pdf", item.fileName.get(0));
             i.putExtra("name", item.topicName);
-            i.putExtra("from" ,"floatservice");
-            startActivity(i );
-        }
-        else if (Constants.FILE_TYPE_IMAGE.equals(item.fileType))
-        {
+            i.putExtra("from", "floatservice");
+            startActivity(i);
+        } else if (Constants.FILE_TYPE_IMAGE.equals(item.fileType)) {
             Intent i = new Intent(this, FullScreenMultiActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("image_list", item.fileName);
-            i.putExtra("from" ,"floatservice");
-            startActivity(i );
+            i.putExtra("from", "floatservice");
+            startActivity(i);
         }
 
     }
@@ -1475,7 +1473,15 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        AppLog.e(TAG , "onActivityReult called  : "+requestCode+" , "+resultCode);
+        AppLog.e(TAG, "onActivityReult called  : " + requestCode + " , " + resultCode);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(countDownTimer!=null){
+            countDownTimer.cancel();
+        }
     }
 }

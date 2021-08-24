@@ -139,6 +139,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     case "ASSIGNMENT_STATUS": {
                         leafPreference.setInt(data.teamId + "_ass_count_noti", leafPreference.getInt(data.teamId + "_ass_count_noti") + 1);
                     }
+                    case "TEST_PAPER_STATUS": {
+                        leafPreference.setInt(data.teamId + "_test_count_noti", leafPreference.getInt(data.teamId + "_test_count_noti") + 1);
+                    }
                     break;
 
                     case "DELETE_EBOOK": {

@@ -102,18 +102,19 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         getDataLocally();
     }
 
-    //    EventTBL eventTBL;
+    EventTBL eventTBL;
+
     private void getDataLocally() {
-       /* eventTBL = EventTBL.getAssignmentEvent(GroupDashboardActivityNew.groupId,team_id,subject_id);
+        eventTBL = EventTBL.getTestEvent(GroupDashboardActivityNew.groupId, team_id, subject_id);
         boolean apiEvent = false;
-        if(eventTBL!=null){
-            if(eventTBL._now ==0){
+        if (eventTBL != null) {
+            if (eventTBL._now == 0) {
                 apiEvent = true;
             }
-            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
+            if (MixOperations.isNewEvent(eventTBL.eventAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", eventTBL._now)) {
                 apiEvent = true;
             }
-        }*/
+        }
 
         List<TestExamTBL> list = TestExamTBL.getAll(subject_id, team_id, GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
@@ -147,26 +148,23 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
             }
             setData();
 
-//            if(apiEvent){
-            getTestExam();
+            if (apiEvent) {
+                getTestExam();
+            }
             getTestLiveEvents();
-//            }
         } else {
             getTestExam();
             getTestLiveEvents();
         }
     }
 
-    public void getTestExam()
-    {
+    public void getTestExam() {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestExamList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
 
-    public void getTestLiveEvents()
-    {
-        progressBar.setVisibility(View.VISIBLE);
+    public void getTestLiveEvents() {
         LeafManager leafManager = new LeafManager();
         leafManager.getTestLiveEvents(this, GroupDashboardActivityNew.groupId);
     }
@@ -205,10 +203,10 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
 
                 saveToDB(testList);
 
-               /* if(eventTBL!=null){
+                if(eventTBL!=null){
                     eventTBL._now = System.currentTimeMillis();
                     eventTBL.save();
-                }*/
+                }
         }
 
     }
@@ -277,25 +275,19 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
     }
 
     @Override
-    public void onPostClick(TestExamRes.TestExamData item)
-    {
-        if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE))
-        {
+    public void onPostClick(TestExamRes.TestExamData item) {
+        if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
             Intent browserIntent = new Intent(getActivity(), TestActivity.class);
             browserIntent.putExtra("url", item.video);
             startActivity(browserIntent);
 
-        }
-        else if (item.fileType.equals(Constants.FILE_TYPE_PDF))
-        {
+        } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
             i.putExtra("name", item.topicName);
             startActivity(i);
 
-        }
-        else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE))
-        {
+        } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
             Intent i = new Intent(getActivity(), FullScreenActivity.class);
             i.putExtra("image", item.fileName);
             startActivity(i);
@@ -321,11 +313,10 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         public void onBindViewHolder(final TestAdapter.ViewHolder holder, final int position) {
             final TestExamRes.TestExamData item = list.get(position);
             holder.txt_name.setText(item.topicName);
-            if(!TextUtils.isEmpty(item.testDate))
-            {
+            if (!TextUtils.isEmpty(item.testDate)) {
                 holder.txt_date.setVisibility(View.VISIBLE);
                 holder.txt_date.setText(item.testDate);
-            }else {
+            } else {
                 holder.txt_date.setVisibility(View.GONE);
             }
         }
@@ -369,25 +360,19 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         }
     }
 
-    private void onTreeClick(TestExamRes.TestExamData data)
-    {
-        AppLog.e(TAG , "onTreeClick : data  :"+ new Gson().toJson(data));
+    private void onTreeClick(TestExamRes.TestExamData data) {
+        AppLog.e(TAG, "onTreeClick : data  :" + new Gson().toJson(data));
 
         Intent intent;
-        if (data.canPost)
-        {
+        if (data.canPost) {
             intent = new Intent(getActivity(), TestParentActivity.class);
-        }
-        else
-        {
+        } else {
             intent = new Intent(getActivity(), TestStudentActivity.class);
 
-            for(int i =0 ; i < testLiveEvents.size() ; i++)
-            {
-                AppLog.e(TAG , "testLiveEvents For Loop  : data  :"+ new Gson().toJson(testLiveEvents.get(i)));
-                if(testLiveEvents.get(i).testExamId !=null && testLiveEvents.get(i).testExamId.equalsIgnoreCase(data.testExamId))
-                {
-                    intent.putExtra("start" , true);
+            for (int i = 0; i < testLiveEvents.size(); i++) {
+                AppLog.e(TAG, "testLiveEvents For Loop  : data  :" + new Gson().toJson(testLiveEvents.get(i)));
+                if (testLiveEvents.get(i).testExamId != null && testLiveEvents.get(i).testExamId.equalsIgnoreCase(data.testExamId)) {
+                    intent.putExtra("start", true);
                 }
             }
 

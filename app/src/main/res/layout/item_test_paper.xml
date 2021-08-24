@@ -258,21 +258,6 @@
                          android:textSize="@dimen/text_size_16sp"
                         android:layout_height="20dp" />
                 </FrameLayout>
-                <FrameLayout
-                    android:id="@+id/btnNo"
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="@dimen/padding_10dp"
-                    android:layout_height="35dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="center"
-                        android:textSize="@dimen/text_size_16sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/holo_red_dark"
-                        android:text="@string/reassigned"
-                        android:layout_height="20dp" />
-                </FrameLayout>
                 <TextView
                     android:id="@+id/txt_NotVerify"
                     android:layout_width="wrap_content"

@@ -154,6 +154,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     VideoClassResponse.ClassData videClassData;
 
     private long currentTimeFromServer;
+    private TestPaperRes.TestPaperData selectedAssignment;
 
 
     @Override
@@ -360,7 +361,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 99 && resultCode == RESULT_OK) {
-//            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"),data.getStringArrayListExtra("_finalUrl"));
+            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"),data.getStringArrayListExtra("_finalUrl"));
         }
 
         if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION) {
@@ -383,8 +384,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     }
 
     public void onPostClick(TestPaperRes.TestPaperData item) {
-//        this.selectedAssignment =item;
-     /*   if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+        this.selectedAssignment =item;
+        if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
             Intent browserIntent = new Intent(this, TestActivity.class);
             browserIntent.putExtra("url", item.video);
             startActivity(browserIntent);
@@ -392,16 +393,15 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
-            i.putExtra("name", ""*//*item.studentName*//*);
+            i.putExtra("name", ""+item.studentName);
             startActivity(i);
-
         } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
             if (item.fileName != null && item.fileName.size() > 0) {
-                Intent i = new Intent(this, HomeWorkEditActivity.class);
+                Intent i = new Intent(this, TestExamEditActivity.class);
                 i.putExtra("item", new Gson().toJson(item));
                 startActivityForResult(i,99);
             }
-        }*/
+        }
 
     }
 
@@ -472,11 +472,10 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 LeafPreference.getInstance(TestParentActivity.this).setBoolean("is_test_added", true);
                 finish();
                 break;
-    /*        case LeafManager.API_VERIFY_ASSIGNMENT:
-//            case LeafManager.API_REASSIGN_ASSIGNMENT:
+            case LeafManager.API_TEST_EXAM_PAPER_VERIFY:
                 getAssignment();
                 sendNotification();
-                break;*/
+                break;
         }
     }
 
@@ -574,11 +573,11 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                     if (item.fileName != null) {
 
                         ChildTestAdapter adapter;
-                      /*  if (item.fileName.size() == 3) {
-                            adapter = new ChildHwAdapter(2, item.fileName.size(), mContext, item.fileName, this, item);
-                        } else {*/
+                        if (item.fileName.size() == 3) {
+                            adapter = new ChildTestAdapter(2, item.fileName.size(), mContext, item.fileName, TestParentActivity.this, item);
+                        } else {
                         adapter = new ChildTestAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName, TestParentActivity.this, item);
-                        //}
+                        }
                         holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                         holder.recyclerView.setVisibility(View.VISIBLE);
                     }
@@ -666,12 +665,6 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                     verifyAssignment(item);
                 }
             });
-            holder.btnNo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    reAssignment(item);
-                }
-            });
 
             if (spStatus.getSelectedItemPosition() == 2) {
                 holder.imgChat.setVisibility(View.VISIBLE);
@@ -688,7 +681,6 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
                 if (!item.testexamVerified) {
                     holder.btnYes.setVisibility(View.GONE);
-                    holder.btnNo.setVisibility(View.GONE);
 //                    holder.txt_NotVerify.setVisibility(View.VISIBLE);
                     holder.txt_comments.setVisibility(View.GONE);
                 } else {
@@ -787,9 +779,6 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             @Bind(R.id.btnYes)
             FrameLayout btnYes;
 
-            @Bind(R.id.btnNo)
-            FrameLayout btnNo;
-
             @Bind(R.id.txt_NotVerify)
             TextView txt_NotVerify;
 
@@ -850,7 +839,6 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         startActivity(intent);
     }
 
-    /*
     private void notVerifyAssignmentFromActResult(boolean isVerify, String comments,ArrayList<String> _finalUrl) {
 
         if (isVerify) {
@@ -860,39 +848,21 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             reassignReq.fileName = new ArrayList<>();
             reassignReq.fileName = _finalUrl;
             AppLog.e(TAG,"reassignReq :"+reassignReq);
-            leafManager.verifyAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, testExamData.studentAssignmentId, true,reassignReq);
-        } else {
-            progressBar.setVisibility(View.VISIBLE);
-            LeafManager leafManager = new LeafManager();
-            ReassignReq reassignReq = new ReassignReq(comments);
-            reassignReq.fileName = new ArrayList<>();
-            reassignReq.fileName = _finalUrl;
-            AppLog.e(TAG,"reassignReq :"+reassignReq);
-            leafManager.reassignAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, testExamData.studentAssignmentId, true, reassignReq);
+            leafManager.verifyTestPaper(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.testExamId, selectedAssignment.studentTestExamId, true,reassignReq);
         }
-    }*/
+    }
 
     private void verifyAssignment(TestPaperRes.TestPaperData item) {
-      /*  String msg = "Are You Sure Want To un-verify " + item.studentName + " Assignment?";
+        String msg = "Are You Sure Want To un-verify " + item.studentName + " Test?";
         SMBDialogUtils.showSMBDialogOKCancel(this, msg, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
-                leafManager.verifyAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentVerified,new ReassignReq("text"));
+                ReassignReq reassignReq = new ReassignReq("");
+                leafManager.verifyTestPaper(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.testExamId, item.studentTestExamId, false,reassignReq);
             }
-        });*/
-    }
-
-    private void reAssignment(TestPaperRes.TestPaperData item) {
-       /* SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To move " + item.studentName + " assignment to not verified?", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
-                LeafManager leafManager = new LeafManager();
-                leafManager.reassignAssignment(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentReassigned, new ReassignReq("text"));
-            }
-        });*/
+        });
     }
 
 
