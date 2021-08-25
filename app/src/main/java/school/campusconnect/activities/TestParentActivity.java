@@ -45,6 +45,16 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +67,7 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.adapters.ChildAdapter;
 import school.campusconnect.adapters.ChildHwAdapter;
@@ -158,7 +169,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_parent);
         ButterKnife.bind(this);
@@ -173,8 +185,9 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         setTitle(nTopic + " (" + className + ")");
 
         showData();
-
     }
+
+
 
     private void _init() {
         videClassData = new Gson().fromJson(getIntent().getStringExtra("liveClass"), VideoClassResponse.ClassData.class);
@@ -219,18 +232,28 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setStartButtonStatus();
+    }
+
     private void showData() {
         if (item.proctoring) {
 
             long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+            long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
 
             AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
-            if (currentTimeFromServer > dtExamStart)
+            if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd)
             {
                 btnStart.setVisibility(View.VISIBLE);
                 btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
                 btnStart.setEnabled(true);
-            }else {
+            }
+            else
+            {
                 btnStart.setVisibility(View.VISIBLE);
                 btnStart.setEnabled(false);
                 btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
@@ -335,6 +358,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             imgPlay.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
         }
+
     }
 
     public void onPostClick(ChapterRes.TopicData item) {
@@ -353,6 +377,35 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             Intent i = new Intent(this, FullScreenActivity.class);
             i.putExtra("image", item.fileName);
             startActivity(i);
+        }
+
+    }
+
+    private void setStartButtonStatus()
+    {
+        if (item.proctoring)
+        {
+
+        long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+        long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
+
+        AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
+        if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd)
+        {
+            btnStart.setVisibility(View.VISIBLE);
+            btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
+            btnStart.setEnabled(true);
+        }
+        else
+        {
+            btnStart.setVisibility(View.VISIBLE);
+            btnStart.setEnabled(false);
+            btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
+        }
+        }
+        else
+        {
+        btnStart.setVisibility(View.GONE);
         }
 
     }
@@ -485,6 +538,21 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         notificationModel.data.title = getResources().getString(R.string.app_name);
         notificationModel.data.body = "";
         notificationModel.data.Notification_type = "TEST_PAPER_STATUS";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+        notificationModel.data.teamId = team_id;
+        notificationModel.data.createdById = LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = "";
+        notificationModel.data.postType = "";
+        SendNotificationGlobal.send(notificationModel);
+    }
+
+    private void sendNotificationProctoring(boolean isStart) {
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId + "_" + team_id;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body =  isStart ? item.createdByName + " teacher has started exam proctoring " : item.createdByName + " teacher has ended exam proctoring";
+        notificationModel.data.Notification_type =  isStart ? "examStart" : "examEnd";
         notificationModel.data.iSNotificationSilent = true;
         notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
         notificationModel.data.teamId = team_id;
@@ -1336,6 +1404,9 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     public void startLiveTest()
     {
         progressBar.setVisibility(View.VISIBLE);
+
+        sendNotificationProctoring(true);
+
         LeafManager leafManager = new LeafManager();
         leafManager.startTestPaperEvent(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
     }
@@ -1343,6 +1414,10 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     public void stopLiveTest()
     {
         progressBar.setVisibility(View.VISIBLE);
+
+        sendNotificationProctoring(false);
+
+
         LeafManager leafManager = new LeafManager();
         leafManager.stopTestPaperEvent(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
     }
@@ -1431,4 +1506,114 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         super.onRestart();
         removeBubble();
     }
+
+    private class SendNotification extends AsyncTask<String, String, String> {
+        private String server_response;
+        boolean isStart;
+
+        public SendNotification(boolean isStart) {
+            this.isStart = isStart;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String name = LeafPreference.getInstance(TestParentActivity.this).getString(LeafPreference.NAME);
+                    String message = isStart ? name + " teacher has started exam proctoring " : name + " teacher has ended exam proctoring";
+                    topic = group_id + "_" + item.teamId;
+                    object.put("to", "/topics/" + topic);
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                    object.put("notification", notificationObj);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", GroupDashboardActivityNew.groupId);
+                    dataObj.put("createdById", LeafPreference.getInstance(TestParentActivity.this).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("createdByName", name);
+                    dataObj.put("teamId", item.teamId);
+                    dataObj.put("title", title);
+                    dataObj.put("Notification_type", isStart ? "examStart" : "examEnd");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+                    wr.writeBytes(object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
+    }
+
 }

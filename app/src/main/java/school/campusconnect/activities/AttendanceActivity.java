@@ -111,12 +111,12 @@ public class AttendanceActivity extends BaseActivity {
                 startActivity(attendanceIntent);
                 return true;
             }
-      /*      case R.id.menu_generate_report_online:
+            case R.id.menu_generate_report_online:
                 Intent attendanceIntent = new Intent(this, AttendanceReportOnlineActivity.class);
                 attendanceIntent.putExtra("team_id", teamId);
                 attendanceIntent.putExtra("className", getIntent().getStringExtra("className"));
                 startActivity(attendanceIntent);
-                return true;*/
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

@@ -51,7 +51,7 @@ import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 
 public class HWClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "VideoClassListFragment";
+    private static final String TAG = "HWClassListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -175,7 +175,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         progressBar.setVisibility(View.GONE);
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
+        AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
         rvClass.setAdapter(new ClassesAdapter(result));
 
         TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);

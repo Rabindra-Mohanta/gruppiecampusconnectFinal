@@ -111,7 +111,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.setAction("MEETING_RESUME");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
+
                     break;
+
+                    case "examStart": {
+                        Intent intent = new Intent("PROCTORING_START");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.setAction("PROCTORING_START");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                    }
+
+                    break;
+
+                    case "examEnd": {
+                        Intent intent = new Intent("PROCTORING_END");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.setAction("PROCTORING_END");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                    }
+
+                    break;
+
                     case "NOTES_VIDEO":
                     case "ADD_TEST_EXAM":
                     case "attendance":

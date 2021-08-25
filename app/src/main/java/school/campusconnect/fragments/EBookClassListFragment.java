@@ -45,7 +45,7 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
 public class EBookClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "EBookClassListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -75,6 +75,7 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onStart() {
         super.onStart();
+        AppLog.e(TAG , "onStart Called ");
     }
     private void getDataLocally() {
         List<EBookClassItem> list = EBookClassItem.getAll(GroupDashboardActivityNew.groupId);
@@ -86,6 +87,8 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
                 item.category = currentItem.category;
                 item.classImage = currentItem.classImage;
                 item.className = currentItem.className;
+                AppLog.e(TAG ,  "Classnames getting from db  : "+currentItem.className);
+
                 item.countryCode = currentItem.countryCode;
                 item.members = currentItem.members;
                 item.phone = currentItem.phone;
@@ -126,6 +129,8 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
             EBookClassItem classItem = new EBookClassItem();
             classItem.category = currentItem.category;
             classItem.classImage = currentItem.classImage;
+
+            AppLog.e(TAG ,  "Classnames getting saved : "+currentItem.className);
             classItem.className = currentItem.className;
             classItem.countryCode = currentItem.countryCode;
             classItem.members = currentItem.members;
@@ -201,6 +206,8 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
             }
 
             holder.txt_name.setText(item.getName());
+            AppLog.e(TAG ,  "Classnames getting displayed  : "+item.getName());
+
 
            /* if (item.ebookId.equals("false")) {
                 holder.btnUpload.setVisibility(View.VISIBLE);

@@ -91,7 +91,6 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         subject_name = getArguments().getString("subject_name");
         canPost = getArguments().getBoolean("canPost");
 
-
         return view;
     }
 

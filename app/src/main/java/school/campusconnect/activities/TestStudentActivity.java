@@ -73,6 +73,7 @@ import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
+import school.campusconnect.fragments.VideoClassListFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.service.FloatingWidgetExamService;
 import school.campusconnect.utils.AmazoneDownload;
@@ -192,7 +193,9 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         List<StudTestPaperItem> list = StudTestPaperItem.getAll(item.testExamId, team_id, GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
             ArrayList<TestPaperRes.TestPaperData> result = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++) {
+
+            for (int i = 0; i < list.size(); i++)
+            {
                 StudTestPaperItem currentItem = list.get(i);
 
                 TestPaperRes.TestPaperData item = new TestPaperRes.TestPaperData();
@@ -219,14 +222,14 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 item.video = currentItem.video;
 
                 result.add(item);
-//
-
             }
+
+
             rvAssignment.setAdapter(new AssignmentAdapter(result));
             showHideSubmitButton(result);
 //
-            if (LeafPreference.getInstance(this).getInt(team_id + "_test_count_noti") > 0) {
-//
+            if (LeafPreference.getInstance(this).getInt(team_id + "_test_count_noti") > 0)
+            {
                 LeafPreference.getInstance(this).setBoolean(team_id + "_test_count_noti", false);
                 getAssignment();
             }
@@ -301,7 +304,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
             if (currentTimeFromServer > dtExamStart) {
                 tvQPaperHide.setVisibility(View.GONE);
-            } else {
+            } else
+                {
                 tvQPaperHide.setVisibility(View.VISIBLE);
             }
         } else {
@@ -477,12 +481,26 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
-        if (LeafPreference.getInstance(this).getBoolean("is_paper_added")) {
+
+        if (LeafPreference.getInstance(this).getBoolean("is_paper_added"))
+        {
             getAssignment();
             LeafPreference.getInstance(this).setBoolean("is_paper_added", false);
         }
+
+        LocalBroadcastManager.getInstance(TestStudentActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("PROCTORING_START"));
+        LocalBroadcastManager.getInstance(TestStudentActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("PROCTORING_END"));
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        LocalBroadcastManager.getInstance(TestStudentActivity.this).unregisterReceiver(mMessageReceiver);
 
     }
 
@@ -541,8 +559,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     CountDownTimer countDownTimer;
     private void showHideSubmitButton(ArrayList<TestPaperRes.TestPaperData> data) {
         long now = TrueTimeRx.now().getTime();
-        item.testDate = "24-08-2021";
-        item.testEndTime = "5:40 PM";
+        //item.testDate = "24-08-2021";
+        //item.testEndTime = "5:40 PM";
 
         if (data != null && data.size() > 0) {
             llSubmit.setVisibility(View.GONE);
@@ -561,6 +579,10 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             if (now > dtExamEnd && now < dtExamEndSubmitTime) {
                 llSubmit.setVisibility(View.VISIBLE);
                 long diffMillisec = dtExamEndSubmitTime - now;
+
+                if(countDownTimer !=null)
+                    countDownTimer.cancel();
+
                 countDownTimer = new CountDownTimer(diffMillisec,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -1415,7 +1437,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             // Get extra data included in the Intent
 
 
-            String message = intent.getStringExtra("action");
+            String message = intent.getAction();
             AppLog.e(TAG, "onReceive called with action : " + message);
             AppLog.e(TAG, "onReceive called with action : " + intent.getStringExtra("data"));
 
@@ -1424,6 +1446,79 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 // Navigate to QA Paper
                 openpaper(intent.getStringExtra("data"));
             }
+            else if (message.equalsIgnoreCase("PROCTORING_START")) {
+               // update UI based on it
+                if (item.proctoring) {
+                    long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+                    dtExamStart = dtExamStart + (5 * 60000);
+
+                    AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
+                    if (currentTimeFromServer > dtExamStart) {
+                        tvQPaperHide.setVisibility(View.GONE);
+                    } else {
+                        tvQPaperHide.setVisibility(View.VISIBLE);
+                    }
+                } else
+                    {
+                    btnStart.setVisibility(View.GONE);
+                    long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+                    AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
+
+                    if (currentTimeFromServer > dtExamStart) {
+                        tvQPaperHide.setVisibility(View.GONE);
+                    } else {
+                        tvQPaperHide.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                showHideSubmitButton(null);
+
+
+            }
+            else if (message.equalsIgnoreCase("PROCTORING_END")) {
+
+                if (item.proctoring) {
+                    long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+                    dtExamStart = dtExamStart + (5 * 60000);
+
+                    AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
+                    if (currentTimeFromServer > dtExamStart) {
+                        tvQPaperHide.setVisibility(View.GONE);
+                    } else {
+                        tvQPaperHide.setVisibility(View.VISIBLE);
+                    }
+
+                    long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
+
+                    AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
+                    if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd)
+                    {
+                    }
+                    else
+                    {
+
+                        btnStart.setEnabled(false);
+                        btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
+                    }
+
+
+
+                } else
+                {
+                    btnStart.setVisibility(View.GONE);
+                    long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+                    AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
+
+                    if (currentTimeFromServer > dtExamStart) {
+                        tvQPaperHide.setVisibility(View.GONE);
+                    } else {
+                        tvQPaperHide.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                showHideSubmitButton(null);
+            }
+
 
         }
     };

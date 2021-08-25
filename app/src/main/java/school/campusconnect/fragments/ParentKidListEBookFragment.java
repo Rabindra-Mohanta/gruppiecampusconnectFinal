@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -36,7 +37,7 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
 public class ParentKidListEBookFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "ParentKidListEBookFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -75,7 +76,7 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
         progressBar.setVisibility(View.GONE);
         ParentKidsResponse res = (ParentKidsResponse) response;
         List<ParentKidsResponse.ParentKidsData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
+        AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
 
         rvClass.setAdapter(new ClassesAdapter(result));
     }
@@ -144,7 +145,7 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
-            holder.txt_name.setText(item.className);
+            holder.txt_name.setText(item.name);
             holder.txt_count.setVisibility(View.GONE);
         }
 

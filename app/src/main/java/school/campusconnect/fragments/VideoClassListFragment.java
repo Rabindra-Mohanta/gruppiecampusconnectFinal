@@ -139,7 +139,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;*/
 
-
     VideoClassResponse.ClassData item;
 
     boolean isSentNotification = false;
@@ -306,21 +305,22 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             String message = intent.getAction();
 
             AppLog.e(TAG, "onReceive called with action : " + message);
-
-           /* if (message.equalsIgnoreCase("MEETING_START")) {
+             if (message.equalsIgnoreCase("MEETING_START")) {
 
                 if (intent.getExtras().containsKey("teamId")) {
-                    int position = getPositionOf(intent.getExtras().getString("teamId"));
+                   /* int position = getPositionOf(intent.getExtras().getString("teamId"));
                     if (position >= 0) {
                         listItemData.isLive = true;
                         listItemData.createdByName = intent.getExtras().getString("createdByName");
                         classesAdapter.notifyDataSetChanged();
-                    }
+                    }*/
+                getLiveClassEventApi();
                 }
-            }*/
+            }
             if (message.equalsIgnoreCase("MEETING_END")) {
 
-                if (intent.getExtras().containsKey("teamId")) {
+                if (intent.getExtras().containsKey("teamId"))
+                {
                     int position = getPositionOf(intent.getExtras().getString("teamId"));
                     if (position >= 0) {
                         listItemData.isLive = false;
@@ -328,6 +328,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         classesAdapter.notifyDataSetChanged();
                     }
                 }
+
             }
 
             if (message.equalsIgnoreCase("MEETING_RESUME")) {
@@ -407,8 +408,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             } catch (Exception ex) {
 
             }
-        } else if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
-        } else if (apiId == LeafManager.API_LIVE_CLASS_START) {
+        }
+        else if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH)
+        {
+        }
+        else if (apiId == LeafManager.API_LIVE_CLASS_START) {
             if (item != null) {
                 item.createdById = leafPreference.getUserId();
                 item.createdByName = leafPreference.getUserName();
@@ -446,9 +450,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         iData.createdByName = jData.createdByName;
                         iData.createdById = jData.createdById;
                         iData.isLive = true;
-                    } else {
+                    } /*else {
                         iData.isLive = false;
-                    }
+                    }*/
                 }
             }
 
@@ -522,14 +526,14 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             final VideoClassResponse.ClassData item = list.get(position);
 
             if (item.canPost && item.isLive) {
-                holder.imgOnline.setVisibility(View.VISIBLE);
+             //   holder.imgOnline.setVisibility(View.VISIBLE);
                 if (item.isCreatedByMe()) {
                     holder.tv_stop.setVisibility(View.VISIBLE);
                 } else {
                     holder.tv_stop.setVisibility(View.GONE);
                 }
             } else {
-                holder.imgOnline.setVisibility(View.GONE);
+            //    holder.imgOnline.setVisibility(View.GONE);
                 holder.tv_stop.setVisibility(View.GONE);
             }
 
@@ -540,7 +544,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             } else
                 holder.tvInfo.setVisibility(View.GONE);
 
-            AppLog.e(TAG, "class adapter liveclass preference : " + leafPreference.getString(item.getId() + "_liveclass"));
+            AppLog.e(TAG, "class item  " + new Gson().toJson(item));
 
 
             if (!TextUtils.isEmpty(item.getImage())) {
@@ -577,7 +581,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
+
             holder.txt_name.setText(item.getName());
+
+
             holder.txt_count.setVisibility(View.GONE);
 
             if (item.canPost || item.isLive) {
@@ -589,10 +596,11 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 holder.img_tree.setEnabled(false);
                 holder.img_tree.setColorFilter(ContextCompat.getColor(mContext, R.color.color_divider), android.graphics.PorterDuff.Mode.SRC_IN);
             }
-            if (item.isLive)
+
+          /*  if (item.isLive)
                 holder.imgOnline.setVisibility(View.VISIBLE);
             else
-                holder.imgOnline.setVisibility(View.GONE);
+                holder.imgOnline.setVisibility(View.GONE);*/
 
 
             holder.tv_stop.setOnClickListener(new View.OnClickListener() {
@@ -603,7 +611,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 }
             });
 
-            if (!leafPreference.getString(item.getId() + "_liveclass").equalsIgnoreCase("")) {
+          /*  if (!leafPreference.getString(item.getId() + "_liveclass").equalsIgnoreCase("")) {
                 SendNotificationModel.SendNotiData notiData = new Gson().fromJson(leafPreference.getString(item.getId() + "_liveclass"), SendNotificationModel.SendNotiData.class);
 
                 AppLog.e(TAG, "class adapter notidata : " + notiData.createdByName);
@@ -614,7 +622,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     holder.tvInfo.setText(notiData.createdByName);
                 }
             }
-
+*/
 
 
            /* holder.tvInfo.setOnClickListener(new View.OnClickListener() {
@@ -742,7 +750,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         this.item = classData;
 
 
-        if (classData.canPost && Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+        if (classData.canPost && Build.VERSION.SDK_INT != Build.VERSION_CODES.Q) {
             ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
         } else {
             videoClassClicked = true;

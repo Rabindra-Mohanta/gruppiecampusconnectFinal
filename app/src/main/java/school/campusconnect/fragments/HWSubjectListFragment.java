@@ -43,7 +43,7 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.MixOperations;
 
 public class HWSubjectListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "HWSubjectListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -96,6 +96,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     }
 
     private void getDataLocally() {
+        AppLog.e(TAG , "getDataLocally");
         List<SubjectItem> list = SubjectItem.getAll(team_id, GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
             ArrayList<SubjectStaffResponse.SubjectData> subList = new ArrayList<>();
@@ -106,6 +107,8 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
                 }.getType());
                 item.subjectId = currentItem.subjectId;
                 item.name = currentItem.subjectName;
+                AppLog.e(TAG , "name from db : "+currentItem.subjectName);
+
                 item.canPost = currentItem.canPost;
                 subList.add(item);
             }
@@ -141,7 +144,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
         progressBar.setVisibility(View.GONE);
         SubjectStaffResponse res = (SubjectStaffResponse) response;
         List<SubjectStaffResponse.SubjectData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
+        AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
 
         rvClass.setAdapter(new SubjectAdapter(result));
 
