@@ -194,8 +194,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         if (list.size() != 0) {
             ArrayList<TestPaperRes.TestPaperData> result = new ArrayList<>();
 
-            for (int i = 0; i < list.size(); i++)
-            {
+            for (int i = 0; i < list.size(); i++) {
                 StudTestPaperItem currentItem = list.get(i);
 
                 TestPaperRes.TestPaperData item = new TestPaperRes.TestPaperData();
@@ -228,8 +227,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             rvAssignment.setAdapter(new AssignmentAdapter(result));
             showHideSubmitButton(result);
 //
-            if (LeafPreference.getInstance(this).getInt(team_id + "_test_count_noti") > 0)
-            {
+            if (LeafPreference.getInstance(this).getInt(team_id + "_test_count_noti") > 0) {
                 LeafPreference.getInstance(this).setBoolean(team_id + "_test_count_noti", false);
                 getAssignment();
             }
@@ -304,19 +302,22 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
             if (currentTimeFromServer > dtExamStart) {
                 tvQPaperHide.setVisibility(View.GONE);
-            } else
-                {
+            } else {
                 tvQPaperHide.setVisibility(View.VISIBLE);
             }
         } else {
             btnStart.setVisibility(View.GONE);
-            long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
-            AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
+            if (!TextUtils.isEmpty(item.testDate)) {
+                long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+                AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
 
-            if (currentTimeFromServer > dtExamStart) {
-                tvQPaperHide.setVisibility(View.GONE);
+                if (currentTimeFromServer > dtExamStart) {
+                    tvQPaperHide.setVisibility(View.GONE);
+                } else {
+                    tvQPaperHide.setVisibility(View.VISIBLE);
+                }
             } else {
-                tvQPaperHide.setVisibility(View.VISIBLE);
+                tvQPaperHide.setVisibility(View.GONE);
             }
         }
 
@@ -347,12 +348,18 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             txtContent.setVisibility(View.GONE);
             txt_readmore.setVisibility(View.GONE);
         }
-        String details = "Test/Exam Date : " + item.testDate + "\n"
-                + "Start Time : " + item.testStartTime + ", End Time : " + item.testEndTime + "\n";
-        if (!TextUtils.isEmpty(item.lastSubmissionTime)) {
-            details = details + "Last Submission Time : " + item.lastSubmissionTime;
+        if (!TextUtils.isEmpty(item.testDate)) {
+            String details = "Test/Exam Date : " + item.testDate + "\n"
+                    + "Start Time : " + item.testStartTime + ", End Time : " + item.testEndTime + "\n";
+            if (!TextUtils.isEmpty(item.lastSubmissionTime)) {
+                details = details + "Last Submission Time : " + item.lastSubmissionTime;
+            }
+            txt_lastDate.setText(details);
+            txt_lastDate.setVisibility(View.VISIBLE);
+        } else {
+            txt_lastDate.setVisibility(View.GONE);
         }
-        txt_lastDate.setText(details);
+
 
         if (!TextUtils.isEmpty(item.fileType)) {
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
@@ -481,12 +488,10 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
 
-        if (LeafPreference.getInstance(this).getBoolean("is_paper_added"))
-        {
+        if (LeafPreference.getInstance(this).getBoolean("is_paper_added")) {
             getAssignment();
             LeafPreference.getInstance(this).setBoolean("is_paper_added", false);
         }
@@ -557,6 +562,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     }
 
     CountDownTimer countDownTimer;
+
     private void showHideSubmitButton(ArrayList<TestPaperRes.TestPaperData> data) {
         long now = TrueTimeRx.now().getTime();
         //item.testDate = "24-08-2021";
@@ -564,50 +570,56 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
         if (data != null && data.size() > 0) {
             llSubmit.setVisibility(View.GONE);
-            if(countDownTimer!=null){
+            if (countDownTimer != null) {
                 countDownTimer.cancel();
             }
         } else {
-            long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
-            long dtExamEndSubmitTime = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
-            try {
-                dtExamEndSubmitTime = dtExamEndSubmitTime + (Integer.parseInt(item.lastSubmissionTime.replace("min", "") + "") * 60000);
-            } catch (Exception e) {
+            if (!TextUtils.isEmpty(item.testDate)) {
+                long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
+                long dtExamEndSubmitTime = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
+                try {
+                    dtExamEndSubmitTime = dtExamEndSubmitTime + (Integer.parseInt(item.lastSubmissionTime.replace("min", "") + "") * 60000);
+                } catch (Exception e) {
 
-            }
-
-            if (now > dtExamEnd && now < dtExamEndSubmitTime) {
-                llSubmit.setVisibility(View.VISIBLE);
-                long diffMillisec = dtExamEndSubmitTime - now;
-
-                if(countDownTimer !=null)
-                    countDownTimer.cancel();
-
-                countDownTimer = new CountDownTimer(diffMillisec,1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        long sec = millisUntilFinished / 1000;
-                        if(sec>60){
-                            long min = sec/60;
-                            sec = sec%60;
-                            tvTimer.setText(min+"m\n"+sec+"s");
-                        }else {
-                            tvTimer.setText(sec+"s");
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        llSubmit.setVisibility(View.GONE);
-                    }
-                };
-                countDownTimer.start();
-            } else {
-                llSubmit.setVisibility(View.GONE);
-                if(countDownTimer!=null){
-                    countDownTimer.cancel();
                 }
+
+                if (now > dtExamEnd && now < dtExamEndSubmitTime) {
+                    llSubmit.setVisibility(View.VISIBLE);
+                    long diffMillisec = dtExamEndSubmitTime - now;
+
+                    if (countDownTimer != null)
+                        countDownTimer.cancel();
+
+                    countDownTimer = new CountDownTimer(diffMillisec, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            long sec = millisUntilFinished / 1000;
+                            if (sec > 60) {
+                                long min = sec / 60;
+                                sec = sec % 60;
+                                tvTimer.setText(min + "m\n" + sec + "s");
+                            } else {
+                                tvTimer.setText(sec + "s");
+                            }
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            llSubmit.setVisibility(View.GONE);
+                        }
+                    };
+                    countDownTimer.start();
+                } else {
+                    llSubmit.setVisibility(View.GONE);
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                    }
+                }
+            } else {
+                tvTimer.setVisibility(View.GONE);
+                llSubmit.setVisibility(View.VISIBLE);
             }
+
         }
     }
 
@@ -1445,9 +1457,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             if (message.equalsIgnoreCase("start")) {
                 // Navigate to QA Paper
                 openpaper(intent.getStringExtra("data"));
-            }
-            else if (message.equalsIgnoreCase("PROCTORING_START")) {
-               // update UI based on it
+            } else if (message.equalsIgnoreCase("PROCTORING_START")) {
+                // update UI based on it
                 if (item.proctoring) {
                     long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
                     dtExamStart = dtExamStart + (5 * 60000);
@@ -1458,24 +1469,11 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                     } else {
                         tvQPaperHide.setVisibility(View.VISIBLE);
                     }
-                } else
-                    {
-                    btnStart.setVisibility(View.GONE);
-                    long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
-                    AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
-
-                    if (currentTimeFromServer > dtExamStart) {
-                        tvQPaperHide.setVisibility(View.GONE);
-                    } else {
-                        tvQPaperHide.setVisibility(View.VISIBLE);
-                    }
                 }
-
                 showHideSubmitButton(null);
 
 
-            }
-            else if (message.equalsIgnoreCase("PROCTORING_END")) {
+            } else if (message.equalsIgnoreCase("PROCTORING_END")) {
 
                 if (item.proctoring) {
                     long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
@@ -1490,30 +1488,15 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
                     long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
 
-                    AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
-                    if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd)
-                    {
-                    }
-                    else
-                    {
+                    AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
+                    if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd) {
+                    } else {
 
                         btnStart.setEnabled(false);
                         btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
                     }
 
 
-
-                } else
-                {
-                    btnStart.setVisibility(View.GONE);
-                    long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
-                    AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
-
-                    if (currentTimeFromServer > dtExamStart) {
-                        tvQPaperHide.setVisibility(View.GONE);
-                    } else {
-                        tvQPaperHide.setVisibility(View.VISIBLE);
-                    }
                 }
 
                 showHideSubmitButton(null);
@@ -1575,7 +1558,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(countDownTimer!=null){
+        if (countDownTimer != null) {
             countDownTimer.cancel();
         }
     }

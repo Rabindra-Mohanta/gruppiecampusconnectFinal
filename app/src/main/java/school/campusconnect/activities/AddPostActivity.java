@@ -951,7 +951,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 Toast.makeText(AddPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
                 if (postType.equalsIgnoreCase("group")) {
                     LeafPreference.getInstance(AddPostActivity.this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
-//                    new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     //NOFIREBASEDATABASE
                  /*   FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
@@ -961,7 +961,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
                 } else if (postType.equalsIgnoreCase("team")) {
                     LeafPreference.getInstance(AddPostActivity.this).setBoolean(LeafPreference.ISTEAMPOSTUPDATED, true);
-//                    new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     //NOFIREBASEDATABASE
                    /* FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();

@@ -739,7 +739,9 @@ public class GroupDashboardActivityNew extends BaseActivity
                 break;
             case R.id.llStaffReg:
                 if (isConnectionAvailable()) {
-                    startActivity(new Intent(this, StaffActivity.class));
+                    Intent intent = new Intent(this, StaffActivity.class);
+                    intent.putExtra("isAdmin",isAdmin);
+                    startActivity(intent);
                 } else {
                     showNoNetworkMsg();
                 }
@@ -853,13 +855,13 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     private void hideMoreOption() {
-        if (mGroupItem.isAdmin) {
+       /* if (mGroupItem.isAdmin) {
             llAllUsers.setVisibility(View.VISIBLE);
             llAuthorizedUser.setVisibility(View.VISIBLE);
         } else {
             llAllUsers.setVisibility(View.GONE);
             llAuthorizedUser.setVisibility(View.GONE);
-        }
+        }*/
 
         if (mGroupItem.isAdmin) {
             llDiscuss.setVisibility(View.VISIBLE);

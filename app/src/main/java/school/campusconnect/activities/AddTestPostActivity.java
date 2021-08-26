@@ -59,6 +59,7 @@ import com.iceteck.silicompressorr.SiliCompressor;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.apache.poi.sl.usermodel.Line;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -168,6 +169,11 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
 
     @Bind(R.id.switchPro)
     SwitchCompat switchPro;
+    @Bind(R.id.switchSchedule)
+    SwitchCompat switchSchedule;
+
+    @Bind(R.id.llSchedule)
+    LinearLayout llSchedule;
 
 
     TextView btn_ok;
@@ -331,6 +337,17 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
                 fragment.show();
+            }
+        });
+
+        switchSchedule.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    llSchedule.setVisibility(View.VISIBLE);
+                }else {
+                    llSchedule.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -737,22 +754,24 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
             if (showToast)
                 Toast.makeText(this, "Please Enter Description", Toast.LENGTH_SHORT).show();
             return false;
-        }*/ if (!isValueValidOnly(et_date)) {
-            if (showToast)
-                Toast.makeText(this, "Please Select Test Date", Toast.LENGTH_SHORT).show();
-            return false;
+        }*/
+        if(switchSchedule.isChecked()) {
+            if (!isValueValidOnly(et_date)) {
+                if (showToast)
+                    Toast.makeText(this, "Please Select Test Date", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (!isValueValidOnly(et_time_start)) {
+                if (showToast)
+                    Toast.makeText(this, "Please Select Test Time", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (!isValueValidOnly(et_time_end)) {
+                if (showToast)
+                    Toast.makeText(this, "Please Select Test Time", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
-        if (!isValueValidOnly(et_time_start)) {
-            if (showToast)
-                Toast.makeText(this, "Please Select Test Time", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!isValueValidOnly(et_time_end)) {
-            if (showToast)
-                Toast.makeText(this, "Please Select Test Time", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
             if (showToast)
                 Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();

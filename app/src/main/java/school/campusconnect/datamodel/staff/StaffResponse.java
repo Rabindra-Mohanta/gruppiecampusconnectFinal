@@ -72,6 +72,10 @@ public class StaffResponse extends BaseResponse {
         public String aadharNumber;
         public boolean isSelected;
 
+        @SerializedName("isAllowedToPost")
+        @Expose
+        public boolean isPost;
+
         public String getCountryCode() {
             return countryCode;
         }

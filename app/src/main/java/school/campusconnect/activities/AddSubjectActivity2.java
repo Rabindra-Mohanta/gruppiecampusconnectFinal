@@ -38,7 +38,6 @@ import school.campusconnect.datamodel.staff.StaffResponse;
 import school.campusconnect.datamodel.subjects.AddSubjectStaffReq;
 import school.campusconnect.datamodel.subjects.SubjectResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
-import school.campusconnect.fragments.StaffListFragment;
 import school.campusconnect.fragments.SubjectListFragment2;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;

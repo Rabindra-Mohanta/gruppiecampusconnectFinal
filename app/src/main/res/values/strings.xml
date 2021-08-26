@@ -524,6 +524,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="hint_test_end_time">End Time</string>
     <string name="strLastSubTime">Last Submission Time</string>
     <string name="strProctoring">Proctoring</string>
+    <string name="strScheduleTest">Schedule Test/Exam</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

@@ -46,6 +46,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    boolean isAdmin;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        isAdmin = getArguments().getBoolean("isAdmin");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -214,6 +216,8 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
         intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
         intent.putExtra("staff_data",new Gson().toJson(classData));
         intent.putExtra("isEdit",true);
+        intent.putExtra("isAdmin",isAdmin);
+        intent.putExtra("isPost",classData.isPost);
         startActivity(intent);
     }
 }
