@@ -137,6 +137,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     case "attendance":
                     case "homework": {
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
                     break;
 
@@ -147,6 +149,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
                         }
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
                     break;
                     case "VendorAdd": {

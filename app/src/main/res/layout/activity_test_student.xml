@@ -176,6 +176,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/tvQPaperHide"
                         android:clickable="true"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView

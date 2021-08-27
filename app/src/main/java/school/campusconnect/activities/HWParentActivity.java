@@ -46,7 +46,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.R;
-import school.campusconnect.adapters.ChildAdapter;
+import school.campusconnect.adapters.ChildAdapter2;
 import school.campusconnect.adapters.ChildHwAdapter;
 import school.campusconnect.adapters.ChildVideoAdapter;
 import school.campusconnect.database.LeafPreference;
@@ -166,6 +166,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     }
 
     private void showData() {
+        constThumb.setVisibility(View.GONE);
         txt_title.setText(item.topic);
         txt_teacher.setText(item.createdByName);
         txt_date.setText(MixOperations.getFormattedDateOnly(item.postedAt, Constants.DATE_FORMAT, "dd MMM yyyy\nhh:mm a"));
@@ -205,11 +206,11 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null) {
 
-                    ChildAdapter adapter;
+                    ChildAdapter2 adapter;
                     if (item.fileName.size() <= 2) {
-                        adapter = new ChildAdapter(1, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter2(1, item.fileName.size(), this, item.fileName);
                     } else {
-                        adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter2(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
                     }
                     recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(this, recyclerView, adapter));
                     recyclerView.setVisibility(View.VISIBLE);

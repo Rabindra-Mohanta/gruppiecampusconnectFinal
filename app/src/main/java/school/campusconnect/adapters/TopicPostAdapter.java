@@ -173,9 +173,12 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
             if (item.fileName != null && item.fileName.size() > 0) {
                 if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
                 {
-                    holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
-                    holder.viewDeleteVideo.setVisibility(View.VISIBLE);
                     holder.llMore.setVisibility(View.VISIBLE);
+                    holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+
+                    holder.viewDeleteVideo.setVisibility(View.GONE);
+                    holder.txt_drop_delete.setVisibility(View.GONE);
+                    holder.txt_drop_share.setVisibility(View.GONE);
                 }
             }
         }
@@ -233,6 +236,8 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         TextView txt_drop_report;
         @Bind(R.id.txt_drop_deletevideo)
         TextView txt_drop_deletevideo;
+        @Bind(R.id.txt_drop_share)
+        TextView txt_drop_share;
         @Bind(R.id.viewDeleteVideo)
         View viewDeleteVideo;
 

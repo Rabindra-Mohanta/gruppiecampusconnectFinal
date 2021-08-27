@@ -547,4 +547,11 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(classListFragment!=null){
+            classListFragment.callEventApi();
+        }
+    }
 }

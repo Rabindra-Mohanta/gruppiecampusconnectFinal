@@ -190,6 +190,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         return view;
     }
 
+
     private void init() {
         leafManager = new LeafManager();
        /* swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
@@ -493,6 +494,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+    }
+
+    public void callEventApi() {
+        getLiveClassEventApi();
     }
 
 

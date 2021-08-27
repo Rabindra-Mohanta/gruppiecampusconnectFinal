@@ -55,11 +55,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,8 +66,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
-import school.campusconnect.adapters.ChildAdapter;
-import school.campusconnect.adapters.ChildHwAdapter;
+import school.campusconnect.adapters.ChildAdapter2;
 import school.campusconnect.adapters.ChildTestAdapter;
 import school.campusconnect.adapters.ChildVideoAdapter;
 import school.campusconnect.database.LeafPreference;
@@ -79,16 +75,12 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
 import school.campusconnect.datamodel.chapter.ChapterRes;
-import school.campusconnect.datamodel.homework.AssignmentRes;
-import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.firebase.SendNotificationGlobal;
 import school.campusconnect.firebase.SendNotificationModel;
-import school.campusconnect.fragments.TestExamListFragment;
-import school.campusconnect.fragments.VideoClassListFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.service.FloatingWidgetExamService;
 import school.campusconnect.utils.AmazoneDownload;
@@ -262,6 +254,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             btnStart.setVisibility(View.GONE);
         }
 
+        constThumb.setVisibility(View.GONE);
         txt_title.setText(item.topicName);
         txt_teacher.setText(item.createdByName);
         if (!TextUtils.isEmpty(item.description)) {
@@ -289,22 +282,28 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             txtContent.setVisibility(View.GONE);
             txt_readmore.setVisibility(View.GONE);
         }
-        String details = "Test/Exam Date : " + item.testDate + "\n"
-                + "Start Time : " + item.testStartTime + ", End Time : " + item.testEndTime + "\n";
-        if (!TextUtils.isEmpty(item.lastSubmissionTime)) {
-            details = details + "Last Submission Time : " + item.lastSubmissionTime;
+
+        if (!TextUtils.isEmpty(item.testDate)) {
+            String details = "Test/Exam Date : " + item.testDate + "\n"
+                    + "Start Time : " + item.testStartTime + ", End Time : " + item.testEndTime + "\n";
+            if (!TextUtils.isEmpty(item.lastSubmissionTime)) {
+                details = details + "Last Submission Time : " + item.lastSubmissionTime;
+            }
+            txt_lastDate.setText(details);
+            txt_lastDate.setVisibility(View.VISIBLE);
+        } else {
+            txt_lastDate.setVisibility(View.GONE);
         }
-        txt_lastDate.setText(details);
 
         if (!TextUtils.isEmpty(item.fileType)) {
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null) {
 
-                    ChildAdapter adapter;
-                    if (item.fileName.size() <= 2) {
-                        adapter = new ChildAdapter(1, item.fileName.size(), this, item.fileName);
+                    ChildAdapter2 adapter;
+                    if (item.fileName.size() == 3) {
+                        adapter = new ChildAdapter2(2, item.fileName.size(), this, item.fileName);
                     } else {
-                        adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter2(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
                     }
                     recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(this, recyclerView, adapter));
                     recyclerView.setVisibility(View.VISIBLE);

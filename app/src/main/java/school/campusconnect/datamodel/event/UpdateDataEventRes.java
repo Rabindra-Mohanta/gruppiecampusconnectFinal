@@ -62,6 +62,9 @@ public class UpdateDataEventRes extends BaseResponse {
         @SerializedName("dashboardTeamCount")
         @Expose
         public int dashboardTeamCount;
+        @SerializedName("schoolGroupCount")
+        @Expose
+        public int schoolGroupCount;
     }
     public static class SubjectCountList {
         @SerializedName("teamId")

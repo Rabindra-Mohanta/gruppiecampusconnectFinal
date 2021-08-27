@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.text.InputFilter;
@@ -34,21 +33,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amazonaws.http.HttpClient;
-import com.amazonaws.http.HttpResponse;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.instacart.library.truetime.TrueTime;
 import com.instacart.library.truetime.TrueTimeRx;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -58,22 +52,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.R;
-import school.campusconnect.adapters.ChildAdapter;
+import school.campusconnect.adapters.ChildAdapter2;
 import school.campusconnect.adapters.ChildVideoAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
-import school.campusconnect.datamodel.StudAssignementItem;
 import school.campusconnect.datamodel.StudTestPaperItem;
 import school.campusconnect.datamodel.chapter.ChapterRes;
-import school.campusconnect.datamodel.homework.AssignmentRes;
-import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
-import school.campusconnect.fragments.VideoClassListFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.service.FloatingWidgetExamService;
 import school.campusconnect.utils.AmazoneDownload;
@@ -360,16 +350,16 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             txt_lastDate.setVisibility(View.GONE);
         }
 
-
+        constThumb.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(item.fileType)) {
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null) {
 
-                    ChildAdapter adapter;
+                    ChildAdapter2 adapter;
                     if (item.fileName.size() == 3) {
-                        adapter = new ChildAdapter(2, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter2(2, item.fileName.size(), this, item.fileName);
                     } else {
-                        adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter2(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
                     }
                     recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(this, recyclerView, adapter));
                     recyclerView.setVisibility(View.VISIBLE);
@@ -585,6 +575,9 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
                 if (now > dtExamEnd && now < dtExamEndSubmitTime) {
                     llSubmit.setVisibility(View.VISIBLE);
+                    tvQPaperHide.setVisibility(View.GONE);
+                    btnStart.setEnabled(false);
+                    btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
                     long diffMillisec = dtExamEndSubmitTime - now;
 
                     if (countDownTimer != null)
@@ -701,11 +694,11 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                     if (item.fileName != null) {
 
-                        ChildAdapter adapter;
+                        ChildAdapter2 adapter;
                         if (item.fileName.size() == 3) {
-                            adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
+                            adapter = new ChildAdapter2(2, item.fileName.size(), mContext, item.fileName);
                         } else {
-                            adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
+                            adapter = new ChildAdapter2(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
                         }
                         holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                         holder.recyclerView.setVisibility(View.VISIBLE);

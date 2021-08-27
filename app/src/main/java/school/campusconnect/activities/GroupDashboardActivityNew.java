@@ -321,26 +321,32 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                     }
 
+
+
+
+
+                    UpdateDataEventRes.TeamListCount teamCount = res.data.get(0).teamsListCount;
+
+                    TeamCountTBL groupCount = TeamCountTBL.getByTypeAndGroup("GROUP", groupId);
+                    if (groupCount == null) {
+                        groupCount = new TeamCountTBL();
+                        groupCount.typeOfTeam = "GROUP";
+                        groupCount.oldCount = teamCount.schoolGroupCount;
+                    }else {
+                        if(groupCount.oldCount!=teamCount.schoolGroupCount){
+                            ifNeedToLogout = true;
+                        }
+                    }
+                    groupCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
+                    groupCount.count = teamCount.schoolGroupCount;
+                    groupCount.groupId = groupId;
+                    groupCount.save();
+
                     if (ifNeedToLogout) {
                         showLogoutPopup();
                         return;
                     }
 
-                    ArrayList<UpdateDataEventRes.SubjectCountList> subCountList = res.data.get(0).subjectCountList;
-                    for (int i = 0; i < subCountList.size(); i++) {
-                        UpdateDataEventRes.SubjectCountList curr = subCountList.get(i);
-                        SubjectCountTBL tbl = SubjectCountTBL.getTeamCount(curr.teamId, groupId);
-                        if (tbl == null) {
-                            tbl = new SubjectCountTBL();
-                            tbl.teamId = curr.teamId;
-                            tbl.groupId = GroupDashboardActivityNew.groupId;
-                            tbl.oldSubjectCount = curr.subjectCount;
-                        }
-                        tbl.subjectCount = curr.subjectCount;
-                        tbl.save();
-                    }
-
-                    UpdateDataEventRes.TeamListCount teamCount = res.data.get(0).teamsListCount;
                     TeamCountTBL liveCount = TeamCountTBL.getByTypeAndGroup("LIVE", groupId);
                     if (liveCount == null) {
                         liveCount = new TeamCountTBL();
@@ -392,6 +398,21 @@ public class GroupDashboardActivityNew extends BaseActivity
                         ((BaseTeamFragment) currFrag).checkAndRefresh(apiCall);
                     }
                     dashboardCount.save();
+
+
+                    ArrayList<UpdateDataEventRes.SubjectCountList> subCountList = res.data.get(0).subjectCountList;
+                    for (int i = 0; i < subCountList.size(); i++) {
+                        UpdateDataEventRes.SubjectCountList curr = subCountList.get(i);
+                        SubjectCountTBL tbl = SubjectCountTBL.getTeamCount(curr.teamId, groupId);
+                        if (tbl == null) {
+                            tbl = new SubjectCountTBL();
+                            tbl.teamId = curr.teamId;
+                            tbl.groupId = GroupDashboardActivityNew.groupId;
+                            tbl.oldSubjectCount = curr.subjectCount;
+                        }
+                        tbl.subjectCount = curr.subjectCount;
+                        tbl.save();
+                    }
                 }
 
                 @Override
