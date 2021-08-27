@@ -368,11 +368,11 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
                // hbRecorder.setAudioSource("DEFAULT");
 
                 if(hbRecorder.getDefaultWidth() > 1000)
-                hbRecorder.setVideoBitrate(2000000);
+                hbRecorder.setVideoBitrate(5000000);
                 else if(hbRecorder.getDefaultWidth() > 650)
-                    hbRecorder.setVideoBitrate(1000000);
+                    hbRecorder.setVideoBitrate(2500000);
                 else
-                    hbRecorder.setVideoBitrate(1000000);
+                    hbRecorder.setVideoBitrate(2500000);
 
                 hbRecorder.setVideoEncoder("H264");
                // hbRecorder.setVideoFrameRate(24);

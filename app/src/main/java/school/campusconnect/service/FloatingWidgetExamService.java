@@ -87,7 +87,7 @@ public class FloatingWidgetExamService extends Service {
                             initialTouchY = event.getRawY();
                             break;
                         case MotionEvent.ACTION_UP:
-                            if (System.currentTimeMillis() - touchStartTime < 150)
+                            if (System.currentTimeMillis() - touchStartTime < 1500)
                             {
                                 Intent intent = new Intent("recording");
                                 // You can also include some extra data.
@@ -98,9 +98,9 @@ public class FloatingWidgetExamService extends Service {
                             }
                             break;
                         case MotionEvent.ACTION_MOVE:
-                            myParams.x = initialX + (int) (event.getRawX() - initialTouchX);
+                     /*       myParams.x = initialX + (int) (event.getRawX() - initialTouchX);
                             myParams.y = initialY + (int) (event.getRawY() - initialTouchY);
-                            windowManager.updateViewLayout(v, myParams);
+                            windowManager.updateViewLayout(v, myParams);*/
                             break;
                     }
                     return false;

@@ -330,7 +330,7 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-    //implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
@@ -341,6 +341,9 @@ dependencies {
     implementation 'com.otaliastudios:zoomlayout:1.8.0'
 
     implementation 'com.github.instacart.truetime-android:library-extension-rx:3.4'
+
+    implementation 'com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview:1.1.0'
+
 
 
 }

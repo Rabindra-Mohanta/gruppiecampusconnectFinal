@@ -17,6 +17,7 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -157,6 +158,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     LeafPreference leafPreference;
 
     LeafManager leafManager;
+    private long mLastClickTime = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -750,14 +752,24 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     }
 
-    private void onTreeClick(VideoClassResponse.ClassData classData) {
+    private void onTreeClick(VideoClassResponse.ClassData classData)
+    {
         AppLog.e(TAG, "onTreeClick : " + classData.getId());
+
+
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 8000) {
+            return;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
+
         this.item = classData;
 
-
-        if (classData.canPost && Build.VERSION.SDK_INT != Build.VERSION_CODES.Q) {
+        if (classData.canPost && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        {
             ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
-        } else {
+        }
+        else
+        {
             videoClassClicked = true;
             startMeeting();
             progressBarZoom.setVisibility(View.VISIBLE);
@@ -793,7 +805,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         //   EnterSubjectDialog();
         getSubjectList(classData.getId());
 
-        if (getActivity() != null && item.canPost && !item.isLive) {
+        if (getActivity() != null && item.canPost) {
             ((VideoClassActivity) getActivity()).stopRecording();
         }
 
