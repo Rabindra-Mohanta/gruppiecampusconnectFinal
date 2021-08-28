@@ -27,6 +27,8 @@ import school.campusconnect.activities.TeamSettingsActivity;
 import school.campusconnect.activities.TeamUsersActivity;
 import school.campusconnect.adapters.ReportAdapter;
 import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.PostDataItem;
+import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
@@ -491,6 +493,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 teamPostGetdata.fileType = dataItemList.get(i).fileType;
                 teamPostGetdata.fileName = new Gson().fromJson(dataItemList.get(i).fileName, new TypeToken<ArrayList<String>>() {
                 }.getType());
+                teamPostGetdata.thumbnailImage = new Gson().fromJson(dataItemList.get(i).thumbnailImage, new TypeToken<ArrayList<String>>() {
+                }.getType());
                 teamPostGetdata.updatedAt = dataItemList.get(i).updatedAt;
                 teamPostGetdata.text = dataItemList.get(i).text;
                 teamPostGetdata.imageWidth = dataItemList.get(i).imageWidth;
@@ -503,6 +507,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 teamPostGetdata.canEdit = dataItemList.get(i).canEdit;
                 teamPostGetdata.phone = dataItemList.get(i).phone;
                 teamPostGetdata.thumbnail = dataItemList.get(i).thumbnail;
+                teamPostGetdata.isFavourited = dataItemList.get(i).isFavourited;
 
                 teamPostList.add(teamPostGetdata);
             }
@@ -716,6 +721,18 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 }
                 break;
 
+            case LeafManager.API_ID_FAV:
+                if (response.status.equalsIgnoreCase("favourite")) {
+                    teamPostList.get(position).isFavourited = true;
+                } else {
+                    teamPostList.get(position).isFavourited = false;
+                }
+                mAdapter2.notifyItemChanged(position);
+                TeamPostGetData select = teamPostList.get(position);
+                PostTeamDataItem.updateFav(select.id,select.isFavourited?1:0);
+                break;
+
+
             case LeafManager.API_ID_LIKE_TEAM:
                 if (response.status.equalsIgnoreCase("liked")) {
                     teamPostList.get(position).isLiked = true;
@@ -726,6 +743,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 }
                 mAdapter2.notifyItemChanged(position);
                 liked = false;
+
+
+                TeamPostGetData select2 = teamPostList.get(position);
+                PostTeamDataItem.updateLike(select2.id,select2.isLiked?1:0,select2.likes);
+
                 break;
 
             case LeafManager.API_ID_DELETE_POST:
@@ -785,14 +807,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 if (!isFind)
                     getActivity().onBackPressed();
                 break;
-            case LeafManager.API_ID_FAV:
-                if (response.status.equalsIgnoreCase("favourite")) {
-                    teamPostList.get(position).isFavourited = true;
-                } else {
-                    teamPostList.get(position).isFavourited = false;
-                }
-                mAdapter2.notifyItemChanged(position);
-                break;
+
 
         }
 
@@ -839,6 +854,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             postItem.fileType = item.fileType;
             if (item.fileName != null) {
                 postItem.fileName = new Gson().toJson(item.fileName);
+                postItem.thumbnailImage = new Gson().toJson(item.thumbnailImage);
             }
             postItem.updatedAt = item.updatedAt;
             postItem.text = item.text;
@@ -854,7 +870,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             postItem.group_id = mGroupId + "";
             postItem.team_id = team_id + "";
             postItem.thumbnail = item.thumbnail;
-
+            postItem.isFavourited = item.isFavourited;
             postItem.save();
         }
 

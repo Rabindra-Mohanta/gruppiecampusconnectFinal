@@ -5,6 +5,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 
 import java.util.List;
 
@@ -33,10 +34,12 @@ public class PostDataItem extends Model {
     public String fileType;
     @Column(name = "fileName")
     public String fileName;
+    @Column(name = "thumbnailImage")
+    public String thumbnailImage;
     @Column(name = "createdById")
-    public String  createdById;
+    public String createdById;
     @Column(name = "createdByImage")
-    public String  createdByImage;
+    public String createdByImage;
     @Column(name = "createdBy")
     public String createdBy;
     @Column(name = "createdAt")
@@ -60,7 +63,7 @@ public class PostDataItem extends Model {
 
     @Column(name = "imageWidth")
     public int imageWidth;
-    @Column(name ="imageHeight")
+    @Column(name = "imageHeight")
     public int imageHeight;
 
 
@@ -107,7 +110,7 @@ public class PostDataItem extends Model {
         new Delete().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).execute();
     }
 
-    public static void deletePersonalChatPosts(String  group_id, String friend_id) {
+    public static void deletePersonalChatPosts(String group_id, String friend_id) {
         new Delete().from(PostDataItem.class).where("type = ?", "personal").where("group_id = ?", group_id).where("friend_id = ?", friend_id).execute();
     }
 
@@ -115,8 +118,18 @@ public class PostDataItem extends Model {
         new Delete().from(PostDataItem.class).where("post_id = ?", post_id).execute();
     }
 
+
     public static void deleteAllPosts() {
         new Delete().from(PostDataItem.class).execute();
     }
+
+    public static void updateLike(String post_id, int isLiked,int likes) {
+        new Update(PostDataItem.class).set("isLiked = ?,likes = ?", isLiked,likes).where("post_id = ?", post_id).execute();
+    }
+
+    public static void updateFav(String post_id, int isFavourited) {
+        new Update(PostDataItem.class).set("isFavourited = ?", isFavourited).where("post_id = ?", post_id).execute();
+    }
+
 }
 

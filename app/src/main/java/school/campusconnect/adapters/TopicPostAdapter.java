@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -325,7 +326,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         LinearLayout llMore;
 
         @Bind(R.id.chkCompleted)
-        CheckBox chkCompleted;
+        SwitchCompat chkCompleted;
 
         public ImageViewHolder(View itemView) {
             super(itemView);

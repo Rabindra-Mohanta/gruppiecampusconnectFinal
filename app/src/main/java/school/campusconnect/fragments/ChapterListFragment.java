@@ -95,7 +95,6 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         canPost = getArguments().getBoolean("canPost");
 
 
-
         return view;
     }
 
@@ -105,41 +104,45 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
         getDataLocally();
     }
+
     EventTBL eventTBL;
+
     private void getDataLocally() {
-        eventTBL = EventTBL.getNotesVideoEvent(GroupDashboardActivityNew.groupId,team_id,subject_id);
+        eventTBL = EventTBL.getNotesVideoEvent(GroupDashboardActivityNew.groupId, team_id, subject_id);
         boolean apiEvent = false;
-        if(eventTBL!=null){
-            if(eventTBL._now ==0){
+        if (eventTBL != null) {
+            if (eventTBL._now == 0) {
                 apiEvent = true;
             }
-            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
+            if (MixOperations.isNewEvent(eventTBL.eventAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", eventTBL._now)) {
                 apiEvent = true;
             }
         }
 
-        List<ChapterTBL> list = ChapterTBL.getAll(subject_id,team_id,GroupDashboardActivityNew.groupId);
+        List<ChapterTBL> list = ChapterTBL.getAll(subject_id, team_id, GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
-            chapterList= new ArrayList<>();
+            chapterList = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 ChapterTBL currentItem = list.get(i);
                 ChapterRes.ChapterData item = new ChapterRes.ChapterData();
                 item.chapterId = currentItem.chapterId;
                 item.chapterName = currentItem.chapterName;
                 item.createdByName = currentItem.createdByName;
-                item.topicList = new Gson().fromJson(currentItem.topics,new TypeToken<ArrayList<ChapterRes.TopicData>>() {}.getType());
+                item.topicList = new Gson().fromJson(currentItem.topics, new TypeToken<ArrayList<ChapterRes.TopicData>>() {
+                }.getType());
                 chapterList.add(item);
             }
 
             bindChapter();
 
-            if(apiEvent){
+            if (apiEvent) {
                 getChapters();
             }
         } else {
             getChapters();
         }
     }
+
     public void getChapters() {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
@@ -158,7 +161,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             getChapters();
             LeafPreference.getInstance(getActivity()).setBoolean("is_topic_added", false);
         }
-        if(adapter!=null){
+        if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
     }
@@ -174,15 +177,17 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_CHAPTER_REMOVE:
-                chapterList.remove(spChapter.getSelectedItemPosition());
-                bindChapter();
+               /* chapterList.remove(spChapter.getSelectedItemPosition());
+                bindChapter();*/
+                getChapters();
                 break;
             case LeafManager.API_TOPIC_REMOVE:
-                chapterList.get(spChapter.getSelectedItemPosition()).topicList.remove(adapterPosition);
-                adapter.notifyDataSetChanged();
+               /* chapterList.get(spChapter.getSelectedItemPosition()).topicList.remove(adapterPosition);
+                adapter.notifyDataSetChanged();*/
+                getChapters();
                 break;
             case LeafManager.API_TOPIC_STATUS_CHANGE:
-                // do nothing
+                getChapters();
                 break;
             default:
                 ChapterRes res = (ChapterRes) response;
@@ -192,7 +197,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
                 saveToDB(chapterList);
 
-                if(eventTBL!=null){
+                if (eventTBL != null) {
                     eventTBL._now = System.currentTimeMillis();
                     eventTBL.save();
                 }
@@ -200,6 +205,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         }
 
     }
+
     private void saveToDB(ArrayList<ChapterRes.ChapterData> result) {
         if (result == null)
             return;
@@ -226,10 +232,10 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             llTop.setVisibility(View.VISIBLE);
 
             String[] strChapter = new String[chapterList.size()];
-            for (int i=0;i<strChapter.length;i++){
-                strChapter[i]=chapterList.get(i).chapterName;
+            for (int i = 0; i < strChapter.length; i++) {
+                strChapter[i] = chapterList.get(i).chapterName;
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.item_spinner,strChapter);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.item_spinner, strChapter);
             spChapter.setAdapter(adapter);
 
             spChapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -247,7 +253,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         } else {
             txtEmpty.setVisibility(View.VISIBLE);
             llTop.setVisibility(View.GONE);
-            if(adapter!=null){
+            if (adapter != null) {
                 adapter.clear();
             }
         }
@@ -285,18 +291,38 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onCompleteClick(ChapterRes.TopicData item, int adapterPosition) {
-        progressBar.setVisibility(View.VISIBLE);
-        LeafManager manager = new LeafManager();
-        manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId,item.topicId);
+        if (item.topicCompleted) {
+            SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Have you completed your notes?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (isConnectionAvailable()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        LeafManager manager = new LeafManager();
+                        manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
+                    } else {
+                        showNoNetworkMsg();
+                    }
+                }
+            });
+        } else {
+            if (isConnectionAvailable()) {
+                progressBar.setVisibility(View.VISIBLE);
+                LeafManager manager = new LeafManager();
+                manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
+            } else {
+                showNoNetworkMsg();
+            }
+
+        }
     }
 
     @Override
     public void onCompletedStudentClick(ChapterRes.TopicData item, int adapterPosition) {
-        Intent intent=new Intent(getActivity(), CompletedTopicUserActivity.class);
-        intent.putExtra("item",new Gson().toJson(item));
-        intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
-        intent.putExtra("team_id",team_id);
-        intent.putExtra("subject_id",subject_id);
+        Intent intent = new Intent(getActivity(), CompletedTopicUserActivity.class);
+        intent.putExtra("item", new Gson().toJson(item));
+        intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
+        intent.putExtra("team_id", team_id);
+        intent.putExtra("subject_id", subject_id);
         startActivity(intent);
     }
 
@@ -338,9 +364,9 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onDeleteVideoClick(ChapterRes.TopicData item, int adapterPosition) {
-        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
-        if(item.fileName!=null && item.fileName.size()>0){
-            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+        AppLog.e(TAG, "onDeleteVideoClick : " + item.fileName.get(0));
+        if (item.fileName != null && item.fileName.size() > 0) {
+            AmazoneDownload.removeVideo(getActivity(), item.fileName.get(0));
             adapter.notifyItemChanged(adapterPosition);
         }
     }

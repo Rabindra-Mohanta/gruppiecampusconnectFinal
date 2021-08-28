@@ -388,7 +388,7 @@
 
             </LinearLayout>
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/chkCompleted"
                 android:visibility="visible"
                 android:layout_width="wrap_content"

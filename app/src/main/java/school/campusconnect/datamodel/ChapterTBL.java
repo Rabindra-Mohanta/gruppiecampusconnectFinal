@@ -46,6 +46,6 @@ public class ChapterTBL extends Model {
     }
 
     public static void deleteAll(String subjectId) {
-        new Delete().from(HwItem.class).where("subjectId = ?", subjectId).execute();
+        new Delete().from(ChapterTBL.class).where("subjectId = ?", subjectId).execute();
     }
 }

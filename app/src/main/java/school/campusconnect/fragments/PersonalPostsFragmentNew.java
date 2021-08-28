@@ -203,6 +203,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
                 postItem.fileType = dataItemList.get(i).fileType;
                 postItem.fileName = new Gson().fromJson(dataItemList.get(i).fileName, new TypeToken<ArrayList<String>>() {
                 }.getType());
+                postItem.thumbnailImage = new Gson().fromJson(dataItemList.get(i).thumbnailImage, new TypeToken<ArrayList<String>>() {
+                }.getType());
                 postItem.updatedAt = dataItemList.get(i).updatedAt;
                 postItem.text = dataItemList.get(i).text;
                 postItem.imageWidth = dataItemList.get(i).imageWidth;
@@ -394,6 +396,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
             postItem.fileType = item.fileType;
             if (item.fileName != null) {
                 postItem.fileName = new Gson().toJson(item.fileName);
+                postItem.thumbnailImage = new Gson().toJson(item.thumbnailImage);
             }
             postItem.updatedAt = item.updatedAt;
             postItem.text = item.text;

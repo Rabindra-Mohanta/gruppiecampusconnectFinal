@@ -276,17 +276,24 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     private void showData() {
 
         if (item.proctoring) {
-            if (showStart) {
+            long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+            long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
+
+            AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
+            if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd && showStart)
+            {
                 btnStart.setVisibility(View.VISIBLE);
                 btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
                 btnStart.setEnabled(true);
-            } else {
+            }
+            else
+            {
                 btnStart.setVisibility(View.VISIBLE);
                 btnStart.setEnabled(false);
                 btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
             }
 
-            long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+
             dtExamStart = dtExamStart + (5 * 60000);
 
             AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);

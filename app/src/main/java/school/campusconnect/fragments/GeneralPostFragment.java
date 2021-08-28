@@ -303,6 +303,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 postItem.fileType = dataItemList.get(i).fileType;
                 postItem.fileName = new Gson().fromJson(dataItemList.get(i).fileName, new TypeToken<ArrayList<String>>() {
                 }.getType());
+                postItem.thumbnailImage = new Gson().fromJson(dataItemList.get(i).thumbnailImage, new TypeToken<ArrayList<String>>() {
+                }.getType());
                 postItem.updatedAt = dataItemList.get(i).updatedAt;
                 postItem.text = dataItemList.get(i).text;
                 postItem.imageWidth = dataItemList.get(i).imageWidth;
@@ -449,6 +451,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     PostList.get(position).isFavourited = false;
                 }
                 mAdapter.notifyItemChanged(position);
+                PostItem select = PostList.get(position);
+                PostDataItem.updateFav(select.id,select.isFavourited?1:0);
+
                 break;
 
             case LeafManager.API_ID_LIKE:
@@ -461,6 +466,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 }
                 mAdapter.notifyItemChanged(position);
                 liked = false;
+
+                PostItem select2 = PostList.get(position);
+                PostDataItem.updateLike(select2.id,select2.isLiked?1:0,select2.likes);
                 break;
 
             case LeafManager.API_ID_DELETE_POST:
@@ -529,6 +537,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             postItem.fileType = item.fileType;
             if (item.fileName != null) {
                 postItem.fileName = new Gson().toJson(item.fileName);
+                postItem.thumbnailImage = new Gson().toJson(item.thumbnailImage);
             }
             postItem.updatedAt = item.updatedAt;
             postItem.text = item.text;

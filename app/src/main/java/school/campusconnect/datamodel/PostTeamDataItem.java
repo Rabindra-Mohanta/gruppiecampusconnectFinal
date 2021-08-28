@@ -7,6 +7,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class PostTeamDataItem extends Model {
     public String fileType;
     @Column(name = "fileName")
     public String fileName;
+    @Column(name = "thumbnailImage")
+    public String thumbnailImage;
     @Column(name = "createdById")
     public String  createdById;
     @Column(name = "createdByImage")
@@ -63,6 +66,8 @@ public class PostTeamDataItem extends Model {
     @Column(name = "image")
     public String image;
 
+    @Column(name = "isFavourited")
+    public boolean isFavourited;
 
 
 
@@ -108,5 +113,14 @@ public class PostTeamDataItem extends Model {
 
     public static void deleteAllPosts() {
         new Delete().from(PostTeamDataItem.class).execute();
+    }
+
+
+    public static void updateLike(String post_id, int isLiked,int likes) {
+        new Update(PostTeamDataItem.class).set("isLiked = ?,likes = ?", isLiked,likes).where("post_id = ?", post_id).execute();
+    }
+
+    public static void updateFav(String post_id, int isFavourited) {
+        new Update(PostTeamDataItem.class).set("isFavourited = ?", isFavourited).where("post_id = ?", post_id).execute();
     }
 }
