@@ -109,7 +109,7 @@ public class ChapterActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if("chapter_refresh".equalsIgnoreCase(intent.getAction())){
-                ((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getChapters();
+                ((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getChapters(true);
             }
         }
     };

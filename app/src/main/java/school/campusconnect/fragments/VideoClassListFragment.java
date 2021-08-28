@@ -412,6 +412,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
         } else if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
         } else if (apiId == LeafManager.API_LIVE_CLASS_START) {
+            isStartApiCalled = false;
             if (item != null) {
                 item.createdById = leafPreference.getUserId();
                 item.createdByName = leafPreference.getUserName();
@@ -487,11 +488,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onFailure(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+        isStartApiCalled = false;
     }
 
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+        isStartApiCalled = false;
     }
 
     public void callEventApi() {
@@ -706,7 +709,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                             onTreeClick(listItemData);
 
                             if (listItemData.canPost && !listItemData.isLive) {
-                                leafManager.startLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, listItemData.getId());
+                                if(!isStartApiCalled){
+                                    isStartApiCalled = true;
+                                    leafManager.startLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, listItemData.getId());
+                                }
                             }
                             if (!listItemData.canPost) {
                                 randomJoin(listItemData);
@@ -731,6 +737,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     boolean isJoinApiCalled = false;
+    boolean isStartApiCalled = false;
 
     private void randomJoin(VideoClassResponse.ClassData listItemData) {
         if (!isJoinApiCalled) {
@@ -765,7 +772,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         this.item = classData;
 
-        if (classData.canPost && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (classData.canPost && Build.VERSION.SDK_INT != Build.VERSION_CODES.Q) {
             ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
         } else {
             videoClassClicked = true;

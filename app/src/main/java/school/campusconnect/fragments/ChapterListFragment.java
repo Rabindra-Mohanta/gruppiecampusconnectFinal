@@ -136,15 +136,16 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             bindChapter();
 
             if (apiEvent || canPost) {
-                getChapters();
+                getChapters(false);
             }
         } else {
-            getChapters();
+            getChapters(true);
         }
     }
 
-    public void getChapters() {
-        progressBar.setVisibility(View.VISIBLE);
+    public void getChapters(boolean isLoading) {
+        if (isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
@@ -154,11 +155,11 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         super.onStart();
 
         if (LeafPreference.getInstance(getActivity()).getBoolean("is_chapter_added")) {
-            getChapters();
+            getChapters(true);
             LeafPreference.getInstance(getActivity()).setBoolean("is_chapter_added", false);
         }
         if (LeafPreference.getInstance(getActivity()).getBoolean("is_topic_added")) {
-            getChapters();
+            getChapters(true);
             LeafPreference.getInstance(getActivity()).setBoolean("is_topic_added", false);
         }
         if (adapter != null) {
@@ -179,15 +180,15 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             case LeafManager.API_CHAPTER_REMOVE:
                /* chapterList.remove(spChapter.getSelectedItemPosition());
                 bindChapter();*/
-                getChapters();
+                getChapters(true);
                 break;
             case LeafManager.API_TOPIC_REMOVE:
                /* chapterList.get(spChapter.getSelectedItemPosition()).topicList.remove(adapterPosition);
                 adapter.notifyDataSetChanged();*/
-                getChapters();
+                getChapters(true);
                 break;
             case LeafManager.API_TOPIC_STATUS_CHANGE:
-                getChapters();
+                getChapters(true);
                 break;
             default:
                 ChapterRes res = (ChapterRes) response;

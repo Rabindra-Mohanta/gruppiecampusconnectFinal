@@ -10,10 +10,12 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 
 import com.activeandroid.ActiveAndroid;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import school.campusconnect.BuildConfig;
@@ -77,49 +79,54 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
     private void handleIntent(Intent intent) {
         String action = intent.getAction();
         String type = intent.getType();
-        AppLog.e(TAG,"action : "+action);
-        AppLog.e(TAG,"type : "+type);
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
-            Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-            AppLog.e(TAG,"uri : "+uri);
-            ArrayList<String> list = new ArrayList<>();
-            String path = ImageUtil.getPath(this, uri);
-            AppLog.e(TAG,"path : "+path);
-            if(!TextUtils.isEmpty(path)){
-                list.add(path);
-            }
-            String fileType = "";
-            if (type.startsWith("application/pdf")) {
-                fileType = Constants.FILE_TYPE_PDF;
-            }else if (type.startsWith("image/")) {
-                fileType = Constants.FILE_TYPE_IMAGE;
-            }else if (type.startsWith("video/")) {
-                fileType = Constants.FILE_TYPE_VIDEO;
-            }
-            LeafApplication.getInstance().setShareFileList(list,fileType);
-        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-            ArrayList<Uri> uriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-            AppLog.e(TAG,"uriList : "+uriList);
-            ArrayList<String> list = new ArrayList<>();
-            if(uriList!=null){
-                for (int i=0;i<uriList.size();i++){
-                    String path = ImageUtil.getPath(this, uriList.get(i));
-                    if(!TextUtils.isEmpty(path)){
-                        list.add(path);
+        AppLog.e(TAG, "action : " + action);
+        AppLog.e(TAG, "type : " + type);
+        try {
+            if (Intent.ACTION_SEND.equals(action) && type != null) {
+                Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                AppLog.e(TAG, "uri : " + uri);
+                ArrayList<String> list = new ArrayList<>();
+                String path = ImageUtil.getPath(this, uri);
+                AppLog.e(TAG, "path : " + path);
+                if (!TextUtils.isEmpty(path)) {
+                    list.add(path);
+                }
+                String fileType = "";
+                if (type.startsWith("application/pdf")) {
+                    fileType = Constants.FILE_TYPE_PDF;
+                } else if (type.startsWith("image/")) {
+                    fileType = Constants.FILE_TYPE_IMAGE;
+                } else if (type.startsWith("video/")) {
+                    fileType = Constants.FILE_TYPE_VIDEO;
+                }
+                LeafApplication.getInstance().setShareFileList(list, fileType);
+            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+                ArrayList<Uri> uriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                AppLog.e(TAG, "uriList : " + uriList);
+                ArrayList<String> list = new ArrayList<>();
+                if (uriList != null) {
+                    for (int i = 0; i < uriList.size(); i++) {
+                        String path = ImageUtil.getPath(this, uriList.get(i));
+                        if (!TextUtils.isEmpty(path)) {
+                            list.add(path);
+                        }
                     }
                 }
+                AppLog.e(TAG, "uriList path: " + list);
+                String fileType = "";
+                if (type.startsWith("application/pdf")) {
+                    fileType = Constants.FILE_TYPE_PDF;
+                } else if (type.startsWith("image/")) {
+                    fileType = Constants.FILE_TYPE_IMAGE;
+                } else if (type.startsWith("video/")) {
+                    fileType = Constants.FILE_TYPE_VIDEO;
+                }
+                LeafApplication.getInstance().setShareFileList(list, fileType);
             }
-            AppLog.e(TAG,"uriList path: "+list);
-            String fileType = "";
-            if (type.startsWith("application/pdf")) {
-                fileType = Constants.FILE_TYPE_PDF;
-            }else if (type.startsWith("image/")) {
-                fileType = Constants.FILE_TYPE_IMAGE;
-            }else if (type.startsWith("video/")) {
-                fileType = Constants.FILE_TYPE_VIDEO;
-            }
-            LeafApplication.getInstance().setShareFileList(list,fileType);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
     }
 
@@ -182,7 +189,7 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
                 @Override
                 public void run() {
 //                    if (!isConnectionAvailable())
-                        gotoHomeScreen();
+                    gotoHomeScreen();
                    /* else {
                         if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
                             SplashActivity.this.manager.getGroups(SplashActivity.this);
@@ -256,27 +263,27 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
             }
         }*/
     }
+
     //save group detail
    /* private void saveGroupDetails(GroupDetailResponse gRes) {
         LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
         LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
         gotoHomeScreen();
     }*/
-    private void gotoHomeScreen()
-    {
-        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
-            if(LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT)>1){
+    private void gotoHomeScreen() {
+        if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
                 Intent intent = new Intent(SplashActivity.this, Home.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
-            }else {
+            } else {
                 Intent login = new Intent(this, GroupDashboardActivityNew.class);
                 login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(login);
                 finish();
             }
-        }else {
+        } else {
             Intent intent = new Intent(SplashActivity.this, GroupDashboardActivityNew.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -290,19 +297,16 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         if (msg.contains("401") || msg.contains("Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_LONG).show();
             logout();
-        }
-        else if (msg.contains("Not Found"))
-        {
+        } else if (msg.contains("Not Found")) {
             logout();
-        }
-        else {
+        } else {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        AppLog.e("splash", "onException : "+msg);
+        AppLog.e("splash", "onException : " + msg);
         /*if (apiCallCount <= 1) {
             manager.getGroupDetail(SplashActivity.this, Constants.group_id_str);
             apiCallCount++;

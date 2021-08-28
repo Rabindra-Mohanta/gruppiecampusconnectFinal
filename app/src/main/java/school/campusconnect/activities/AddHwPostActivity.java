@@ -46,6 +46,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -73,6 +74,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -351,6 +353,35 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         imageAdapter = new UploadImageAdapter(listImages, this);
         rvImages.setAdapter(imageAdapter);
 
+        dragDropFeature();
+    }
+    private void dragDropFeature() {
+        // Extend the Callback class
+        ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
+            //and in your imlpementaion of
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                // get the viewHolder's and target's positions in your adapter data, swap them
+                Collections.swap(listImages/*RecyclerView.Adapter's data collection*/, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                // and notify the adapter that its dataset has changed
+                imageAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //TODO
+            }
+
+            //defines the enabled move directions in each state (idle, swiping, dragging).
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
+                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+            }
+        };
+        // Create an `ItemTouchHelper` and attach it to the `RecyclerView`
+        ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
+        ith.attachToRecyclerView(rvImages);
     }
 
     private void shareButtonEnableDisable() {

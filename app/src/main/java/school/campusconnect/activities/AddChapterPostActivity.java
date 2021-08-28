@@ -40,6 +40,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,6 +66,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -302,7 +304,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new UploadImageAdapter(listImages, this);
         rvImages.setAdapter(imageAdapter);
-
     }
 
     private void shareButtonEnableDisable() {
@@ -316,6 +317,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     public void addPost() {
         hide_keyboard();
+
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
