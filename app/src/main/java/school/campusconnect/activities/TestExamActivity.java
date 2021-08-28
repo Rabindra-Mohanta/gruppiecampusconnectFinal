@@ -30,6 +30,7 @@ public class TestExamActivity extends BaseActivity {
     String subject_id;
     String subject_name;
     String className;
+    TestExamListFragment classListFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,7 @@ public class TestExamActivity extends BaseActivity {
         className = getIntent().getStringExtra("className");
 
 
-        TestExamListFragment classListFragment=new TestExamListFragment();
+        classListFragment=new TestExamListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
 
@@ -55,6 +56,14 @@ public class TestExamActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(classListFragment!=null){
+            classListFragment.refereshApiEvent();
+        }
     }
 
     @Override

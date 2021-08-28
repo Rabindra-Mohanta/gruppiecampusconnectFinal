@@ -135,7 +135,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
             bindChapter();
 
-            if (apiEvent) {
+            if (apiEvent || canPost) {
                 getChapters();
             }
         } else {
@@ -292,7 +292,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onCompleteClick(ChapterRes.TopicData item, int adapterPosition) {
         if (item.topicCompleted) {
-            SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Have you completed your notes?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogYesNoCancel(getActivity(), "Have you completed your notes?", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {
@@ -301,7 +301,16 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                         manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
                     } else {
                         showNoNetworkMsg();
+                        item.topicCompleted = !item.topicCompleted;
+                        adapter.notifyDataSetChanged();
                     }
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    item.topicCompleted = !item.topicCompleted;
+                    adapter.notifyDataSetChanged();
                 }
             });
         } else {
@@ -311,6 +320,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
             } else {
                 showNoNetworkMsg();
+                item.topicCompleted = !item.topicCompleted;
+                adapter.notifyDataSetChanged();
             }
 
         }

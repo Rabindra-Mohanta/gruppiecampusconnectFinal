@@ -161,8 +161,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_parent);
         ButterKnife.bind(this);
@@ -178,7 +177,6 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
         showData();
     }
-
 
 
     private void _init() {
@@ -237,15 +235,12 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
             long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
 
-            AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
-            if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd)
-            {
+            AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
+            if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd) {
                 btnStart.setVisibility(View.VISIBLE);
                 btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
                 btnStart.setEnabled(true);
-            }
-            else
-            {
+            } else {
                 btnStart.setVisibility(View.VISIBLE);
                 btnStart.setEnabled(false);
                 btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
@@ -380,31 +375,24 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     }
 
-    private void setStartButtonStatus()
-    {
-        if (item.proctoring)
-        {
+    private void setStartButtonStatus() {
+        if (item.proctoring) {
 
-        long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
-        long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
+            long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
+            long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
 
-        AppLog.e(TAG , "dtExamStart time : "+dtExamStart+ " , "+currentTimeFromServer);
-        if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd)
-        {
-            btnStart.setVisibility(View.VISIBLE);
-            btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
-            btnStart.setEnabled(true);
-        }
-        else
-        {
-            btnStart.setVisibility(View.VISIBLE);
-            btnStart.setEnabled(false);
-            btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
-        }
-        }
-        else
-        {
-        btnStart.setVisibility(View.GONE);
+            AppLog.e(TAG, "dtExamStart time : " + dtExamStart + " , " + currentTimeFromServer);
+            if (currentTimeFromServer > dtExamStart && currentTimeFromServer < dtExamEnd) {
+                btnStart.setVisibility(View.VISIBLE);
+                btnStart.setBackground(getDrawable(R.drawable.start_button_bg));
+                btnStart.setEnabled(true);
+            } else {
+                btnStart.setVisibility(View.VISIBLE);
+                btnStart.setEnabled(false);
+                btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
+            }
+        } else {
+            btnStart.setVisibility(View.GONE);
         }
 
     }
@@ -413,7 +401,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 99 && resultCode == RESULT_OK) {
-            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify",false),data.getStringExtra("comments"),data.getStringArrayListExtra("_finalUrl"));
+            notVerifyAssignmentFromActResult(data.getBooleanExtra("isVerify", false), data.getStringExtra("comments"), data.getStringArrayListExtra("_finalUrl"));
         }
 
         if (requestCode == DRAW_OVER_OTHER_APP_PERMISSION) {
@@ -436,7 +424,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     }
 
     public void onPostClick(TestPaperRes.TestPaperData item) {
-        this.selectedAssignment =item;
+        this.selectedAssignment = item;
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
             Intent browserIntent = new Intent(this, TestActivity.class);
             browserIntent.putExtra("url", item.video);
@@ -445,13 +433,13 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
-            i.putExtra("name", ""+item.studentName);
+            i.putExtra("name", "" + item.studentName);
             startActivity(i);
         } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
             if (item.fileName != null && item.fileName.size() > 0) {
                 Intent i = new Intent(this, TestExamEditActivity.class);
                 i.putExtra("item", new Gson().toJson(item));
-                startActivityForResult(i,99);
+                startActivityForResult(i, 99);
             }
         }
 
@@ -461,6 +449,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_delete, menu);
         menu.findItem(R.id.menuDelete).setTitle("Delete Test/Exam");
+        menu.findItem(R.id.menuGetLink).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -469,6 +458,28 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         switch (item.getItemId()) {
             case R.id.menuDelete:
                 deletePost();
+                return true;
+            case R.id.menuGetLink:
+                TestExamRes.TestExamData currPaper = TestParentActivity.this.item;
+                if(currPaper!=null && currPaper.fileName!=null){
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("Question Paper : "+subject_name+" (" + className + ")");
+                    stringBuilder.append("\n");
+                    for (int i=0;i<currPaper.fileName.size();i++){
+                        stringBuilder.append("Page "+(i+1)).append(" : "+Constants.decodeUrlToBase64(currPaper.fileName.get(i))).append("\n");
+                    }
+
+                    /*Create an ACTION_SEND Intent*/
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    /*The type of the content is text, obviously.*/
+                    intent.setType("text/plain");
+                    /*Applying information Subject and Body.*/
+                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Question Paper : "+subject_name+" (" + className + ")");
+                    intent.putExtra(android.content.Intent.EXTRA_TEXT, stringBuilder.toString());
+                    /*Fire!*/
+                    startActivity(Intent.createChooser(intent,"Sharing using"));
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -550,8 +561,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         SendNotificationModel notificationModel = new SendNotificationModel();
         notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId + "_" + team_id;
         notificationModel.data.title = getResources().getString(R.string.app_name);
-        notificationModel.data.body =  isStart ? item.createdByName + " teacher has started exam proctoring " : item.createdByName + " teacher has ended exam proctoring";
-        notificationModel.data.Notification_type =  isStart ? "examStart" : "examEnd";
+        notificationModel.data.body = isStart ? item.createdByName + " teacher has started exam proctoring " : item.createdByName + " teacher has ended exam proctoring";
+        notificationModel.data.Notification_type = isStart ? "examStart" : "examEnd";
         notificationModel.data.iSNotificationSilent = true;
         notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
         notificationModel.data.teamId = team_id;
@@ -643,7 +654,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                         if (item.fileName.size() == 3) {
                             adapter = new ChildTestAdapter(2, item.fileName.size(), mContext, item.fileName, TestParentActivity.this, item);
                         } else {
-                        adapter = new ChildTestAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName, TestParentActivity.this, item);
+                            adapter = new ChildTestAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName, TestParentActivity.this, item);
                         }
                         holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                         holder.recyclerView.setVisibility(View.VISIBLE);
@@ -906,7 +917,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         startActivity(intent);
     }
 
-    private void notVerifyAssignmentFromActResult(boolean isVerify, String comments,ArrayList<String> _finalUrl) {
+    private void notVerifyAssignmentFromActResult(boolean isVerify, String comments, ArrayList<String> _finalUrl) {
 
         if (isVerify) {
             progressBar.setVisibility(View.VISIBLE);
@@ -914,8 +925,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             ReassignReq reassignReq = new ReassignReq(comments);
             reassignReq.fileName = new ArrayList<>();
             reassignReq.fileName = _finalUrl;
-            AppLog.e(TAG,"reassignReq :"+reassignReq);
-            leafManager.verifyTestPaper(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.testExamId, selectedAssignment.studentTestExamId, true,reassignReq);
+            AppLog.e(TAG, "reassignReq :" + reassignReq);
+            leafManager.verifyTestPaper(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.testExamId, selectedAssignment.studentTestExamId, true, reassignReq);
         }
     }
 
@@ -927,7 +938,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 ReassignReq reassignReq = new ReassignReq("");
-                leafManager.verifyTestPaper(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.testExamId, item.studentTestExamId, false,reassignReq);
+                leafManager.verifyTestPaper(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.testExamId, item.studentTestExamId, false, reassignReq);
             }
         });
     }
@@ -1395,13 +1406,12 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         AppLog.e(TAG, "startBubbleService()");
 
         Intent uploadIntent2 = new Intent(this, FloatingWidgetExamService.class);
-        uploadIntent2.putExtra("data",new Gson().toJson(item));
+        uploadIntent2.putExtra("data", new Gson().toJson(item));
         bindService(uploadIntent2, mConnection, Context.BIND_AUTO_CREATE);
 
     }
 
-    public void startLiveTest()
-    {
+    public void startLiveTest() {
         progressBar.setVisibility(View.VISIBLE);
 
         sendNotificationProctoring(true);
@@ -1410,8 +1420,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         leafManager.startTestPaperEvent(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
     }
 
-    public void stopLiveTest()
-    {
+    public void stopLiveTest() {
         progressBar.setVisibility(View.VISIBLE);
 
         sendNotificationProctoring(false);
@@ -1469,7 +1478,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     };
 
     private void openpaper(String data) {
-        TestExamRes.TestExamData item = new Gson().fromJson(data,TestExamRes.TestExamData.class);
+        TestExamRes.TestExamData item = new Gson().fromJson(data, TestExamRes.TestExamData.class);
         if (Constants.FILE_TYPE_PDF.equals(item.fileType)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

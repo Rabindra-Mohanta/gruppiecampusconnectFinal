@@ -308,7 +308,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             String message = intent.getAction();
 
             AppLog.e(TAG, "onReceive called with action : " + message);
-             if (message.equalsIgnoreCase("MEETING_START")) {
+            if (message.equalsIgnoreCase("MEETING_START")) {
 
                 if (intent.getExtras().containsKey("teamId")) {
                    /* int position = getPositionOf(intent.getExtras().getString("teamId"));
@@ -317,13 +317,12 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                         listItemData.createdByName = intent.getExtras().getString("createdByName");
                         classesAdapter.notifyDataSetChanged();
                     }*/
-                getLiveClassEventApi();
+                    getLiveClassEventApi();
                 }
             }
             if (message.equalsIgnoreCase("MEETING_END")) {
 
-                if (intent.getExtras().containsKey("teamId"))
-                {
+                if (intent.getExtras().containsKey("teamId")) {
                     int position = getPositionOf(intent.getExtras().getString("teamId"));
                     if (position >= 0) {
                         listItemData.isLive = false;
@@ -411,11 +410,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             } catch (Exception ex) {
 
             }
-        }
-        else if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH)
-        {
-        }
-        else if (apiId == LeafManager.API_LIVE_CLASS_START) {
+        } else if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
+        } else if (apiId == LeafManager.API_LIVE_CLASS_START) {
             if (item != null) {
                 item.createdById = leafPreference.getUserId();
                 item.createdByName = leafPreference.getUserName();
@@ -533,14 +529,14 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             final VideoClassResponse.ClassData item = list.get(position);
 
             if (item.canPost && item.isLive) {
-             //   holder.imgOnline.setVisibility(View.VISIBLE);
+                //   holder.imgOnline.setVisibility(View.VISIBLE);
                 if (item.isCreatedByMe()) {
                     holder.tv_stop.setVisibility(View.VISIBLE);
                 } else {
                     holder.tv_stop.setVisibility(View.GONE);
                 }
             } else {
-            //    holder.imgOnline.setVisibility(View.GONE);
+                //    holder.imgOnline.setVisibility(View.GONE);
                 holder.tv_stop.setVisibility(View.GONE);
             }
 
@@ -734,17 +730,23 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         }
     }
 
-    private void randomJoin(VideoClassResponse.ClassData listItemData) {
+    boolean isJoinApiCalled = false;
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AppLog.e(TAG, "---- run  Join called ----");
-                if (!TextUtils.isEmpty(listItemData.meetingIdOnLive)) {
-                    leafManager.joinLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, listItemData.getId(), new JoinLiveClassReq(listItemData.meetingIdOnLive));
+    private void randomJoin(VideoClassResponse.ClassData listItemData) {
+        if (!isJoinApiCalled) {
+            isJoinApiCalled = true;
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    AppLog.e(TAG, "---- run  Join called ----");
+                    isJoinApiCalled = false;
+                    if (!TextUtils.isEmpty(listItemData.meetingIdOnLive)) {
+                        leafManager.joinLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, listItemData.getId(), new JoinLiveClassReq(listItemData.meetingIdOnLive));
+                    }
                 }
-            }
-        }, new Random().nextInt(15000));
+            }, new Random().nextInt(15000));
+        }
+
 
     }
 
@@ -752,8 +754,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     }
 
-    private void onTreeClick(VideoClassResponse.ClassData classData)
-    {
+    private void onTreeClick(VideoClassResponse.ClassData classData) {
         AppLog.e(TAG, "onTreeClick : " + classData.getId());
 
 
@@ -764,12 +765,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         this.item = classData;
 
-        if (classData.canPost && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        {
+        if (classData.canPost && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
-        }
-        else
-        {
+        } else {
             videoClassClicked = true;
             startMeeting();
             progressBarZoom.setVisibility(View.VISIBLE);

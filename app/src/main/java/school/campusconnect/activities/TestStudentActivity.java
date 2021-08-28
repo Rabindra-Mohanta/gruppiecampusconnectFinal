@@ -1459,7 +1459,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 openpaper(intent.getStringExtra("data"));
             } else if (message.equalsIgnoreCase("PROCTORING_START")) {
                 // update UI based on it
-                if (item.proctoring) {
+               /* if (item.proctoring) {
                     long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
                     dtExamStart = dtExamStart + (5 * 60000);
 
@@ -1470,7 +1470,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                         tvQPaperHide.setVisibility(View.VISIBLE);
                     }
                 }
-                showHideSubmitButton(null);
+                showHideSubmitButton(null);*/
+                finish();
 
 
             } else if (message.equalsIgnoreCase("PROCTORING_END")) {

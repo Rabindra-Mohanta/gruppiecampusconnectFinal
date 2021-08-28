@@ -525,6 +525,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strLastSubTime">Last Submission Time</string>
     <string name="strProctoring">Proctoring</string>
     <string name="strScheduleTest">Schedule Test/Exam</string>
+    <string name="strGetQuestPaperLink">Get question paper link</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

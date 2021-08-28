@@ -1,8 +1,10 @@
 package school.campusconnect.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -293,6 +296,10 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         }
     }
 
+    public void refereshApiEvent() {
+        getTestLiveEvents();
+    }
+
     public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         List<TestExamRes.TestExamData> list;
         private Context mContext;
@@ -386,4 +393,44 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         intent.putExtra("liveClass", getArguments().getString("liveClass"));
         startActivity(intent);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getActivity()!=null){
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("PROCTORING_START"));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("PROCTORING_END"));
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            if(getActivity()!=null){
+                LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getAction();
+            AppLog.e(TAG, "onReceive called with action : " + message);
+            AppLog.e(TAG, "onReceive called with action : " + intent.getStringExtra("data"));
+
+            if (message.equalsIgnoreCase("PROCTORING_START")) {
+                refereshApiEvent();
+            } else if (message.equalsIgnoreCase("PROCTORING_END")) {
+                refereshApiEvent();
+            }
+        }
+    };
+
 }
