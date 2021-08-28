@@ -869,13 +869,15 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
             showLastImage();
             removePdf();
         } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            listImages.clear();
-            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
-            String path = cameraFile.getAbsolutePath();
-            AppLog.e(TAG, "path : " + path);
-            listImages.add(path);
-            showLastImage();
-            removePdf();
+            if(cameraFile!=null){
+                listImages.clear();
+                fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+                String path = cameraFile.getAbsolutePath();
+                AppLog.e(TAG, "path : " + path);
+                listImages.add(path);
+                showLastImage();
+                removePdf();
+            }
         } else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
             listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_VIDEO;
