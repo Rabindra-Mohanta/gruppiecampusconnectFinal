@@ -32,6 +32,7 @@ import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.fees.FeesRes;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.fees.UpdateStudentFees;
+import school.campusconnect.datamodel.gruppiecontacts.SendMsgToStudentReq;
 import school.campusconnect.datamodel.homework.AddHwPostRequest;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.HwRes;
@@ -1531,5 +1532,10 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/live/end")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> endLiveClass(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body StopMeetingReq req);
+
+    @POST("/api/v1/groups/{group_id}/multipleuser/post/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> sendMsgToNotSubmittedStudents(@Body SendMsgToStudentReq req,@Path("group_id") String group_id,@Query("userIds") String userIds);
+
 
 }

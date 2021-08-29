@@ -2,15 +2,14 @@ package school.campusconnect.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -52,7 +51,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
             int colSpan1;
             int rowSpan1;
 
-            if (allImageList.size() <= 2) {
+            if (allImageList.size() == 1) {
                 colSpan1 = 2;
                 rowSpan1 = 2;
             } else {
@@ -95,15 +94,13 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
     @Override
     public int getItemCount()
     {
-       if (mDisplay == 4 && items.size() > 4) {
+        if (mDisplay == 2 && items.size() > 2)
+            return 2;
+        else if (mDisplay == 4 && items.size() > 4) {
             return 4;
-        }
-       else if(items.size()<=2)
-           return 1;
-       else {
+        } else {
             return items.size();
         }
-
     }
 
     @Override

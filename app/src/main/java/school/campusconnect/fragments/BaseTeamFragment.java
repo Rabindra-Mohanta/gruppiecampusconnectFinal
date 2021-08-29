@@ -457,6 +457,9 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             if(getContext()!=null && menuItem!=null){
                 menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
             }
+            if(mAdapter!=null){
+                mAdapter.notifyDataSetChanged();
+            }
         }
     };
 

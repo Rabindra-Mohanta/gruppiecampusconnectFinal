@@ -7,25 +7,19 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -46,21 +40,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.R;
-import school.campusconnect.adapters.ChildAdapter2;
+import school.campusconnect.adapters.ChildAdapter;
 import school.campusconnect.adapters.ChildVideoAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.EBookItem;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
 import school.campusconnect.datamodel.StudAssignementItem;
 import school.campusconnect.datamodel.chapter.ChapterRes;
-import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.HwRes;
-import school.campusconnect.fragments.EBookPdfTeamFragment;
-import school.campusconnect.fragments.HWListFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppLog;
@@ -263,11 +253,11 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null) {
 
-                    ChildAdapter2 adapter;
+                    ChildAdapter adapter;
                     if (item.fileName.size() == 3) {
-                        adapter = new ChildAdapter2(2, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter(2, item.fileName.size(), this, item.fileName);
                     } else {
-                        adapter = new ChildAdapter2(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
                     }
                     recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(this, recyclerView, adapter));
                     recyclerView.setVisibility(View.VISIBLE);
@@ -533,11 +523,11 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                     if (item.fileName != null) {
 
-                        ChildAdapter2 adapter;
+                        ChildAdapter adapter;
                         if (item.fileName.size() == 3) {
-                            adapter = new ChildAdapter2(2, item.fileName.size(), mContext, item.fileName);
+                            adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
                         } else {
-                            adapter = new ChildAdapter2(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
+                            adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
                         }
                         holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                         holder.recyclerView.setVisibility(View.VISIBLE);

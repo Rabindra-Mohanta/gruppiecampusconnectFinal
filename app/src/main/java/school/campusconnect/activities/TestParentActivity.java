@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,7 +67,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
-import school.campusconnect.adapters.ChildAdapter2;
+import school.campusconnect.adapters.ChildAdapter;
 import school.campusconnect.adapters.ChildTestAdapter;
 import school.campusconnect.adapters.ChildVideoAdapter;
 import school.campusconnect.database.LeafPreference;
@@ -75,6 +76,8 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
 import school.campusconnect.datamodel.chapter.ChapterRes;
+import school.campusconnect.datamodel.gruppiecontacts.SendMsgToStudentReq;
+import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
@@ -145,6 +148,12 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     TextView txt_teacher;
     @Bind(R.id.btnStart)
     Button btnStart;
+    @Bind(R.id.llNotSubmitted)
+    LinearLayout llNotSubmitted;
+    @Bind(R.id.et_msg)
+    EditText et_msg;
+    @Bind(R.id.btnSend)
+    Button btnSend;
 
     private static final int DRAW_OVER_OTHER_APP_PERMISSION = 123;
 
@@ -159,6 +168,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     private long currentTimeFromServer;
     private TestPaperRes.TestPaperData selectedAssignment;
 
+    private ArrayList<TestPaperRes.TestPaperData> assignmentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,6 +230,33 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             }
         });
 
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (assignmentList == null) {
+                    return;
+                }
+                if (!TextUtils.isEmpty(et_msg.getText().toString())) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    LeafManager leafManager = new LeafManager();
+                    leafManager.sendMsgToNotSubmittedStudents(TestParentActivity.this, group_id, getStudentIds(), new SendMsgToStudentReq(et_msg.getText().toString()));
+                } else {
+                    Toast.makeText(TestParentActivity.this, "Please enter msg", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private String getStudentIds() {
+        StringBuilder strIds = new StringBuilder();
+        for (int i = 0; i < assignmentList.size(); i++) {
+            if (i == 0) {
+                strIds.append(assignmentList.get(i).userId);
+            } else {
+                strIds.append(",").append(assignmentList.get(i).userId);
+            }
+        }
+        return strIds.toString();
     }
 
 
@@ -294,11 +331,11 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null) {
 
-                    ChildAdapter2 adapter;
+                    ChildAdapter adapter;
                     if (item.fileName.size() == 3) {
-                        adapter = new ChildAdapter2(2, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter(2, item.fileName.size(), this, item.fileName);
                     } else {
-                        adapter = new ChildAdapter2(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
+                        adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), this, item.fileName);
                     }
                     recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(this, recyclerView, adapter));
                     recyclerView.setVisibility(View.VISIBLE);
@@ -461,12 +498,12 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 return true;
             case R.id.menuGetLink:
                 TestExamRes.TestExamData currPaper = TestParentActivity.this.item;
-                if(currPaper!=null && currPaper.fileName!=null){
+                if (currPaper != null && currPaper.fileName != null) {
                     StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("Question Paper : "+subject_name+" (" + className + ")");
+                    stringBuilder.append("Question Paper : " + subject_name + " (" + className + ")");
                     stringBuilder.append("\n");
-                    for (int i=0;i<currPaper.fileName.size();i++){
-                        stringBuilder.append("Page "+(i+1)).append(" : "+Constants.decodeUrlToBase64(currPaper.fileName.get(i))).append("\n");
+                    for (int i = 0; i < currPaper.fileName.size(); i++) {
+                        stringBuilder.append("Page " + (i + 1)).append(" : " + Constants.decodeUrlToBase64(currPaper.fileName.get(i))).append("\n");
                     }
 
                     /*Create an ACTION_SEND Intent*/
@@ -474,10 +511,10 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                     /*The type of the content is text, obviously.*/
                     intent.setType("text/plain");
                     /*Applying information Subject and Body.*/
-                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Question Paper : "+subject_name+" (" + className + ")");
+                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Question Paper : " + subject_name + " (" + className + ")");
                     intent.putExtra(android.content.Intent.EXTRA_TEXT, stringBuilder.toString());
                     /*Fire!*/
-                    startActivity(Intent.createChooser(intent,"Sharing using"));
+                    startActivity(Intent.createChooser(intent, "Sharing using"));
                 }
 
                 return true;
@@ -508,6 +545,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
 
     public void getAssignment() {
+        llNotSubmitted.setVisibility(View.GONE);
         int pos = spStatus.getSelectedItemPosition();
         String filter = "notVerified";
         if (pos == 0) {
@@ -529,7 +567,12 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         switch (apiId) {
             case LeafManager.API_TEST_EXAM_PAPER_LIST:
                 TestPaperRes assignmentRes = (TestPaperRes) response;
-                rvAssignment.setAdapter(new AssignmentAdapter(assignmentRes.getData()));
+                assignmentList = assignmentRes.getData();
+                rvAssignment.setAdapter(new AssignmentAdapter(assignmentList));
+
+                if (spStatus.getSelectedItemPosition() == 2 && assignmentRes.getData() != null && assignmentRes.getData().size() > 0) {
+                    llNotSubmitted.setVisibility(View.VISIBLE);
+                }
                 break;
             case LeafManager.API_TEST_EXAM_REMOVE:
                 LeafPreference.getInstance(TestParentActivity.this).setBoolean("is_test_added", true);
@@ -538,6 +581,10 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             case LeafManager.API_TEST_EXAM_PAPER_VERIFY:
                 getAssignment();
                 sendNotification();
+                break;
+            case LeafManager.API_SEND_MSG_TO_NOTSUBMITTED_STUDENT:
+                et_msg.setText("");
+                Toast.makeText(this, "Message send successfully", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

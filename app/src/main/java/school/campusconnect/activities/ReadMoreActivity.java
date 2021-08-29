@@ -49,7 +49,6 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.adapters.PostAdapter;
 import school.campusconnect.adapters.ReportAdapter;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
@@ -198,13 +197,13 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     protected void onResume() {
         super.onResume();
 
-        if (item != null) {
+      /*  if (item != null) {
             AppLog.e(TAG, "Item Found-------------");
             getData();
         } else {
             AppLog.e(TAG, "Item Empty--------------");
         }
-
+*/
     }
 
     private void setData() {
@@ -421,6 +420,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     }
 
     private void init() {
+        mGroupId = GroupDashboardActivityNew.groupId;
         databaseHandler = new DatabaseHandler(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
@@ -441,7 +441,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         if (type.equals("personal"))
             userId = getIntent().getStringExtra("user_id");
 
-        mGroupId = GroupDashboardActivityNew.groupId;
+
 
         AppLog.e(TAG, "data : " + data);
         AppLog.e(TAG, "type : " + type);
@@ -464,7 +464,9 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
 
 
         this.type = type;
-        this.mGroupId = mGroupId;
+        if(mGroupId!=null){
+            this.mGroupId = mGroupId;
+        }
         this.mTeamId = mTeamId;
         this.userId = userId;
 
@@ -511,15 +513,6 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
                 showNoNetworkMsg();
             }
         }
-
-//        if(type.equalsIgnoreCase("teamPostComment"))
-//        {
-//            linComments.setVisibility(View.VISIBLE);
-//
-//            if(isConnectionAvailable()){manager.readMore_TeamPostComment(ReadMoreActivity.this,mGroupId,mTeamId,postId);}
-//            else { showNoNetworkMsg();}
-//
-//        }
 
 
     }

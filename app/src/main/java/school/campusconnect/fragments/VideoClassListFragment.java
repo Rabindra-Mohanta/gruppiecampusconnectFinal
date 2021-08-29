@@ -412,7 +412,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
         } else if (apiId == LeafManager.API_ONLINE_ATTENDANCE_PUSH) {
         } else if (apiId == LeafManager.API_LIVE_CLASS_START) {
-            isStartApiCalled = false;
             if (item != null) {
                 item.createdById = leafPreference.getUserId();
                 item.createdByName = leafPreference.getUserName();
@@ -488,16 +487,15 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onFailure(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
-        isStartApiCalled = false;
     }
 
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
-        isStartApiCalled = false;
     }
 
     public void callEventApi() {
+        isStartApiCalled = false;
         getLiveClassEventApi();
     }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topbar"
@@ -16,24 +16,28 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_below="@+id/topbar"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topbar">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_15dp"
-                android:layout_marginEnd="@dimen/padding_15dp"
                 android:layout_marginTop="@dimen/padding_15dp"
-                android:layout_height="wrap_content">
+                android:layout_marginEnd="@dimen/padding_15dp">
+
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
                     android:gravity="left"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/txt_title"
                         style="@style/LabelNormal"
@@ -50,18 +54,19 @@
                         android:id="@+id/txt_teacher"
                         style="@style/LabelSmall"
                         android:layout_width="match_parent"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text=" "
                         android:textColor="@color/colorTextLight" />
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/txt_date"
                     style="@style/LabelSmall"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:layout_height="wrap_content"
                     android:text="dd/MM/yyyy\nhh:mm"
                     android:textColor="@color/colorTextLight" />
             </LinearLayout>
@@ -69,11 +74,11 @@
 
             <RelativeLayout
                 android:id="@+id/rel"
-                android:layout_marginStart="@dimen/padding_10dp"
-                android:layout_marginEnd="@dimen/padding_10dp"
-                android:layout_marginTop="@dimen/padding_10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_10dp"
+                android:layout_marginTop="@dimen/padding_10dp"
+                android:layout_marginEnd="@dimen/padding_10dp"
                 android:layout_marginBottom="@dimen/padding_10dp"
                 android:paddingLeft="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_5dp">
@@ -166,7 +171,6 @@
             </RelativeLayout>
 
 
-
             <TextView
                 android:id="@+id/txt_content"
                 style="@style/LabelNormal"
@@ -220,54 +224,100 @@
 
             <View
                 android:layout_width="match_parent"
-                android:background="@color/color_divider"
+                android:layout_height="1dp"
                 android:layout_marginTop="@dimen/padding_10dp"
-                android:layout_height="1dp"/>
+                android:background="@color/color_divider" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding_15dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_15dp"
-                android:layout_marginEnd="@dimen/padding_15dp"
-                android:layout_height="wrap_content">
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:layout_marginEnd="@dimen/padding_15dp">
+
                 <Spinner
                     android:id="@+id/spStatus"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height" />
+
                 <ImageView
                     android:layout_width="25dp"
-                    android:src="@drawable/icon_down_white"
-                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="right|center"
-                    android:layout_height="25dp"/>
+                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:src="@drawable/icon_down_white" />
             </FrameLayout>
 
             <TextView
                 android:id="@+id/txtEmpty"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/padding_15dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/padding_15dp"
                 android:gravity="center"
-                android:text="@string/msg_no_data_found"
-                android:paddingEnd="16dp"
                 android:paddingStart="16dp"
-                android:textSize="18sp" />
+                android:paddingEnd="16dp"
+                android:text="@string/msg_no_data_found"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+
+
+            <LinearLayout
+                android:id="@+id/llNotSubmitted"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:layout_marginBottom="@dimen/padding_5dp"
+                android:layout_marginStart="@dimen/padding_20dp"
+                android:layout_marginEnd="@dimen/padding_15dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_msg"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ract_border"
+                    android:layout_marginEnd="@dimen/padding_15dp"
+                    android:layout_height="wrap_content"
+                    android:lines="2"
+                    android:hint="Enter message"
+                    android:paddingStart="@dimen/padding_10dp"
+                    android:paddingEnd="@dimen/padding_10dp"
+                    android:paddingTop="@dimen/padding_5dp"
+                    android:paddingBottom="@dimen/padding_5dp"
+                    android:gravity="start|center"
+                    android:layout_gravity="bottom"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLength="200"
+                    android:textSize="@dimen/text_size_14sp"
+                    android:scrollbars="vertical"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btnSend"
+                    android:layout_width="80dp"
+                    style="@style/AddPostButton"
+                    android:text="@string/strSend"
+                    android:layout_height="35dp"/>
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvAssignment"
-                android:layout_marginTop="@dimen/padding_10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
-        android:visibility="gone"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/padding_15dp"
-        android:layout_height="wrap_content" />
+        android:visibility="gone" />
 </RelativeLayout>

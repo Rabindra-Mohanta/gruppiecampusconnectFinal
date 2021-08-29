@@ -1150,6 +1150,13 @@ public class GroupDashboardActivityNew extends BaseActivity
         }*/
         else if (group.type.equals("Home Work") || group.type.equals("Recorded Class")
                 || group.type.equals("Time Table")) {
+
+            if(group.type.equalsIgnoreCase("Home Work")){
+                LeafPreference.getInstance(this).remove(groupId + "_HOMEWORK_NOTI_COUNT");
+            }else if(group.type.equalsIgnoreCase("Recorded Class")){
+                LeafPreference.getInstance(this).remove(groupId + "_NOTES_VIDEO_NOTI_COUNT");
+            }
+
             Intent intent;
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, HWClassActivity.class);
@@ -1179,6 +1186,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("role", group.role);
             startActivity(intent);
         } else if (group.type.equals("Test")) {
+            LeafPreference.getInstance(this).remove(groupId + "_TEST_EXAM_NOTI_COUNT");
             Intent intent;
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, TestClassActivity.class);
