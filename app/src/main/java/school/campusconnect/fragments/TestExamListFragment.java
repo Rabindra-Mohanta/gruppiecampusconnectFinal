@@ -375,14 +375,14 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
             intent = new Intent(getActivity(), TestParentActivity.class);
         } else {
             intent = new Intent(getActivity(), TestStudentActivity.class);
-
-            for (int i = 0; i < testLiveEvents.size(); i++) {
-                AppLog.e(TAG, "testLiveEvents For Loop  : data  :" + new Gson().toJson(testLiveEvents.get(i)));
-                if (testLiveEvents.get(i).testExamId != null && testLiveEvents.get(i).testExamId.equalsIgnoreCase(data.testExamId)) {
-                    intent.putExtra("start", true);
+            if(testLiveEvents!=null){
+                for (int i = 0; i < testLiveEvents.size(); i++) {
+                    AppLog.e(TAG, "testLiveEvents For Loop  : data  :" + new Gson().toJson(testLiveEvents.get(i)));
+                    if (testLiveEvents.get(i).testExamId != null && testLiveEvents.get(i).testExamId.equalsIgnoreCase(data.testExamId)) {
+                        intent.putExtra("start", true);
+                    }
                 }
             }
-
         }
 
         intent.putExtra("group_id", GroupDashboardActivityNew.groupId);

@@ -27,10 +27,12 @@ import android.util.TypedValue;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -828,4 +830,20 @@ public class ImageUtil {
         }
     }
 
+    public static void writeDataToUri(Context context,File fileData, Uri uri) {
+        try (InputStream in = context.getContentResolver().openInputStream(uri)) {
+            try (OutputStream out = new FileOutputStream(fileData)) {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                in.close();
+                out.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

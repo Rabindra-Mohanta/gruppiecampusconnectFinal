@@ -260,7 +260,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         transferUtility = AmazoneHelper.getTransferUtility(this);
-        setTitle("Submit Assignment");
+        setTitle("Submit Answer Paper ");
         if (getIntent() != null) {
             group_id = getIntent().getStringExtra("group_id");
             team_id = getIntent().getStringExtra("team_id");

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -30,7 +31,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 import school.campusconnect.R;
 import school.campusconnect.database.DatabaseHandler;
@@ -81,53 +84,98 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         String type = intent.getType();
         AppLog.e(TAG, "action : " + action);
         AppLog.e(TAG, "type : " + type);
-        try {
-            if (Intent.ACTION_SEND.equals(action) && type != null) {
-                Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                AppLog.e(TAG, "uri : " + uri);
-                ArrayList<String> list = new ArrayList<>();
-                String path = ImageUtil.getPath(this, uri);
-                AppLog.e(TAG, "path : " + path);
-                if (!TextUtils.isEmpty(path)) {
-                    list.add(path);
-                }
+        if(type==null){
+            return;
+        }
+        Uri uri = null;
+        ArrayList<Uri> uriList = null;
+        if (Intent.ACTION_SEND.equals(action)) {
+            uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        }
+        else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            uriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+        }
+        new HandleShareFiles(action,type,uri,uriList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    private static class HandleShareFiles extends AsyncTask<Void,Void,Void>{
+        String action;
+        String type;
+        Uri uri;
+        ArrayList<Uri> uriList;
+        public HandleShareFiles(String action, String type, Uri uri, ArrayList<Uri> uriList) {
+            this.action = action;
+            this.type = type;
+            this.uri = uri;
+            this.uriList = uriList;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
                 String fileType = "";
+                String extension = "";
                 if (type.startsWith("application/pdf")) {
                     fileType = Constants.FILE_TYPE_PDF;
+                    extension = ".pdf";
                 } else if (type.startsWith("image/")) {
                     fileType = Constants.FILE_TYPE_IMAGE;
+                    extension = ".jpeg";
                 } else if (type.startsWith("video/")) {
                     fileType = Constants.FILE_TYPE_VIDEO;
+                    extension = ".mp4";
                 }
-                LeafApplication.getInstance().setShareFileList(list, fileType);
-            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-                ArrayList<Uri> uriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+
                 AppLog.e(TAG, "uriList : " + uriList);
                 ArrayList<String> list = new ArrayList<>();
                 if (uriList != null) {
                     for (int i = 0; i < uriList.size(); i++) {
-                        String path = ImageUtil.getPath(this, uriList.get(i));
-                        if (!TextUtils.isEmpty(path)) {
-                            list.add(path);
+                        try {
+                            String path = ImageUtil.getPath(LeafApplication.getInstance(), uriList.get(i));
+                            if(!TextUtils.isEmpty(path)){
+                                list.add(path);
+                            }
+                        }catch (IllegalArgumentException e){
+                            AppLog.e(TAG," IllegalArgumentException :"+e.getMessage());
+                            String fileName = System.currentTimeMillis()+""+ new Random().nextInt(99)+extension;
+                            File file=new File(LeafApplication.getInstance().getExternalCacheDir(),fileName);
+                            if(!file.exists()){
+                                file.createNewFile();
+                            }
+                            ImageUtil.writeDataToUri(LeafApplication.getInstance(),file,uriList.get(i));
+                            if(!TextUtils.isEmpty(file.getAbsolutePath())){
+                                list.add(file.getAbsolutePath());
+                            }
                         }
                     }
                 }
-                AppLog.e(TAG, "uriList path: " + list);
-                String fileType = "";
-                if (type.startsWith("application/pdf")) {
-                    fileType = Constants.FILE_TYPE_PDF;
-                } else if (type.startsWith("image/")) {
-                    fileType = Constants.FILE_TYPE_IMAGE;
-                } else if (type.startsWith("video/")) {
-                    fileType = Constants.FILE_TYPE_VIDEO;
+
+                if(uri!=null){
+                    try {
+                        String path = ImageUtil.getPath(LeafApplication.getInstance(), uri);
+                        if(!TextUtils.isEmpty(path)){
+                            list.add(path);
+                        }
+                    }catch (IllegalArgumentException e){
+                        AppLog.e(TAG," IllegalArgumentException :"+e.getMessage());
+                        String fileName = System.currentTimeMillis()+""+ new Random().nextInt(99)+extension;
+                        File file=new File(LeafApplication.getInstance().getExternalCacheDir(),fileName);
+                        if(!file.exists()){
+                            file.createNewFile();
+                        }
+                        ImageUtil.writeDataToUri(LeafApplication.getInstance(),file,uri);
+                        if(!TextUtils.isEmpty(file.getAbsolutePath())){
+                            list.add(file.getAbsolutePath());
+                        }
+                    }
                 }
+
+                AppLog.e(TAG, "uriList path: " + list);
                 LeafApplication.getInstance().setShareFileList(list, fileType);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-
-
     }
 
     @Override

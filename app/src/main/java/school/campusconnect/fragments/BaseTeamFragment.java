@@ -310,14 +310,13 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     }
 
     private void selectedImage(Uri selectedImage) {
-
-        String path = ImageUtil.getPath(getActivity(), selectedImage);
         try {
+            String path = ImageUtil.getPath(getActivity(), selectedImage);
             File newFile = new Compressor(getActivity()).setMaxWidth(1000).setQuality(70).compressToFile(new File(path));
             if (newFile != null)
                 wallPref.edit().putString(Constants.BACKGROUND_IMAGE, newFile.getAbsolutePath()).apply();
             setBackgroundImage();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), "Error in set wallpaper", Toast.LENGTH_SHORT).show();
         }
@@ -451,7 +450,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             AppLog.e("BroadcastReceiver error", "error--> " + ex.toString());
         }
     }
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(getContext()!=null && menuItem!=null){

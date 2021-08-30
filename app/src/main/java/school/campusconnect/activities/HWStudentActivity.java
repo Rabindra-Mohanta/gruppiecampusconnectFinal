@@ -401,12 +401,15 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
 
     private void saveToDB(ArrayList<AssignmentRes.AssignmentData> data) {
         btnSubmit.setVisibility(View.GONE);
+
+        StudAssignementItem.deleteAll(item.assignmentId,team_id,group_id);
+
         if (data == null || data.size()==0){
             btnSubmit.setVisibility(View.VISIBLE);
             return;
         }
 
-        StudAssignementItem.deleteAll(item.assignmentId,team_id,group_id);
+
 
         for (int i = 0; i < data.size(); i++) {
             AssignmentRes.AssignmentData currentItem = data.get(i);
