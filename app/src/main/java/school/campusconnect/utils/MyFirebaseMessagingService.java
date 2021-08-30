@@ -117,6 +117,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     case "examStart": {
                         Intent intent = new Intent("PROCTORING_START");
                         intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("action", "PROCTORING_START");
                         intent.setAction("PROCTORING_START");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }
@@ -126,6 +127,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     case "examEnd": {
                         Intent intent = new Intent("PROCTORING_END");
                         intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("action", "PROCTORING_END");
                         intent.setAction("PROCTORING_END");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                     }

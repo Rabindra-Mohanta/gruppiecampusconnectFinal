@@ -502,7 +502,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     protected void onStop() {
         super.onStop();
 
-        LocalBroadcastManager.getInstance(TestStudentActivity.this).unregisterReceiver(mMessageReceiver);
+       // LocalBroadcastManager.getInstance(TestStudentActivity.this).unregisterReceiver(mMessageReceiver);
 
     }
 
@@ -1449,7 +1449,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             // Get extra data included in the Intent
 
 
-            String message = intent.getAction();
+            String message = intent.getStringExtra("action");
             AppLog.e(TAG, "onReceive called with action : " + message);
             AppLog.e(TAG, "onReceive called with action : " + intent.getStringExtra("data"));
 
@@ -1562,5 +1562,10 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+
+       LocalBroadcastManager.getInstance(TestStudentActivity.this).unregisterReceiver(mMessageReceiver);
+
+
+
     }
 }

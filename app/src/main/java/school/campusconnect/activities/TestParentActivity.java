@@ -1671,4 +1671,11 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(TestParentActivity.this).unregisterReceiver(mMessageReceiver);
+
+    }
 }
