@@ -219,11 +219,11 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 //
             if (LeafPreference.getInstance(this).getInt(team_id + "_test_count_noti") > 0) {
                 LeafPreference.getInstance(this).setBoolean(team_id + "_test_count_noti", false);
-                getAssignment();
+                getAssignment(false);
             }
 //
         } else {
-            getAssignment();
+            getAssignment(true);
         }
     }
 
@@ -242,7 +242,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
-                    getAssignment();
+                    getAssignment(true);
                     swipeRefreshLayout.setRefreshing(false);
                 } else {
                     showNoNetworkMsg();
@@ -477,8 +477,9 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         super.onBackPressed();
     }
 
-    public void getAssignment() {
-        progressBar.setVisibility(View.VISIBLE);
+    public void getAssignment(boolean isLoading) {
+        if(isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestPaper(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId, "");
     }
@@ -489,7 +490,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         super.onStart();
 
         if (LeafPreference.getInstance(this).getBoolean("is_paper_added")) {
-            getAssignment();
+            getAssignment(true);
             LeafPreference.getInstance(this).setBoolean("is_paper_added", false);
         }
 
@@ -518,7 +519,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 saveToDB(assignmentRes.getData());
                 break;
             case LeafManager.API_TEST_EXAM_PAPER_DELETE_STUDENT:
-                getAssignment();
+                getAssignment(true);
                 break;
         }
     }

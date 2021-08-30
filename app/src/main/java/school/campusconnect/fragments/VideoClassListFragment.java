@@ -248,7 +248,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 }
 
                 if (apiCall) {
-                    calApi();
+                    calApi(false);
                 } else {
                     getLiveClassEventApi();
                 }
@@ -256,7 +256,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 getLiveClassEventApi();
             }
         } else {
-            calApi();
+            calApi(true);
         }
     }
 
@@ -267,8 +267,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
 
-    private void calApi() {
-        progressBar.setVisibility(View.VISIBLE);
+    private void calApi(boolean isLoading) {
+        if(isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
     }
 

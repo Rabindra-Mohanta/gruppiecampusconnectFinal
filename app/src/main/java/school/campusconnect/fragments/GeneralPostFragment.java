@@ -357,7 +357,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         if (TextUtils.isEmpty(lastIdFromDB) || leafPreference.getInt(mGroupId + "_post") > 0
                 || leafPreference.getBoolean(mGroupId + "_post_delete") || apiEvent){
             leafPreference.setBoolean(mGroupId + "_post_delete",false);
-            getData(false);
+            getData(true);
         }
 
 

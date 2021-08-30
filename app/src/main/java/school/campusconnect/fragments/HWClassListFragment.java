@@ -145,17 +145,18 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                 }
 
                 if (apiCall) {
-                    apiCall();
+                    apiCall(false);
                 }
             }
         } else {
-            apiCall();
+            apiCall(true);
         }
     }
 
-    private void apiCall() {
+    private void apiCall(boolean isLoading) {
+        if(isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
         if ("teacher".equalsIgnoreCase(role)) {
             leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
         }else if ("parent".equalsIgnoreCase(role)) {

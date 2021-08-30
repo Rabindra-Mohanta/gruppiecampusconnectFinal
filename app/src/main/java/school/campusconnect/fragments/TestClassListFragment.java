@@ -144,18 +144,19 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
                 }
 
                 if (apiCall) {
-                    calApi();
+                    calApi(false);
                 }
             }
         } else {
-            calApi();
+            calApi(true);
         }
     }
 
 
-    private void calApi() {
+    private void calApi(boolean isLoading) {
+        if(isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
         leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
     }
 

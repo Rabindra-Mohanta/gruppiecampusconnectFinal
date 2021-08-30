@@ -136,10 +136,10 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
             rvClass.setAdapter(new HwAdapter(result));
 
             if(apiEvent){
-                getChapters();
+                getChapters(false);
             }
         } else {
-            getChapters();
+            getChapters(true);
         }
     }
 
@@ -147,13 +147,14 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
     public void onStart() {
         super.onStart();
         if (LeafPreference.getInstance(getActivity()).getBoolean("is_hw_added")) {
-            getChapters();
+            getChapters(true);
             LeafPreference.getInstance(getActivity()).setBoolean("is_hw_added", false);
         }
     }
 
-    public void getChapters() {
-        progressBar.setVisibility(View.VISIBLE);
+    public void getChapters(boolean isLoading) {
+        if(isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getHwList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }

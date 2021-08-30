@@ -405,7 +405,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         if(TextUtils.isEmpty(lastIdFromDB) ||  leafPreference.getInt(team_id+"_post") >0
                 || leafPreference.getBoolean(team_id + "_post_delete") || apiEvent) {
             leafPreference.setBoolean(team_id + "_post_delete", false);
-            callApi(false);
+            callApi(true);
         }
 
     }

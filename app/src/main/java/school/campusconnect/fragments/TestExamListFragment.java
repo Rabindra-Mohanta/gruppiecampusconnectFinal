@@ -151,17 +151,18 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
             setData();
 
             if (apiEvent) {
-                getTestExam();
+                getTestExam(false);
             }
             getTestLiveEvents();
         } else {
-            getTestExam();
+            getTestExam(true);
             getTestLiveEvents();
         }
     }
 
-    public void getTestExam() {
-        progressBar.setVisibility(View.VISIBLE);
+    public void getTestExam(boolean isLoading) {
+        if(isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestExamList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
@@ -176,7 +177,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         super.onStart();
 
         if (LeafPreference.getInstance(getActivity()).getBoolean("is_test_added")) {
-            getTestExam();
+            getTestExam(true);
             LeafPreference.getInstance(getActivity()).setBoolean("is_test_added", false);
         }
     }
@@ -192,7 +193,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_TEST_EXAM_REMOVE:
-                getTestExam();
+                getTestExam(true);
                 break;
             case LeafManager.API_TEST_PAPER_LIVE_EVENTS:
                 testLiveEvents = ((TestLiveEventRes) response).getData();

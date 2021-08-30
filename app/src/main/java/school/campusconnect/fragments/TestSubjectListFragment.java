@@ -107,17 +107,18 @@ public class TestSubjectListFragment extends BaseFragment implements LeafManager
                 if (subjectCountTBL.oldSubjectCount != subjectCountTBL.subjectCount) {
                     subjectCountTBL.oldSubjectCount = subjectCountTBL.subjectCount;
                     subjectCountTBL.save();
-                    callAPi();
+                    callAPi(false);
                 }
             }
 
         } else {
-            callAPi();
+            callAPi(true);
         }
     }
 
-    private void callAPi() {
-        progressBar.setVisibility(View.VISIBLE);
+    private void callAPi(boolean isLoading) {
+        if(isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id, "");
     }

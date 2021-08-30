@@ -173,11 +173,11 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             if (LeafPreference.getInstance(this).getInt(team_id + "_ass_count_noti") > 0) {
 
                 LeafPreference.getInstance(this).setBoolean(team_id + "_ass_count_noti", false);
-                getAssignment();
+                getAssignment(false);
             }
 
         } else {
-            getAssignment();
+            getAssignment(true);
         }
     }
 
@@ -194,7 +194,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
-                    getAssignment();
+                    getAssignment(true);
                     swipeRefreshLayout.setRefreshing(false);
                 } else {
                     showNoNetworkMsg();
@@ -366,8 +366,9 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         super.onBackPressed();
     }
 
-    public void getAssignment() {
-        progressBar.setVisibility(View.VISIBLE);
+    public void getAssignment(boolean isLoading) {
+        if(isLoading)
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getAssignment(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.assignmentId, "");
     }
@@ -376,7 +377,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     protected void onStart() {
         super.onStart();
         if (LeafPreference.getInstance(this).getBoolean("is_assignment_added")) {
-            getAssignment();
+            getAssignment(false);
             LeafPreference.getInstance(this).setBoolean("is_assignment_added", false);
         }
     }
@@ -393,7 +394,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 saveToDB(assignmentRes.getData());
                 break;
             case LeafManager.API_DELETE_ASSIGNMENT_STUDENT:
-                getAssignment();
+                getAssignment(true);
                 break;
         }
     }
