@@ -134,6 +134,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                     break;
 
+                    case "PROCTORING_RESTART": {
+                        Intent intent = new Intent("PROCTORING_RESTART");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("action", "PROCTORING_RESTART");
+                        intent.setAction("PROCTORING_RESTART");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                    }
+
+                    break;
+
                     case "NOTES_VIDEO":{
                         leafPreference.setInt(data.groupId + "_NOTES_VIDEO_NOTI_COUNT", leafPreference.getInt(data.groupId + "_NOTES_VIDEO_NOTI_COUNT") + 1);
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);

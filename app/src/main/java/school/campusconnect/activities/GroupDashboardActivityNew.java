@@ -34,12 +34,14 @@ import android.util.DisplayMetrics;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.LiveClassListTBL;
 import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
+import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
@@ -71,6 +73,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -1191,12 +1194,47 @@ public class GroupDashboardActivityNew extends BaseActivity
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, TestClassActivity.class);
                 intent.putExtra("title", group.name);
-            } else {
-                if (group.count == 1) {
+            }
+            else
+            {
+                if (group.count == 1)
+                {
                     intent = new Intent(this, TestClassSubjectActivity.class);
                     intent.putExtra("group_id", groupId);
                     intent.putExtra("team_id", group.details.teamId);
                     intent.putExtra("title", group.details.studentName);
+
+                    // GETTING CLASSLIST TO SEND TO EXAM SCREEN...
+                List<LiveClassListTBL> list = LiveClassListTBL.getAll(GroupDashboardActivityNew.groupId);
+                ArrayList<VideoClassResponse.ClassData> result = new ArrayList<>();
+
+                if (list.size() != 0)
+                {
+
+                for (int i = 0; i < list.size(); i++)
+                {
+                LiveClassListTBL currentItem = list.get(i);
+                VideoClassResponse.ClassData item = new VideoClassResponse.ClassData();
+                item.zoomPassword = currentItem.zoomPassword;
+                item.zoomName = new Gson().fromJson(currentItem.zoomName, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                item.zoomMail = currentItem.zoomMail;
+                item.zoomSecret = currentItem.zoomSecret;
+                item.zoomMeetingPassword = currentItem.zoomMeetingPassword;
+                item.zoomKey = currentItem.zoomKey;
+                item.id = currentItem.teamId;
+                item.className = currentItem.name;
+                item.jitsiToken = currentItem.jitsiToken;
+                item.groupId = currentItem.groupId;
+                item.canPost = currentItem.canPost;
+                result.add(item);
+                }
+
+                }
+
+                if(result !=null && result.size()>0)
+                intent.putExtra("liveClass", new Gson().toJson(result.get(0)));
+
 
                 } else {
                     intent = new Intent(this, TestClassActivity.class);

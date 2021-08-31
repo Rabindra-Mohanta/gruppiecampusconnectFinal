@@ -496,6 +496,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
         LocalBroadcastManager.getInstance(TestStudentActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("PROCTORING_START"));
         LocalBroadcastManager.getInstance(TestStudentActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("PROCTORING_END"));
+        LocalBroadcastManager.getInstance(TestStudentActivity.this).registerReceiver(mMessageReceiver, new IntentFilter("PROCTORING_RESTART"));
 
     }
 
@@ -960,7 +961,9 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
      */
 
 
-    private void startMeeting() {
+    private void startMeeting()
+    {
+        AppLog.e(TAG , "StartMeeting Called "+isConnectionAvailable() );
         try {
             if (isConnectionAvailable()) {
 
@@ -971,11 +974,14 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 showNoNetworkMsg();
             }
         } catch (Exception e) {
+            AppLog.e(TAG , "initialize zoom crashed : "+e.getLocalizedMessage());
             e.printStackTrace();
         }
     }
 
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
+
+        AppLog.e(TAG , "initializeZoom Called");
 
         progressBar.setVisibility(View.VISIBLE);
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
@@ -984,7 +990,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             @Override
             public void onZoomSDKInitializeResult(int i, int i1) {
 
-                AppLog.e(TAG, "Zoom SDK initialized : " + i + " , " + i1 + " , " + startOrJoin);
+                AppLog.e(TAG, "onZoomSDKInitializeResult : " + i + " , " + i1 + " , " + startOrJoin);
 
                 try {
                     ZoomSDK.getInstance().getMeetingSettingsHelper().setMuteMyMicrophoneWhenJoinMeeting(true);
@@ -1006,8 +1012,13 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             @Override
             public void onZoomAuthIdentityExpired() {
                 progressBar.setVisibility(View.GONE);
+                AppLog.e(TAG , "onZoomAuthIdentityExpired Called");
+
 
             }
+
+
+
         });///APP_KEY , APP_SECRET
 
 
@@ -1475,7 +1486,13 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 finish();
 
 
-            } else if (message.equalsIgnoreCase("PROCTORING_END")) {
+            }
+            else if (message.equalsIgnoreCase("PROCTORING_RESTART"))
+            {
+                // TO-DO
+
+            }
+            else if (message.equalsIgnoreCase("PROCTORING_END")) {
 
                 if (item.proctoring) {
                     long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();

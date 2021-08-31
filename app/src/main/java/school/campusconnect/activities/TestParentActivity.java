@@ -1,5 +1,6 @@
 package school.campusconnect.activities;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,10 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.text.InputFilter;
@@ -36,6 +40,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,6 +76,7 @@ import school.campusconnect.adapters.ChildAdapter;
 import school.campusconnect.adapters.ChildTestAdapter;
 import school.campusconnect.adapters.ChildVideoAdapter;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.databinding.DialogMeetingOnOffBinding;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
@@ -84,6 +90,7 @@ import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.firebase.SendNotificationGlobal;
 import school.campusconnect.firebase.SendNotificationModel;
+import school.campusconnect.fragments.VideoClassListFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.service.FloatingWidgetExamService;
 import school.campusconnect.utils.AmazoneDownload;
@@ -170,6 +177,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     private ArrayList<TestPaperRes.TestPaperData> assignmentList;
 
+    boolean isRestarted;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -245,6 +254,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 }
             }
         });
+
+        isRestarted = false;
     }
 
     private String getStudentIds() {
@@ -610,6 +621,22 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         notificationModel.data.title = getResources().getString(R.string.app_name);
         notificationModel.data.body = isStart ? item.createdByName + " teacher has started exam proctoring " : item.createdByName + " teacher has ended exam proctoring";
         notificationModel.data.Notification_type = isStart ? "examStart" : "examEnd";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+        notificationModel.data.teamId = team_id;
+        notificationModel.data.createdById = LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = "";
+        notificationModel.data.postType = "";
+        SendNotificationGlobal.send(notificationModel);
+    }
+
+    private void sendNotificationProctoringRestart()
+    {
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId + "_" + team_id;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "";
+        notificationModel.data.Notification_type = "PROCTORING_RESTART";
         notificationModel.data.iSNotificationSilent = true;
         notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
         notificationModel.data.teamId = team_id;
@@ -1177,17 +1204,16 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
                 progressBar.setVisibility(View.GONE);
 
+                if(!isRestarted)
                 startLiveTest();
                 /*if (getActivity() != null) {
                     ((VideoClassActivity) getActivity()).startBubbleService();
                 }*/
             }
 
-            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING")) {
-
-                stopLiveTest();
-                // Stop Meeting
-                removeBubble();
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING"))
+            {
+                dialogMeetingConfirmation();
             }
         }
     };
@@ -1458,7 +1484,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     }
 
-    public void startLiveTest() {
+    public void startLiveTest()
+    {
         progressBar.setVisibility(View.VISIBLE);
 
         sendNotificationProctoring(true);
@@ -1559,117 +1586,10 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     protected void onRestart() {
         super.onRestart();
-        removeBubble();
+        AppLog.e(TAG , "OnRestart Called");
+       // removeBubble();
     }
 
-    private class SendNotification extends AsyncTask<String, String, String> {
-        private String server_response;
-        boolean isStart;
-
-        public SendNotification(boolean isStart) {
-            this.isStart = isStart;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            URL url;
-            HttpURLConnection urlConnection = null;
-
-            try {
-                url = new URL("https://fcm.googleapis.com/fcm/send");
-                urlConnection = (HttpURLConnection) url.openConnection();
-
-                urlConnection.setDoOutput(true);
-                urlConnection.setDoInput(true);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-
-                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
-
-                try {
-                    JSONObject object = new JSONObject();
-
-                    String topic;
-                    String title = getResources().getString(R.string.app_name);
-                    String name = LeafPreference.getInstance(TestParentActivity.this).getString(LeafPreference.NAME);
-                    String message = isStart ? name + " teacher has started exam proctoring " : name + " teacher has ended exam proctoring";
-                    topic = group_id + "_" + item.teamId;
-                    object.put("to", "/topics/" + topic);
-
-                    JSONObject notificationObj = new JSONObject();
-                    notificationObj.put("title", title);
-                    notificationObj.put("body", message);
-                    object.put("notification", notificationObj);
-
-                    JSONObject dataObj = new JSONObject();
-                    dataObj.put("groupId", GroupDashboardActivityNew.groupId);
-                    dataObj.put("createdById", LeafPreference.getInstance(TestParentActivity.this).getString(LeafPreference.LOGIN_ID));
-                    dataObj.put("createdByName", name);
-                    dataObj.put("teamId", item.teamId);
-                    dataObj.put("title", title);
-                    dataObj.put("Notification_type", isStart ? "examStart" : "examEnd");
-                    dataObj.put("body", message);
-                    object.put("data", dataObj);
-                    wr.writeBytes(object.toString());
-                    Log.e(TAG, " JSON input : " + object.toString());
-                    wr.flush();
-                    wr.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                urlConnection.connect();
-
-                int responseCode = urlConnection.getResponseCode();
-                AppLog.e(TAG, "responseCode :" + responseCode);
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    server_response = readStream(urlConnection.getInputStream());
-                }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return server_response;
-        }
-
-        private String readStream(InputStream in) {
-            BufferedReader reader = null;
-            StringBuffer response = new StringBuffer();
-            try {
-                reader = new BufferedReader(new InputStreamReader(in));
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return response.toString();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            AppLog.e(TAG, "server_response :" + server_response);
-
-            if (!TextUtils.isEmpty(server_response)) {
-                AppLog.e(TAG, "Notification Sent");
-            } else {
-                AppLog.e(TAG, "Notification Send Fail");
-            }
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -1678,4 +1598,80 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         LocalBroadcastManager.getInstance(TestParentActivity.this).unregisterReceiver(mMessageReceiver);
 
     }
+
+
+    CountDownTimer timer;
+    long timeOfStopMeeting;
+
+    private void dialogMeetingConfirmation() {
+        if (TestParentActivity.this == null) {
+            return;
+        }
+
+        //NOFIREBASEDATABASE
+      /*  if (item.firebaseLive != null) {
+            item.firebaseLive.auto_join = false;
+            myRef.child("live_class").child(item.getId()).setValue(item.firebaseLive);
+        }*/
+
+        timeOfStopMeeting = System.currentTimeMillis();
+        Dialog dialog = new Dialog(TestParentActivity.this, R.style.AppDialog);
+        DialogMeetingOnOffBinding binding = DataBindingUtil.inflate(LayoutInflater.from(TestParentActivity.this), R.layout.dialog_meeting_on_off, null, false);
+        dialog.setContentView(binding.getRoot());
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        binding.tvYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                timer.cancel();
+
+                isRestarted =true;
+
+               startMeeting();
+               sendNotificationProctoringRestart();
+
+
+            }
+        });
+
+        binding.tvNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                timer.cancel();
+
+                stopLiveTest();
+                removeBubble();
+            }
+        });
+
+        timer = new CountDownTimer(11000, 1000) {
+            @Override
+            public void onTick(long l) {
+
+                binding.circularProgressBar.setProgressMax(11000);
+                binding.circularProgressBar.setProgress(l);
+                binding.tvTime.setText("" + l / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                binding.circularProgressBar.setProgress(0);
+                binding.tvTime.setText("00");
+
+                stopLiveTest();
+                removeBubble();
+
+                dialog.dismiss();
+
+            }
+        }.start();
+
+    }
+
+
 }
