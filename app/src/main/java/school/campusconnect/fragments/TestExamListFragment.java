@@ -332,14 +332,14 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Homework found.");
+                    txtEmpty.setText("No Test/Exam found.");
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Homework found.");
+                txtEmpty.setText("No Test/Exam found.");
                 return 0;
             }
 

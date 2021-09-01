@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.text.InputFilter;
@@ -219,8 +220,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 //
             if (LeafPreference.getInstance(this).getInt(team_id + "_test_count_noti") > 0) {
                 LeafPreference.getInstance(this).setBoolean(team_id + "_test_count_noti", false);
-                getAssignment(false);
             }
+            getAssignment(false);
 //
         } else {
             getAssignment(true);
@@ -1490,6 +1491,17 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             else if (message.equalsIgnoreCase("PROCTORING_RESTART"))
             {
                 // TO-DO
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btnStart.performClick();
+                            }
+                        });
+                    }
+                }, 7000);
 
             }
             else if (message.equalsIgnoreCase("PROCTORING_END")) {

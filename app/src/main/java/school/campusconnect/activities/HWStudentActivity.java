@@ -171,10 +171,9 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
             rvAssignment.setAdapter(new AssignmentAdapter(result));
 
             if (LeafPreference.getInstance(this).getInt(team_id + "_ass_count_noti") > 0) {
-
                 LeafPreference.getInstance(this).setBoolean(team_id + "_ass_count_noti", false);
-                getAssignment(false);
             }
+            getAssignment(false);
 
         } else {
             getAssignment(true);

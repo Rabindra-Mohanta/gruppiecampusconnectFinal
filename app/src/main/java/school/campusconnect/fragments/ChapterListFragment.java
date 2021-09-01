@@ -188,7 +188,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 getChapters(true);
                 break;
             case LeafManager.API_TOPIC_STATUS_CHANGE:
-                getChapters(true);
+                //getChapters(true);
                 break;
             default:
                 ChapterRes res = (ChapterRes) response;
