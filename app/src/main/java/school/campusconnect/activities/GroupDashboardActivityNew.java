@@ -283,6 +283,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
 
                     boolean ifNeedToLogout = false;
+                    boolean ifGroupListRefresh = false;
                     for (int i = 0; i < eventList.size(); i++) {
                         UpdateDataEventRes.EventResData curr = eventList.get(i);
                         EventTBL eventTBL = null;
@@ -294,7 +295,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                             eventTBL = EventTBL.getNotesVideoEvent(curr.groupId, curr.teamId, curr.subjectId);
                         } else if (curr.eventType.equalsIgnoreCase("4")) {
                             eventTBL = EventTBL.getAssignmentEvent(curr.groupId, curr.teamId, curr.subjectId);
-                        }else if (curr.eventType.equalsIgnoreCase("6")) {
+                        } else if (curr.eventType.equalsIgnoreCase("6")) {
                             eventTBL = EventTBL.getTestEvent(curr.groupId, curr.teamId, curr.subjectId);
                         } else if (curr.eventType.equalsIgnoreCase("5")) {
                             eventTBL = EventTBL.getAdminEvents(curr.groupId);
@@ -325,20 +326,22 @@ public class GroupDashboardActivityNew extends BaseActivity
                     }
 
 
-
-
-
                     UpdateDataEventRes.TeamListCount teamCount = res.data.get(0).teamsListCount;
-
                     TeamCountTBL groupCount = TeamCountTBL.getByTypeAndGroup("GROUP", groupId);
                     if (groupCount == null) {
                         groupCount = new TeamCountTBL();
                         groupCount.typeOfTeam = "GROUP";
                         groupCount.oldCount = teamCount.schoolGroupCount;
-                    }else {
-                        if(groupCount.oldCount!=teamCount.schoolGroupCount){
+                    } else {
+                        if (groupCount.oldCount == 1 && teamCount.schoolGroupCount > 1) {
                             ifNeedToLogout = true;
+                        } else if (groupCount.oldCount > 1 && teamCount.schoolGroupCount == 1) {
+                            ifNeedToLogout = true;
+                        } else if (groupCount.oldCount != teamCount.schoolGroupCount) {
+                            LeafPreference.getInstance(GroupDashboardActivityNew.this).setBoolean("group_list_refresh",true);
+                            ifGroupListRefresh = true;
                         }
+                        groupCount.oldCount = teamCount.schoolGroupCount;
                     }
                     groupCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
                     groupCount.count = teamCount.schoolGroupCount;
@@ -347,6 +350,12 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                     if (ifNeedToLogout) {
                         showLogoutPopup();
+                        return;
+                    }else if(ifGroupListRefresh){
+                        Intent intent = new Intent(GroupDashboardActivityNew.this, Home.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
                         return;
                     }
 
@@ -764,7 +773,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.llStaffReg:
                 if (isConnectionAvailable()) {
                     Intent intent = new Intent(this, StaffActivity.class);
-                    intent.putExtra("isAdmin",isAdmin);
+                    intent.putExtra("isAdmin", isAdmin);
                     startActivity(intent);
                 } else {
                     showNoNetworkMsg();
@@ -1154,9 +1163,9 @@ public class GroupDashboardActivityNew extends BaseActivity
         else if (group.type.equals("Home Work") || group.type.equals("Recorded Class")
                 || group.type.equals("Time Table")) {
 
-            if(group.type.equalsIgnoreCase("Home Work")){
+            if (group.type.equalsIgnoreCase("Home Work")) {
                 LeafPreference.getInstance(this).remove(groupId + "_HOMEWORK_NOTI_COUNT");
-            }else if(group.type.equalsIgnoreCase("Recorded Class")){
+            } else if (group.type.equalsIgnoreCase("Recorded Class")) {
                 LeafPreference.getInstance(this).remove(groupId + "_NOTES_VIDEO_NOTI_COUNT");
             }
 
@@ -1164,13 +1173,9 @@ public class GroupDashboardActivityNew extends BaseActivity
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, HWClassActivity.class);
                 intent.putExtra("title", group.name);
-            }
-            else
-            {
-                if (group.count == 1)
-                {
-                    if (group.type.equals("Home Work") || group.type.equals("Recorded Class"))
-                    {
+            } else {
+                if (group.count == 1) {
+                    if (group.type.equals("Home Work") || group.type.equals("Recorded Class")) {
                         intent = new Intent(this, HWClassSubjectActivity.class);
                     } else {
                         intent = new Intent(this, TimeTabelActivity2.class);
@@ -1194,46 +1199,41 @@ public class GroupDashboardActivityNew extends BaseActivity
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, TestClassActivity.class);
                 intent.putExtra("title", group.name);
-            }
-            else
-            {
-                if (group.count == 1)
-                {
+            } else {
+                if (group.count == 1) {
                     intent = new Intent(this, TestClassSubjectActivity.class);
                     intent.putExtra("group_id", groupId);
                     intent.putExtra("team_id", group.details.teamId);
                     intent.putExtra("title", group.details.studentName);
 
                     // GETTING CLASSLIST TO SEND TO EXAM SCREEN...
-                List<LiveClassListTBL> list = LiveClassListTBL.getAll(GroupDashboardActivityNew.groupId);
-                ArrayList<VideoClassResponse.ClassData> result = new ArrayList<>();
+                    List<LiveClassListTBL> list = LiveClassListTBL.getAll(GroupDashboardActivityNew.groupId);
+                    ArrayList<VideoClassResponse.ClassData> result = new ArrayList<>();
 
-                if (list.size() != 0)
-                {
+                    if (list.size() != 0) {
 
-                for (int i = 0; i < list.size(); i++)
-                {
-                LiveClassListTBL currentItem = list.get(i);
-                VideoClassResponse.ClassData item = new VideoClassResponse.ClassData();
-                item.zoomPassword = currentItem.zoomPassword;
-                item.zoomName = new Gson().fromJson(currentItem.zoomName, new TypeToken<ArrayList<String>>() {
-                }.getType());
-                item.zoomMail = currentItem.zoomMail;
-                item.zoomSecret = currentItem.zoomSecret;
-                item.zoomMeetingPassword = currentItem.zoomMeetingPassword;
-                item.zoomKey = currentItem.zoomKey;
-                item.id = currentItem.teamId;
-                item.className = currentItem.name;
-                item.jitsiToken = currentItem.jitsiToken;
-                item.groupId = currentItem.groupId;
-                item.canPost = currentItem.canPost;
-                result.add(item);
-                }
+                        for (int i = 0; i < list.size(); i++) {
+                            LiveClassListTBL currentItem = list.get(i);
+                            VideoClassResponse.ClassData item = new VideoClassResponse.ClassData();
+                            item.zoomPassword = currentItem.zoomPassword;
+                            item.zoomName = new Gson().fromJson(currentItem.zoomName, new TypeToken<ArrayList<String>>() {
+                            }.getType());
+                            item.zoomMail = currentItem.zoomMail;
+                            item.zoomSecret = currentItem.zoomSecret;
+                            item.zoomMeetingPassword = currentItem.zoomMeetingPassword;
+                            item.zoomKey = currentItem.zoomKey;
+                            item.id = currentItem.teamId;
+                            item.className = currentItem.name;
+                            item.jitsiToken = currentItem.jitsiToken;
+                            item.groupId = currentItem.groupId;
+                            item.canPost = currentItem.canPost;
+                            result.add(item);
+                        }
 
-                }
+                    }
 
-                if(result !=null && result.size()>0)
-                intent.putExtra("liveClass", new Gson().toJson(result.get(0)));
+                    if (result != null && result.size() > 0)
+                        intent.putExtra("liveClass", new Gson().toJson(result.get(0)));
 
 
                 } else {

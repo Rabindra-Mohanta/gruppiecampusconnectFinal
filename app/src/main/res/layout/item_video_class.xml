@@ -44,6 +44,8 @@
                     android:layout_marginEnd="@dimen/padding_5dp"
                     android:layout_gravity="center"
                     android:text="INFO"
+                    android:singleLine="true"
+                    android:maxLength="10"
                     app:srcCompat="@drawable/ic_close"
 
                     />

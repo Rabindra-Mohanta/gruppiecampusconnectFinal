@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_10dp"
                 android:paddingStart="@dimen/padding_5dp"
-                android:text="@string/lbl_topic_name"
+                android:text="@string/lbl_test_name"
                 android:textColor="@color/colorPrimary"
                 android:visibility="visible" />
 

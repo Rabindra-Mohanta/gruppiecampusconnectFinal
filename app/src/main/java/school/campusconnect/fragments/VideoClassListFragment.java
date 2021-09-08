@@ -771,7 +771,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         this.item = classData;
 
-        if (classData.canPost && Build.VERSION.SDK_INT != Build.VERSION_CODES.Q) {
+        if (classData.canPost && !listItemData.isLive && Build.VERSION.SDK_INT != Build.VERSION_CODES.Q) {
             ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
         } else {
             videoClassClicked = true;

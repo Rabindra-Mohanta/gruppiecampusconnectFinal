@@ -188,6 +188,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 getChapters(true);
                 break;
             case LeafManager.API_TOPIC_STATUS_CHANGE:
+                updateDb();
                 //getChapters(true);
                 break;
             default:
@@ -205,6 +206,10 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
         }
 
+    }
+
+    private void updateDb() {
+            ChapterTBL.update(chapterList.get(spChapter.getSelectedItemPosition()).chapterId,new Gson().toJson(chapterList.get(spChapter.getSelectedItemPosition()).topicList));
     }
 
     private void saveToDB(ArrayList<ChapterRes.ChapterData> result) {

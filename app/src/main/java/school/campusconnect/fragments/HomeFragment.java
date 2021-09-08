@@ -64,8 +64,10 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+/*
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;
+*/
 
     @Nullable
     @Override
@@ -80,7 +82,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     }
 
     private void _init() {
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+    /*    swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -90,7 +92,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
                     showNoNetworkMsg();
                 }
             }
-        });
+        });*/
     }
 
     private void getGroupList() {
@@ -103,14 +105,18 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     public void onStart() {
         super.onStart();
         if (isConnectionAvailable()) {
-
-            String groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
-            if (groupList != null && !TextUtils.isEmpty(groupList)) {
-                List<GroupItem> result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
-                }.getType());
-                rvClass.setAdapter(new GroupAdapterNew(result));
-            } else {
+            if(LeafPreference.getInstance(getActivity()).getBoolean("group_list_refresh")){
+                LeafPreference.getInstance(getActivity()).setBoolean("group_list_refresh",false);
                 getGroupList();
+            }else {
+                String groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
+                if (groupList != null && !TextUtils.isEmpty(groupList)) {
+                    List<GroupItem> result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
+                    }.getType());
+                    rvClass.setAdapter(new GroupAdapterNew(result));
+                } else {
+                    getGroupList();
+                }
             }
         } else {
             showNoNetworkMsg();

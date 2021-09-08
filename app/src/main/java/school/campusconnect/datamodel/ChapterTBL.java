@@ -5,8 +5,12 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import school.campusconnect.datamodel.chapter.ChapterRes;
 
 @Table(name = "ChapterTBL")
 public class ChapterTBL extends Model {
@@ -47,5 +51,9 @@ public class ChapterTBL extends Model {
 
     public static void deleteAll(String subjectId) {
         new Delete().from(ChapterTBL.class).where("subjectId = ?", subjectId).execute();
+    }
+
+    public static void update(String chapterId, String jsonData) {
+        new Update(ChapterTBL.class).set("topics = ?", jsonData).where("chapterId = ?", chapterId).execute();
     }
 }
