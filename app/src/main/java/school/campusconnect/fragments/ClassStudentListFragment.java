@@ -279,6 +279,17 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
             rowA.createCell(0).setCellValue("Name");
             rowA.createCell(1).setCellValue("Phone Number");
             rowA.createCell(2).setCellValue("Roll Number");
+            rowA.createCell(3).setCellValue("Student Id");
+            rowA.createCell(4).setCellValue("Admission Number");
+            rowA.createCell(5).setCellValue("Class");
+            rowA.createCell(6).setCellValue("Section");
+            rowA.createCell(7).setCellValue("Date of Birth");
+            rowA.createCell(8).setCellValue("Father Name");
+            rowA.createCell(9).setCellValue("Mother Name");
+            rowA.createCell(10).setCellValue("Father Number");
+            rowA.createCell(11).setCellValue("Mother Number");
+            rowA.createCell(12).setCellValue("Email");
+            rowA.createCell(13).setCellValue("Address");
 
             if(list!=null){
                 for(int i=0;i<list.size();i++){
@@ -287,6 +298,17 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
                     rowData.createCell(0).setCellValue(item.getName());
                     rowData.createCell(1).setCellValue(item.getPhone());
                     rowData.createCell(2).setCellValue(item.getRollNumber());
+                    rowData.createCell(3).setCellValue(item.studentDbId);
+                    rowData.createCell(4).setCellValue(item.admissionNumber);
+                    rowData.createCell(5).setCellValue(item._class);
+                    rowData.createCell(6).setCellValue(item.section);
+                    rowData.createCell(7).setCellValue(item.dob);
+                    rowData.createCell(8).setCellValue(item.fatherName);
+                    rowData.createCell(9).setCellValue(item.motherName);
+                    rowData.createCell(10).setCellValue(item.fatherNumber);
+                    rowData.createCell(11).setCellValue(item.motherNumber);
+                    rowData.createCell(12).setCellValue(item.email);
+                    rowData.createCell(13).setCellValue(item.address);
                 }
             }
             FileOutputStream fos = null;

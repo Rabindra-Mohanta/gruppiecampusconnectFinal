@@ -41,6 +41,9 @@ public class StudentRes extends BaseResponse {
         @SerializedName("name")
         @Expose
         public String name;
+        @SerializedName("phone")
+        @Expose
+        public String phone;
         @SerializedName("motherNumber")
         @Expose
         public String motherNumber;
@@ -82,9 +85,6 @@ public class StudentRes extends BaseResponse {
         @SerializedName("countryCode")
         @Expose
         public String countryCode;
-        @SerializedName("phone")
-        @Expose
-        public String phone;
 
         public String get_class() {
             return _class;

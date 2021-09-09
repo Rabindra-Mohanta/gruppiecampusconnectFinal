@@ -48,8 +48,9 @@ public class Home extends BaseActivity {
 
         if (getIntent().hasExtra("talukName")) {
             talukName = getIntent().getStringExtra("talukName");
+            setTitle(talukName);
+            setBackEnabled(true);
         }
-
         HomeFragment homeFragment = new HomeFragment();
         homeFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
@@ -98,7 +99,9 @@ public class Home extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        if (TextUtils.isEmpty(talukName)) {
+            getMenuInflater().inflate(R.menu.menu_home, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

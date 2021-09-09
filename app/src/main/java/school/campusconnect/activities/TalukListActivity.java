@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -47,7 +49,7 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class TalukListActivity extends AppCompatActivity implements LeafManager.OnCommunicationListener {
+public class TalukListActivity extends BaseActivity implements LeafManager.OnCommunicationListener {
 
     private static final String TAG = "TalukListActivity";
     @Bind(R.id.toolbar)
@@ -120,11 +122,12 @@ public class TalukListActivity extends AppCompatActivity implements LeafManager.
             progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             leafManager.getTaluks(this);
-        }else {
+        } else {
             showNoNetworkMsg();
         }
 
     }
+
     public void showNoNetworkMsg() {
         /*SMBDialogUtils.showSMBDialogOK(getActivity(), getString(R.string.no_internet), new DialogInterface.OnClickListener() {
             @Override
@@ -177,6 +180,7 @@ public class TalukListActivity extends AppCompatActivity implements LeafManager.
     public void onException(int apiId, String msg) {
 
     }
+
     public class GroupAdapterNew extends RecyclerView.Adapter<GroupAdapterNew.ViewHolder> {
         List<TaluksRes.TalusData> list;
         private Context mContext;
@@ -280,8 +284,26 @@ public class TalukListActivity extends AppCompatActivity implements LeafManager.
 
     private void onTaluksSelect(TaluksRes.TalusData talusData) {
         Intent intent = new Intent(TalukListActivity.this, Home.class);
-        intent.putExtra("talukName",talusData.talukName);
+        intent.putExtra("talukName", talusData.talukName);
         startActivity(intent);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_logout:
+                logout();
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }
