@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -35,6 +36,8 @@ public class Home extends BaseActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_CALENDAR
     };
+    private String talukName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,15 +46,20 @@ public class Home extends BaseActivity {
         setSupportActionBar(mToolBar);
         setTitle("Groups");
 
-        HomeFragment homeFragment =new HomeFragment();
+        if (getIntent().hasExtra("talukName")) {
+            talukName = getIntent().getStringExtra("talukName");
+        }
+
+        HomeFragment homeFragment = new HomeFragment();
         homeFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
 
 
-        if(!hasPermission(permissions)){
-            ActivityCompat.requestPermissions(this,permissions, 222);
+        if (!hasPermission(permissions)) {
+            ActivityCompat.requestPermissions(this, permissions, 222);
         }
     }
+
     public boolean hasPermission(String[] permissions) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions != null) {
@@ -65,16 +73,19 @@ public class Home extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-        AppLog.e(TAG, "BackStack count : " + fm.getBackStackEntryCount());
+        if (!TextUtils.isEmpty(talukName)) {
+            Home.super.onBackPressed();
+        } else {
+            FragmentManager fm = getSupportFragmentManager();
+            AppLog.e(TAG, "BackStack count : " + fm.getBackStackEntryCount());
 
-                editDialog = SMBDialogUtils.showSMBDialogOKCancel_(this, getResources().getString(R.string.msg_app_exit), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Home.super.onBackPressed();
-                    }
-                });
-
+            editDialog = SMBDialogUtils.showSMBDialogOKCancel_(this, getResources().getString(R.string.msg_app_exit), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Home.super.onBackPressed();
+                }
+            });
+        }
     }
 
     @Override
@@ -87,19 +98,19 @@ public class Home extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home,menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_logout:
                 logout();
                 finish();
                 return true;
-             default:
-                 return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
     }

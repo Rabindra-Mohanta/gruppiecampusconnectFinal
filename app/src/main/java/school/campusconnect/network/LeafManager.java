@@ -12,6 +12,7 @@ import school.campusconnect.datamodel.NewPassReq;
 import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
+import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
@@ -396,6 +397,7 @@ public class LeafManager {
     public static final int API_LIVE_CLASS_JOIN = 252;
     public static final int API_LIVE_CLASS_END = 253;
     public static final int API_SEND_MSG_TO_NOTSUBMITTED_STUDENT = 254;
+    public static final int API_TALUKS = 258;
 
 
     public LeafManager() {
@@ -3264,6 +3266,7 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
+
     public void attendancePush(OnCommunicationListener listListener, String group_id, String teamId, MeetingStatusModelApi req) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
@@ -8437,13 +8440,17 @@ public class LeafManager {
 
     }
 
-    public void getGroups(final OnCommunicationListener listListener) {
+    public void getGroups(final OnCommunicationListener listListener, String talukName) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
         final Call<GroupResponse> model;
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && "CAMPUS".equalsIgnoreCase(BuildConfig.AppType)) {
-            model = service.getGroups(BuildConfig.APP_ID);
+            if (!TextUtils.isEmpty(talukName)) {
+                model = service.getGroupsTaluks(BuildConfig.APP_ID, talukName);
+            } else {
+                model = service.getGroups(BuildConfig.APP_ID);
+            }
         } else {
             model = service.getGroups(BuildConfig.APP_ID, BuildConfig.AppName);
         }
@@ -8452,6 +8459,41 @@ public class LeafManager {
         wrapper.execute(API_ID_GROUP_LIST, new ResponseWrapper.ResponseHandler<GroupResponse, ErrorResponse>() {
             @Override
             public void handle200(int apiId, GroupResponse response) {
+                AppLog.e("LeafManager", "GetGroupList : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void getTaluks(final OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<TaluksRes> model = service.getTaluks();
+        ResponseWrapper<TaluksRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_TALUKS, new ResponseWrapper.ResponseHandler<TaluksRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, TaluksRes response) {
                 AppLog.e("LeafManager", "GetGroupList : " + response);
                 if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onSuccess(apiId, response);
@@ -9727,7 +9769,7 @@ public class LeafManager {
 
     }
 
-    public void sendMsgToNotSubmittedStudents(OnCommunicationListener listListener, String group_id,String userIds, SendMsgToStudentReq req) {
+    public void sendMsgToNotSubmittedStudents(OnCommunicationListener listListener, String group_id, String userIds, SendMsgToStudentReq req) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);

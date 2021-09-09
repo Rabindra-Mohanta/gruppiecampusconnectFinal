@@ -69,6 +69,8 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     public PullRefreshLayout swipeRefreshLayout;
 */
 
+    private String talukName;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -82,6 +84,9 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     }
 
     private void _init() {
+        if (getArguments() != null) {
+            talukName = getArguments().getString("talukName");
+        }
     /*    swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -98,17 +103,19 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     private void getGroupList() {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getGroups(this);
+        leafManager.getGroups(this, talukName);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         if (isConnectionAvailable()) {
-            if(LeafPreference.getInstance(getActivity()).getBoolean("group_list_refresh")){
-                LeafPreference.getInstance(getActivity()).setBoolean("group_list_refresh",false);
+            if (LeafPreference.getInstance(getActivity()).getBoolean("group_list_refresh")) {
+                LeafPreference.getInstance(getActivity()).setBoolean("group_list_refresh", false);
                 getGroupList();
-            }else {
+            } else if (!TextUtils.isEmpty(talukName)) {
+                getGroupList();
+            } else {
                 String groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
                 if (groupList != null && !TextUtils.isEmpty(groupList)) {
                     List<GroupItem> result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
@@ -289,33 +296,6 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
                         break;
                 }
             }
-        }
-    }
-
-    private class GroupIdModel implements Serializable {
-
-        private String groupId;
-        private boolean added = false;
-
-        public GroupIdModel(String groupId, boolean added) {
-            this.groupId = groupId;
-            this.added = added;
-        }
-
-        public String getGroupId() {
-            return groupId;
-        }
-
-        public void setGroupId(String groupId) {
-            this.groupId = groupId;
-        }
-
-        public boolean isAdded() {
-            return added;
-        }
-
-        public void setAdded(boolean added) {
-            this.added = added;
         }
     }
 

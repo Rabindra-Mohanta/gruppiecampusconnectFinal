@@ -24,6 +24,7 @@ public class LeafPreference {
     public static final String HOME_LIST_OFFLINE = "HOME_LIST_OFFLINE";
     public static final String SCHOOL_LIST = "SCHOOL_LIST";
     public static final String GROUP_ID_LIST = "GROUP_ID_LIST";
+    public static final String ROLE = "ROLE";
     private static LeafPreference sInstance;
     private static SharedPreferences sPref;
     private static SharedPreferences.Editor sEditor;

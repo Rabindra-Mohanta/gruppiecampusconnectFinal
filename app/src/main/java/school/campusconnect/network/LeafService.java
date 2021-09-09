@@ -11,6 +11,7 @@ import school.campusconnect.datamodel.NewPassReq;
 import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
+import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
@@ -1319,6 +1320,14 @@ public interface LeafService {
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<GroupResponse> getGroups(@Query("category") String category);
+
+    @GET("/api/v1/groups")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<GroupResponse> getGroupsTaluks(@Query("category") String category,@Query("talukName") String talukName);
+
+    @GET("/api/v1/taluks")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TaluksRes> getTaluks();
 
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

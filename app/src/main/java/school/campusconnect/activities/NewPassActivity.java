@@ -138,6 +138,7 @@ public class NewPassActivity extends BaseActivity {
         if (apiId == LeafManager.API_ID_NEW_PASS) {
             LoginResponse response1 = (LoginResponse) response;
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.LOGIN_ID, response1.userId);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.ROLE, response1.role);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, response1.name);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NUM, response1.phone);
@@ -155,16 +156,22 @@ public class NewPassActivity extends BaseActivity {
 
             hide_keyboard();
 
-
             LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
-            if(response1.groupCount>1){
-                Intent login = new Intent(this, Home.class);
+            if("taluk".equalsIgnoreCase(response1.role)){
+                Intent login = new Intent(this, TalukListActivity.class);
                 login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(login);
                 finish();
             }else {
-                manager = new LeafManager();
-                manager.getGroupDetail(this, response1.groupId);
+                if(response1.groupCount>1){
+                    Intent login = new Intent(this, Home.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                }else {
+                    manager = new LeafManager();
+                    manager.getGroupDetail(this, response1.groupId);
+                }
             }
         }
         if (apiId == LeafManager.API_ID_GROUP_DETAIL) {

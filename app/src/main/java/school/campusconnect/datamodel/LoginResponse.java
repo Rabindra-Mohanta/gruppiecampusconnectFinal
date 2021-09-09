@@ -7,6 +7,7 @@ public class LoginResponse extends BaseResponse {
     public String token;
     public String name;
     public String phone;
+    public String role;
     public String image;
     public String counryTelephoneCode;
     public String countryAlpha2Code;

@@ -84,24 +84,25 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         String type = intent.getType();
         AppLog.e(TAG, "action : " + action);
         AppLog.e(TAG, "type : " + type);
-        if(type==null){
+        if (type == null) {
             return;
         }
         Uri uri = null;
         ArrayList<Uri> uriList = null;
         if (Intent.ACTION_SEND.equals(action)) {
             uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        }
-        else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             uriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         }
-        new HandleShareFiles(action,type,uri,uriList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new HandleShareFiles(action, type, uri, uriList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-    private static class HandleShareFiles extends AsyncTask<Void,Void,Void>{
+
+    private static class HandleShareFiles extends AsyncTask<Void, Void, Void> {
         String action;
         String type;
         Uri uri;
         ArrayList<Uri> uriList;
+
         public HandleShareFiles(String action, String type, Uri uri, ArrayList<Uri> uriList) {
             this.action = action;
             this.type = type;
@@ -131,39 +132,39 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
                     for (int i = 0; i < uriList.size(); i++) {
                         try {
                             String path = ImageUtil.getPath(LeafApplication.getInstance(), uriList.get(i));
-                            if(!TextUtils.isEmpty(path)){
+                            if (!TextUtils.isEmpty(path)) {
                                 list.add(path);
                             }
-                        }catch (IllegalArgumentException e){
-                            AppLog.e(TAG," IllegalArgumentException :"+e.getMessage());
-                            String fileName = System.currentTimeMillis()+""+ new Random().nextInt(99)+extension;
-                            File file=new File(LeafApplication.getInstance().getExternalCacheDir(),fileName);
-                            if(!file.exists()){
+                        } catch (IllegalArgumentException e) {
+                            AppLog.e(TAG, " IllegalArgumentException :" + e.getMessage());
+                            String fileName = System.currentTimeMillis() + "" + new Random().nextInt(99) + extension;
+                            File file = new File(LeafApplication.getInstance().getExternalCacheDir(), fileName);
+                            if (!file.exists()) {
                                 file.createNewFile();
                             }
-                            ImageUtil.writeDataToUri(LeafApplication.getInstance(),file,uriList.get(i));
-                            if(!TextUtils.isEmpty(file.getAbsolutePath())){
+                            ImageUtil.writeDataToUri(LeafApplication.getInstance(), file, uriList.get(i));
+                            if (!TextUtils.isEmpty(file.getAbsolutePath())) {
                                 list.add(file.getAbsolutePath());
                             }
                         }
                     }
                 }
 
-                if(uri!=null){
+                if (uri != null) {
                     try {
                         String path = ImageUtil.getPath(LeafApplication.getInstance(), uri);
-                        if(!TextUtils.isEmpty(path)){
+                        if (!TextUtils.isEmpty(path)) {
                             list.add(path);
                         }
-                    }catch (IllegalArgumentException e){
-                        AppLog.e(TAG," IllegalArgumentException :"+e.getMessage());
-                        String fileName = System.currentTimeMillis()+""+ new Random().nextInt(99)+extension;
-                        File file=new File(LeafApplication.getInstance().getExternalCacheDir(),fileName);
-                        if(!file.exists()){
+                    } catch (IllegalArgumentException e) {
+                        AppLog.e(TAG, " IllegalArgumentException :" + e.getMessage());
+                        String fileName = System.currentTimeMillis() + "" + new Random().nextInt(99) + extension;
+                        File file = new File(LeafApplication.getInstance().getExternalCacheDir(), fileName);
+                        if (!file.exists()) {
                             file.createNewFile();
                         }
-                        ImageUtil.writeDataToUri(LeafApplication.getInstance(),file,uri);
-                        if(!TextUtils.isEmpty(file.getAbsolutePath())){
+                        ImageUtil.writeDataToUri(LeafApplication.getInstance(), file, uri);
+                        if (!TextUtils.isEmpty(file.getAbsolutePath())) {
                             list.add(file.getAbsolutePath());
                         }
                     }
@@ -320,17 +321,25 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
     }*/
     private void gotoHomeScreen() {
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
-            if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
-                Intent intent = new Intent(SplashActivity.this, Home.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            } else {
-                Intent login = new Intent(this, GroupDashboardActivityNew.class);
+            if ("taluk".equalsIgnoreCase(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.ROLE))) {
+                Intent login = new Intent(this, TalukListActivity.class);
                 login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(login);
                 finish();
+            } else {
+                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+                    Intent intent = new Intent(SplashActivity.this, Home.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent login = new Intent(this, GroupDashboardActivityNew.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                }
             }
+
         } else {
             Intent intent = new Intent(SplashActivity.this, GroupDashboardActivityNew.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

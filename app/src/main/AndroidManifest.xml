@@ -18,16 +18,13 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!--This is only necessary if you are displaying notifications-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- This is only necessary if you are displaying notifications -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
 
-
     <application
-        android:name="school.campusconnect.LeafApplication"
+        android:name=".LeafApplication"
         android:allowBackup="false"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
@@ -39,28 +36,28 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
+        <activity android:name=".activities.TalukListActivity"></activity>
         <activity
             android:name=".activities.Home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
-            android:name="school.campusconnect.activities.FullScreenVideoMultiActivity"
+            android:name=".activities.FullScreenVideoMultiActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.VideoPlayActivity"
+            android:name=".activities.VideoPlayActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="school.campusconnect.activities.AttendancePareSchool"
+            android:name=".activities.AttendancePareSchool"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TeamUsersActivity"
+            android:name=".activities.TeamUsersActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.LeaveActivity"
+            android:name=".activities.LeaveActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="school.campusconnect.activities.ReadUnreadPostUsers" /> <!-- pass : Frenzin@2018 -->
+        <activity android:name=".activities.ReadUnreadPostUsers" /> <!-- pass : Frenzin@2018 -->
         <!-- vividinnovations.in@gmail.com -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -89,14 +86,14 @@
             android:authorities="${applicationId}"
             android:exported="false" />
 
-        <receiver android:name="school.campusconnect.utils.IncomingSms">
+        <receiver android:name=".utils.IncomingSms">
             <intent-filter>
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name="school.campusconnect.activities.SplashActivity"
+            android:name=".activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -105,197 +102,202 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="video/*" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="video/*" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/pdf" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/pdf" />
             </intent-filter>
-
         </activity>
         <activity
-            android:name="school.campusconnect.activities.Activity_Walkthrough"
+            android:name=".activities.Activity_Walkthrough"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.UserExistActivity"
+            android:name=".activities.UserExistActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="school.campusconnect.activities.LoginActivity2"
+            android:name=".activities.LoginActivity2"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.utils.crop.CropImageActivity"
+            android:name=".utils.crop.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="school.campusconnect.activities.CreateAccountActivity"
+            android:name=".activities.CreateAccountActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.SignUpActivity2"
+            android:name=".activities.SignUpActivity2"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="school.campusconnect.activities.ViewPDFActivity" />
+        <activity android:name=".activities.ViewPDFActivity" />
         <activity
-            android:name="school.campusconnect.activities.InviteFriendActivity"
+            android:name=".activities.InviteFriendActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddFriendActivity"
+            android:name=".activities.AddFriendActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.GroupDashboardActivityNew"
+            android:name=".activities.GroupDashboardActivityNew"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name="school.campusconnect.activities.LeadDetailActivity"
+            android:name=".activities.LeadDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.GroupListActivityNew"
+            android:name=".activities.GroupListActivityNew"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.ReadMoreActivity"
+            android:name=".activities.ReadMoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TreeListActivity"
+            android:name=".activities.TreeListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.LeadsListActivity"
+            android:name=".activities.LeadsListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.LikesListActivity"
+            android:name=".activities.LikesListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.AllUserListActivity"
+            android:name=".activities.AllUserListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.AllContactListActivity"
+            android:name=".activities.AllContactListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.UserDetailActivity"
+            android:name=".activities.UserDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ProfileActivity2"
+            android:name=".activities.ProfileActivity2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddPostActivity"
+            android:name=".activities.AddPostActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.EditPostActivity"
+            android:name=".activities.EditPostActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="school.campusconnect.activities.FullScreenActivity" />
+        <activity android:name=".activities.FullScreenActivity" />
         <activity
-            android:name="school.campusconnect.activities.FullScreenAddPostActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="school.campusconnect.activities.GroupsActivity"
+            android:name=".activities.FullScreenAddPostActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.CommentsActivity"
+            android:name=".activities.GroupsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ReplyActivity"
+            android:name=".activities.CommentsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ChangePasswordActivity"
+            android:name=".activities.ReplyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TestActivity"
+            android:name=".activities.ChangePasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TestActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="school.campusconnect.activities.ChangeNumberActivity"
+            android:name=".activities.ChangeNumberActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.FavoritePostActivity"
+            android:name=".activities.FavoritePostActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AboutGroupActivity2"
+            android:name=".activities.AboutGroupActivity2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AboutPublicGroupActivity"
+            android:name=".activities.AboutPublicGroupActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.PublicGroupJoinActivity"
+            android:name=".activities.PublicGroupJoinActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.NotificationsActivityNew"
+            android:name=".activities.NotificationsActivityNew"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ShareGroupListActivity"
+            android:name=".activities.ShareGroupListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ShareGroupTeamListActivity"
+            android:name=".activities.ShareGroupTeamListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.SelectShareTypeActivity"
+            android:name=".activities.SelectShareTypeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ShareInPersonalActivity"
+            android:name=".activities.ShareInPersonalActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.SharePersonalNameListActivity"
+            android:name=".activities.SharePersonalNameListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AuthorizedUserActivity"
+            android:name=".activities.AuthorizedUserActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.QuestionListActivity"
+            android:name=".activities.QuestionListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddQuestionActivity"
+            android:name=".activities.AddQuestionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.PushActivity"
+            android:name=".activities.PushActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name="school.campusconnect.utils.MyFirebaseMessagingService">
+        <service android:name=".utils.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name="school.campusconnect.utils.youtube.UploadService"
+            android:name=".utils.youtube.UploadService"
             android:exported="true" />
-
         <service
             android:name=".utils.BackgroundVideoUploadService"
             android:enabled="true"
@@ -306,25 +308,25 @@
             android:exported="true" />
 
         <activity
-            android:name="school.campusconnect.utils.youtube.MainActivity"
+            android:name=".utils.youtube.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.utils.youtube.PlayActivity"
+            android:name=".utils.youtube.PlayActivity"
             android:label="@string/title_activity_play"
-            android:parentActivityName="school.campusconnect.utils.youtube.MainActivity"
+            android:parentActivityName=".utils.youtube.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.utils.youtube.ReviewActivity"
+            android:name=".utils.youtube.ReviewActivity"
             android:label="@string/title_activity_review"
-            android:parentActivityName="school.campusconnect.utils.youtube.MainActivity"
+            android:parentActivityName=".utils.youtube.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.curl.CurlActivity"
+            android:name=".curl.CurlActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.curl.AllPagesActivity"
+            android:name=".curl.AllPagesActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -340,7 +342,7 @@
             android:name="AA_MODELS"
             android:value="school.campusconnect.datamodel.StudTestPaperItem,school.campusconnect.datamodel.TestExamTBL,school.campusconnect.datamodel.ChapterTBL,school.campusconnect.datamodel.BaseTeamTable,school.campusconnect.datamodel.LiveClassListTBL,school.campusconnect.datamodel.ClassListTBL,school.campusconnect.datamodel.TeamCountTBL,school.campusconnect.datamodel.SubjectCountTBL,school.campusconnect.datamodel.EventTBL,school.campusconnect.datamodel.HwItem,school.campusconnect.datamodel.StudAssignementItem,school.campusconnect.datamodel.SubjectItem,school.campusconnect.datamodel.EBookItem,school.campusconnect.datamodel.EBookClassItem, school.campusconnect.datamodel.GroupDataItem, school.campusconnect.datamodel.PostDataItem, school.campusconnect.datamodel.notifications.NotificationModel,school.campusconnect.datamodel.PostTeamDataItem, school.campusconnect.datamodel.personalchat.PersonalContactsModel,  school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel,  school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel,  school.campusconnect.datamodel.gruppiecontacts.AllContactModel" /> <!-- rajini.gruppie.datamodel.gruppiecontacts.GruppieContactAddressModel, -->
         <activity
-            android:name="school.campusconnect.activities.CommentsLikeActivity"
+            android:name=".activities.CommentsLikeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
@@ -355,222 +357,222 @@
         </provider>
 
         <activity
-            android:name="school.campusconnect.activities.FullScreenMultiActivity"
+            android:name=".activities.FullScreenMultiActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.CreateTeamActivity"
+            android:name=".activities.CreateTeamActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name="school.campusconnect.activities.TeamSettingsActivity"
+            android:name=".activities.TeamSettingsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.PersonalSettingsActivity"
+            android:name=".activities.PersonalSettingsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="school.campusconnect.activities.GpsActivity"
+            android:name=".activities.GpsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
         <service
-            android:name="school.campusconnect.utils.GruppieTracker"
+            android:name=".utils.GruppieTracker"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="school.campusconnect.activities.AttendanceActivity"
+            android:name=".activities.AttendanceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.EditAttendanceActivity"
+            android:name=".activities.EditAttendanceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ArchiveTeamActivity"
+            android:name=".activities.ArchiveTeamActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.NestedTeamActivity"
+            android:name=".activities.NestedTeamActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddStudentActivity"
+            android:name=".activities.AddStudentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.GalleryActivity"
+            android:name=".activities.GalleryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddGalleryPostActivity"
+            android:name=".activities.AddGalleryPostActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TimeTableActivity"
+            android:name=".activities.TimeTableActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddTimeTablePostActivity"
+            android:name=".activities.AddTimeTablePostActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.VendorActivity"
+            android:name=".activities.VendorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddVendorActivity"
+            android:name=".activities.AddVendorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.CodeConductActivity"
+            android:name=".activities.CodeConductActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddCodeConductActivity"
+            android:name=".activities.AddCodeConductActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.VendorReadMoreActivity"
+            android:name=".activities.VendorReadMoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ChatActivity"
+            android:name=".activities.ChatActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.CalendarActivity"
+            android:name=".activities.CalendarActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TeamListActivity"
+            android:name=".activities.TeamListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.PeopleActivity"
+            android:name=".activities.PeopleActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.NotificationListActivity"
+            android:name=".activities.NotificationListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.NewPassActivity"
+            android:name=".activities.NewPassActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TimeTableTeamsActivity"
+            android:name=".activities.TimeTableTeamsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.SubjectActivity"
+            android:name=".activities.SubjectActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.SubjectActivity2"
+            android:name=".activities.SubjectActivity2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddSubjectActivity2"
+            android:name=".activities.AddSubjectActivity2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ClassActivity2"
+            android:name=".activities.ClassActivity2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TimeTableClassActivity2"
+            android:name=".activities.TimeTableClassActivity2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TimeTabelActivity2"
+            android:name=".activities.TimeTabelActivity2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddTimeTable2"
+            android:name=".activities.AddTimeTable2"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ClassActivity"
+            android:name=".activities.ClassActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddSubjectActivity"
+            android:name=".activities.AddSubjectActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="school.campusconnect.activities.AddClassActivity"
+            android:name=".activities.AddClassActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="school.campusconnect.activities.ClassStudentActivity"
+            android:name=".activities.ClassStudentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddClassStudentActivity"
+            android:name=".activities.AddClassStudentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="school.campusconnect.activities.AttendanceReportActivity"
+            android:name=".activities.AttendanceReportActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AttendanceDetailActivity"
+            android:name=".activities.AttendanceDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.BusStudentActivity"
+            android:name=".activities.BusStudentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.BusActivity"
+            android:name=".activities.BusActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddBusStudentActivity"
+            android:name=".activities.AddBusStudentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name="school.campusconnect.activities.AddBusActivity"
+            android:name=".activities.AddBusActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name="school.campusconnect.activities.StaffActivity"
+            android:name=".activities.StaffActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddStaffActivity"
+            android:name=".activities.AddStaffActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name="school.campusconnect.activities.AddTeamStaffActivity"
+            android:name=".activities.AddTeamStaffActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddTeamStudentActivity"
+            android:name=".activities.AddTeamStudentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.TeacherClassActivity"
+            android:name=".activities.TeacherClassActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ParentKidsActivity"
+            android:name=".activities.ParentKidsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.MarksheetActivity"
+            android:name=".activities.MarksheetActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.MarkSheetListActivity"
+            android:name=".activities.MarkSheetListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.MarkCardReadMoreActivity"
+            android:name=".activities.MarkCardReadMoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.GalleryDetailActivity"
+            android:name=".activities.GalleryDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.MarkCardListActivity"
+            android:name=".activities.MarkCardListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddMarkCardActivity"
+            android:name=".activities.AddMarkCardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.UpdateMarksheetActivity"
+            android:name=".activities.UpdateMarksheetActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.VideoClassActivity"
+            android:name=".activities.VideoClassActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.EBookActivity"
+            android:name=".activities.EBookActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddEBookActivity"
+            android:name=".activities.AddEBookActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.EBookPdfActivity"
+            android:name=".activities.EBookPdfActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.SelectEBookActivity"
+            android:name=".activities.SelectEBookActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.EBookPdfForTeamActivity"
+            android:name=".activities.EBookPdfForTeamActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ParentKidsForEBookActivity"
+            android:name=".activities.ParentKidsForEBookActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.EBookReadMoreActivity"
+            android:name=".activities.EBookReadMoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.EBookClassActivity"
+            android:name=".activities.EBookClassActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.NewShareActivity"
+            android:name=".activities.NewShareActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -581,22 +583,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="school.campusconnect.activities.ClassAddTokenActivity"
+            android:name=".activities.ClassAddTokenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.RecordedClassActivity"
+            android:name=".activities.RecordedClassActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.RecClassSubjectActivity"
+            android:name=".activities.RecClassSubjectActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.ChapterActivity"
+            android:name=".activities.ChapterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.AddChapterPostActivity"
+            android:name=".activities.AddChapterPostActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="school.campusconnect.activities.CompletedTopicUserActivity"
+            android:name=".activities.CompletedTopicUserActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.FeesClassActivity"
@@ -640,19 +642,20 @@
         <activity
             android:name=".activities.AddEBookActivity2"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.HomeWorkEditActivity"
             android:screenOrientation="portrait">
-            <!--   <intent-filter>
+
+            <!--
+               <intent-filter>
                           <action android:name="android.intent.action.MAIN" />
                           <action android:name="android.intent.action.VIEW" />
                </activity>
                           <category android:name="android.intent.category.LAUNCHER" />
-                      </intent-filter>-->
+                      </intent-filter>
+            -->
 
         </activity>
-
         <activity
             android:name=".activities.TestClassActivity"
             android:screenOrientation="portrait" />
@@ -686,8 +689,6 @@
             android:name=".service.FloatingWidgetExamService"
             android:enabled="true"
             android:exported="false" />
-
-
     </application>
 
 </manifest>
