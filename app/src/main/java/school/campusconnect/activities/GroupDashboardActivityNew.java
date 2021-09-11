@@ -283,7 +283,6 @@ public class GroupDashboardActivityNew extends BaseActivity
                     ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
 
                     boolean ifNeedToLogout = false;
-                    boolean ifGroupListRefresh = false;
                     for (int i = 0; i < eventList.size(); i++) {
                         UpdateDataEventRes.EventResData curr = eventList.get(i);
                         EventTBL eventTBL = null;
@@ -339,7 +338,6 @@ public class GroupDashboardActivityNew extends BaseActivity
                             ifNeedToLogout = true;
                         } else if (groupCount.oldCount != teamCount.schoolGroupCount) {
                             LeafPreference.getInstance(GroupDashboardActivityNew.this).setBoolean("group_list_refresh",true);
-                            ifGroupListRefresh = true;
                         }
                         groupCount.oldCount = teamCount.schoolGroupCount;
                     }
@@ -350,12 +348,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                     if (ifNeedToLogout) {
                         showLogoutPopup();
-                        return;
-                    }else if(ifGroupListRefresh){
-                        Intent intent = new Intent(GroupDashboardActivityNew.this, Home.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
                         return;
                     }
 

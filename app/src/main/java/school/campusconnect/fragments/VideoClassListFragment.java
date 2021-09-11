@@ -771,13 +771,14 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         this.item = classData;
 
-        if (classData.canPost && !listItemData.isLive && Build.VERSION.SDK_INT != Build.VERSION_CODES.Q) {
+        // TODO : DISABLED VIDEO SCREEN RECORD
+       /* if (classData.canPost && !listItemData.isLive && Build.VERSION.SDK_INT != Build.VERSION_CODES.Q) {
             ((VideoClassActivity) getActivity()).startRecordingScreen(this.item);
-        } else {
+        } else {*/
             videoClassClicked = true;
             startMeeting();
             progressBarZoom.setVisibility(View.VISIBLE);
-        }
+//        }
 
     }
 

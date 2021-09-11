@@ -15,9 +15,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/padding_30dp"
-            android:src="@drawable/app_icon"
-            />
+            android:scaleType="fitXY"
+            android:src="@drawable/splash_kittur" />
 
         <TextView
             android:layout_width="wrap_content"
