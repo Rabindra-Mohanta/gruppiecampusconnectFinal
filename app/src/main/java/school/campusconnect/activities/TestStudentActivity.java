@@ -575,6 +575,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             }
         } else {
             if (!TextUtils.isEmpty(item.testDate)) {
+                long dtExamStart = MixOperations.getDateFromStringDate(item.testDate + " " + item.testStartTime, "dd-MM-yyyy hh:mm a").getTime();
                 long dtExamEnd = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
                 long dtExamEndSubmitTime = MixOperations.getDateFromStringDate(item.testDate + " " + item.testEndTime, "dd-MM-yyyy hh:mm a").getTime();
                 try {
@@ -583,8 +584,15 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
                 }
 
-                if (now > dtExamEnd && now < dtExamEndSubmitTime) {
+                if(now > dtExamStart && now < dtExamEndSubmitTime){
                     llSubmit.setVisibility(View.VISIBLE);
+                }else {
+                    llSubmit.setVisibility(View.GONE);
+                }
+
+
+                if (now > dtExamEnd && now < dtExamEndSubmitTime) {
+
                     tvQPaperHide.setVisibility(View.GONE);
                     btnStart.setEnabled(false);
                     btnStart.setBackground(getDrawable(R.drawable.start_button_bg_disabled));
@@ -613,7 +621,6 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                     };
                     countDownTimer.start();
                 } else {
-                    llSubmit.setVisibility(View.GONE);
                     if (countDownTimer != null) {
                         countDownTimer.cancel();
                     }

@@ -113,6 +113,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     EditText et_msg;
     @Bind(R.id.btnSend)
     Button btnSend;
+    @Bind(R.id.rel)
+    RelativeLayout relMain;
 
 
     private String group_id;
@@ -184,6 +186,13 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                 }
             }
         });
+
+        relMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPostClick(item);
+            }
+        });
     }
 
     private String getStudentIds() {
@@ -196,6 +205,12 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             }
         }
         return strIds.toString();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        showData();
     }
 
     private void showData() {
@@ -299,7 +314,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         }
     }
 
-    public void onPostClick(ChapterRes.TopicData item) {
+    public void onPostClick(HwRes.HwData item) {
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
             Intent browserIntent = new Intent(this, TestActivity.class);
             browserIntent.putExtra("url", item.video);
@@ -308,7 +323,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
-            i.putExtra("name", item.topicName);
+            i.putExtra("name", "");
             startActivity(i);
 
         } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {

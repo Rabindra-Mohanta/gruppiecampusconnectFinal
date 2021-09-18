@@ -191,7 +191,7 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
         setListener();
 
         String fileType = LeafApplication.getInstance().getType();
-        if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType) || Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
+        if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)){
             ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
             if(shareList!=null && shareList.size()>0){
                 SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
@@ -199,15 +199,9 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
 
-                        String fileType = LeafApplication.getInstance().getType();
-                        if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)){
-                            listImages.addAll(shareList);
-                            fileTypeImageOrVideo = fileType;
-                            showLastImage();
-                        }else if(Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
-                            pdfPath = shareList.get(0);
-                            Picasso.with(SubmitAssignmentActivity.this).load(R.drawable.pdf_thumbnail).into(imgDoc);
-                        }
+                        listImages.addAll(shareList);
+                        fileTypeImageOrVideo = fileType;
+                        showLastImage();
                     }
                 });
             }

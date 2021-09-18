@@ -114,7 +114,14 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
                 LeafPreference.getInstance(getActivity()).setBoolean("group_list_refresh", false);
                 getGroupList();
             } else if (!TextUtils.isEmpty(talukName)) {
-                getGroupList();
+                String groupList = LeafPreference.getInstance(getActivity()).getString(talukName);
+                if (groupList != null && !TextUtils.isEmpty(groupList)) {
+                    List<GroupItem> result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
+                    }.getType());
+                    rvClass.setAdapter(new GroupAdapterNew(result));
+                } else {
+                    getGroupList();
+                }
             } else {
                 String groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
                 if (groupList != null && !TextUtils.isEmpty(groupList)) {
@@ -135,7 +142,12 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         progressBar.setVisibility(View.GONE);
         GroupResponse res = (GroupResponse) response;
         AppLog.e(TAG, "ClassResponse " + res.data);
-        LeafPreference.getInstance(getActivity()).setString(LeafPreference.SCHOOL_LIST, new Gson().toJson(res.data));
+        if (!TextUtils.isEmpty(talukName)) {
+            LeafPreference.getInstance(getActivity()).setString(talukName, new Gson().toJson(res.data));
+        } else {
+            LeafPreference.getInstance(getActivity()).setString(LeafPreference.SCHOOL_LIST, new Gson().toJson(res.data));
+        }
+
 
         rvClass.setAdapter(new GroupAdapterNew(res.data));
 
