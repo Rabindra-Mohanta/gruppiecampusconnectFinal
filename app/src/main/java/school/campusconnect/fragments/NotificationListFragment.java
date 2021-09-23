@@ -173,13 +173,13 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No People found.");
+                    txtEmpty.setText("No Notification found.");
                 }
                 return list.size();
             }
             else
             {
-                txtEmpty.setText("No People found.");
+                txtEmpty.setText("No Notification found.");
                 return 0;
             }
 

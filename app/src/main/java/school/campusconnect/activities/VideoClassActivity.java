@@ -96,7 +96,6 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle(getIntent().getStringExtra("title"));
-
         //    VideoClassListFragment classListFragment=new VideoClassListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
