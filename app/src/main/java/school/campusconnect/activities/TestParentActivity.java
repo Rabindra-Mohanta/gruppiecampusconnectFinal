@@ -61,8 +61,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -187,14 +193,14 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
 
-        currentTimeFromServer = TrueTimeRx.now().getTime();
+        ///currentTimeFromServer = TrueTimeRx.now().getTime();
 
         _init();
 
         String nTopic = item.topicName.length() > 15 ? item.topicName.substring(0, 15) : item.topicName;
         setTitle(nTopic + " (" + className + ")");
 
-        showData();
+        new TESTGOOGLE().execute();
     }
 
 
@@ -274,6 +280,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     protected void onStart() {
         super.onStart();
+
+        if(currentTimeFromServer != 0)
         setStartButtonStatus();
     }
 
@@ -1673,5 +1681,57 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     }
 
+    private class TESTGOOGLE extends AsyncTask<String, String, Long>
+    {
+
+        @Override
+        protected Long doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://www.google.com");
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode+" , date : "+urlConnection.getHeaderField("Date"));
+
+
+                DateFormat utcFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss");
+                utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                DateFormat indianFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss");
+                indianFormat .setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
+                AppLog.e(TAG, "response  code date :"+new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").parse(urlConnection.getHeaderField("Date")).getTime());
+                return indianFormat.parse(indianFormat.format(utcFormat.parse(urlConnection.getHeaderField("Date")))).getTime();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                AppLog.e(TAG ,"Parse date : "+e.getLocalizedMessage());
+                e.printStackTrace();
+            }
+
+            return Calendar.getInstance().getTimeInMillis();
+        }
+
+
+        @Override
+        protected void onPostExecute(Long s) {
+            super.onPostExecute(s);
+
+            currentTimeFromServer = s;
+            AppLog.e(TAG, "Date : " + currentTimeFromServer);
+
+
+            showData();
+            setStartButtonStatus();
+        }
+    }
 
 }
