@@ -10,6 +10,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.fragments.ClassStudentListFragment;
 import school.campusconnect.fragments.StaffListFragment;
 
 public class StaffActivity extends BaseActivity {
@@ -46,6 +47,7 @@ public class StaffActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_staff,menu);
+        menu.findItem(R.id.menu_print_staff_list).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -56,6 +58,9 @@ public class StaffActivity extends BaseActivity {
                 Intent intent = new Intent(this, AddStaffActivity.class);
                 intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
                 startActivity(intent);
+                return true;
+            case R.id.menu_print_staff_list:
+                ((StaffListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).exportDataToCSV();
                 return true;
              default:
                  return super.onOptionsItemSelected(item);

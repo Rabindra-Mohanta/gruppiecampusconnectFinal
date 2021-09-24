@@ -154,6 +154,13 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
     @Bind(R.id.swipeRefreshLayout)
     PullRefreshLayout swipeRefreshLayout;
+
+    @Bind(R.id.iconBack)
+    public ImageView iconBack;
+
+    @Bind(R.id.imgHome)
+    public ImageView imgHome;
+
     private static final int DRAW_OVER_OTHER_APP_PERMISSION = 123;
 
     private String group_id;
@@ -173,12 +180,28 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         setContentView(R.layout.activity_test_student);
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
-        setBackEnabled(true);
 
         _init();
 
         String nTopic = item.topicName.length() > 15 ? item.topicName.substring(0, 15) : item.topicName;
-        setTitle(nTopic + " (" + className + ")");
+
+        setBackEnabled(false);
+        tvTitle.setText(nTopic + " (" + className + ")");
+        setTitle("");
+        iconBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        imgHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TestStudentActivity.this,GroupDashboardActivityNew.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
 
         new TESTGOOGLE().execute(null ,null);
 

@@ -108,6 +108,12 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     @Bind(R.id.swipeRefreshLayout)
     PullRefreshLayout swipeRefreshLayout;
 
+    @Bind(R.id.iconBack)
+    public ImageView iconBack;
+
+    @Bind(R.id.imgHome)
+    public ImageView imgHome;
+
     private String group_id;
     private String team_id;
     private String subject_id;
@@ -121,11 +127,28 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         setContentView(R.layout.activity_hw_student);
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
-        setBackEnabled(true);
 
         _init();
+
         String nTopic = item.topic.length() > 15 ? item.topic.substring(0, 15) : item.topic;
-        setTitle(nTopic + " (" + className + ")");
+        setBackEnabled(false);
+        tvTitle.setText(nTopic + " (" + className + ")");
+        setTitle("");
+        iconBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        imgHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HWStudentActivity.this,GroupDashboardActivityNew.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
 
         showData();
 

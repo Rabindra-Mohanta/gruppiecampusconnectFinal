@@ -4,6 +4,19 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <EditText
+        android:id="@+id/etSearch"
+        style="@style/SeachEditText"
+        android:background="@drawable/edit_search"
+        android:layout_width="match_parent"
+        android:paddingStart="@dimen/padding_10dp"
+        android:paddingEnd="@dimen/padding_10dp"
+        android:singleLine="true"
+        android:layout_marginStart="@dimen/padding_10dp"
+        android:layout_marginTop="@dimen/padding_10dp"
+        android:layout_marginEnd="@dimen/padding_10dp"
+        android:hint="@string/hint_search_group"
+        android:layout_height="45dp"/>
 <!--    <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -13,6 +26,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTeams"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_below="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
  <!--   </com.baoyz.widget.PullRefreshLayout>-->

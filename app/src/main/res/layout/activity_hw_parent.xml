@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <include layout="@layout/layout_toolbar" />
+        <include layout="@layout/layout_toolbar_home_back" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

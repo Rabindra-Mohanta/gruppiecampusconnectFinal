@@ -528,6 +528,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strGetQuestPaperLink">Get question paper link</string>
     <string name="strSend">Send</string>
     <string name="lbl_test_name">Test Name</string>
+    <string name="hint_search_group">Search</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

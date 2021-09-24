@@ -2,4 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_add_staff"
         android:title="Add Staff"/>
+    <item android:id="@+id/menu_print_staff_list"
+        android:visible="false"
+        android:title="Print Staff List"/>
 </menu>

@@ -142,6 +142,15 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
     @Bind(R.id.rvImages)
     RecyclerView rvImages;
 
+    @Bind(R.id.tv_toolbar_title)
+    public TextView tvTitle;
+
+    @Bind(R.id.iconBack)
+    public ImageView iconBack;
+
+    @Bind(R.id.imgHome)
+    public ImageView imgHome;
+
     TextView btn_ok;
     TextView btn_cancel;
     TextView btn_upload;
@@ -256,10 +265,28 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
 
         group_id = GroupDashboardActivityNew.groupId;
 
-        setSupportActionBar(mToolBar);
-        setBackEnabled(true);
+
         transferUtility = AmazoneHelper.getTransferUtility(this);
-        setTitle("Submit Assignment");
+
+        setSupportActionBar(mToolBar);
+        setBackEnabled(false);
+        tvTitle.setText("Submit Assignment");
+        setTitle("");
+        iconBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        imgHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SubmitAssignmentActivity.this,GroupDashboardActivityNew.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
         if (getIntent() != null) {
             group_id = getIntent().getStringExtra("group_id");
             team_id = getIntent().getStringExtra("team_id");

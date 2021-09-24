@@ -5,11 +5,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -64,12 +67,16 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    @Bind(R.id.etSearch)
+    public EditText etSearch;
+
 /*
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;
 */
 
     private String talukName;
+    private List<GroupItem> result;
 
     @Nullable
     @Override
@@ -98,6 +105,35 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
                 }
             }
         });*/
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(result!=null){
+                    if(!TextUtils.isEmpty(s.toString())){
+                        ArrayList<GroupItem> list = new ArrayList<>();
+                        for (int i=0;i<result.size();i++){
+                            if(result.get(i).name.toLowerCase().contains(s.toString().toLowerCase())){
+                                list.add(result.get(i));
+                            }
+                        }
+                        rvClass.setAdapter(new GroupAdapterNew(list));
+                    }else {
+                        rvClass.setAdapter(new GroupAdapterNew(result));
+                    }
+                }
+            }
+        });
     }
 
     private void getGroupList() {
@@ -116,7 +152,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             } else if (!TextUtils.isEmpty(talukName)) {
                 String groupList = LeafPreference.getInstance(getActivity()).getString(talukName);
                 if (groupList != null && !TextUtils.isEmpty(groupList)) {
-                    List<GroupItem> result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
+                    result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
                     }.getType());
                     rvClass.setAdapter(new GroupAdapterNew(result));
                 } else {
@@ -125,7 +161,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             } else {
                 String groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
                 if (groupList != null && !TextUtils.isEmpty(groupList)) {
-                    List<GroupItem> result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
+                    result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
                     }.getType());
                     rvClass.setAdapter(new GroupAdapterNew(result));
                 } else {
@@ -142,6 +178,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         progressBar.setVisibility(View.GONE);
         GroupResponse res = (GroupResponse) response;
         AppLog.e(TAG, "ClassResponse " + res.data);
+        result = res.data;
         if (!TextUtils.isEmpty(talukName)) {
             LeafPreference.getInstance(getActivity()).setString(talukName, new Gson().toJson(res.data));
         } else {

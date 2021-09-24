@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +28,13 @@ public class ChapterActivity extends BaseActivity {
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
+    @Bind(R.id.iconBack)
+    public ImageView iconBack;
+
+    @Bind(R.id.imgHome)
+    public ImageView imgHome;
+
+
     boolean canPost;
     String team_id;
     String subject_id;
@@ -35,13 +43,27 @@ public class ChapterActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_people);
+        setContentView(R.layout.activity_people2);
 
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
-        setBackEnabled(true);
-        setTitle(getIntent().getStringExtra("title")+" - ("+getIntent().getStringExtra("className")+")");
-
+        setBackEnabled(false);
+        tvTitle.setText(getIntent().getStringExtra("title")+" - ("+getIntent().getStringExtra("className")+")");
+        setTitle("");
+        iconBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        imgHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChapterActivity.this,GroupDashboardActivityNew.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
         canPost = getIntent().getBooleanExtra("canPost",false);
         team_id = getIntent().getStringExtra("team_id");
         subject_id = getIntent().getStringExtra("subject_id");
