@@ -262,6 +262,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void getLiveClassEventApi() {
         if (isConnectionAvailable()) {
+            progressBar.setVisibility(View.VISIBLE);
             leafManager.getLiveClassEvents(this, GroupDashboardActivityNew.groupId);
         }
     }

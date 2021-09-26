@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/etSearch"
@@ -21,27 +20,27 @@
         android:textColorHint="@color/color_label"
         android:textSize="@dimen/text_size_14sp"
         app:layout_scrollFlags="scroll|enterAlways" />
-<!--    <com.baoyz.widget.PullRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:visibility="visible"
-        android:layout_height="match_parent"
-        app:refreshColor="@color/colorPrimary">-->
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTeams"
-            android:layout_below="@+id/etSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
- <!--   </com.baoyz.widget.PullRefreshLayout>-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTeams"
+        android:layout_below="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:layout_height="wrap_content" />
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressBarZoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/txtEmpty"
@@ -49,7 +48,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:paddingEnd="16dp"
         android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:textSize="18sp" />
 </RelativeLayout>

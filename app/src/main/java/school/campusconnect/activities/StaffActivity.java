@@ -59,6 +59,9 @@ public class StaffActivity extends BaseActivity {
                 intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
                 startActivity(intent);
                 return true;
+            case R.id.menu_search:
+                ((StaffListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).showHideSearch();
+                return true;
             case R.id.menu_print_staff_list:
                 ((StaffListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).exportDataToCSV();
                 return true;

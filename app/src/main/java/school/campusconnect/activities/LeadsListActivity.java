@@ -5,7 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+
+import school.campusconnect.datamodel.GroupItem;
+import school.campusconnect.datamodel.LeadResponse;
+import school.campusconnect.fragments.HomeFragment;
 import school.campusconnect.utils.AppLog;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +19,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -103,21 +111,6 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
             }
         });
 
-        edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    edtSearch.setCursorVisible(false);
-                    if (edtSearch.getText().toString().isEmpty()) {
-                        Toast.makeText(LeadsListActivity.this, "Input some query first", Toast.LENGTH_LONG).show();
-                    } else {
-                            getSearchData(edtSearch.getText().toString());
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
 
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -127,27 +120,21 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (edtSearch.getText().toString().length() > 2) {
-                    if (isConnectionAvailable()) {
-                        getSearchData(edtSearch.getText().toString());
-                    } else {
-                        showNoNetworkMsg();
-                    }
-                } else if (edtSearch.getText().toString().length() == 0) {
-                    if (isConnectionAvailable()) {
-                        getSearchData("");
-                    } else {
-                        showNoNetworkMsg();
-                    }
-                }
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                fragment.search(s.toString());
             }
         });
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        fragment.search("");
     }
 
     private void getSearchData(String search) {
@@ -170,11 +157,11 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         if(progressBar!=null)
         progressBar.setVisibility(View.GONE);
 
-        switch (apiId) {
+      /*  switch (apiId) {
             case LeafManager.API_ID_LEAD_LIST_SEARCH:
-                fragment.refreshData(response);
+                LeadResponse res = (LeadResponse) response;
                 break;
-        }
+        }*/
     }
 
     @Override

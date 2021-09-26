@@ -52,7 +52,7 @@
                             android:layout_height="wrap_content"
                             android:autoLink="web"
                             android:ellipsize="end"
-                            android:text="Topic 1"
+                            android:text=""
                             android:textColor="@color/colorTextDark"
                             android:textColorLink="@color/colorPrimary"
                             android:textStyle="bold" />
@@ -70,6 +70,7 @@
                         android:id="@+id/btnStart"
                         android:layout_width="120dp"
                         android:text="Start"
+                        android:visibility="gone"
                         android:layout_marginStart="@dimen/padding_5dp"
                         android:layout_gravity="center"
                         android:textColor="@color/white"
@@ -121,7 +122,7 @@
                         android:layout_centerInParent="true"
                         android:background="@color/imgBg"
                         android:padding="1dp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <school.campusconnect.views.TopCropImageView
                             android:id="@+id/imageThumb"
@@ -257,6 +258,7 @@
 
                 <FrameLayout
                     android:id="@+id/llSubmit"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/padding_20dp"
                     android:layout_marginStart="@dimen/padding_15dp"

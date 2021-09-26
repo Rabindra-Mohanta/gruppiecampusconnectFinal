@@ -37,6 +37,7 @@ public class Home extends BaseActivity {
             Manifest.permission.WRITE_CALENDAR
     };
     private String talukName;
+    private HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class Home extends BaseActivity {
             setTitle(talukName);
             setBackEnabled(true);
         }
-        HomeFragment homeFragment = new HomeFragment();
+        homeFragment = new HomeFragment();
         homeFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
 
@@ -111,6 +112,9 @@ public class Home extends BaseActivity {
             case R.id.menu_logout:
                 logout();
                 finish();
+                return true;
+            case R.id.menu_search:
+                homeFragment.showHideSearch();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

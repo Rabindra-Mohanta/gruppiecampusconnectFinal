@@ -14,6 +14,7 @@ import school.campusconnect.activities.LeadsListActivity;
 import school.campusconnect.activities.NestedTeamActivity;
 import school.campusconnect.utils.AppLog;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     private boolean itemClick;
     private boolean isAdmin;
     private LinearLayoutManager layoutManager;
+    private List<LeadItem> list;
 
     public LeadListFragment() {
 
@@ -255,7 +257,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             hideLoadingBar();
             LeadResponse res = (LeadResponse) response;
 
-            List<LeadItem> list = res.getResults();
+            list = res.getResults();
             mAdapter.addItems(list);
             mAdapter.notifyDataSetChanged();
             if (currentPage == 1) {
@@ -298,15 +300,34 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         }
     }
 
-    public void refreshData(BaseResponse response) {
+    public void refreshData(List<LeadItem> result) {
         hideLoadingBar();
         mAdapter.clear();
-        LeadResponse res = (LeadResponse) response;
-        mAdapter.addItems(res.getResults());
+        mAdapter.addItems(result);
         mAdapter.notifyDataSetChanged();
         mBinding.recyclerView.setAdapter(mAdapter);
         mBinding.setSize(mAdapter.getItemCount());
-        totalPages = res.totalNumberOfPages;
+        totalPages = 0;
         mIsLoading = false;
+    }
+
+    public void search(String strsearch) {
+        if(list!=null){
+            if(!TextUtils.isEmpty(strsearch)){
+                ArrayList<LeadItem> newList = new ArrayList<>();
+                for (int i=0;i<list.size();i++){
+                    if(list.get(i).name.toLowerCase().contains(strsearch.toLowerCase())){
+                        newList.add(list.get(i));
+                    }
+                }
+                mAdapter.clear();
+                mAdapter.addItems(newList);
+                mAdapter.notifyDataSetChanged();
+            }else {
+                mAdapter.clear();
+                mAdapter.addItems(list);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

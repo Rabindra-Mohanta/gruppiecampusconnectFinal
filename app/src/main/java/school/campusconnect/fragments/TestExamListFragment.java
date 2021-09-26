@@ -169,6 +169,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
 
     public void getTestLiveEvents() {
         LeafManager leafManager = new LeafManager();
+        progressBar.setVisibility(View.VISIBLE);
         leafManager.getTestLiveEvents(this, GroupDashboardActivityNew.groupId);
     }
 

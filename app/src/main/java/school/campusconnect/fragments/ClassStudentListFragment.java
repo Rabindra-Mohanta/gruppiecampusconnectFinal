@@ -16,10 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,6 +54,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.network.LeafManager;
@@ -70,6 +74,10 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+
+    @Bind(R.id.etSearch)
+    public EditText etSearch;
+
     ClassResponse.ClassData classData;
     private String mGroupId;
     private String teamId;
@@ -78,7 +86,7 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss_search, container, false);
         ButterKnife.bind(this, view);
 
         init();
@@ -89,6 +97,14 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
 
         return view;
     }
+    public void showHideSearch(){
+        if(etSearch.getVisibility()==View.VISIBLE){
+            etSearch.setVisibility(View.GONE);
+        }else {
+            etSearch.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void init() {
         if (getArguments() != null) {
@@ -97,11 +113,40 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
             mGroupId = GroupDashboardActivityNew.groupId;
             teamId = classData.getId();
         }
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(list!=null){
+                    if(!TextUtils.isEmpty(s.toString())){
+                        ArrayList<StudentRes.StudentData> newList = new ArrayList<>();
+                        for (int i=0;i<list.size();i++){
+                            if(list.get(i).name.toLowerCase().contains(s.toString().toLowerCase())){
+                                newList.add(list.get(i));
+                            }
+                        }
+                        rvClass.setAdapter(new ClassesStudentAdapter(newList));
+                    }else {
+                        rvClass.setAdapter(new ClassesStudentAdapter(list));
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        etSearch.setText("");
         LeafManager leafManager = new LeafManager();
         AppLog.e(TAG, "getStudents : ");
         leafManager.getStudents(this, GroupDashboardActivityNew.groupId, classData.getId());

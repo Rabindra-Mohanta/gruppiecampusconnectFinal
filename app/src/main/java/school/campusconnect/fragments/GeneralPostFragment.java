@@ -176,7 +176,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ActiveAndroid.initialize(getActivity());
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_button, container, false);
-
+        mBinding.setSize(1);
         init();
 
         getGroupPostLocaly();
@@ -353,14 +353,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     private void firebaseListen(String lastIdFromDB, boolean apiEvent) {
         AppLog.e(TAG, "firebaseListen called : " + lastIdFromDB);
-
-        if (TextUtils.isEmpty(lastIdFromDB) || leafPreference.getInt(mGroupId + "_post") > 0
+        if (TextUtils.isEmpty(lastIdFromDB)){
+            getData(false);
+        }else if (leafPreference.getInt(mGroupId + "_post") > 0
                 || leafPreference.getBoolean(mGroupId + "_post_delete") || apiEvent){
             leafPreference.setBoolean(mGroupId + "_post_delete",false);
             getData(true);
         }
-
-
     }
 
     private void init() {

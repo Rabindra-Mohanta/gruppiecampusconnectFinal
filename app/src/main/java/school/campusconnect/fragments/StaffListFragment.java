@@ -15,10 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -66,6 +69,8 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
+    @Bind(R.id.etSearch)
+    public EditText etSearch;
 
     boolean isAdmin;
     private ArrayList<StaffResponse.StaffData> result;
@@ -73,7 +78,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss_search,container,false);
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -81,12 +86,53 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
 
         progressBar.setVisibility(View.VISIBLE);
 
+        init();
+
         return view;
+    }
+    public void showHideSearch(){
+        if(etSearch.getVisibility()==View.VISIBLE){
+            etSearch.setVisibility(View.GONE);
+        }else {
+            etSearch.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void init() {
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(result!=null){
+                    if(!TextUtils.isEmpty(s.toString())){
+                        ArrayList<StaffResponse.StaffData> newList = new ArrayList<>();
+                        for (int i=0;i<result.size();i++){
+                            if(result.get(i).name.toLowerCase().contains(s.toString().toLowerCase())){
+                                newList.add(result.get(i));
+                            }
+                        }
+                        rvClass.setAdapter(new StaffAdapter(newList));
+                    }else {
+                        rvClass.setAdapter(new StaffAdapter(result));
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        etSearch.setText("");
         LeafManager leafManager = new LeafManager();
         leafManager.getStaff(this,GroupDashboardActivityNew.groupId);
     }

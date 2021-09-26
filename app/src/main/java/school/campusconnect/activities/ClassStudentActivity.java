@@ -82,6 +82,9 @@ public class ClassStudentActivity extends BaseActivity {
                 startActivity(intent);
                 return true;
             }
+            case R.id.menu_search:
+                ((ClassStudentListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).showHideSearch();
+                return true;
             case R.id.menu_print_student_list:
                 ((ClassStudentListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).exportDataToCSV();
                 return true;

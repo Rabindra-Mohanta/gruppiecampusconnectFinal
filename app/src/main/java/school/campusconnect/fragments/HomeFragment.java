@@ -89,6 +89,13 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
         return view;
     }
+    public void showHideSearch(){
+        if(etSearch.getVisibility()==View.VISIBLE){
+            etSearch.setVisibility(View.GONE);
+        }else {
+            etSearch.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void _init() {
         if (getArguments() != null) {
@@ -145,6 +152,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Override
     public void onStart() {
         super.onStart();
+        etSearch.setText("");
         if (isConnectionAvailable()) {
             if (LeafPreference.getInstance(getActivity()).getBoolean("group_list_refresh")) {
                 LeafPreference.getInstance(getActivity()).setBoolean("group_list_refresh", false);
