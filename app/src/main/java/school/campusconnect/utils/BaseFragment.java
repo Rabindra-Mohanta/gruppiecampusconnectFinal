@@ -212,7 +212,7 @@ public class BaseFragment extends Fragment {
            AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getActivity()).getString(LeafPreference.GCM_TOKEN));
             GroupDataItem.deleteAll();
             PostDataItem.deleteAllPosts();
-            NotificationModel.deleteAll();
+//            NotificationModel.deleteAll();
             BaseTeamTable.deleteAll();
             PostTeamDataItem.deleteAllPosts();
             PersonalContactsModel.deleteAll();

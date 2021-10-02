@@ -467,7 +467,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         if (result == null)
             return;
 
-        LiveClassListTBL.deleteAll();
+        LiveClassListTBL.deleteAll(GroupDashboardActivityNew.groupId);
         for (int i = 0; i < result.size(); i++) {
             VideoClassResponse.ClassData currentItem = result.get(i);
             LiveClassListTBL item = new LiveClassListTBL();

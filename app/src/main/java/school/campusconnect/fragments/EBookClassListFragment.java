@@ -124,6 +124,8 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
         if (result == null)
             return;
 
+        EBookClassItem.deleteAll(GroupDashboardActivityNew.groupId);
+
         for (int i = 0; i < result.size(); i++) {
             ClassResponse.ClassData currentItem = result.get(i);
             EBookClassItem classItem = new EBookClassItem();

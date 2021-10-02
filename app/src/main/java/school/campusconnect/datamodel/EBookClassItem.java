@@ -44,6 +44,9 @@ public class EBookClassItem extends Model {
     public static List<EBookClassItem> getAll(String groupId) {
         return new Select().from(EBookClassItem.class).where("groupId = ?", groupId).execute();
     }
+    public static void deleteAll(String groupId) {
+        new Delete().from(EBookClassItem.class).where("groupId = ?", groupId).execute();
+    }
     public static void deleteAll() {
         new Delete().from(EBookClassItem.class).execute();
     }

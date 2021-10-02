@@ -54,6 +54,9 @@ public class ClassListTBL extends Model {
         return new Select().from(ClassListTBL.class).where("groupId = ?", groupId).execute();
     }
 
+    public static void deleteAll(String groupId) {
+        new Delete().from(ClassListTBL.class).where("groupId = ?", groupId).execute();
+    }
     public static void deleteAll() {
         new Delete().from(ClassListTBL.class).execute();
     }

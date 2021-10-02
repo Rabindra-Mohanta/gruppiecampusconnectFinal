@@ -38,6 +38,9 @@ public class EBookItem extends Model {
     public static List<EBookItem> getAll(String teamId,String groupId) {
         return new Select().from(EBookItem.class).where("teamId = ?", teamId).where("groupId = ?", groupId).execute();
     }
+    public static void deleteAll(String teamId,String groupId) {
+        new Delete().from(EBookItem.class).where("teamId = ?", teamId).where("groupId = ?", groupId).execute();
+    }
     public static void deleteAll() {
         new Delete().from(EBookItem.class).execute();
     }

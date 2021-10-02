@@ -180,7 +180,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         if (data == null)
             return;
 
-        EBookItem.deleteAll();
+        EBookItem.deleteAll(team_id,GroupDashboardActivityNew.groupId);
 
         for (int i = 0; i < data.size(); i++) {
             EBooksTeamResponse.SubjectBook currentItem = data.get(i);

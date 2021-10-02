@@ -79,7 +79,7 @@ public class PostDataItem extends Model {
         List<PostDataItem> postDataItems = getAll();
 
         for (int i = 0; i < postDataItems.size(); i++) {
-            if (post_id == postDataItems.get(i).id) {
+            if (post_id.equals(postDataItems.get(i).id)) {
                 return true;
             }
         }

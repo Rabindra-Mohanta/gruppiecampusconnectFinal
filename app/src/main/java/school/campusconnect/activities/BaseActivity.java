@@ -271,31 +271,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             hide_keyboard();
-            if (this instanceof NotificationsActivityNew) {
 
-                try {
-                    ActivityManager mngr = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-
-                    List<ActivityManager.RunningTaskInfo> taskList = mngr.getRunningTasks(10);
-
-                    if (taskList.get(0).numActivities == 1 &&
-                            taskList.get(0).topActivity.getClassName().equals(this.getClass().getName())) {
-                       AppLog.e("onOptionsItemSelected", "This is last activity in the stack");
-                        startActivity(new Intent(this, GroupListActivityNew.class));
-                    } else {
-                        finish();
-                    }
-                } catch (Exception e) {
-                   AppLog.e("RunningTaskInfo", "error is " + e.toString());
-                    finish();
-                }
-            } /*else if (this instanceof TeamListPersonalActivity) {
-                if (TeamPostFragment_New.isTeamPosts) {
-                    TeamPostFragment_New.getInstance().showContactList();
-                } else {
-                    finish();
-                }
-            }*/ else if (this instanceof GroupDashboardActivityNew) {
+            if (this instanceof GroupDashboardActivityNew) {
                 onBackPressed();
             } else {
                 finish();
@@ -307,8 +284,6 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             if(this instanceof GroupDashboardActivityNew){
                 ((GroupDashboardActivityNew)this).llNotification.performClick();
             }
-        }else if (item.getItemId() == R.id.action_notification) {
-            startActivity(new Intent(this, NotificationsActivityNew.class));
         } else if (item.getItemId() == R.id.action_sync) {
             getContactsWithPermission();
         } else if (item.getItemId() == R.id.action_add_multi) {
@@ -435,7 +410,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
                 new MyMenuItemStuffListener(relNoti, "Notifications") {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(context, NotificationsActivityNew.class));
+
                     }
                 };
             } catch (NullPointerException e) {
@@ -615,19 +590,16 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
        AppLog.e("Logout", "onSuccessCalled");
         LeafPreference.getInstance(this).clearData();
         RememberPref.getInstance(this).clearData();
-       AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
+        this.getSharedPreferences("pref_noti_count", MODE_PRIVATE).edit().clear().commit();
+        AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
+
         GroupDataItem.deleteAll();
         PostDataItem.deleteAllPosts();
-        NotificationModel.deleteAll();
+//        NotificationModel.deleteAll();
         BaseTeamTable.deleteAll();
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();
-//        GruppieContactAddressModel.deleteAll();
-        GruppieContactGroupIdModel.deleteAll();
-        this.getSharedPreferences("pref_noti_count", MODE_PRIVATE).edit().clear().commit();
-        new DatabaseHandler(this).deleteAll();
-
         HwItem.deleteAll();
         TestExamTBL.deleteAll();
         ChapterTBL.deleteAll();
@@ -642,6 +614,10 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         EBookItem.deleteAll();
         EBookClassItem.deleteAll();
 
+//        GruppieContactAddressModel.deleteAll();
+        GruppieContactGroupIdModel.deleteAll();
+        new DatabaseHandler(this).deleteAll();
+
         Intent intent = new Intent(this, LoginActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -654,7 +630,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
         GroupDataItem.deleteAll();
         PostDataItem.deleteAllPosts();
-        NotificationModel.deleteAll();
+//        NotificationModel.deleteAll();
         BaseTeamTable.deleteAll();
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();

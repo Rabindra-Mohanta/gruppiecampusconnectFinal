@@ -53,11 +53,10 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class SplashActivity extends AppCompatActivity implements LeafManager.OnCommunicationListener {
+public class SplashActivity extends AppCompatActivity{
 
     private static final String TAG = "SplashActivity";
     private Handler mHandler;
-    private LeafManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,6 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         AppLog.e(TAG, "onCreate()");
-        manager = new LeafManager();
 
         handleIntent(getIntent());
 
@@ -237,16 +235,7 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-//                    if (!isConnectionAvailable())
                     gotoHomeScreen();
-                   /* else {
-                        if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
-                            SplashActivity.this.manager.getGroups(SplashActivity.this);
-                        }else {
-                            SplashActivity.this.manager.getGroupDetail(SplashActivity.this, BuildConfig.APP_ID);
-                        }
-
-                    }*/
                 }
             }, 1000);
         }
@@ -297,28 +286,7 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
         }
     }
 
-    @Override
-    public void onSuccess(int apiId, BaseResponse response) {
-       /* if("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)){
-            GroupResponse res = (GroupResponse) response;
-            AppLog.e(TAG, "ClassResponse " + res.data);
-            LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, res.data.size());
-            gotoHomeScreen();
-        }else {
-            if (apiId == LeafManager.API_ID_GROUP_DETAIL) {
-                GroupDetailResponse gRes = (GroupDetailResponse) response;
-                AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
-                saveGroupDetails(gRes);
-            }
-        }*/
-    }
 
-    //save group detail
-   /* private void saveGroupDetails(GroupDetailResponse gRes) {
-        LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
-        LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
-        gotoHomeScreen();
-    }*/
     private void gotoHomeScreen() {
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             if ("taluk".equalsIgnoreCase(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.ROLE))) {
@@ -347,50 +315,4 @@ public class SplashActivity extends AppCompatActivity implements LeafManager.OnC
             finish();
         }
     }
-
-    @Override
-    public void onFailure(int apiId, String msg) {
-        AppLog.e("splash", "onFailure");
-        if (msg.contains("401") || msg.contains("Unauthorized")) {
-            Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_LONG).show();
-            logout();
-        } else if (msg.contains("Not Found")) {
-            logout();
-        } else {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onException(int apiId, String msg) {
-        AppLog.e("splash", "onException : " + msg);
-        /*if (apiCallCount <= 1) {
-            manager.getGroupDetail(SplashActivity.this, Constants.group_id_str);
-            apiCallCount++;
-        } else {
-            showNoNetworkMsg();
-        }*/
-    }
-
-    public void logout() {
-        AppLog.e("Logout", "onSuccessCalled");
-        LeafPreference.getInstance(this).clearData();
-        RememberPref.getInstance(this).clearData();
-        AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
-        GroupDataItem.deleteAll();
-        PostDataItem.deleteAllPosts();
-        NotificationModel.deleteAll();
-        BaseTeamTable.deleteAll();
-        PostTeamDataItem.deleteAllPosts();
-        PersonalContactsModel.deleteAll();
-        GruppieContactsModel.deleteAll();
-        GruppieContactGroupIdModel.deleteAll();
-        getSharedPreferences("pref_noti_count", MODE_PRIVATE).edit().clear().apply();
-        new DatabaseHandler(this).deleteAll();
-        Intent intent = new Intent(this, LoginActivity2.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
 }

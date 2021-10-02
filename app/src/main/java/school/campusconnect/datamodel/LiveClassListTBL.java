@@ -8,6 +8,8 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
+import school.campusconnect.activities.GroupDashboardActivityNew;
+
 @Table(name = "LiveClassListTBL")
 public class LiveClassListTBL extends Model {
     @Column(name = "zoomPassword")
@@ -49,6 +51,9 @@ public class LiveClassListTBL extends Model {
 
     public static List<LiveClassListTBL> getAll(String groupId) {
         return new Select().from(LiveClassListTBL.class).where("groupId = ?", groupId).execute();
+    }
+    public static void deleteAll(String groupId) {
+        new Delete().from(LiveClassListTBL.class).where("groupId = ?", groupId).execute();
     }
     public static void deleteAll() {
         new Delete().from(LiveClassListTBL.class).execute();

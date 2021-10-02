@@ -61,7 +61,7 @@ public class NotificationModel extends Model {
         super();
     }
 
-    public static List<NotificationModel> getAll(int noti_type) {
+ /*   public static List<NotificationModel> getAll(int noti_type) {
         return new Select().from(NotificationModel.class).where("noti_type = ?", noti_type).orderBy("noti_id COLLATE NOCASE DESC").execute();
     }
 
@@ -75,7 +75,7 @@ public class NotificationModel extends Model {
 
     public static void deleteAll() {
         new Delete().from(NotificationModel.class).execute();
-    }
+    }*/
 
     /*Group --> 8, 9
 

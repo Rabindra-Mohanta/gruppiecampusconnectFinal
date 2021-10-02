@@ -192,7 +192,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         if (result == null)
             return;
 
-        ClassListTBL.deleteAll();
+        ClassListTBL.deleteAll(GroupDashboardActivityNew.groupId);
         for (int i = 0; i < result.size(); i++) {
             ClassResponse.ClassData currentItem = result.get(i);
             ClassListTBL item = new ClassListTBL();

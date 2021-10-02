@@ -491,7 +491,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 List<MyTeamData> result = res.getResults();
                 AppLog.e("API", "data " + new Gson().toJson(result));
 
-                BaseTeamTable.deleteAll();
+                BaseTeamTable.deleteTeams(GroupDashboardActivityNew.groupId);
                 teamList.clear();
                 ArrayList<String> currentTopics = new ArrayList<>();
                 for (int i = 0; i < result.size(); i++) {
