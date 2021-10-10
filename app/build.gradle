@@ -25,14 +25,14 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-                applicationId "school.campusconnect"
+            /*    applicationId "school.campusconnect"
                 versionCode 11
                 versionName "1.2"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
                 // [ 2. RPES :  Campus Copy]
               /*  applicationId "rpes.campusconnect"
                 versionCode 6
@@ -141,15 +141,14 @@ android {
                 buildConfigField("String", "AppType",  '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')
 */
-/*
             applicationId "ktsv.gruppie"
-            versionCode 3
-            versionName "1.0"
+            versionCode 4
+            versionName "1.1"
             resValue "string", "app_name", '"K.T.S.V"'
             buildConfigField("String", "AppName", '"K.T.S.V"')
             buildConfigField("String", "AppCategory", '"CAMPUS"')
             buildConfigField("String", "AppType",  '"CAMPUS"')
-            buildConfigField("String", "APP_ID",  '"school"')*/
+            buildConfigField("String", "APP_ID",  '"school"')
 
            /*     applicationId "jnana.gruppie"
                 versionCode 2
@@ -183,9 +182,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://hoysala.gruppie.in"'
-            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
+//            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'
+            buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'
             buildConfigField("String", "API_KEY_FIREBASE1", '"key=AAAATq979wE:APA91bEw0Dh3Ju0phxXjisU4z0eEmC90mi8ciomV-4S9X38UM8eMaB72bRpgGrGvv_"')
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
