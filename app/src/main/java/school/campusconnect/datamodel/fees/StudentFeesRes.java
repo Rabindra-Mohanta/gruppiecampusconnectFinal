@@ -22,6 +22,9 @@ public class StudentFeesRes extends BaseResponse {
     }
 
     public static class StudentFees {
+        @SerializedName("userId")
+        @Expose
+        public String userId;
         @SerializedName("totalFee")
         @Expose
         public String totalFee;

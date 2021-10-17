@@ -31,6 +31,8 @@ import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.fees.FeesRes;
+import school.campusconnect.datamodel.fees.PaidStudentFeesRes;
+import school.campusconnect.datamodel.fees.PayFeesRequest;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.fees.UpdateStudentFees;
 import school.campusconnect.datamodel.gruppiecontacts.SendMsgToStudentReq;
@@ -1547,4 +1549,27 @@ public interface LeafService {
     Call<BaseResponse> sendMsgToNotSubmittedStudents(@Body SendMsgToStudentReq req,@Path("group_id") String group_id,@Query("userIds") String userIds);
 
 
+    @GET("/api/v1/groups/{group_id}/fee/status/list")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<PaidStudentFeesRes> getPaidStudentList(@Path("group_id") String group_id,
+                                                @Query("status") String status);
+
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/fee/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StudentFeesRes> getStudentFees(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                            @Path("user_id") String user_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/fee/paid")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> payFeesByStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                        @Path("user_id") String user_id, @Body PayFeesRequest payFeesRequest);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{student_id}/fee/{payment_id}/approve")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> approveOrHoldFees(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                        @Path("student_id") String student_id,
+                                        @Path("payment_id") String payment_id,
+                                        @Query("status") String status);
 }

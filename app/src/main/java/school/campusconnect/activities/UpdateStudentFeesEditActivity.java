@@ -114,7 +114,7 @@ public class UpdateStudentFeesEditActivity extends BaseActivity implements LeafM
 
     FeesDetailAdapter feesAdapter = new FeesDetailAdapter(true);
     DueDateAdapter dueDateAdapter ;
-    PaidDateAdapter paidDateAdapter = new PaidDateAdapter(false);
+    PaidDateAdapter paidDateAdapter = new PaidDateAdapter();
     StudentFeesRes.StudentFees studentFees;
     UpdateStudentFees updateStudentFees;
 

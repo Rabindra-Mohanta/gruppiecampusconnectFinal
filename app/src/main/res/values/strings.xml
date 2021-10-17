@@ -529,6 +529,16 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strSend">Send</string>
     <string name="lbl_test_name">Test Name</string>
     <string name="hint_search_group">Search</string>
+    <string name="lbl_paid_fees">Paid Fees</string>
+    <string name="lbl_class_fees">Class Fees</string>
+    <string name="due_amount">Amount Due</string>
+    <string name="lbl_pay">Pay</string>
+    <string name="lbl_paid_details">Paid Details</string>
+    <string name="lbl_amount_paid">Amount Paid : </string>
+    <string name="lbl_mode">MODE : </string>
+    <string name="lbl_attachment">Attachment : </string>
+    <string name="lbl_approve">Approve</string>
+    <string name="lbl_hold">Hold</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

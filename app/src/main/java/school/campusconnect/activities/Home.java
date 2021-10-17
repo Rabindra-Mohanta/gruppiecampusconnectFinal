@@ -100,8 +100,9 @@ public class Home extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (TextUtils.isEmpty(talukName)) {
-            getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        if (!TextUtils.isEmpty(talukName)) {
+            menu.findItem(R.id.menu_logout).setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }

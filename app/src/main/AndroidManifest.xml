@@ -698,6 +698,15 @@
         <activity
             android:name=".activities.TestExamEditActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.StudentFeesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.StudentFeesPayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AdminStudentFeesActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.FloatingWidgetService"

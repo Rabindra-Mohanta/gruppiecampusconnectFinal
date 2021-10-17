@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.PeopleActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/topbar"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_10dp"
+            android:layout_marginRight="@dimen/padding_10dp"
+            android:layout_marginBottom="@dimen/padding_10dp"
+            android:orientation="vertical">
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_total_fees"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/etTotalFees"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:digits="1234567890"
+                android:focusable="false"
+                android:inputType="numberDecimal" />
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_total_amount_paid"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/etTotalPaid"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:layout_marginBottom="@dimen/padding_5dp"
+                android:digits="1234567890"
+                android:enabled="false"
+                android:inputType="numberDecimal" />
+
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/due_amount"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/etDueAmount"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:digits="1234567890"
+                android:enabled="false"
+                android:inputType="numberDecimal" />
+
+
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_amount_paid"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_10dp"
+                android:layout_marginTop="@dimen/padding_10dp"
+                android:layout_marginEnd="@dimen/padding_10dp">
+
+                <EditText
+                    android:id="@+id/etPaidAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:layout_weight="1"
+                    android:digits="1234567890"
+                    android:gravity="center"
+                    android:hint="@string/hint_amount"
+                    android:inputType="numberDecimal"
+                    android:maxLength="7"
+                    android:focusable="false"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_13sp" />
+
+                <EditText
+                    android:id="@+id/etDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_10dp"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:hint="Due Date"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_13sp" />
+            </LinearLayout>
+
+            <school.campusconnect.Assymetric.AsymmetricRecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="3dp"
+                android:fadingEdge="none"
+                android:focusable="false"
+                android:visibility="visible"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:paddingRight="@dimen/padding_10dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_due_date"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary" />
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_completed"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDueDates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_30dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/padding_20dp"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btnApprove"
+                    style="@style/AddPostButton"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_width="@dimen/login_button_width"
+                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:layout_height="@dimen/login_button_height"
+                    android:text="@string/lbl_approve" />
+
+                <Button
+                    android:id="@+id/btnHold"
+                    style="@style/AddPostButton"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_marginStart="@dimen/padding_10dp"
+                    android:layout_width="@dimen/login_button_width"
+                    android:layout_height="@dimen/login_button_height"
+                    android:text="@string/lbl_hold" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

@@ -30,11 +30,6 @@ import school.campusconnect.utils.AppDialog;
 public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHolder> {
     private Context mContext;
     ArrayList<FeePaidDetails> list = new ArrayList<>();
-    boolean isFromUpdate=false;
-
-    public PaidDateAdapter(boolean isFromUpdate) {
-        this.isFromUpdate = isFromUpdate;
-    }
 
     @NonNull
     @Override
@@ -88,27 +83,11 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(isFromUpdate){
-                        AppDialog.showConfirmDialog(mContext, "Are you sure you want to delete?", new AppDialog.AppDialogListener() {
-                            @Override
-                            public void okPositiveClick(DialogInterface dialog) {
-                                list.remove(getAdapterPosition());
-                                notifyDataSetChanged();
-                            }
-
-                            @Override
-                            public void okCancelClick(DialogInterface dialog) {
-
-                            }
-                        });
-                    }else {
-                        list.remove(getAdapterPosition());
-                        notifyDataSetChanged();
-                    }
+                    // open Attachment
                 }
             });
 
-            if(isFromUpdate){
+          /*  if(isFromUpdate){
                 etDateAmount.setFocusable(true);
                 etDate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -132,12 +111,12 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
 
                     }
                 });
-            }else {
+            }else {*/
                 etDateAmount.setFocusable(false);
-            }
+//            }
 
         }
-    }
+    }/*
     private void showDateDialog(EditText etDate, int adapterPosition){
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog fragment = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
@@ -153,5 +132,5 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
         fragment.show();
-    }
+    }*/
 }

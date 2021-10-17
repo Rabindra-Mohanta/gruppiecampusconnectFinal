@@ -32,6 +32,8 @@ import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.fees.FeesRes;
+import school.campusconnect.datamodel.fees.PaidStudentFeesRes;
+import school.campusconnect.datamodel.fees.PayFeesRequest;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.fees.UpdateStudentFees;
 import school.campusconnect.datamodel.gruppiecontacts.SendMsgToStudentReq;
@@ -398,6 +400,9 @@ public class LeafManager {
     public static final int API_LIVE_CLASS_END = 253;
     public static final int API_SEND_MSG_TO_NOTSUBMITTED_STUDENT = 254;
     public static final int API_TALUKS = 258;
+    public static final int API_PAID_STUDENT_LIST = 262;
+    public static final int API_PAY_FEES_BY_STUDENT = 261;
+    public static final int API_APPROVE_FEES = 263;
 
 
     public LeafManager() {
@@ -9805,6 +9810,150 @@ public class LeafManager {
 
     }
 
+    public void getPaidStudentList(final OnCommunicationListener listListener, String groupId,String status) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<PaidStudentFeesRes> model = service.getPaidStudentList(groupId,status);
+
+
+        ResponseWrapper<PaidStudentFeesRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_PAID_STUDENT_LIST, new ResponseWrapper.ResponseHandler<PaidStudentFeesRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, PaidStudentFeesRes response) {
+                AppLog.e("LeafManager", "LiveClassEventRes : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+    public void getStudentFees(final OnCommunicationListener listListener, String groupId,String teamId,String userId) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<StudentFeesRes> model = service.getStudentFees(groupId,teamId,userId);
+
+
+        ResponseWrapper<StudentFeesRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_STUDENT_FEES_LIST, new ResponseWrapper.ResponseHandler<StudentFeesRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, StudentFeesRes response) {
+                AppLog.e("LeafManager", "LiveClassEventRes : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+    public void payFeesByStudent(final OnCommunicationListener listListener, String groupId, String teamId, String userId, PayFeesRequest payFeesRequest) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.payFeesByStudent(groupId,teamId,userId,payFeesRequest);
+
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_PAY_FEES_BY_STUDENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                AppLog.e("LeafManager", "payFeesByStudent : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+ public void approveOrHoldFees(final OnCommunicationListener listListener, String groupId, String teamId, String studentId, String paymentID,String status) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.approveOrHoldFees(groupId,teamId,studentId,paymentID,status);
+
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_APPROVE_FEES, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                AppLog.e("LeafManager", "payFeesByStudent : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
 
     public interface OnCommunicationListener {
         void onSuccess(int apiId, BaseResponse response);

@@ -1270,12 +1270,22 @@ public class GroupDashboardActivityNew extends BaseActivity
                 startActivity(intent);
             } else {
                 if (group.count == 1) {
-                    Intent intent = new Intent(this, FeesListActivity.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.details.teamId);
-                    intent.putExtra("title", group.details.studentName);
-                    intent.putExtra("role", group.role);
+                    Intent intent;
+                    if("teacher".equalsIgnoreCase(group.role)){
+                        intent = new Intent(this, FeesListActivity.class);
+                        intent.putExtra("group_id", groupId);
+                        intent.putExtra("team_id", group.details.teamId);
+                        intent.putExtra("title", group.details.studentName);
+                        intent.putExtra("role", group.role);
+                    }else {
+                        intent = new Intent(this, StudentFeesActivity.class);
+                        intent.putExtra("groupId",groupId);
+                        intent.putExtra("title",group.details.studentName);
+                        intent.putExtra("team_id",group.details.teamId);
+                        intent.putExtra("user_id",group.details.userId);
+                    }
                     startActivity(intent);
+
                 } else {
                     Intent intent = new Intent(this, FeesClassActivity.class);
                     intent.putExtra("title", group.name);

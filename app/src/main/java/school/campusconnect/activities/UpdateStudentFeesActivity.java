@@ -118,7 +118,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
 
     FeesDetailAdapter feesAdapter = new FeesDetailAdapter(true);
     DueDateAdapter dueDateAdapter ;
-    PaidDateAdapter paidDateAdapter = new PaidDateAdapter(true);
+    PaidDateAdapter paidDateAdapter = new PaidDateAdapter();
     StudentFeesRes.StudentFees studentFees;
     UpdateStudentFees updateStudentFees;
 

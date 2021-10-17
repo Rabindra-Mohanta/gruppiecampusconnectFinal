@@ -72,7 +72,7 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
         setContentView(R.layout.activity_taluk_list);
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
-        setTitle("Taluks");
+        setTitle(getResources().getString(R.string.app_name));
 
         _init();
 

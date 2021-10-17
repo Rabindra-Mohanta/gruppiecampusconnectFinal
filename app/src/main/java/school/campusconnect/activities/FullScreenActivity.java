@@ -40,6 +40,8 @@ public class FullScreenActivity extends BaseActivity {
     ImageView ivDownload;
     @Bind(R.id.iconBack)
     ImageView iconBack;
+ @Bind(R.id.iconRotate)
+    ImageView iconRotate;
 
     String image;
 
@@ -69,6 +71,17 @@ public class FullScreenActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        iconRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float r = ivImage.getRotation();
+                r = r+90;
+                if(r>360){
+                    r=90;
+                }
+                ivImage.setRotation(r);
             }
         });
     }
