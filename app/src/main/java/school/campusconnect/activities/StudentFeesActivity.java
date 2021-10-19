@@ -36,6 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.adapters.PaidDateAdapter;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
@@ -95,6 +96,15 @@ public class StudentFeesActivity extends BaseActivity {
         _init();
 
         getStudentFeesDetail();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if( LeafPreference.getInstance(StudentFeesActivity.this).getBoolean("fees_paid")){
+            getStudentFeesDetail();
+            LeafPreference.getInstance(StudentFeesActivity.this).setBoolean("fees_paid", false);
+        }
     }
 
     private void _init() {

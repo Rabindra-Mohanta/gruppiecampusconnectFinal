@@ -59,6 +59,7 @@ import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.adapters.PaidDateAdapter;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.PayFeesRequest;
@@ -179,7 +180,7 @@ public class StudentFeesPayActivity extends BaseActivity {
                         etDate.setText(format.format(calendar.getTime()));
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                fragment.getDatePicker().setMaxDate(Calendar.getInstance().getTimeInMillis());
+//                fragment.getDatePicker().setMaxDate(Calendar.getInstance().getTimeInMillis());
                 fragment.show();
             }
         });
@@ -344,6 +345,7 @@ public class StudentFeesPayActivity extends BaseActivity {
             progressBar.setVisibility(View.GONE);
 
         Toast.makeText(StudentFeesPayActivity.this, "Successfully Paid", Toast.LENGTH_SHORT).show();
+        LeafPreference.getInstance(StudentFeesPayActivity.this).setBoolean("fees_paid", true);
         finish();
     }
 

@@ -3,6 +3,7 @@ package school.campusconnect.adapters;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.FullScreenMultiActivity;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.FeePaidDetails;
 import school.campusconnect.utils.AppDialog;
@@ -58,7 +60,7 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-        holder.etDate.setText(list.get(i).getDate());
+        holder.etDate.setText(list.get(i).paidDate);
         holder.etDateAmount.setText(list.get(i).getAmountPaid());
     }
 
@@ -83,7 +85,9 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // open Attachment
+                    Intent i = new Intent(mContext, FullScreenMultiActivity.class);
+                    i.putStringArrayListExtra("image_list", list.get(getAdapterPosition()).attachment);
+                    mContext.startActivity(i);
                 }
             });
 

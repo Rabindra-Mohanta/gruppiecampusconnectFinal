@@ -7,9 +7,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class FeePaidDetails {
-    @SerializedName("date")
-    @Expose
-    private String date;
     @SerializedName("amountPaid")
     @Expose
     private String amountPaid;
@@ -39,20 +36,12 @@ public class FeePaidDetails {
     @Expose
     public ArrayList<String> attachment;
 
-    public FeePaidDetails( String date,String amountPaid) {
-        this.date = date;
+    public FeePaidDetails( String paidDate,String amountPaid) {
+        this.paidDate = paidDate;
         this.amountPaid = amountPaid;
     }
 
     public FeePaidDetails() {
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getAmountPaid() {

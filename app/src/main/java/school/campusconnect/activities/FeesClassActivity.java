@@ -26,7 +26,7 @@ public class FeesClassActivity extends BaseActivity {
     @Bind(R.id.tabLayout)
     public TabLayout tabLayout;
 
-
+    PaidFeesFragment paidFeesFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +44,7 @@ public class FeesClassActivity extends BaseActivity {
             FeesClassListFragment classListFragment=new FeesClassListFragment();
             classListFragment.setArguments(getIntent().getExtras());
 
-            PaidFeesFragment paidFeesFragment=new PaidFeesFragment();
+            paidFeesFragment =new PaidFeesFragment();
             paidFeesFragment.setArguments(getIntent().getExtras());
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,paidFeesFragment).commit();
@@ -74,6 +74,14 @@ public class FeesClassActivity extends BaseActivity {
             FeesClassListFragment classListFragment=new FeesClassListFragment();
             classListFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(paidFeesFragment!=null && tabLayout.getSelectedTabPosition()==0){
+            paidFeesFragment.callApi();
         }
     }
 

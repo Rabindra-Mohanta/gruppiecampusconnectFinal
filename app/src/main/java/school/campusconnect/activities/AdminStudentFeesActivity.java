@@ -31,7 +31,6 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.R;
 import school.campusconnect.adapters.ChildAdapter;
 import school.campusconnect.adapters.ChildHwAdapter;
-import school.campusconnect.adapters.PaidDateAdapter;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.PaidStudentFeesRes;
@@ -130,7 +129,7 @@ public class AdminStudentFeesActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (resData != null) {
-                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, "Are you sure you want to approve?", new AppDialog.AppDialogListener() {
+                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, "Are you sure you want to hold?", new AppDialog.AppDialogListener() {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
@@ -150,6 +149,18 @@ public class AdminStudentFeesActivity extends BaseActivity {
 
     private void getStudentFeesDetail() {
         if (resData != null) {
+
+            if("onHold".equalsIgnoreCase(resData.status)){
+                btnApprove.setVisibility(View.VISIBLE);
+                btnHold.setVisibility(View.GONE);
+            }else if("approved".equalsIgnoreCase(resData.status)){
+                btnApprove.setVisibility(View.GONE);
+                btnHold.setVisibility(View.GONE);
+            }else {
+                btnApprove.setVisibility(View.VISIBLE);
+                btnHold.setVisibility(View.VISIBLE);
+            }
+
             etTotalPaid.setText(TextUtils.isEmpty(resData.totalAmountPaid) ? "0" : resData.totalAmountPaid);
             etTotalFees.setText(resData.totalFee);
             try {
@@ -230,7 +241,6 @@ public class AdminStudentFeesActivity extends BaseActivity {
             holder.etDateAmount.setText(list.get(i).getMinimumAmount());
 
             holder.imgDelete.setVisibility(View.GONE);
-            holder.chkCompleted.setEnabled(false);
 
             if ("completed".equalsIgnoreCase(list.get(i).getStatus())) {
                 holder.chkCompleted.setChecked(true);

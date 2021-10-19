@@ -68,7 +68,6 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
 
         return view;
     }
-
     private void _init() {
         String[] strStatus = new String[3];
         strStatus[0] = "Not Approved";
@@ -123,6 +122,10 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+    }
+
+    public void callApi() {
+        getPaidFees();
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -248,6 +251,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
         intent.putExtra("groupId",GroupDashboardActivityNew.groupId);
         intent.putExtra("team_id",classData.teamId);
         intent.putExtra("user_id",classData.userId);
+        intent.putExtra("status",classData.status);
         intent.putExtra("data",new Gson().toJson(classData));
         startActivity(intent);
     }
