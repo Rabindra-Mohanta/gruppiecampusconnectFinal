@@ -62,6 +62,14 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
         holder.etDate.setText(list.get(i).paidDate);
         holder.etDateAmount.setText(list.get(i).getAmountPaid());
+
+        if("onHold".equalsIgnoreCase(list.get(i).status)){
+            holder.imgStatus.setImageResource(R.drawable.icon_hold);
+        }else if("approved".equalsIgnoreCase(list.get(i).status)){
+            holder.imgStatus.setImageResource(R.drawable.icon_yes_green);
+        }else {
+            holder.imgStatus.setImageResource(R.drawable.icon_not_approve);
+        }
     }
 
     @Override
@@ -77,6 +85,8 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
         EditText etDateAmount;
         @Bind(R.id.imgDelete)
         ImageView imgDelete;
+        @Bind(R.id.imgStatus)
+        ImageView imgStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

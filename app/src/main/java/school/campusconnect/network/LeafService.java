@@ -1554,6 +1554,12 @@ public interface LeafService {
     Call<PaidStudentFeesRes> getPaidStudentList(@Path("group_id") String group_id,
                                                 @Query("status") String status);
 
+    @GET("/api/v1/groups/{group_id}/fee/status/list")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<PaidStudentFeesRes> getPaidStudentList(@Path("group_id") String group_id,
+                                                @Query("status") String status,
+                                                @Query("teamId") String teamId);
+
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/fee/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

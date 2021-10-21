@@ -30,7 +30,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.AdminStudentFeesActivity;
-import school.campusconnect.activities.FeesListActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.fees.PaidStudentFeesRes;
@@ -55,6 +54,8 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
     public Spinner spStatus;
 
     String role;
+    private String selectedClassId;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -101,7 +102,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
         }
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getPaidStudentList(this, GroupDashboardActivityNew.groupId,filter);
+        leafManager.getPaidStudentList(this, GroupDashboardActivityNew.groupId,filter,selectedClassId);
     }
 
     @Override
@@ -124,7 +125,8 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
         progressBar.setVisibility(View.GONE);
     }
 
-    public void callApi() {
+    public void callApi(String selectedClassId) {
+        this.selectedClassId = selectedClassId;
         getPaidFees();
     }
 
@@ -182,7 +184,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
-            holder.txt_name.setText(item.studentName);
+            holder.txt_name.setText(item.studentName+" ("+item.className+")");
             holder.txt_count.setText("Paid : "+item.amountPaid);
         }
 
@@ -192,7 +194,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Student found.");
+                    txtEmpty.setText("No Fee Found.");
                 }
                 else {
                     txtEmpty.setText("");
@@ -202,7 +204,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
             }
             else
             {
-                txtEmpty.setText("No Student found.");
+                txtEmpty.setText("No Fee Found");
                 return 0;
             }
 
@@ -247,7 +249,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
 
     private void onTreeClick(PaidStudentFeesRes.StudentFees classData) {
         Intent intent = new Intent(getActivity(), AdminStudentFeesActivity.class);
-        intent.putExtra("title",classData.studentName);
+        intent.putExtra("title",classData.studentName+" ("+classData.className+")");
         intent.putExtra("groupId",GroupDashboardActivityNew.groupId);
         intent.putExtra("team_id",classData.teamId);
         intent.putExtra("user_id",classData.userId);

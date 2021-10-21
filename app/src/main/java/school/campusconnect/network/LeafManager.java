@@ -9810,12 +9810,11 @@ public class LeafManager {
 
     }
 
-    public void getPaidStudentList(final OnCommunicationListener listListener, String groupId,String status) {
+    public void getPaidStudentList(final OnCommunicationListener listListener, String groupId,String status,String teamId) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<PaidStudentFeesRes> model = service.getPaidStudentList(groupId,status);
-
+        final Call<PaidStudentFeesRes> model = !TextUtils.isEmpty(teamId)? service.getPaidStudentList(groupId,status,teamId):service.getPaidStudentList(groupId,status);
 
         ResponseWrapper<PaidStudentFeesRes> wrapper = new ResponseWrapper<>(model);
 

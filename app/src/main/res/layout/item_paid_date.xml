@@ -13,7 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_5dp"
         android:gravity="center">
-
+        <ImageView
+            android:id="@+id/imgStatus"
+            android:layout_width="20dp"
+            android:src="@drawable/icon_yes_green"
+            android:layout_height="20dp"
+            android:layout_marginEnd="@dimen/padding_5dp" />
         <EditText
             android:id="@+id/etDate"
             android:layout_width="0dp"

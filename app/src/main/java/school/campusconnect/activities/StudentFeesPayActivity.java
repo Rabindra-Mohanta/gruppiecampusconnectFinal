@@ -319,6 +319,18 @@ public class StudentFeesPayActivity extends BaseActivity {
 
     private boolean isValid() {
         boolean valid = true;
+
+        try {
+            int actualDue = Integer.parseInt(etDueAmount.getText().toString());
+            int payDue = Integer.parseInt(etDueAmountPay.getText().toString());
+            if(payDue>actualDue){
+                Toast.makeText(this, "Paid amount should not grater than Amount Due", Toast.LENGTH_SHORT).show();
+                valid = false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         if (!isValueValid(etDueAmountPay)) {
             valid = false;
         } else if (!isValueValid(etDate)) {

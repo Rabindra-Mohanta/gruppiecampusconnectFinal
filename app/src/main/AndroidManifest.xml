@@ -700,6 +700,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.StudentFeesPayActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AdminStudentFeesActivity"
