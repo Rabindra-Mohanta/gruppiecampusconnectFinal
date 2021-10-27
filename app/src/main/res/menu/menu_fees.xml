@@ -2,4 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menuAdd"
         android:title="Add/Update Fees"/>
+    <item android:id="@+id/menuPrintFees"
+        android:title="Print Fees List"/>
 </menu>

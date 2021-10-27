@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,8 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.UpdateStudentFeesActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.fees.DueDates;
+import school.campusconnect.datamodel.fees.FeePaidDetails;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.network.LeafManager;
@@ -117,10 +120,10 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
         rvClass.setAdapter(new ClassesStudentAdapter(list));
 
-        if(list!=null && list.size()>0){
-            ((FeesListActivity)getActivity()).setOptionMenuName("Update Fees");
-        }else {
-            ((FeesListActivity)getActivity()).setOptionMenuName("Add Fees");
+        if (list != null && list.size() > 0) {
+            ((FeesListActivity) getActivity()).setOptionMenuName("Update Fees");
+        } else {
+            ((FeesListActivity) getActivity()).setOptionMenuName("Add Fees");
         }
     }
 
@@ -133,6 +136,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
     }
+
 
     public class ClassesStudentAdapter extends RecyclerView.Adapter<ClassesStudentAdapter.ViewHolder> {
         List<StudentFeesRes.StudentFees> list;
@@ -187,7 +191,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
                 holder.img_lead_default.setImageDrawable(drawable);
             }
             holder.txt_name.setText(item.getStudentName());
-            holder.txt_count.setText("Total Balance Amount : "+(TextUtils.isEmpty(item.getTotalBalanceAmount())?"0":item.getTotalBalanceAmount()));
+            holder.txt_count.setText("Total Balance Amount : " + (TextUtils.isEmpty(item.getTotalBalanceAmount()) ? "0" : item.getTotalBalanceAmount()));
         }
 
         @Override
@@ -242,9 +246,132 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         Intent intent = new Intent(getActivity(), UpdateStudentFeesActivity.class);
         intent.putExtra("group_id", mGroupId);
         intent.putExtra("team_id", teamId);
-        intent.putExtra("title", studentData.studentName+" - ("+className+")");
+        intent.putExtra("title", studentData.studentName + " - (" + className + ")");
         intent.putExtra("role", role);
         intent.putExtra("StudentFees", new Gson().toJson(studentData));
         startActivity(intent);
+    }
+
+    private boolean checkPermissionForWriteExternal() {
+        int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            Log.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            Log.e("External" + "permission", "checkpermission , denied");
+            return false;
+        }
+    }
+
+    public void exportDataToCSV() {
+        if (!checkPermissionForWriteExternal()) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            } else {
+                AppLog.e(TAG, "requestPermissionForWriteExternal");
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1111);
+            }
+            return;
+        }
+
+        File mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        File csvFolder = new File(mainFolder, "Excel");
+        if (!csvFolder.exists()) {
+            csvFolder.mkdir();
+        }
+        File file = new File(csvFolder, className + ".xls");
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet firstSheet = workbook.createSheet(className);
+            HSSFRow rowA = firstSheet.createRow(0);
+            rowA.createCell(0).setCellValue("Name");
+            rowA.createCell(1).setCellValue("Phone Number");
+            rowA.createCell(2).setCellValue("Roll Number");
+            rowA.createCell(3).setCellValue("Student Id");
+            rowA.createCell(5).setCellValue("Class");
+            rowA.createCell(6).setCellValue("Total Fee");
+            rowA.createCell(7).setCellValue("Total Amount Paid");
+            rowA.createCell(8).setCellValue("Total Due Amount");
+            rowA.createCell(9).setCellValue("Fee Paid Detail");
+            rowA.createCell(10).setCellValue("Due Date Detail");
+
+            if (list != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    StudentFeesRes.StudentFees item = list.get(i);
+                    HSSFRow rowData = firstSheet.createRow(i + 1);
+                    rowData.createCell(0).setCellValue(item.getStudentName());
+                    rowData.createCell(1).setCellValue(item.getPhone()); // phone
+                    rowData.createCell(2).setCellValue(item.getStudentRollNumber());
+                    rowData.createCell(3).setCellValue(item.userId);
+                    rowData.createCell(5).setCellValue(className);
+                    rowData.createCell(6).setCellValue(item.totalFee);
+                    rowData.createCell(7).setCellValue(item.totalAmountPaid);
+
+                    if(!TextUtils.isEmpty(item.totalFee) && !TextUtils.isEmpty(item.totalAmountPaid)){
+                        int dueAmount = Integer.parseInt(item.totalFee) - Integer.parseInt(item.totalAmountPaid);
+                        rowData.createCell(8).setCellValue(dueAmount+"");
+                    }else {
+                        rowData.createCell(8).setCellValue("0");
+                    }
+                    StringBuilder feesDetail = new StringBuilder();
+                    if(item.feePaidDetails!=null && item.feePaidDetails.size()>0){
+                        for (int j=0;j<item.feePaidDetails.size();j++){
+                            FeePaidDetails jData = item.feePaidDetails.get(j);
+                            feesDetail.append(jData.paidDate).append(" ").append(jData.getAmountPaid()).append(" ").append(jData.status).append("\n");
+                        }
+                    }
+                    rowData.createCell(9).setCellValue(feesDetail.toString());
+
+                    StringBuilder dueDetail = new StringBuilder();
+                    if(item.dueDates!=null && item.dueDates.size()>0){
+                        for (int j=0;j<item.dueDates.size();j++){
+                            DueDates jData = item.dueDates.get(j);
+                            dueDetail.append(jData.getDate()).append(" ").append(jData.getMinimumAmount()).append(" ").append(jData.getStatus1()).append("\n");
+                        }
+                    }
+                    rowData.createCell(10).setCellValue(dueDetail.toString());
+                }
+            }
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file);
+                workbook.write(fos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            shareFile(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void shareFile(File file) {
+        Uri uriFile;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            uriFile = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
+        } else {
+            uriFile = Uri.fromFile(file);
+        }
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile);
+        sharingIntent.setType("text/csv");
+        startActivity(Intent.createChooser(sharingIntent, "share file with"));
     }
 }

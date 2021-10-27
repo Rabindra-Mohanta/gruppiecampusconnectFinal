@@ -705,6 +705,9 @@
         <activity
             android:name=".activities.AdminStudentFeesActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EditStudentFeesActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.FloatingWidgetService"

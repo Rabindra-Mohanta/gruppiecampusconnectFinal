@@ -539,6 +539,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_attachment">Attachment : </string>
     <string name="lbl_approve">Approve</string>
     <string name="lbl_hold">Hold</string>
+    <string name="lbl_not_approve">Not Approve</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

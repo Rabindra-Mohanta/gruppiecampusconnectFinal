@@ -403,6 +403,8 @@ public class LeafManager {
     public static final int API_PAID_STUDENT_LIST = 262;
     public static final int API_PAY_FEES_BY_STUDENT = 261;
     public static final int API_APPROVE_FEES = 263;
+    public static final int API_DUE_DATE_STATUS = 264;
+    public static final int API_EDIT_STUDENT_FEES = 265;
 
 
     public LeafManager() {
@@ -9810,11 +9812,11 @@ public class LeafManager {
 
     }
 
-    public void getPaidStudentList(final OnCommunicationListener listListener, String groupId,String status,String teamId) {
+    public void getPaidStudentList(final OnCommunicationListener listListener, String groupId, String status, String teamId) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<PaidStudentFeesRes> model = !TextUtils.isEmpty(teamId)? service.getPaidStudentList(groupId,status,teamId):service.getPaidStudentList(groupId,status);
+        final Call<PaidStudentFeesRes> model = !TextUtils.isEmpty(teamId) ? service.getPaidStudentList(groupId, status, teamId) : service.getPaidStudentList(groupId, status);
 
         ResponseWrapper<PaidStudentFeesRes> wrapper = new ResponseWrapper<>(model);
 
@@ -9845,11 +9847,12 @@ public class LeafManager {
         }, ErrorResponse.class);
 
     }
-    public void getStudentFees(final OnCommunicationListener listListener, String groupId,String teamId,String userId) {
+
+    public void getStudentFees(final OnCommunicationListener listListener, String groupId, String teamId, String userId) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<StudentFeesRes> model = service.getStudentFees(groupId,teamId,userId);
+        final Call<StudentFeesRes> model = service.getStudentFees(groupId, teamId, userId);
 
 
         ResponseWrapper<StudentFeesRes> wrapper = new ResponseWrapper<>(model);
@@ -9881,11 +9884,12 @@ public class LeafManager {
         }, ErrorResponse.class);
 
     }
+
     public void payFeesByStudent(final OnCommunicationListener listListener, String groupId, String teamId, String userId, PayFeesRequest payFeesRequest) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BaseResponse> model = service.payFeesByStudent(groupId,teamId,userId,payFeesRequest);
+        final Call<BaseResponse> model = service.payFeesByStudent(groupId, teamId, userId, payFeesRequest);
 
 
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
@@ -9917,16 +9921,89 @@ public class LeafManager {
         }, ErrorResponse.class);
 
     }
- public void approveOrHoldFees(final OnCommunicationListener listListener, String groupId, String teamId, String studentId, String paymentID,String status) {
+
+    public void approveOrHoldFees(final OnCommunicationListener listListener, String groupId, String teamId, String studentId, String paymentID, String status) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BaseResponse> model = service.approveOrHoldFees(groupId,teamId,studentId,paymentID,status);
+        final Call<BaseResponse> model = service.approveOrHoldFees(groupId, teamId, studentId, paymentID, status);
 
 
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_APPROVE_FEES, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                AppLog.e("LeafManager", "payFeesByStudent : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    /*public void updateStatusDueDate(final OnCommunicationListener listListener, String groupId, String teamId, String userID, String status) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.updateStatusDueDate(groupId, teamId, userID, status);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_DUE_DATE_STATUS, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                AppLog.e("LeafManager", "payFeesByStudent : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+    */
+    public void editStudentFees(final OnCommunicationListener listListener, String groupId, String teamId, String userID,FeesRes.Fees req ) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.editStudentFees(groupId, teamId, userID, req);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_EDIT_STUDENT_FEES, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 AppLog.e("LeafManager", "payFeesByStudent : " + response);

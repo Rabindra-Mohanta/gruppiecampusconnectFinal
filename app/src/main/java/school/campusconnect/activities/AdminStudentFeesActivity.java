@@ -59,8 +59,8 @@ public class AdminStudentFeesActivity extends BaseActivity {
     public Button btnApprove;
     @Bind(R.id.btnHold)
     public Button btnHold;
-    @Bind(R.id.rvDueDates)
-    public RecyclerView rvDueDates;
+    @Bind(R.id.btnNotApprove)
+    public Button btnNotApprove;
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
     @Bind(R.id.etPaidAmount)
@@ -73,7 +73,6 @@ public class AdminStudentFeesActivity extends BaseActivity {
     String team_id;
     String user_id;
     String groupId;
-    DueDateAdapter dueDateAdapter;
 
     PaidStudentFeesRes.StudentFees resData;
 
@@ -100,9 +99,6 @@ public class AdminStudentFeesActivity extends BaseActivity {
     }
 
     private void _init() {
-        dueDateAdapter = new DueDateAdapter();
-        rvDueDates.setAdapter(dueDateAdapter);
-
         btnApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +109,28 @@ public class AdminStudentFeesActivity extends BaseActivity {
                             LeafManager leafManager = new LeafManager();
                             progressBar.setVisibility(View.VISIBLE);
                             leafManager.approveOrHoldFees(AdminStudentFeesActivity.this, groupId, team_id, user_id, resData.paymentId, "approve");
+                        }
+
+                        @Override
+                        public void okCancelClick(DialogInterface dialog) {
+
+                        }
+                    });
+
+
+                }
+            }
+        });
+        btnNotApprove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (resData != null) {
+                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, "Are you sure you want to Not approve?", new AppDialog.AppDialogListener() {
+                        @Override
+                        public void okPositiveClick(DialogInterface dialog) {
+                            LeafManager leafManager = new LeafManager();
+                            progressBar.setVisibility(View.VISIBLE);
+                            leafManager.approveOrHoldFees(AdminStudentFeesActivity.this, groupId, team_id, user_id, resData.paymentId, "notApprove");
                         }
 
                         @Override
@@ -150,15 +168,18 @@ public class AdminStudentFeesActivity extends BaseActivity {
     private void getStudentFeesDetail() {
         if (resData != null) {
 
-            if("onHold".equalsIgnoreCase(resData.status)){
+            if ("onHold".equalsIgnoreCase(resData.status)) {
                 btnApprove.setVisibility(View.VISIBLE);
                 btnHold.setVisibility(View.GONE);
-            }else if("approved".equalsIgnoreCase(resData.status)){
+                btnNotApprove.setVisibility(View.GONE);
+            } else if ("approved".equalsIgnoreCase(resData.status)) {
                 btnApprove.setVisibility(View.GONE);
                 btnHold.setVisibility(View.GONE);
-            }else {
+                btnNotApprove.setVisibility(View.VISIBLE);
+            } else {
                 btnApprove.setVisibility(View.VISIBLE);
                 btnHold.setVisibility(View.VISIBLE);
+                btnNotApprove.setVisibility(View.GONE);
             }
 
             etTotalPaid.setText(TextUtils.isEmpty(resData.totalAmountPaid) ? "0" : resData.totalAmountPaid);
@@ -173,7 +194,6 @@ public class AdminStudentFeesActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            dueDateAdapter.addList(resData.dueDates);
 
             etPaidAmount.setText(resData.amountPaid);
             etDate.setText(resData.paidDate);
@@ -196,8 +216,12 @@ public class AdminStudentFeesActivity extends BaseActivity {
         super.onSuccess(apiId, response);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
-        Toast.makeText(this, "Status successfully updated", Toast.LENGTH_SHORT).show();
-        finish();
+        if(apiId==LeafManager.API_DUE_DATE_STATUS){
+
+        }else {
+            Toast.makeText(this, "Status successfully updated", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     @Override
@@ -205,71 +229,4 @@ public class AdminStudentFeesActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHolder> {
-        private Context mContext;
-        ArrayList<DueDates> list = new ArrayList<>();
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-            mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_due_date, parent, false);
-            return new ViewHolder(view);
-        }
-
-        public void addList(ArrayList<DueDates> list) {
-            if (list == null)
-                return;
-
-            this.list.clear();
-            this.list.addAll(list);
-            notifyDataSetChanged();
-        }
-
-        public void add(DueDates dueDate) {
-            list.add(dueDate);
-            notifyDataSetChanged();
-        }
-
-        public ArrayList<DueDates> getList() {
-            return this.list;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-            holder.etDate.setText(list.get(i).getDate());
-            holder.etDateAmount.setText(list.get(i).getMinimumAmount());
-
-            holder.imgDelete.setVisibility(View.GONE);
-
-            if ("completed".equalsIgnoreCase(list.get(i).getStatus())) {
-                holder.chkCompleted.setChecked(true);
-            } else {
-                holder.chkCompleted.setChecked(false);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            @Bind(R.id.etDate)
-            EditText etDate;
-            @Bind(R.id.etDateAmount)
-            EditText etDateAmount;
-            @Bind(R.id.imgDelete)
-            ImageView imgDelete;
-            @Bind(R.id.chkCompleted)
-            CheckBox chkCompleted;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                ButterKnife.bind(this, itemView);
-                etDateAmount.setFocusable(false);
-            }
-        }
-    }
 }

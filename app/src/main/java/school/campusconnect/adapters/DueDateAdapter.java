@@ -89,7 +89,7 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
         }else {
             holder.chkCompleted.setChecked(false);
         }
-        holder.chkCompleted.setOnClickListener(new View.OnClickListener() {
+       /* holder.chkCompleted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(holder.chkCompleted.isChecked()){
@@ -104,7 +104,7 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
             }
-        });
+        });*/
     }
 
     @Override
@@ -126,7 +126,7 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
+            chkCompleted.setEnabled(false);
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

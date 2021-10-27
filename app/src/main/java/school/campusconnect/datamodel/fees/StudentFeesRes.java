@@ -43,6 +43,9 @@ public class StudentFeesRes extends BaseResponse {
         @SerializedName("studentName")
         @Expose
         public String studentName;
+        @SerializedName("phone")
+        @Expose
+        public String phone;
         @SerializedName("studentImage")
         @Expose
         public String studentImage;
@@ -107,6 +110,14 @@ public class StudentFeesRes extends BaseResponse {
 
         public String getStudentName() {
             return studentName;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
         }
 
         public void setStudentName(String studentName) {

@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,9 +28,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.FullScreenMultiActivity;
+import school.campusconnect.activities.HomeWorkEditActivity;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.FeePaidDetails;
 import school.campusconnect.utils.AppDialog;
+import school.campusconnect.utils.Constants;
 
 public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHolder> {
     private Context mContext;
@@ -68,7 +73,10 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
         }else if("approved".equalsIgnoreCase(list.get(i).status)){
             holder.imgStatus.setImageResource(R.drawable.icon_yes_green);
         }else {
-            holder.imgStatus.setImageResource(R.drawable.icon_not_approve);
+            holder.imgStatus.setImageResource(R.drawable.icon_pending);
+        }
+        if(list.get(i).attachment!=null && list.get(i).attachment.size()>0){
+            Picasso.with(mContext).load(Constants.decodeUrlToBase64(list.get(i).attachment.get(0))).resize(50,50).into(holder.imgDelete);
         }
     }
 

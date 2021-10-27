@@ -1578,4 +1578,14 @@ public interface LeafService {
                                         @Path("student_id") String student_id,
                                         @Path("payment_id") String payment_id,
                                         @Query("status") String status);
+ /*   @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/duedate/update")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateStatusDueDate(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                        @Path("user_id") String user_id,
+                                        @Query("status") String status);*/
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/fee/update")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editStudentFees(@Path("group_id") String group_id, @Path("team_id") String team_id,@Path("user_id") String user_id, @Body FeesRes.Fees req);
+
 }

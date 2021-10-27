@@ -131,7 +131,6 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
 
         showData();
     }
-/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -144,10 +143,16 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menuEdit) {
-
+            Intent intent = new Intent(this, EditStudentFeesActivity.class);
+            intent.putExtra("group_id", groupId);
+            intent.putExtra("team_id", teamId);
+            intent.putExtra("title", title);
+            intent.putExtra("role", role);
+            intent.putExtra("StudentFees", new Gson().toJson(studentFees));
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     private void init() {
         ButterKnife.bind(this);
@@ -158,7 +163,8 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getIntent().getStringExtra("title"));
+        title=getIntent().getStringExtra("title");
+        setTitle(title);
         leafManager = new LeafManager();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
