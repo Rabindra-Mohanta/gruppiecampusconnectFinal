@@ -69,11 +69,11 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
         holder.etDateAmount.setText(list.get(i).getAmountPaid());
 
         if("onHold".equalsIgnoreCase(list.get(i).status)){
-            holder.imgStatus.setImageResource(R.drawable.icon_hold);
+            holder.imgStatus.setImageResource(R.drawable.hold);
         }else if("approved".equalsIgnoreCase(list.get(i).status)){
-            holder.imgStatus.setImageResource(R.drawable.icon_yes_green);
+            holder.imgStatus.setImageResource(R.drawable.approve);
         }else {
-            holder.imgStatus.setImageResource(R.drawable.icon_pending);
+            holder.imgStatus.setImageResource(R.drawable.pending);
         }
         if(list.get(i).attachment!=null && list.get(i).attachment.size()>0){
             Picasso.with(mContext).load(Constants.decodeUrlToBase64(list.get(i).attachment.get(0))).resize(50,50).into(holder.imgDelete);

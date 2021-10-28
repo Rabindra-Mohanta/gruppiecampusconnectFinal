@@ -126,7 +126,7 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            chkCompleted.setEnabled(false);
+//            chkCompleted.setEnabled(false);
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

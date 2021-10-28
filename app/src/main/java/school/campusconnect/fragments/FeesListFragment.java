@@ -120,6 +120,9 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
         rvClass.setAdapter(new ClassesStudentAdapter(list));
 
+        if(getActivity()==null){
+            return;
+        }
         if (list != null && list.size() > 0) {
             ((FeesListActivity) getActivity()).setOptionMenuName("Update Fees");
         } else {
@@ -282,7 +285,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         if (!csvFolder.exists()) {
             csvFolder.mkdir();
         }
-        File file = new File(csvFolder, className + ".xls");
+        File file = new File(csvFolder, className+ " (Fees)" + ".xls");
 
         try {
             if (!file.exists()) {
