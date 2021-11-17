@@ -2,6 +2,7 @@ package school.campusconnect.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
@@ -27,6 +29,7 @@ import school.campusconnect.datamodel.VideoOfflineObject;
 
 public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
     private static final String TAG = "AmazoneDownload";
+    private static Context mContext;
     private AmazoneDownloadSingleListener listenerSignle;
     String url;
     File file;
@@ -37,7 +40,8 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
         PDFBoxResourceLoader.init(LeafApplication.getInstance());
     }
 
-    public static AmazoneDownload download(String file, AmazoneDownloadSingleListener listener) {
+    public static AmazoneDownload download( Context context, String file, AmazoneDownloadSingleListener listener) {
+        mContext = context;
         AmazoneDownload asynch = new AmazoneDownload(file, listener);
         asynch.executeOnExecutor(THREAD_POOL_EXECUTOR);
         return asynch;
@@ -98,6 +102,7 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
     @Override
     protected String doInBackground(Void... voids) {
         try {
+            Log.e(TAG+"_ViewPDF", "doInBackground called");
 
             url = Constants.decodeUrlToBase64(url);
             String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
@@ -203,7 +208,12 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
     }
 
     private static File getDirForMedia(String folder) {
-        File mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        File mainFolder ;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        mainFolder = new File( mContext.getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        else
+            mainFolder = new File( Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }
