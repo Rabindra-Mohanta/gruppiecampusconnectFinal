@@ -3,7 +3,9 @@ package school.campusconnect.datamodel.test_exam;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TestOfflineSubjectMark {
+import java.io.Serializable;
+
+public class TestOfflineSubjectMark implements Serializable {
     @SerializedName("subjectId")
     @Expose
     public  String subjectId;

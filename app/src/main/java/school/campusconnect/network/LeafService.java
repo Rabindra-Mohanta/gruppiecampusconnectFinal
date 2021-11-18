@@ -1598,4 +1598,8 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<OfflineTestRes> getOfflineTestList(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/{offlineTestExamId}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteOfflineTestList(@Path("group_id") String group_id, @Path("team_id") String team_id,@Path("offlineTestExamId") String offlineTestExamId);
+
 }

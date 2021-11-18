@@ -711,6 +711,9 @@
         <activity
             android:name=".activities.AddOfflineTestActivity"
             android:screenOrientation="portrait" />
+   <activity
+            android:name=".activities.EditOfflineTestActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.FloatingWidgetService"

@@ -23,8 +23,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddOfflineTestActivity;
+import school.campusconnect.activities.EditOfflineTestActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.TestExamActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.SubjectItem;
@@ -97,6 +100,10 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
     @Override
     public void onStart() {
         super.onStart();
+        if(LeafPreference.getInstance(getActivity()).getBoolean("is_offline_test_added")){
+            LeafPreference.getInstance(getActivity()).setBoolean("is_offline_test_added", false);
+            getDataLocally();
+        }
     }
 
     @Override
@@ -131,7 +138,7 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_subject_staff, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_subject_staff_2, parent, false);
             return new ViewHolder(view);
         }
 
@@ -139,7 +146,6 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final OfflineTestRes.ScheduleTestData item = list.get(position);
             holder.txt_name.setText(item.title);
-            holder.txt_count.setVisibility(View.GONE);
         }
 
         @Override
@@ -163,9 +169,6 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
 
             @Bind(R.id.txt_name)
             TextView txt_name;
-
-            @Bind(R.id.txt_count)
-            TextView txt_count;
             @Bind(R.id.img_tree)
             ImageView img_tree;
 
@@ -192,6 +195,12 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
     }
 
     private void onTreeClick(OfflineTestRes.ScheduleTestData classData) {
+        Intent intent = new Intent(getActivity(), EditOfflineTestActivity.class);
+        intent.putExtra("groupId", GroupDashboardActivityNew.groupId);
+        intent.putExtra("teamId", team_id);
+        intent.putExtra("title", className);
+        intent.putExtra("classData", new Gson().toJson(classData));
+        startActivity(intent);
 
     }
 }

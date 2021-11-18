@@ -3,6 +3,7 @@ package school.campusconnect.datamodel.test_exam;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import school.campusconnect.datamodel.BaseResponse;
@@ -13,7 +14,7 @@ public class OfflineTestRes extends BaseResponse {
     public ArrayList<ScheduleTestData> data;
 
 
-    public static class ScheduleTestData {
+    public static class ScheduleTestData implements Serializable {
         @SerializedName("updatedAt")
         @Expose
         public String updatedAt;

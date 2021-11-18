@@ -10000,7 +10000,7 @@ public class LeafManager {
 
     }
     */
-    public void editStudentFees(final OnCommunicationListener listListener, String groupId, String teamId, String userID,FeesRes.Fees req ) {
+    public void editStudentFees(final OnCommunicationListener listListener, String groupId, String teamId, String userID, FeesRes.Fees req) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
@@ -10035,7 +10035,8 @@ public class LeafManager {
         }, ErrorResponse.class);
 
     }
-    public void createOfflineTest(final OnCommunicationListener listListener, String groupId, String teamId, OfflineTestReq req ) {
+
+    public void createOfflineTest(final OnCommunicationListener listListener, String groupId, String teamId, OfflineTestReq req) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
@@ -10070,7 +10071,8 @@ public class LeafManager {
         }, ErrorResponse.class);
 
     }
-public void getOfflineTestList(final OnCommunicationListener listListener, String groupId, String teamId) {
+
+    public void getOfflineTestList(final OnCommunicationListener listListener, String groupId, String teamId) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
@@ -10079,6 +10081,40 @@ public void getOfflineTestList(final OnCommunicationListener listListener, Strin
         ResponseWrapper<OfflineTestRes> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_OFFLINE_TEST_LIST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                AppLog.e("LeafManager", "payFeesByStudent : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    } public void deleteOfflineTestList(final OnCommunicationListener listListener, String groupId, String teamId,String examID) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.deleteOfflineTestList(groupId, teamId,examID);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_REMOVE_OFFLINE_TEST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 AppLog.e("LeafManager", "payFeesByStudent : " + response);

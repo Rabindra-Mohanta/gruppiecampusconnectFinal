@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -16,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,6 +32,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+
+import org.apache.poi.sl.usermodel.Line;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,40 +50,21 @@ import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.test_exam.OfflineTestReq;
+import school.campusconnect.datamodel.test_exam.OfflineTestRes;
 import school.campusconnect.datamodel.test_exam.TestOfflineSubjectMark;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.views.SMBDialogUtils;
 
-public class AddOfflineTestActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
+public class EditOfflineTestActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
 
     private static final String TAG = "AddOfflineTestActivity";
-
-    @Bind(R.id.etDate)
-    EditText etDate;
 
     @Bind(R.id.etTitle)
     EditText etTitle;
 
-    @Bind(R.id.etStartTime)
-    EditText etStartTime;
-
-    @Bind(R.id.etMaxMarks)
-    EditText etMaxMarks;
-
-    @Bind(R.id.etMinMarks)
-    EditText etMinMarks;
-
-    @Bind(R.id.spSubject)
-    Spinner spSubject;
-
-    @Bind(R.id.etEndTime)
-    EditText etEndTime;
-
     @Bind(R.id.etResultDate)
     EditText etResultDate;
-
-    @Bind(R.id.imgAdd)
-    ImageView imgAdd;
 
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -101,17 +89,54 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
     String groupId;
     String teamId;
     private ArrayList<SubjectStaffResponse.SubjectData> subjectList;
+    OfflineTestRes.ScheduleTestData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_offline_test);
+        setContentView(R.layout.activity_edit_offline_test);
 
         init();
+
+        showData();
 
         LeafManager leafManager = new LeafManager();
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
     }
+
+    private void showData() {
+        if (data != null) {
+            etTitle.setText(data.title);
+            adapter.addAll(data.subjectMarksDetails);
+            etResultDate.setText(data.resultDate);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_test_offline_edit, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_schedule_exam) {
+            if(data==null)
+                return false;
+
+            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this Test.?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    leafManager.deleteOfflineTestList(EditOfflineTestActivity.this, groupId,teamId, data.offlineTestExamId);
+                }
+            });
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void init() {
 
@@ -119,6 +144,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
 
         groupId = getIntent().getStringExtra("groupId");
         teamId = getIntent().getStringExtra("teamId");
+        data = new Gson().fromJson(getIntent().getStringExtra("classData"), OfflineTestRes.ScheduleTestData.class);
 
         rvSubjects.setAdapter(adapter);
 
@@ -136,44 +162,6 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
         });
 
         leafManager = new LeafManager();
-
-        imgAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (TextUtils.isEmpty(etDate.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Select Date", Toast.LENGTH_SHORT).show();
-                } else if (spSubject.getSelectedItemPosition() == -1) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Select Subject", Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(etStartTime.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Select Start Time", Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(etEndTime.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Select End Time", Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(etMaxMarks.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Enter Max Marks", Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(etMinMarks.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Enter Min Marks", Toast.LENGTH_SHORT).show();
-                } else {
-                    TestOfflineSubjectMark t1 = new TestOfflineSubjectMark();
-                    t1.date = etDate.getText().toString();
-                    t1.subjectName = spSubject.getSelectedItem().toString();
-                    t1.subjectId = subjectList.get(spSubject.getSelectedItemPosition()).subjectId;
-                    t1.maxMarks = etMaxMarks.getText().toString();
-                    t1.minMarks = etMinMarks.getText().toString();
-                    t1.startTime = etStartTime.getText().toString();
-                    t1.endTime = etEndTime.getText().toString();
-                    adapter.add(t1);
-                    hide_keyboard(view);
-
-                    etDate.setText("");
-                    etMaxMarks.setText("");
-                    etMinMarks.setText("");
-                    etStartTime.setText("");
-                    etEndTime.setText("");
-                }
-            }
-        });
-
-
     }
 
     public void hide_keyboard(View view) {
@@ -184,33 +172,12 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    @OnClick({R.id.btnCreateClass, R.id.etDate, R.id.etResultDate, R.id.etStartTime, R.id.etEndTime})
+
+    @OnClick({R.id.btnCreateClass, R.id.etResultDate})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnCreateClass:
                 if (isValid()) {
-                    if (!TextUtils.isEmpty(etDate.getText().toString().trim())) {
-                        if (TextUtils.isEmpty(etStartTime.getText().toString().trim())) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Select Start Time", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (spSubject.getSelectedItemPosition() == -1) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Select Subject", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (TextUtils.isEmpty(etEndTime.getText().toString().trim())) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Select End Time", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (TextUtils.isEmpty(etMaxMarks.getText().toString().trim())) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Enter Max Marks", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (TextUtils.isEmpty(etMinMarks.getText().toString().trim())) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Enter Min Marks", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
 
                     if (!isConnectionAvailable()) {
                         showNoNetworkMsg();
@@ -222,84 +189,17 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                     request.resultDate = etResultDate.getText().toString();
                     request.subjectMarksDetails = adapter.getList();
 
-                    TestOfflineSubjectMark t1 = null;
-
-                    if (!TextUtils.isEmpty(etDate.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(etStartTime.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(etEndTime.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(etMaxMarks.getText().toString().trim()) &&
-                            !TextUtils.isEmpty(etMinMarks.getText().toString().trim())
-                    ) {
-                        t1 = new TestOfflineSubjectMark();
-                        t1.date = etDate.getText().toString();
-                        t1.subjectName = spSubject.getSelectedItem().toString();
-                        t1.subjectId = subjectList.get(spSubject.getSelectedItemPosition()).subjectId;
-                        t1.maxMarks = etMaxMarks.getText().toString();
-                        t1.minMarks = etMinMarks.getText().toString();
-                        t1.startTime = etStartTime.getText().toString();
-                        t1.endTime = etEndTime.getText().toString();
-
-                    }
-                    if (request.subjectMarksDetails.size() == 0 && t1 == null) {
-                        Toast.makeText(this, "Please add at least one subject/marks", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (t1 != null) {
-                        request.subjectMarksDetails.add(t1);
-                    }
                     AppLog.e(TAG, "request :" + new Gson().toJson(request));
-                    LeafManager leafManager = new LeafManager();
-                    progressBar.setVisibility(View.VISIBLE);
-                    leafManager.createOfflineTest(this, groupId, teamId, request);
+                    SMBDialogUtils.showSMBDialogOK(this, "This will schedule new test/exam, kindly remove old test/exam if you are not required", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            LeafManager leafManager = new LeafManager();
+                            progressBar.setVisibility(View.VISIBLE);
+                            leafManager.createOfflineTest(EditOfflineTestActivity.this, groupId, teamId, request);
+                        }
+                    });
                 }
                 break;
-
-            case R.id.etDate: {
-                final Calendar calendar = Calendar.getInstance();
-                DatePickerDialog fragment = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        etDate.setText(format.format(calendar.getTime()));
-                    }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
-                break;
-            }
-
-
-            case R.id.etStartTime: {
-                Calendar calendar = Calendar.getInstance();
-                TimePickerDialog fragment1 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar.set(Calendar.MINUTE, minute);
-                        SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                        etStartTime.setText(format.format(calendar.getTime()));
-                    }
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                fragment1.show();
-                break;
-            }
-            case R.id.etEndTime: {
-                Calendar calendar = Calendar.getInstance();
-                TimePickerDialog fragment1 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar.set(Calendar.MINUTE, minute);
-                        SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                        etEndTime.setText(format.format(calendar.getTime()));
-                    }
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                fragment1.show();
-                break;
-            }
             case R.id.etResultDate: {
                 final Calendar calendar = Calendar.getInstance();
                 DatePickerDialog fragment = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -340,15 +240,19 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             case LeafManager.API_SUBJECT_STAFF:
                 SubjectStaffResponse res = (SubjectStaffResponse) response;
                 subjectList = res.getData();
-                String strSubject[] = new String[subjectList.size()];
+               /* String strSubject[] = new String[subjectList.size()];
                 for (int i = 0; i < subjectList.size(); i++) {
                     strSubject[i] = subjectList.get(i).name;
                 }
                 ArrayAdapter<String> spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white, R.id.tvItem, strSubject);
-                spSubject.setAdapter(spSubAdapter);
+                spSubject.setAdapter(spSubAdapter);*/
                 break;
             case LeafManager.API_CREATE_OFFLINE_TEST:
-                LeafPreference.getInstance(AddOfflineTestActivity.this).setBoolean("is_offline_test_added", true);
+                LeafPreference.getInstance(EditOfflineTestActivity.this).setBoolean("is_offline_test_added", true);
+                finish();
+                break;
+            case LeafManager.API_REMOVE_OFFLINE_TEST:
+                LeafPreference.getInstance(EditOfflineTestActivity.this).setBoolean("is_offline_test_added", true);
                 finish();
                 break;
 
@@ -389,10 +293,10 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
 
         @NonNull
         @Override
-        public SubjectMarkAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_offline_add, parent, false);
-            return new SubjectMarkAdapter.ViewHolder(view);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test_offline_edit, parent, false);
+            return new ViewHolder(view);
         }
 
         public ArrayList<TestOfflineSubjectMark> getList() {
@@ -400,13 +304,28 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
         }
 
         @Override
-        public void onBindViewHolder(@NonNull SubjectMarkAdapter.ViewHolder holder, int i) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
+            holder.tvSubject.setText(list.get(i).subjectName);
+            holder.tvDate.setText(list.get(i).date);
             holder.etDate.setText(list.get(i).date);
             holder.etSubject.setText(list.get(i).subjectName);
             holder.etMaxMarks.setText(list.get(i).maxMarks);
             holder.etMinMarks.setText(list.get(i).minMarks);
             holder.etStartTime.setText(list.get(i).startTime);
             holder.etEndTime.setText(list.get(i).endTime);
+
+            holder.imgDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(holder.llMain.getVisibility()==View.VISIBLE){
+                        holder.llMain.setVisibility(View.GONE);
+                        holder.imgDelete.setImageResource(R.drawable.arrow_down);
+                    }else {
+                        holder.llMain.setVisibility(View.VISIBLE);
+                        holder.imgDelete.setImageResource(R.drawable.arrow_up);
+                    }
+                }
+            });
 
             holder.etStartTime.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -488,6 +407,11 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             notifyDataSetChanged();
         }
 
+        public void addAll(ArrayList<TestOfflineSubjectMark> addSubjectData) {
+            list.addAll(addSubjectData);
+            notifyDataSetChanged();
+        }
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             @Bind(R.id.etDate)
             EditText etDate;
@@ -508,18 +432,16 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             EditText etEndTime;
             @Bind(R.id.imgDelete)
             ImageView imgDelete;
+            @Bind(R.id.llMain)
+            LinearLayout llMain;
+            @Bind(R.id.tvDate)
+            TextView tvDate;
+            @Bind(R.id.tvSubject)
+            TextView tvSubject;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
-
-                imgDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        list.remove(getAdapterPosition());
-                        notifyDataSetChanged();
-                    }
-                });
             }
         }
     }
