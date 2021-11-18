@@ -40,12 +40,13 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
         PDFBoxResourceLoader.init(LeafApplication.getInstance());
     }
 
-    public static AmazoneDownload download( Context context, String file, AmazoneDownloadSingleListener listener) {
+    public static AmazoneDownload download(Context context, String file, AmazoneDownloadSingleListener listener) {
         mContext = context;
         AmazoneDownload asynch = new AmazoneDownload(file, listener);
         asynch.executeOnExecutor(THREAD_POOL_EXECUTOR);
         return asynch;
     }
+
     public static boolean isPdfDownloaded(String url) {
         try {
             if (!TextUtils.isEmpty(url)) {
@@ -60,26 +61,25 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                 }
                 return file.exists();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public static void removeVideo(Context context,String fileName) {
+    public static void removeVideo(Context context, String fileName) {
         try {
             LeafPreference leafPreference = LeafPreference.getInstance(context);
-            if(!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase(""))
-            {
-                ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {}.getType());
+            if (!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase("")) {
+                ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {
+                }.getType());
                 int count = list.size();
 
                 for (Iterator<VideoOfflineObject> iterator = list.iterator(); iterator.hasNext(); ) {
                     VideoOfflineObject offlineObject = iterator.next();
                     try {
-                        AppLog.e(TAG , "filename from pref : "+offlineObject.getVideo_filename());
-                        if(offlineObject.getVideo_filename()!=null  && offlineObject.getVideo_filename().equalsIgnoreCase(fileName))
-                        {
+                        AppLog.e(TAG, "filename from pref : " + offlineObject.getVideo_filename());
+                        if (offlineObject.getVideo_filename() != null && offlineObject.getVideo_filename().equalsIgnoreCase(fileName)) {
                             MixOperations.deleteVideoFile(offlineObject.video_filepath);
                             iterator.remove();
                         }
@@ -88,12 +88,11 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                     }
                 }
 
-                if(count != list.size())
-                {
+                if (count != list.size()) {
                     leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -102,7 +101,7 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
     @Override
     protected String doInBackground(Void... voids) {
         try {
-            Log.e(TAG+"_ViewPDF", "doInBackground called");
+            Log.e(TAG + "_ViewPDF", "doInBackground called");
 
             url = Constants.decodeUrlToBase64(url);
             String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
@@ -184,7 +183,7 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
         if (listenerSignle != null) {
             listenerSignle.progressUpdate(values[0], 100);
 
-            if (values[0] != 100){
+            if (values[0] != 100) {
 
             }
         }
@@ -208,11 +207,11 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
     }
 
     private static File getDirForMedia(String folder) {
-        File mainFolder ;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        mainFolder = new File( mContext.getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        File mainFolder;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q)
+            mainFolder = new File(mContext.getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         else
-            mainFolder = new File( Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+            mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
 
         if (!mainFolder.exists()) {
             mainFolder.mkdir();

@@ -130,6 +130,8 @@ import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetResponse;
 import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
+import school.campusconnect.datamodel.test_exam.OfflineTestReq;
+import school.campusconnect.datamodel.test_exam.OfflineTestRes;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.test_exam.TestLiveEventRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
@@ -1587,5 +1589,13 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/fee/update")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> editStudentFees(@Path("group_id") String group_id, @Path("team_id") String team_id,@Path("user_id") String user_id, @Body FeesRes.Fees req);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/create")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> createOfflineTest(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                         @Body OfflineTestReq req);
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<OfflineTestRes> getOfflineTestList(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
 }

@@ -708,6 +708,9 @@
         <activity
             android:name=".activities.EditStudentFeesActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddOfflineTestActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.FloatingWidgetService"

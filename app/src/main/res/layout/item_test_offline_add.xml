@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="@dimen/padding_10dp"
+    android:layout_marginTop="@dimen/padding_5dp"
+    android:layout_marginRight="@dimen/padding_10dp"
+    android:layout_marginBottom="@dimen/padding_10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_5dp"
+        android:layout_marginRight="@dimen/padding_5dp"
+        android:layout_marginBottom="@dimen/padding_10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/lbl_Date"
+                    android:textColor="@color/colorPrimary" />
+
+                <EditText
+                    android:id="@+id/etDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:focusable="false"
+                    android:hint="Select Date"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/lbl_subject"
+                    android:textColor="@color/colorPrimary" />
+
+                <EditText
+                    android:id="@+id/etSubject"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:focusable="false"
+                    android:hint="Select Date"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_13sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/lbl_Start_Time"
+                    android:textColor="@color/colorPrimary" />
+
+                <EditText
+                    android:id="@+id/etStartTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:focusable="false"
+                    android:hint="Select Time"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_13sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/lbl_End_Time"
+                    android:textColor="@color/colorPrimary" />
+
+                <EditText
+                    android:id="@+id/etEndTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:focusable="false"
+                    android:hint="Select Time"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_13sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/lbl_Max_Marks"
+                    android:textColor="@color/colorPrimary" />
+
+                <EditText
+                    android:id="@+id/etMaxMarks"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:inputType="numberDecimal"
+                    android:hint="Enter Marks"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_13sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:text="@string/lbl_Min_Marks"
+                    android:textColor="@color/colorPrimary" />
+
+                <EditText
+                    android:id="@+id/etMinMarks"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:inputType="numberDecimal"
+                    android:hint="Enter Marks"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_13sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imgDelete"
+        android:layout_width="@dimen/padding_30dp"
+        android:layout_height="@dimen/padding_30dp"
+        android:tint="@android:color/holo_red_dark"
+        android:layout_gravity="right|top"
+        android:padding="@dimen/padding_5dp"
+        app:srcCompat="@drawable/ic_close" />
+</androidx.cardview.widget.CardView>

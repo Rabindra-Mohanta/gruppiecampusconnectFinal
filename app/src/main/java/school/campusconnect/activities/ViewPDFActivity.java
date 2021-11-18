@@ -106,7 +106,7 @@ public class ViewPDFActivity extends BaseActivity {
         ProgressBar progressBar1 = findViewById(R.id.progressBar1);
         progressBar1.setVisibility(View.VISIBLE);
         llProgress.setVisibility(View.VISIBLE);
-        asyncTask = AmazoneDownload.download(pdf, new AmazoneDownload.AmazoneDownloadSingleListener() {
+        asyncTask = AmazoneDownload.download(this,pdf, new AmazoneDownload.AmazoneDownloadSingleListener() {
             @Override
             public void onDownload(File file) {
                 llProgress.setVisibility(View.GONE);

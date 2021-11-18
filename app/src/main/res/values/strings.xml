@@ -540,6 +540,16 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_approve">Approve</string>
     <string name="lbl_hold">Hold</string>
     <string name="lbl_not_approve">Not Approve</string>
+    <string name="lbl_offline">OFFLINE</string>
+    <string name="lbl_online">ONLINE</string>
+    <string name="lbl_add_subject_mark">Add subject / marks</string>
+    <string name="lbl_Date">Date</string>
+    <string name="lbl_Start_Time">Start Time</string>
+    <string name="lbl_End_Time">End Time</string>
+    <string name="lbl_Max_Marks">Max Marks</string>
+    <string name="lbl_Min_Marks">Min Marks</string>
+    <string name="lbl_ResultDate">Result Date</string>
+    <string name="strSelectDate">Select Date</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>
