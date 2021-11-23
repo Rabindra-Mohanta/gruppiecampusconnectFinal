@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -78,6 +79,9 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
+    @Bind(R.id.btnCreateClass)
+    public Button btnCreateClass;
+
 
     @Bind(R.id.iconBack)
     public ImageView iconBack;
@@ -90,6 +94,7 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
     String teamId;
     private ArrayList<SubjectStaffResponse.SubjectData> subjectList;
     OfflineTestRes.ScheduleTestData data;
+    String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,12 +114,22 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
             etTitle.setText(data.title);
             adapter.addAll(data.subjectMarksDetails);
             etResultDate.setText(data.resultDate);
+
+            if("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)){
+                btnCreateClass.setVisibility(View.VISIBLE);
+            }else {
+                btnCreateClass.setVisibility(View.GONE);
+                etTitle.setEnabled(false);
+                etResultDate.setEnabled(false);
+            }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_test_offline_edit, menu);
+        if("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)){
+            getMenuInflater().inflate(R.menu.menu_test_offline_edit, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -144,6 +159,7 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
 
         groupId = getIntent().getStringExtra("groupId");
         teamId = getIntent().getStringExtra("teamId");
+        role = getIntent().getStringExtra("role");
         data = new Gson().fromJson(getIntent().getStringExtra("classData"), OfflineTestRes.ScheduleTestData.class);
 
         rvSubjects.setAdapter(adapter);
@@ -327,74 +343,79 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
                 }
             });
 
-            holder.etStartTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Calendar calendar = Calendar.getInstance();
-                    TimePickerDialog fragment1 = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                            calendar.set(Calendar.MINUTE, minute);
-                            SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                            holder.etStartTime.setText(format.format(calendar.getTime()));
-                            list.get(i).startTime = format.format(calendar.getTime());
-                        }
-                    }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                    fragment1.show();
-                }
-            });
-            holder.etEndTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Calendar calendar = Calendar.getInstance();
-                    TimePickerDialog fragment1 = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                            calendar.set(Calendar.MINUTE, minute);
-                            SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                            holder.etEndTime.setText(format.format(calendar.getTime()));
-                            list.get(i).endTime = format.format(calendar.getTime());
-                        }
-                    }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                    fragment1.show();
-                }
-            });
+            if("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)){
+                holder.etStartTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar calendar = Calendar.getInstance();
+                        TimePickerDialog fragment1 = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                calendar.set(Calendar.MINUTE, minute);
+                                SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                                holder.etStartTime.setText(format.format(calendar.getTime()));
+                                list.get(i).startTime = format.format(calendar.getTime());
+                            }
+                        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+                        fragment1.show();
+                    }
+                });
+                holder.etEndTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar calendar = Calendar.getInstance();
+                        TimePickerDialog fragment1 = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                calendar.set(Calendar.MINUTE, minute);
+                                SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                                holder.etEndTime.setText(format.format(calendar.getTime()));
+                                list.get(i).endTime = format.format(calendar.getTime());
+                            }
+                        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+                        fragment1.show();
+                    }
+                });
 
-            holder.etMaxMarks.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                holder.etMaxMarks.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                }
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                    list.get(i).maxMarks = s.toString();
-                }
-            });
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        list.get(i).maxMarks = s.toString();
+                    }
+                });
 
-            holder.etMinMarks.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                holder.etMinMarks.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                }
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                    list.get(i).minMarks = s.toString();
-                }
-            });
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        list.get(i).minMarks = s.toString();
+                    }
+                });
+            }else {
+                holder.etMinMarks.setEnabled(false);
+                holder.etMaxMarks.setEnabled(false);
+            }
         }
 
         @Override

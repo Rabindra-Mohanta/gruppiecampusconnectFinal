@@ -63,14 +63,11 @@
                     android:text="@string/lbl_subject"
                     android:textColor="@color/colorPrimary" />
 
-                <EditText
-                    android:id="@+id/etSubject"
+                <Spinner
+                    android:id="@+id/spSubject"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/login_button_height"
-                    android:focusable="false"
-                    android:hint="Select Date"
-                    android:singleLine="true"
-                    android:textSize="@dimen/text_size_13sp" />
+                    android:layout_height="@dimen/login_button_height" />
             </LinearLayout>
 
 

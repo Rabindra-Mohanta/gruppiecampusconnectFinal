@@ -54,9 +54,9 @@ public class TestClassSubjectActivity extends BaseActivity {
         tvTitle.setText(getIntent().getStringExtra("title"));
         setTitle("");
 
-        title  = getIntent().getStringExtra("title");
-        role  = getIntent().getStringExtra("role");
-        team_id  = getIntent().getStringExtra("team_id");
+        title = getIntent().getStringExtra("title");
+        role = getIntent().getStringExtra("role");
+        team_id = getIntent().getStringExtra("team_id");
 
         iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,62 +67,54 @@ public class TestClassSubjectActivity extends BaseActivity {
         imgHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TestClassSubjectActivity.this,GroupDashboardActivityNew.class);
+                Intent intent = new Intent(TestClassSubjectActivity.this, GroupDashboardActivityNew.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
 
-        if("admin".equalsIgnoreCase(role)){
-            tabLayout.setVisibility(View.VISIBLE);
-            TestOfflineListFragment testOfflineListFragment=new TestOfflineListFragment();
-            testOfflineListFragment.setArguments(getIntent().getExtras());
+        tabLayout.setVisibility(View.VISIBLE);
+        TestOfflineListFragment testOfflineListFragment = new TestOfflineListFragment();
+        testOfflineListFragment.setArguments(getIntent().getExtras());
 
-            TestSubjectListFragment testSubjectFragmement = new TestSubjectListFragment();
-            testSubjectFragmement.setArguments(getIntent().getExtras());
+        TestSubjectListFragment testSubjectFragmement = new TestSubjectListFragment();
+        testSubjectFragmement.setArguments(getIntent().getExtras());
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,testOfflineListFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, testOfflineListFragment).commit();
 
-            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    if(tab.getPosition()==0){
-                        if(menu!=null){
-                            menu.findItem(R.id.menu_schedule_exam).setVisible(true);
-                        }
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,testOfflineListFragment).commit();
-                    }else{
-
-                        if(menu!=null){
-                            menu.findItem(R.id.menu_schedule_exam).setVisible(false);
-                        }
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,testSubjectFragmement).commit();
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) {
+                    if (menu != null) {
+                        menu.findItem(R.id.menu_schedule_exam).setVisible(true);
                     }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, testOfflineListFragment).commit();
+                } else {
+
+                    if (menu != null) {
+                        menu.findItem(R.id.menu_schedule_exam).setVisible(false);
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, testSubjectFragmement).commit();
                 }
+            }
 
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-                }
+            }
 
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-                }
-            });
-        }else {
-            tabLayout.setVisibility(View.GONE);
-            TestSubjectListFragment classListFragment=new TestSubjectListFragment();
-            classListFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
-
-        }
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if("admin".equalsIgnoreCase(role)){
-            getMenuInflater().inflate(R.menu.menu_test_offline,menu);
+        if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
+            getMenuInflater().inflate(R.menu.menu_test_offline, menu);
             this.menu = menu;
         }
         return super.onCreateOptionsMenu(menu);
@@ -130,7 +122,7 @@ public class TestClassSubjectActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.menu_schedule_exam){
+        if (item.getItemId() == R.id.menu_schedule_exam) {
             Intent intent = new Intent(this, AddOfflineTestActivity.class);
             intent.putExtra("groupId", GroupDashboardActivityNew.groupId);
             intent.putExtra("teamId", team_id);

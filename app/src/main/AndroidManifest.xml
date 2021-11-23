@@ -36,7 +36,9 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.TalukListActivity" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.TalukListActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Home"
             android:screenOrientation="portrait"
@@ -710,9 +712,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddOfflineTestActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
-   <activity
+        <activity
             android:name=".activities.EditOfflineTestActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
 
         <service

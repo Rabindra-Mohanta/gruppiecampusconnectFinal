@@ -50,6 +50,7 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
 
     String team_id;
     String className;
+    String role;
 /*
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;*/
@@ -64,6 +65,7 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
 
         team_id = getArguments().getString("team_id");
         className = getArguments().getString("title");
+        role = getArguments().getString("role");
 
         init();
 
@@ -199,6 +201,7 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
         intent.putExtra("groupId", GroupDashboardActivityNew.groupId);
         intent.putExtra("teamId", team_id);
         intent.putExtra("title", className);
+        intent.putExtra("role", role);
         intent.putExtra("classData", new Gson().toJson(classData));
         startActivity(intent);
 
