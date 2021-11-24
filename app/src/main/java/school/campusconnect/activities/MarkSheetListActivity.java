@@ -8,6 +8,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.fragments.MarkSheetListFragment;
 
+// TODO : REMOVE THIS NOT USED
 public class MarkSheetListActivity extends BaseActivity {
 
 

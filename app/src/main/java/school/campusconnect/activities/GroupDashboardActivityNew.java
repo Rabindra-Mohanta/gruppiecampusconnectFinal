@@ -1153,7 +1153,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }*/
         else if (group.type.equals("Home Work") || group.type.equals("Recorded Class")
-                || group.type.equals("Time Table")) {
+                || group.type.equals("Time Table") || group.type.equals("Marks Card")) {
 
             if (group.type.equalsIgnoreCase("Home Work")) {
                 LeafPreference.getInstance(this).remove(groupId + "_HOMEWORK_NOTI_COUNT");
@@ -1169,6 +1169,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                 if (group.count == 1) {
                     if (group.type.equals("Home Work") || group.type.equals("Recorded Class")) {
                         intent = new Intent(this, HWClassSubjectActivity.class);
+                    }else if (group.type.equals("Marks Card")) {
+                        intent = new Intent(this, MarksCardActivity2.class);
                     } else {
                         intent = new Intent(this, TimeTabelActivity2.class);
                     }
@@ -1375,7 +1377,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 startActivity(intent);
             }
 
-        } else if (group.type.equals("Marks Card")) {
+        }/* else if (group.type.equals("Marks Card")) {
             if ("teacher".equalsIgnoreCase(group.role) && group.count == 1) {
                 Intent intent = new Intent(this, MarksheetActivity.class);
                 intent.putExtra("team_id", group.details.teamId);
@@ -1411,7 +1413,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 intent.putExtra("is_for_attendance", false);
                 startActivity(intent);
             }
-        } else {
+        } */else {
             setBackEnabled(true);
             tvToolbar.setText(group.name);
             //  tv_Desc.setText(group.members + " users");

@@ -718,6 +718,10 @@
             android:name=".activities.EditOfflineTestActivity"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.MarksCardActivity2"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.FloatingWidgetService"

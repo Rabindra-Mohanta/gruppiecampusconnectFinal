@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -95,6 +96,9 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.iconBack)
     public ImageView iconBack;
 
+    @Bind(R.id.imgHome)
+    public ImageView imgHome;
+
     LeafManager leafManager;
 
 
@@ -130,6 +134,14 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        imgHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddOfflineTestActivity.this,GroupDashboardActivityNew.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
 

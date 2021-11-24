@@ -41,6 +41,8 @@ import school.campusconnect.datamodel.homework.AddHwPostRequest;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
+import school.campusconnect.datamodel.markcard2.AddMarksReq;
+import school.campusconnect.datamodel.markcard2.MarkCardResponse2;
 import school.campusconnect.datamodel.marksheet.AddMarkCardReq;
 import school.campusconnect.datamodel.marksheet.MarkCardListResponse;
 import school.campusconnect.datamodel.marksheet.StudentMarkCardListResponse;
@@ -410,6 +412,8 @@ public class LeafManager {
     public static final int API_CREATE_OFFLINE_TEST = 266;
     public static final int API_OFFLINE_TEST_LIST = 267;
     public static final int API_REMOVE_OFFLINE_TEST = 268;
+    public static final int API_MARK_CARD_LIST_2 = 269;
+    public static final int API_ADD_OBT_MARK = 270;
 
 
     public LeafManager() {
@@ -10106,15 +10110,124 @@ public class LeafManager {
             }
         }, ErrorResponse.class);
 
-    } public void deleteOfflineTestList(final OnCommunicationListener listListener, String groupId, String teamId,String examID) {
+    }
+
+    public void deleteOfflineTestList(final OnCommunicationListener listListener, String groupId, String teamId, String examID) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BaseResponse> model = service.deleteOfflineTestList(groupId, teamId,examID);
+        final Call<BaseResponse> model = service.deleteOfflineTestList(groupId, teamId, examID);
 
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_REMOVE_OFFLINE_TEST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                AppLog.e("LeafManager", "payFeesByStudent : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void getMarkCard2List(final OnCommunicationListener listListener, String groupId, String teamId, String offlineTestExamId) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<MarkCardResponse2> model = service.getMarkCard2List(groupId, teamId, offlineTestExamId);
+
+        ResponseWrapper<MarkCardResponse2> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_MARK_CARD_LIST_2, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                AppLog.e("LeafManager", "payFeesByStudent : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+    public void getMarkCard2ListForStudent(final OnCommunicationListener listListener, String groupId, String teamId, String offlineTestExamId,String userID) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<MarkCardResponse2> model = service.getMarkCard2ListForStudent(groupId, teamId, offlineTestExamId,userID);
+
+        ResponseWrapper<MarkCardResponse2> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_MARK_CARD_LIST_2, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                AppLog.e("LeafManager", "payFeesByStudent : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void addObtainMark(final OnCommunicationListener listListener, String groupId, String teamId, String offlineTestExamId, String userID, AddMarksReq addMarksReq) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addObtainMark(groupId, teamId, offlineTestExamId, userID, addMarksReq);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ADD_OBT_MARK, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 AppLog.e("LeafManager", "payFeesByStudent : " + response);

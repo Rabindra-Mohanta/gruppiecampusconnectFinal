@@ -34,6 +34,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWClassSubjectActivity;
+import school.campusconnect.activities.MarksCardActivity2;
 import school.campusconnect.activities.RecClassSubjectActivity;
 import school.campusconnect.activities.TimeTabelActivity2;
 import school.campusconnect.database.LeafPreference;
@@ -337,6 +338,13 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         }else if("Time Table".equalsIgnoreCase(type)){
             Intent intent = new Intent(getActivity(), TimeTabelActivity2.class);
             intent.putExtra("team_id",classData.getId());
+            intent.putExtra("team_name",classData.getName());
+            intent.putExtra("role",role);
+            startActivity(intent);
+        }else if("Marks Card".equalsIgnoreCase(type)){
+            Intent intent = new Intent(getActivity(), MarksCardActivity2.class);
+            intent.putExtra("team_id",classData.getId());
+            intent.putExtra("userId",classData.userId);
             intent.putExtra("team_name",classData.getName());
             intent.putExtra("role",role);
             startActivity(intent);

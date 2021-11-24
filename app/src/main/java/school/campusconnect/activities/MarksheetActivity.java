@@ -78,7 +78,7 @@ import static school.campusconnect.R.layout.dialog_add_mark_sheet;
 import static school.campusconnect.activities.AddGalleryPostActivity.REQUEST_LOAD_CAMERA_IMAGE;
 import static school.campusconnect.activities.AddGalleryPostActivity.REQUEST_LOAD_GALLERY_IMAGE;
 import static school.campusconnect.activities.AddGalleryPostActivity.REQUEST_LOAD_PDF;
-
+// TODO : REMOVE THIS NOT USED
 public class MarksheetActivity extends BaseActivity {
 
     private static final String TAG = "AttendanceActivity";

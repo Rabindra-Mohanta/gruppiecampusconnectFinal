@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_button_height"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tvSubject"
+        style="@style/LabelNormal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:text="English" />
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/padding_10dp"
+        android:layout_marginEnd="@dimen/padding_10dp"
+        android:background="@color/color_divider" />
+    <TextView
+        android:id="@+id/tvMax"
+        style="@style/LabelNormal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:text="100" />
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/padding_10dp"
+        android:layout_marginEnd="@dimen/padding_10dp"
+        android:background="@color/color_divider" />
+    <TextView
+        android:id="@+id/tvMin"
+        style="@style/LabelNormal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:text="35" />
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/padding_10dp"
+        android:layout_marginEnd="@dimen/padding_10dp"
+        android:background="@color/color_divider" />
+    <EditText
+        android:id="@+id/etObtain"
+        style="@style/LabelNormal"
+        android:layout_width="0dp"
+        android:inputType="numberDecimal"
+        android:digits="1234567890"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="89" />
+
+</LinearLayout>
