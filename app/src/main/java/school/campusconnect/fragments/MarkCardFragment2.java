@@ -257,13 +257,22 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
             holder.txt_name.setText(item.studentName);
             holder.txt_count.setText("Total : " + item.totalObtainedMarks + "/" + item.totalMaxMarks);
 
+            if(item.isExpand){
+                holder.llMarkCard.setVisibility(View.VISIBLE);
+                holder.img_tree.setImageResource(R.drawable.arrow_up);
+            }else {
+                holder.llMarkCard.setVisibility(View.GONE);
+                holder.img_tree.setImageResource(R.drawable.arrow_down);
+            }
             holder.img_tree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (holder.llMarkCard.getVisibility() == View.VISIBLE) {
+                    if (item.isExpand) {
+                        item.isExpand = false;
                         holder.llMarkCard.setVisibility(View.GONE);
                         holder.img_tree.setImageResource(R.drawable.arrow_down);
                     } else {
+                        item.isExpand = true;
                         holder.llMarkCard.setVisibility(View.VISIBLE);
                         holder.img_tree.setImageResource(R.drawable.arrow_up);
                     }

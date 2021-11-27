@@ -79,9 +79,6 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
-    @Bind(R.id.btnCreateClass)
-    public Button btnCreateClass;
-
 
     @Bind(R.id.iconBack)
     public ImageView iconBack;
@@ -106,7 +103,7 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
         showData();
 
         LeafManager leafManager = new LeafManager();
-        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
+        leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "more");
     }
 
     private void showData() {
@@ -114,14 +111,6 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
             etTitle.setText(data.title);
             adapter.addAll(data.subjectMarksDetails);
             etResultDate.setText(data.resultDate);
-
-            if("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)){
-                btnCreateClass.setVisibility(View.VISIBLE);
-            }else {
-                btnCreateClass.setVisibility(View.GONE);
-                etTitle.setEnabled(false);
-                etResultDate.setEnabled(false);
-            }
         }
     }
 
@@ -147,6 +136,17 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
                 }
             });
 
+            return true;
+        }
+        if(item.getItemId() == R.id.menu_schedule_exam_edit){
+            Intent intent = new Intent(this, AddOfflineTestActivity.class);
+            intent.putExtra("groupId", GroupDashboardActivityNew.groupId);
+            intent.putExtra("teamId", teamId);
+            intent.putExtra("isEdit", true);
+            intent.putExtra("data", new Gson().toJson(data));
+            intent.putExtra("subjectList", new Gson().toJson(subjectList));
+            intent.putExtra("title", tvTitle.getText().toString());
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -189,10 +189,10 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
     }
 
 
-    @OnClick({R.id.btnCreateClass, R.id.etResultDate})
+    @OnClick({ R.id.etResultDate})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnCreateClass:
+          /*  case R.id.btnCreateClass:
                 if (isValid()) {
 
                     if (!isConnectionAvailable()) {
@@ -216,7 +216,7 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
                     });
                 }
                 break;
-            case R.id.etResultDate: {
+          */  case R.id.etResultDate: {
                 final Calendar calendar = Calendar.getInstance();
                 DatePickerDialog fragment = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -343,79 +343,8 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
                 }
             });
 
-            if("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)){
-                holder.etStartTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Calendar calendar = Calendar.getInstance();
-                        TimePickerDialog fragment1 = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                calendar.set(Calendar.MINUTE, minute);
-                                SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                                holder.etStartTime.setText(format.format(calendar.getTime()));
-                                list.get(i).startTime = format.format(calendar.getTime());
-                            }
-                        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                        fragment1.show();
-                    }
-                });
-                holder.etEndTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Calendar calendar = Calendar.getInstance();
-                        TimePickerDialog fragment1 = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                calendar.set(Calendar.MINUTE, minute);
-                                SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                                holder.etEndTime.setText(format.format(calendar.getTime()));
-                                list.get(i).endTime = format.format(calendar.getTime());
-                            }
-                        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                        fragment1.show();
-                    }
-                });
-
-                holder.etMaxMarks.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        list.get(i).maxMarks = s.toString();
-                    }
-                });
-
-                holder.etMinMarks.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        list.get(i).minMarks = s.toString();
-                    }
-                });
-            }else {
-                holder.etMinMarks.setEnabled(false);
-                holder.etMaxMarks.setEnabled(false);
-            }
+            holder.etMinMarks.setEnabled(false);
+            holder.etMaxMarks.setEnabled(false);
         }
 
         @Override

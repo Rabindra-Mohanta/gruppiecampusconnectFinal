@@ -50,7 +50,7 @@ public class MarkCardResponse2 extends BaseResponse {
         @Expose
         public String admissionNumber;
 
-
+        public boolean isExpand = false;
     }
 
     public static class SubjectMarkData {

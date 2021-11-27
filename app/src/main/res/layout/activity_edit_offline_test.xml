@@ -119,17 +119,6 @@
                 </androidx.cardview.widget.CardView>
             </FrameLayout>
 
-            <Button
-                android:id="@+id/btnCreateClass"
-                style="@style/AddPostButton"
-                android:layout_width="@dimen/login_button_width"
-                android:layout_height="@dimen/login_button_height"
-                android:visibility="visible"
-                android:layout_below="@+id/frameMain"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="-40dp"
-                android:layout_marginBottom="@dimen/padding_20dp"
-                android:text="@string/lbl_update" />
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 

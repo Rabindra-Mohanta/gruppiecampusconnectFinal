@@ -53,7 +53,7 @@
             android:layout_marginEnd="@dimen/padding_20dp">
 
             <TextView
-                style="@style/LabelHeader2"
+                style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name : "
@@ -61,7 +61,7 @@
 
             <TextView
                 android:id="@+id/tvName"
-                style="@style/LabelHeader2"
+                style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
@@ -75,7 +75,7 @@
             android:layout_marginEnd="@dimen/padding_20dp">
 
             <TextView
-                style="@style/LabelHeader2"
+                style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Roll Number : "
@@ -83,7 +83,7 @@
 
             <TextView
                 android:id="@+id/tvRollNo"
-                style="@style/LabelHeader2"
+                style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
@@ -97,7 +97,7 @@
             android:layout_marginEnd="@dimen/padding_20dp">
 
             <TextView
-                style="@style/LabelHeader2"
+                style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Exam Duration : "
@@ -105,7 +105,7 @@
 
             <TextView
                 android:id="@+id/tvDuration"
-                style="@style/LabelHeader2"
+                style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
