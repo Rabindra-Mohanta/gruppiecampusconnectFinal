@@ -177,6 +177,14 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
             }
         });
 
+        if("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)){
+            etTitle.setEnabled(true);
+        }
+        else
+        {
+            etTitle.setEnabled(false);
+        }
+
         leafManager = new LeafManager();
     }
 
@@ -217,6 +225,16 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
                 }
                 break;
           */  case R.id.etResultDate: {
+
+
+                if("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role))
+                {
+                }
+                else
+                {
+                    return;
+                }
+
                 final Calendar calendar = Calendar.getInstance();
                 DatePickerDialog fragment = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                     @Override
