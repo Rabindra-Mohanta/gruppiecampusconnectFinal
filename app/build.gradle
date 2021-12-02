@@ -25,7 +25,7 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-            /*    applicationId "school.campusconnect"
+                /*applicationId "school.campusconnect"
                 versionCode 11
                 versionName "1.2"
                 resValue "string", "app_name", '"Gruppie Campus"'
@@ -33,6 +33,17 @@ android {
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')*/
+
+                // [1. Gruppie Campus constituency]
+                applicationId "school.campusconnect"
+                versionCode 11
+                versionName "1.2"
+                resValue "string", "app_name", '"Namma Gundlupet"'
+                buildConfigField("String", "AppName", '"Namma Gundlupet"')
+                buildConfigField("String", "AppCategory", '"constituency"')
+                buildConfigField("String", "AppType",  '""')
+                buildConfigField("String", "APP_ID",  '"constituency"')
+
                 // [ 2. RPES :  Campus Copy]
         /*        applicationId "rpes.campusconnect"
                 versionCode 9
@@ -161,14 +172,14 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
 
-                applicationId "doddagoudar.gruppie"
+               /* applicationId "doddagoudar.gruppie"
                 versionCode 3
                 versionName "3.0"
                 resValue "string", "app_name", '"DODDAGOUDAR"'
                 buildConfigField("String", "AppName", '"DODDAGOUDAR"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
                 /*   ndk {
                        // Specifies the ABI configurations of your native
@@ -192,7 +203,8 @@ android {
         }
         debug
          {
-           buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'
+           buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
+//           buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'
 //           buildConfigField "String", "BASE_URL", '"https://lite.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prod.gruppie.in"'
    //         buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
@@ -343,7 +355,7 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 

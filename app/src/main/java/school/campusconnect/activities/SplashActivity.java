@@ -53,7 +53,7 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class SplashActivity extends AppCompatActivity{
+public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = "SplashActivity";
     private Handler mHandler;
@@ -288,31 +288,38 @@ public class SplashActivity extends AppCompatActivity{
 
 
     private void gotoHomeScreen() {
-        if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
-            if ("taluk".equalsIgnoreCase(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.ROLE))) {
-                Intent login = new Intent(this, TalukListActivity.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(login);
-                finish();
-            } else {
-                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
-                    Intent intent = new Intent(SplashActivity.this, Home.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Intent login = new Intent(this, GroupDashboardActivityNew.class);
+        if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            Intent login = new Intent(this, ConstituencyListActivity.class);
+            login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(login);
+            finish();
+        } else {
+            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                if ("taluk".equalsIgnoreCase(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.ROLE))) {
+                    Intent login = new Intent(this, TalukListActivity.class);
                     login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(login);
                     finish();
+                } else {
+                    if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+                        Intent intent = new Intent(SplashActivity.this, Home.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent login = new Intent(this, GroupDashboardActivityNew.class);
+                        login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(login);
+                        finish();
+                    }
                 }
-            }
 
-        } else {
-            Intent intent = new Intent(SplashActivity.this, GroupDashboardActivityNew.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            } else {
+                Intent intent = new Intent(SplashActivity.this, GroupDashboardActivityNew.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 }

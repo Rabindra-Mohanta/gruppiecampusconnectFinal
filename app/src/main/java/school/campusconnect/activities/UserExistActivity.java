@@ -431,31 +431,40 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
             hide_keyboard();
 
-            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
-                AppLog.e("UserExist->", "join group api called");
-                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
-                if ("taluk".equalsIgnoreCase(response1.role)) {
-                    Intent login = new Intent(this, TalukListActivity.class);
-                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(login);
-                    finish();
-                } else {
-                    if (response1.groupCount > 1) {
-                        Intent login = new Intent(this, Home.class);
+
+            if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                Intent login = new Intent(this, ConstituencyListActivity.class);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(login);
+                finish();
+            } else {
+                if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                    AppLog.e("UserExist->", "join group api called");
+                    LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
+                    if ("taluk".equalsIgnoreCase(response1.role)) {
+                        Intent login = new Intent(this, TalukListActivity.class);
                         login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(login);
                         finish();
                     } else {
-                        manager = new LeafManager();
-                        manager.getGroupDetail(this, response1.groupId);
+                        if (response1.groupCount > 1) {
+                            Intent login = new Intent(this, Home.class);
+                            login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(login);
+                            finish();
+                        } else {
+                            manager = new LeafManager();
+                            manager.getGroupDetail(this, response1.groupId);
+                        }
                     }
-                }
-            } else {
-                AppLog.e("UserExist->", "join Direct group api called");
-                manager = new LeafManager();
+                } else {
+                    AppLog.e("UserExist->", "join Direct group api called");
+                    manager = new LeafManager();
 
-                manager.joinGroupDirect(this, BuildConfig.APP_ID);
+                    manager.joinGroupDirect(this, BuildConfig.APP_ID);
+                }
             }
+
 
         }
         if (apiId == LeafManager.API_JOIN_GROUP) {

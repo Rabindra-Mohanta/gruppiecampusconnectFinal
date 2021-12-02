@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.http.Url;
+import school.campusconnect.datamodel.ConstituencyRes;
 import school.campusconnect.datamodel.LeaveReq;
 import school.campusconnect.datamodel.MarkSheetListResponse;
 import school.campusconnect.datamodel.NewPassReq;
@@ -155,6 +156,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json"})
     Call<NumberExistResponse> next(@Body NumberExistRequest request, @Query("category") String category);
 
+    @POST("/api/v1/user/exist/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<NumberExistResponse> nextConstituency(@Body NumberExistRequest request, @Query("constituencyName") String categoryName);
+
     @POST("/api/v1/user/exist/individual?")
     @Headers({"Content-Type: application/json"})
     Call<NumberExistResponse> nextIndividual(@Body NumberExistRequest request, @Query("appId") String group_id);
@@ -162,6 +167,10 @@ public interface LeafService {
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> login(@Body LoginRequest request, @Query("category") String category, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+
+    @POST("/api/v1/login/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> loginConstituency(@Body LoginRequest request, @Query("constituencyName") String categoryName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
@@ -175,6 +184,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json"})
     Call<OtpVerifyRes> otpVerify(@Body OtpVerifyReq request, @Query("category") String category);
 
+    @POST("/api/v1/verify/otp/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<OtpVerifyRes> otpVerifyConstituency(@Body OtpVerifyReq request, @Query("constituencyName") String categoryName);
+
     @POST("/api/v1/verify/otp/individual?")
     @Headers({"Content-Type: application/json"})
     Call<OtpVerifyRes> otpVerifyIndividual(@Body OtpVerifyReq request, @Query("appId") String group_id);
@@ -182,6 +195,10 @@ public interface LeafService {
     @PUT("/api/v1/create/password/category/app")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> newPass(@Body NewPassReq request, @Query("category") String category);
+
+    @PUT("/api/v1/create/password/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> newPassConstituency(@Body NewPassReq request, @Query("constituencyName") String categoryName);
 
     @PUT("/api/v1/create/password/individual?")
     @Headers({"Content-Type: application/json"})
@@ -191,6 +208,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> forgotPassword(@Body ForgotPasswordRequest request, @Query("category") String category, @Query("sms") int count);
 
+    @PUT("/api/v1/forgot/password/category/app")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> forgotPasswordConstituency(@Body ForgotPasswordRequest request, @Query("constituencyName") String categoryName, @Query("sms") int count);
+
     @PUT("/api/v1/forgot/password/individual?")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> forgotPasswordIndividual(@Body ForgotPasswordRequest request, @Query("appId") String groupId, @Query("sms") int count);
@@ -199,6 +220,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request, @Query("category") String category);
 
+    @PUT("/api/v1/password/change/category/app")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ChangePasswordResponse> changePasswordConstituency(@Body ChangePasswordRequest request, @Query("constituencyName") String categoryName);
+
     @PUT("/api/v1/password/change/individual")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ChangePasswordResponse> changePasswordIndividual(@Body ChangePasswordRequest request, @Query("appId") String groupId);
@@ -206,6 +231,10 @@ public interface LeafService {
     @POST("/api/v1/register/category/app")
     @Headers({"Content-Type: application/json"})
     Call<SignUpResponse> signup(@Body SignUpRequest request, @Query("category") String category);
+
+    @POST("/api/v1/register/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<SignUpResponse> signupConstituency(@Body SignUpRequest request, @Query("constituencyName") String categoryName);
 
     @POST("/api/v1/register/individual?")
     @Headers({"Content-Type: application/json"})
@@ -1331,9 +1360,17 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<GroupResponse> getGroupsTaluks(@Query("category") String category, @Query("talukName") String talukName);
 
+    @GET("/api/v1/groups")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<GroupResponse> getGroupsConstituency(@Query("category") String category, @Query("categoryName") String categoryName);
+
     @GET("/api/v1/taluks")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TaluksRes> getTaluks();
+
+    @GET("/api/v1/constituency/groups/category")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ConstituencyRes> getConstituencyList(@Query("constituencyName") String constituencyName);
 
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

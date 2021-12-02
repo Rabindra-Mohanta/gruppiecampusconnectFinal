@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import school.campusconnect.BuildConfig;
+import school.campusconnect.datamodel.ConstituencyRes;
 import school.campusconnect.datamodel.LeaveErrorResponse;
 import school.campusconnect.datamodel.LeaveReq;
 import school.campusconnect.datamodel.MarkSheetListResponse;
@@ -414,6 +415,7 @@ public class LeafManager {
     public static final int API_REMOVE_OFFLINE_TEST = 268;
     public static final int API_MARK_CARD_LIST_2 = 269;
     public static final int API_ADD_OBT_MARK = 270;
+    public static final int API_CONSTITUENCY = 271;
 
 
     public LeafManager() {
@@ -435,6 +437,8 @@ public class LeafManager {
                 model = service.loginCampusCopy(request, BuildConfig.APP_ID, BuildConfig.AppName, request.deviceToken, request.deviceType);
             }
 
+        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            model = service.loginConstituency(request, BuildConfig.AppName, request.deviceToken, request.deviceType);
         } else {
             model = service.loginIndividual(request, BuildConfig.APP_ID, request.deviceToken, request.deviceType);
         }
@@ -477,6 +481,8 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.otpVerify(request, BuildConfig.APP_ID);
+        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            model = service.otpVerifyConstituency(request, BuildConfig.AppName);
         } else {
             model = service.otpVerifyIndividual(request, BuildConfig.APP_ID);
         }
@@ -518,7 +524,10 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.newPass(request, BuildConfig.APP_ID);
-        } else {
+        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            model = service.newPassConstituency(request, BuildConfig.AppName);
+        }
+        else {
             model = service.newPassIndividual(request, BuildConfig.APP_ID);
         }
 
@@ -559,6 +568,8 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.signup(request, BuildConfig.APP_ID);
+        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            model = service.signupConstituency(request, BuildConfig.AppName);
         } else {
             model = service.signupIndividual(request, BuildConfig.APP_ID);
         }
@@ -603,6 +614,8 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.forgotPassword(request, BuildConfig.APP_ID, count);
+        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            model = service.forgotPasswordConstituency(request, BuildConfig.AppName, count);
         } else {
             model = service.forgotPasswordIndividual(request, BuildConfig.APP_ID, count);
         }
@@ -1055,7 +1068,9 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.changePassword(request, BuildConfig.APP_ID);
-        } else {
+        } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            model = service.changePasswordConstituency(request, BuildConfig.AppName);
+        }else {
             model = service.changePasswordIndividual(request, BuildConfig.APP_ID);
         }
 
@@ -6226,6 +6241,8 @@ public class LeafManager {
         final Call<NumberExistResponse> model;
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.next(request, BuildConfig.APP_ID);
+        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            model = service.nextConstituency(request, BuildConfig.AppName);
         } else {
             model = service.nextIndividual(request, BuildConfig.APP_ID);
         }
@@ -8456,20 +8473,25 @@ public class LeafManager {
 
     }
 
-    public void getGroups(final OnCommunicationListener listListener, String talukName) {
+    public void getGroups(final OnCommunicationListener listListener, String from,String talukName,String category,String categoryName) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
         final Call<GroupResponse> model;
-        if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && "CAMPUS".equalsIgnoreCase(BuildConfig.AppType)) {
-            if (!TextUtils.isEmpty(talukName)) {
-                model = service.getGroupsTaluks(BuildConfig.APP_ID, talukName);
+        if("CONSTITUENCY".equalsIgnoreCase(from)){
+            model = service.getGroupsConstituency(category, categoryName);
+        }else {
+            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && "CAMPUS".equalsIgnoreCase(BuildConfig.AppType)) {
+                if (!TextUtils.isEmpty(talukName)) {
+                    model = service.getGroupsTaluks(BuildConfig.APP_ID, talukName);
+                } else {
+                    model = service.getGroups(BuildConfig.APP_ID);
+                }
             } else {
-                model = service.getGroups(BuildConfig.APP_ID);
+                model = service.getGroups(BuildConfig.APP_ID, BuildConfig.AppName);
             }
-        } else {
-            model = service.getGroups(BuildConfig.APP_ID, BuildConfig.AppName);
         }
+
         ResponseWrapper<GroupResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_ID_GROUP_LIST, new ResponseWrapper.ResponseHandler<GroupResponse, ErrorResponse>() {
@@ -8510,6 +8532,40 @@ public class LeafManager {
         wrapper.execute(API_TALUKS, new ResponseWrapper.ResponseHandler<TaluksRes, ErrorResponse>() {
             @Override
             public void handle200(int apiId, TaluksRes response) {
+                AppLog.e("LeafManager", "GetGroupList : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+    public void getConstituencyList(final OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<ConstituencyRes> model = service.getConstituencyList(BuildConfig.AppName);
+        ResponseWrapper<ConstituencyRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_CONSTITUENCY, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
                 AppLog.e("LeafManager", "GetGroupList : " + response);
                 if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onSuccess(apiId, response);

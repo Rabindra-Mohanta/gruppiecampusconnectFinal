@@ -1,13 +1,5 @@
 package school.campusconnect.activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,8 +18,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -39,17 +39,18 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.ConstituencyRes;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TaluksRes;
-import school.campusconnect.fragments.HomeFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class TalukListActivity extends BaseActivity implements LeafManager.OnCommunicationListener {
+public class ConstituencyListActivity extends BaseActivity implements LeafManager.OnCommunicationListener {
 
     private static final String TAG = "TalukListActivity";
     @Bind(R.id.toolbar)
@@ -76,7 +77,7 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
 
         _init();
 
-        getTaluksList();
+        getConstituencyList();
     }
 
     private void _init() {
@@ -91,7 +92,7 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
         editDialog = SMBDialogUtils.showSMBDialogOKCancel_(this, getResources().getString(R.string.msg_app_exit), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                TalukListActivity.super.onBackPressed();
+                ConstituencyListActivity.super.onBackPressed();
             }
         });
 
@@ -117,11 +118,11 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
 
     }
 
-    private void getTaluksList() {
+    private void getConstituencyList() {
         if (isConnectionAvailable()) {
             progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
-            leafManager.getTaluks(this);
+            leafManager.getConstituencyList(this);
         } else {
             showNoNetworkMsg();
         }
@@ -166,8 +167,8 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
-        TaluksRes taluksRes = (TaluksRes) response;
-        AppLog.e(TAG, "taluksRes " + taluksRes);
+        ConstituencyRes taluksRes = (ConstituencyRes) response;
+        AppLog.e(TAG, "ConstituencyRes " + taluksRes);
         rvClass.setAdapter(new GroupAdapterNew(taluksRes.data));
     }
 
@@ -182,23 +183,23 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
     }
 
     public class GroupAdapterNew extends RecyclerView.Adapter<GroupAdapterNew.ViewHolder> {
-        List<TaluksRes.TalusData> list;
+        List<GroupItem> list;
         private Context mContext;
 
-        public GroupAdapterNew(List<TaluksRes.TalusData> list) {
+        public GroupAdapterNew(List<GroupItem> list) {
             this.list = list;
         }
 
         @Override
-        public GroupAdapterNew.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_taluks, parent, false);
-            return new GroupAdapterNew.ViewHolder(view);
+            return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final GroupAdapterNew.ViewHolder holder, final int position) {
-            final TaluksRes.TalusData item = list.get(position);
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+            final GroupItem item = list.get(position);
 
             if (!TextUtils.isEmpty(item.image)) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(200, 200).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgGroupNew,
@@ -220,7 +221,7 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
                                     public void onError() {
                                         holder.imgGroupNewDefault.setVisibility(View.VISIBLE);
                                         TextDrawable drawable = TextDrawable.builder()
-                                                .buildRound(ImageUtil.getTextLetter(item.talukName), ImageUtil.getRandomColor(position));
+                                                .buildRound(ImageUtil.getTextLetter(item.categoryName), ImageUtil.getRandomColor(position));
                                         holder.imgGroupNewDefault.setImageDrawable(drawable);
                                         AppLog.e("Picasso", "Error : ");
                                     }
@@ -230,25 +231,25 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
             } else {
                 holder.imgGroupNewDefault.setVisibility(View.VISIBLE);
                 TextDrawable drawable = TextDrawable.builder()
-                        .buildRound(ImageUtil.getTextLetter(item.talukName), ImageUtil.getRandomColor(position));
+                        .buildRound(ImageUtil.getTextLetter(item.categoryName), ImageUtil.getRandomColor(position));
                 holder.imgGroupNewDefault.setImageDrawable(drawable);
             }
 
-            holder.txtName.setText(item.talukName);
+            holder.txtName.setText(item.categoryName);
         }
 
         @Override
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Taluks found.");
+                    txtEmpty.setText("No Constituency found.");
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Taluks found.");
+                txtEmpty.setText("No Constituency found.");
                 return 0;
             }
 
@@ -282,16 +283,26 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
         }
     }
 
-    private void onTaluksSelect(TaluksRes.TalusData talusData) {
-        Intent intent = new Intent(TalukListActivity.this, Home.class);
-        intent.putExtra("from","TALUK");
-        intent.putExtra("talukName", talusData.talukName);
-        startActivity(intent);
+    private void onTaluksSelect(GroupItem item) {
+        if (item.groupCount == 1) {
+            LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, item.totalUsers);
+            LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(item));
+
+            Intent login = new Intent(this, GroupDashboardActivityNew.class);
+            startActivity(login);
+        } else {
+            Intent intent = new Intent(ConstituencyListActivity.this, Home.class);
+            intent.putExtra("from", "CONSTITUENCY");
+            intent.putExtra("category", item.category);
+            intent.putExtra("categoryName", item.categoryName);
+            startActivity(intent);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
+        menu.findItem(R.id.menu_search).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 

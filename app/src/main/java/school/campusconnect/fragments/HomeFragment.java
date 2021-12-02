@@ -74,7 +74,9 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;
 */
-
+    private String from="";
+    private String category="";
+    private String categoryName="";
     private String talukName;
     private List<GroupItem> result;
 
@@ -99,19 +101,15 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
     private void _init() {
         if (getArguments() != null) {
-            talukName = getArguments().getString("talukName");
-        }
-    /*    swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (isConnectionAvailable()) {
-                    getGroupList();
-                    swipeRefreshLayout.setRefreshing(false);
-                } else {
-                    showNoNetworkMsg();
-                }
+            from = getArguments().getString("from");
+            if("TALUK".equalsIgnoreCase(from)){
+                talukName = getArguments().getString("talukName");
             }
-        });*/
+            else if("CONSTITUENCY".equalsIgnoreCase(from)){
+                category = getArguments().getString("category");
+                categoryName = getArguments().getString("categoryName");
+            }
+        }
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -146,7 +144,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     private void getGroupList() {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getGroups(this, talukName);
+        leafManager.getGroups(this, from,talukName,category,categoryName);
     }
 
     @Override
@@ -157,17 +155,16 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             if (LeafPreference.getInstance(getActivity()).getBoolean("group_list_refresh")) {
                 LeafPreference.getInstance(getActivity()).setBoolean("group_list_refresh", false);
                 getGroupList();
-            } else if (!TextUtils.isEmpty(talukName)) {
-                String groupList = LeafPreference.getInstance(getActivity()).getString(talukName);
-                if (groupList != null && !TextUtils.isEmpty(groupList)) {
-                    result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
-                    }.getType());
-                    rvClass.setAdapter(new GroupAdapterNew(result));
-                } else {
-                    getGroupList();
-                }
             } else {
-                String groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
+                String groupList;
+                if (!TextUtils.isEmpty(talukName)){
+                    groupList = LeafPreference.getInstance(getActivity()).getString(talukName);
+                }else if (!TextUtils.isEmpty(categoryName)){
+                    groupList = LeafPreference.getInstance(getActivity()).getString(categoryName);
+                }else {
+                    groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
+                }
+
                 if (groupList != null && !TextUtils.isEmpty(groupList)) {
                     result = new Gson().fromJson(groupList, new TypeToken<List<GroupItem>>() {
                     }.getType());
@@ -189,6 +186,8 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         result = res.data;
         if (!TextUtils.isEmpty(talukName)) {
             LeafPreference.getInstance(getActivity()).setString(talukName, new Gson().toJson(res.data));
+        }else if (!TextUtils.isEmpty(categoryName)) {
+            LeafPreference.getInstance(getActivity()).setString(categoryName, new Gson().toJson(res.data));
         } else {
             LeafPreference.getInstance(getActivity()).setString(LeafPreference.SCHOOL_LIST, new Gson().toJson(res.data));
         }

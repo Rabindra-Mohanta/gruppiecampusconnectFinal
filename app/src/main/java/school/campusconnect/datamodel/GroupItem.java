@@ -4,15 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 public class GroupItem implements Parcelable {
 
+    @SerializedName(value = "id",alternate = "groupId")
     public String id;
     public String type;
     public int totalUsers;
     public int totalPostsCount;
     public int totalCommentsCount;
     public String subCategory;
+    @SerializedName(value = "name",alternate = "groupName")
     public String name;
     public boolean isPostShareAllowed;
     public boolean isAdminChangeAllowed;
@@ -32,6 +35,10 @@ public class GroupItem implements Parcelable {
     public String aboutGroup;
     public int notificationUnseenCount;
     public int appVersion;
+
+    public String constituencyName;
+    public String categoryName;
+    public int groupCount;
 
 
     protected GroupItem(Parcel in) {
@@ -58,6 +65,11 @@ public class GroupItem implements Parcelable {
         createdBy = in.readString();
         shortDescription = in.readString();
         aboutGroup = in.readString();
+        notificationUnseenCount = in.readInt();
+        appVersion = in.readInt();
+        constituencyName = in.readString();
+        categoryName = in.readString();
+        groupCount = in.readInt();
     }
 
     public static final Creator<GroupItem> CREATOR = new Creator<GroupItem>() {
@@ -116,6 +128,15 @@ public class GroupItem implements Parcelable {
         this.name = name;
     }
 
+    public GroupItem() {
+
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -123,7 +144,6 @@ public class GroupItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeString(id);
         dest.writeString(type);
         dest.writeInt(totalUsers);
@@ -147,14 +167,10 @@ public class GroupItem implements Parcelable {
         dest.writeString(createdBy);
         dest.writeString(shortDescription);
         dest.writeString(aboutGroup);
-    }
-
-    public GroupItem() {
-
-    }
-
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
+        dest.writeInt(notificationUnseenCount);
+        dest.writeInt(appVersion);
+        dest.writeString(constituencyName);
+        dest.writeString(categoryName);
+        dest.writeInt(groupCount);
     }
 }

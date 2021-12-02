@@ -176,7 +176,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         } else {
             removeWallMenu.setVisible(false);
         }
-        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1 || "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
         } else {
             menu.findItem(R.id.menu_logout).setVisible(true);

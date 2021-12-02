@@ -36,9 +36,8 @@ public class Home extends BaseActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_CALENDAR
     };
-    private String talukName;
     private HomeFragment homeFragment;
-
+    private String from="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +46,19 @@ public class Home extends BaseActivity {
         setSupportActionBar(mToolBar);
         setTitle("Groups");
 
-        if (getIntent().hasExtra("talukName")) {
-            talukName = getIntent().getStringExtra("talukName");
-            setTitle(talukName);
-            setBackEnabled(true);
+        if(getIntent().hasExtra("from")){
+            from = getIntent().getStringExtra("from");
+
+            if("TALUK".equalsIgnoreCase(from)){
+                setTitle(getIntent().getStringExtra("talukName"));
+                setBackEnabled(true);
+            }
+            else if("CONSTITUENCY".equalsIgnoreCase(from)){
+                setTitle(getIntent().getStringExtra("categoryName"));
+                setBackEnabled(true);
+            }
         }
+
         homeFragment = new HomeFragment();
         homeFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
@@ -75,7 +82,7 @@ public class Home extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!TextUtils.isEmpty(talukName)) {
+        if (!TextUtils.isEmpty(from)) {
             Home.super.onBackPressed();
         } else {
             FragmentManager fm = getSupportFragmentManager();
@@ -101,7 +108,7 @@ public class Home extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
-        if (!TextUtils.isEmpty(talukName)) {
+        if (!TextUtils.isEmpty(from)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);

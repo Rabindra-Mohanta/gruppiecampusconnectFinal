@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
+import com.activeandroid.ActiveAndroid;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
@@ -33,6 +34,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.LiveClassListTBL;
 import school.campusconnect.datamodel.SubjectCountTBL;
@@ -230,6 +232,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         ButterKnife.bind(this);
 
         init();
+
+        ActiveAndroid.initialize(this);
 
         calculateDisplayMatrix();
 
@@ -984,7 +988,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             super.onBackPressed();
         } else {
             if (tabLayout.getSelectedTabPosition() == 0) {
-                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1 || "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
                     GroupDashboardActivityNew.super.onBackPressed();
                 } else {
                     editDialog = SMBDialogUtils.showSMBDialogOKCancel_(this, getResources().getString(R.string.msg_app_exit), new DialogInterface.OnClickListener() {

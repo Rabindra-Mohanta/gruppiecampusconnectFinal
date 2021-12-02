@@ -722,6 +722,10 @@
             android:name=".activities.MarksCardActivity2"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ConstituencyListActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".service.FloatingWidgetService"
