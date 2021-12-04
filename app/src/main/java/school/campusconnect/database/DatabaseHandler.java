@@ -210,7 +210,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public String getNameFromNum(String num) {
         AppLog.e(TAG,"getNameFromNum :"+num);
-        if (num.equals("") || GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_SCHOOL))
+        if (num.equals("") || GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_SCHOOL) || GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_CONSTITUENCY))
             return "";
 
         if (num.length() > 3) {

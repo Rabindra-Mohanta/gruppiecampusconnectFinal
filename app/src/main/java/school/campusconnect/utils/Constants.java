@@ -30,6 +30,7 @@ public class Constants {
     public static final long INTERVAL = 15000;
     public static final long INTERVAL_FAST = 14000;
     public static final String CATEGORY_SCHOOL = "school";
+    public static final String CATEGORY_CONSTITUENCY = "constituency";
     public static final String BACKGROUND_IMAGE = "BACKGROUND_IMAGE";
     public static final String FILE_TYPE_VIDEO = "video";
 

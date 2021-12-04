@@ -156,6 +156,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     public View tapView2;
     @Bind(R.id.tapView3)
     public View tapView3;
+    @Bind(R.id.tvAbout)
+    public TextView tvAbout;
 
     public TextView tvToolbar;
 
@@ -253,7 +255,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         AppLog.e(TAG, "Category :" + mGroupItem.category);
 
         if (mGroupItem != null) {
-            if (!mGroupItem.category.equalsIgnoreCase(Constants.CATEGORY_SCHOOL)) {
+            if (!mGroupItem.category.equalsIgnoreCase(Constants.CATEGORY_SCHOOL) && !mGroupItem.category.equalsIgnoreCase(Constants.CATEGORY_CONSTITUENCY)) {
                 DatabaseHandler databaseHandler = new DatabaseHandler(this);
                 if (databaseHandler.getCount() == 0) {
                     getContactsWithPermission();
@@ -908,6 +910,15 @@ public class GroupDashboardActivityNew extends BaseActivity
             llStaffReg.setVisibility(View.VISIBLE);
             llAttendanceReport.setVisibility(View.VISIBLE);
             llBusRegister.setVisibility(View.VISIBLE);
+        }
+
+        if(LeafPreference.getInstance(this).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)){
+            llClass.setVisibility(View.GONE);
+            llSubject2.setVisibility(View.GONE);
+            llStaffReg.setVisibility(View.GONE);
+            llBusRegister.setVisibility(View.GONE);
+            llAttendanceReport.setVisibility(View.GONE);
+            tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
         }
     }
 

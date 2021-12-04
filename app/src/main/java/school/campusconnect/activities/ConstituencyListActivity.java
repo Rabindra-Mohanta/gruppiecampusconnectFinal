@@ -1,13 +1,19 @@
 package school.campusconnect.activities;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,9 +23,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,12 +42,15 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
@@ -67,6 +80,9 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+
+    SharedPreferences wallPref;
+    private MenuItem removeWallMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +93,47 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
 
         _init();
 
+        setBackgroundImage();
+
         getConstituencyList();
+    }
+    private void setBackgroundImage() {
+        if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
+            String path = wallPref.getString(Constants.BACKGROUND_IMAGE, "");
+            if (TextUtils.isEmpty(path))
+                return;
+
+            File file = new File(path);
+            AppLog.e(TAG, "path background : " + path);
+            Picasso.with(this).load(file).into(imgBackground, new Callback() {
+                @Override
+                public void onSuccess() {
+                    AppLog.e(TAG, "onSuccess background");
+                }
+
+                @Override
+                public void onError() {
+                    AppLog.e(TAG, "onError background");
+                    imgBackground.setImageResource(R.drawable.app_icon);
+                }
+            });
+        } else {
+            imgBackground.setImageResource(R.drawable.app_icon);
+        }
+
+        if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
+            if (removeWallMenu != null)
+                removeWallMenu.setVisible(true);
+        } else {
+            if (removeWallMenu != null)
+                removeWallMenu.setVisible(false);
+        }
     }
 
     private void _init() {
+        imgBackground = findViewById(R.id.imgBackground);
+        wallPref = getSharedPreferences(BuildConfig.APPLICATION_ID + ".wall", Context.MODE_PRIVATE);
+        imgBackground.setVisibility(View.VISIBLE);
         rvClass.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));
     }
 
@@ -284,10 +337,12 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
     }
 
     private void onTaluksSelect(GroupItem item) {
+
+        LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT,item.groupCount);
+
         if (item.groupCount == 1) {
             LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, item.totalUsers);
             LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(item));
-
             Intent login = new Intent(this, GroupDashboardActivityNew.class);
             startActivity(login);
         } else {
@@ -303,7 +358,52 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
         menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.menu_change_pass).setVisible(true);
+        menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
+        removeWallMenu = menu.findItem(R.id.menu_remove_wallpaper);
+        if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
+            removeWallMenu.setVisible(true);
+        } else {
+            removeWallMenu.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 21) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startGallery(REQUEST_LOAD_GALLERY_IMAGE);
+            }
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            final Uri selectedImage = data.getData();
+
+            SMBDialogUtils.showSMBDialogOKCancel(this, "Do you like to set this as a wallpaper?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    selectedImage(selectedImage);
+                }
+            });
+
+
+        }
+    }
+    private void selectedImage(Uri selectedImage) {
+        try {
+            String path = ImageUtil.getPath(this, selectedImage);
+            File newFile = new Compressor(this).setMaxWidth(1000).setQuality(70).compressToFile(new File(path));
+            if (newFile != null)
+                wallPref.edit().putString(Constants.BACKGROUND_IMAGE, newFile.getAbsolutePath()).apply();
+            setBackgroundImage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error in set wallpaper", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -313,9 +413,45 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
                 logout();
                 finish();
                 return true;
+            case R.id.menu_change_pass:
+                Intent intent = new Intent(this, ChangePasswordActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.menu_set_wallpaper:
+                if (checkPermissionForWriteExternal()) {
+                    startGallery(REQUEST_LOAD_GALLERY_IMAGE);
+                } else {
+                    requestPermissionForWriteExternal(21);
+                }
+                return true;
+            case R.id.menu_remove_wallpaper:
+                wallPref.edit().clear().commit();
+                setBackgroundImage();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    public void requestPermissionForWriteExternal(int code) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            AppLog.e(TAG, "requestPermissionForWriteExternal");
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
+        }
+    }
+    private int REQUEST_LOAD_GALLERY_IMAGE = 112;
+    ImageView imgBackground;
+    private boolean checkPermissionForWriteExternal() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            Log.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            Log.e("External" + "permission", "checkpermission , denied");
+            return false;
+        }
     }
 }

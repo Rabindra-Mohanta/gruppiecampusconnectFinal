@@ -161,8 +161,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         else
             menu.findItem(R.id.menu_add_team).setVisible(false);
 
-        menu.findItem(R.id.menu_change_pass).setVisible(true);
-        menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
+
 
         if(mGroupItem.canPost){
             menu.findItem(R.id.menu_profile).setVisible(false);
@@ -171,15 +170,20 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         }
 
         removeWallMenu = menu.findItem(R.id.menu_remove_wallpaper);
-        if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
-            removeWallMenu.setVisible(true);
-        } else {
-            removeWallMenu.setVisible(false);
-        }
+
         if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1 || "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
+            menu.findItem(R.id.menu_change_pass).setVisible(false);
+            menu.findItem(R.id.menu_set_wallpaper).setVisible(false);
         } else {
+            if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
+                removeWallMenu.setVisible(true);
+            } else {
+                removeWallMenu.setVisible(false);
+            }
             menu.findItem(R.id.menu_logout).setVisible(true);
+            menu.findItem(R.id.menu_change_pass).setVisible(true);
+            menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
         }
         menuItem = menu.findItem(R.id.action_notification_list);
         menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
@@ -426,7 +430,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         if (getActivity() == null)
             return;
 
-        if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+        if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.GROUP_COUNT) > 1 || "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
         } else {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(false);

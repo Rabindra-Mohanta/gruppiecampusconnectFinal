@@ -38,8 +38,8 @@ android {
                 applicationId "school.campusconnect"
                 versionCode 11
                 versionName "1.2"
-                resValue "string", "app_name", '"Namma Gundlupet"'
-                buildConfigField("String", "AppName", '"Namma Gundlupet"')
+                resValue "string", "app_name", '"GCM"'
+                buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
                 buildConfigField("String", "AppType",  '""')
                 buildConfigField("String", "APP_ID",  '"constituency"')

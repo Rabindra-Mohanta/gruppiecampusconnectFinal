@@ -444,7 +444,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 //                menu.findItem(R.id.action_add_multi).setVisible(true);
                 menu.findItem(R.id.action_invite).setVisible(true);
 
-                if(!GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL))
+                if(!GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL) && !GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_CONSTITUENCY))
                 menu.findItem(R.id.action_sync).setVisible(true);
 
 //                menu.findItem(R.id.action_add_count).setVisible(true);

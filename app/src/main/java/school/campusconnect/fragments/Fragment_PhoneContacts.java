@@ -203,7 +203,7 @@ public class Fragment_PhoneContacts extends BaseFragment implements MyContactLis
             dialog.setMessage("Syncing your contacts to Gruppie please wait...");
             dialog.setCancelable(false);
 
-            if(!GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_SCHOOL))
+            if(!GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_SCHOOL) && !GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_CONSTITUENCY))
                 dialog.show();
             else
                 showLoadingBar(mBinding.progressBar2);

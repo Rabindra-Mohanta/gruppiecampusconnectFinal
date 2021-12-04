@@ -157,7 +157,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 menu.findItem(R.id.menu_edit_team).setVisible(true);
                 menu.findItem(R.id.menu_change_admin).setVisible(true);
                 menu.findItem(R.id.menu_archive_team).setVisible(true);
-                if (GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL))
+                if (GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL) || GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_CONSTITUENCY))
                     menu.findItem(R.id.menu_add_time_table).setVisible(true);
             } else {
                /* if (teamData.isClass && !teamData.allowTeamPostAll) {

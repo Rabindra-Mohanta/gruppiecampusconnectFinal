@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/menu_change_pass"
+        android:visible="false"
+        android:title="Change Password"/>
+
+
+
+    <item android:id="@+id/menu_set_wallpaper"
+        android:visible="false"
+        android:title="Set Wallpaper"/>
+    <item android:id="@+id/menu_remove_wallpaper"
+        android:visible="false"
+        android:title="Remove Wallpaper"/>
+
     <item android:id="@+id/menu_logout"
         android:title="Logout"/>
     <item android:id="@+id/menu_search"
