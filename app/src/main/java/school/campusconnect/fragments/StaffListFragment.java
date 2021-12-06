@@ -179,7 +179,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
             return;
         }
 
-        File mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }
