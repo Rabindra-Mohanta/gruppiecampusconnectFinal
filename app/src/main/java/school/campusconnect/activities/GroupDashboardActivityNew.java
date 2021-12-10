@@ -146,6 +146,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.llBusRegister)
     LinearLayout llBusRegister;
 
+    @Bind(R.id.llBooth)
+    LinearLayout llBooth;
+
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
 
@@ -643,7 +646,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBooth, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -757,6 +760,13 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.llClass:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, ClassActivity.class));
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+            case R.id.llBooth:
+                if (isConnectionAvailable()) {
+                    startActivity(new Intent(this, BoothActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -919,6 +929,9 @@ public class GroupDashboardActivityNew extends BaseActivity
             llBusRegister.setVisibility(View.GONE);
             llAttendanceReport.setVisibility(View.GONE);
             tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
+            if (mGroupItem.isAdmin || mGroupItem.canPost) {
+                llBooth.setVisibility(View.VISIBLE);
+            }
         }
     }
 

@@ -554,6 +554,10 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_min">Min</string>
     <string name="lbl_obtain">Obtained</string>
     <string name="lbl_about_constituency">About Constituency</string>
+    <string name="lbl_booth_register">Register Booth</string>
+    <string name="lbl_booth_name">Booth Name</string>
+    <string name="lbl_booth_president">Booth President Name</string>
+    <string name="lbl_add_booth">Add Booth</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

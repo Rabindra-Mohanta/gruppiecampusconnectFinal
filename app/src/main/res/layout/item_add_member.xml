@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_5dp"
+    app:cardCornerRadius="@dimen/padding_10dp"
+    android:layout_marginBottom="@dimen/padding_10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_5dp"
+        android:layout_marginRight="@dimen/padding_5dp"
+        android:layout_marginBottom="@dimen/padding_10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/LabelNormal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_20dp"
+            android:paddingLeft="@dimen/padding_10dp"
+            android:text="@string/lbl_name"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/etName"
+            style="@style/RegEditText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="@dimen/padding_5dp"
+            android:inputType="textPersonName|textCapWords" />
+
+
+        <TextView
+            android:id="@+id/labelPhone"
+            style="@style/LabelNormal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_15dp"
+            android:paddingLeft="@dimen/padding_10dp"
+            android:text="@string/lbl_phone"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/etPhone"
+            style="@style/RegEditText"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="@dimen/padding_10dp"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="@dimen/padding_5dp"
+            android:inputType="phone" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imgDelete"
+        android:layout_width="@dimen/padding_30dp"
+        android:layout_height="@dimen/padding_30dp"
+        android:layout_gravity="right|top"
+        android:padding="@dimen/padding_5dp"
+        app:srcCompat="@drawable/ic_close"
+        app:tint="@android:color/holo_red_dark" />
+</androidx.cardview.widget.CardView>

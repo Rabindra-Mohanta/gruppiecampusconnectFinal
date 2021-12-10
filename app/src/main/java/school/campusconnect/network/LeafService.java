@@ -17,6 +17,9 @@ import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
 import school.campusconnect.datamodel.attendance_report.PreSchoolStudentRes;
+import school.campusconnect.datamodel.booths.BoothMemberReq;
+import school.campusconnect.datamodel.booths.BoothMemberResponse;
+import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.bus.BusResponse;
 import school.campusconnect.datamodel.bus.BusStudentRes;
 import school.campusconnect.datamodel.calendar.AddEventReq;
@@ -1659,5 +1662,24 @@ public interface LeafService {
                                      @Path("offlineTestExamId") String offlineTestExamId,
                                      @Path("userId") String userId,
                                      @Body AddMarksReq addMarksReq);
+
+
+
+    @GET("/api/v1/groups/{group_id}/all/booths/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothResponse> getBooths(@Path("group_id") String group_id);
+
+    @POST("/api/v1/groups/{group_id}/constituency/booths/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addBooths(@Path("group_id") String group_id,@Body BoothResponse.BoothData boothData);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/user/add/booth")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addBoothsMember(@Path("group_id") String group_id,@Path("team_id") String team_id,@Body BoothMemberReq req);
+
 
 }

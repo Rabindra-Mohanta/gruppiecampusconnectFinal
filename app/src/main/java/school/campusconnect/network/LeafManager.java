@@ -18,6 +18,9 @@ import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
 import school.campusconnect.datamodel.attendance_report.PreSchoolStudentRes;
+import school.campusconnect.datamodel.booths.BoothMemberReq;
+import school.campusconnect.datamodel.booths.BoothMemberResponse;
+import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.bus.BusResponse;
 import school.campusconnect.datamodel.bus.BusStudentRes;
 import school.campusconnect.datamodel.calendar.AddEventReq;
@@ -416,6 +419,10 @@ public class LeafManager {
     public static final int API_MARK_CARD_LIST_2 = 269;
     public static final int API_ADD_OBT_MARK = 270;
     public static final int API_CONSTITUENCY = 271;
+    public static final int API_GET_BOOTHS = 2711;
+    public static final int API_ADD_BOOTH = 272;
+    public static final int API_ADD_BOOTH_MEMEBER = 273;
+    public static final int API_GET_BOOTH_MEMEBER = 274;
 
 
     public LeafManager() {
@@ -437,7 +444,7 @@ public class LeafManager {
                 model = service.loginCampusCopy(request, BuildConfig.APP_ID, BuildConfig.AppName, request.deviceToken, request.deviceType);
             }
 
-        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.loginConstituency(request, BuildConfig.AppName, request.deviceToken, request.deviceType);
         } else {
             model = service.loginIndividual(request, BuildConfig.APP_ID, request.deviceToken, request.deviceType);
@@ -481,7 +488,7 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.otpVerify(request, BuildConfig.APP_ID);
-        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.otpVerifyConstituency(request, BuildConfig.AppName);
         } else {
             model = service.otpVerifyIndividual(request, BuildConfig.APP_ID);
@@ -524,10 +531,9 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.newPass(request, BuildConfig.APP_ID);
-        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.newPassConstituency(request, BuildConfig.AppName);
-        }
-        else {
+        } else {
             model = service.newPassIndividual(request, BuildConfig.APP_ID);
         }
 
@@ -568,7 +574,7 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.signup(request, BuildConfig.APP_ID);
-        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.signupConstituency(request, BuildConfig.AppName);
         } else {
             model = service.signupIndividual(request, BuildConfig.APP_ID);
@@ -614,7 +620,7 @@ public class LeafManager {
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.forgotPassword(request, BuildConfig.APP_ID, count);
-        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.forgotPasswordConstituency(request, BuildConfig.AppName, count);
         } else {
             model = service.forgotPasswordIndividual(request, BuildConfig.APP_ID, count);
@@ -1070,7 +1076,7 @@ public class LeafManager {
             model = service.changePassword(request, BuildConfig.APP_ID);
         } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.changePasswordConstituency(request, BuildConfig.AppName);
-        }else {
+        } else {
             model = service.changePasswordIndividual(request, BuildConfig.APP_ID);
         }
 
@@ -3261,6 +3267,7 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
+
 
     public void getVideoClasses(OnCommunicationListener listListener, String group_id) {
         mOnCommunicationListener = listListener;
@@ -6241,7 +6248,7 @@ public class LeafManager {
         final Call<NumberExistResponse> model;
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.next(request, BuildConfig.APP_ID);
-        }else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.nextConstituency(request, BuildConfig.AppName);
         } else {
             model = service.nextIndividual(request, BuildConfig.APP_ID);
@@ -8473,14 +8480,14 @@ public class LeafManager {
 
     }
 
-    public void getGroups(final OnCommunicationListener listListener, String from,String talukName,String category,String categoryName) {
+    public void getGroups(final OnCommunicationListener listListener, String from, String talukName, String category, String categoryName) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
         final Call<GroupResponse> model;
-        if("CONSTITUENCY".equalsIgnoreCase(from)){
+        if ("CONSTITUENCY".equalsIgnoreCase(from)) {
             model = service.getGroupsConstituency(category, categoryName);
-        }else {
+        } else {
             if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && "CAMPUS".equalsIgnoreCase(BuildConfig.AppType)) {
                 if (!TextUtils.isEmpty(talukName)) {
                     model = service.getGroupsTaluks(BuildConfig.APP_ID, talukName);
@@ -8556,6 +8563,7 @@ public class LeafManager {
         }, ErrorResponse.class);
 
     }
+
     public void getConstituencyList(final OnCommunicationListener listListener) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
@@ -10239,11 +10247,12 @@ public class LeafManager {
         }, ErrorResponse.class);
 
     }
-    public void getMarkCard2ListForStudent(final OnCommunicationListener listListener, String groupId, String teamId, String offlineTestExamId,String userID) {
+
+    public void getMarkCard2ListForStudent(final OnCommunicationListener listListener, String groupId, String teamId, String offlineTestExamId, String userID) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<MarkCardResponse2> model = service.getMarkCard2ListForStudent(groupId, teamId, offlineTestExamId,userID);
+        final Call<MarkCardResponse2> model = service.getMarkCard2ListForStudent(groupId, teamId, offlineTestExamId, userID);
 
         ResponseWrapper<MarkCardResponse2> wrapper = new ResponseWrapper<>(model);
 
@@ -10308,6 +10317,150 @@ public class LeafManager {
                 }
             }
         }, ErrorResponse.class);
+
+    }
+
+    public void getBooths(OnCommunicationListener listListener, String group_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BoothResponse> model = service.getBooths(group_id);
+        ResponseWrapper<BoothResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_GET_BOOTHS, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void addBooths(OnCommunicationListener listListener, String group_id, BoothResponse.BoothData boothData) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addBooths(group_id, boothData);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_ADD_BOOTH, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void getBoothMember(OnCommunicationListener listListener, String group_id, String teamId) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BoothMemberResponse> model = service.getBoothsMember(group_id, teamId);
+        ResponseWrapper<BoothMemberResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_GET_BOOTH_MEMEBER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void addBoothsMember(OnCommunicationListener listListener, String group_id, String teamId, BoothMemberReq boothData) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addBoothsMember(group_id, teamId, boothData);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_ADD_BOOTH_MEMEBER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
 
     }
 
