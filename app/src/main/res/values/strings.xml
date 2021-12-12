@@ -107,6 +107,7 @@
     <string name="crop__pick_error">No image sources available</string>
     <string name="lbl_lead_count">Friends Count</string>
     <string name="lbl_phone">Phone Number*</string>
+    <string name="lbl_phone2">Phone Number</string>
     <string name="lbl_email">Email</string>
     <string name="lbl_other_leads">Other Friends</string>
     <string name="lbl_gender">Gender</string>
@@ -554,10 +555,14 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_min">Min</string>
     <string name="lbl_obtain">Obtained</string>
     <string name="lbl_about_constituency">About Constituency</string>
-    <string name="lbl_booth_register">Register Booth</string>
+    <string name="lbl_booth_register">Booth Register</string>
+    <string name="lbl_family_register">My Family Register</string>
     <string name="lbl_booth_name">Booth Name</string>
     <string name="lbl_booth_president">Booth President Name</string>
     <string name="lbl_add_booth">Add Booth</string>
+    <string name="relationship">Relationship*</string>
+    <string name="lbl_voterId">Voter Id</string>
+    <string name="lbl_adharNumber">Aadhar Number</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

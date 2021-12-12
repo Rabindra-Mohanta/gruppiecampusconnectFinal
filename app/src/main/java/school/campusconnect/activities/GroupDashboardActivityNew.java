@@ -133,6 +133,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     LinearLayout llNotification;
     @Bind(R.id.llClass)
     LinearLayout llClass;
+    @Bind(R.id.llFamily)
+    LinearLayout llFamily;
 
     @Bind(R.id.llSubject)
     LinearLayout llSubject;
@@ -646,7 +648,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBooth, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBooth,R.id.llFamily, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -767,6 +769,13 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.llBooth:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, BoothActivity.class));
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+            case R.id.llFamily:
+                if (isConnectionAvailable()) {
+                    startActivity(new Intent(this, FamilyMemberActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -932,6 +941,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             if (mGroupItem.isAdmin || mGroupItem.canPost) {
                 llBooth.setVisibility(View.VISIBLE);
             }
+            llFamily.setVisibility(View.VISIBLE);
         }
     }
 

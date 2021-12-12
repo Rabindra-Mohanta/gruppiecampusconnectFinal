@@ -34,6 +34,7 @@ import school.campusconnect.datamodel.ebook.AddEbookReq2;
 import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
+import school.campusconnect.datamodel.family.FamilyMemberResponse;
 import school.campusconnect.datamodel.fees.FeesRes;
 import school.campusconnect.datamodel.fees.PaidStudentFeesRes;
 import school.campusconnect.datamodel.fees.PayFeesRequest;
@@ -1681,5 +1682,15 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addBoothsMember(@Path("group_id") String group_id,@Path("team_id") String team_id,@Body BoothMemberReq req);
 
+
+    @GET("/api/v1/groups/{group_id}//user/{userId}/family/voters/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<FamilyMemberResponse> getFamilyMember(@Path("group_id") String group_id, @Path("userId") String team_id);
+
+
+    @POST("/api/v1/groups/{group_id}/user/{userId}/register/family/voters")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addFamilyMember(@Path("group_id") String group_id,@Path("userId") String team_id,
+                                       @Body FamilyMemberResponse req);
 
 }
