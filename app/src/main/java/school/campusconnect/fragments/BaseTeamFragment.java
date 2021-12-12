@@ -171,7 +171,11 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
         removeWallMenu = menu.findItem(R.id.menu_remove_wallpaper);
 
-        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1 || "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            menu.findItem(R.id.menu_logout).setVisible(false);
+            menu.findItem(R.id.menu_change_pass).setVisible(false);
+            menu.findItem(R.id.menu_set_wallpaper).setVisible(false);
+        }else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
             menu.findItem(R.id.menu_set_wallpaper).setVisible(false);
@@ -430,7 +434,9 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         if (getActivity() == null)
             return;
 
-        if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.GROUP_COUNT) > 1 || "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
+        }else if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
         } else {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(false);

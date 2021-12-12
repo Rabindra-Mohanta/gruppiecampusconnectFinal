@@ -289,10 +289,18 @@ public class SplashActivity extends AppCompatActivity {
 
     private void gotoHomeScreen() {
         if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
-            Intent login = new Intent(this, ConstituencyListActivity.class);
-            login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(login);
-            finish();
+            if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
+                Intent login = new Intent(this, ConstituencyListActivity.class);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(login);
+                finish();
+            } else {
+                Intent login = new Intent(this, GroupDashboardActivityNew.class);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(login);
+                finish();
+            }
+
         } else {
             if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
                 if ("taluk".equalsIgnoreCase(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.ROLE))) {

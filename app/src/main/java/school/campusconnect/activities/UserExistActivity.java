@@ -433,10 +433,17 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
 
             if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
-                Intent login = new Intent(this, ConstituencyListActivity.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(login);
-                finish();
+                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, response1.groupCount);
+
+                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
+                    Intent login = new Intent(this, ConstituencyListActivity.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                } else {
+                    manager = new LeafManager();
+                    manager.getGroupDetail(this, response1.groupId);
+                }
             } else {
                 if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
                     AppLog.e("UserExist->", "join group api called");

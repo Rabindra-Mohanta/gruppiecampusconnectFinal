@@ -144,7 +144,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             }
 
             holder.txt_name.setText(item.boothName);
-            holder.txt_count.setText("phone : "+item.phone);
+            holder.txt_count.setText("Members: "+item.totalBoothMembersCount);
         }
 
         @Override

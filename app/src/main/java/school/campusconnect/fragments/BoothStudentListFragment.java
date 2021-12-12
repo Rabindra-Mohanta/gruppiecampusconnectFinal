@@ -167,7 +167,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
                 holder.img_lead_default.setImageDrawable(drawable);
 
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Phone : "+item.phone);
+            holder.txt_count.setText("Role: "+item.roleOnConstituency);
         }
 
         @Override

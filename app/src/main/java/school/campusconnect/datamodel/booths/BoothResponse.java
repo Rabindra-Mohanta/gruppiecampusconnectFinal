@@ -38,6 +38,9 @@ public class BoothResponse extends BaseResponse {
         @SerializedName("countryCode")
         @Expose
         public String countryCode;
+        @SerializedName("totalBoothMembersCount")
+        @Expose
+        public String totalBoothMembersCount;
 
         @Override
         public String toString() {

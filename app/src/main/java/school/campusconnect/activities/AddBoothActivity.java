@@ -147,6 +147,8 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
         currentCountry = 1;
         String[] str = getResources().getStringArray(R.array.array_country);
         tvCountry.setText(str[0]);
+
+        tvCountry.setVisibility(View.GONE);
     }
     private static final long MIN_CLICK_INTERVAL = 1000; //in millis
     private long lastClickTime = 0;

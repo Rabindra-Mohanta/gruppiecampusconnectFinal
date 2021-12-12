@@ -154,14 +154,23 @@ public class NewPassActivity extends BaseActivity {
 
             hide_keyboard();
 
-            LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
+
 
             if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
-                Intent login = new Intent(this, ConstituencyListActivity.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(login);
-                finish();
+                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, response1.groupCount);
+                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
+                    Intent login = new Intent(this, ConstituencyListActivity.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                } else {
+                    Intent login = new Intent(this, GroupDashboardActivityNew.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                }
             } else {
+                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
                 if ("taluk".equalsIgnoreCase(response1.role)) {
                     Intent login = new Intent(this, TalukListActivity.class);
                     login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

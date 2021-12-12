@@ -35,9 +35,9 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
                 // [1. Gruppie Campus constituency]
-                applicationId "school.campusconnect"
-                versionCode 11
-                versionName "1.2"
+                applicationId "gcm.gruppie"
+                versionCode 1
+                versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')

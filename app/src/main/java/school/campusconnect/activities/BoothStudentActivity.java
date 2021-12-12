@@ -42,7 +42,7 @@ public class BoothStudentActivity extends BaseActivity {
         setBackEnabled(true);
 
         if (getIntent().getExtras() != null) {
-            setTitle(getIntent().getStringExtra("title"));
+            setTitle(getIntent().getStringExtra("title")+" Members");
         }
 
         BoothStudentListFragment classListFragment = new BoothStudentListFragment();

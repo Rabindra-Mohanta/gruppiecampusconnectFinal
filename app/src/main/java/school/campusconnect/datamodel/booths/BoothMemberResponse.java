@@ -41,6 +41,9 @@ public class BoothMemberResponse extends BaseResponse {
         @SerializedName("allowedToAddTeamPost")
         @Expose
         public boolean allowedToAddTeamPost;
+        @SerializedName("roleOnConstituency")
+        @Expose
+        public String roleOnConstituency;
 
         @Override
         public String toString() {

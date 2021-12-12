@@ -107,6 +107,7 @@
     <string name="crop__pick_error">No image sources available</string>
     <string name="lbl_lead_count">Friends Count</string>
     <string name="lbl_phone">Phone Number*</string>
+    <string name="lbl_booth_president_phone">PRESIDENT PHONE NUMBER*</string>
     <string name="lbl_phone2">Phone Number</string>
     <string name="lbl_email">Email</string>
     <string name="lbl_other_leads">Other Friends</string>

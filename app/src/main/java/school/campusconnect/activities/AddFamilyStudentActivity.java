@@ -107,45 +107,34 @@ public class AddFamilyStudentActivity extends BaseActivity {
 
         init();
     }
-
+    String[] bloodGrpArray;
+    String[] genderArray;
+    ArrayAdapter<String> genderAdapter;
+    ArrayAdapter<String> bloodGrpAdapter;
     private void init() {
         leafManager = new LeafManager();
 
         ArrayList<FamilyMemberResponse.FamilyMemberData> list = new Gson().fromJson(getIntent().getStringExtra("data"), new TypeToken<ArrayList<FamilyMemberResponse.FamilyMemberData>>() {
         }.getType());
 
-        String[] bloodGrpArray = getResources().getStringArray(R.array.blood_group);
-        String[] genderArray = getResources().getStringArray(R.array.gender_array);
+        bloodGrpArray = getResources().getStringArray(R.array.blood_group);
+        genderArray = getResources().getStringArray(R.array.gender_array);
 
-        ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, genderArray);
+        genderAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, genderArray);
         etGender.setAdapter(genderAdapter);
 
-        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
+        bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
         etBlood.setAdapter(bloodGrpAdapter);
 
         if(list.size()>1){
-            adapter = new FamilyMemberAdapter((ArrayList<FamilyMemberResponse.FamilyMemberData>) list.subList(0,list.size()-1));
+            adapter = new FamilyMemberAdapter(new ArrayList<>(list.subList(0, list.size() - 1)));
+            setData(list.get(list.size()-1));
         }else {
-            adapter = new FamilyMemberAdapter(new ArrayList<FamilyMemberResponse.FamilyMemberData>());
+            adapter = new FamilyMemberAdapter(new ArrayList<>());
 
             if(list.size()==1){
                 FamilyMemberResponse.FamilyMemberData item = list.get(0);
-
-                int index = 0;
-                for (int i=0;i<genderArray.length;i++){
-                    if((item.gender+"").equals(genderArray[i])){
-                        index = i;
-                    }
-                }
-                etGender.setSelection(index);
-
-                index = 0;
-                for (int i=0;i<bloodGrpArray.length;i++){
-                    if((item.bloodGroup+"").equals(bloodGrpArray[i])){
-                        index = i;
-                    }
-                }
-                etBlood.setSelection(index);
+                setData(item);
             }
         }
 
@@ -184,12 +173,66 @@ public class AddFamilyStudentActivity extends BaseActivity {
                     adapter.add(item);
 
                     etName.setText("");
+                    etRelationShip.setText("");
+                    etAddress.setText("");
                     etPhone.setText("");
+                    etdob.setText("");
+                    etVoterId.setText("");
+                    etAadhar.setText("");
+                    etGender.setSelection(0);
+                    etBlood.setSelection(0);
                 }
             }
         });
 
 
+    }
+
+    private void setData(FamilyMemberResponse.FamilyMemberData item) {
+
+        etName.setText(item.name);
+        etRelationShip.setText(item.relationship);
+        etAddress.setText(item.address);
+        etPhone.setText(item.phone);
+
+        if("self".equalsIgnoreCase(item.relationship)){
+            etRelationShip.setEnabled(false);
+        }else {
+            etRelationShip.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if("self".equalsIgnoreCase(etRelationShip.getText().toString())){
+                        etRelationShip.setText("");
+                    }
+                }
+            });
+        }
+
+        int index = 0;
+        for (int i=0;i<genderArray.length;i++){
+            if((item.gender+"").equals(genderArray[i])){
+                index = i;
+            }
+        }
+        etGender.setSelection(index);
+
+        index = 0;
+        for (int i=0;i<bloodGrpArray.length;i++){
+            if((item.bloodGroup+"").equals(bloodGrpArray[i])){
+                index = i;
+            }
+        }
+        etBlood.setSelection(index);
     }
 
     private long lastClickTime = 0;
@@ -313,168 +356,181 @@ public class AddFamilyStudentActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int pos) {
-            FamilyMemberResponse.FamilyMemberData item = list.get(pos);
-            holder.etName.setText(item.name);
-            holder.etRelationShip.setText(item.relationship);
-            holder.etAddress.setText(item.address);
-            holder.etPhone.setText(item.phone);
+            try {
+                FamilyMemberResponse.FamilyMemberData item = list.get(pos);
+                holder.etName.setText(item.name);
+                holder.etRelationShip.setText(item.relationship);
+                holder.etAddress.setText(item.address);
+                holder.etPhone.setText(item.phone);
 
 
-            if(!"self".equalsIgnoreCase(item.relationship)){
-                holder.etName.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(!"self".equalsIgnoreCase(item.relationship)){
+                    holder.imgDelete.setVisibility(View.VISIBLE);
+                    holder.etRelationShip.setEnabled(true);
+                    holder.etName.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                    }
+                        }
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        list.get(pos).name = holder.etName.getText().toString();
-                    }
-                });
-                holder.etPhone.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            list.get(pos).name = holder.etName.getText().toString();
+                        }
+                    });
+                    holder.etPhone.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                    }
+                        }
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        list.get(pos).phone = holder.etPhone.getText().toString();
-                    }
-                });
-                holder.etRelationShip.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            list.get(pos).phone = holder.etPhone.getText().toString();
+                        }
+                    });
+                    holder.etRelationShip.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                    }
+                        }
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
-                });
-                holder.etAddress.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        list.get(pos).address = holder.etAddress.getText().toString();
-                    }
-                });
-                holder.etdob.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DatePickerFragment fragment = DatePickerFragment.newInstance();
-                        fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
-                            @Override
-                            public void onDateSelected(Calendar c) {
-                                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                                holder.etdob.setText(format.format(c.getTime()));
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            if("self".equalsIgnoreCase(holder.etRelationShip.getText().toString())){
+                                holder.etRelationShip.setText("");
                             }
-                        });
-                        fragment.show(getSupportFragmentManager(), "datepicker");
+                        }
+                    });
+                    holder.etAddress.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            list.get(pos).address = holder.etAddress.getText().toString();
+                        }
+                    });
+                    holder.etdob.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DatePickerFragment fragment = DatePickerFragment.newInstance();
+                            fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                                @Override
+                                public void onDateSelected(Calendar c) {
+                                    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                                    holder.etdob.setText(format.format(c.getTime()));
+                                }
+                            });
+                            fragment.show(getSupportFragmentManager(), "datepicker");
+                        }
+                    });
+                    holder.etAadhar.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            list.get(pos).aadharNumber = holder.etAadhar.getText().toString();
+                        }
+                    });
+                    holder.etAddress.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            list.get(pos).address = holder.etAddress.getText().toString();
+                        }
+                    });
+                    holder.etVoterId.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            list.get(pos).voterId = holder.etVoterId.getText().toString();
+                        }
+                    });
+
+
+                    String[] bloodGrpArray = getResources().getStringArray(R.array.blood_group);
+                    String[] genderArray = getResources().getStringArray(R.array.gender_array);
+
+                    ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(AddFamilyStudentActivity.this, R.layout.item_spinner, R.id.tvItem, genderArray);
+                    holder.etGender.setAdapter(genderAdapter);
+
+                    int index = 0;
+                    for (int i=0;i<genderArray.length;i++){
+                        if((item.gender+"").equals(genderArray[i])){
+                            index = i;
+                        }
                     }
-                });
-                holder.etAadhar.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    holder.etGender.setSelection(index);
 
+
+                    ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(AddFamilyStudentActivity.this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
+                    holder.etBlood.setAdapter(bloodGrpAdapter);
+
+                    index = 0;
+                    for (int i=0;i<bloodGrpArray.length;i++){
+                        if((item.bloodGroup+"").equals(bloodGrpArray[i])){
+                            index = i;
+                        }
                     }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        list.get(pos).aadharNumber = holder.etAadhar.getText().toString();
-                    }
-                });
-                holder.etAddress.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        list.get(pos).address = holder.etAddress.getText().toString();
-                    }
-                });
-                holder.etVoterId.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        list.get(pos).voterId = holder.etVoterId.getText().toString();
-                    }
-                });
-
-
-                String[] bloodGrpArray = getResources().getStringArray(R.array.blood_group);
-                String[] genderArray = getResources().getStringArray(R.array.gender_array);
-
-                ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(AddFamilyStudentActivity.this, R.layout.item_spinner, R.id.tvItem, genderArray);
-                holder.etGender.setAdapter(genderAdapter);
-
-                int index = 0;
-                for (int i=0;i<genderArray.length;i++){
-                    if((item.gender+"").equals(genderArray[i])){
-                        index = i;
-                    }
+                    holder.etBlood.setSelection(index);
+                }else {
+                    holder.imgDelete.setVisibility(View.GONE);
+                    holder.etRelationShip.setEnabled(false);
+                    holder.etRelationShip.addTextChangedListener(null);
                 }
-                holder.etGender.setSelection(index);
-
-
-                ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(AddFamilyStudentActivity.this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
-                holder.etBlood.setAdapter(bloodGrpAdapter);
-
-                index = 0;
-                for (int i=0;i<bloodGrpArray.length;i++){
-                    if((item.bloodGroup+"").equals(bloodGrpArray[i])){
-                        index = i;
-                    }
-                }
-                holder.etBlood.setSelection(index);
+            }catch (Exception e){
+                e.printStackTrace();
             }
+
         }
 
         @Override
