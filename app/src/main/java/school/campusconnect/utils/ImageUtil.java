@@ -572,10 +572,17 @@ public class ImageUtil {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
+        AppLog.e(TAG , "getPath called : "+uri.toString());
+
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
+
+            AppLog.e(TAG , "isDocumentURI");
+
             if (isExternalStorageDocument(uri)) {
+
+                AppLog.e(TAG , "isExternalStorageDocument");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -591,12 +598,18 @@ public class ImageUtil {
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
 
+                AppLog.e(TAG , "isDownloadsDocument");
                 String id = DocumentsContract.getDocumentId(uri);
 
-                if (id != null && id.startsWith("raw:")) {
-                    return id.substring(4);
+                AppLog.e(TAG , "isDownloadsDocument id : "+id);
+
+                if (id != null && id.startsWith("raw:"))
+                {
+                    id= id.substring(4);
                 }
-                if(id!=null && id.startsWith("msf:")){
+
+                if(id!=null && id.startsWith("msf:"))
+                {
                     id = id.substring(4);
                 }
 
@@ -606,8 +619,8 @@ public class ImageUtil {
                 };
 
                 for (String contentUriPrefix : contentUriPrefixesToTry) {
-                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
                     try {
+                        Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
                         String path = getDataColumn(context, contentUri, null, null);
                         if (path != null) {
                             return path;
@@ -629,9 +642,14 @@ public class ImageUtil {
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
+
+                AppLog.e(TAG , "isMediaDocument");
+
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
+
+                AppLog.e(TAG , "isMediaDocument : type : "+type);
 
                 Uri contentUri = null;
                 if ("image".equals(type)) {
@@ -645,19 +663,40 @@ public class ImageUtil {
                     contentUri = MediaStore.Files.getContentUri("external");
                 }
 
+                AppLog.e(TAG , "isMediaDocument : contentUri : "+contentUri);
+
                 final String selection = "_id=?";
                 final String[] selectionArgs = new String[] {
                         split[1]
                 };
 
+                String retUrl = getDataColumn(context, contentUri, selection, selectionArgs);
 
-                return getDataColumn(context, contentUri, selection, selectionArgs);
+                if(retUrl !=null)
+                {
+                    return retUrl;
+                }
+                else
+                {
+                    // path could not be retrieved using ContentResolver, therefore copy file to accessible cache using streams
+                    String fileName = getFileName(context, uri);
+                    File cacheDir = getDocumentCacheDir(context);
+                    File file = generateFileName(fileName, cacheDir);
+                    String destinationPath = null;
+                    if (file != null) {
+                        destinationPath = file.getAbsolutePath();
+                        saveFileFromUri(context, uri, destinationPath);
+                    }
+
+                    return destinationPath;
+                }
             }
 
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
 
+            AppLog.e(TAG , "uri Scheme is Content : "+uri.getScheme());
             // Return the remote address
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
