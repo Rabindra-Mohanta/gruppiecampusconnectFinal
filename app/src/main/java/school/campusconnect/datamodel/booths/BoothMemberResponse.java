@@ -29,9 +29,24 @@ public class BoothMemberResponse extends BaseResponse {
         @SerializedName("image")
         @Expose
         public String image;
-        @SerializedName("id")
+        @SerializedName("userId")
         @Expose
         public String id;
+        @SerializedName("voterId")
+        @Expose
+        public String voterId;
+        @SerializedName("gender")
+        @Expose
+        public String gender;
+        @SerializedName("dob")
+        @Expose
+        public String dob;
+        @SerializedName("bloodGroup")
+        @Expose
+        public String bloodGroup;
+        @SerializedName("aadharNumber")
+        @Expose
+        public String aadharNumber;
         @SerializedName("allowedToAddUser")
         @Expose
         public boolean allowedToAddUser;

@@ -364,7 +364,7 @@
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/student"
+                            app:srcCompat="@drawable/booth"
                             android:tint="@color/colorTextLight"
                             android:layout_height="wrap_content" />
                         <TextView
@@ -383,7 +383,7 @@
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/student"
+                            app:srcCompat="@drawable/family"
                             android:tint="@color/colorTextLight"
                             android:layout_height="wrap_content" />
                         <TextView

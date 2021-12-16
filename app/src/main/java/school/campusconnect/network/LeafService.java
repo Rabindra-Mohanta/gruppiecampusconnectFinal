@@ -1665,14 +1665,13 @@ public interface LeafService {
                                      @Body AddMarksReq addMarksReq);
 
 
-
     @GET("/api/v1/groups/{group_id}/all/booths/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothResponse> getBooths(@Path("group_id") String group_id);
 
     @POST("/api/v1/groups/{group_id}/constituency/booths/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addBooths(@Path("group_id") String group_id,@Body BoothResponse.BoothData boothData);
+    Call<BaseResponse> addBooths(@Path("group_id") String group_id, @Body BoothResponse.BoothData boothData);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1680,7 +1679,12 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/user/add/booth")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addBoothsMember(@Path("group_id") String group_id,@Path("team_id") String team_id,@Body BoothMemberReq req);
+    Call<BaseResponse> addBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body BoothMemberReq req);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/user/{user_id}/update/booth/member")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("user_id") String user_id,
+                                       @Body BoothMemberResponse.BoothMemberData req);
 
 
     @GET("/api/v1/groups/{group_id}//user/{userId}/family/voters/get")
@@ -1690,7 +1694,7 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/user/{userId}/register/family/voters")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addFamilyMember(@Path("group_id") String group_id,@Path("userId") String team_id,
+    Call<BaseResponse> addFamilyMember(@Path("group_id") String group_id, @Path("userId") String team_id,
                                        @Body FamilyMemberResponse req);
 
 }

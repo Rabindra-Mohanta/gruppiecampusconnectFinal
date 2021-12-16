@@ -423,6 +423,7 @@ public class LeafManager {
     public static final int API_GET_BOOTHS = 2711;
     public static final int API_ADD_BOOTH = 272;
     public static final int API_ADD_BOOTH_MEMEBER = 273;
+    public static final int API_UPDATE_BOOTH_MEMEBER = 277;
     public static final int API_GET_BOOTH_MEMEBER = 274;
     public static final int API_GET_FAMILY_MEMBER = 275;
     public static final int API_CREATE_FAMILY_MEMBER = 276;
@@ -10512,6 +10513,41 @@ public class LeafManager {
         }.getType();
 
         wrapper.execute(API_ADD_BOOTH_MEMEBER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+    public void updateBoothsMember(OnCommunicationListener listListener, String group_id, String teamId,String studentId, BoothMemberResponse.BoothMemberData boothData) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.updateBoothsMember(group_id, teamId,studentId, boothData);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_UPDATE_BOOTH_MEMEBER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {
