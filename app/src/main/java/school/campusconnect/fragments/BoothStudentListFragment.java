@@ -162,10 +162,40 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final BoothMemberResponse.BoothMemberData item = list.get(position);
 
+            if (!TextUtils.isEmpty(item.image)) {
+                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
+                        new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.img_lead_default.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).into(holder.imgTeam, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        holder.img_lead_default.setVisibility(View.INVISIBLE);
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        holder.img_lead_default.setVisibility(View.VISIBLE);
+                                        TextDrawable drawable = TextDrawable.builder()
+                                                .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
+                                        holder.img_lead_default.setImageDrawable(drawable);
+                                        AppLog.e("Picasso", "Error : ");
+                                    }
+                                });
+                            }
+                        });
+            } else {
                 holder.img_lead_default.setVisibility(View.VISIBLE);
                 TextDrawable drawable = TextDrawable.builder()
                         .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
                 holder.img_lead_default.setImageDrawable(drawable);
+            }
+
 
             holder.txt_name.setText(item.name);
             holder.txt_count.setText("Role: "+item.roleOnConstituency);

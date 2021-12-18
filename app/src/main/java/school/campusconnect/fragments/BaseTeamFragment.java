@@ -162,10 +162,9 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             menu.findItem(R.id.menu_add_team).setVisible(false);
 
 
-
-        if(mGroupItem.canPost){
+        if (mGroupItem.canPost) {
             menu.findItem(R.id.menu_profile).setVisible(false);
-        }else {
+        } else {
             menu.findItem(R.id.menu_profile).setVisible(true);
         }
 
@@ -175,7 +174,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
             menu.findItem(R.id.menu_set_wallpaper).setVisible(false);
-        }else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+        } else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
             menu.findItem(R.id.menu_set_wallpaper).setVisible(false);
@@ -192,6 +191,10 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         menuItem = menu.findItem(R.id.action_notification_list);
         menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
         menuItem.setVisible(true);
+
+        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            menu.findItem(R.id.menu_add_team).setVisible(true);
+        }
     }
 
     private Drawable buildCounterDrawable(int count) {
@@ -243,7 +246,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 wallPref.edit().clear().commit();
                 setBackgroundImage();
                 break;
-            case R.id.menu_profile:{
+            case R.id.menu_profile: {
                 if (isConnectionAvailable()) {
                     Intent intent2 = new Intent(getActivity(), ProfileActivity2.class);
                     startActivity(intent2);
@@ -357,7 +360,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 myTeamData.count = dataItemList.get(i).count;
                 myTeamData.allowedToAddTeamPost = dataItemList.get(i).allowedToAddTeamPost;
                 myTeamData.leaveRequest = dataItemList.get(i).leaveRequest;
-                myTeamData.details = new Gson().fromJson(dataItemList.get(i).details,MyTeamData.TeamDetails.class);
+                myTeamData.details = new Gson().fromJson(dataItemList.get(i).details, MyTeamData.TeamDetails.class);
 
                 teamList.add(myTeamData);
             }
@@ -414,12 +417,12 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     @Override
     public void onStart() {
         super.onStart();
-        if(getActivity()!=null){
+        if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
             ((GroupDashboardActivityNew) getActivity()).callEventApi();
         }
 
-        if(getContext()!=null && menuItem!=null){
+        if (getContext() != null && menuItem != null) {
             menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
         }
         //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
@@ -436,7 +439,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
         if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
-        }else if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+        } else if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
         } else {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(false);
@@ -445,7 +448,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISTEAMUPDATED)) {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED, false);
         }
-        if(getActivity()!=null){
+        if (getActivity() != null) {
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("NOTIFICATION_COUNT_UPDATE"));
         }
     }
@@ -460,13 +463,14 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             AppLog.e("BroadcastReceiver error", "error--> " + ex.toString());
         }
     }
+
     private final BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(getContext()!=null && menuItem!=null){
+            if (getContext() != null && menuItem != null) {
                 menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
             }
-            if(mAdapter!=null){
+            if (mAdapter != null) {
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -566,7 +570,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 mAdapter.notifyDataSetChanged();
 
                 TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
-                if(dashboardCount!=null){
+                if (dashboardCount != null) {
                     dashboardCount.lastApiCalled = System.currentTimeMillis();
                     dashboardCount.save();
                 }

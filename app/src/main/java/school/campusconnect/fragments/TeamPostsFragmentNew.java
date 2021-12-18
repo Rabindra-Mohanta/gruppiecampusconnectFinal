@@ -13,6 +13,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import school.campusconnect.BuildConfig;
+import school.campusconnect.activities.AddBoothStudentActivity;
 import school.campusconnect.activities.AddTeamStaffActivity;
 import school.campusconnect.activities.AddTeamStudentActivity;
 import school.campusconnect.activities.AddTimeTablePostActivity;
@@ -218,36 +220,43 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 startMeeting();
                 break;
             case R.id.menu_add_friend:
-                final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                CharSequence items[] = new CharSequence[]{"Add Staff", "Add Students"};
-                adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                    Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
+                    intent.putExtra("group_id", mGroupId);
+                    intent.putExtra("team_id", team_id);
+                    startActivity(intent);
+                }else {
+                    final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                    CharSequence items[] = new CharSequence[]{"Add Staff", "Add Students"};
+                    adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface d, int n) {
-                        AppLog.e(TAG, "ss : " + n);
-                        d.dismiss();
-                        if (n == 0) {
-                            Intent intent = new Intent(getActivity(), AddTeamStaffActivity.class);
-                            intent.putExtra("id", mGroupId);
-                            intent.putExtra("invite", true);
-                            intent.putExtra("from_team", true);
-                            intent.putExtra("team_id", team_id);
-                            startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(getActivity(), AddTeamStudentActivity.class);
-                            intent.putExtra("id", mGroupId);
-                            intent.putExtra("invite", true);
-                            intent.putExtra("from_team", true);
-                            intent.putExtra("team_id", team_id);
-                            startActivity(intent);
+                        @Override
+                        public void onClick(DialogInterface d, int n) {
+                            AppLog.e(TAG, "ss : " + n);
+                            d.dismiss();
+                            if (n == 0) {
+                                Intent intent = new Intent(getActivity(), AddTeamStaffActivity.class);
+                                intent.putExtra("id", mGroupId);
+                                intent.putExtra("invite", true);
+                                intent.putExtra("from_team", true);
+                                intent.putExtra("team_id", team_id);
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(getActivity(), AddTeamStudentActivity.class);
+                                intent.putExtra("id", mGroupId);
+                                intent.putExtra("invite", true);
+                                intent.putExtra("from_team", true);
+                                intent.putExtra("team_id", team_id);
+                                startActivity(intent);
+                            }
                         }
-                    }
 
-                });
-                adb.setNegativeButton("Cancel", null);
-                AlertDialog dialog = adb.create();
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
+                    });
+                    adb.setNegativeButton("Cancel", null);
+                    AlertDialog dialog = adb.create();
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.show();
+                }
                 break;
             case R.id.action_settings:
                 Intent intent1 = new Intent(getActivity(), TeamSettingsActivity.class);

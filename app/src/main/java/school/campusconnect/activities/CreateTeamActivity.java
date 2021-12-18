@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddTeamResponse;
@@ -195,44 +196,48 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
 
                 Toast.makeText(this, getString(R.string.msg_creted_team), Toast.LENGTH_LONG).show();
 
-                final AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                CharSequence items[] = new CharSequence[] {"Add Staff", "Add Students"};
-                adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                if (LeafPreference.getInstance(this).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                    finish();
+                }else {
+                    final AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                    CharSequence items[] = new CharSequence[] {"Add Staff", "Add Students"};
+                    adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface d, int n) {
-                        AppLog.e(TAG,"ss : "+n);
-                        d.dismiss();
-                        if(n==0){
-                            Intent intent = new Intent(CreateTeamActivity.this, AddTeamStaffActivity.class);
-                            intent.putExtra("id", GroupDashboardActivityNew.groupId);
-                            intent.putExtra("invite", true);
-                            intent.putExtra("from_team", true);
-                            intent.putExtra("team_id", addTeamResponse.data.teamId);
-                            startActivity(intent);
-                        }else {
-                            Intent intent = new Intent(CreateTeamActivity.this, AddTeamStudentActivity.class);
-                            intent.putExtra("id", GroupDashboardActivityNew.groupId);
-                            intent.putExtra("invite", true);
-                            intent.putExtra("from_team", true);
-                            intent.putExtra("team_id", addTeamResponse.data.teamId);
-                            startActivity(intent);
+                        @Override
+                        public void onClick(DialogInterface d, int n) {
+                            AppLog.e(TAG,"ss : "+n);
+                            d.dismiss();
+                            if(n==0){
+                                Intent intent = new Intent(CreateTeamActivity.this, AddTeamStaffActivity.class);
+                                intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                                intent.putExtra("invite", true);
+                                intent.putExtra("from_team", true);
+                                intent.putExtra("team_id", addTeamResponse.data.teamId);
+                                startActivity(intent);
+                            }else {
+                                Intent intent = new Intent(CreateTeamActivity.this, AddTeamStudentActivity.class);
+                                intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                                intent.putExtra("invite", true);
+                                intent.putExtra("from_team", true);
+                                intent.putExtra("team_id", addTeamResponse.data.teamId);
+                                startActivity(intent);
+                            }
+                            finish();
                         }
-                        finish();
-                    }
 
-                });
-                adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                });
-                AlertDialog dialog = adb.create();
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCancelable(false);
-                dialog.show();
+                    });
+                    adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+                    AlertDialog dialog = adb.create();
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(false);
+                    dialog.show();
+                }
                 break;
             case LeafManager.API_ID_EDIT_TEAM:
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMUPDATED, true);

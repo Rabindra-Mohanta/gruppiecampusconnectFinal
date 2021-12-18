@@ -113,6 +113,12 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
         menu.findItem(R.id.menuAllowPost).setVisible(true);
         menu.findItem(R.id.menuAllowCommnet).setVisible(true);
 
+        if(studentData!=null){
+            menu.findItem(R.id.menuAllowAddMember).setChecked(studentData.allowedToAddUser);
+            menu.findItem(R.id.menuAllowPost).setChecked(studentData.allowedToAddTeamPost);
+            menu.findItem(R.id.menuAllowCommnet).setChecked(studentData.allowedToAddTeamPostComment);
+        }
+
         this.menu = menu;
 
         return super.onCreateOptionsMenu(menu);
@@ -208,12 +214,6 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
     @Override
     protected void onResume() {
         super.onResume();
-
-        if(menu!=null && studentData!=null){
-            menu.findItem(R.id.menuAllowAddMember).setChecked(studentData.allowedToAddUser);
-            menu.findItem(R.id.menuAllowPost).setChecked(studentData.allowedToAddTeamPost);
-            menu.findItem(R.id.menuAllowCommnet).setChecked(studentData.allowedToAddTeamPostComment);
-        }
     }
 
     private void setImageFragment() {

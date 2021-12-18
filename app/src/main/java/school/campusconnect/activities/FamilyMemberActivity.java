@@ -65,6 +65,7 @@ public class FamilyMemberActivity extends BaseActivity {
             case R.id.menu_add_class_student: {
                 Intent intent = new Intent(this, AddFamilyStudentActivity.class);
                 intent.putExtra("data",new Gson().toJson(classListFragment.getList()));
+                intent.putExtra("pos",-1);
                 startActivity(intent);
                 return true;
             }

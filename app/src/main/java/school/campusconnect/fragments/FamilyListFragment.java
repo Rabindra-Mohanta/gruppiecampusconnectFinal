@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddFamilyStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
@@ -172,15 +174,18 @@ public class FamilyListFragment extends BaseFragment implements LeafManager.OnCo
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        editStudent(list.get(getAdapterPosition()));
+                        editStudent(getAdapterPosition());
                     }
                 });
             }
         }
     }
 
-    private void editStudent(FamilyMemberResponse.FamilyMemberData studentData) {
-
+    private void editStudent(int pos) {
+        Intent intent = new Intent(getContext(), AddFamilyStudentActivity.class);
+        intent.putExtra("data",new Gson().toJson(list));
+        intent.putExtra("pos",pos);
+        startActivity(intent);
     }
 
 }

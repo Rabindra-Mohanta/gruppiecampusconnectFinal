@@ -809,7 +809,14 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         // myRef.child("live_class").child(item.getId()).removeValue();
         new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         //   EnterSubjectDialog();
-        getSubjectList(classData.getId());
+
+        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            progressBar.setVisibility(View.VISIBLE);
+            leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
+        }else {
+            getSubjectList(classData.getId());
+        }
+
 
         if (getActivity() != null && item.canPost) {
             ((VideoClassActivity) getActivity()).stopRecording();
