@@ -58,11 +58,13 @@ public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.
             holder.imgRemove.setVisibility(View.VISIBLE);
             try {
                 if(Constants.FILE_TYPE_IMAGE.equals(fileTypeImageOrVideo)){
-                    File file=new File(uploadImages.get(position));
-                    Picasso.with(context).load(file).resize(80,80).into(holder.imgUpload);
+//                    File file=new File(uploadImages.get(position));
+                    Picasso.with(context).load(uploadImages.get(position)).resize(80,80).into(holder.imgUpload);
                 }else {
+                    // TODO : URI : Display Video Thumbnain from URI
                     Bitmap bMap = ThumbnailUtils.createVideoThumbnail(uploadImages.get(position) , MediaStore.Video.Thumbnails.MICRO_KIND);
                     holder.imgUpload.setImageBitmap(bMap);
+
                 }
             }catch (Exception e)
             {

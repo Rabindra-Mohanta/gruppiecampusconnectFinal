@@ -9,11 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
 
@@ -460,14 +463,18 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         } else
             {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
-            File file = new File(listThumbnails.get(index));
+//            File file = new File(listThumbnails.get(index));
 
             TransferObserver observer = null;
-            if (file != null) {
-                AppLog.e(TAG, "file " + file.getName() + " , " + file.getAbsolutePath());
+            if (!TextUtils.isEmpty(listThumbnails.get(index))) {
+//                AppLog.e(TAG, "file " + file.getName() + " , " + file.getAbsolutePath());
                 try {
-                    observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                            file, CannedAccessControlList.PublicRead);
+
+                    UploadOptions option = UploadOptions.
+                            builder().bucket(AmazoneHelper.BUCKET_NAME).
+                            cannedAcl(CannedAccessControlList.PublicRead).build();
+                    observer = transferUtility.upload(key,
+                            getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
 
                     observer.setTransferListener(new TransferListener() {
                         @Override
@@ -516,6 +523,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
                             Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                         }
                     });
+
                 } catch (Exception ex) {
                     Log.e("Thumbnail", "onStateChanged " + index);
 
@@ -572,49 +580,56 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
             manager.addPost(this, group_id, team_id, mainRequest, postType, friend_id, isFromChat);
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
-            File file = new File(listImages.get(pos));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file, CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
-                        updateList(pos, key);
+            TransferObserver observer = null;
+            try {
+                UploadOptions option = UploadOptions.
+                        builder().bucket(AmazoneHelper.BUCKET_NAME).
+                        cannedAcl(CannedAccessControlList.PublicRead).build();
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
+
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                            updateList(pos, key);
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            //progressDialog.dismiss();
+                            Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        //progressDialog.dismiss();
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                            // progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                            uploadVideoPercentages.set(pos, percentDone);
+                            publishUploadProgress();
+                        }
+                        AppLog.d(TAG, "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        //progressBar.setVisibility(View.GONE);
+                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                            //progressDialog.dismiss();
+                        }
+                        AppLog.e(TAG, "Upload Error : " + ex);
                         Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-
                     }
-                }
-
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        // progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
-                        uploadVideoPercentages.set(pos , percentDone) ;
-                        publishUploadProgress();
-                    }
-                    AppLog.d(TAG, "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
-
-                @Override
-                public void onError(int id, Exception ex)
-                {
-                    //progressBar.setVisibility(View.GONE);
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        //progressDialog.dismiss();
-                    }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }

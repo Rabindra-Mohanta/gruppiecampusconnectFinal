@@ -128,11 +128,11 @@ public class SplashActivity extends AppCompatActivity {
                 ArrayList<String> list = new ArrayList<>();
                 if (uriList != null) {
                     for (int i = 0; i < uriList.size(); i++) {
-                        try {
+                        /*try {
                             String path = ImageUtil.getPath(LeafApplication.getInstance(), uriList.get(i));
-                            if (!TextUtils.isEmpty(path)) {
-                                list.add(path);
-                            }
+                            if (!TextUtils.isEmpty(path)) {*/
+                                list.add(uriList.get(i).toString());
+                            /*}
                         } catch (IllegalArgumentException e) {
                             AppLog.e(TAG, " IllegalArgumentException :" + e.getMessage());
                             String fileName = System.currentTimeMillis() + "" + new Random().nextInt(99) + extension;
@@ -144,16 +144,16 @@ public class SplashActivity extends AppCompatActivity {
                             if (!TextUtils.isEmpty(file.getAbsolutePath())) {
                                 list.add(file.getAbsolutePath());
                             }
-                        }
+                        }*/
                     }
                 }
 
                 if (uri != null) {
-                    try {
+                   /* try {
                         String path = ImageUtil.getPath(LeafApplication.getInstance(), uri);
-                        if (!TextUtils.isEmpty(path)) {
-                            list.add(path);
-                        }
+                        if (!TextUtils.isEmpty(path)) {*/
+                            list.add(uri.toString());
+                        /*}
                     } catch (IllegalArgumentException e) {
                         AppLog.e(TAG, " IllegalArgumentException :" + e.getMessage());
                         String fileName = System.currentTimeMillis() + "" + new Random().nextInt(99) + extension;
@@ -165,7 +165,7 @@ public class SplashActivity extends AppCompatActivity {
                         if (!TextUtils.isEmpty(file.getAbsolutePath())) {
                             list.add(file.getAbsolutePath());
                         }
-                    }
+                    }*/
                 }
 
                 AppLog.e(TAG, "uriList path: " + list);

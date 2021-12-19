@@ -1,6 +1,7 @@
 buildscript {
     ext.kotlin_version = "1.4.21"
     repositories {
+        mavenLocal()
         google()
         jcenter()
     }
@@ -20,7 +21,7 @@ allprojects {
         /*   maven {
                url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
            }*/
-
+        mavenLocal()
         maven {
             url "https://github.com/friendscorpgroup/jitsi-maven-repository/raw/master/releases"
         }

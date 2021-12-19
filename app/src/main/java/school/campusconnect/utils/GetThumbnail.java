@@ -3,8 +3,12 @@ package school.campusconnect.utils;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.MediaStore;
+
+import androidx.core.content.FileProvider;
 
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.rendering.PDFRenderer;
@@ -15,7 +19,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Random;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 
 public class GetThumbnail extends AsyncTask<Void, Void, Void> {
@@ -59,19 +65,28 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
     private void createThumbnailMultiPdf(int index) {
         if (listFiles.size() > 0 && index < listFiles.size()) {
             try {
-                String path = listFiles.get(index);
-                File file = new File(path);
-                PDDocument document = PDDocument.load(file);
+//                String path = listFiles.get(index);
+//                File file = new File(path);
+                PDDocument document = PDDocument.load(LeafApplication.getInstance().getContentResolver().openInputStream(Uri.parse(listFiles.get(index))));
                 // Create a renderer for the document
                 PDFRenderer renderer = new PDFRenderer(document);
                 // Render the image to an RGB Bitmap
                 Bitmap pageImage = renderer.renderImage(0, 1, Bitmap.Config.RGB_565);
                 // Save the render result to an image
-                File renderFile = new File(getThumbnainDir(), file.getName().replace(".pdf", ".png"));
-                thumbnailList.add(renderFile.getAbsolutePath());
+                File renderFile = new File(getThumbnainDir(), System.currentTimeMillis()+new Random().nextInt()+".png");
                 FileOutputStream fileOut = new FileOutputStream(renderFile);
                 pageImage.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
                 fileOut.close();
+
+                Uri imageCaptureFile;
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    imageCaptureFile = FileProvider.getUriForFile(LeafApplication.getInstance(), BuildConfig.APPLICATION_ID + ".fileprovider", renderFile);
+                }else {
+                    imageCaptureFile = Uri.fromFile(renderFile);
+                }
+                thumbnailList.add(imageCaptureFile.toString());
+
+
             } catch (Exception e) {
                 e.printStackTrace();
                 AssetManager assetFiles = LeafApplication.getInstance().getAssets();
@@ -82,7 +97,13 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
                         FileOutputStream out = new FileOutputStream(renderFile);
                         copyAssetFiles(in, out);
                     }
-                    thumbnailList.add(renderFile.getAbsolutePath());
+                    Uri imageCaptureFile;
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                        imageCaptureFile = FileProvider.getUriForFile(LeafApplication.getInstance(), BuildConfig.APPLICATION_ID + ".fileprovider", renderFile);
+                    }else {
+                        imageCaptureFile = Uri.fromFile(renderFile);
+                    }
+                    thumbnailList.add(imageCaptureFile.toString());
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -114,23 +135,24 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
     }
     private void createThumbnailMultiVideo(int index) {
         if (listFiles.size() > 0 && index < listFiles.size()) {
-            try {
+           /* try {
                 String path = listFiles.get(index);
                 File file = new File(path);
                 Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MINI_KIND);
-                String filename = file.getName().substring(0, file.getName().lastIndexOf('.'));
+                String filename = file.getName().substring(0, file.getName().lastIndexOf('.'));*/
                 // Save the render result to an image
-                File renderFile = new File(getThumbnainDir(), filename+".png");
+                // TODO : URI : Display Video Thumbnain from URI
+              /*  File renderFile = new File(getThumbnainDir(), filename+".png");
                 thumbnailList.add(renderFile.getAbsolutePath());
                 FileOutputStream fileOut = new FileOutputStream(renderFile);
                 thumb.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
                 fileOut.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace();*/
                 thumbnailList.add("");
-            } finally {
+           /* } finally {*/
                 createThumbnailMultiVideo(index+1);
-            }
+//            }
         }
     }
 
