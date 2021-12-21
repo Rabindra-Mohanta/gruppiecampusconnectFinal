@@ -2,7 +2,9 @@ package school.campusconnect.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import school.campusconnect.R;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 
 public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.ViewHolder> {
@@ -62,12 +65,17 @@ public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.
                     Picasso.with(context).load(uploadImages.get(position)).resize(80,80).into(holder.imgUpload);
                 }else {
                     // TODO : URI : Display Video Thumbnain from URI
-                    Bitmap bMap = ThumbnailUtils.createVideoThumbnail(uploadImages.get(position) , MediaStore.Video.Thumbnails.MICRO_KIND);
-                    holder.imgUpload.setImageBitmap(bMap);
+                 //   Bitmap bMap = ThumbnailUtils.createVideoThumbnail(uploadImages.get(position) , MediaStore.Video.Thumbnails.MICRO_KIND);
+               //    holder.imgUpload.setImageBitmap(bMap);
+
+                    MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
+                    mMMR.setDataSource(context, Uri.parse(uploadImages.get(position)));
+                    holder.imgUpload.setImageBitmap(mMMR.getFrameAtTime());
 
                 }
             }catch (Exception e)
             {
+                AppLog.e("UploadImageAdapter" , "error on crateing bitmap : "+e.getLocalizedMessage());
                 e.printStackTrace();
             }
     }

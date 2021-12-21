@@ -1,7 +1,9 @@
 package school.campusconnect.utils;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -30,11 +32,20 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
     private GetThumbnailListener thumbnailListener;
     ArrayList<String> thumbnailList = new ArrayList<>();
     ArrayList<String> listFiles;
+    Context mContext ;
 
     public GetThumbnail(ArrayList<String> listFiles, GetThumbnailListener listener,String type) {
         this.listFiles = listFiles;
         this.thumbnailListener = listener;
         this.type = type;
+    }
+
+    public GetThumbnail(ArrayList<String> listFiles, GetThumbnailListener listener,String type , Context context)
+    {
+        this.listFiles = listFiles;
+        this.thumbnailListener = listener;
+        this.type = type;
+        this.mContext = context;
     }
 
     public static void create(ArrayList<String> fileName, GetThumbnailListener listener,String type) {
@@ -133,26 +144,37 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
     }
-    private void createThumbnailMultiVideo(int index) {
-        if (listFiles.size() > 0 && index < listFiles.size()) {
-           /* try {
+    private void createThumbnailMultiVideo(int index)
+    {
+        if (listFiles.size() > 0 && index < listFiles.size())
+        {
+            try
+            {
                 String path = listFiles.get(index);
                 File file = new File(path);
-                Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MINI_KIND);
-                String filename = file.getName().substring(0, file.getName().lastIndexOf('.'));*/
+
+              //  Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MINI_KIND);
+              //  String filename = file.getName().substring(0, file.getName().lastIndexOf('.'));
+
+                MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
+                mMMR.setDataSource(mContext, Uri.parse(listFiles.get(index)));
+                Bitmap bmp = mMMR.getFrameAtTime();
+
                 // Save the render result to an image
-                // TODO : URI : Display Video Thumbnain from URI
-              /*  File renderFile = new File(getThumbnainDir(), filename+".png");
+                // TODO : URI : Display Video Thumbnail from URI
+                File renderFile = new File(getThumbnainDir(), "thumbnail_"+System.currentTimeMillis()+".png");
                 thumbnailList.add(renderFile.getAbsolutePath());
                 FileOutputStream fileOut = new FileOutputStream(renderFile);
-                thumb.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
                 fileOut.close();
-            } catch (Exception e) {
-                e.printStackTrace();*/
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
                 thumbnailList.add("");
-           /* } finally {*/
+            } finally {
                 createThumbnailMultiVideo(index+1);
-//            }
+            }
         }
     }
 
