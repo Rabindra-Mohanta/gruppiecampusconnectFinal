@@ -163,10 +163,19 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
                 // Save the render result to an image
                 // TODO : URI : Display Video Thumbnail from URI
                 File renderFile = new File(getThumbnainDir(), "thumbnail_"+System.currentTimeMillis()+".png");
-                thumbnailList.add(renderFile.getAbsolutePath());
                 FileOutputStream fileOut = new FileOutputStream(renderFile);
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
                 fileOut.close();
+
+
+                Uri imageCaptureFile;
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    imageCaptureFile = FileProvider.getUriForFile(LeafApplication.getInstance(), BuildConfig.APPLICATION_ID + ".fileprovider", renderFile);
+                }else {
+                    imageCaptureFile = Uri.fromFile(renderFile);
+                }
+                thumbnailList.add(imageCaptureFile.toString());
+
             }
             catch (Exception e)
             {

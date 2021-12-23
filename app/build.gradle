@@ -25,24 +25,24 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-                /*applicationId "school.campusconnect"
+                applicationId "school.campusconnect"
                 versionCode 11
                 versionName "1.2"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
+                buildConfigField("String", "APP_ID",  '"school"')
 
                 // [1. Gruppie Campus constituency]
-                applicationId "gcm.gruppie"
+               /* applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
                 buildConfigField("String", "AppType",  '""')
-                buildConfigField("String", "APP_ID",  '"constituency"')
+                buildConfigField("String", "APP_ID",  '"constituency"')*/
 
                 // [ 2. RPES :  Campus Copy]
         /*        applicationId "rpes.campusconnect"
