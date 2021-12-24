@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
@@ -20,6 +22,7 @@ import androidx.core.app.NotificationCompat;
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
 import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
@@ -301,60 +304,76 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         File videoCompresed  = ImageUtil.getOutputMediaVideo(finalI);
 
 
+
         AppLog.e(TAG, "compression Started id : "+finalI+", output path : "+videoCompresed.getPath());
-        VideoCompressor.start(listImages.get(finalI), videoCompresed.getPath(), new CompressionListener()
+
+        String width = "";
+        String height = "";
+        try {
+            MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+            metaRetriever.setDataSource(getApplicationContext(), Uri.parse(listImages.get(finalI)));
+            height = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+            width = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+        }
+        catch(Exception ex)
         {
-            @Override
-            public void onStart()
-            {
-                // Compression start
-            }
+            compressedCounts++;
+            compressVideo(compressedCounts);
+        }
 
-            @Override
-            public void onSuccess()
-            {
-                // On Compression success
-                AppLog.e(TAG, "Compression onSuccess id :  "+finalI + " & getPath  : "+videoCompresed.getPath());
+        VideoCompressor.start(
+                getApplicationContext(), // => This is required if srcUri is provided. If not, pass null.
+                Uri.parse(listImages.get(finalI)), // => Source can be provided as content uri, it requires context.
+                null, // => This could be null if srcUri and context are provided.
+                videoCompresed.getPath(),
+                new CompressionListener() {
+                    @Override
+                    public void onStart() {
+                        // Compression start
+                    }
 
-                File file = new File(videoCompresed.getPath());
-                // Get length of file in bytes
-                long fileSizeInBytes = file.length();
-                long fileSizeInKB = fileSizeInBytes / 1024;
-                long fileSizeInMB = fileSizeInKB / 1024;
+                    @Override
+                    public void onSuccess() {
+                        // On Compression success
 
-                AppLog.e(TAG, "onSuccess: with size :  "+fileSizeInMB + " compressCounts : "+compressedCounts);
-                listImages.set(finalI, file.getPath());
+                        AppLog.e(TAG, "Compression onSuccess id :  "+finalI + " & getPath  : "+videoCompresed.getPath());
 
-                compressedCounts++;
+                        File file = new File(videoCompresed.getPath());
+                        // Get length of file in bytes
+                        long fileSizeInBytes = file.length();
+                        long fileSizeInKB = fileSizeInBytes / 1024;
+                        long fileSizeInMB = fileSizeInKB / 1024;
 
-                compressVideo(compressedCounts);
+                        AppLog.e(TAG, "onSuccess: with size :  "+fileSizeInMB + " compressCounts : "+compressedCounts);
 
-            }
+                        listImages.set(finalI, Uri.fromFile(file).toString());
 
-            @Override
-            public void onFailure(String failureMessage) {
-                // On Failure
+                        compressedCounts++;
+                        compressVideo(compressedCounts);
+                    }
 
-                AppLog.e(TAG , "Compression "+finalI+" onFailure : "+failureMessage);
+                    @Override
+                    public void onFailure(String failureMessage) {
+                        // On Failure
+                        AppLog.e(TAG , "onFailure called : "+failureMessage);
+                        compressedCounts++;
 
-                compressedCounts++;
+                        compressVideo(compressedCounts);
+                    }
 
-                compressVideo(compressedCounts);
-            }
+                    @Override
+                    public void onProgress(float v) {
+                        // Update UI with progress value
+                        compressedVideoCount.set(finalI , (int) v) ;
+                        publishCompressProgress((int) v);
+                    }
 
-            @Override
-            public void onProgress(float progressPercent)
-            {
-
-                compressedVideoCount.set(finalI , (int) progressPercent) ;
-                publishCompressProgress((int) progressPercent);
-            }
-
-            @Override
-            public void onCancelled() {
-                // On Cancelled
-            }
-        }, VideoQuality.MEDIUM, false, true);
+                    @Override
+                    public void onCancelled() {
+                        // On Cancelled
+                    }
+                },new Configuration(VideoQuality.LOW , false , false , Double.parseDouble(height) ,Double.parseDouble(width) , 2500000)
+        );
 
 
     }

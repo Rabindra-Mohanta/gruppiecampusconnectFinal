@@ -25,6 +25,7 @@ import androidx.core.app.NotificationCompat;
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
 import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
@@ -36,7 +37,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
+
 
 
 import id.zelory.compressor.Compressor;
@@ -47,6 +48,7 @@ import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.network.LeafManager;
+
 
 public class BackgroundVideoUploadService extends Service implements LeafManager.OnAddUpdateListener<AddPostValidationError> {
 
@@ -89,7 +91,6 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
         currentTask = null;
         taskIntents = new ArrayList<>();
-
     }
 
     @Nullable
@@ -323,7 +324,76 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
 
         AppLog.e(TAG, "compression Started id : "+finalI+", output path : "+videoCompresed.getPath());
-        VideoCompressor.start(listImages.get(finalI), videoCompresed.getPath(), new CompressionListener()
+
+        String width = "";
+        String height = "";
+        try {
+            MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+            metaRetriever.setDataSource(getApplicationContext(), Uri.parse(listImages.get(finalI)));
+            height = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+            width = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+        }
+        catch(Exception ex)
+        {
+            compressedCounts++;
+            compressVideo(compressedCounts);
+        }
+
+        VideoCompressor.start(
+                getApplicationContext(), // => This is required if srcUri is provided. If not, pass null.
+                Uri.parse(listImages.get(finalI)), // => Source can be provided as content uri, it requires context.
+                null, // => This could be null if srcUri and context are provided.
+                videoCompresed.getPath(),
+                new CompressionListener() {
+                    @Override
+                    public void onStart() {
+                        // Compression start
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        // On Compression success
+
+                        AppLog.e(TAG, "Compression onSuccess id :  "+finalI + " & getPath  : "+videoCompresed.getPath());
+
+                        File file = new File(videoCompresed.getPath());
+                        // Get length of file in bytes
+                        long fileSizeInBytes = file.length();
+                        long fileSizeInKB = fileSizeInBytes / 1024;
+                        long fileSizeInMB = fileSizeInKB / 1024;
+
+                        AppLog.e(TAG, "onSuccess: with size :  "+fileSizeInMB + " compressCounts : "+compressedCounts);
+
+                        listImages.set(finalI, Uri.fromFile(file).toString());
+
+                        compressedCounts++;
+                        compressVideo(compressedCounts);
+                    }
+
+                    @Override
+                    public void onFailure(String failureMessage) {
+                        // On Failure
+                        AppLog.e(TAG , "onFailure called : "+failureMessage);
+                        compressedCounts++;
+
+                        compressVideo(compressedCounts);
+                    }
+
+                    @Override
+                    public void onProgress(float v) {
+                        // Update UI with progress value
+                        compressedVideoCount.set(finalI , (int) v) ;
+                        publishCompressProgress((int) v);
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                        // On Cancelled
+                    }
+                },new Configuration(VideoQuality.LOW , false , false , Double.parseDouble(height) ,Double.parseDouble(width) , 2500000)
+        );
+
+    /*    VideoCompressor.start(listImages.get(finalI), videoCompresed.getPath(), new CompressionListener()
         {
             @Override
             public void onStart()
@@ -375,7 +445,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
             public void onCancelled() {
                 // On Cancelled
             }
-        }, VideoQuality.LOW, true, true);
+        }, VideoQuality.LOW, true, true);*/
 
 
     }

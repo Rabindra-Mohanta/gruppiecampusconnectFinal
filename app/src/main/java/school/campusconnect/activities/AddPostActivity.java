@@ -928,7 +928,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     private void recordVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+        takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 //        takeVideoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 1*1024*1024);//5*1048*1048=5MB
 //        takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT,10);
 //        takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.HEIGHT, 640);
@@ -941,6 +941,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             cameraFile = ImageUtil.getOutputMediaVideo();
             imageCaptureFile = Uri.fromFile(cameraFile);
         }
+
+        AppLog.e(TAG , "Video Capture URI : ");
+
         takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureFile);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takeVideoIntent, REQUEST_RECORD_VIDEO);
