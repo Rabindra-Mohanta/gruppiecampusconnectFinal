@@ -810,7 +810,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         //   EnterSubjectDialog();
 
-        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        if ("constituency".equalsIgnoreCase(classData.category)) {
             progressBar.setVisibility(View.VISIBLE);
             leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
         }else {

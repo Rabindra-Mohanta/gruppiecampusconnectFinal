@@ -86,7 +86,7 @@ public class AddBoothStudentActivity extends BaseActivity {
 
     LeafManager leafManager;
 
-    String group_id, team_id;
+    String group_id, team_id, category;
 
     ContactsAdapter adapter;
 
@@ -138,6 +138,7 @@ public class AddBoothStudentActivity extends BaseActivity {
         leafManager = new LeafManager();
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
+        category = getIntent().getStringExtra("category");
 
         adapter = new ContactsAdapter();
         rvSubjects.setAdapter(adapter);
@@ -221,7 +222,7 @@ public class AddBoothStudentActivity extends BaseActivity {
                     BoothMemberReq req = new BoothMemberReq();
                     req.user = adapter.getList();
                     req.user.add(str);
-                    leafManager.addBoothsMember(this, group_id, team_id, req);
+                    leafManager.addBoothsMember(this, group_id, team_id,category, req);
                 }
                 break;
         }

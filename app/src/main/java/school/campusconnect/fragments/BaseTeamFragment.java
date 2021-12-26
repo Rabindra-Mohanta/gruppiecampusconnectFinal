@@ -192,7 +192,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
         menuItem.setVisible(true);
 
-        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
             menu.findItem(R.id.menu_add_team).setVisible(true);
         }
     }
@@ -437,7 +437,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         if (getActivity() == null)
             return;
 
-        if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(mGroupItem.category)) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
         } else if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);

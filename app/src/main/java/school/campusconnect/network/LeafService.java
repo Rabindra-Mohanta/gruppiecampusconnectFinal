@@ -1670,6 +1670,15 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothResponse> getBooths(@Path("group_id") String group_id);
 
+    @GET("/api/v1/groups/{group_id}/my/booth/teams")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothResponse> getMyBooths(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{booth_id}/booth/members/teams")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothResponse> getBoothTeams(@Path("group_id") String group_id,
+                                      @Path("booth_id") String booth_id);
+
     @POST("/api/v1/groups/{group_id}/constituency/booths/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addBooths(@Path("group_id") String group_id, @Body BoothData boothData);
@@ -1680,7 +1689,10 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/user/add/booth")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body BoothMemberReq req);
+    Call<BaseResponse> addBoothsMember(@Path("group_id") String group_id,
+                                       @Path("team_id") String team_id,
+                                       @Query("category") String category,
+                                       @Body BoothMemberReq req);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/user/{user_id}/update/booth/member")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

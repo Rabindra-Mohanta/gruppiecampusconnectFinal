@@ -40,6 +40,8 @@ import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.fragments.BoothListFragment;
 import school.campusconnect.fragments.GeneralPostFragment;
+import school.campusconnect.fragments.MemberTeamListFragment;
+import school.campusconnect.fragments.PublicForumListFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
 
@@ -842,7 +844,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             llBusRegister.setVisibility(View.VISIBLE);
         }
 
-        if (LeafPreference.getInstance(this).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+        if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
             llClass.setVisibility(View.GONE);
             llSubject2.setVisibility(View.GONE);
             llStaffReg.setVisibility(View.GONE);
@@ -1014,12 +1016,21 @@ public class GroupDashboardActivityNew extends BaseActivity
 
 
     private void boothClick() {
+        tvToolbar.setText(GroupDashboardActivityNew.group_name);
         BoothListFragment classListFragment=new BoothListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
     }
 
     private void publicForumClick() {
+        tvToolbar.setText(GroupDashboardActivityNew.group_name);
+        if(mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.groupCount > 1)){
+            PublicForumListFragment classListFragment=new PublicForumListFragment();
+            classListFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
+        } else {
+            onBoothTeams(mGroupItem.name,mGroupItem.id,false);
+        }
 
     }
 
@@ -1094,7 +1105,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (fm.getBackStackEntryCount() > 0) {
 
             if (fm.getBackStackEntryCount() == 1) {
-                if("constituency".equalsIgnoreCase(BuildConfig.AppCategory)){
+                if("constituency".equalsIgnoreCase(mGroupItem.category)){
                     tabLayout.setVisibility(View.VISIBLE);
                 }
                 else if (mGroupItem.canPost)
@@ -1103,7 +1114,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             super.onBackPressed();
         } else {
             if (tabLayout.getSelectedTabPosition() == 0) {
-                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1 || "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) > 1 || "constituency".equalsIgnoreCase(mGroupItem.category)) {
                     GroupDashboardActivityNew.super.onBackPressed();
                 } else {
                     editDialog = SMBDialogUtils.showSMBDialogOKCancel_(this, getResources().getString(R.string.msg_app_exit), new DialogInterface.OnClickListener() {
@@ -1116,6 +1127,11 @@ public class GroupDashboardActivityNew extends BaseActivity
             } else {
                 if (tabLayout.getTabAt(0) != null) {
                     tabLayout.getTabAt(0).select();
+                    if("constituency".equalsIgnoreCase(mGroupItem.category)){
+                        tabLayout.setVisibility(View.VISIBLE);
+                    }
+                    else if (mGroupItem.canPost)
+                        tabLayout.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -1242,6 +1258,21 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         tabLayout.setVisibility(View.GONE);
 
+    }
+    public void onBoothTeams(String name,String team_id,boolean isBackStack) {
+        setBackEnabled(true);
+        tvToolbar.setText(name+"");
+        MemberTeamListFragment fragTeamPost = new MemberTeamListFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("team_id",team_id);
+        fragTeamPost.setArguments(bundle);
+        if(isBackStack){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost)
+                    .addToBackStack("home").commit();
+            tabLayout.setVisibility(View.GONE);
+        }else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).commit();
+        }
     }
 
     public void groupSelected(MyTeamData group) {

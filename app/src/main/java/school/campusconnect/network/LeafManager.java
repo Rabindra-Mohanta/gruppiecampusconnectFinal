@@ -428,7 +428,8 @@ public class LeafManager {
     public static final int API_GET_BOOTH_MEMEBER = 274;
     public static final int API_GET_FAMILY_MEMBER = 275;
     public static final int API_CREATE_FAMILY_MEMBER = 276;
-
+    public static final int API_GET_BOOTH_TEAMS = 280;
+    public static final int API_GET_MY_BOOTH = 279;
 
     public LeafManager() {
 
@@ -10360,6 +10361,76 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
+    public void getMyBooths(OnCommunicationListener listListener, String group_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BoothResponse> model = service.getMyBooths(group_id);
+        ResponseWrapper<BoothResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_GET_MY_BOOTH, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+    public void getBoothTeams(OnCommunicationListener listListener, String group_id,String booth_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BoothResponse> model = service.getBoothTeams(group_id,booth_id);
+        ResponseWrapper<BoothResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_GET_BOOTH_TEAMS, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
 
     public void addBooths(OnCommunicationListener listListener, String group_id, BoothData boothData) {
         mOnCommunicationListener = listListener;
@@ -10503,11 +10574,11 @@ public class LeafManager {
 
     }
 
-    public void addBoothsMember(OnCommunicationListener listListener, String group_id, String teamId, BoothMemberReq boothData) {
+    public void addBoothsMember(OnCommunicationListener listListener, String group_id, String teamId,String category, BoothMemberReq boothData) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BaseResponse> model = service.addBoothsMember(group_id, teamId, boothData);
+        final Call<BaseResponse> model = service.addBoothsMember(group_id, teamId,category, boothData);
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {

@@ -238,6 +238,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         }else {
             ConstituencyRes taluksRes = (ConstituencyRes) response;
             AppLog.e(TAG, "ConstituencyRes " + taluksRes);
+            LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT,taluksRes.data.size());
             rvClass.setAdapter(new GroupAdapterNew(taluksRes.data));
         }
     }
@@ -354,8 +355,6 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
     }
 
     private void onTaluksSelect(GroupItem item) {
-
-        LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT,item.groupCount);
 
         if (item.groupCount == 1) {
             LeafManager manager = new LeafManager();

@@ -220,10 +220,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 startMeeting();
                 break;
             case R.id.menu_add_friend:
-                if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) == 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
                     Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
                     intent.putExtra("group_id", mGroupId);
                     intent.putExtra("team_id", team_id);
+                    intent.putExtra("category", teamData.category);
                     startActivity(intent);
                 }else {
                     final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());

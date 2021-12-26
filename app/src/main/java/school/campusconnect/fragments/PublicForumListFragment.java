@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +32,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.AddBoothActivity;
-import school.campusconnect.activities.BoothStudentActivity;
-import school.campusconnect.activities.ClassStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
-import school.campusconnect.adapters.TeamListAdapterNew;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.booths.BoothResponse;
-import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -47,7 +44,7 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
-public class BoothListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
+public class PublicForumListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "TeamDiscussFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
@@ -57,6 +54,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
+    private GroupItem mGroupItem;
 
     @Nullable
     @Override
@@ -64,13 +62,25 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
 
-        rvClass.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        _init();
 
+        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        if(mGroupItem.canPost){
+            leafManager.getBooths(this,GroupDashboardActivityNew.groupId);
+        }else {
+            leafManager.getMyBooths(this,GroupDashboardActivityNew.groupId);
+        }
 
         return view;
     }
+
+    private void _init() {
+        mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,20 +89,13 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.menu_add_booth).setVisible(true);
         menu.findItem(R.id.action_notification_list).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_add_booth:
-                startActivity(new Intent(getContext(), AddBoothActivity.class));
-                return true;
-            default:
                 return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -101,8 +104,6 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
         }
-        LeafManager leafManager = new LeafManager();
-        leafManager.getBooths(this,GroupDashboardActivityNew.groupId);
     }
 
     @Override
@@ -137,59 +138,53 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_team_list,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class,parent,false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-            final MyTeamData team = list.get(position);
+            final MyTeamData item = list.get(position);
 
-            holder.tvTeamName.setText(team.name);
-            holder.tvPostCount.setText("");
-            holder.tvPostCount.setVisibility(View.GONE);
 
-            if (!TextUtils.isEmpty(team.image)) {
-                holder.imgTeam.setVisibility(View.VISIBLE);
-                holder.imgDefault.setVisibility(View.GONE);
-
-                Picasso.with(mContext).load(Constants.decodeUrlToBase64(team.image)).networkPolicy(NetworkPolicy.OFFLINE)/*.resize(150,150)*/.into(holder.imgTeam, new Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError() {
-                        Picasso.with(mContext).load(Constants.decodeUrlToBase64(team.image))/*.resize(150,150)*/.into(holder.imgTeam, new Callback() {
+            if (!TextUtils.isEmpty(item.image)) {
+                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
+                        new Callback() {
                             @Override
                             public void onSuccess() {
-
+                                holder.img_lead_default.setVisibility(View.INVISIBLE);
                             }
 
                             @Override
                             public void onError() {
-                                holder.imgTeam.setVisibility(View.GONE);
-                                holder.imgDefault.setVisibility(View.VISIBLE);
+                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).into(holder.imgTeam, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        holder.img_lead_default.setVisibility(View.INVISIBLE);
+                                    }
 
-                                TextDrawable drawable = TextDrawable.builder()
-                                        .buildRoundRect(ImageUtil.getTextLetter(team.name), ImageUtil.getRandomColor(position),30);
-                                holder.imgDefault.setImageDrawable(drawable);
+                                    @Override
+                                    public void onError() {
+                                        holder.img_lead_default.setVisibility(View.VISIBLE);
+                                        TextDrawable drawable = TextDrawable.builder()
+                                                .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
+                                        holder.img_lead_default.setImageDrawable(drawable);
+                                        AppLog.e("Picasso", "Error : ");
+                                    }
+                                });
                             }
                         });
-                    }
-                });
-
-
             } else {
-                holder.imgTeam.setVisibility(View.GONE);
-                holder.imgDefault.setVisibility(View.VISIBLE);
-
+                holder.img_lead_default.setVisibility(View.VISIBLE);
                 TextDrawable drawable = TextDrawable.builder()
-                        .buildRoundRect(ImageUtil.getTextLetter(team.name), ImageUtil.getRandomColor(position),30);
-                holder.imgDefault.setImageDrawable(drawable);
+                        .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
+                holder.img_lead_default.setImageDrawable(drawable);
             }
-            holder.imgTeamAdd.setVisibility(View.GONE);
+
+
+            holder.txt_name.setText(item.name);
+            holder.txt_count.setText("");
+            holder.txt_count.setVisibility(View.GONE);
         }
 
         @Override
@@ -215,21 +210,21 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            ImageView imgTeamAdd;
-            TextView tvTeamName, tvBlur, tvPostCount;
-            ImageView imgTeam,imgDefault;
+            @Bind(R.id.img_lead)
+            ImageView imgTeam;
 
+            @Bind(R.id.img_lead_default)
+            ImageView img_lead_default;
+
+            @Bind(R.id.txt_name)
+            TextView txt_name;
+
+            @Bind(R.id.txt_count)
+            TextView txt_count;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-
-                imgTeam = itemView.findViewById(R.id.imgTeam);
-                imgTeamAdd = itemView.findViewById(R.id.imgTeamAdd);
-                imgDefault = itemView.findViewById(R.id.imgDefault);
-                tvTeamName = itemView.findViewById(R.id.tvTeamName);
-                tvBlur = itemView.findViewById(R.id.tvBlur);
-                tvPostCount = itemView.findViewById(R.id.tvPostCount);
-
+                ButterKnife.bind(this, itemView);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -245,11 +240,6 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
     private void onTreeClick(MyTeamData classData) {
 
-        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData);
-//
-//        Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
-//        intent.putExtra("class_data",new Gson().toJson(classData));
-//        intent.putExtra("title",classData.boothName);
-//        startActivity(intent);
+        ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.teamId,true);
     }
 }
