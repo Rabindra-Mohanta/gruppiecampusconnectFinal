@@ -33,10 +33,12 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
+import school.campusconnect.datamodel.booths.BoothData;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.subjects.SubjectResponse;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.UploadImageFragment;
@@ -69,7 +71,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
     LeafManager leafManager;
 
     boolean isEdit;
-    private BoothResponse.BoothData classData;
+    private MyTeamData classData;
     private int currentCountry;
 
     @Override
@@ -84,7 +86,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
 
     private void setImageFragment() {
         if (isEdit) {
-            imageFragment = UploadImageFragment.newInstance(classData.boothImage, true, true);
+            imageFragment = UploadImageFragment.newInstance(classData.image, true, true);
         } else {
             imageFragment = UploadImageFragment.newInstance(null, true, true);
         }
@@ -117,7 +119,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);
-                    leafManager.deleteTeam(AddBoothActivity.this, GroupDashboardActivityNew.groupId, classData.boothId);
+                    leafManager.deleteTeam(AddBoothActivity.this, GroupDashboardActivityNew.groupId, classData.teamId);
                 }
             });
             return true;
@@ -136,8 +138,8 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
             isEdit = bundle.getBoolean("is_edit");
 
             if (isEdit) {
-                classData = new Gson().fromJson(bundle.getString("class_data"), BoothResponse.BoothData.class);
-                etName.setText(classData.boothName);
+                classData = new Gson().fromJson(bundle.getString("class_data"), MyTeamData.class);
+                etName.setText(classData.name);
                 etPhone.setText(classData.phone);
                 etBoothPresident.setText(classData.boothPresidentName);
                 btnCreateClass.setText(getResources().getString(R.string.lbl_update));
@@ -187,7 +189,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
                         progressBar.setVisibility(View.VISIBLE);
                         leafManager.editTeam(this, GroupDashboardActivityNew.groupId, myTeamData.teamId, request);*/
                     } else {
-                        BoothResponse.BoothData request = new BoothResponse.BoothData();
+                        BoothData request = new BoothData();
                         request.boothName = etName.getText().toString();
                         request.boothPresidentName = etBoothPresident.getText().toString();
                         request.phone = etPhone.getText().toString();

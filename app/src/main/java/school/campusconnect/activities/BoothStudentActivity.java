@@ -13,8 +13,10 @@ import com.google.gson.Gson;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.datamodel.booths.BoothData;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.BoothStudentListFragment;
 import school.campusconnect.fragments.ClassStudentListFragment;
 
@@ -28,7 +30,7 @@ public class BoothStudentActivity extends BaseActivity {
 
     private String mGroupId;
     private String teamId;
-    BoothResponse.BoothData classData;
+    MyTeamData classData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +55,9 @@ public class BoothStudentActivity extends BaseActivity {
 
     private void init() {
         if (getIntent().getExtras() != null) {
-            classData = new Gson().fromJson(getIntent().getStringExtra("class_data"), BoothResponse.BoothData.class);
+            classData = new Gson().fromJson(getIntent().getStringExtra("class_data"), MyTeamData.class);
             mGroupId = GroupDashboardActivityNew.groupId;
-            teamId = classData.boothId;
+            teamId = classData.teamId;
 
         }
 

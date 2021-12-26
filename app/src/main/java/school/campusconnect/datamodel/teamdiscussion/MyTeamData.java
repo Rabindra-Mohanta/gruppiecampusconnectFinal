@@ -46,6 +46,14 @@ public class MyTeamData extends BaseResponse {
 
     public TeamDetails details;
 
+    @SerializedName("boothPresidentName")
+    @Expose
+    public String boothPresidentName;
+
+    @SerializedName("countryCode")
+    @Expose
+    public String countryCode;
+
 
     @Override
     public String toString() {

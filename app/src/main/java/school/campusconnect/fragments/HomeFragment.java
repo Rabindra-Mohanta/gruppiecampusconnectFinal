@@ -47,6 +47,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.GroupResponse;
 import school.campusconnect.network.LeafManager;
@@ -70,13 +71,13 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Bind(R.id.etSearch)
     public EditText etSearch;
 
-/*
-    @Bind(R.id.swipeRefreshLayout)
-    public PullRefreshLayout swipeRefreshLayout;
-*/
-    private String from="";
-    private String category="";
-    private String categoryName="";
+    /*
+        @Bind(R.id.swipeRefreshLayout)
+        public PullRefreshLayout swipeRefreshLayout;
+    */
+    private String from = "";
+    private String category = "";
+    private String categoryName = "";
     private String talukName;
     private List<GroupItem> result;
 
@@ -91,10 +92,11 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
         return view;
     }
-    public void showHideSearch(){
-        if(etSearch.getVisibility()==View.VISIBLE){
+
+    public void showHideSearch() {
+        if (etSearch.getVisibility() == View.VISIBLE) {
             etSearch.setVisibility(View.GONE);
-        }else {
+        } else {
             etSearch.setVisibility(View.VISIBLE);
         }
     }
@@ -102,10 +104,9 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     private void _init() {
         if (getArguments() != null) {
             from = getArguments().getString("from");
-            if("TALUK".equalsIgnoreCase(from)){
+            if ("TALUK".equalsIgnoreCase(from)) {
                 talukName = getArguments().getString("talukName");
-            }
-            else if("CONSTITUENCY".equalsIgnoreCase(from)){
+            } else if ("CONSTITUENCY".equalsIgnoreCase(from)) {
                 category = getArguments().getString("category");
                 categoryName = getArguments().getString("categoryName");
             }
@@ -124,16 +125,16 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(result!=null){
-                    if(!TextUtils.isEmpty(s.toString())){
+                if (result != null) {
+                    if (!TextUtils.isEmpty(s.toString())) {
                         ArrayList<GroupItem> list = new ArrayList<>();
-                        for (int i=0;i<result.size();i++){
-                            if(result.get(i).name.toLowerCase().contains(s.toString().toLowerCase())){
+                        for (int i = 0; i < result.size(); i++) {
+                            if (result.get(i).name.toLowerCase().contains(s.toString().toLowerCase())) {
                                 list.add(result.get(i));
                             }
                         }
                         rvClass.setAdapter(new GroupAdapterNew(list));
-                    }else {
+                    } else {
                         rvClass.setAdapter(new GroupAdapterNew(result));
                     }
                 }
@@ -144,7 +145,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     private void getGroupList() {
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getGroups(this, from,talukName,category,categoryName);
+        leafManager.getGroups(this, from, talukName, category, categoryName);
     }
 
     @Override
@@ -157,11 +158,11 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
                 getGroupList();
             } else {
                 String groupList;
-                if (!TextUtils.isEmpty(talukName)){
+                if (!TextUtils.isEmpty(talukName)) {
                     groupList = LeafPreference.getInstance(getActivity()).getString(talukName);
-                }else if (!TextUtils.isEmpty(categoryName)){
+                } else if (!TextUtils.isEmpty(categoryName)) {
                     groupList = LeafPreference.getInstance(getActivity()).getString(categoryName);
-                }else {
+                } else {
                     groupList = LeafPreference.getInstance(getActivity()).getString(LeafPreference.SCHOOL_LIST);
                 }
 
@@ -181,36 +182,50 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
-        GroupResponse res = (GroupResponse) response;
-        AppLog.e(TAG, "ClassResponse " + res.data);
-        result = res.data;
-        if (!TextUtils.isEmpty(talukName)) {
-            LeafPreference.getInstance(getActivity()).setString(talukName, new Gson().toJson(res.data));
-        }else if (!TextUtils.isEmpty(categoryName)) {
-            LeafPreference.getInstance(getActivity()).setString(categoryName, new Gson().toJson(res.data));
+        if (apiId == LeafManager.API_ID_GROUP_DETAIL) {
+            AppLog.e("UserExist->", "getGroupDetail api response");
+
+            GroupDetailResponse gRes = (GroupDetailResponse) response;
+            AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
+            LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
+            //save group detail
+            LeafPreference.getInstance(getActivity()).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
+
+            Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
+            startActivity(login);
         } else {
-            LeafPreference.getInstance(getActivity()).setString(LeafPreference.SCHOOL_LIST, new Gson().toJson(res.data));
-        }
+            GroupResponse res = (GroupResponse) response;
+            AppLog.e(TAG, "ClassResponse " + res.data);
+            result = res.data;
+            if (!TextUtils.isEmpty(talukName)) {
+                LeafPreference.getInstance(getActivity()).setString(talukName, new Gson().toJson(res.data));
+            } else if (!TextUtils.isEmpty(categoryName)) {
+                LeafPreference.getInstance(getActivity()).setString(categoryName, new Gson().toJson(res.data));
+            } else {
+                LeafPreference.getInstance(getActivity()).setString(LeafPreference.SCHOOL_LIST, new Gson().toJson(res.data));
+            }
 
 
-        rvClass.setAdapter(new GroupAdapterNew(res.data));
+            rvClass.setAdapter(new GroupAdapterNew(res.data));
 
-        for (int i = 0; i < res.data.size(); i++) {
-            FirebaseMessaging.getInstance().subscribeToTopic(res.data.get(i).getGroupId())
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                AppLog.e(TAG, "subscribeToTopic : Successful()");
-                            } else {
-                                AppLog.e(TAG, "subscribeToTopic : Fail()");
+            for (int i = 0; i < res.data.size(); i++) {
+                FirebaseMessaging.getInstance().subscribeToTopic(res.data.get(i).getGroupId())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    AppLog.e(TAG, "subscribeToTopic : Successful()");
+                                } else {
+                                    AppLog.e(TAG, "subscribeToTopic : Fail()");
+                                }
+
                             }
+                        });
+            }
 
-                        }
-                    });
+            checkVersionUpdate(res.appVersion);
+
         }
-
-        checkVersionUpdate(res.appVersion);
     }
 
     private void checkVersionUpdate(int appVersion) {
@@ -357,11 +372,16 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
     private void onGroupSelect(GroupItem groupItem) {
 
-        LeafPreference.getInstance(getActivity()).setBoolean("home_api", false);
-        LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER, groupItem.totalUsers);
-        LeafPreference.getInstance(getActivity()).setString(Constants.GROUP_DATA, new Gson().toJson(groupItem));
+        if ("constituency".equalsIgnoreCase(category)) {
+            LeafManager manager = new LeafManager();
+            progressBar.setVisibility(View.VISIBLE);
+            manager.getGroupDetail(this, groupItem.getGroupId());
+        } else {
+            LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER, groupItem.totalUsers);
+            LeafPreference.getInstance(getActivity()).setString(Constants.GROUP_DATA, new Gson().toJson(groupItem));
+            Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
+            startActivity(login);
+        }
 
-        Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
-        startActivity(login);
     }
 }

@@ -1,7 +1,6 @@
 package school.campusconnect.activities;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,8 +15,6 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
 import com.activeandroid.ActiveAndroid;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
@@ -29,8 +26,6 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
-import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
@@ -41,9 +36,9 @@ import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
-import school.campusconnect.datamodel.homework.ReassignReq;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
+import school.campusconnect.fragments.BoothListFragment;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
@@ -68,11 +63,9 @@ import net.frederico.showtipsview.ShowTipsBuilder;
 import net.frederico.showtipsview.ShowTipsView;
 import net.frederico.showtipsview.ShowTipsViewInterface;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -147,9 +140,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.llBusRegister)
     LinearLayout llBusRegister;
-
-    @Bind(R.id.llBooth)
-    LinearLayout llBooth;
 
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
@@ -246,7 +236,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         setGroupData(true);
 
-        hideMoreOption();
+        enableOptions();
 
         cleverTapGroupVisited(mGroupItem);
 
@@ -577,9 +567,6 @@ public class GroupDashboardActivityNew extends BaseActivity
         LeafPreference.getInstance(this).setBoolean("IS_GROUP_ICON_CHANGE", false);
 
         manager = new LeafManager();
-
-        setTabLayout();
-
     }
 
     //NOFIREBASEDATABASE
@@ -603,52 +590,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-
-    private void setTabLayout() {
-        tabText = new String[2];
-        tabIcon = new int[2];
-        tabIcongray = new int[2];
-
-        tabIcon[0] = R.drawable.icon_home;
-        tabIcongray[0] = R.drawable.icon_home_gray;
-        tabText[0] = getResources().getString(R.string.lbl_home);
-        tabLayout.addTab(tabLayout.newTab().setText(tabText[0]));
-
-        tabIcon[1] = R.drawable.icon_more_tab;
-        tabIcongray[1] = R.drawable.icon_more_tab_gray;
-        tabText[1] = getResources().getString(R.string.lbl_more);
-        tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-                AppLog.e(TAG, "TAb Chaged Called");
-
-                changeTab(tab.getPosition());
-                updateTabIcons(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                //prevTabPos = tab.getPosition();
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        createTabIcons();
-
-        if (mGroupItem.canPost) {
-            tabLayout.setVisibility(View.VISIBLE);
-        } else {
-            tabLayout.setVisibility(View.GONE);
-        }
-    }
-
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llBooth, R.id.llFamily, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llFamily, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -766,13 +708,6 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
-            case R.id.llBooth:
-                if (isConnectionAvailable()) {
-                    startActivity(new Intent(this, BoothActivity.class));
-                } else {
-                    showNoNetworkMsg();
-                }
-                break;
             case R.id.llFamily:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, FamilyMemberActivity.class));
@@ -859,21 +794,6 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-
-    public void changeTab(int position) {
-        AppLog.e(TAG, "pos : " + position);
-        switch (position) {
-            case 0:
-                rlMore.setVisibility(View.GONE);
-                HomeClick();
-                break;
-            case 1:
-                AppLog.e(TAG, "Set More Visible triggered");
-                rlMore.setVisibility(View.VISIBLE);
-                break;
-        }
-    }
-
     private void setGroupData(boolean isToolBarTextSet) {
 
         groupId = mGroupItem.getGroupId();
@@ -904,15 +824,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-    private void hideMoreOption() {
-       /* if (mGroupItem.isAdmin) {
-            llAllUsers.setVisibility(View.VISIBLE);
-            llAuthorizedUser.setVisibility(View.VISIBLE);
-        } else {
-            llAllUsers.setVisibility(View.GONE);
-            llAuthorizedUser.setVisibility(View.GONE);
-        }*/
-
+    private void enableOptions() {
         if (mGroupItem.isAdmin) {
             llDiscuss.setVisibility(View.VISIBLE);
         } else {
@@ -924,7 +836,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (mGroupItem.isAdmin || mGroupItem.canPost) {
             llClass.setVisibility(View.VISIBLE);
-//            llSubject.setVisibility(View.VISIBLE);
             llSubject2.setVisibility(View.VISIBLE);
             llStaffReg.setVisibility(View.VISIBLE);
             llAttendanceReport.setVisibility(View.VISIBLE);
@@ -939,17 +850,177 @@ public class GroupDashboardActivityNew extends BaseActivity
             llAttendanceReport.setVisibility(View.GONE);
             tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
             if (mGroupItem.isAdmin || mGroupItem.canPost) {
-                llBooth.setVisibility(View.VISIBLE);
-            }else {
-                llBooth.setVisibility(View.GONE);
+
+            } else {
                 llDiscuss.setVisibility(View.GONE);
             }
             llFamily.setVisibility(View.VISIBLE);
 
             tabLayout.setVisibility(View.VISIBLE);
 
+            if (mGroupItem.canPost) {
+                tabText = new String[4];
+                tabIcon = new int[4];
+                tabIcongray = new int[4];
 
+                tabIcon[0] = R.drawable.icon_home;
+                tabIcongray[0] = R.drawable.icon_home_gray;
+                tabText[0] = getResources().getString(R.string.lbl_home);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[0]));
+
+                tabIcon[1] = R.drawable.icon_booth_home;
+                tabIcongray[1] = R.drawable.icon_booth_grey;
+                tabText[1] = getResources().getString(R.string.lbl_Booths);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
+
+                tabIcon[2] = R.drawable.icon_public_forum;
+                tabIcongray[2] = R.drawable.icon_public_forum_grey;
+                tabText[2] = getResources().getString(R.string.lbl_public_forum);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[2]));
+
+                tabIcon[3] = R.drawable.icon_more_tab;
+                tabIcongray[3] = R.drawable.icon_more_tab_gray;
+                tabText[3] = getResources().getString(R.string.lbl_more);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[3]));
+            } else if (mGroupItem.isBoothPresident) {
+                tabText = new String[3];
+                tabIcon = new int[3];
+                tabIcongray = new int[3];
+
+                tabIcon[0] = R.drawable.icon_home;
+                tabIcongray[0] = R.drawable.icon_home_gray;
+                tabText[0] = getResources().getString(R.string.lbl_home);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[0]));
+
+                tabIcon[1] = R.drawable.icon_public_forum;
+                tabIcongray[1] = R.drawable.icon_public_forum_grey;
+                tabText[1] = getResources().getString(R.string.lbl_public_forum);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
+
+                tabIcon[2] = R.drawable.icon_more_tab;
+                tabIcongray[2] = R.drawable.icon_more_tab_gray;
+                tabText[2] = getResources().getString(R.string.lbl_more);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[2]));
+            } else {
+                tabText = new String[2];
+                tabIcon = new int[2];
+                tabIcongray = new int[2];
+
+                tabIcon[0] = R.drawable.icon_home;
+                tabIcongray[0] = R.drawable.icon_home_gray;
+                tabText[0] = getResources().getString(R.string.lbl_home);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[0]));
+
+                tabIcon[1] = R.drawable.icon_more_tab;
+                tabIcongray[1] = R.drawable.icon_more_tab_gray;
+                tabText[1] = getResources().getString(R.string.lbl_more);
+                tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
+            }
+
+        } else {
+
+            tabText = new String[2];
+            tabIcon = new int[2];
+            tabIcongray = new int[2];
+
+            tabIcon[0] = R.drawable.icon_home;
+            tabIcongray[0] = R.drawable.icon_home_gray;
+            tabText[0] = getResources().getString(R.string.lbl_home);
+            tabLayout.addTab(tabLayout.newTab().setText(tabText[0]));
+
+            tabIcon[1] = R.drawable.icon_more_tab;
+            tabIcongray[1] = R.drawable.icon_more_tab_gray;
+            tabText[1] = getResources().getString(R.string.lbl_more);
+            tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
+
+            if (mGroupItem.canPost) {
+                tabLayout.setVisibility(View.VISIBLE);
+            } else {
+                tabLayout.setVisibility(View.GONE);
+            }
         }
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                AppLog.e(TAG, "TAb Chaged Called");
+                if(tabIcon.length==4){
+                    switch (tab.getPosition()) {
+                        case 0:
+                            rlMore.setVisibility(View.GONE);
+                            HomeClick();
+                            break;
+                        case 1:
+                            rlMore.setVisibility(View.GONE);
+                            // Booth Click
+                            boothClick();
+                            break;
+                        case 2:
+                            rlMore.setVisibility(View.GONE);
+                            // Public Forum CLick
+                            publicForumClick();
+                            break;
+                        case 3:
+                            AppLog.e(TAG, "Set More Visible triggered");
+                            rlMore.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }else if(tabIcon.length==3){
+                    switch (tab.getPosition()) {
+                        case 0:
+                            rlMore.setVisibility(View.GONE);
+                            HomeClick();
+                            break;
+                        case 1:
+                            rlMore.setVisibility(View.GONE);
+                            // Public Forum CLick
+                            publicForumClick();
+                            break;
+                        case 2:
+                            AppLog.e(TAG, "Set More Visible triggered");
+                            rlMore.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }else if(tabIcon.length==2){
+                     switch (tab.getPosition()) {
+                        case 0:
+                            rlMore.setVisibility(View.GONE);
+                            HomeClick();
+                            break;
+                        case 1:
+                            AppLog.e(TAG, "Set More Visible triggered");
+                            rlMore.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }
+
+
+                updateTabIcons(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //prevTabPos = tab.getPosition();
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        createTabIcons();
+    }
+
+
+    private void boothClick() {
+        BoothListFragment classListFragment=new BoothListFragment();
+        classListFragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
+    }
+
+    private void publicForumClick() {
+
     }
 
     public void getContactsWithPermission() {
@@ -1023,7 +1094,10 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (fm.getBackStackEntryCount() > 0) {
 
             if (fm.getBackStackEntryCount() == 1) {
-                if (mGroupItem.canPost)
+                if("constituency".equalsIgnoreCase(BuildConfig.AppCategory)){
+                    tabLayout.setVisibility(View.VISIBLE);
+                }
+                else if (mGroupItem.canPost)
                     tabLayout.setVisibility(View.VISIBLE);
             }
             super.onBackPressed();

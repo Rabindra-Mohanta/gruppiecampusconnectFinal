@@ -7,44 +7,18 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 
 public class BoothResponse extends BaseResponse {
-    private ArrayList<BoothData> data;
+    private ArrayList<MyTeamData> data;
 
-    public ArrayList<BoothData> getData() {
+    public ArrayList<MyTeamData> getData() {
         return data;
     }
 
-    public void setData(ArrayList<BoothData> data) {
+    public void setData(ArrayList<MyTeamData> data) {
         this.data = data;
     }
 
-    public static class BoothData {
-        @SerializedName("phone")
-        @Expose
-        public String phone;
-        @SerializedName("boothPresidentName")
-        @Expose
-        public String boothPresidentName;
-        @SerializedName("boothName")
-        @Expose
-        public String boothName;
-        @SerializedName("boothImage")
-        @Expose
-        public String boothImage;
-        @SerializedName("boothId")
-        @Expose
-        public String boothId;
-        @SerializedName("countryCode")
-        @Expose
-        public String countryCode;
-        @SerializedName("totalBoothMembersCount")
-        @Expose
-        public String totalBoothMembersCount;
 
-        @Override
-        public String toString() {
-            return new Gson().toJson(this);
-        }
-    }
 }

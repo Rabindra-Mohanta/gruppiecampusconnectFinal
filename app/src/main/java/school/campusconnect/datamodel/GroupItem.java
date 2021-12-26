@@ -39,6 +39,7 @@ public class GroupItem implements Parcelable {
     public String constituencyName;
     public String categoryName;
     public int groupCount;
+    public boolean isBoothPresident;
 
 
     protected GroupItem(Parcel in) {
@@ -70,6 +71,7 @@ public class GroupItem implements Parcelable {
         constituencyName = in.readString();
         categoryName = in.readString();
         groupCount = in.readInt();
+        isBoothPresident = in.readByte() != 0;
     }
 
     public static final Creator<GroupItem> CREATOR = new Creator<GroupItem>() {
@@ -172,5 +174,6 @@ public class GroupItem implements Parcelable {
         dest.writeString(constituencyName);
         dest.writeString(categoryName);
         dest.writeInt(groupCount);
+        dest.writeInt((byte) (isBoothPresident ? 1 : 0));
     }
 }

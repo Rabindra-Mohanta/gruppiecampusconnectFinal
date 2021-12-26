@@ -728,9 +728,6 @@
 
 
         <activity
-            android:name=".activities.BoothActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activities.BoothStudentActivity"
             android:screenOrientation="portrait" />
         <activity

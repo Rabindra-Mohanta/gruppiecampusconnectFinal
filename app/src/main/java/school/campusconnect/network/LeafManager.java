@@ -18,6 +18,7 @@ import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
 import school.campusconnect.datamodel.attendance_report.PreSchoolStudentRes;
+import school.campusconnect.datamodel.booths.BoothData;
 import school.campusconnect.datamodel.booths.BoothMemberReq;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
@@ -10360,7 +10361,7 @@ public class LeafManager {
 
     }
 
-    public void addBooths(OnCommunicationListener listListener, String group_id, BoothResponse.BoothData boothData) {
+    public void addBooths(OnCommunicationListener listListener, String group_id, BoothData boothData) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);

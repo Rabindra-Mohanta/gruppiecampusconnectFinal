@@ -166,6 +166,7 @@
         android:visible="false"
         android:title="Add Team"/>
 
+
     <item android:id="@+id/menu_profile"
         android:visible="false"
         android:title="Profile"/>
@@ -190,5 +191,10 @@
 
 
 
+    <item android:id="@+id/menu_add_booth"
+        android:visible="false"
+        app:showAsAction="always"
+        android:icon="@drawable/posticon"
+        android:title="Add Booth"/>
 
 </menu>

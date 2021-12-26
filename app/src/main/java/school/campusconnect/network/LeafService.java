@@ -17,6 +17,7 @@ import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
 import school.campusconnect.datamodel.attendance_report.PreSchoolStudentRes;
+import school.campusconnect.datamodel.booths.BoothData;
 import school.campusconnect.datamodel.booths.BoothMemberReq;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
@@ -1671,7 +1672,7 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/constituency/booths/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addBooths(@Path("group_id") String group_id, @Body BoothResponse.BoothData boothData);
+    Call<BaseResponse> addBooths(@Path("group_id") String group_id, @Body BoothData boothData);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

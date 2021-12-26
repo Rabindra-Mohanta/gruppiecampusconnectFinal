@@ -55,6 +55,7 @@ import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.student.StudentRes;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
@@ -76,7 +77,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
     @Bind(R.id.etSearch)
     public EditText etSearch;
 
-    BoothResponse.BoothData classData;
+    MyTeamData classData;
     private String mGroupId;
     private String teamId;
 
@@ -107,10 +108,10 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
     private void init() {
         if (getArguments() != null) {
-            classData = new Gson().fromJson(getArguments().getString("class_data"), BoothResponse.BoothData.class);
+            classData = new Gson().fromJson(getArguments().getString("class_data"), MyTeamData.class);
             AppLog.e(TAG, "classData : " + classData);
             mGroupId = GroupDashboardActivityNew.groupId;
-            teamId = classData.boothId;
+            teamId = classData.teamId;
         }
     }
 
@@ -120,7 +121,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         etSearch.setText("");
         LeafManager leafManager = new LeafManager();
         AppLog.e(TAG, "getStudents : ");
-        leafManager.getBoothMember(this, GroupDashboardActivityNew.groupId, classData.boothId);
+        leafManager.getBoothMember(this, GroupDashboardActivityNew.groupId, classData.teamId);
     }
 
     @Override

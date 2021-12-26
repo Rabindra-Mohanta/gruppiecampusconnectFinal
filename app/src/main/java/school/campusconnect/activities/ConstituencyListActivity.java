@@ -36,7 +36,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -55,6 +58,7 @@ import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ConstituencyRes;
+import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.network.LeafManager;
@@ -220,9 +224,22 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
-        ConstituencyRes taluksRes = (ConstituencyRes) response;
-        AppLog.e(TAG, "ConstituencyRes " + taluksRes);
-        rvClass.setAdapter(new GroupAdapterNew(taluksRes.data));
+        if (apiId == LeafManager.API_ID_GROUP_DETAIL) {
+            AppLog.e("UserExist->", "getGroupDetail api response");
+
+            GroupDetailResponse gRes = (GroupDetailResponse) response;
+            AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
+            LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
+            //save group detail
+            LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
+
+            Intent login = new Intent(this, GroupDashboardActivityNew.class);
+            startActivity(login);
+        }else {
+            ConstituencyRes taluksRes = (ConstituencyRes) response;
+            AppLog.e(TAG, "ConstituencyRes " + taluksRes);
+            rvClass.setAdapter(new GroupAdapterNew(taluksRes.data));
+        }
     }
 
     @Override
@@ -341,10 +358,9 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT,item.groupCount);
 
         if (item.groupCount == 1) {
-            LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, item.totalUsers);
-            LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(item));
-            Intent login = new Intent(this, GroupDashboardActivityNew.class);
-            startActivity(login);
+            LeafManager manager = new LeafManager();
+            progressBar.setVisibility(View.VISIBLE);
+            manager.getGroupDetail(this, item.getGroupId());
         } else {
             Intent intent = new Intent(ConstituencyListActivity.this, Home.class);
             intent.putExtra("from", "CONSTITUENCY");

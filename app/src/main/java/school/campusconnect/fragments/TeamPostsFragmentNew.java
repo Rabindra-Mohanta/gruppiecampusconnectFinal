@@ -601,7 +601,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         isFromMain = getArguments().getBoolean("isFromMain", false);
         AppLog.e(TAG, "isFromMain : " + isFromMain);
 
-        mGroupId = teamData.groupId;
+        mGroupId = !TextUtils.isEmpty(teamData.groupId)?teamData.groupId:GroupDashboardActivityNew.groupId;
         team_id = teamData.teamId;
         teamName = teamData.name;
         teamType = teamData.teamType;
