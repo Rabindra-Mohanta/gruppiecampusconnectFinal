@@ -31,6 +31,7 @@ import school.campusconnect.adapters.ReportAdapter;
 import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostItem;
+import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
@@ -220,13 +221,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 startMeeting();
                 break;
             case R.id.menu_add_friend:
-                if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                if ("constituency".equalsIgnoreCase(teamData.category)) {
                     Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
                     intent.putExtra("group_id", mGroupId);
                     intent.putExtra("team_id", team_id);
                     intent.putExtra("category", teamData.category);
                     startActivity(intent);
-                }else {
+                } else {
                     final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                     CharSequence items[] = new CharSequence[]{"Add Staff", "Add Students"};
                     adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
@@ -398,9 +399,9 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         return mBinding.getRoot();
     }
-    private void callApi(boolean isInBackground){
-        if (isConnectionAvailable())
-        {
+
+    private void callApi(boolean isInBackground) {
+        if (isConnectionAvailable()) {
             getData2(team_id, isInBackground);
             AppLog.e("TeamPostFrag", "DataFromAPI");
         } else {
@@ -408,11 +409,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mBinding.progressBar2.setVisibility(View.GONE);
         }
     }
-    private void firebaseListen(String lastIdFromDB, boolean apiEvent)
-    {
-        AppLog.e(TAG , "firebaseListen called : "+lastIdFromDB);
+
+    private void firebaseListen(String lastIdFromDB, boolean apiEvent) {
+        AppLog.e(TAG, "firebaseListen called : " + lastIdFromDB);
         //NOFIREBASEDATABASE
-        if(TextUtils.isEmpty(lastIdFromDB) ||  leafPreference.getInt(team_id+"_post") >0
+        if (TextUtils.isEmpty(lastIdFromDB) || leafPreference.getInt(team_id + "_post") > 0
                 || leafPreference.getBoolean(team_id + "_post_delete") || apiEvent) {
             leafPreference.setBoolean(team_id + "_post_delete", false);
             callApi(true);
@@ -466,15 +467,17 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mBinding.fabAttendance.setVisibility(View.GONE);
         }*/
     }
+
     EventTBL eventTBL;
+
     private void getDataLocaly() {
-        eventTBL = EventTBL.getTeamEvent( mGroupId,team_id);
+        eventTBL = EventTBL.getTeamEvent(mGroupId, team_id);
         boolean apiEvent = false;
-        if(eventTBL!=null){
-            if(eventTBL._now ==0){
+        if (eventTBL != null) {
+            if (eventTBL._now == 0) {
                 apiEvent = true;
             }
-            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
+            if (MixOperations.isNewEvent(eventTBL.eventAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", eventTBL._now)) {
                 apiEvent = true;
             }
 
@@ -490,7 +493,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 TeamPostGetData teamPostGetdata = new TeamPostGetData();
 
-                if(i==0){
+                if (i == 0) {
                     lastId = dataItemList.get(i).id;
                 }
 
@@ -526,10 +529,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mAdapter2.notifyDataSetChanged();
             mBinding.setSize(mAdapter2.getItemCount());
 
-            firebaseListen(lastId,apiEvent);
+            firebaseListen(lastId, apiEvent);
 
         } else {
-           firebaseListen("",apiEvent);
+            firebaseListen("", apiEvent);
         }
 
 
@@ -581,8 +584,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
 
         //NOFIREBASEDATABASE
@@ -602,7 +604,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         isFromMain = getArguments().getBoolean("isFromMain", false);
         AppLog.e(TAG, "isFromMain : " + isFromMain);
 
-        mGroupId = !TextUtils.isEmpty(teamData.groupId)?teamData.groupId:GroupDashboardActivityNew.groupId;
+        mGroupId = !TextUtils.isEmpty(teamData.groupId) ? teamData.groupId : GroupDashboardActivityNew.groupId;
         team_id = teamData.teamId;
         teamName = teamData.name;
         teamType = teamData.teamType;
@@ -696,7 +698,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISTEAMUPDATED)) {
-            manager.myTeamList(this, GroupDashboardActivityNew.groupId);
+            if ("constituency".equalsIgnoreCase(teamData.category)) {
+                manager.getBooths(this, GroupDashboardActivityNew.groupId);
+            } else {
+                manager.myTeamList(this, GroupDashboardActivityNew.groupId);
+            }
             //((GroupDashboardActivityNew)getActivity()).HomeClick();
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED, false);
         }
@@ -725,7 +731,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 saveTeamPost(res2.getResults());
 
-                if(eventTBL!=null){
+                if (eventTBL != null) {
                     eventTBL._now = System.currentTimeMillis();
                     eventTBL.save();
                 }
@@ -739,7 +745,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 }
                 mAdapter2.notifyItemChanged(position);
                 TeamPostGetData select = teamPostList.get(position);
-                PostTeamDataItem.updateFav(select.id,select.isFavourited?1:0);
+                PostTeamDataItem.updateFav(select.id, select.isFavourited ? 1 : 0);
                 break;
 
 
@@ -756,7 +762,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
 
                 TeamPostGetData select2 = teamPostList.get(position);
-                PostTeamDataItem.updateLike(select2.id,select2.isLiked?1:0,select2.likes);
+                PostTeamDataItem.updateLike(select2.id, select2.isLiked ? 1 : 0, select2.likes);
 
                 break;
 
@@ -800,9 +806,27 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 getActivity().onBackPressed();
                 break;
 
-            case LeafManager.API_MY_TEAM_LIST:
+            case LeafManager.API_MY_TEAM_LIST: {
                 MyTeamsResponse res = (MyTeamsResponse) response;
                 List<MyTeamData> result = res.getResults();
+                AppLog.e(TAG, "Team list Res :: " + new Gson().toJson(result));
+                boolean isFind = false;
+                for (MyTeamData myTeam : result) {
+                    if (team_id.equals(myTeam.teamId)) {
+                        teamData = myTeam;
+                        teamName = teamData.name;
+                        isFind = true;
+                        refreshData();
+                        break;
+                    }
+                }
+                if (!isFind)
+                    getActivity().onBackPressed();
+            }
+            break;
+            case LeafManager.API_GET_BOOTHS:
+                BoothResponse res = (BoothResponse) response;
+                List<MyTeamData> result = res.getData();
                 AppLog.e(TAG, "Team list Res :: " + new Gson().toJson(result));
                 boolean isFind = false;
                 for (MyTeamData myTeam : result) {
@@ -827,7 +851,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         setFloatingButton();
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(teamData.name);
-          //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(teamData.members + " users");
+            //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(teamData.members + " users");
         }
 
     }
@@ -835,7 +859,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private void sendNotification(TeamPostGetData currentItem) {
 
         SendNotificationModel notificationModel = new SendNotificationModel();
-        notificationModel.to = "/topics/" + mGroupId+"_"+team_id;
+        notificationModel.to = "/topics/" + mGroupId + "_" + team_id;
         notificationModel.data.title = getResources().getString(R.string.app_name);
         notificationModel.data.body = "Team Post deleted";
         notificationModel.data.Notification_type = "DELETE_POST";
@@ -963,7 +987,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mIsLoading = true;
         }
         manager.teamPostGetApi(this, mGroupId + "", team_id + "", getActivity(), currentPage2);
-        leafPreference.remove(team_id+"_post");
+        leafPreference.remove(team_id + "_post");
 
     }
 

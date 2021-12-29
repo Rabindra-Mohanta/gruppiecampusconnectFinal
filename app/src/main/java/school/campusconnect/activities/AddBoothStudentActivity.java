@@ -156,6 +156,7 @@ public class AddBoothStudentActivity extends BaseActivity {
                     adapter.add(str);
 
                     etName.setText("");
+                    etName.requestFocus();
                     etPhone.setText("");
                 }
             }
@@ -211,18 +212,32 @@ public class AddBoothStudentActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btnAdd:
                 hide_keyboard(view);
+                String str = "";
+                if (!TextUtils.isEmpty(etName.getText().toString().trim()) && !TextUtils.isEmpty(etPhone.getText().toString().trim())) {
+                    str = etName.getText().toString() + ",IN," + etPhone.getText().toString();
+                }
+                else if (TextUtils.isEmpty(etName.getText().toString().trim()) && TextUtils.isEmpty(etPhone.getText().toString().trim())) {
 
-                if (TextUtils.isEmpty(etName.getText().toString().trim())) {
-                    Toast.makeText(AddBoothStudentActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(etPhone.getText().toString().trim())) {
-                    Toast.makeText(AddBoothStudentActivity.this, "Please Enter Phone", Toast.LENGTH_SHORT).show();
                 } else {
-                    String str = etName.getText().toString() + ",IN," + etPhone.getText().toString();
-                    progressBar.setVisibility(View.VISIBLE);
+                    if (TextUtils.isEmpty(etName.getText().toString().trim())) {
+                        Toast.makeText(AddBoothStudentActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (TextUtils.isEmpty(etPhone.getText().toString().trim())) {
+                        Toast.makeText(AddBoothStudentActivity.this, "Please Enter Phone", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
+                if(!TextUtils.isEmpty(str) || adapter.getList().size()>0){
                     BoothMemberReq req = new BoothMemberReq();
                     req.user = adapter.getList();
-                    req.user.add(str);
-                    leafManager.addBoothsMember(this, group_id, team_id,category, req);
+                    if(!TextUtils.isEmpty(str)){
+                        req.user.add(str);
+                    }
+                    progressBar.setVisibility(View.VISIBLE);
+                    leafManager.addBoothsMember(this, group_id, team_id, category, req);
+                }else {
+                    Toast.makeText(AddBoothStudentActivity.this, "Please Add at least one contact", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

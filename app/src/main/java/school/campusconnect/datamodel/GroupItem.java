@@ -39,6 +39,9 @@ public class GroupItem implements Parcelable {
     public String constituencyName;
     public String categoryName;
     public int groupCount;
+    public String boothId;
+    public String boothName;
+    public int boothCount;
     public boolean isBoothPresident;
 
 
@@ -71,6 +74,9 @@ public class GroupItem implements Parcelable {
         constituencyName = in.readString();
         categoryName = in.readString();
         groupCount = in.readInt();
+        boothId = in.readString();
+        boothName = in.readString();
+        boothCount = in.readInt();
         isBoothPresident = in.readByte() != 0;
     }
 
@@ -174,6 +180,9 @@ public class GroupItem implements Parcelable {
         dest.writeString(constituencyName);
         dest.writeString(categoryName);
         dest.writeInt(groupCount);
+        dest.writeString(boothId);
+        dest.writeString(boothName);
+        dest.writeInt(boothCount);
         dest.writeInt((byte) (isBoothPresident ? 1 : 0));
     }
 }

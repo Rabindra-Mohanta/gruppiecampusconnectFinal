@@ -191,10 +191,17 @@
 
 
 
+    <item android:id="@+id/menu_search"
+        app:showAsAction="always"
+        android:visible="false"
+        android:icon="@drawable/icon_search"
+        android:title="Search"/>
+
     <item android:id="@+id/menu_add_booth"
         android:visible="false"
         app:showAsAction="always"
         android:icon="@drawable/posticon"
         android:title="Add Booth"/>
+
 
 </menu>

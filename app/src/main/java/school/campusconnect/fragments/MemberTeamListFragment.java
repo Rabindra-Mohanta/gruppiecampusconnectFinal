@@ -50,6 +50,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     public ProgressBar progressBar;
 
     String team_id;
+    String name;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         ButterKnife.bind(this,view);
 
         team_id = getArguments().getString("team_id");
+        name = getArguments().getString("name");
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         progressBar.setVisibility(View.VISIBLE);
@@ -86,6 +88,9 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onStart() {
         super.onStart();
+        if (getActivity() != null) {
+            ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(name+"");
+        }
     }
 
     @Override

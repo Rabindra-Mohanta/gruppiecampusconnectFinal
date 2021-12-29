@@ -1024,12 +1024,12 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     private void publicForumClick() {
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
-        if(mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.groupCount > 1)){
+        if(mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)){
             PublicForumListFragment classListFragment=new PublicForumListFragment();
             classListFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
         } else {
-            onBoothTeams(mGroupItem.name,mGroupItem.id,false);
+            onBoothTeams(mGroupItem.boothName,mGroupItem.boothId,false);
         }
 
     }
@@ -1265,6 +1265,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         MemberTeamListFragment fragTeamPost = new MemberTeamListFragment();
         Bundle bundle=new Bundle();
         bundle.putString("team_id",team_id);
+        bundle.putString("name",name);
         fragTeamPost.setArguments(bundle);
         if(isBackStack){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost)

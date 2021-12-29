@@ -4,13 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,6 +30,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -40,6 +44,7 @@ import school.campusconnect.adapters.TeamListAdapterNew;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.staff.StaffResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -57,20 +62,54 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
+    @Bind(R.id.etSearch)
+    public EditText etSearch;
+    private ArrayList<MyTeamData> result;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss_search,container,false);
         ButterKnife.bind(this,view);
+
+        init();
 
         rvClass.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
-
-        progressBar.setVisibility(View.VISIBLE);
-
         return view;
     }
+
+    private void init() {
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(result!=null){
+                    if(!TextUtils.isEmpty(s.toString())){
+                        ArrayList<MyTeamData> newList = new ArrayList<>();
+                        for (int i=0;i<result.size();i++){
+                            if(result.get(i).name.toLowerCase().contains(s.toString().toLowerCase())){
+                                newList.add(result.get(i));
+                            }
+                        }
+                        rvClass.setAdapter(new ClassesAdapter(newList));
+                    }else {
+                        rvClass.setAdapter(new ClassesAdapter(result));
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +119,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.menu_add_booth).setVisible(true);
+        menu.findItem(R.id.menu_search).setVisible(true);
         menu.findItem(R.id.action_notification_list).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
@@ -89,6 +129,9 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         switch (item.getItemId()){
             case R.id.menu_add_booth:
                 startActivity(new Intent(getContext(), AddBoothActivity.class));
+                return true;
+            case R.id.menu_search:
+                showHideSearch();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -101,7 +144,9 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
         }
+        etSearch.setText("");
         LeafManager leafManager = new LeafManager();
+        progressBar.setVisibility(View.VISIBLE);
         leafManager.getBooths(this,GroupDashboardActivityNew.groupId);
     }
 
@@ -109,7 +154,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
         BoothResponse res = (BoothResponse) response;
-        List<MyTeamData> result = res.getData();
+        result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
 
         rvClass.setAdapter(new ClassesAdapter(result));
@@ -123,6 +168,16 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+    }
+
+
+
+    public void showHideSearch() {
+        if (etSearch.getVisibility() == View.VISIBLE) {
+            etSearch.setVisibility(View.GONE);
+        } else {
+            etSearch.setVisibility(View.VISIBLE);
+        }
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
