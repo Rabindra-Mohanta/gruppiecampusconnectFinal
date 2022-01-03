@@ -851,11 +851,10 @@ public class GroupDashboardActivityNew extends BaseActivity
             llBusRegister.setVisibility(View.GONE);
             llAttendanceReport.setVisibility(View.GONE);
             tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
-            if (mGroupItem.isAdmin || mGroupItem.canPost) {
 
-            } else {
-                llDiscuss.setVisibility(View.GONE);
-            }
+            llDiscuss.setVisibility(View.GONE);
+            llPeople.setVisibility(View.GONE);
+
             llFamily.setVisibility(View.VISIBLE);
 
             tabLayout.setVisibility(View.VISIBLE);

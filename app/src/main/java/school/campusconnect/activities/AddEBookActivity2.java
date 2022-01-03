@@ -29,6 +29,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 
 import org.json.JSONObject;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -379,17 +381,18 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
             if (clipData == null) {
                 Uri selectedImageURI = data.getData();
                 Log.e("SelectedURI : ", selectedImageURI.toString());
-                if (selectedImageURI.toString().startsWith("content")) {
+                /*if (selectedImageURI.toString().startsWith("content")) {
                     selectedPDF = ImageUtil.getPath(this, selectedImageURI);
                 } else {
-                    selectedPDF = selectedImageURI.getPath();
-                }
+                    selectedPDF = selectedImageURI.toString();
+                }*/
+                selectedPDF = selectedImageURI.toString();
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
-                    String path = ImageUtil.getPath(this, uri1);
-                    selectedPDF = path;
+//                    String path = ImageUtil.getPath(this, uri1);
+                    selectedPDF = uri1.toString();
                 }
             }
             if (selectedPDF == null) {
@@ -427,42 +430,51 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
 
         final String key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_PDF);
 
-        File file = new File(selectedPDF);
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file, CannedAccessControlList.PublicRead);
+        TransferObserver observer ;
 
-        observer.setTransferListener(new TransferListener() {
-            @Override
-            public void onStateChanged(int id, TransferState state) {
-                AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                    Log.e("MULTI_IMAGE", "onStateChanged " + selectedPDF);
-                    updateList(key);
+        try {
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            observer = transferUtility.upload(key,
+                    getContentResolver().openInputStream(Uri.parse(selectedPDF)), option);
+
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                        Log.e("MULTI_IMAGE", "onStateChanged " + selectedPDF);
+                        updateList(key);
+                    }
+                    if (TransferState.FAILED.equals(state)) {
+                        Toast.makeText(AddEBookActivity2.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }
-                if (TransferState.FAILED.equals(state)) {
-                    Toast.makeText(AddEBookActivity2.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+                    progressDialog.setMessage("Uploading Pdf " + percentDone + "% ");
+                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
+                    progressDialog.dismiss();
+                    AppLog.e(TAG, "Upload Error : " + ex);
+                    Toast.makeText(AddEBookActivity2.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
                 }
-            }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                int percentDone = (int) percentDonef;
-                progressDialog.setMessage("Uploading Pdf " + percentDone + "% ");
-                AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-            }
-
-            @Override
-            public void onError(int id, Exception ex) {
-                progressBar.setVisibility(View.GONE);
-                progressDialog.dismiss();
-                AppLog.e(TAG, "Upload Error : " + ex);
-                Toast.makeText(AddEBookActivity2.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 

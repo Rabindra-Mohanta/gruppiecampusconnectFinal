@@ -29,6 +29,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 
 import org.json.JSONObject;
@@ -135,7 +136,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                 } else if (pdfSelected.size() == 0) {
                     Toast.makeText(AddEBookActivity.this, "Please Select Pdf", Toast.LENGTH_SHORT).show();
                 } else {
-                    adapter.add(new EBooksResponse.SubjectBook(etSubject.getText().toString(),etDesc.getText().toString(), pdfSelected));
+                    adapter.add(new EBooksResponse.SubjectBook(etSubject.getText().toString(), etDesc.getText().toString(), pdfSelected));
                     hide_keyboard(view);
                     pdfSelected.clear();
                     etSubject.setText("");
@@ -188,7 +189,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                     request.className = etName.getText().toString();
                     request.subjectBooks = adapter.getList();
                     if (!TextUtils.isEmpty(etSubject.getText().toString().trim()) && pdfSelected.size() > 0) {
-                        request.subjectBooks.add((new EBooksResponse.SubjectBook(etSubject.getText().toString(),etDesc.getText().toString(), pdfSelected)));
+                        request.subjectBooks.add((new EBooksResponse.SubjectBook(etSubject.getText().toString(), etDesc.getText().toString(), pdfSelected)));
                     }
                     AppLog.e(TAG, "request :" + request);
                     progressDialog.setMessage("Uploading Pdf...");
@@ -270,8 +271,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
     private class SendNotification extends AsyncTask<String, String, String> {
         private String server_response;
 
-        public SendNotification()
-        {
+        public SendNotification() {
 
         }
 
@@ -298,21 +298,21 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                     String topic;
                     String title = getResources().getString(R.string.app_name);
                     String name = LeafPreference.getInstance(AddEBookActivity.this).getString(LeafPreference.NAME);
-                    String message = name + " has added new ebook." ;
-                    topic = GroupDashboardActivityNew.groupId ;
+                    String message = name + " has added new ebook.";
+                    topic = GroupDashboardActivityNew.groupId;
                     object.put("to", "/topics/" + topic);
 
                     JSONObject notificationObj = new JSONObject();
                     notificationObj.put("title", title);
                     notificationObj.put("body", message);
-                  //  object.put("notification", notificationObj);
+                    //  object.put("notification", notificationObj);
 
                     JSONObject dataObj = new JSONObject();
                     dataObj.put("groupId", GroupDashboardActivityNew.groupId);
                     dataObj.put("createdById", LeafPreference.getInstance(AddEBookActivity.this).getString(LeafPreference.LOGIN_ID));
                     dataObj.put("teamId", "");
                     dataObj.put("title", title);
-                    dataObj.put("Notification_type",  "EBookAdd");
+                    dataObj.put("Notification_type", "EBookAdd");
                     dataObj.put("body", message);
                     object.put("data", dataObj);
                     wr.writeBytes(object.toString());
@@ -427,17 +427,18 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
             if (clipData == null) {
                 Uri selectedImageURI = data.getData();
                 Log.e("SelectedURI : ", selectedImageURI.toString());
-                if (selectedImageURI.toString().startsWith("content")) {
+                /*if (selectedImageURI.toString().startsWith("content")) {
                     pdfSelected.add(ImageUtil.getPath(this, selectedImageURI));
                 } else {
                     pdfSelected.add(selectedImageURI.getPath());
-                }
+                }*/
+                pdfSelected.add(selectedImageURI.toString());
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
-                    String path = ImageUtil.getPath(this, uri1);
-                    pdfSelected.add(path);
+//                    String path = ImageUtil.getPath(this, uri1);
+                    pdfSelected.add(uri1.toString());
                 }
             }
             if (pdfSelected.size() == 0) {
@@ -449,38 +450,43 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
     }
 
     ArrayList<ArrayList<String>> thumbnailListMulti = new ArrayList<>();
+
     private void uploadToAmazone(AddEbookReq request) {
         mainRequest = request;
         thumbnailListMulti.clear();
         createMultipleListThumbnail(0);
     }
+
     private void createMultipleListThumbnail(int index) {
-        if(mainRequest.subjectBooks.size()==index){
-            upLoadThumbnailOnCloud(0,0);
-        }else {
+        if (mainRequest.subjectBooks.size() == index) {
+            upLoadThumbnailOnCloud(0, 0);
+        } else {
             GetThumbnail.create(mainRequest.subjectBooks.get(index).fileName, new GetThumbnail.GetThumbnailListener() {
                 @Override
                 public void onThumbnail(ArrayList<String> listThumbnails) {
-                    if(listThumbnails!=null){
+                    if (listThumbnails != null) {
                         thumbnailListMulti.add(listThumbnails);
-                        createMultipleListThumbnail(index+1);
-                    }else {
+                        createMultipleListThumbnail(index + 1);
+                    } else {
                         Toast.makeText(AddEBookActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
                     }
 
                 }
-            },Constants.FILE_TYPE_PDF);
+            }, Constants.FILE_TYPE_PDF);
         }
     }
 
     private void upLoadImageOnCloud(final int pos, final int pdfPos) {
 
-            final String key = AmazoneHelper.getAmazonS3Key(mainRequest.subjectBooks.get(pos).fileType);
+        final String key = AmazoneHelper.getAmazonS3Key(mainRequest.subjectBooks.get(pos).fileType);
 
-            File file = new File(mainRequest.subjectBooks.get(pos).fileName.get(pdfPos));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
-
+        TransferObserver observer;
+        UploadOptions option = UploadOptions.
+                builder().bucket(AmazoneHelper.BUCKET_NAME).
+                cannedAcl(CannedAccessControlList.PublicRead).build();
+        try {
+            observer = transferUtility.upload(key,
+                    getContentResolver().openInputStream(Uri.parse(mainRequest.subjectBooks.get(pos).fileName.get(pdfPos))), option);
             observer.setTransferListener(new TransferListener() {
                 @Override
                 public void onStateChanged(int id, TransferState state) {
@@ -513,6 +519,10 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                     Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
                 }
             });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -525,70 +535,77 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
 
         Log.e("FINALURL", "encoded url is " + _finalUrl);
 
-        mainRequest.subjectBooks.get(pos).fileName.set(pdfPos,_finalUrl);
-        pdfPos = pdfPos+1;
-        if(mainRequest.subjectBooks.get(pos).fileName.size()==pdfPos){
-            pos = pos+1;
+        mainRequest.subjectBooks.get(pos).fileName.set(pdfPos, _finalUrl);
+        pdfPos = pdfPos + 1;
+        if (mainRequest.subjectBooks.get(pos).fileName.size() == pdfPos) {
+            pos = pos + 1;
             if (pos == mainRequest.subjectBooks.size()) {
 
-                for (int i=0;i<mainRequest.subjectBooks.size();i++){
+                for (int i = 0; i < mainRequest.subjectBooks.size(); i++) {
                     mainRequest.subjectBooks.get(i).thumbnailImage = thumbnailListMulti.get(i);
                 }
                 progressDialog.dismiss();
                 AppLog.e(TAG, "mainRequest :" + mainRequest);
                 progressBar.setVisibility(View.VISIBLE);
                 leafManager.addEBook(this, GroupDashboardActivityNew.groupId, mainRequest);
-            }else {
-                pdfPos=0;
-                upLoadImageOnCloud(pos,pdfPos);
+            } else {
+                pdfPos = 0;
+                upLoadImageOnCloud(pos, pdfPos);
             }
-        }else {
-            upLoadImageOnCloud(pos,pdfPos);
+        } else {
+            upLoadImageOnCloud(pos, pdfPos);
         }
     }
-
 
 
     private void upLoadThumbnailOnCloud(final int pos, final int pdfPos) {
 
         final String key = AmazoneHelper.getAmazonS3KeyThumbnail(Constants.FILE_TYPE_PDF);
 
-        File file = new File(thumbnailListMulti.get(pos).get(pdfPos));
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file , CannedAccessControlList.PublicRead);
-
-        observer.setTransferListener(new TransferListener() {
-            @Override
-            public void onStateChanged(int id, TransferState state) {
-                AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                    Log.e("MULTI_IMAGE", "onStateChanged " + pos);
-                    updateThumbnailList(pos, pdfPos, key);
+        TransferObserver observer ;
+        UploadOptions option = UploadOptions.
+                builder().bucket(AmazoneHelper.BUCKET_NAME).
+                cannedAcl(CannedAccessControlList.PublicRead).build();
+        try {
+            observer = transferUtility.upload(key,
+                    getContentResolver().openInputStream(Uri.parse(thumbnailListMulti.get(pos).get(pdfPos))), option);
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                        updateThumbnailList(pos, pdfPos, key);
+                    }
+                    if (TransferState.FAILED.equals(state)) {
+                        Toast.makeText(AddEBookActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        progressDialog.dismiss();
+                    }
                 }
-                if (TransferState.FAILED.equals(state)) {
-                    Toast.makeText(AddEBookActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+                    //progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pdfPos + 1) + "/" + mainRequest.subjectBooks.get(pos).fileName.size() + " From " + (pos + 1) + "/" + mainRequest.subjectBooks.size() + " Subject");
+                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
                     progressDialog.dismiss();
+                    AppLog.e(TAG, "Upload Error : " + ex);
+                    Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
                 }
-            }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                int percentDone = (int) percentDonef;
-                //progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pdfPos + 1) + "/" + mainRequest.subjectBooks.get(pos).fileName.size() + " From " + (pos + 1) + "/" + mainRequest.subjectBooks.size() + " Subject");
-                AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-            }
 
-            @Override
-            public void onError(int id, Exception ex) {
-                progressBar.setVisibility(View.GONE);
-                progressDialog.dismiss();
-                AppLog.e(TAG, "Upload Error : " + ex);
-                Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
@@ -601,18 +618,18 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
 
         Log.e("FINALURL", "encoded url is " + _finalUrl);
 
-        thumbnailListMulti.get(pos).set(pdfPos,_finalUrl);
-        pdfPos = pdfPos+1;
-        if(thumbnailListMulti.get(pos).size()==pdfPos){
-            pos = pos+1;
+        thumbnailListMulti.get(pos).set(pdfPos, _finalUrl);
+        pdfPos = pdfPos + 1;
+        if (thumbnailListMulti.get(pos).size() == pdfPos) {
+            pos = pos + 1;
             if (pos == thumbnailListMulti.size()) {
-                upLoadImageOnCloud(0,0);
-            }else {
-                pdfPos=0;
-                upLoadThumbnailOnCloud(pos,pdfPos);
+                upLoadImageOnCloud(0, 0);
+            } else {
+                pdfPos = 0;
+                upLoadThumbnailOnCloud(pos, pdfPos);
             }
-        }else {
-            upLoadThumbnailOnCloud(pos,pdfPos);
+        } else {
+            upLoadThumbnailOnCloud(pos, pdfPos);
         }
     }
 }

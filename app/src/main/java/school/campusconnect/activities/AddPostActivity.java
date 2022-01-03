@@ -58,7 +58,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -184,7 +183,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     ArrayList<String> listAmazonS3Url = new ArrayList<>();
     ArrayList<String> listImages = new ArrayList<>();
-    private String pdfUri = "";
+    private String pdfPath = "";
     private TransferUtility transferUtility;
     private AddPostRequest mainRequest;
     private boolean isFromChat;
@@ -220,7 +219,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                         fileTypeImageOrVideo = fileType;
                         showLastImage();
                     } else if (Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)) {
-                        pdfUri = shareList.get(0);
+                        pdfPath = shareList.get(0);
                         Picasso.with(AddPostActivity.this).load(R.drawable.pdf_thumbnail).into(imgDoc);
                     }
                 }
@@ -399,7 +398,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                         new VideoCompressor(request,false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }*/
 
-                } else if (!TextUtils.isEmpty(pdfUri)) {
+                } else if (!TextUtils.isEmpty(pdfPath)) {
                     request.fileType = Constants.FILE_TYPE_PDF;
                     progressDialog.setMessage("Preparing Pdf...");
                     progressDialog.show();
@@ -623,7 +622,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         if (request.fileType.equals(Constants.FILE_TYPE_PDF)) {
             AppLog.e(TAG, "Final PAth :: " + listImages.toString());
             listImages.clear();
-            listImages.add(pdfUri);
+            listImages.add(pdfPath);
             GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
                 @Override
                 public void onThumbnail(ArrayList<String> listThumbnails) {
@@ -827,7 +826,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
         if (!TextUtils.isEmpty(videoUrl)) {
             valid = true;
-        } else if (!TextUtils.isEmpty(pdfUri)) {
+        } else if (!TextUtils.isEmpty(pdfPath)) {
             valid = true;
         } else if (listImages.size() > 0) {
             valid = true;
@@ -929,10 +928,6 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     private void recordVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-//        takeVideoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 1*1024*1024);//5*1048*1048=5MB
-//        takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT,10);
-//        takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.HEIGHT, 640);
-//        takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.WIDTH, 360);
         File cameraFile;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             cameraFile = ImageUtil.getOutputMediaVideo();
@@ -1257,22 +1252,22 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             removePdf();
         } else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
-                pdfUri = data.getData().toString();
-                Log.e("pdfUri : ", pdfUri);
+                pdfPath = data.getData().toString();
+                Log.e("pdfUri : ", pdfPath);
                /* if (selectedImageURI.toString().startsWith("content")) {
                     pdfUri = ImageUtil.getPath(this, selectedImageURI);
                 } else {
                     pdfUri = selectedImageURI.getPath();
                 }
 */
-                if (TextUtils.isEmpty(pdfUri)) {
+                if (TextUtils.isEmpty(pdfPath)) {
                     Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Log.e("PDF", "imgUrl is " + pdfUri);
+                Log.e("PDF", "imgUrl is " + pdfPath);
 
-                if (!TextUtils.isEmpty(pdfUri))
+                if (!TextUtils.isEmpty(pdfPath))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
                 removeImage();
             }
@@ -1295,7 +1290,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     }
 
     private void removePdf() {
-        pdfUri = "";
+        pdfPath = "";
         Picasso.with(this).load(R.drawable.icon_doc).into(imgDoc);
     }
 

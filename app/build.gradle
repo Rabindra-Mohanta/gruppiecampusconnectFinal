@@ -35,14 +35,14 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
                 // [1. Gruppie Campus constituency]
-               /* applicationId "gcm.gruppie"
+                applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
                 buildConfigField("String", "AppType",  '""')
-                buildConfigField("String", "APP_ID",  '"constituency"')*/
+                buildConfigField("String", "APP_ID",  '"constituency"')
 
                 // [ 2. RPES :  Campus Copy]
         /*        applicationId "rpes.campusconnect"
@@ -153,14 +153,14 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')
 */
 
-            applicationId "ktsvapp.gruppie"   // /// GCC2
+          /*  applicationId "ktsvapp.gruppie"   // /// GCC2
             versionCode 7
             versionName "7.0"
             resValue "string", "app_name", '"K.T.S.V"'
             buildConfigField("String", "AppName", '"K.T.S.V"')
             buildConfigField("String", "AppCategory", '"CAMPUS"')
             buildConfigField("String", "AppType",  '"CAMPUS"')
-            buildConfigField("String", "APP_ID",  '"school"')
+            buildConfigField("String", "APP_ID",  '"school"')*/
 
            /*     applicationId "jnana.gruppie"   // /// GCC2
                 versionCode 2

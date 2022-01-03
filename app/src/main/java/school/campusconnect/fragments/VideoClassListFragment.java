@@ -810,7 +810,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         //   EnterSubjectDialog();
 
-        if ("constituency".equalsIgnoreCase(classData.category)) {
+        if ("boothVideo".equalsIgnoreCase(classData.category) || "constituency".equalsIgnoreCase(classData.category)) {
             progressBar.setVisibility(View.VISIBLE);
             leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
         }else {
@@ -1542,6 +1542,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+        if ("boothVideo".equalsIgnoreCase(item.category) || "constituency".equalsIgnoreCase(item.category)) {
+            binding.tvMsg.setText(getResources().getString(R.string.strMsgConst));
+        }
+
 
         binding.tvYes.setOnClickListener(new View.OnClickListener() {
             @Override

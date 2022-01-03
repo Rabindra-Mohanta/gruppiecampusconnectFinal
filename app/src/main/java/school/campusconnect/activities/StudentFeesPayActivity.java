@@ -41,6 +41,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -107,7 +108,6 @@ public class StudentFeesPayActivity extends BaseActivity {
     ArrayList<String> listAmazonS3Url = new ArrayList<>();
     ArrayList<String> listImages = new ArrayList<>();
     private TransferUtility transferUtility;
-    private File cameraFile;
     private ProgressDialog progressDialog;
 
     public Uri imageCaptureFile;
@@ -238,6 +238,7 @@ public class StudentFeesPayActivity extends BaseActivity {
     }
     private void startCamera(int requestCode) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File cameraFile;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             cameraFile = ImageUtil.getOutputMediaFile();
             imageCaptureFile = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
@@ -262,26 +263,26 @@ public class StudentFeesPayActivity extends BaseActivity {
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
             if (clipData == null) {
-                String path = ImageUtil.getPath(this, selectedImage);
-                listImages.add(path);
+//                String path = ImageUtil.getPath(this, selectedImage);
+                listImages.add(selectedImage.toString());
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
-                    String path = ImageUtil.getPath(this, uri1);
-                    listImages.add(path);
+//                    String path = ImageUtil.getPath(this, uri1);
+                    listImages.add(uri1.toString());
                 }
             }
             if(listImages.size()>0){
-                Picasso.with(this).load(new File(listImages.get(listImages.size() - 1))).resize(100, 100).into(imgAttach);
+                Picasso.with(this).load(listImages.get(listImages.size() - 1)).resize(100, 100).into(imgAttach);
             }
         } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
             listImages.clear();
-            String path = cameraFile.getAbsolutePath();
-            AppLog.e(TAG, "path : " + path);
-            listImages.add(path);
+//            String path = cameraFile.getAbsolutePath();
+            AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
+            listImages.add(imageCaptureFile.toString());
             if(listImages.size()>0){
-                Picasso.with(this).load(new File(listImages.get(listImages.size() - 1))).resize(100, 100).into(imgAttach);
+                Picasso.with(this).load(listImages.get(listImages.size() - 1)).resize(100, 100).into(imgAttach);
             }
         }
     }
@@ -395,45 +396,54 @@ public class StudentFeesPayActivity extends BaseActivity {
 
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_IMAGE);
-            File file = new File(listImages.get(pos));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file, CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
-                        updateList(pos, key);
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
+
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                            updateList(pos, key);
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            Toast.makeText(StudentFeesPayActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            if (progressDialog != null)
+                                progressDialog.dismiss();
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(StudentFeesPayActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-                        if (progressDialog != null)
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        progressBar.setVisibility(View.GONE);
+                        if (progressDialog != null) {
                             progressDialog.dismiss();
+                        }
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(StudentFeesPayActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                     }
-                }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
-
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
-
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(StudentFeesPayActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
 

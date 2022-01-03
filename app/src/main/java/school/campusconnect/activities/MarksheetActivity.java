@@ -39,6 +39,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.squareup.picasso.Callback;
@@ -107,7 +108,6 @@ public class MarksheetActivity extends BaseActivity {
     private ImageView img_image;
     private ProgressBar pbImgLoading;
     private ImageView imgDoc;
-    private File cameraFile;
     private Uri imageCaptureFile;
     private String pdfPath;
     private String imgPath;
@@ -379,36 +379,45 @@ public class MarksheetActivity extends BaseActivity {
 
     private void upLoadImageOnCloud(final AddMarkSheetReq addMarkSheetReq) {
         final String key = AmazoneHelper.getAmazonS3Key(addMarkSheetReq.fileType);
-        File file = new File(addMarkSheetReq.fileName.get(0));
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file , CannedAccessControlList.PublicRead);
 
-        observer.setTransferListener(new TransferListener() {
-            @Override
-            public void onStateChanged(int id, TransferState state) {
-                AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                    Log.e("MULTI_IMAGE", "onStateChanged " + 0);
-                    updateList(addMarkSheetReq, key);
+        TransferObserver observer ;
+        UploadOptions option = UploadOptions.
+                builder().bucket(AmazoneHelper.BUCKET_NAME).
+                cannedAcl(CannedAccessControlList.PublicRead).build();
+        try {
+            observer = transferUtility.upload(key,
+                    getContentResolver().openInputStream(Uri.parse(addMarkSheetReq.fileName.get(0))), option);
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                        Log.e("MULTI_IMAGE", "onStateChanged " + 0);
+                        updateList(addMarkSheetReq, key);
+                    }
                 }
-            }
 
-            @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                int percentDone = (int) percentDonef;
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
 
-                AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-            }
+                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
 
-            @Override
-            public void onError(int id, Exception ex) {
-                progressBar.setVisibility(View.GONE);
-                AppLog.e(TAG, "Upload Error : " + ex);
-                Toast.makeText(MarksheetActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onError(int id, Exception ex) {
+                    progressBar.setVisibility(View.GONE);
+                    AppLog.e(TAG, "Upload Error : " + ex);
+                    Toast.makeText(MarksheetActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void updateList(AddMarkSheetReq addMarkSheetReq, String key) {
@@ -513,6 +522,7 @@ public class MarksheetActivity extends BaseActivity {
 
     private void startCamera(int requestCode) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File cameraFile;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             cameraFile = ImageUtil.getOutputMediaFile();
             imageCaptureFile = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
@@ -535,39 +545,37 @@ public class MarksheetActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             final Uri selectedImage = data.getData();
-            String path = ImageUtil.getPath(this, selectedImage);
-            AppLog.e(TAG, "path : " + path);
+            AppLog.e(TAG, "path : " + selectedImage);
             try {
-                File file = new File(path);
-                Picasso.with(this).load(file).resize(80, 80).into(img_image);
+                Picasso.with(this).load(selectedImage).resize(80, 80).into(img_image);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            imgPath = path;
+            imgPath = selectedImage.toString();
             removePdf();
 
         } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            String path = cameraFile.getAbsolutePath();
-            AppLog.e(TAG, "path : " + path);
+            AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
             try {
-                File file = new File(path);
-                Picasso.with(this).load(file).resize(80, 80).into(img_image);
+                Picasso.with(this).load(imageCaptureFile).resize(80, 80).into(img_image);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            imgPath = path;
+            imgPath = imageCaptureFile.toString();
             removePdf();
         } else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
                 Uri selectedImageURI = data.getData();
                 Log.e("SelectedURI : ", selectedImageURI.toString());
-                if (selectedImageURI.toString().startsWith("content")) {
+               /* if (selectedImageURI.toString().startsWith("content")) {
                     pdfPath = ImageUtil.getPath(this, selectedImageURI);
                 } else {
                     pdfPath = selectedImageURI.getPath();
-                }
+                }*/
+                pdfPath = imageCaptureFile.toString();
 
                 if (TextUtils.isEmpty(pdfPath)) {
                     Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();

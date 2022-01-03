@@ -38,6 +38,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
@@ -315,60 +316,69 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
             upLoadImageOnCloud(0);
         }else {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
-            File file = new File(listThumbnails.get(index));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("Thumbnail", "onStateChanged " + index);
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("Thumbnail", "onStateChanged " + index);
 
-                        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+                            String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                        Log.e("FINALURL", "url is " + _finalUrl);
+                            Log.e("FINALURL", "url is " + _finalUrl);
 
-                        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+                            _finalUrl = Constants.encodeStringToBase64(_finalUrl);
 
-                        Log.e("FINALURL", "encoded url is " + _finalUrl);
+                            Log.e("FINALURL", "encoded url is " + _finalUrl);
 
-                        listThumbnails.set(index,_finalUrl);
+                            listThumbnails.set(index,_finalUrl);
 
-                        uploadThumbnail(listThumbnails,index+1);
+                            uploadThumbnail(listThumbnails,index+1);
 
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            progressBar.setVisibility(View.GONE);
+                            if (progressDialog!=null) {
+                                progressDialog.dismiss();
+                            }
+                            Toast.makeText(AddCodeConductActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Preparing Pdf " + percentDone + "% " + (index + 1) + " out of " + listImages.size() + ", please wait...");
+                        }
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
                         progressBar.setVisibility(View.GONE);
                         if (progressDialog!=null) {
                             progressDialog.dismiss();
                         }
-                        Toast.makeText(AddCodeConductActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(AddCodeConductActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                     }
-                }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Preparing Pdf " + percentDone + "% " + (index + 1) + " out of " + listImages.size() + ", please wait...");
-                    }
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
 
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    if (progressDialog!=null) {
-                        progressDialog.dismiss();
-                    }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddCodeConductActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 
@@ -383,48 +393,57 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
             manager.addCodeOfConduct(this, group_id, mainRequest);
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
-            File file = new File(listImages.get(pos));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
-                        updateList(pos, key);
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                            updateList(pos, key);
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            Toast.makeText(AddCodeConductActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            if(progressDialog!=null)
+                                progressDialog.dismiss();
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddCodeConductActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-                        if(progressDialog!=null)
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        }
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        progressBar.setVisibility(View.GONE);
+                        if (progressDialog != null) {
                             progressDialog.dismiss();
+                        }
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(AddCodeConductActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                     }
-                }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
-                    } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
-                    }
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
 
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddCodeConductActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
 
@@ -737,42 +756,46 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            listImages.clear();
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
-
             if (clipData == null) {
-                listImages.clear();
-                String path = ImageUtil.getPath(this, selectedImage);
-                listImages.add(path);
+//                String path = ImageUtil.getPath(this, selectedImage);
+                listImages.add(selectedImage.toString());
             } else {
-                listImages.clear();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
-                    String path = ImageUtil.getPath(this, uri1);
-                    listImages.add(path);
+//                    String path = ImageUtil.getPath(this, uri1);
+                    listImages.add(uri1.toString());
                 }
             }
             showLastImage();
             removePdf();
 
-        } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            String path = cameraFile.getAbsolutePath();
-            AppLog.e(TAG, "path : " + path);
-            listImages.add(path);
+        }
+        else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
+            listImages.clear();
+//            String path = cameraFile.getAbsolutePath();
+            AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
+            listImages.add(imageCaptureFile.toString());
             showLastImage();
             removePdf();
-        } else if (resultCode == Activity.RESULT_OK) {
+        }  else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
-                Uri selectedImageURI = data.getData();
-                Log.e("SelectedURI : ", selectedImageURI.toString());
-                if (selectedImageURI.toString().startsWith("content")) {
-                    pdfPath = ImageUtil.getPath(this, selectedImageURI);
+                pdfPath = data.getData().toString();
+                Log.e("pdfUri : ", pdfPath);
+               /* if (selectedImageURI.toString().startsWith("content")) {
+                    pdfUri = ImageUtil.getPath(this, selectedImageURI);
                 } else {
-                    pdfPath = selectedImageURI.getPath();
+                    pdfUri = selectedImageURI.getPath();
                 }
-
+*/
                 if (TextUtils.isEmpty(pdfPath)) {
                     Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
                     return;
@@ -782,7 +805,6 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
 
                 if (!TextUtils.isEmpty(pdfPath))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
-
                 removeImage();
             }
         }
@@ -790,6 +812,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
         shareButtonEnableDisable();
 
     }
+
 
     private void showLastImage() {
         if (listImages.size() > 0) {

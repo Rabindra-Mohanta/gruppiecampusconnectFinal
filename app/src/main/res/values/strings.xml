@@ -557,7 +557,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_obtain">Obtained</string>
     <string name="lbl_about_constituency">About Constituency</string>
     <string name="lbl_booth_register">Booth Register</string>
-    <string name="lbl_family_register">My Family Register</string>
+    <string name="lbl_family_register">Family Register</string>
     <string name="lbl_booth_name">Booth Name</string>
     <string name="lbl_booth_president">Booth President Name</string>
     <string name="lbl_add_booth">Add Booth</string>
@@ -567,6 +567,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_role">Role</string>
     <string name="lbl_Booths">Booths</string>
     <string name="lbl_public_forum">Public Forum</string>
+    <string name="strMsgConst">Do you want to continue live meeting?</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

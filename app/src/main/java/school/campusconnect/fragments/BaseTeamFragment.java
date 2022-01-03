@@ -120,9 +120,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             if (TextUtils.isEmpty(path))
                 return;
 
-            File file = new File(path);
             AppLog.e(TAG, "path background : " + path);
-            Picasso.with(getActivity()).load(file).into(imgBackground, new Callback() {
+            Picasso.with(getActivity()).load(path).into(imgBackground, new Callback() {
                 @Override
                 public void onSuccess() {
                     AppLog.e(TAG, "onSuccess background");
@@ -322,10 +321,8 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
     private void selectedImage(Uri selectedImage) {
         try {
-            String path = ImageUtil.getPath(getActivity(), selectedImage);
-            File newFile = new Compressor(getActivity()).setMaxWidth(1000).setQuality(70).compressToFile(new File(path));
-            if (newFile != null)
-                wallPref.edit().putString(Constants.BACKGROUND_IMAGE, newFile.getAbsolutePath()).apply();
+           if (selectedImage != null)
+                wallPref.edit().putString(Constants.BACKGROUND_IMAGE,selectedImage.toString()).apply();
             setBackgroundImage();
         } catch (Exception e) {
             e.printStackTrace();

@@ -32,7 +32,6 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
     private GetThumbnailListener thumbnailListener;
     ArrayList<String> thumbnailList = new ArrayList<>();
     ArrayList<String> listFiles;
-    Context mContext ;
 
     public GetThumbnail(ArrayList<String> listFiles, GetThumbnailListener listener,String type) {
         this.listFiles = listFiles;
@@ -40,13 +39,6 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
         this.type = type;
     }
 
-    public GetThumbnail(ArrayList<String> listFiles, GetThumbnailListener listener,String type , Context context)
-    {
-        this.listFiles = listFiles;
-        this.thumbnailListener = listener;
-        this.type = type;
-        this.mContext = context;
-    }
 
     public static void create(ArrayList<String> fileName, GetThumbnailListener listener,String type) {
         new GetThumbnail(fileName, listener,type).executeOnExecutor(THREAD_POOL_EXECUTOR);
@@ -157,7 +149,7 @@ public class GetThumbnail extends AsyncTask<Void, Void, Void> {
               //  String filename = file.getName().substring(0, file.getName().lastIndexOf('.'));
 
                 MediaMetadataRetriever mMMR = new MediaMetadataRetriever();
-                mMMR.setDataSource(mContext, Uri.parse(listFiles.get(index)));
+                mMMR.setDataSource(LeafApplication.getInstance(), Uri.parse(listFiles.get(index)));
                 Bitmap bmp = mMMR.getFrameAtTime();
 
                 // Save the render result to an image

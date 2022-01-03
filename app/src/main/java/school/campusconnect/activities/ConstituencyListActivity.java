@@ -107,9 +107,8 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
             if (TextUtils.isEmpty(path))
                 return;
 
-            File file = new File(path);
             AppLog.e(TAG, "path background : " + path);
-            Picasso.with(this).load(file).into(imgBackground, new Callback() {
+            Picasso.with(this).load(path).into(imgBackground, new Callback() {
                 @Override
                 public void onSuccess() {
                     AppLog.e(TAG, "onSuccess background");
@@ -410,10 +409,8 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
     }
     private void selectedImage(Uri selectedImage) {
         try {
-            String path = ImageUtil.getPath(this, selectedImage);
-            File newFile = new Compressor(this).setMaxWidth(1000).setQuality(70).compressToFile(new File(path));
-            if (newFile != null)
-                wallPref.edit().putString(Constants.BACKGROUND_IMAGE, newFile.getAbsolutePath()).apply();
+            if (selectedImage != null)
+                wallPref.edit().putString(Constants.BACKGROUND_IMAGE, selectedImage.toString()).apply();
             setBackgroundImage();
         } catch (Exception e) {
             e.printStackTrace();

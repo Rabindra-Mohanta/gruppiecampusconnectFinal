@@ -221,7 +221,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 startMeeting();
                 break;
             case R.id.menu_add_friend:
-                if ("constituency".equalsIgnoreCase(teamData.category)) {
+                if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
                     Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
                     intent.putExtra("group_id", mGroupId);
                     intent.putExtra("team_id", team_id);
@@ -698,7 +698,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISTEAMUPDATED)) {
-            if ("constituency".equalsIgnoreCase(teamData.category)) {
+            if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
                 manager.getBooths(this, GroupDashboardActivityNew.groupId);
             } else {
                 manager.myTeamList(this, GroupDashboardActivityNew.groupId);

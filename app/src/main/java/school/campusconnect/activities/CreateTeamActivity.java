@@ -196,7 +196,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
 
                 Toast.makeText(this, getString(R.string.msg_creted_team), Toast.LENGTH_LONG).show();
 
-                if ("constituency".equalsIgnoreCase(myTeamData.category)) {
+                if ("subBooth".equalsIgnoreCase(myTeamData.category) || "booth".equalsIgnoreCase(myTeamData.category) || "constituency".equalsIgnoreCase(myTeamData.category)) {
                     finish();
                 }else {
                     final AlertDialog.Builder adb = new AlertDialog.Builder(this);
