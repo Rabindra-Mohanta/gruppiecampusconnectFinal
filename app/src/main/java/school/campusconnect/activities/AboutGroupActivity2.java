@@ -158,7 +158,6 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     private void setData() {
         tvGroupName.setText(title);
-        tvTitleToolbar.setText(("constituency".equalsIgnoreCase(item.category) && LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.GROUP_COUNT) == 1)?getResources().getString(R.string.lbl_about_constituency):"About School");
         imgLogo_Default.setVisibility(View.VISIBLE);
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(ImageUtil.getTextLetter(title), ImageUtil.getRandomColor(1));
@@ -839,6 +838,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 tvNumOfPosts.setText("" + res.data.get(0).getTotalPostsCount());
 
                 tvGroupName.setText(item.name);
+
+                tvTitleToolbar.setText(("constituency".equalsIgnoreCase(item.category))?getResources().getString(R.string.lbl_about_constituency):"About School");
                 break;
             }
         }

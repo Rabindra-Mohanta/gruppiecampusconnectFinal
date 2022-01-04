@@ -851,9 +851,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         setFloatingButton();
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(teamData.name);
-            //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(teamData.members + " users");
+            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText("Members : " + teamData.members);
         }
-
     }
 
     private void sendNotification(TeamPostGetData currentItem) {

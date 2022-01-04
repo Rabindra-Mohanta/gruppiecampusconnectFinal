@@ -143,6 +143,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         super.onStart();
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
+            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
         }
         etSearch.setText("");
         LeafManager leafManager = new LeafManager();

@@ -73,7 +73,7 @@
                         android:layout_height="match_parent"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="0 users"
+                        android:text="Members"
                         style="@style/LabelSmall"
                         android:textColor="@color/colorTextWhiteLight"
                         android:visibility="gone" />

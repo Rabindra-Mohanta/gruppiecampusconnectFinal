@@ -157,6 +157,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     public TextView tvAbout;
 
     public TextView tvToolbar;
+    public TextView tv_Desc;
 
     SharedPreferences prefs;
 
@@ -556,7 +557,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_toolbar_icon = findViewById(R.id.iv_toolbar_icon);
         tv_toolbar_default = findViewById(R.id.iv_toolbar_default);
         tvToolbar = findViewById(R.id.tv_toolbar_title_dashboard);
-        // tv_Desc = findViewById(R.id.tv_Desc);
+        tv_Desc = findViewById(R.id.tv_Desc);
         setSupportActionBar(mToolBar);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -592,7 +593,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llFamily, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llFamily, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -821,8 +822,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (isToolBarTextSet) {
             tvToolbar.setText(mGroupItem.name);
-            //  tv_Desc.setText(LeafPreference.getInstance(this).getInt(Constants.TOTAL_MEMBER) + " users");
-            //   tv_Desc.setVisibility(View.GONE);
+            tv_Desc.setVisibility(View.GONE);
         }
     }
 
@@ -946,7 +946,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             public void onTabSelected(TabLayout.Tab tab) {
 
                 AppLog.e(TAG, "TAb Chaged Called");
-                if(tabIcon.length==4){
+                if (tabIcon.length == 4) {
                     switch (tab.getPosition()) {
                         case 0:
                             rlMore.setVisibility(View.GONE);
@@ -967,7 +967,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                             rlMore.setVisibility(View.VISIBLE);
                             break;
                     }
-                }else if(tabIcon.length==3){
+                } else if (tabIcon.length == 3) {
                     switch (tab.getPosition()) {
                         case 0:
                             rlMore.setVisibility(View.GONE);
@@ -983,8 +983,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                             rlMore.setVisibility(View.VISIBLE);
                             break;
                     }
-                }else if(tabIcon.length==2){
-                     switch (tab.getPosition()) {
+                } else if (tabIcon.length == 2) {
+                    switch (tab.getPosition()) {
                         case 0:
                             rlMore.setVisibility(View.GONE);
                             HomeClick();
@@ -1016,19 +1016,21 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     private void boothClick() {
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
-        BoothListFragment classListFragment=new BoothListFragment();
+        tv_Desc.setVisibility(View.GONE);
+        BoothListFragment classListFragment = new BoothListFragment();
         classListFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
     }
 
     private void publicForumClick() {
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
-        if(mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)){
-            PublicForumListFragment classListFragment=new PublicForumListFragment();
+        tv_Desc.setVisibility(View.GONE);
+        if (mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)) {
+            PublicForumListFragment classListFragment = new PublicForumListFragment();
             classListFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
         } else {
-            onBoothTeams(mGroupItem.boothName,mGroupItem.boothId,false);
+            onBoothTeams(mGroupItem.boothName, mGroupItem.boothId, false);
         }
 
     }
@@ -1104,10 +1106,9 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (fm.getBackStackEntryCount() > 0) {
 
             if (fm.getBackStackEntryCount() == 1) {
-                if("constituency".equalsIgnoreCase(mGroupItem.category)){
+                if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
                     tabLayout.setVisibility(View.VISIBLE);
-                }
-                else if (mGroupItem.canPost)
+                } else if (mGroupItem.canPost)
                     tabLayout.setVisibility(View.VISIBLE);
             }
             super.onBackPressed();
@@ -1126,10 +1127,9 @@ public class GroupDashboardActivityNew extends BaseActivity
             } else {
                 if (tabLayout.getTabAt(0) != null) {
                     tabLayout.getTabAt(0).select();
-                    if("constituency".equalsIgnoreCase(mGroupItem.category)){
+                    if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
                         tabLayout.setVisibility(View.VISIBLE);
-                    }
-                    else if (mGroupItem.canPost)
+                    } else if (mGroupItem.canPost)
                         tabLayout.setVisibility(View.VISIBLE);
                 }
             }
@@ -1236,7 +1236,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void HomeClick() {
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
-        // tv_Desc.setVisibility(View.VISIBLE);
+        tv_Desc.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         BaseTeamFragment baseTeamFragment = new BaseTeamFragment();
@@ -1247,8 +1247,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void onTeamSelected(MyTeamData team) {
         setBackEnabled(true);
         tvToolbar.setText(team.name);
-        //  tv_Desc.setText(team.members + " users");
-        //  tv_Desc.setVisibility(View.VISIBLE);
+        tv_Desc.setText("Members : "+team.members);
+        tv_Desc.setVisibility(View.VISIBLE);
         AppLog.e("getActivity", "team name is =>" + team.name);
 
         TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
@@ -1258,19 +1258,21 @@ public class GroupDashboardActivityNew extends BaseActivity
         tabLayout.setVisibility(View.GONE);
 
     }
-    public void onBoothTeams(String name,String team_id,boolean isBackStack) {
+
+    public void onBoothTeams(String name, String team_id, boolean isBackStack) {
         setBackEnabled(true);
-        tvToolbar.setText(name+"");
+        tvToolbar.setText(name + "");
+        tv_Desc.setVisibility(View.GONE);
         MemberTeamListFragment fragTeamPost = new MemberTeamListFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("team_id",team_id);
-        bundle.putString("name",name);
+        Bundle bundle = new Bundle();
+        bundle.putString("team_id", team_id);
+        bundle.putString("name", name);
         fragTeamPost.setArguments(bundle);
-        if(isBackStack){
+        if (isBackStack) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost)
                     .addToBackStack("home").commit();
             tabLayout.setVisibility(View.GONE);
-        }else {
+        } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).commit();
         }
     }
@@ -1566,8 +1568,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         } */ else {
             setBackEnabled(true);
             tvToolbar.setText(group.name);
-            //  tv_Desc.setText(group.members + " users");
-            //   tv_Desc.setVisibility(View.VISIBLE);
+            tv_Desc.setText("Members : "+group.members);
+            tv_Desc.setVisibility(View.VISIBLE);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(group.groupId)).addToBackStack("home").commitAllowingStateLoss();
             tabLayout.setVisibility(View.GONE);
         }

@@ -103,6 +103,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         super.onStart();
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
+            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
         }
     }
 

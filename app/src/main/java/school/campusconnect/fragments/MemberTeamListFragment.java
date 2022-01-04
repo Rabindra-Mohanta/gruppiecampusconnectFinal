@@ -90,6 +90,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         super.onStart();
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(name+"");
+            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
         }
     }
 
