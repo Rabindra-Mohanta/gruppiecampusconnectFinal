@@ -599,7 +599,12 @@ public class GroupDashboardActivityNew extends BaseActivity
         switch (view.getId()) {
             case R.id.llProfile:
                 if (isConnectionAvailable()) {
-                    Intent intent = new Intent(this, ProfileActivity2.class);
+                    Intent intent;
+                    if("constituency".equalsIgnoreCase(mGroupItem.category)){
+                        intent = new Intent(this, ProfileConstituencyActivity.class);
+                    }else {
+                        intent = new Intent(this, ProfileActivity2.class);
+                    }
                     startActivity(intent);
                 } else {
                     showNoNetworkMsg();
@@ -1281,6 +1286,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         if (group.type.equals("Video Class")) {
             Intent intent = new Intent(this, VideoClassActivity.class);
             intent.putExtra("title", group.name);
+            intent.putExtra("category", group.category);
             startActivity(intent);
         }
         /*else if (group.type.equals("Recorded Class")) {

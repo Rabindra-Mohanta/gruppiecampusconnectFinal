@@ -289,6 +289,9 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ProfileConstituencyActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".utils.MyFirebaseMessagingService">
             <intent-filter>
@@ -304,6 +307,11 @@
             android:exported="true" />
         <service
             android:name=".utils.BackgroundVideoUploadChapterService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".utils.BackgroundVideoUploadGallery"
             android:enabled="true"
             android:exported="true" />
 

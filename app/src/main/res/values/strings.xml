@@ -568,6 +568,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_Booths">Booths</string>
     <string name="lbl_public_forum">Public Forum</string>
     <string name="strMsgConst">Do you want to continue live meeting?</string>
+    <string name="lbl_my_profile">MY INFO</string>
+    <string name="lbl_family">FAMILY INFO</string>
+    <string name="lbl_save">Save</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

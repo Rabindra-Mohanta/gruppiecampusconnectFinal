@@ -601,7 +601,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
     public void onImageSelected(Intent data, int reCode) {
         // When an Image is picked
         Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+       /* String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
         // Get the cursor
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -613,8 +613,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         cursor.close();
 
         Uri sourceImage = Uri.parse("file:////" + image);
-
-        beginCrop(sourceImage, reCode);
+*/
+        beginCrop(selectedImage, reCode);
     }
 
     public void galleryAddPic(String path) {

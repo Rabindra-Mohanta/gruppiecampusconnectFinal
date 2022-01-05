@@ -49,10 +49,6 @@ public class FamilyListFragment extends BaseFragment implements LeafManager.OnCo
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
-
-    @Bind(R.id.etSearch)
-    public EditText etSearch;
-
     private ArrayList<FamilyMemberResponse.FamilyMemberData> list;
 
     @Nullable

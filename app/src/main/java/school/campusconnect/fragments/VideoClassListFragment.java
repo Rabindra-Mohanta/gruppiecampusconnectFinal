@@ -159,7 +159,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     LeafManager leafManager;
     private long mLastClickTime = 0;
-
+    String category="";
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,6 +195,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void init() {
         leafManager = new LeafManager();
+
+        if (getArguments() != null) {
+            category = getArguments().getString("category");
+        }
        /* swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -810,7 +814,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         new SendNotification(false, item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         //   EnterSubjectDialog();
 
-        if ("booth".equalsIgnoreCase(classData.category) ||"boothVideo".equalsIgnoreCase(classData.category) || "constituency".equalsIgnoreCase(classData.category)) {
+        if ("booth".equalsIgnoreCase(category) ||"boothVideo".equalsIgnoreCase(category) || "constituency".equalsIgnoreCase(category)) {
             progressBar.setVisibility(View.VISIBLE);
             leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
         }else {
@@ -1542,7 +1546,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
-        if ("booth".equalsIgnoreCase(item.category) || "boothVideo".equalsIgnoreCase(item.category) || "constituency".equalsIgnoreCase(item.category)) {
+        if ("booth".equalsIgnoreCase(category) || "boothVideo".equalsIgnoreCase(category) || "constituency".equalsIgnoreCase(category)) {
             binding.tvMsg.setText(getResources().getString(R.string.strMsgConst));
         }
 

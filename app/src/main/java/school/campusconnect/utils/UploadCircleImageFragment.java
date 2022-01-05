@@ -36,7 +36,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.ProfileActivity2;
+import school.campusconnect.activities.ProfileConstituencyActivity;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.fragments.ProfileFragmentConst;
 import school.campusconnect.utils.crop.Crop;
 
 public class UploadCircleImageFragment extends BaseUploadImageFragment implements View.OnClickListener {
@@ -75,7 +77,12 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
 
     public void updateDefaultPhoto(boolean update) {
         if (update)
-            ((ProfileActivity2) getActivity()).callUpdateApi();
+            if(getActivity() instanceof ProfileActivity2)
+                ((ProfileActivity2) getActivity()).callUpdateApi();
+            else if(getActivity() instanceof ProfileConstituencyActivity)
+                ((ProfileConstituencyActivity) getActivity()).callUpdateApi();
+
+
         getDefaultImageView().setVisibility(View.VISIBLE);
 
         if (!isGroupOrProfile)
@@ -189,6 +196,8 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
 
                 if (ProfileActivity2.profileImage != null && !ProfileActivity2.profileImage.isEmpty()) {
                     Picasso.with(getActivity()).load(Constants.decodeUrlToBase64(ProfileActivity2.profileImage)).into(iv);
+                }if (ProfileFragmentConst.profileImage != null && !ProfileFragmentConst.profileImage.isEmpty()) {
+                    Picasso.with(getActivity()).load(Constants.decodeUrlToBase64(ProfileFragmentConst.profileImage)).into(iv);
                 } else {
                     Picasso.with(getActivity()).load(R.drawable.icon_default_user).into(iv);
 
@@ -330,7 +339,11 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         profileImage.imageString = mProfileImage;
         imgService.setImageBitmap(profileImage.image);
         isImageChanged = true;
-        ((ProfileActivity2) getActivity()).callUpdateApi();
+        if(getActivity() instanceof ProfileActivity2)
+            ((ProfileActivity2) getActivity()).callUpdateApi();
+        else if(getActivity() instanceof ProfileConstituencyActivity)
+            ((ProfileConstituencyActivity) getActivity()).callUpdateApi();
+
     }
 
     @Override

@@ -76,6 +76,8 @@ import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.BackgroundVideoUploadChapterService;
+import school.campusconnect.utils.BackgroundVideoUploadGallery;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
@@ -344,10 +346,12 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                 } else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     request.fileType = fileTypeImageOrVideo;
                     Log.e(TAG, "send data " + new Gson().toJson(request));
+                    mainRequest = request;
 //                    progressDialog.setMessage("Preparing Video...");
 //                    progressDialog.show();
 //                    compressVideo(request, 0);
-                    new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                    new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    startService();
                 } else if (listImages.size() > 0) {
                     request.fileType = Constants.FILE_TYPE_IMAGE;
                     uploadToAmazone(request);
@@ -361,6 +365,21 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         } else {
             showNoNetworkMsg();
         }
+
+    }
+    public void startService() {
+
+        Intent serviceIntent = new Intent(this, BackgroundVideoUploadGallery.class);
+        serviceIntent.putExtra("videoUrl", videoUrl);
+        serviceIntent.putExtra("mainRequest", mainRequest);
+        serviceIntent.putExtra("listImages", listImages);
+        serviceIntent.putExtra("group_id", group_id);
+        serviceIntent.putExtra("album_id", album_id);
+        serviceIntent.putExtra("isEdit", isEdit);
+        ContextCompat.startForegroundService(this, serviceIntent);
+
+        Toast.makeText(this, "Video Uploading in background", Toast.LENGTH_SHORT).show();
+        finish();
 
     }
 

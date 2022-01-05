@@ -47,21 +47,19 @@ import java.util.ArrayList;
 import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
-import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddGalleryPostRequest;
-import school.campusconnect.datamodel.AddPostRequest;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.network.LeafManager;
 
-public class BackgroundVideoUploadChapterService extends Service implements LeafManager.OnAddUpdateListener<AddPostValidationError> {
+public class BackgroundVideoUploadGallery extends Service implements LeafManager.OnAddUpdateListener<AddPostValidationError>, LeafManager.OnCommunicationListener {
 
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
 
-    public static final String TAG = "BackgroundVideoUploadService";
+    public static final String TAG = "BackgroundVideoUploadGallery";
 
     private Context context;
     private ArrayList<String> listImages = new ArrayList<>();
@@ -69,7 +67,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
     ArrayList<String> listAmazonS3Url = new ArrayList<>();
     private AddGalleryPostRequest mainRequest;
     LeafManager manager = new LeafManager();
-    private String team_id, group_id, videoUrl;
+    private String  group_id;
     private int notifyId = 1;
     NotificationCompat.Builder notificationBuilder;
     NotificationManager notificationManager;
@@ -81,18 +79,17 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
 
     ArrayList<Intent> taskIntents = new ArrayList<>();
 
-    Intent currentTask = null;
-    private String chapter_id;
-    private String subject_id;
+    Intent currentTask  = null;
+    private String album_id;
     private boolean isEdit;
-    private String subject_name;
 
     //95387 32882
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
 
-        AppLog.e(TAG, "OnCreate called");
+        AppLog.e(TAG , "OnCreate called");
         context = getApplicationContext();
         transferUtility = AmazoneHelper.getTransferUtility(this);
 
@@ -108,13 +105,17 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        AppLog.e(TAG, "onStartCommand called : " + startId + " and currentTassk : " + (currentTask != null));
-        if (currentTask != null) {
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        AppLog.e(TAG , "onStartCommand called : "+startId +" and currentTassk : "+(currentTask !=null));
+        if(currentTask != null)
+        {
             taskIntents.add(intent);
-            AppLog.e(TAG, "onStartCommand currentTask is not null and taskIntent size is : " + taskIntents.size());
+            AppLog.e(TAG, "onStartCommand currentTask is not null and taskIntent size is : "+taskIntents.size());
             return START_NOT_STICKY;
-        } else {
+        }
+        else
+        {
             currentTask = intent;
         }
 
@@ -125,15 +126,12 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
     }
 
 
-    public void getDataFromCurrentTask() {
-        AppLog.e(TAG, "getDataFromCurrentTask called ");
-        videoUrl = currentTask.getStringExtra("videoUrl");
+    public void getDataFromCurrentTask()
+    {
+        AppLog.e(TAG , "getDataFromCurrentTask called ");
         group_id = currentTask.getStringExtra("group_id");
-        team_id = currentTask.getStringExtra("team_id");
-        chapter_id = currentTask.getStringExtra("chapter_id");
-        subject_id = currentTask.getStringExtra("subject_id");
-        subject_name = currentTask.getStringExtra("subject_name");
-        isEdit = currentTask.getBooleanExtra("isEdit", false);
+        album_id = currentTask.getStringExtra("album_id");
+        isEdit = currentTask.getBooleanExtra("isEdit",false);
 
         listImages = new ArrayList<>();
         listAmazonS3Url = new ArrayList<>();
@@ -155,33 +153,34 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                     "Foreground Service Channel",
                     NotificationManager.IMPORTANCE_LOW
             );
-            serviceChannel.setSound(null, null);
+            serviceChannel.setSound(null , null);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(serviceChannel);
         }
     }
 
     @Override
-    public void onSuccess(int apiId, BaseResponse response) {
-        AppLog.e(TAG, "API onSuccess : " + apiId + " taskIntent size : " + taskIntents.size());
+    public void onSuccess(int apiId, BaseResponse response)
+    {
+        AppLog.e(TAG , "API onSuccess : "+apiId +" taskIntent size : "+taskIntents.size());
 
-        if (taskIntents.size() > 0) {
+        if(taskIntents.size() > 0)
+        {
             currentTask = taskIntents.remove(0);
 
-            AppLog.e(TAG, "onSuccess nexttask assigned now size is : " + taskIntents.size());
+            AppLog.e(TAG , "onSuccess nexttask assigned now size is : "+taskIntents.size());
             getDataFromCurrentTask();
             uploadVideos();
-
-            return;
-        } else {
-            if (isEdit) {
-                LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).setBoolean("is_topic_added", true);
-                new SendNotification(mainRequest.albumName, false).execute();
-            } else {
-                LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).setBoolean("is_chapter_added", true);
-                new SendNotification(mainRequest.albumName, true).execute();
-            }
+        }else {
+            Intent intent = new Intent("gallery_refresh");
+            sendBroadcast(intent);
+            stopForeground(false);
         }
+    }
+
+    @Override
+    public void onFailure(int apiId, String msg) {
+        AppLog.e(TAG,"onFailure : "+msg);
     }
 
     @Override
@@ -205,14 +204,15 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 
-    public void uploadVideos() {
+    public void uploadVideos()
+    {
         compressedVideoCount = new ArrayList<>();
         uploadVideoPercentages = new ArrayList<>();
 
-        for (String s : listImages)
-            compressedVideoCount.add(0);
+        for(String s : listImages)
+        compressedVideoCount.add(0);
 
-        for (String s : listImages)
+        for(String s : listImages)
             uploadVideoPercentages.add(0);
 
         compressedCounts = 0;
@@ -224,7 +224,8 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         notificationManager = (NotificationManager) getApplicationContext()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
             notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setContentTitle("Video Uploading...")
                     .setContentText("0%")
@@ -236,9 +237,11 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                     .setAutoCancel(false);
             Notification notification = notificationBuilder.build();
 
-            AppLog.e(TAG, "start foregournd called 1");
+            AppLog.e(TAG , "start foregournd called 1");
             this.startForeground(notifyId, notification);
-        } else {
+        }
+        else
+        {
 
             notificationBuilder = new NotificationCompat.Builder(context)
                     .setContentTitle("Video Upload")
@@ -250,7 +253,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                     .setAutoCancel(false);
             Notification notification = notificationBuilder.build();
 
-            AppLog.e(TAG, "start foregournd  2");
+            AppLog.e(TAG , "start foregournd  2");
             this.startForeground(notifyId, notification);
         }
 
@@ -260,9 +263,10 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
 
         try {
 
-            compressVideo(0);
+                compressVideo(0);
 
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             Toast.makeText(context, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -270,8 +274,10 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
 
     }
 
-    public void compressVideo(int index) {
-        if (compressedCounts == listImages.size()) {
+    public void compressVideo(int index)
+    {
+        if(compressedCounts == listImages.size())
+        {
             uploadToAmazone(mainRequest);
             return;
         }
@@ -287,10 +293,11 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         long fileSizeInMB = fileSizeInKB / 1024;
 
 
-        File videoCompresed = ImageUtil.getOutputMediaVideo(finalI);
+        File videoCompresed  = ImageUtil.getOutputMediaVideo(finalI);
 
 
-        AppLog.e(TAG, "compression Started id : " + finalI + ", output path : " + videoCompresed.getPath());
+
+        AppLog.e(TAG, "compression Started id : "+finalI+", output path : "+videoCompresed.getPath());
 
         String width = "";
         String height = "";
@@ -299,7 +306,9 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
             metaRetriever.setDataSource(getApplicationContext(), Uri.parse(listImages.get(finalI)));
             height = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
             width = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
-        } catch (Exception ex) {
+        }
+        catch(Exception ex)
+        {
             compressedCounts++;
             compressVideo(compressedCounts);
         }
@@ -319,7 +328,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                     public void onSuccess() {
                         // On Compression success
 
-                        AppLog.e(TAG, "Compression onSuccess id :  " + finalI + " & getPath  : " + videoCompresed.getPath());
+                        AppLog.e(TAG, "Compression onSuccess id :  "+finalI + " & getPath  : "+videoCompresed.getPath());
 
                         File file = new File(videoCompresed.getPath());
                         // Get length of file in bytes
@@ -327,7 +336,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                         long fileSizeInKB = fileSizeInBytes / 1024;
                         long fileSizeInMB = fileSizeInKB / 1024;
 
-                        AppLog.e(TAG, "onSuccess: with size :  " + fileSizeInMB + " compressCounts : " + compressedCounts);
+                        AppLog.e(TAG, "onSuccess: with size :  "+fileSizeInMB + " compressCounts : "+compressedCounts);
 
                         listImages.set(finalI, Uri.fromFile(file).toString());
 
@@ -338,7 +347,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                     @Override
                     public void onFailure(String failureMessage) {
                         // On Failure
-                        AppLog.e(TAG, "onFailure called : " + failureMessage);
+                        AppLog.e(TAG , "onFailure called : "+failureMessage);
                         compressedCounts++;
 
                         compressVideo(compressedCounts);
@@ -347,7 +356,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                     @Override
                     public void onProgress(float v) {
                         // Update UI with progress value
-                        compressedVideoCount.set(finalI, (int) v);
+                        compressedVideoCount.set(finalI , (int) v) ;
                         publishCompressProgress((int) v);
                     }
 
@@ -355,20 +364,22 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                     public void onCancelled() {
                         // On Cancelled
                     }
-                }, new Configuration(VideoQuality.LOW, false, false, Double.parseDouble(height), Double.parseDouble(width), 2500000)
+                },new Configuration(VideoQuality.LOW , false , false , Double.parseDouble(height) ,Double.parseDouble(width) , 2500000)
         );
 
 
     }
 
 
-    public void publishCompressProgress(int percentage) {
+    public void publishCompressProgress(int percentage)
+    {
         int total = 0;
-        for (int i : compressedVideoCount) {
+        for(int i : compressedVideoCount)
+        {
             total += i;
         }
 
-        int newPercentage = (total) / compressedVideoCount.size();
+        int newPercentage = (total ) / compressedVideoCount.size();
 
         notificationBuilder.setContentTitle("Preparing Videos ...");
         notificationBuilder.setContentText("" + newPercentage + "%");
@@ -379,13 +390,15 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         notificationManager.notify(notifyId, notification);
     }
 
-    public void publishUploadProgress() {
+    public void publishUploadProgress()
+    {
         int total = 0;
-        for (int i : uploadVideoPercentages) {
+        for(int i : uploadVideoPercentages)
+        {
             total += i;
         }
 
-        int newPercentage = (total) / uploadVideoPercentages.size();
+        int newPercentage = (total ) / uploadVideoPercentages.size();
 
         notificationBuilder.setContentTitle("Upload Videos ...");
         notificationBuilder.setContentText("" + newPercentage + "%");
@@ -397,13 +410,14 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
     }
 
     private void uploadToAmazone(AddGalleryPostRequest request) {
-        // mainRequest = request;
+       // mainRequest = request;
         //request.fileName = listAmazonS3Url;
         AppLog.e(TAG, "send data " + new Gson().toJson(request));
 
         if (request.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
             AppLog.e(TAG, "Final videos :: " + listImages.toString());
-            GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
+            GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener()
+            {
                 @Override
                 public void onThumbnail(ArrayList<String> listThumbnails) {
                     if (listThumbnails != null) {
@@ -414,8 +428,10 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
 
                 }
             }, Constants.FILE_TYPE_VIDEO);
-        } else {
-            for (int i = 0; i < listImages.size(); i++) {
+        } else
+            {
+            for (int i = 0; i < listImages.size(); i++)
+            {
                 try {
                     File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
                     listImages.set(i, newFile.getAbsolutePath());
@@ -428,95 +444,101 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         }
     }
 
-    private void uploadThumbnail(ArrayList<String> listThumbnails, int index) {
-        if (index == listThumbnails.size()) {
+    private void uploadThumbnail(ArrayList<String> listThumbnails, int index)
+    {
+        if (index == listThumbnails.size())
+        {
             mainRequest.thumbnailImage = listThumbnails;
             upLoadImageOnCloud(0);
-        } else {
+        } else
+            {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
 //            File file = new File(listThumbnails.get(index));
 
             TransferObserver observer = null;
-            try {
-                UploadOptions option = UploadOptions.
-                        builder().bucket(AmazoneHelper.BUCKET_NAME).
-                        cannedAcl(CannedAccessControlList.PublicRead).build();
-                observer = transferUtility.upload(key,
-                        getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
 
-                observer.setTransferListener(new TransferListener() {
-                    @Override
-                    public void onStateChanged(int id, TransferState state) {
-                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                            AppLog.e(TAG, "onStateChanged " + index);
+                try {
+                    UploadOptions option = UploadOptions.
+                            builder().bucket(AmazoneHelper.BUCKET_NAME).
+                            cannedAcl(CannedAccessControlList.PublicRead).build();
+                    observer = transferUtility.upload(key,
+                            getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
 
-                            String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                            AppLog.e(TAG, "url is " + _finalUrl);
+                    observer.setTransferListener(new TransferListener() {
+                        @Override
+                        public void onStateChanged(int id, TransferState state) {
+                            AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                            if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                                AppLog.e(TAG, "onStateChanged " + index);
 
-                            _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+                                String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                            AppLog.e(TAG, "encoded url is " + _finalUrl);
+                                AppLog.e(TAG, "url is " + _finalUrl);
 
-                            listThumbnails.set(index, _finalUrl);
+                                _finalUrl = Constants.encodeStringToBase64(_finalUrl);
 
-                            uploadThumbnail(listThumbnails, index + 1);
+                                AppLog.e(TAG, "encoded url is " + _finalUrl);
 
+                                listThumbnails.set(index, _finalUrl);
+
+                                uploadThumbnail(listThumbnails, index + 1);
+
+                            }
+                            if (TransferState.FAILED.equals(state)) {
+                                //progressBar.setVisibility(View.GONE);
+                                if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                                    //progressDialog.dismiss();
+                                }
+                                Toast.makeText(context, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        if (TransferState.FAILED.equals(state)) {
+
+                        @Override
+                        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                            float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                            int percentDone = (int) percentDonef;
+                            AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                    + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                        }
+
+                        @Override
+                        public void onError(int id, Exception ex) {
                             //progressBar.setVisibility(View.GONE);
                             if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
                                 //progressDialog.dismiss();
                             }
-                            Toast.makeText(context, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            AppLog.e(TAG, "Upload Error : " + ex);
+                            Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                         }
-                    }
+                    });
+                } catch (Exception ex) {
+                    Log.e("Thumbnail", "onStateChanged " + index);
 
-                    @Override
-                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                        int percentDone = (int) percentDonef;
-                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                    }
+                    String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                    @Override
-                    public void onError(int id, Exception ex) {
-                        //progressBar.setVisibility(View.GONE);
-                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                            //progressDialog.dismiss();
-                        }
-                        AppLog.e(TAG, "Upload Error : " + ex);
-                        Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } catch (Exception ex) {
-                Log.e("Thumbnail", "onStateChanged " + index);
+                    AppLog.e(TAG, "url is " + _finalUrl);
 
-                String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+                    _finalUrl = Constants.encodeStringToBase64(_finalUrl);
 
-                AppLog.e(TAG, "url is " + _finalUrl);
+                    AppLog.e(TAG, "encoded url is " + _finalUrl);
 
-                _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+                    listThumbnails.set(index, _finalUrl);
 
-                AppLog.e(TAG, "encoded url is " + _finalUrl);
-
-                listThumbnails.set(index, _finalUrl);
-
-                uploadThumbnail(listThumbnails, index + 1);
-            }
-
+                    uploadThumbnail(listThumbnails, index + 1);
+                }
 
         }
     }
 
     private void upLoadImageOnCloud(final int pos) {
 
-        AppLog.e(TAG, "upLoadImageOnCloud: position " + pos);
+        AppLog.e(TAG, "upLoadImageOnCloud: position "+pos);
 
-        if (pos == listImages.size()) {
-            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+        if (pos == listImages.size())
+        {
+            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType))
+            {
                 //progressDialog.dismiss();
                 notificationBuilder.setContentTitle("Video Upload Successfully");
                 notificationBuilder.setProgress(0, 0, false);
@@ -526,19 +548,19 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
             }
             mainRequest.fileName = listAmazonS3Url;
 
-            AppLog.e(TAG, "send data : " + new Gson().toJson(mainRequest));
+            AppLog.e(TAG , "send data : "+new Gson().toJson(mainRequest));
             if (isEdit) {
-                manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
+                manager.addGalleryFile(this, group_id, album_id, mainRequest);
             } else {
-                manager.addChapterPost(this, group_id, team_id, subject_id, mainRequest);
+                manager.addGalleryPost(this, group_id, mainRequest);
             }
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
 //            File file = new File(listImages.get(pos));
+            TransferObserver observer = null;
             UploadOptions option = UploadOptions.
                     builder().bucket(AmazoneHelper.BUCKET_NAME).
                     cannedAcl(CannedAccessControlList.PublicRead).build();
-            TransferObserver observer = null;
             try {
                 observer = transferUtility.upload(key,
                         getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
@@ -563,7 +585,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                         int percentDone = (int) percentDonef;
                         if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
                             // progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
-                            uploadVideoPercentages.set(pos, percentDone);
+                            uploadVideoPercentages.set(pos , percentDone) ;
                             publishUploadProgress();
                         }
                         AppLog.d(TAG, "ID:" + id + " bytesCurrent: " + bytesCurrent
@@ -571,7 +593,8 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
                     }
 
                     @Override
-                    public void onError(int id, Exception ex) {
+                    public void onError(int id, Exception ex)
+                    {
                         //progressBar.setVisibility(View.GONE);
                         if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
                             //progressDialog.dismiss();
@@ -583,6 +606,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
 
 
         }
@@ -601,127 +625,5 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         listAmazonS3Url.add(_finalUrl);
 
         upLoadImageOnCloud(pos + 1);
-    }
-
-    private class SendNotification extends AsyncTask<String, String, String> {
-
-        private final String chapterName;
-        private final boolean isChapter;
-        private String server_response;
-
-        public SendNotification(String chapterName, boolean isChapter) {
-            this.chapterName = chapterName;
-            this.isChapter = isChapter;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            URL url;
-            HttpURLConnection urlConnection = null;
-
-            try {
-                url = new URL("https://fcm.googleapis.com/fcm/send");
-                urlConnection = (HttpURLConnection) url.openConnection();
-
-                urlConnection.setDoOutput(true);
-                urlConnection.setDoInput(true);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-
-                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
-
-                try {
-                    JSONObject object = new JSONObject();
-
-                    String topic;
-                    String title = getResources().getString(R.string.app_name);
-                    String message = "";
-
-                    if (isChapter) {
-                        message = subject_name + " : New chapter added";
-                    } else {
-                        message = " New topic added to " + chapterName;
-                    }
-
-                    topic = group_id + "_" + team_id;
-                    object.put("to", "/topics/" + topic);
-
-                    JSONObject notificationObj = new JSONObject();
-                    notificationObj.put("title", title);
-                    notificationObj.put("body", message);
-                    object.put("notification", notificationObj);
-
-                    JSONObject dataObj = new JSONObject();
-                    dataObj.put("groupId", group_id);
-                    dataObj.put("createdById", LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).getString(LeafPreference.LOGIN_ID));
-                    dataObj.put("postId", "");
-                    dataObj.put("teamId", team_id);
-                    dataObj.put("title", title);
-                    dataObj.put("postType", isChapter ? "chapter" : "topic");
-                    dataObj.put("Notification_type", "VideoClass");
-                    dataObj.put("body", message);
-                    object.put("data", dataObj);
-
-                    wr.writeBytes(object.toString());
-                    Log.e(" JSON input : ", object.toString());
-                    wr.flush();
-                    wr.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                urlConnection.connect();
-
-                int responseCode = urlConnection.getResponseCode();
-                AppLog.e(TAG, "responseCode :" + responseCode);
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    server_response = readStream(urlConnection.getInputStream());
-                }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return server_response;
-        }
-
-        private String readStream(InputStream in) {
-            BufferedReader reader = null;
-            StringBuffer response = new StringBuffer();
-            try {
-                reader = new BufferedReader(new InputStreamReader(in));
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return response.toString();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            AppLog.e(TAG, "server_response :" + server_response);
-            if (!TextUtils.isEmpty(server_response)) {
-                AppLog.e(TAG, "Notification Sent");
-            } else {
-                AppLog.e(TAG, "Notification Send Fail");
-            }
-            Intent intent = new Intent("chapter_refresh");
-            sendBroadcast(intent);
-            stopForeground(false);
-        }
     }
 }

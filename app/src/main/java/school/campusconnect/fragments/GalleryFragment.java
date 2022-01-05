@@ -348,4 +348,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
         }
 
     }
+
+    public void getChapters() {
+        getData();
+    }
 }

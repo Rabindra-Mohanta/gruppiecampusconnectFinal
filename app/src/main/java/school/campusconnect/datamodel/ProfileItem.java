@@ -19,4 +19,6 @@ public class ProfileItem {
     public String oldId;
     public String city;
 
+    public String relationship;
+    public String bloodGroup;
 }

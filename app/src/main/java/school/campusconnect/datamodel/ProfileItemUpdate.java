@@ -14,4 +14,7 @@ public class ProfileItemUpdate {
     //public String profileCompletion;
     public String email;
 
+    public String bloodGroup;
+    public String voterId;
+    public String aadharNumber;
 }

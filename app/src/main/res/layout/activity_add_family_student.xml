@@ -132,6 +132,7 @@
                         style="@style/RegEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
+                        android:focusable="false"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:inputType="textPersonName|textCapWords" />
                     <TextView
@@ -181,6 +182,8 @@
                         android:id="@+id/etVoterId"
                         style="@style/RegEditText"
                         android:singleLine="true"
+
+                        android:layout_marginBottom="@dimen/padding_10dp"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
                         android:layout_marginTop="@dimen/padding_5dp"
@@ -193,6 +196,7 @@
                         android:paddingLeft="@dimen/padding_10dp"
                         android:text="@string/lbl_adharNumber"
                         android:textAllCaps="true"
+                        android:visibility="gone"
                         android:textColor="@color/colorPrimary" />
 
                     <EditText
@@ -202,6 +206,7 @@
                         android:layout_marginBottom="@dimen/padding_10dp"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
+                        android:visibility="gone"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:inputType="text" />
 
