@@ -25,9 +25,9 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-              /*  applicationId "school.campusconnect"
-                versionCode 11
-                versionName "1.2"
+               /* applicationId "school.campusconnect"
+                versionCode 12
+                versionName "1.3"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
@@ -45,15 +45,15 @@ android {
                 buildConfigField("String", "APP_ID",  '"constituency"')
 
                 // [ 2. RPES :  Campus Copy]
-        /*        applicationId "rpes.campusconnect"
-                versionCode 9
-                versionName "9.0"
+              /*  applicationId "rpes.campusconnect"
+                versionCode 10
+                versionName "9.1"
                 resValue "string", "app_name", '"RPES"'
                 buildConfigField("String", "AppName", '"RPES"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
-                buildConfigField("String", "APP_ID",  '"school"')
-*/
+                buildConfigField("String", "APP_ID",  '"school"')*/
+
                 // [ 2. R.P.A : Single]
 //                applicationId "rpa.gruppie"
 //                versionCode 9
@@ -95,9 +95,9 @@ android {
                 buildConfigField("String", "APP_ID",  '"60a9e7f0a0ccf76a8e79a0a6"')*/
 //
                 // [ 4. NPHPS ]
-              /*  applicationId "nphps.gruppie"
-                versionCode 3
-                versionName "1.2"
+            /*    applicationId "nphps.gruppie"
+                versionCode 4
+                versionName "1.3"
                 resValue "string", "app_name", '"NPHPS"'
                 buildConfigField("String", "AppName", '"NPHPS"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
@@ -115,32 +115,31 @@ android {
                 buildConfigField("String", "APP_ID",  '"5f72d668a0ccf7753777d8fe"')*/
 
              /* applicationId "akanksha.gruppie"
-              versionCode 2
-              versionName "1.1"
+              versionCode 3
+              versionName "1.2"
               resValue "string", "app_name", '"AKANKSHA"'
               buildConfigField("String", "AppName", '"AKANKSHA"')
               buildConfigField("String", "AppCategory", '"CAMPUS"')
               buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
               buildConfigField("String", "APP_ID",  '"school"')*/
 
-//              applicationId "shahbaaz.gruppie"
-//              versionCode 3
-//              versionName "3.0"
-//              resValue "string", "app_name", '"SHAHBAAZ"'
-//              buildConfigField("String", "AppName", '"SHAHBAAZ"')
-//              buildConfigField("String", "AppCategory", '"CAMPUS"')
-//              buildConfigField("String", "AppType",  '"CAMPUS"')
-//              buildConfigField("String", "APP_ID",  '"school"')
-
-          /*    applicationId "vidyaniketan.gruppie"   /// GCC2
+              /*applicationId "shahbaaz.gruppie"
               versionCode 5
-              versionName "5.0"
+              versionName "4.1"
+              resValue "string", "app_name", '"SHAHBAAZ"'
+              buildConfigField("String", "AppName", '"SHAHBAAZ"')
+              buildConfigField("String", "AppCategory", '"CAMPUS"')
+              buildConfigField("String", "AppType",  '"CAMPUS"')
+              buildConfigField("String", "APP_ID",  '"school"')*/
+
+            /*  applicationId "vidyaniketan.gruppie"   /// GCC2
+              versionCode 6
+              versionName "5.1"
               resValue "string", "app_name", '"VIDYANIKETAN"'
               buildConfigField("String", "AppName", '"VIDYANIKETAN"')
               buildConfigField("String", "AppCategory", '"CAMPUS"')
               buildConfigField("String", "AppType",  '"CAMPUS"')
-              buildConfigField("String", "APP_ID",  '"school"')
-*/
+              buildConfigField("String", "APP_ID",  '"school"')*/
 
 
                /* applicationId "school.campusconnectlite"
@@ -154,8 +153,8 @@ android {
 */
 
           /*  applicationId "ktsvapp.gruppie"   // /// GCC2
-            versionCode 7
-            versionName "7.0"
+            versionCode 8
+            versionName "7.1"
             resValue "string", "app_name", '"K.T.S.V"'
             buildConfigField("String", "AppName", '"K.T.S.V"')
             buildConfigField("String", "AppCategory", '"CAMPUS"')
@@ -172,9 +171,9 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
 
-               /* applicationId "doddagoudar.gruppie"
-                versionCode 3
-                versionName "3.0"
+              /*  applicationId "doddagoudar.gruppie"
+                versionCode 4
+                versionName "3.1"
                 resValue "string", "app_name", '"DODDAGOUDAR"'
                 buildConfigField("String", "AppName", '"DODDAGOUDAR"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
@@ -196,8 +195,10 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://hoysala.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
-//            buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"' // kittur
-            buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  //GCC2 for vidyaniketan , KTSV n janani..
+//            buildConfigField "String", "BASE_URL", '"https://gcc4.gruppie.in"' // NPHPS,Akanksha,Gruppie campus
+//            buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"' // DODDAGOUDAR
+            buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV
+//            buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'  // RPES, SHAHBAAZ
             buildConfigField("String", "API_KEY_FIREBASE1", '"key=AAAATq979wE:APA91bEw0Dh3Ju0phxXjisU4z0eEmC90mi8ciomV-4S9X38UM8eMaB72bRpgGrGvv_"')
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
