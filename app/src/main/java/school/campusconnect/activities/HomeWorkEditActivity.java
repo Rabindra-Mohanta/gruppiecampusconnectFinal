@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
@@ -42,6 +44,7 @@ import com.otaliastudios.zoom.ZoomLayout;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -616,98 +619,64 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
         else {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(FILE_TYPE_IMAGE);
             AppLog.e(TAG , "uploadImageOnCloud called with key : "+key);
-            File file = new File(listThumbnails.get(index));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file, CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED"))
-                    {
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
 
-                        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED"))
+                        {
 
-                        Log.e("FINALURL", "url is " + _finalUrl);
+                            String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+                            Log.e("FINALURL", "url is " + _finalUrl);
 
-                        Log.e("FINALURL", "encoded url is " + _finalUrl);
+                            _finalUrl = Constants.encodeStringToBase64(_finalUrl);
 
-                        editedPaths.set(index,_finalUrl);
+                            Log.e("FINALURL", "encoded url is " + _finalUrl);
 
-                        uploadThumbnail(editedPaths , index+1, checked);
+                            editedPaths.set(index,_finalUrl);
+
+                            uploadThumbnail(editedPaths , index+1, checked);
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            Toast.makeText(HomeWorkEditActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(HomeWorkEditActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
 
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+
+                        progressDialog.setMessage("Uploading Image ("+(index+1)+") : "+ percentDone + "% , please wait...");
+
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
                     }
-                }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        progressDialog.dismiss();
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(HomeWorkEditActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                    progressDialog.setMessage("Uploading Image ("+(index+1)+") : "+ percentDone + "% , please wait...");
 
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
-
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressDialog.dismiss();
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(HomeWorkEditActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
-    }
-
-
-
-    private void uploadImageOnCloud(String imagePath)
-    {
-        final String key = AmazoneHelper.getAmazonS3KeyThumbnail(FILE_TYPE_IMAGE);
-        AppLog.e(TAG , "uploadImageOnCloud called with key : "+key);
-        File file = new File(imagePath);
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file, CannedAccessControlList.PublicRead);
-
-        observer.setTransferListener(new TransferListener() {
-            @Override
-            public void onStateChanged(int id, TransferState state) {
-                AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                    progressDialog.dismiss();
-
-                }
-                if (TransferState.FAILED.equals(state)) {
-                    Toast.makeText(HomeWorkEditActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                int percentDone = (int) percentDonef;
-
-                progressDialog.setMessage("Uploading Image " + percentDone + "% , please wait...");
-
-                AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-            }
-
-            @Override
-            public void onError(int id, Exception ex) {
-                progressDialog.dismiss();
-                AppLog.e(TAG, "Upload Error : " + ex);
-                Toast.makeText(HomeWorkEditActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 }

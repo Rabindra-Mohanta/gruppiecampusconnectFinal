@@ -370,34 +370,6 @@ public class UploadImageFragment extends BaseUploadImageFragment implements View
     //===========================================================================
 
     /*
-     * Begins to upload the file specified by the file path.
-     */
-    private void beginUpload(String filePath, String key) {
-        Log.e("KEYY", "key is " + key);
-        if (filePath == null) {
-            Log.e("UPLOADTEST", "filepath null");
-            Toast.makeText(getActivity(), "Could not find the filepath of the selected file",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-        File file = new File(filePath);
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file , CannedAccessControlList.PublicRead);
-
-        Log.e("UPLOADTEST", "upload started");
-        /*
-         * Note that usually we set the transfer listener after initializing the
-         * transfer. However it isn't required in this sample app. The flow is
-         * click upload button -> start an activity for image selection
-         * startActivityForResult -> onActivityResult -> beginUpload -> onResume
-         * -> set listeners to in progress transfers.
-         */
-
-        observer.setTransferListener(new UploadListener());
-        Log.e("UPLOADTEST", "observer started");
-    }
-
-    /*
      * Gets the file path of the given Uri.
      */
     @SuppressLint("NewApi")

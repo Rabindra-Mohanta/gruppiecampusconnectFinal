@@ -41,6 +41,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.clevertap.android.sdk.CleverTapAPI;
@@ -81,6 +82,7 @@ import school.campusconnect.datamodel.gruppiecontacts.LeaveResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.BaseUploadImageFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.crop.Crop;
@@ -565,7 +567,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         if (resultCode == Activity.RESULT_OK) {
             final Uri output = Crop.getOutput(result);
 
-            galleryAddPic(output.getPath());
+            galleryAddPic(output.toString());
 
 
         } else if (resultCode == Crop.RESULT_ERROR) {
@@ -618,19 +620,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
     }
 
     public void galleryAddPic(String path) {
-        final File f = new File(path);
-
-        MediaScannerConnection.scanFile(this,
-                new String[]{f.toString()}, null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
-                        Log.e("ExternalStorage", "Scanned " + path.replaceAll("file:", "") + ":");
-                        Log.e("ExternalStorage", "Scanned file " + f.getPath().replaceAll("file:", "") + ":");
-                        Log.e("ExternalStorage", "-> uri=" + uri);
-                        key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_IMAGE);
-                        beginUpload(path.replaceAll("file:", ""), key);
-                    }
-                });
+        key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_IMAGE);
+        beginUpload(path, key);
     }
 
     /*
@@ -644,21 +635,30 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                     Toast.LENGTH_LONG).show();
             return;
         }
-        File file = new File(filePath);
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file , CannedAccessControlList.PublicRead);
+        TransferObserver observer ;
+        UploadOptions option = UploadOptions.
+                builder().bucket(AmazoneHelper.BUCKET_NAME).
+                cannedAcl(CannedAccessControlList.PublicRead).build();
+        try {
+            observer = transferUtility.upload(key,
+                    getContentResolver().openInputStream(Uri.parse(filePath)), option);
+
+            /*
+             * Note that usually we set the transfer listener after initializing the
+             * transfer. However it isn't required in this sample app. The flow is
+             * click upload button -> start an activity for image selection
+             * startActivityForResult -> onActivityResult -> beginUpload -> onResume
+             * -> set listeners to in progress transfers.
+             */
+
+            observer.setTransferListener(new UploadListener());
+            Log.e("UPLOADTEST", "observer started");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Log.e("UPLOADTEST", "upload started");
-        /*
-         * Note that usually we set the transfer listener after initializing the
-         * transfer. However it isn't required in this sample app. The flow is
-         * click upload button -> start an activity for image selection
-         * startActivityForResult -> onActivityResult -> beginUpload -> onResume
-         * -> set listeners to in progress transfers.
-         */
 
-        observer.setTransferListener(new UploadListener());
-        Log.e("UPLOADTEST", "observer started");
     }
 
     /*

@@ -506,42 +506,50 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
 
         final String key = AmazoneHelper.getAmazonS3KeyThumbnail(Constants.FILE_TYPE_PDF);
 
-        File file = new File(selectedPDFThumbnail);
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file, CannedAccessControlList.PublicRead);
-
-        observer.setTransferListener(new TransferListener() {
-            @Override
-            public void onStateChanged(int id, TransferState state) {
-                AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                    Log.e("MULTI_IMAGE", "onStateChanged ");
-                    updateThumbnailList(key);
+        TransferObserver observer ;
+        UploadOptions option = UploadOptions.
+                builder().bucket(AmazoneHelper.BUCKET_NAME).
+                cannedAcl(CannedAccessControlList.PublicRead).build();
+        try {
+            observer = transferUtility.upload(key,
+                    getContentResolver().openInputStream(Uri.parse(selectedPDFThumbnail)), option);
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                        Log.e("MULTI_IMAGE", "onStateChanged ");
+                        updateThumbnailList(key);
+                    }
+                    if (TransferState.FAILED.equals(state)) {
+                        Toast.makeText(AddEBookActivity2.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        progressDialog.dismiss();
+                    }
                 }
-                if (TransferState.FAILED.equals(state)) {
-                    Toast.makeText(AddEBookActivity2.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+                    //progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pdfPos + 1) + "/" + mainRequest.subjectBooks.get(pos).fileName.size() + " From " + (pos + 1) + "/" + mainRequest.subjectBooks.size() + " Subject");
+                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
                     progressBar.setVisibility(View.GONE);
                     progressDialog.dismiss();
+                    AppLog.e(TAG, "Upload Error : " + ex);
+                    Toast.makeText(AddEBookActivity2.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
                 }
-            }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                int percentDone = (int) percentDonef;
-                //progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pdfPos + 1) + "/" + mainRequest.subjectBooks.get(pos).fileName.size() + " From " + (pos + 1) + "/" + mainRequest.subjectBooks.size() + " Subject");
-                AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-            }
 
-            @Override
-            public void onError(int id, Exception ex) {
-                progressBar.setVisibility(View.GONE);
-                progressDialog.dismiss();
-                AppLog.e(TAG, "Upload Error : " + ex);
-                Toast.makeText(AddEBookActivity2.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
