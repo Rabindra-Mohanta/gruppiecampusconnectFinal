@@ -142,6 +142,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.llBusRegister)
     LinearLayout llBusRegister;
+    @Bind(R.id.llIssueRegister)
+    LinearLayout llIssueRegister;
 
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
@@ -593,7 +595,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llFamily, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -726,6 +728,13 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.llSubject2:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, ClassActivity2.class));
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+            case R.id.llIssueRegister:
+                if (isConnectionAvailable()) {
+                    startActivity(new Intent(this, IssueActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -865,6 +874,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             tabLayout.setVisibility(View.VISIBLE);
 
             if (mGroupItem.canPost) {
+                llIssueRegister.setVisibility(View.VISIBLE);
+
                 tabText = new String[4];
                 tabIcon = new int[4];
                 tabIcongray = new int[4];

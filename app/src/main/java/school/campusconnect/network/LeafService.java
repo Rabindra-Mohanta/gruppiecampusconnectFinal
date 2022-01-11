@@ -46,6 +46,8 @@ import school.campusconnect.datamodel.homework.AddHwPostRequest;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.datamodel.homework.HwRes;
 import school.campusconnect.datamodel.homework.ReassignReq;
+import school.campusconnect.datamodel.issue.IssueListResponse;
+import school.campusconnect.datamodel.issue.RegisterIssueReq;
 import school.campusconnect.datamodel.markcard2.AddMarksReq;
 import school.campusconnect.datamodel.markcard2.MarkCardResponse2;
 import school.campusconnect.datamodel.marksheet.AddMarkCardReq;
@@ -1709,5 +1711,13 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addFamilyMember(@Path("group_id") String group_id, @Path("userId") String team_id,
                                        @Body FamilyMemberResponse req);
+
+    @GET("/api/v1/groups/{group_id}/constituency/issues")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<IssueListResponse> getIssues(@Path("group_id") String group_id);
+
+    @POST("/api/v1/groups/{group_id}/constituency/issues/register")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addIssue(@Path("group_id") String group_id, @Body RegisterIssueReq req);
 
 }

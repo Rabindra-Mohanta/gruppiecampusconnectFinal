@@ -571,6 +571,11 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_my_profile">MY INFO</string>
     <string name="lbl_family">FAMILY INFO</string>
     <string name="lbl_save">Save</string>
+    <string name="lbl_RegisterIssue">Register Issues</string>
+    <string name="lbl_jurisdiction">Jurisdiction/Place*</string>
+    <string name="lbl_issue">Issue*</string>
+    <string name="lbl_days">Days</string>
+    <string name="lbl_add_issue">Add Issue</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>
