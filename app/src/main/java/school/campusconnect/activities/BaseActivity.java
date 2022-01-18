@@ -1062,8 +1062,12 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             if(isConnectionAvailable())
             {
                 LeafManager mManager = new LeafManager();
-                mManager.getAllContactsList(BaseActivity.this/*, 1*/);
+//                mManager.getAllContactsList(BaseActivity.this/*, 1*/);
                 LeafPreference.getInstance(BaseActivity.this).setBoolean(LeafPreference.ISALLCONTACTSAVED, true);
+                hideLoadingDialog();
+                hideLoadingDialogText();
+                if(BaseActivity.this instanceof GroupDashboardActivityNew)
+                    ((GroupDashboardActivityNew)BaseActivity.this).reqPermission();
             }
             else {
                 showNoNetworkMsg();

@@ -48,19 +48,19 @@ public class IssueListResponse extends BaseResponse {
     public static class IssueUserData {
         @SerializedName("userId")
         @Expose
-        private String userId;
+        public String userId;
         @SerializedName("phone")
         @Expose
-        private String phone;
+        public String phone;
         @SerializedName("name")
         @Expose
-        private String name;
+        public String name;
         @SerializedName("image")
         @Expose
-        private String image;
+        public String image;
         @SerializedName("designation")
         @Expose
-        private String designation;
+        public String designation;
 
     }
 }

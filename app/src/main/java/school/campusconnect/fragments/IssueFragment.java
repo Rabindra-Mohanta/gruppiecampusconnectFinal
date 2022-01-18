@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -29,6 +30,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.EditIssueActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.SubjectActivity2;
 import school.campusconnect.datamodel.BaseResponse;
@@ -211,9 +213,8 @@ public class IssueFragment extends BaseFragment implements LeafManager.OnCommuni
     }
 
     private void onTreeClick(IssueListResponse.IssueData classData) {
-//        Intent intent = new Intent(getActivity(), SubjectActivity2.class);
-//        intent.putExtra("team_id",classData.getId());
-//        intent.putExtra("className",classData.className);
-//        startActivity(intent);
+        Intent intent = new Intent(getActivity(), EditIssueActivity.class);
+        intent.putExtra("data",new Gson().toJson(classData));
+        startActivity(intent);
     }
 }

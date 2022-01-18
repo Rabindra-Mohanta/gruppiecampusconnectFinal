@@ -1720,4 +1720,12 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addIssue(@Path("group_id") String group_id, @Body RegisterIssueReq req);
 
+    @POST("/api/v1/groups/{group_id}/issue/{issue_id}/department/user/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editIssue(@Path("group_id") String group_id,@Path("issue_id") String issue_id,@Body IssueListResponse.IssueData req);
+
+    @PUT("/api/v1/groups/{group_id}/issue/{issue_id}/delete")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteIssue(@Path("group_id") String group_id,@Path("issue_id") String issue_id);
+
 }

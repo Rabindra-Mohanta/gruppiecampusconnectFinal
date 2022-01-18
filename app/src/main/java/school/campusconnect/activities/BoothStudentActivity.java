@@ -31,6 +31,7 @@ public class BoothStudentActivity extends BaseActivity {
     private String mGroupId;
     private String teamId;
     MyTeamData classData;
+    private BoothStudentListFragment classListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class BoothStudentActivity extends BaseActivity {
             setTitle(getIntent().getStringExtra("title")+" Members");
         }
 
-        BoothStudentListFragment classListFragment = new BoothStudentListFragment();
+        classListFragment = new BoothStudentListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
 
@@ -78,9 +79,11 @@ public class BoothStudentActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_class_student: {
+
                 Intent intent = new Intent(this, AddBoothStudentActivity.class);
                 intent.putExtra("group_id", mGroupId);
                 intent.putExtra("team_id", teamId);
+                intent.putExtra("mobileList", classListFragment.getMobileList());
                 startActivity(intent);
                 return true;
             }

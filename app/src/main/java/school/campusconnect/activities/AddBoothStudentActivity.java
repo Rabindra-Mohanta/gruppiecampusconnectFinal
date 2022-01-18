@@ -89,6 +89,7 @@ public class AddBoothStudentActivity extends BaseActivity {
     String group_id, team_id, category;
 
     ContactsAdapter adapter;
+    ArrayList<String> mobileList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +140,7 @@ public class AddBoothStudentActivity extends BaseActivity {
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
         category = getIntent().getStringExtra("category");
-
+        mobileList = getIntent().getStringArrayListExtra("mobileList");
         adapter = new ContactsAdapter();
         rvSubjects.setAdapter(adapter);
 
@@ -170,10 +171,13 @@ public class AddBoothStudentActivity extends BaseActivity {
     }
 
     private void selectContact() {
-        Uri uri = Uri.parse("content://contacts");
-        Intent intent = new Intent(Intent.ACTION_PICK, uri);
-        intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-        startActivityForResult(intent, 12);
+//        Uri uri = Uri.parse("content://contacts");
+//        Intent intent = new Intent(Intent.ACTION_PICK, uri);
+//        intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+//        startActivityForResult(intent, 12);
+            Intent intent = new Intent(this,SelectContactActivity.class);
+            intent.putExtra("mobileList",mobileList);
+            startActivityForResult(intent,119);
     }
 
     @Override
@@ -195,6 +199,9 @@ public class AddBoothStudentActivity extends BaseActivity {
 
             Log.d(TAG, "ZZZ number : " + number + " , name : " + name);
             adapter.add(name + ",IN," + number.replace(" ", "").replace("+91", ""));
+        }
+        if(requestCode==119 && resultCode== EBookActivity.RESULT_OK && data!=null){
+            adapter.addAll(data.getStringArrayListExtra("mobileList"));
         }
     }
 
@@ -350,6 +357,11 @@ public class AddBoothStudentActivity extends BaseActivity {
 
         public void add(String item) {
             list.add(item);
+            notifyDataSetChanged();
+        }
+
+        public void addAll(ArrayList<String> mobileList) {
+            list.addAll(mobileList);
             notifyDataSetChanged();
         }
 

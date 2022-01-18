@@ -256,4 +256,13 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         startActivity(intent);
     }
 
+    public ArrayList<String> getMobileList(){
+        ArrayList<String> mobList = new ArrayList<>();
+        if(list!=null){
+            for (int i=0;i<list.size();i++){
+                mobList.add(list.get(i).phone);
+            }
+        }
+        return mobList;
+    }
 }

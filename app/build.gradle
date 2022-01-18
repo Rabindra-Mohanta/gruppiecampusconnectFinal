@@ -43,6 +43,16 @@ android {
                 buildConfigField("String", "AppCategory", '"constituency"')
                 buildConfigField("String", "AppType",  '""')
                 buildConfigField("String", "APP_ID",  '"constituency"')
+/*
+
+                applicationId "kreis.gruppie"
+                versionCode 1
+                versionName "1.0"
+                resValue "string", "app_name", '"KREIS"'
+                buildConfigField("String", "AppName", '"KREIS"')
+                buildConfigField("String", "AppCategory", '"CAMPUS"')
+                buildConfigField("String", "AppType",  '"CAMPUS_COPY"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
                 // [ 2. RPES :  Campus Copy]
               /*  applicationId "rpes.campusconnect"
@@ -124,8 +134,8 @@ android {
               buildConfigField("String", "APP_ID",  '"school"')*/
 
               /*applicationId "shahbaaz.gruppie"
-              versionCode 5
-              versionName "4.1"
+              versionCode 6
+              versionName "4.2"
               resValue "string", "app_name", '"SHAHBAAZ"'
               buildConfigField("String", "AppName", '"SHAHBAAZ"')
               buildConfigField("String", "AppCategory", '"CAMPUS"')
@@ -196,9 +206,10 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://gcc4.gruppie.in"' // NPHPS,Akanksha,Gruppie campus
+//            buildConfigField "String", "BASE_URL", '"https://gcc5.gruppie.in"' // KREIS
 //            buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"' // DODDAGOUDAR
-            buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV
-//            buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'  // RPES, SHAHBAAZ
+//            buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV
+            buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'  // RPES, SHAHBAAZ
             buildConfigField("String", "API_KEY_FIREBASE1", '"key=AAAATq979wE:APA91bEw0Dh3Ju0phxXjisU4z0eEmC90mi8ciomV-4S9X38UM8eMaB72bRpgGrGvv_"')
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }

@@ -255,7 +255,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         AppLog.e(TAG, "Category :" + mGroupItem.category);
 
         if (mGroupItem != null) {
-            if (!mGroupItem.category.equalsIgnoreCase(Constants.CATEGORY_SCHOOL) && !mGroupItem.category.equalsIgnoreCase(Constants.CATEGORY_CONSTITUENCY)) {
+            if (!mGroupItem.category.equalsIgnoreCase(Constants.CATEGORY_SCHOOL)) {
                 DatabaseHandler databaseHandler = new DatabaseHandler(this);
                 if (databaseHandler.getCount() == 0) {
                     getContactsWithPermission();
@@ -264,6 +264,9 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
         // sendNotification("Message","Title");
 
+       reqPermission();
+    }
+    public void reqPermission(){
         if (!hasPermission(permissions)) {
             ActivityCompat.requestPermissions(this, permissions, 222);
         }
