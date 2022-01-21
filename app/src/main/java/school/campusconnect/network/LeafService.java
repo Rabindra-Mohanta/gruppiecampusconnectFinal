@@ -173,15 +173,12 @@ public interface LeafService {
 
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
-    Call<LoginResponse> login(@Body LoginRequest request, @Query("category") String category, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+    Call<LoginResponse> login(@Body LoginRequest request, @Query("category") String category, @Query("appName") String appName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> loginConstituency(@Body LoginRequest request, @Query("constituencyName") String categoryName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
-    @POST("/api/v1/login/category/app")
-    @Headers({"Content-Type: application/json"})
-    Call<LoginResponse> loginCampusCopy(@Body LoginRequest request, @Query("category") String category, @Query("appName") String appName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
     @POST("/api/v1/login/individual?")
     @Headers({"Content-Type: application/json"})
@@ -1358,10 +1355,10 @@ public interface LeafService {
     @GET
     Call<ResponseBody> downloadFile(@Url String url);
 
-
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<GroupResponse> getGroups(@Query("category") String category);
+    Call<GroupResponse> getGroups(@Query("category") String category, @Query("appName") String appName);
+
 
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1379,9 +1376,6 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ConstituencyRes> getConstituencyList(@Query("constituencyName") String constituencyName);
 
-    @GET("/api/v1/groups")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<GroupResponse> getGroups(@Query("category") String category, @Query("appName") String appName);
 
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/posts/get")

@@ -450,12 +450,7 @@ public class LeafManager {
         final Call<LoginResponse> model;
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
-            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppType)) {
-                model = service.login(request, BuildConfig.APP_ID, request.deviceToken, request.deviceType);
-            } else {
-                model = service.loginCampusCopy(request, BuildConfig.APP_ID, BuildConfig.AppName, request.deviceToken, request.deviceType);
-            }
-
+            model = service.login(request, BuildConfig.APP_ID, BuildConfig.AppName, request.deviceToken, request.deviceType);
         } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.loginConstituency(request, BuildConfig.AppName, request.deviceToken, request.deviceType);
         } else {
@@ -8536,12 +8531,8 @@ public class LeafManager {
         if ("CONSTITUENCY".equalsIgnoreCase(from)) {
             model = service.getGroupsConstituency(category, categoryName);
         } else {
-            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && "CAMPUS".equalsIgnoreCase(BuildConfig.AppType)) {
-                if (!TextUtils.isEmpty(talukName)) {
-                    model = service.getGroupsTaluks(BuildConfig.APP_ID, talukName);
-                } else {
-                    model = service.getGroups(BuildConfig.APP_ID);
-                }
+            if (!TextUtils.isEmpty(talukName)) {
+                model = service.getGroupsTaluks(BuildConfig.APP_ID, talukName);
             } else {
                 model = service.getGroups(BuildConfig.APP_ID, BuildConfig.AppName);
             }
@@ -10764,7 +10755,8 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
-public void deleteIssue(OnCommunicationListener listListener, String group_id, String issueId) {
+
+    public void deleteIssue(OnCommunicationListener listListener, String group_id, String issueId) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
