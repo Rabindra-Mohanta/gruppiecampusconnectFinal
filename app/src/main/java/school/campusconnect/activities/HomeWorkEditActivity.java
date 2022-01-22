@@ -29,6 +29,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
@@ -56,6 +57,7 @@ import ja.burhanrashid52.photoeditor.SaveSettings;
 import ja.burhanrashid52.photoeditor.ViewType;
 import ja.burhanrashid52.photoeditor.shape.ShapeBuilder;
 import ja.burhanrashid52.photoeditor.shape.ShapeType;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.utils.AmazoneHelper;
@@ -626,8 +628,15 @@ public class HomeWorkEditActivity extends BaseActivity implements OnPhotoEditorL
                     cannedAcl(CannedAccessControlList.PublicRead).build();
 
             try {
+                Uri uri;
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", new File(listThumbnails.get(index)));
+                } else {
+                    uri = Uri.fromFile(new File(listThumbnails.get(index)));
+                }
+
                 observer = transferUtility.upload(key,
-                        getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
+                        getContentResolver().openInputStream(uri), option);
                 observer.setTransferListener(new TransferListener() {
                     @Override
                     public void onStateChanged(int id, TransferState state) {
