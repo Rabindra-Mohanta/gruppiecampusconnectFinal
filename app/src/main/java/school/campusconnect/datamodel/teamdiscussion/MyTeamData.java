@@ -19,6 +19,7 @@ public class MyTeamData extends BaseResponse {
     @Expose
     public String name;
     public int members;
+    public String boothNumber;
 
     @SerializedName(value = "image",alternate = {"teamImage"})
     @Expose

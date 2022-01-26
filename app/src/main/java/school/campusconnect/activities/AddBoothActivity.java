@@ -1,14 +1,19 @@
 package school.campusconnect.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -49,12 +54,16 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
     private static final String TAG = "CreateTeamActivity";
     @Bind(R.id.etName)
     EditText etName;
+    @Bind(R.id.etBoothNumber)
+    EditText etBoothNumber;
     @Bind(R.id.etBoothPresident)
     EditText etBoothPresident;
     @Bind(R.id.etPhone)
     EditText etPhone;
     @Bind(R.id.tvCountry)
     TextView tvCountry;
+    @Bind(R.id.iconContact)
+    ImageView iconContact;
 
 
     @Bind(R.id.btnCreateClass)
@@ -140,6 +149,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
             if (isEdit) {
                 classData = new Gson().fromJson(bundle.getString("class_data"), MyTeamData.class);
                 etName.setText(classData.name);
+                etBoothNumber.setText(classData.boothNumber);
                 etPhone.setText(classData.phone);
                 etBoothPresident.setText(classData.boothPresidentName);
                 btnCreateClass.setText(getResources().getString(R.string.lbl_update));
@@ -151,7 +161,51 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
         tvCountry.setText(str[0]);
 
         tvCountry.setVisibility(View.GONE);
+        iconContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //        Uri uri = Uri.parse("content://contacts");
+//        Intent intent = new Intent(Intent.ACTION_PICK, uri);
+//        intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+//        startActivityForResult(intent, 12);
+
+                Intent intent = new Intent(AddBoothActivity.this,SelectContactActivity.class);
+                intent.putExtra("mobileList",new ArrayList<String>());
+                startActivityForResult(intent,119);
+            }
+        });
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 12 && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+
+            Cursor cursor = getContentResolver().query(uri, projection,
+                    null, null, null);
+            cursor.moveToFirst();
+
+            int numberColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            String number = cursor.getString(numberColumnIndex);
+
+            int nameColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+            String name = cursor.getString(nameColumnIndex);
+
+            Log.d(TAG, "ZZZ number : " + number + " , name : " + name);
+
+            etBoothPresident.setText(name);
+            etPhone.setText(number.replace(" ", "").replace("+91", ""));
+        }
+        if(requestCode==119 && resultCode== EBookActivity.RESULT_OK && data!=null){
+            ArrayList<String> list = data.getStringArrayListExtra("mobileList");
+            if(list!=null && list.size()>0){
+                etBoothPresident.setText(list.get(0).split(",")[0]);
+                etPhone.setText(list.get(0).split(",")[2]);
+            }
+        }
+    }
+
     private static final long MIN_CLICK_INTERVAL = 1000; //in millis
     private long lastClickTime = 0;
     @OnClick({R.id.btnCreateClass, R.id.tvCountry})
@@ -191,6 +245,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
                     } else {
                         BoothData request = new BoothData();
                         request.boothName = etName.getText().toString();
+                        request.boothNumber = etBoothNumber.getText().toString();
                         request.boothPresidentName = etBoothPresident.getText().toString();
                         request.phone = etPhone.getText().toString();
                         request.boothImage = imageFragment.getmProfileImage();

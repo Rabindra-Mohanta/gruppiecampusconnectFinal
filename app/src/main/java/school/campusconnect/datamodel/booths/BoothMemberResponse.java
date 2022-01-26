@@ -23,6 +23,9 @@ public class BoothMemberResponse extends BaseResponse {
         @SerializedName("phone")
         @Expose
         public String phone;
+        @SerializedName("countryCode")
+        @Expose
+        public String countryCode;
         @SerializedName("name")
         @Expose
         public String name;
@@ -59,6 +62,10 @@ public class BoothMemberResponse extends BaseResponse {
         @SerializedName("roleOnConstituency")
         @Expose
         public String roleOnConstituency;
+
+        @SerializedName("salary")
+        @Expose
+        public String salary;
 
         @Override
         public String toString() {

@@ -556,7 +556,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_min">Min</string>
     <string name="lbl_obtain">Obtained</string>
     <string name="lbl_about_constituency">About Constituency</string>
-    <string name="lbl_booth_register">Booth Register</string>
+    <string name="lbl_booth_register">Booth/Member Register</string>
     <string name="lbl_family_register">Family Register</string>
     <string name="lbl_booth_name">Booth Name</string>
     <string name="lbl_booth_president">Booth President Name</string>
@@ -571,7 +571,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_my_profile">MY INFO</string>
     <string name="lbl_family">FAMILY INFO</string>
     <string name="lbl_save">Save</string>
-    <string name="lbl_RegisterIssue">Register Issues</string>
+    <string name="lbl_RegisterIssue">Issue/TaskForce Register</string>
     <string name="lbl_jurisdiction">Jurisdiction/Place*</string>
     <string name="lbl_issue">Issue*</string>
     <string name="lbl_days">Days</string>
@@ -582,6 +582,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strDelete">Delete</string>
     <string name="lbl_select_contact">Select Contacts</string>
     <string name="strSelect">Select</string>
+    <string name="lbl_booth_coordinate_register">Booth/Coordinator Register</string>
+    <string name="lbl_salary">Salary</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

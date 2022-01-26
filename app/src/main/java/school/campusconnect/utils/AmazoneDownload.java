@@ -98,6 +98,7 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
 
     }
 
+
     @Override
     protected String doInBackground(Void... voids) {
         try {
@@ -207,15 +208,7 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
     }
 
     private static File getDirForMedia(String folder) {
-        File mainFolder;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q)
-            mainFolder = new File(mContext.getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
-        else
-            mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
-
-        if (!mainFolder.exists()) {
-            mainFolder.mkdir();
-        }
+        File mainFolder = LeafApplication.getInstance().AppFilesPath();
 
         if (TextUtils.isEmpty(folder)) {
             return mainFolder;

@@ -66,6 +66,25 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_marginTop="@dimen/padding_15dp"
+                            android:text="@string/lbl_booth_name"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            style="@style/LabelNormal"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:id="@+id/etBoothNumber"
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:layout_height="@dimen/login_button_height"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            style="@style/RegEditText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="@dimen/padding_15dp"
                             android:text="@string/lbl_booth_president"
                             android:paddingLeft="@dimen/padding_10dp"
                             style="@style/LabelNormal"
@@ -112,14 +131,26 @@
                             android:textColor="@color/colorPrimary"
                             android:layout_height="wrap_content" />
 
-                        <EditText
-                            android:id="@+id/etPhone"
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_marginTop="@dimen/padding_5dp"
                             android:layout_marginBottom="@dimen/padding_50dp"
-                            android:layout_height="@dimen/login_button_height"
-                            android:inputType="phone"
-                            style="@style/RegEditText" />
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:layout_height="wrap_content">
+                            <EditText
+                                android:id="@+id/etPhone"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/login_button_height"
+                                android:inputType="phone"
+                                style="@style/RegEditText" />
+                            <ImageView
+                                android:id="@+id/iconContact"
+                                android:layout_width="24dp"
+                                android:src="@drawable/ic_contacts"
+                                android:layout_gravity="end|center"
+                                android:tint="@color/white"
+                                android:layout_marginEnd="@dimen/padding_10dp"
+                                android:layout_height="24dp"/>
+                        </FrameLayout>
 
 
                     </LinearLayout>

@@ -144,6 +144,10 @@ public class GroupDashboardActivityNew extends BaseActivity
     LinearLayout llBusRegister;
     @Bind(R.id.llIssueRegister)
     LinearLayout llIssueRegister;
+    @Bind(R.id.llBothRegister)
+    LinearLayout llBothRegister;
+    @Bind(R.id.llBothCoordinateRegister)
+    LinearLayout llBothCoordinateRegister;
 
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
@@ -598,7 +602,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -717,6 +721,24 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.llClass:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, ClassActivity.class));
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+            case R.id.llBothRegister:
+                if (isConnectionAvailable()) {
+                    Intent intent = new Intent(this, BoothActivity.class);
+                    intent.putExtra("type","MEMBER");
+                    startActivity(intent);
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+            case R.id.llBothCoordinateRegister:
+                if (isConnectionAvailable()) {
+                    Intent intent = new Intent(this, BoothActivity.class);
+                    intent.putExtra("type","COORDINATE");
+                    startActivity(intent);
                 } else {
                     showNoNetworkMsg();
                 }
@@ -876,8 +898,13 @@ public class GroupDashboardActivityNew extends BaseActivity
 
             tabLayout.setVisibility(View.VISIBLE);
 
+
+
             if (mGroupItem.canPost) {
+
                 llIssueRegister.setVisibility(View.VISIBLE);
+                llBothRegister.setVisibility(View.VISIBLE);
+                llBothCoordinateRegister.setVisibility(View.VISIBLE);
 
                 tabText = new String[4];
                 tabIcon = new int[4];

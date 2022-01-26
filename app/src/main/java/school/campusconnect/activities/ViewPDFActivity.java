@@ -120,6 +120,9 @@ public class ViewPDFActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        llProgress.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        progressBar1.setVisibility(View.GONE);
                         Toast.makeText(ViewPDFActivity.this, msg + "", Toast.LENGTH_SHORT).show();
                         finish();
                     }

@@ -152,7 +152,6 @@ import school.campusconnect.datamodel.versioncheck.VersionCheckResponse;
 import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
 import school.campusconnect.datamodel.videocall.LiveClassEventRes;
 import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
-import school.campusconnect.datamodel.videocall.StartMeetingRes;
 import school.campusconnect.datamodel.videocall.StopMeetingReq;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.datamodel.youtubetoken.YoutubeTokenResponse;
@@ -1683,6 +1682,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/coordinator/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothMemberResponse> getCoordinateMember(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
     @POST("/api/v1/groups/{group_id}/team/{team_id}/user/add/booth")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addBoothsMember(@Path("group_id") String group_id,
@@ -1693,6 +1696,11 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/user/{user_id}/update/booth/member")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> updateBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("user_id") String user_id,
+                                       @Body BoothMemberResponse.BoothMemberData req);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/coordinator/add/booth")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addCoordinateBooth(@Path("group_id") String group_id, @Path("team_id") String team_id,
                                        @Body BoothMemberResponse.BoothMemberData req);
 
 

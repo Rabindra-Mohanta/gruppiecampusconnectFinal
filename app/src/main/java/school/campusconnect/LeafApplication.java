@@ -1,6 +1,7 @@
 package school.campusconnect;
 
 import android.app.Application;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
@@ -15,6 +16,7 @@ import com.clevertap.android.sdk.ActivityLifecycleCallback;
 import com.instacart.library.truetime.TrueTime;
 import com.instacart.library.truetime.TrueTimeRx;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -158,4 +160,12 @@ public class LeafApplication extends Application  {
     public void onZoomAuthIdentityExpired() {
 
     }*/
+
+    public File AppFilesPath(){
+        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        return mainFolder;
+    }
 }

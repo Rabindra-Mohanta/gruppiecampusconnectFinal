@@ -14,6 +14,9 @@ public class BoothData {
         @SerializedName("boothName")
         @Expose
         public String boothName;
+        @SerializedName("boothNumber")
+        @Expose
+        public String boothNumber;
         @SerializedName("boothImage")
         @Expose
         public String boothImage;

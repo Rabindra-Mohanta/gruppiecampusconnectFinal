@@ -3,7 +3,6 @@ package school.campusconnect.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,9 +16,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import school.campusconnect.LeafApplication;
-import school.campusconnect.R;
 
-public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
+public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
     private static final String TAG = "AmazoneDownload";
     private AmazoneDownloadSingleListener listenerSignle;
     String url;
@@ -27,23 +25,23 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
     Context context;
     private PowerManager.WakeLock mWakeLock;
 
-    public AmazoneVideoDownload(Context activity, String url, AmazoneDownloadSingleListener listener) {
+    public AmazoneImageDownload(Context activity, String url, AmazoneDownloadSingleListener listener) {
         this.url = url;
         this.context = activity;
         this.listenerSignle = listener;
     }
 
-    public AmazoneVideoDownload(Context context) {
+    public AmazoneImageDownload(Context context) {
     this.context = context;
     }
 
-    public static AmazoneVideoDownload download(Activity activity, String file, AmazoneDownloadSingleListener listener) {
-        AmazoneVideoDownload asynchTask = new AmazoneVideoDownload(activity, file, listener);
+    public static AmazoneImageDownload download(Context activity, String file, AmazoneDownloadSingleListener listener) {
+        AmazoneImageDownload asynchTask = new AmazoneImageDownload(activity, file, listener);
         asynchTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
         return asynchTask;
     }
 
-    public boolean isVideoDownloaded(String url) {
+    public static boolean isImageDownloaded(String url) {
         try {
             if (!TextUtils.isEmpty(url)) {
                 url = Constants.decodeUrlToBase64(url);
@@ -51,9 +49,9 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
                 File file;
                 if (key.contains("/")) {
                     String[] splitStr = key.split("/");
-                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".mp4");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".png");
                 } else {
-                    file = new File(getDirForMedia(""), key + ".mp4");
+                    file = new File(getDirForMedia(""), key + ".png");
                 }
                 return file.exists();
             }
@@ -64,6 +62,25 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
     }
 
 
+    public static File getDownloadPath(String url) {
+        try {
+            if (!TextUtils.isEmpty(url)) {
+                url = Constants.decodeUrlToBase64(url);
+                String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                File file;
+                if (key.contains("/")) {
+                    String[] splitStr = key.split("/");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".png");
+                } else {
+                    file = new File(getDirForMedia(""), key + ".png");
+                }
+                return file;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -83,9 +100,9 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
                 Log.e(TAG, "download key :" + key);
                 if (key.contains("/")) {
                     String[] splitStr = key.split("/");
-                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".mp4");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".png");
                 } else {
-                    file = new File(getDirForMedia(""), key + ".mp4");
+                    file = new File(getDirForMedia(""), key + ".png");
                 }
                 if (!file.exists()) {
                     InputStream input = null;
@@ -181,7 +198,7 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
 
     }
 
-    private  File getDirForMedia(String folder) {
+    private static   File getDirForMedia(String folder) {
         File mainFolder = LeafApplication.getInstance().AppFilesPath();
         if (!mainFolder.exists()) {
             mainFolder.mkdir();

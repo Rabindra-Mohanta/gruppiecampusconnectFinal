@@ -355,7 +355,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                     <LinearLayout
-                        android:id="@+id/llFamily"
+                        android:id="@+id/llBothRegister"
                         android:layout_width="match_parent"
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_5dp"
@@ -364,13 +364,32 @@
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/family"
+                            app:srcCompat="@drawable/booth"
                             android:tint="@color/colorTextLight"
                             android:layout_height="wrap_content" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_family_register"
+                            android:text="@string/lbl_booth_register"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/llBothCoordinateRegister"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            app:srcCompat="@drawable/booth"
+                            android:tint="@color/colorTextLight"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_booth_coordinate_register"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                     <LinearLayout
@@ -392,6 +411,27 @@
                             android:text="@string/lbl_RegisterIssue"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/llFamily"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            app:srcCompat="@drawable/family"
+                            android:tint="@color/colorTextLight"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_family_register"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
                     <LinearLayout
                         android:id="@+id/llSubject2"
                         android:layout_width="match_parent"
