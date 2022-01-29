@@ -290,7 +290,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     if (res.data == null || res.data.size() == 0)
                         return;
 
-
+                    LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("PREVIEW_URL",res.data.get(0).imagePreviewUrl);
                     ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
 
                     boolean ifNeedToLogout = false;
