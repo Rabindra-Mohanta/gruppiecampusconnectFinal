@@ -558,8 +558,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_about_constituency">About Constituency</string>
     <string name="lbl_booth_register">Booth/Member Register</string>
     <string name="lbl_family_register">Family Register</string>
-    <string name="lbl_booth_name">Booth Name</string>
-    <string name="lbl_booth_president">Booth President Name</string>
+    <string name="lbl_booth_name">Booth Name*</string>
+    <string name="lbl_booth_president">Booth President Name*</string>
     <string name="lbl_add_booth">Add Booth</string>
     <string name="relationship">Relationship*</string>
     <string name="lbl_voterId">Voter Id</string>
@@ -582,8 +582,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strDelete">Delete</string>
     <string name="lbl_select_contact">Select Contacts</string>
     <string name="strSelect">Select</string>
-    <string name="lbl_booth_coordinate_register">Booth/Coordinator Register</string>
+    <string name="lbl_booth_coordinate_register">Booth Coordinator register</string>
     <string name="lbl_salary">Salary</string>
+    <string name="lbl_booth_number">Booth Number*</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

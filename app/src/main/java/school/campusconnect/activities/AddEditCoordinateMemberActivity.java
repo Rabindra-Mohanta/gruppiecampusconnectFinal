@@ -59,8 +59,6 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
-    @Bind(R.id.etRole)
-    public EditText etRole;
     @Bind(R.id.etdob)
     public EditText etdob;
     @Bind(R.id.etGender)
@@ -191,7 +189,6 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
             etName.setText(studentData.name);
             etPhone.setText(studentData.phone);
             etPhone.setEnabled(false);
-            etRole.setText(studentData.roleOnConstituency);
             etdob.setText(studentData.dob);
             etVoterId.setText(studentData.voterId);
             etSalary.setText(studentData.salary);
@@ -225,7 +222,7 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
 
         imageFragment = UploadImageFragment.newInstance(isEdit?studentData.image:null, true, true);
         btnAdd.setText(isEdit?"Update":"Add");
-        setTitle(isEdit?"Coordinate Detail - (" + getIntent().getStringExtra("className") + ")":"Add Coordinate");
+        setTitle(isEdit?"Coordinator Detail - (" + getIntent().getStringExtra("className") + ")":"Add Coordinator");
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
@@ -258,7 +255,6 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
                     }
                     studentData.countryCode = "IN";
                     studentData.phone = etPhone.getText().toString();
-                    studentData.roleOnConstituency = etRole.getText().toString();
                     studentData.dob = etdob.getText().toString();
                     studentData.gender = etdob.getText().toString();
 

@@ -10359,11 +10359,11 @@ public class LeafManager {
 
     }
 
-    public void getBooths(OnCommunicationListener listListener, String group_id) {
+    public void getBooths(OnCommunicationListener listListener, String group_id,String option) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BoothResponse> model = service.getBooths(group_id);
+        final Call<BoothResponse> model = !TextUtils.isEmpty(option)?service.getBoothsCoordinator(group_id,option):service.getBooths(group_id);
         ResponseWrapper<BoothResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {

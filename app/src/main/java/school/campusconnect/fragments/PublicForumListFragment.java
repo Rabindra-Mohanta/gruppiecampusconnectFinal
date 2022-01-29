@@ -69,7 +69,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if(mGroupItem.canPost){
-            leafManager.getBooths(this,GroupDashboardActivityNew.groupId);
+            leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
         }else {
             leafManager.getMyBooths(this,GroupDashboardActivityNew.groupId);
         }

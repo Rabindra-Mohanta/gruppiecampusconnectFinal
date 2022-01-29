@@ -128,8 +128,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     LinearLayout llNotification;
     @Bind(R.id.llClass)
     LinearLayout llClass;
-    @Bind(R.id.llFamily)
-    LinearLayout llFamily;
 
     @Bind(R.id.llSubject)
     LinearLayout llSubject;
@@ -602,7 +600,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -739,13 +737,6 @@ public class GroupDashboardActivityNew extends BaseActivity
                     Intent intent = new Intent(this, BoothActivity.class);
                     intent.putExtra("type","COORDINATE");
                     startActivity(intent);
-                } else {
-                    showNoNetworkMsg();
-                }
-                break;
-            case R.id.llFamily:
-                if (isConnectionAvailable()) {
-                    startActivity(new Intent(this, FamilyMemberActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -893,8 +884,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
             llDiscuss.setVisibility(View.GONE);
             llPeople.setVisibility(View.GONE);
-
-            llFamily.setVisibility(View.VISIBLE);
 
             tabLayout.setVisibility(View.VISIBLE);
 
@@ -1329,6 +1318,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("title", group.name);
             intent.putExtra("category", group.category);
             startActivity(intent);
+        }else if (group.type.equals("My Family")) {
+            startActivity(new Intent(this, FamilyMemberActivity.class));
         }
         /*else if (group.type.equals("Recorded Class")) {
             Intent intent;

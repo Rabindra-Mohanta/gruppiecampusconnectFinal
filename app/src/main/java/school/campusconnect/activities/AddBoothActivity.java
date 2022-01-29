@@ -295,6 +295,8 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
         boolean valid = true;
         if (!isValueValid(etName)) {
             valid = false;
+        } else if (!isValueValid(etBoothNumber)) {
+            valid = false;
         } else if (!isValueValid(etBoothPresident)) {
             valid = false;
         } else if (!isValueValid(etPhone)) {

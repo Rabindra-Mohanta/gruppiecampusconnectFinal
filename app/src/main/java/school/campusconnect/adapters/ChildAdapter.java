@@ -172,6 +172,19 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                     }
                 });
             }else {
+                String path = Constants.decodeUrlToBase64(item.get(position).getImagePath());
+                String newStr = path.substring(path.indexOf("/images")+1);
+                Picasso.with(mContext).load("https://ik.imagekit.io/mxfzvmvkayv/"+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.e("Picasso", "Error : ");
+                    }
+                });
                 imgDownload.setVisibility(View.VISIBLE);
                 imgDownload.setOnClickListener(new View.OnClickListener() {
                     @Override

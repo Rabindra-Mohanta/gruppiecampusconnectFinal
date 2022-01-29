@@ -699,7 +699,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISTEAMUPDATED)) {
             if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
-                manager.getBooths(this, GroupDashboardActivityNew.groupId);
+                manager.getBooths(this, GroupDashboardActivityNew.groupId,"");
             } else {
                 manager.myTeamList(this, GroupDashboardActivityNew.groupId);
             }
