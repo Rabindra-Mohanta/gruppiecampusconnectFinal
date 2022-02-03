@@ -115,6 +115,7 @@
     <string name="lbl_dob">Date of Birth</string>
     <string name="lbl_roll">Roll</string>
     <string name="lbl_address">Address</string>
+    <string name="lbl_landmark">Landmark</string>
     <string name="lbl_lead_city">City</string>
     <string name="lbl_state">State</string>
     <string name="lbl_pincode">Pincode</string>
@@ -130,6 +131,8 @@
     <string name="lbl_join_group">Join With</string>
     <string name="lbl_select_friend">Select Friend</string>
     <string name="lbl_select_team">Select Team</string>
+    <string name="lbl_select_location">Select Location</string>
+    <string name="lbl_select_issue">Select Issue</string>
     <string name="lbl_select_type">Select Type</string>
     <string name="lbl_comments">Comments</string>
     <string name="lbl_chat">Messages</string>
@@ -177,6 +180,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="mapApi">AIzaSyBnPjheD0bIGUtTdZ9SZ4r9oiXBxLWBIMQ</string>
     <string name="msg_uploady">Please Upload A File Or Enter Video URL.</string>
     <string name="msg_upload2"> File And Video Can\'t Be Posted Same Time.</string>
     <string name="msg_termnotaccepted">Please Accept Terms And Conditions.</string>
@@ -192,7 +196,7 @@
     <string name="hint_ytdesc">Enter Description</string>
 
     <string name="hint_search">Search contacts</string>
-
+    <string name="hint_search_address">Search Address</string>
     <string name="action_register">New User ? Sign Up</string>
     <string name="action_login_new">Registered? Sign In</string>
     <string name="action_btnregister">Register</string>
@@ -360,7 +364,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_ask_doubt">Ask Doubt</string>
     <string name="lbl_post_title">Post Title</string>
     <string name="lbl_post_desc">Description</string>
+    <string name="lbl_post_add_desc">Add Description</string>
     <string name="lbl_attechment">Attachments</string>
+    <string name="lbl_add_attechment">Add Attachment</string>
     <string name="lbl_image">Image</string>
     <string name="lbl_video">Video</string>
     <string name="lbl_documents">Doc</string>
@@ -411,6 +417,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_classes">All Classes</string>
     <string name="lbl_class_name">Class</string>
     <string name="lbl_add_class">Add Class</string>
+    <string name="lbl_add_tikit">Add Tikit</string>
     <string name="lbl_teacher_name">Class Teacher</string>
     <string name="lbl_students">Students</string>
     <string name="lbl_class_register_student">Class/Student Register</string>

@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
 import com.activeandroid.ActiveAndroid;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
@@ -107,6 +108,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     ProgressBar progressBar;
     @Bind(R.id.tabLayout)
     public TabLayout tabLayout;
+
+    @Bind(R.id.fabAddTicket)
+    public FloatingActionButton fabAddTicket;
 
     @Bind(R.id.llAuthorizedUser)
     LinearLayout llAuthorizedUser;
@@ -602,7 +606,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg, R.id.fabAddTicket})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -764,6 +768,16 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
+
+            case R.id.fabAddTicket:
+
+                if (isConnectionAvailable()) {
+                    startActivity(new Intent(this, AddTicketActivity.class));
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+
             case R.id.llStaffReg:
                 if (isConnectionAvailable()) {
                     Intent intent = new Intent(this, StaffActivity.class);

@@ -171,9 +171,12 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
 
 
     private void init() {
+
         leafManager = new LeafManager();
+
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
+
         isEdit = getIntent().getBooleanExtra("isEdit",false);
 
 

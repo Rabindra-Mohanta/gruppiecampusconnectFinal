@@ -812,6 +812,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 }
                 finish();
                 break;
+
             case LeafManager.API_CHAPTER_LIST:
                 ChapterRes res = (ChapterRes) response;
                 chapterList = res.getData();
@@ -823,6 +824,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     }
 
     private void bindChapter() {
+
         if (chapterList != null && chapterList.size() > 0) {
             llTop.setVisibility(View.VISIBLE);
             cardChapterName.setVisibility(View.GONE);

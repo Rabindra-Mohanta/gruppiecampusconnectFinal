@@ -13,6 +13,7 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.add_tikit.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
@@ -21,6 +22,7 @@ import school.campusconnect.datamodel.booths.BoothData;
 import school.campusconnect.datamodel.booths.BoothMemberReq;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.booths.SubBoothResponse;
 import school.campusconnect.datamodel.bus.BusResponse;
 import school.campusconnect.datamodel.bus.BusStudentRes;
 import school.campusconnect.datamodel.calendar.AddEventReq;
@@ -1729,5 +1731,17 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/issue/{issue_id}/delete")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> deleteIssue(@Path("group_id") String group_id,@Path("issue_id") String issue_id);
+
+
+    @GET("/api/v1/groups/{group_id}/booth/subbooth/teams")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubBoothResponse> getMySubBooths(@Path("group_id") String group_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/issue/{issue_id}/ticket/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addTicket(@Path("group_id") String group_id, @Path("team_id") String teamId, @Path("issue_id") String issue_id, @Body AddTicketRequest ticketRequest);
+
+
+
 
 }

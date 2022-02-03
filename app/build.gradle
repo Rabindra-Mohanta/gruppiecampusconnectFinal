@@ -305,7 +305,7 @@ dependencies {
     implementation ('com.google.code.gson:gson:2.8.6') {
         exclude group: 'com.google.guava'
     }
-    implementation 'com.mcxiaoke.volley:library:1.0.19'
+    //implementation 'com.mcxiaoke.volley:library:1.0.19'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.github.stfalcon:smsverifycatcher:0.3.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -321,10 +321,14 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-s3:2.26.0'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.7.7'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
     implementation 'com.google.android.gms:play-services-auth-api-phone:17.4.0'
+
+    //map
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
 
     implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
 
@@ -360,7 +364,7 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
@@ -373,6 +377,7 @@ dependencies {
     implementation 'com.github.instacart.truetime-android:library-extension-rx:3.4'
 
     implementation 'com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview:1.1.0'
+
 
 }
 apply plugin: 'com.google.gms.google-services'

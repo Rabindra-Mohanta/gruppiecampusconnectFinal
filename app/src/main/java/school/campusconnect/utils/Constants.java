@@ -34,6 +34,16 @@ public class Constants {
     public static final String BACKGROUND_IMAGE = "BACKGROUND_IMAGE";
     public static final String FILE_TYPE_VIDEO = "video";
 
+    public static final int KEY_RESULT_ADDRESS = 123;
+    public static final String KEY_BUNDLE_LOCATION = "location";
+    public static final String KEY_BUNDLE_ADDRESS = "bundleaddress";
+    public static final String KEY_BUNDLE_LOCALITY = "bundlelocality";
+    public static final String KEY_BUNDLE_FLOOR = "bundleaddressfloor";
+    public static final String KEY_BUNDLE_POSTAL = "bundleaddresspostal";
+    public static final String KEY_BUNDLE_PAYTYPE = "payment_type";
+    public static final String KEY_BUNDLE_LONGITUDE = "key_longitude";
+    public static final String KEY_BUNDLE_LATITUDE =  "key_latitude";
+
 
     public static int image_width = 1800;
     public static int image_height = 1200;
