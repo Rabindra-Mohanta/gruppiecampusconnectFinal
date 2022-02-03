@@ -429,7 +429,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 mainRequest.text = binding.etDescription.getText().toString();
                 mainRequest.location = new AddTicketRequest.LocationData();
                 mainRequest.location.landmark = landMark;
-                mainRequest.location.boothNumber = "12";
+                mainRequest.location.address = binding.etLocation.getText().toString();
                 mainRequest.location.latitude = lat;
                 mainRequest.location.longitude = lng;
                 mainRequest.location.pincode = pinCode;
@@ -1064,6 +1064,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
 
         Address location = bundlenew.getParcelable(Constants.KEY_BUNDLE_LOCATION);
+
 
         if (location != null) {
             lat = "" + location.getLatitude();

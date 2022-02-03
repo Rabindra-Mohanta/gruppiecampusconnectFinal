@@ -1739,7 +1739,7 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/issue/{issue_id}/ticket/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addTicket(@Path("group_id") String group_id, @Path("team_id") String teamId, @Path("issue_id") String issue_id, @Body AddTicketRequest ticketRequest);
+    Call<AddTicketRequest.AddTicketRes> addTicket(@Path("group_id") String group_id, @Path("team_id") String teamId, @Path("issue_id") String issue_id, @Body AddTicketRequest ticketRequest);
 
 
 

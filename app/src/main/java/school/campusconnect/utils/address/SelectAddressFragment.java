@@ -152,7 +152,7 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
             filter = getArguments().getString("filter", "all");
             Bundle bundle = getArguments();
             binding.etAddress.setText(bundle.getString(Constants.KEY_BUNDLE_ADDRESS));
-            binding.etAddress.setText(bundle.getString(Constants.KEY_BUNDLE_LOCALITY));
+            binding.etLandmark.setText(bundle.getString(Constants.KEY_BUNDLE_LOCALITY));
            // edtFloor.setText(bundle.getString(Constants.KEYS.KEY_BUNDLE_FLOOR));
               /*  if(!isFromRegister)
                 edtPostalCode.setText(bundle.getString(Constants.KEYS.KEY_BUNDLE_POSTAL));*/
