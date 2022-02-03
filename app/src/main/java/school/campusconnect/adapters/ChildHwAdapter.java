@@ -22,7 +22,9 @@ import school.campusconnect.Assymetric.AsymmetricItem;
 import school.campusconnect.Assymetric.multiimages.ItemImage;
 import school.campusconnect.R;
 import school.campusconnect.activities.FullScreenMultiActivity;
+import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWParentActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.homework.AssignmentRes;
 import school.campusconnect.utils.Constants;
 
@@ -36,7 +38,6 @@ public class ChildHwAdapter extends AGVRecyclerViewAdapter<ChildHwAdapter.ViewHo
     private int mDisplay = 0;
     private int mTotal = 0;
     private Context context;
-
     public ChildHwAdapter(int mDisplay, int mTotal, Context context, ArrayList<String> allImageList, HWParentActivity acContext, AssignmentRes.AssignmentData item) {
         this.allImageList = allImageList;
         this.mDisplay = mDisplay;
@@ -81,6 +82,7 @@ public class ChildHwAdapter extends AGVRecyclerViewAdapter<ChildHwAdapter.ViewHo
                 items.add(tempData.get(j));
             }*/
         }
+
     }
 
 

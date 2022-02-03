@@ -70,7 +70,12 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
-        leafManager.getBooths(this,GroupDashboardActivityNew.groupId);
+        if("MEMBER".equalsIgnoreCase(type)){
+            leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
+        }else {
+            leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"boothCoordinator");
+        }
+
     }
 
     @Override
@@ -148,7 +153,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             }
 
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("phone : "+item.phone);
+            holder.txt_count.setText("Member : "+item.members);
         }
 
         @Override

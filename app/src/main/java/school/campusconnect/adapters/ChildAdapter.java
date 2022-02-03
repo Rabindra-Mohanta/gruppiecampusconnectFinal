@@ -29,6 +29,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.FullScreenActivity;
 import school.campusconnect.activities.FullScreenMultiActivity;
 import school.campusconnect.activities.ViewPDFActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
@@ -43,6 +44,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
     private int mTotal = 0;
     private Context context;
 
+    String imagePreviewUrl = "";
     public ChildAdapter(int mDisplay, int mTotal, Context context, ArrayList<String> allImageList) {
         this.allImageList = allImageList;
         this.mDisplay = mDisplay;
@@ -85,6 +87,9 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                 items.add(tempData.get(j));
             }*/
         }
+
+
+        imagePreviewUrl = LeafPreference.getInstance(context).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
     }
 
 
@@ -172,6 +177,19 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                     }
                 });
             }else {
+                String path = Constants.decodeUrlToBase64(item.get(position).getImagePath());
+                String newStr = path.substring(path.indexOf("/images")+1);
+                Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.e("Picasso", "Error : ");
+                    }
+                });
                 imgDownload.setVisibility(View.VISIBLE);
                 imgDownload.setOnClickListener(new View.OnClickListener() {
                     @Override

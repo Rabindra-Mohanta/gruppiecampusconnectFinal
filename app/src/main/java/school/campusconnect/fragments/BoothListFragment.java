@@ -148,7 +148,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         etSearch.setText("");
         LeafManager leafManager = new LeafManager();
         progressBar.setVisibility(View.VISIBLE);
-        leafManager.getBooths(this,GroupDashboardActivityNew.groupId);
+        leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
     }
 
     @Override

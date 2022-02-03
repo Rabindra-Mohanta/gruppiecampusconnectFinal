@@ -1667,6 +1667,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothResponse> getBooths(@Path("group_id") String group_id);
 
+    @GET("/api/v1/groups/{group_id}/all/booths/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothResponse> getBoothsCoordinator(@Path("group_id") String group_id,@Query("boothCoordinator") String option);
+
     @GET("/api/v1/groups/{group_id}/my/booth/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothResponse> getMyBooths(@Path("group_id") String group_id);

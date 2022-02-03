@@ -23,6 +23,10 @@ public class UpdateDataEventRes extends BaseResponse {
         @Expose
         public ArrayList<EventResData> eventList;
 
+        @SerializedName("imagePreviewUrl")
+        @Expose
+        public String imagePreviewUrl;
+
     }
 
 
