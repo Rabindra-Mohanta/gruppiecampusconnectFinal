@@ -24,6 +24,7 @@ public class Constants {
     public static final String FILE_TYPE_IMAGE = "image";
 
     public static final String GROUP_DATA = "GROUP_DATA";
+    public static final String TYPE = "TYPE";
     public static final String TOTAL_MEMBER = "TOTAL_MEMBER";
     public static final int MAX_IMAGE_NUM = 4;
 

@@ -422,7 +422,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_class_name">Class</string>
     <string name="lbl_add_class">Add Class</string>
     <string name="lbl_add_tikit">Add Ticket</string>
-    <string name="lbl_tikit">Add Tickets</string>
+    <string name="lbl_tikit">Tickets</string>
     <string name="lbl_tikit_details">Ticket Details</string>
     <string name="lbl_task_force">Task Force</string>
     <string name="lbl_teacher_name">Class Teacher</string>

@@ -13,7 +13,7 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
-import school.campusconnect.datamodel.add_tikit.AddTicketRequest;
+import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
@@ -147,6 +147,7 @@ import school.campusconnect.datamodel.test_exam.OfflineTestRes;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.test_exam.TestLiveEventRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
+import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
@@ -1736,7 +1737,6 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> deleteIssue(@Path("group_id") String group_id,@Path("issue_id") String issue_id);
 
-
     @GET("/api/v1/groups/{group_id}/booth/subbooth/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<SubBoothResponse> getMySubBooths(@Path("group_id") String group_id);
@@ -1745,7 +1745,12 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addTicket(@Path("group_id") String group_id, @Path("team_id") String teamId, @Path("issue_id") String issue_id, @Body AddTicketRequest ticketRequest);
 
+    @GET("/api/v1/groups/{group_id}/issues/tickets/get?")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TicketListResponse> getTickets(@Path("group_id") String group_id,@Query("role") String role,@Query("option") String option,@Query("page") String page);
 
-
+    @GET("/api/v1/groups/{group_id}/issues/tickets/get?")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TicketListResponse> getTicketWithoutRole(@Path("group_id") String group_id,@Query("option") String option,@Query("page") String page);
 
 }

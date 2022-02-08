@@ -1,4 +1,4 @@
-package school.campusconnect.datamodel.add_tikit;
+package school.campusconnect.datamodel.ticket;
 
 import java.io.Serializable;
 import java.util.ArrayList;

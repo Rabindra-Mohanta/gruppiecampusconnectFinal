@@ -336,6 +336,7 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
         try {
             startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
         } catch (Exception ex) {
+            Log.e(TAG,"Auto Complete exception: "+ex.getMessage());
         }
     }
 

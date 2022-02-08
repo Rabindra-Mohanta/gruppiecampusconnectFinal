@@ -231,6 +231,8 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
             LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
             //save group detail
             LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
+           // LeafPreference.getInstance(this).setString(Constants.TYPE,  gRes.data.get(0).type);
+
 
             Intent login = new Intent(this, GroupDashboardActivityNew.class);
             startActivity(login);

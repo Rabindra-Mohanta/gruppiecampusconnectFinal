@@ -601,12 +601,13 @@
         <item>Select Your Country</item>
         <item>India +91</item>
         <item>US    +01</item>
-
     </string-array>
 
     <string-array name="array_approval">
-        <item>Not Approved</item>
-        <item>Approved</item>
+        <item>notApproved</item>
+        <item>approved</item>
+        <item>Hold</item>
+        <item>denied</item>
     </string-array>
 
     <string-array name="share">

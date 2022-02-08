@@ -67,7 +67,7 @@ import school.campusconnect.R;
 import school.campusconnect.adapters.UploadImageAdapter;
 import school.campusconnect.databinding.ActivityAddTicketBinding;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.add_tikit.AddTicketRequest;
+import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.booths.SubBoothResponse;
 import school.campusconnect.datamodel.issue.IssueListResponse;
 import school.campusconnect.network.LeafManager;
@@ -76,7 +76,6 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.address.AddressActivity;
 import school.campusconnect.utils.address.FindAddress;
-import school.campusconnect.utils.address.GetLocation;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBDialogUtils;
@@ -128,7 +127,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     private String sharePath;
 
     String TeamId = "",IssueID = "";
-    String Team = "Select Your Team",Issue = "Select Your Issue";
+    String Team =null,Issue = null;
 
 
     boolean gotAddress;
@@ -299,28 +298,27 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
         if (resultIssue != null && resultIssue.size() > 0) {
 
-            String[] strIssue = new String[resultIssue.size()+1];
+            String[] strIssue = new String[resultIssue.size()];
 
             for (int i=0;i<resultIssue.size();i++){
                 strIssue[i]=resultIssue.get(i).issue;
             }
-            strIssue[strIssue.length-1]="Select Your Issue";
+            //strIssue[strIssue.length-1]="Select Your Issue";
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white,strIssue);
             binding.spIssue.setAdapter(adapter);
-            binding.spIssue.setSelection(strIssue.length-1);
+         //  binding.spIssue.setSelection(strIssue.length-1);
 
             binding.spIssue.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     AppLog.e(TAG, "onItemSelected : " + position);
 
-                    if(position != strIssue.length-1){
-                        Issue = resultIssue.get(position).issue;
-                        IssueID = resultIssue.get(position).issueId;
-                    }
+                    Issue = resultIssue.get(position).issue;
+                    IssueID = resultIssue.get(position).issueId;
+                  /*  if(position != strIssue.length-1){
 
-
+                    }*/
                 }
 
                 @Override
@@ -335,27 +333,29 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
         if (resultTeam != null && resultTeam.size() > 0) {
 
-            String[] strTeam = new String[resultTeam.size()+1];
+            String[] strTeam = new String[resultTeam.size()];
 
             for (int i=0;i<resultTeam.size();i++){
                 strTeam[i]=resultTeam.get(i).name;
             }
-            strTeam[strTeam.length-1]="Select Your Team";
+         //   strTeam[strTeam.length-1]="Select Your Team";
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white,strTeam);
             binding.spTeam.setAdapter(adapter);
-            binding.spTeam.setSelection(strTeam.length-1);
+        //    binding.spTeam.setSelection(strTeam.length-1);
 
             binding.spTeam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     AppLog.e(TAG, "onItemSelected : " + position);
 
-                    if(position != strTeam.length-1){
-                        Team = resultTeam.get(position).name;
-                        TeamId = resultTeam.get(position).teamId;
+                    Team = resultTeam.get(position).name;
+                    TeamId = resultTeam.get(position).teamId;
 
-                    }
+                 /*   if(position != strTeam.length-1){
+
+
+                    }*/
 
 
                 }
@@ -480,15 +480,27 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
 
-        if (Team.equalsIgnoreCase("Select Your Team")) {
+        if (Team == null) {
             if (showToast)
                 Toast.makeText(this, "Please Select Team", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (Issue.equalsIgnoreCase("Select Your Issue")) {
+        if (Issue == null) {
             if (showToast)
                 Toast.makeText(this, "Please Select Issue", Toast.LENGTH_SHORT).show();
             return false;
+        }
+
+        if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
+            if (showToast)
+                Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
+            valid = false;
+            removeImage();
+            removePdf();
+            Toast.makeText(this, "" + getResources().getString(R.string.msg_upload2), Toast.LENGTH_SHORT).show();
         }
 
         if (binding.etDescription.getText().toString().isEmpty()) {
@@ -501,17 +513,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 Toast.makeText(this, "Please Select Location", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
-            if (showToast)
-                Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
-            valid = false;
-        }
-        if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
-            valid = false;
-            removeImage();
-            removePdf();
-            Toast.makeText(this, "" + getResources().getString(R.string.msg_upload2), Toast.LENGTH_SHORT).show();
-        }
+
         AppLog.e(TAG, "valid : " + valid);
         return valid;
     }

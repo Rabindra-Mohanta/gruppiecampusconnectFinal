@@ -40,6 +40,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/issueTitle"
                     style="@style/LabelHeader2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -165,7 +166,7 @@
                                         android:orientation="horizontal"
                                         >
                                         <ImageView
-                                            android:src="@drawable/ic_description_svg"
+                                            android:src="@drawable/ic_task_forces"
                                             android:layout_gravity="center"
                                             android:layout_width="@dimen/padding_20dp"
                                             android:layout_height="@dimen/padding_20dp"/>
@@ -189,7 +190,7 @@
                                       >
 
                                         <ImageView
-                                            android:src="@drawable/ic_description_svg"
+                                            android:src="@drawable/ic_team_name"
                                             android:layout_gravity="center"
                                             android:layout_width="@dimen/padding_20dp"
                                             android:layout_height="@dimen/padding_20dp"/>
@@ -212,7 +213,7 @@
                                         >
 
                                         <ImageView
-                                            android:src="@drawable/ic_description_svg"
+                                            android:src="@drawable/ic_member"
                                             android:layout_gravity="center"
                                             android:layout_width="@dimen/padding_20dp"
                                             android:layout_height="@dimen/padding_20dp"/>
@@ -235,7 +236,7 @@
                                         >
 
                                         <ImageView
-                                            android:src="@drawable/ic_description_svg"
+                                            android:src="@drawable/ic_president"
                                             android:layout_gravity="center"
                                             android:layout_width="@dimen/padding_20dp"
                                             android:layout_height="@dimen/padding_20dp"/>
@@ -265,7 +266,7 @@
                             android:layout_marginTop="-10dp"
                             android:layout_width="@dimen/padding_20dp"
                             android:layout_height="@dimen/padding_20dp"
-                            android:padding="@dimen/padding_5dp"
+                            android:padding="2dp"
                             android:src="@drawable/ic_drop_down"
                             app:tint="@color/white" />
                     </LinearLayout>
@@ -298,11 +299,27 @@
                             android:layout_width="match_parent"
                             android:layout_height="150dp">
 
-                            <ImageView
-                                android:id="@+id/imgAttachment"
+
+                            <school.campusconnect.Assymetric.AsymmetricRecyclerView
+                                android:id="@+id/rvimgAttachment"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/colorTextLight" />
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+                                android:adjustViewBounds="true"
+                                android:background="@android:color/transparent"
+                                android:divider="@android:color/transparent"
+                                android:dividerHeight="3dp"
+                                android:fadingEdge="none"
+                                android:focusable="false"
+                                android:foregroundGravity="center_horizontal"
+                                android:gravity="center_horizontal"
+                                android:listSelector="#00000000"
+                                android:src="#d3d3d3"
+                                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
                         </RelativeLayout>
 
                         <LinearLayout
@@ -381,9 +398,9 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/padding_10dp"
-
                                     android:text="Lorem Ipsum is simply Dummy Text."
                                     android:textColor="@color/colorTextLight" />
+
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="match_parent"

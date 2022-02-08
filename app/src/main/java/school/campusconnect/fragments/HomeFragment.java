@@ -189,8 +189,9 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
             LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
             //save group detail
-            LeafPreference.getInstance(getActivity()).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
+      //      LeafPreference.getInstance(getActivity()).setString(Constants.TYPE,  gRes.data.get(0).type);
 
+            LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
             Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
             startActivity(login);
         } else {

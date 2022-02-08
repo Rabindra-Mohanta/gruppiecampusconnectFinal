@@ -52,6 +52,13 @@
                             android:layout_height="@dimen/padding_40dp"
                             android:layout_margin="@dimen/padding_5dp"
                             />
+
+                        <ImageView
+                            android:id="@+id/imgPointer"
+                            android:layout_width="@dimen/padding_30dp"
+                            android:layout_height="@dimen/padding_30dp"
+                            android:src="@drawable/ic_location_svg"
+                            android:layout_centerInParent="true"/>
                     </RelativeLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -72,7 +79,7 @@
                     style="@style/commonSpinner"
                     android:background="@drawable/spinner_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/padding_40dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/padding_5dp"
                     />
 
@@ -90,8 +97,9 @@
                     style="@style/commonSpinner"
                     android:background="@drawable/spinner_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/padding_40dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/padding_5dp"
+                    android:maxLines="1"
                     />
 
                 <TextView
@@ -108,7 +116,8 @@
                     style="@style/commonSpinner"
                     android:background="@drawable/spinner_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/padding_40dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:layout_margin="@dimen/padding_5dp"
                     />
 

@@ -65,9 +65,9 @@
                     android:id="@+id/imgDetails"
                     android:layout_alignParentRight="true"
                     android:layout_width="@dimen/padding_20dp"
-                    android:padding="@dimen/padding_5dp"
-                    android:tint="@color/white"
+                    app:tint="@color/white"
                     android:rotation="270"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/ic_drop_down"
                     android:layout_height="@dimen/padding_20dp"
                     android:background="@drawable/round_primary_bg"/>

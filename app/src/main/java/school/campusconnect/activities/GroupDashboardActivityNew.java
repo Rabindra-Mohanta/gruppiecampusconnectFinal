@@ -46,6 +46,7 @@ import school.campusconnect.fragments.PublicForumListFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -777,7 +778,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.fabAddTicket:
 
                 if (isConnectionAvailable()) {
-                    startActivity(new Intent(this, TicketsActivity.class));
+                    startActivity(new Intent(this, AddTicketActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -1174,6 +1175,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             if (fm.getBackStackEntryCount() == 1) {
                 if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
                     tabLayout.setVisibility(View.VISIBLE);
+                    fabAddTicket.setVisibility(View.VISIBLE);
                 } else if (mGroupItem.canPost)
                     tabLayout.setVisibility(View.VISIBLE);
             }
@@ -1284,8 +1286,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void onException(int apiId, String msg) {
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
-
-
     }
 
 
@@ -1344,6 +1344,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     public void groupSelected(MyTeamData group) {
+
+
         if (group.type.equals("Video Class")) {
             Intent intent = new Intent(this, VideoClassActivity.class);
             intent.putExtra("title", group.name);
@@ -1634,8 +1636,17 @@ public class GroupDashboardActivityNew extends BaseActivity
                 intent.putExtra("is_for_attendance", false);
                 startActivity(intent);
             }
-        } */ else {
+        } */
+        else if (group.type.equals("Issues")){
             setBackEnabled(true);
+            Log.e(TAG,"TYPE"+LeafPreference.getInstance(this).getString(Constants.TYPE));
+            Intent intent = new Intent(this, TicketsActivity.class);
+            intent.putExtra("type", LeafPreference.getInstance(this).getString(Constants.TYPE));
+            startActivity(intent);
+        }
+        else {
+            setBackEnabled(true);
+            Log.e(TAG,"group name"+group.name);
             tvToolbar.setText(group.name);
             tv_Desc.setText("Members : "+group.members);
             tv_Desc.setVisibility(View.VISIBLE);

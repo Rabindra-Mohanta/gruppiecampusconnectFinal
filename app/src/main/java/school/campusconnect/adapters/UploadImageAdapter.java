@@ -10,6 +10,8 @@ import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,8 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 
 public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.ViewHolder> {
+
+    public static String TAG = "UploadImageAdapter";
     private final ArrayList<String> uploadImages;
     Context context;
     UploadImageListener listener;
@@ -62,6 +66,7 @@ public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.
             try {
                 if(Constants.FILE_TYPE_IMAGE.equals(fileTypeImageOrVideo)){
 //                    File file=new File(uploadImages.get(position));
+
                     Picasso.with(context).load(uploadImages.get(position)).resize(80,80).into(holder.imgUpload);
                 }else {
                     // TODO : URI : Display Video Thumbnain from URI
