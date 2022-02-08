@@ -15,8 +15,8 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
 import com.activeandroid.ActiveAndroid;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.app.ActivityCompat;
@@ -48,6 +48,7 @@ import school.campusconnect.utils.AppLog;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -110,10 +111,14 @@ public class GroupDashboardActivityNew extends BaseActivity
     public TabLayout tabLayout;
 
     @Bind(R.id.fabAddTicket)
-    public FloatingActionButton fabAddTicket;
+    public TextView fabAddTicket;
+
+    @Bind(R.id.llAdTicket)
+    FrameLayout llAdTicket;
 
     @Bind(R.id.llAuthorizedUser)
     LinearLayout llAuthorizedUser;
+
     @Bind(R.id.llAllUsers)
     LinearLayout llAllUsers;
     @Bind(R.id.llDoubt)
@@ -772,7 +777,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             case R.id.fabAddTicket:
 
                 if (isConnectionAvailable()) {
-                    startActivity(new Intent(this, AddTicketActivity.class));
+                    startActivity(new Intent(this, TicketsActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
@@ -880,6 +885,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     private void enableOptions() {
+
+        AppLog.e(TAG,"mGroupItem.category"+mGroupItem.category);
         if (mGroupItem.isAdmin) {
             llDiscuss.setVisibility(View.VISIBLE);
         } else {
@@ -909,9 +916,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             llPeople.setVisibility(View.GONE);
 
             llFamily.setVisibility(View.VISIBLE);
-
+            llAdTicket.setVisibility(View.VISIBLE);
             tabLayout.setVisibility(View.VISIBLE);
-
 
 
             if (mGroupItem.canPost) {

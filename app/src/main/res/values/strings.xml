@@ -132,6 +132,7 @@
     <string name="lbl_select_friend">Select Friend</string>
     <string name="lbl_select_team">Select Team</string>
     <string name="lbl_select_location">Select Location</string>
+    <string name="lbl_location">Location</string>
     <string name="lbl_select_issue">Select Issue</string>
     <string name="lbl_select_type">Select Type</string>
     <string name="lbl_comments">Comments</string>
@@ -220,6 +221,7 @@
     <string name="action_edit_contact">Edit Contact</string>
     <string name="next">Next</string>
     <string name="done">Done</string>
+    <string name="deny">Deny</string>
     <string name="to_this_group">To This Group</string>
     <string name="to_groups">To Groups</string>
     <string name="to_teams">To Teams</string>
@@ -387,6 +389,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="image_upload_error">Error in Image Upload</string>
     <string name="upload_error">Error in Upload</string>
     <string name="lbl_team_name">Team Name</string>
+    <string name="lbl_member_details">Member Details</string>
+    <string name="lbl_president_details">President Details</string>
     <string name="lbl_create_team">Create Team</string>
     <string name="lbl_broadcast">Broadcast</string>
     <string name="hint_roll_no">Roll Number</string>
@@ -417,7 +421,10 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_classes">All Classes</string>
     <string name="lbl_class_name">Class</string>
     <string name="lbl_add_class">Add Class</string>
-    <string name="lbl_add_tikit">Add Tikit</string>
+    <string name="lbl_add_tikit">Add Ticket</string>
+    <string name="lbl_tikit">Add Tickets</string>
+    <string name="lbl_tikit_details">Ticket Details</string>
+    <string name="lbl_task_force">Task Force</string>
     <string name="lbl_teacher_name">Class Teacher</string>
     <string name="lbl_students">Students</string>
     <string name="lbl_class_register_student">Class/Student Register</string>
@@ -446,6 +453,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_route_name">Route Name</string>
     <string name="lbl_staff_register">Staff Register</string>
     <string name="lbl_name">Name*</string>
+    <string name="lbl_name_">Name</string>
+    <string name="lbl_description">Description</string>
     <string name="lbl_staff_id">Staff Id</string>
     <string name="lbl_qualification">Qualification</string>
     <string name="lbl_religion">Religion</string>

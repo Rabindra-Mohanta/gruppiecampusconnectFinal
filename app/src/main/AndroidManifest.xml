@@ -45,6 +45,12 @@
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
         <activity
+            android:name=".activities.TicketDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.TicketsActivity"
+            android:exported="false" />
+        <activity
             android:name=".utils.address.AddressActivity"
             android:exported="false" />
         <activity

@@ -3613,8 +3613,8 @@ public class LeafManager {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<AddTicketRequest.AddTicketRes> model = service.addTicket(groupId, teamId, issueId,addTicketReq);
-        ResponseWrapper<AddTicketRequest.AddTicketRes> wrapper = new ResponseWrapper<>(model);
+        final Call<BaseResponse> model = service.addTicket(groupId, teamId, issueId,addTicketReq);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
         }.getType();

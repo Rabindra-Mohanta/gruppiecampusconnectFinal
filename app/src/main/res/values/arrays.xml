@@ -604,9 +604,16 @@
 
     </string-array>
 
+    <string-array name="array_approval">
+        <item>Not Approved</item>
+        <item>Approved</item>
+    </string-array>
+
     <string-array name="share">
         <item>Share Post</item>
         <item>Edit and Share Post</item>
+
+
 
     </string-array>
 </resources>

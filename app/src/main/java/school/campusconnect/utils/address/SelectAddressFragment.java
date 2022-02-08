@@ -153,6 +153,7 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
             Bundle bundle = getArguments();
             binding.etAddress.setText(bundle.getString(Constants.KEY_BUNDLE_ADDRESS));
             binding.etLandmark.setText(bundle.getString(Constants.KEY_BUNDLE_LOCALITY));
+            binding.etPinCode.setText(bundle.getString(Constants.KEY_BUNDLE_POSTAL));
            // edtFloor.setText(bundle.getString(Constants.KEYS.KEY_BUNDLE_FLOOR));
               /*  if(!isFromRegister)
                 edtPostalCode.setText(bundle.getString(Constants.KEYS.KEY_BUNDLE_POSTAL));*/
@@ -276,7 +277,7 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
         }
 
     }
-    public boolean isValidField(TextView editText) {
+    public boolean isValidField(EditText editText) {
         String text = editText.getText().toString().trim();
 
         if (TextUtils.isEmpty(text)) {
@@ -308,7 +309,7 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
 
                 //getAddress();
 
-                if (selAddress != null && isValidField(binding.etAddress) && isValidField(binding.etLandmark))
+                if (selAddress != null && isValidField(binding.etAddress) && isValidField(binding.etLandmark) && isValidField(binding.etPinCode))
                     sendAddress(selAddress);
 
                 break;
@@ -496,6 +497,7 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
             // edtSearch.setText(selAddress.getAddressLine(0));
             binding.etAddress.setText(selAddress.getAddressLine(0));
             binding.etLandmark.setText(selAddress.getSubAdminArea());
+            binding.etPinCode.setText(selAddress.getPostalCode());
             binding.etSearch.clearFocus();
 
             getLocation.stopFusedLocationUpdates();
@@ -518,10 +520,10 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
         Log.e(TAG,"address"+address);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.KEY_BUNDLE_LOCATION, address);
-        bundle.putString(Constants.KEY_BUNDLE_ADDRESS, address.getAddressLine(0));
-        bundle.putString(Constants.KEY_BUNDLE_LOCALITY,address.getSubLocality());
+        bundle.putString(Constants.KEY_BUNDLE_ADDRESS, binding.etAddress.getText().toString());
+        bundle.putString(Constants.KEY_BUNDLE_LOCALITY,binding.etLandmark.getText().toString());
        // bundle.putString(Constants.KEYS.KEY_BUNDLE_FLOOR, edtFloor.getText().toString());
-        bundle.putString(Constants.KEY_BUNDLE_POSTAL, postalCode);
+        bundle.putString(Constants.KEY_BUNDLE_POSTAL, binding.etPinCode.getText().toString());
         bundle.putString(Constants.KEY_BUNDLE_LATITUDE, lat);
         bundle.putString(Constants.KEY_BUNDLE_LONGITUDE, lng);
 

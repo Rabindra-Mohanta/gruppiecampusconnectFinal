@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/padding_5dp"
+        android:layout_height="wrap_content">
+        <androidx.cardview.widget.CardView
+            android:layout_margin="@dimen/padding_5dp"
+            app:cardUseCompatPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_margin="@dimen/padding_10dp"
+                android:layout_height="wrap_content">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/llImg"
+                    android:layout_width="70dp"
+                    app:cardCornerRadius="@dimen/padding_5dp"
+                    android:layout_height="70dp">
+                    <ImageView
+                        android:id="@+id/imgTicket"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimary"/>
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_marginLeft="@dimen/padding_10dp"
+                    android:layout_toRightOf="@id/llImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/LabelHeader1"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:text="Burthan Cooper"/>
+
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/tvIssue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/LabelNormal"
+                        android:textColor="@color/colorTextLight"
+                        android:text="Issue - Jurison"/>
+
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/tvCordinator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/LabelNormal"
+                        android:textColor="@color/colorTextLight"
+                        android:text="Cordinator : Name"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imgDetails"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="@dimen/padding_20dp"
+                    android:padding="@dimen/padding_5dp"
+                    android:tint="@color/white"
+                    android:rotation="270"
+                    android:src="@drawable/ic_drop_down"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:background="@drawable/round_primary_bg"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</layout>

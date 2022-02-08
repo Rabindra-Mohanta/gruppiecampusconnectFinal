@@ -53,7 +53,7 @@ public class ResponseWrapper<T> {
                             AppLog.e("app", e.toString());
                             handler.handleException(apiId, new Exception(getErrorMsg(e)));
                         }
-                        break; // commit karo pehle commit hi he
+                        break;
                     default:
                         AppLog.e("ResponseWrapperDefault", new Gson().toJson(response));
                         try {

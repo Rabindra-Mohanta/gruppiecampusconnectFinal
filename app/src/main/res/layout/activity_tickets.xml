@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include layout="@layout/layout_toolbar" />
+
+            </FrameLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+        <FrameLayout
+            android:id="@+id/llApproval"
+            android:layout_margin="@dimen/padding_15dp"
+            android:layout_below="@id/appBar"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <Spinner
+                android:id="@+id/spApproval"
+                style="@style/commonSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:src="@drawable/icon_down_white"
+                app:tint="@color/colorPrimary"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:layout_gravity="right|center"
+                android:layout_height="25dp"/>
+        </FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_margin="@dimen/padding_10dp"
+            android:layout_below="@id/llApproval"
+            android:id="@+id/rvTickets"
+            android:layout_width="match_parent"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_tickets"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

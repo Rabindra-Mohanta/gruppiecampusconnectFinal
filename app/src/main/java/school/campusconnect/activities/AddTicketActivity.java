@@ -252,6 +252,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     }
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+
+        Log.e(TAG,"progressbar Visibility"+binding.progressBar.getVisibility());
         binding.progressBar.setVisibility(View.GONE);
 
         switch (apiId)
@@ -275,6 +277,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             case LeafManager.API_ADD_TICKET:
                 BaseResponse res2 = (BaseResponse) response;
                 AppLog.e(TAG, "ClassResponse " + res2);
+                Toast.makeText(getApplicationContext(), "Ticket Added Successfully...", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }
@@ -350,7 +353,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
                     if(position != strTeam.length-1){
                         Team = resultTeam.get(position).name;
-                        IssueID = resultTeam.get(position).teamId;
+                        TeamId = resultTeam.get(position).teamId;
+
                     }
 
 
@@ -1053,25 +1057,15 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         Log.e(TAG, "GotADrress " + bundlenew.getString(Constants.KEY_BUNDLE_ADDRESS));
 
         binding.etLocation.setText(bundlenew.getString(Constants.KEY_BUNDLE_ADDRESS));
-        Address locationData = bundlenew.getParcelable(Constants.KEY_BUNDLE_LOCATION);
-        landMark = bundlenew.getString(Constants.KEY_BUNDLE_ADDRESS);
+
+        landMark = bundlenew.getString(Constants.KEY_BUNDLE_LOCALITY);
         pinCode = bundlenew.getString(Constants.KEY_BUNDLE_POSTAL);
-        lat = String.valueOf(locationData.getLatitude());
-        lng = String.valueOf(locationData.getLongitude());
-
-       // Log.e(TAG, "OwnerLatLong" + locationData + "\n" + owner_long);
+        lat = bundlenew.getString(Constants.KEY_BUNDLE_LATITUDE);
+        lng = bundlenew.getString(Constants.KEY_BUNDLE_LONGITUDE);
 
 
 
-        Address location = bundlenew.getParcelable(Constants.KEY_BUNDLE_LOCATION);
 
-
-        if (location != null) {
-            lat = "" + location.getLatitude();
-            lng = "" + location.getLongitude();
-        } else {
-            return;
-        }
         //refreshScreen();
 
        /* if(maxRange <= 25)
