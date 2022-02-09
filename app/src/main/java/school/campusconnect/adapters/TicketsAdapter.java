@@ -44,20 +44,37 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
 
         TicketListResponse.TicketData data = ticketData.get(position);
 
-        holder.binding.tvName.setText(data.getTeamDetails().getUserTeamName());
+        if (data.getIssueCreatedByName() != null)
+        {
+            holder.binding.tvName.setText(data.getIssueCreatedByName());
+        }
+        else
+        {
+            holder.binding.tvName.setText("");
+        }
 
-        holder.binding.tvIssue.setText("Issue - "+data.getConstituencyIssue());
+        if (data.getConstituencyIssue() != null && data.getConstituencyIssueJurisdiction() != null)
+        {
+            holder.binding.tvIssue.setText(data.getConstituencyIssue() +"-"+data.getConstituencyIssueJurisdiction());
+        }
+        else
+        {
+            holder.binding.tvIssue.setText("");
+        }
+
+
+
+    /*    holder.binding.tvIssue.setText("Issue - "+data.getConstituencyIssue());
 
         if (data.getBoothCoordinators() != null && data.getBoothCoordinators().size()>0)
         {
             holder.binding.tvCordinator.setText("Coordinator - "+data.getBoothCoordinators().get(0).getName());
-
-        }
+        }*/
 
 
         if (data.getFileName() != null && data.getFileName().size()>0)
         {
-            Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(holder.binding.imgTicket,
+            Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.binding.imgTicket,
                     new Callback() {
                         @Override
                         public void onSuccess() {
@@ -67,7 +84,7 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
                         @Override
                         public void onError() {
 
-                            Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).into(holder.binding.imgTicket, new Callback() {
+                            Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).fit().centerCrop().into(holder.binding.imgTicket, new Callback() {
                                 @Override
                                 public void onSuccess() {
 

@@ -19,6 +19,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -115,7 +116,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     public TextView fabAddTicket;
 
     @Bind(R.id.llAdTicket)
-    FrameLayout llAdTicket;
+    public CardView llAdTicket;
 
     @Bind(R.id.llAuthorizedUser)
     LinearLayout llAuthorizedUser;
@@ -1178,6 +1179,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     fabAddTicket.setVisibility(View.VISIBLE);
                 } else if (mGroupItem.canPost)
                     tabLayout.setVisibility(View.VISIBLE);
+                    fabAddTicket.setVisibility(View.VISIBLE);
             }
             super.onBackPressed();
         } else {
@@ -1215,7 +1217,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     protected void onRestart() {
         super.onRestart();
     }
-
     @Override
     protected void onResume() {
         super.onResume();

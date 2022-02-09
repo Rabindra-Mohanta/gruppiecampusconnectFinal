@@ -23,6 +23,7 @@
                         android:id="@+id/imgTicket"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:scaleType="fitXY"
                         android:background="@color/colorPrimary"/>
                 </androidx.cardview.widget.CardView>
 
@@ -50,7 +51,7 @@
                         android:textColor="@color/colorTextLight"
                         android:text="Issue - Jurison"/>
 
-                    <TextView
+                   <!-- <TextView
                         android:layout_marginTop="2dp"
                         android:id="@+id/tvCordinator"
                         android:layout_width="wrap_content"
@@ -58,7 +59,7 @@
                         style="@style/LabelNormal"
                         android:textColor="@color/colorTextLight"
                         android:text="Cordinator : Name"/>
-
+-->
                 </LinearLayout>
 
                 <ImageView

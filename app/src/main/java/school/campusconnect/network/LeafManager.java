@@ -443,6 +443,7 @@ public class LeafManager {
     public static final int API_ADD_TICKET = 290;
     public static final int API_DELETE_TICKET = 291;
     public static final int API_LIST_TICKET = 292;
+    public static final int APPROVED_TICKET = 293;
 
     public LeafManager() {
 
@@ -10964,6 +10965,47 @@ public class LeafManager {
         }.getType();
 
         wrapper.execute(API_LIST_TICKET, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"success");
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"success");
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"handleError");
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void setApprovedTicket(OnCommunicationListener listListener, String group_id,String issuePostID,String status) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.ticketApproved(group_id,issuePostID,status);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(APPROVED_TICKET, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {

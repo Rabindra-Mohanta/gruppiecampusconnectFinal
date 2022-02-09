@@ -37,9 +37,9 @@ public class TicketListResponse extends BaseResponse implements Serializable {
     public static class TicketData implements Serializable
     {
 
-        @SerializedName("teamDetails")
+      /*  @SerializedName("teamDetails")
         @Expose
-        private TeamDetailsData teamDetails;
+        private TeamDetailsData teamDetails;*/
 
         @SerializedName("issueText")
         @Expose
@@ -226,14 +226,14 @@ public class TicketListResponse extends BaseResponse implements Serializable {
             this.constituencyIssue = constituencyIssue;
         }
 
-        public TeamDetailsData getTeamDetails() {
+       /* public TeamDetailsData getTeamDetails() {
             return teamDetails;
         }
 
         public void setTeamDetails(TeamDetailsData teamDetails) {
             this.teamDetails = teamDetails;
         }
-
+*/
         public ArrayList<BoothCoordinatorData> getBoothCoordinators() {
             return boothCoordinators;
         }

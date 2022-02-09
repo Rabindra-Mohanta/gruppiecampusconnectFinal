@@ -104,7 +104,6 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        Log.e(TAG,"progressbar Visibility"+binding.progressBar.getVisibility());
 
         binding.progressBar.setVisibility(View.GONE);
 

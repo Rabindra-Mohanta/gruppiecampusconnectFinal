@@ -598,14 +598,13 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             return;
         }
 
-
         if ( requestCode == Constants.KEY_RESULT_ADDRESS && resultCode == Activity.RESULT_OK)
         {
             gotAddress(data.getExtras());
         }
 
         else if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            listImages.clear();
+           // listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
@@ -626,7 +625,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         }
 
         else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            listImages.clear();
+          //  listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
 //            String path = cameraFile.getAbsolutePath();
             AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);

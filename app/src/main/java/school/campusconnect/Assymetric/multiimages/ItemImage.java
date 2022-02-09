@@ -17,8 +17,9 @@ public class ItemImage extends ItemPosition {
 	protected ItemImage(Parcel in) {
 		ImagePath = in.readString();
 
-
 	}
+
+
 
 	@Override
 	public int describeContents() {
