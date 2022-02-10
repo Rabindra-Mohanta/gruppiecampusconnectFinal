@@ -14,6 +14,8 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
+import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -444,6 +446,8 @@ public class LeafManager {
     public static final int API_DELETE_TICKET = 291;
     public static final int API_LIST_TICKET = 292;
     public static final int APPROVED_TICKET = 293;
+    public static final int ADD_COMMENT = 294;
+    public static final int LIST_COMMENT = 295;
 
     public LeafManager() {
 
@@ -11008,6 +11012,88 @@ public class LeafManager {
         wrapper.execute(APPROVED_TICKET, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"success");
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"success");
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"handleError");
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void setAddCommentTaskDetails(OnCommunicationListener listListener, String group_id, String issuePostID, AddCommentTaskDetailsReq req) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.addCommentTaskDetails(group_id,issuePostID,req);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(ADD_COMMENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"success");
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"success");
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e(TAG,"handleError");
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void getCommentTaskDetails(OnCommunicationListener listListener, String group_id, String issuePostID) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<CommentTaskDetailsRes> model = service.getCommentTaskDetails(group_id,issuePostID);
+
+        ResponseWrapper<CommentTaskDetailsRes> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(LIST_COMMENT, new ResponseWrapper.ResponseHandler<CommentTaskDetailsRes, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, CommentTaskDetailsRes response) {
                 if (mOnCommunicationListener != null) {
                     AppLog.e(TAG,"success");
                     mOnCommunicationListener.onSuccess(apiId, response);

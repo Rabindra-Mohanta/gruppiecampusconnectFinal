@@ -13,6 +13,8 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
+import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -1749,12 +1751,20 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TicketListResponse> getTickets(@Path("group_id") String group_id,@Query("role") String role,@Query("option") String option,@Query("page") String page);
 
-    @GET("/api/v1/groups/{group_id}/issues/tickets/get?")
+   /* @GET("/api/v1/groups/{group_id}/issues/tickets/get?")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TicketListResponse> getTicketWithoutRole(@Path("group_id") String group_id,@Query("option") String option,@Query("page") String page);
-
+*/
     @PUT("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/approve")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> ticketApproved(@Path("group_id") String group_id,@Path("issuePost_id") String issuePost_id,@Query("status") String status);
+
+    @POST("/api/v1/groups/{group_id}/issue/post/{post_id}/comment/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addCommentTaskDetails(@Path("group_id") String group_id, @Path("post_id") String postId, @Body AddCommentTaskDetailsReq addCommentTaskDetailsReq);
+
+    @GET("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/comments/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<CommentTaskDetailsRes> getCommentTaskDetails(@Path("group_id") String group_id, @Path("issuePost_id") String postId);
 
 }

@@ -603,12 +603,26 @@
         <item>US    +01</item>
     </string-array>
 
-    <string-array name="array_approval">
-        <item>notApproved</item>
-        <item>approved</item>
-        <item>Hold</item>
-        <item>denied</item>
+    <string-array name="array_boothCoordinator">
+        <item>Not Approved</item>
+        <item>Approved</item>
     </string-array>
+
+
+    <string-array name="array_isDepartmentTaskForce">
+        <item>Open</item>
+        <item>Close</item>
+        <item>Hold</item>
+    </string-array>
+
+
+    <string-array name="array_other">
+        <item>Not Approved</item>
+        <item>Open</item>
+        <item>Close</item>
+        <item>Hold</item>
+    </string-array>
+
 
     <string-array name="share">
         <item>Share Post</item>

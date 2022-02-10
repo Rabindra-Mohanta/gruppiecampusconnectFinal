@@ -27,7 +27,7 @@
 
 
     <androidx.core.widget.NestedScrollView
-
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appBar"
@@ -250,6 +250,33 @@
                                         android:id="@+id/rvBoothCordinator"
                                         android:nestedScrollingEnabled="false"
                                         tools:listitem="@layout/item_booth_cordinator"
+                                        />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/llBoothInCharge"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        style="@style/LabelNormal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/padding_15dp"
+                                        android:text="@string/lbl_booth_in_charge"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:layout_marginTop="@dimen/padding_10dp"
+                                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                        android:id="@+id/rvBoothInCharge"
+                                        android:nestedScrollingEnabled="false"
+                                        tools:listitem="@layout/item_booth_in_charge"
                                         />
 
                                 </LinearLayout>
@@ -500,6 +527,7 @@
 
                         </LinearLayout>
                         <LinearLayout
+                            android:id="@+id/llBtn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding_15dp"
@@ -571,9 +599,9 @@
                 android:id="@+id/rvComment"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
+                android:nestedScrollingEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:itemCount="3"
                 tools:listitem="@layout/item_comment_ticket_details"
                 />
         </LinearLayout>

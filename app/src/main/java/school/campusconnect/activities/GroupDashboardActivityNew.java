@@ -109,6 +109,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
+
     @Bind(R.id.tabLayout)
     public TabLayout tabLayout;
 
@@ -123,22 +124,31 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.llAllUsers)
     LinearLayout llAllUsers;
+
     @Bind(R.id.llDoubt)
     LinearLayout llDoubt;
+
     @Bind(R.id.rlMore)
     RelativeLayout rlMore;
+
     @Bind(R.id.llFavourite)
     LinearLayout llFavourite;
+
     @Bind(R.id.llArchiveTeam)
     LinearLayout llArchiveTeam;
+
     @Bind(R.id.llDiscuss)
     LinearLayout llDiscuss;
+
     @Bind(R.id.llPeople)
     LinearLayout llPeople;
+
     @Bind(R.id.llNotification)
     LinearLayout llNotification;
+
     @Bind(R.id.llClass)
     LinearLayout llClass;
+
     @Bind(R.id.llFamily)
     LinearLayout llFamily;
 
@@ -153,10 +163,13 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.llBusRegister)
     LinearLayout llBusRegister;
+
     @Bind(R.id.llIssueRegister)
     LinearLayout llIssueRegister;
+
     @Bind(R.id.llBothRegister)
     LinearLayout llBothRegister;
+
     @Bind(R.id.llBothCoordinateRegister)
     LinearLayout llBothCoordinateRegister;
 
@@ -166,10 +179,13 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.tapView1)
     public View tapView1;
+
     @Bind(R.id.tapView2)
     public View tapView2;
+
     @Bind(R.id.tapView3)
     public View tapView3;
+
     @Bind(R.id.tvAbout)
     public TextView tvAbout;
 
@@ -1027,6 +1043,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                             break;
                         case 2:
                             rlMore.setVisibility(View.GONE);
+
                             // Public Forum CLick
                             publicForumClick();
                             break;
@@ -1063,8 +1080,6 @@ public class GroupDashboardActivityNew extends BaseActivity
                             break;
                     }
                 }
-
-
                 updateTabIcons(tab.getPosition());
             }
 

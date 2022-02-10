@@ -105,6 +105,10 @@ public class TicketListResponse extends BaseResponse implements Serializable {
         @Expose
         private ArrayList<BoothCoordinatorData> boothCoordinators;
 
+        @SerializedName("boothIncharge")
+        @Expose
+        private ArrayList<BoothInchargeData> boothIncharge;
+
 
         public String getIssueText() {
             return issueText;
@@ -240,6 +244,14 @@ public class TicketListResponse extends BaseResponse implements Serializable {
 
         public void setBoothCoordinators(ArrayList<BoothCoordinatorData> boothCoordinators) {
             this.boothCoordinators = boothCoordinators;
+        }
+
+        public ArrayList<BoothInchargeData> getBoothIncharge() {
+            return boothIncharge;
+        }
+
+        public void setBoothIncharge(ArrayList<BoothInchargeData> boothIncharge) {
+            this.boothIncharge = boothIncharge;
         }
     }
     public static class TeamDetailsData implements Serializable
@@ -503,6 +515,69 @@ public class TicketListResponse extends BaseResponse implements Serializable {
         }
     }
 
+
+    public static class BoothInchargeData implements Serializable
+    {
+        @SerializedName("teamName")
+        @Expose
+        private String teamName;
+
+        @SerializedName("phone")
+        @Expose
+        private String phone;
+
+        @SerializedName("name")
+        @Expose
+        private String name;
+
+        @SerializedName("constituencyDesignation")
+        @Expose
+        private String constituencyDesignation;
+
+        @SerializedName("_id")
+        @Expose
+        private String _id;
+
+        public String getTeamName() {
+            return teamName;
+        }
+
+        public void setTeamName(String teamName) {
+            this.teamName = teamName;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getConstituencyDesignation() {
+            return constituencyDesignation;
+        }
+
+        public void setConstituencyDesignation(String constituencyDesignation) {
+            this.constituencyDesignation = constituencyDesignation;
+        }
+
+        public String get_id() {
+            return _id;
+        }
+
+        public void set_id(String _id) {
+            this._id = _id;
+        }
+    }
     public static class BoothCoordinatorData implements Serializable
     {
         @SerializedName("phone")

@@ -1,14 +1,12 @@
 package school.campusconnect.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.databinding.DataBindingUtil;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -36,18 +35,23 @@ import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
 
 import school.campusconnect.adapters.BoothCordinatorAdapter;
-import school.campusconnect.adapters.TicketCommentAdpater;
+import school.campusconnect.adapters.BoothInChargeAdapter;
+import school.campusconnect.adapters.TicketDetailsCommentAdpater;
 import school.campusconnect.adapters.TicketDetailsImageAdapter;
 
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.GroupDetailResponse;
+import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
+import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.network.LeafManager;
-import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 
 public class TicketDetailsActivity extends BaseActivity implements View.OnClickListener, LeafManager.OnCommunicationListener {
+
+    public static String TAG = "TicketDetailsActivity";
+
+
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
 
@@ -93,6 +97,9 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     @Bind(R.id.btnsendComment)
     public ImageView btnsendComment;
 
+    @Bind(R.id.etComment)
+    public EditText etComment;
+
     @Bind(R.id.llExpand)
     public LinearLayout llExpand;
 
@@ -102,11 +109,20 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     @Bind(R.id.llBoothCordinator)
     public LinearLayout llBoothCordinator;
 
+    @Bind(R.id.llBoothInCharge)
+    public LinearLayout llBoothInCharge;
+
+    @Bind(R.id.llBtn)
+    public LinearLayout llBtn;
+
     @Bind(R.id.rvimgAttachment)
     public AsymmetricRecyclerView rvimgAttachment;
 
     @Bind(R.id.rvBoothCordinator)
     public RecyclerView rvBoothCordinator;
+
+    @Bind(R.id.rvBoothInCharge)
+    public RecyclerView rvBoothInCharge;
 
     @Bind(R.id.rvComment)
     public RecyclerView rvComment;
@@ -114,14 +130,19 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     @Bind(R.id.ProgressBar)
     public ProgressBar ProgressBar;
 
-    public static String TAG = "TicketDetailsActivity";
-   // ActivityTicketDetailsBinding binding;
+    @Bind(R.id.scrollView)
+    public NestedScrollView scrollView;
 
+   // ActivityTicketDetailsBinding binding;
     private LeafManager manager;
     private TicketListResponse.TicketData taskData;
     private BoothCordinatorAdapter boothCordinatorAdapter;
+    private BoothInChargeAdapter boothInChargeAdapter;
+    private TicketDetailsCommentAdpater ticketDetailsCommentAdpater;
     private Boolean expandable = false;
     private String callDepartment,callParty;
+    private String Option,Role;
+
     public static final String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
     };
 
@@ -150,15 +171,64 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
         ButterKnife.bind(this);
 
         manager = new LeafManager();
+
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle(getResources().getString(R.string.lbl_tikit_details));
         boothCordinatorAdapter = new BoothCordinatorAdapter();
+        boothInChargeAdapter = new BoothInChargeAdapter();
+        ticketDetailsCommentAdpater = new TicketDetailsCommentAdpater();
+        rvComment.setAdapter(ticketDetailsCommentAdpater);
+
         if (getIntent() != null)
         {
             taskData = (TicketListResponse.TicketData) getIntent().getSerializableExtra("data");
+            Option = getIntent().getStringExtra("Option");
+            Role = getIntent().getStringExtra("Role");
+
             Log.e(TAG,"get Issue Text"+taskData.getIssueText());
-            rvComment.setAdapter(new TicketCommentAdpater());
+
+          /*  if (Role.equalsIgnoreCase("isBoothCoordinator"))
+            {
+                if (Option != null)
+                {
+                    if (Option.equalsIgnoreCase("approved"))
+                    {
+                        btnApprove.setText("Not Approve");
+                        btnDeny.setText("Deny");
+                    }
+                    else if (Option.equalsIgnoreCase("notApproved"))
+                    {
+                        btnApprove.setText("Approve");
+                        btnDeny.setText("Deny");
+                    }
+                }
+            }
+            else if (Role.equalsIgnoreCase("isDepartmentTaskForce"))
+            {
+                if (Option != null)
+                {
+                    if (Option.equalsIgnoreCase("open"))
+                    {
+                        btnApprove.setText("Close");
+                        btnDeny.setText("Hold");
+                    }
+                    else if (Option.equalsIgnoreCase("hold"))
+                    {
+                        btnApprove.setText("Open");
+                        btnDeny.setText("Close");
+                    }
+                    else if (Option.equalsIgnoreCase("close"))
+                    {
+                        btnApprove.setText("Open");
+                        btnDeny.setText("Hold");
+                    }
+                }
+            }
+            else
+            {
+                llBtn.setVisibility(View.GONE);
+            }*/
 
             if (taskData != null)
             {
@@ -186,11 +256,21 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 {
                     llBoothCordinator.setVisibility(View.GONE);
                 }
+
+                if (taskData.getBoothIncharge() != null && taskData.getBoothIncharge().size() > 0)
+                {
+                    boothInChargeAdapter.add(taskData.getBoothIncharge());
+                    rvBoothInCharge.setAdapter(boothInChargeAdapter);
+                }
+                else
+                {
+                    llBoothInCharge.setVisibility(View.GONE);
+                }
+
                 if (taskData.getFileName() != null &&  taskData.getFileName().size()> 0)
                 {
                     TicketDetailsImageAdapter adapter;
 
-                    rvimgAttachment.setVisibility(View.VISIBLE);
                     rvimgAttachment.setRequestedHorizontalSpacing(Utils.dpToPx(getApplicationContext(), 3));
                     rvimgAttachment.addItemDecoration(
                             new SpacesItemDecoration(getResources().getDimensionPixelSize(R.dimen.padding_3dp)));
@@ -208,7 +288,10 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 {
                     rvimgAttachment.setVisibility(View.GONE);
                 }
+                getComment();
+
             }
+
             reqPermission();
         }
     }
@@ -252,6 +335,30 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 AppLog.e(TAG, "BaseResponse " + new Gson().toJson(res1));
                 finish();
                 break;
+
+
+            case LeafManager.LIST_COMMENT:
+                CommentTaskDetailsRes res2 = (CommentTaskDetailsRes) response;
+                AppLog.e(TAG, "CommentTaskDetailsRes " + new Gson().toJson(res2));
+                ticketDetailsCommentAdpater.add(res2.getCommentData());
+
+                if (res2.getCommentData().size()>0)
+                {
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    });
+                }
+                break;
+
+            case LeafManager.ADD_COMMENT:
+                etComment.setText("");
+                BaseResponse res3 = (BaseResponse) response;
+                getComment();
+                break;
+
         }
     }
 
@@ -291,7 +398,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             case R.id.btnApprove:
                 Log.e(TAG,"groupID"+GroupDashboardActivityNew.groupId);
 
-                AppDialog.showConfirmDialog(this, "Are You Sure You Want to Approve Ticket ?", new AppDialog.AppDialogListener() {
+              /*  AppDialog.showConfirmDialog(this, "Are You Sure You Want to Approve Ticket ?", new AppDialog.AppDialogListener() {
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
@@ -302,14 +409,14 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     public void okCancelClick(DialogInterface dialog) {
                         dialog.dismiss();
                     }
-                });
+                });*/
                 break;
 
             case R.id.btnDeny:
 
                 Log.e(TAG,"groupID"+GroupDashboardActivityNew.groupId);
 
-                AppDialog.showConfirmDialog(this, "Are You Sure You Want to Denied Ticket ?", new AppDialog.AppDialogListener() {
+              /*  AppDialog.showConfirmDialog(this, "Are You Sure You Want to Denied Ticket ?", new AppDialog.AppDialogListener() {
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
@@ -321,9 +428,37 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     public void okCancelClick(DialogInterface dialog) {
                         dialog.dismiss();
                     }
-                });
+                });*/
                  break;
+
+            case R.id.btnsendComment:
+                if (isValid())
+                {
+                    sendComment();
+                }
+                break;
         }
+    }
+    private Boolean isValid()
+    {
+        if (etComment.getText().toString().isEmpty())
+        {
+            Toast.makeText(getApplicationContext(),"Add Comment",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+    private void sendComment()
+    {
+        AddCommentTaskDetailsReq req = new AddCommentTaskDetailsReq();
+        req.setText(etComment.getText().toString());
+        ProgressBar.setVisibility(View.VISIBLE);
+        manager.setAddCommentTaskDetails(this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),req);
+    }
+    private void getComment()
+    {
+        ProgressBar.setVisibility(View.VISIBLE);
+        manager.getCommentTaskDetails(this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId());
     }
     private void redirectMap()
     {

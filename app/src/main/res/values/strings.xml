@@ -600,6 +600,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strSelect">Select</string>
     <string name="lbl_booth_coordinate_register">Booth Coordinator register</string>
     <string name="lbl_booth_coordinate">Booth Coordinator</string>
+    <string name="lbl_booth_in_charge">Booth In Charge</string>
     <string name="lbl_salary">Salary</string>
     <string name="lbl_booth_number">Booth Number*</string>
 
