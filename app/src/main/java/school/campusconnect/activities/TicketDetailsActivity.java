@@ -355,6 +355,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
             case LeafManager.ADD_COMMENT:
                 etComment.setText("");
+                hideKeyboard();
                 BaseResponse res3 = (BaseResponse) response;
                 getComment();
                 break;

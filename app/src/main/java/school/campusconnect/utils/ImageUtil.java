@@ -201,8 +201,6 @@ public class ImageUtil {
         if (maxHeight <= 0 && maxWidth <= 0) {
             throw new IllegalArgumentException("maxWidth and maxHeight should not be 0 or less");
         }
-
-
         float imgRatio = actualWidth / actualHeight;
         float maxRatio = maxWidth / maxHeight;
 

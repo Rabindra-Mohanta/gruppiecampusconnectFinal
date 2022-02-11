@@ -241,7 +241,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             for (int i = 0; i < strChapter.length; i++) {
                 strChapter[i] = chapterList.get(i).chapterName;
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.item_spinner, strChapter);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_spinner, strChapter);
             spChapter.setAdapter(adapter);
 
             spChapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

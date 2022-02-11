@@ -45,16 +45,17 @@ public class TicketDetailsCommentAdpater extends RecyclerView.Adapter<TicketDeta
 
         holder.binding.tvName.setText(data.getName());
         holder.binding.tvDesc.setText(data.getText());
+
        // holder.binding.tvcommentTime.setText(data.getInsertedAt());
 
-      /*  Date c = Calendar.getInstance().getTime();
+        Date c = Calendar.getInstance().getTime();
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String todayDate = df.format(c);
 
-        String[] TimeDate = data.getInsertedAt().split(" ");
+        String[] TimeDate = data.getInsertedAt().split("T");
         String Date = TimeDate[0];
-        String Time = TimeDate[1];
+        String Time = TimeDate[1].substring(0,TimeDate[0].length()-1);
 
         try {
             Date date1 = df.parse(todayDate);
@@ -62,17 +63,17 @@ public class TicketDetailsCommentAdpater extends RecyclerView.Adapter<TicketDeta
 
             if (date2.before(date1))
             {
-                Time = DateTimeHelper.convertFormat(Time, "HH:mm:ss", "hh:mm a")+ Date;
+                Time = DateTimeHelper.convertFormat(Time, "HH:mm:ss", "hh:mm a")+"\n"+Date;
             }
             else
             {
                 Time = DateTimeHelper.convertFormat(Time, "HH:mm:ss", "hh:mm a");
             }
-
+             holder.binding.tvcommentTime.setText(Time);
 
         } catch (ParseException e) {
             e.printStackTrace();
-        }*/
+        }
 
     }
     @Override
