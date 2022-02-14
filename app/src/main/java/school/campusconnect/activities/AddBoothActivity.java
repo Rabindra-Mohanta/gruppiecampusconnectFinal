@@ -65,6 +65,11 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
     @Bind(R.id.iconContact)
     ImageView iconContact;
 
+    @Bind(R.id.etBoothAddress)
+    EditText etBoothAddress;
+
+    @Bind(R.id.etAboutBooth)
+    EditText etAboutBooth;
 
     @Bind(R.id.btnCreateClass)
     Button btnCreateClass;
@@ -251,8 +256,11 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
                         request.boothImage = imageFragment.getmProfileImage();
                         String[] str = getResources().getStringArray(R.array.array_country_values);
                         request.countryCode = str[currentCountry - 1];
+                        request.boothAddress = etBoothAddress.getText().toString();
+                        request.aboutBooth = etAboutBooth.getText().toString();
 
                         progressBar.setVisibility(View.VISIBLE);
+
                         AppLog.e(TAG, "request :" + request);
                         leafManager.addBooths(this, GroupDashboardActivityNew.groupId, request);
 
@@ -305,6 +313,12 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
             Toast.makeText(this,"Please enter valid phone",Toast.LENGTH_SHORT).show();
             valid = false;
         }*/
+        else if (!isValueValid(etBoothAddress)) {
+            valid = false;
+        }
+        else if (!isValueValid(etAboutBooth)) {
+            valid = false;
+        }
         return valid;
     }
 

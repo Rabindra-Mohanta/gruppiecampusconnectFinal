@@ -34,14 +34,14 @@ android {
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')
 */
-             /*   // [1. Gruppie Campus constituency]
+                // [1. Gruppie Campus constituency]
                 applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
-                buildConfigField("String", "APP_ID",  '"constituency"')*/
+                buildConfigField("String", "APP_ID",  '"constituency"')
 
                 /*applicationId "kreis.gruppie"
                 versionCode 3
@@ -156,14 +156,14 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')
 */
 
-            applicationId "ktsvapp.gruppie"   // /// GCC2
+        /*    applicationId "ktsvapp.gruppie"   // /// GCC2
             versionCode 9
             versionName "7.2"
             resValue "string", "app_name", '"K.T.S.V"'
             buildConfigField("String", "AppName", '"K.T.S.V"')
             buildConfigField("String", "AppCategory", '"CAMPUS"')
             
-            buildConfigField("String", "APP_ID",  '"school"')
+            buildConfigField("String", "APP_ID",  '"school"')*/
 
            /*     applicationId "jnana.gruppie"   // /// GCC2
                 versionCode 2
@@ -209,8 +209,8 @@ android {
         }
         debug
          {
-          // buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
-             buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'
+           buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
+          //   buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'
 //           buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'
 //           buildConfigField "String", "BASE_URL", '"https://lite.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prod.gruppie.in"'

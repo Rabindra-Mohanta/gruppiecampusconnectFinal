@@ -30,6 +30,14 @@ public class BoothData {
         @Expose
         public String totalBoothMembersCount;
 
+        @SerializedName("boothAddress")
+        @Expose
+        public String boothAddress;
+
+        @SerializedName("aboutBooth")
+        @Expose
+        public String aboutBooth;
+
         @Override
         public String toString() {
             return new Gson().toJson(this);

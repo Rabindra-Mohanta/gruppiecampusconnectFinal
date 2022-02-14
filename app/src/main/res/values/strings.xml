@@ -603,6 +603,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_booth_in_charge">Booth In Charge</string>
     <string name="lbl_salary">Salary</string>
     <string name="lbl_booth_number">Booth Number*</string>
+    <string name="lbl_booth_address">Booth Address*</string>
+    <string name="lbl_booth_about">Booth About*</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

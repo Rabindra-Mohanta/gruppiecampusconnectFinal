@@ -15,6 +15,7 @@ import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
+import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -1766,5 +1767,10 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/comments/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<CommentTaskDetailsRes> getCommentTaskDetails(@Path("group_id") String group_id, @Path("issuePost_id") String postId);
+
+    @GET("/api/v1/groups/{group_id}/booth/team/{team_id}/committees/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<committeeResponse> getCommittee(@Path("group_id") String group_id, @Path("team_id") String teamId);
+
 
 }

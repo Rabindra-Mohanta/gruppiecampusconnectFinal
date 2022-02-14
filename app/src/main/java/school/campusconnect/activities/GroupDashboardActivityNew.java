@@ -754,8 +754,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                 break;
             case R.id.llBothRegister:
                 if (isConnectionAvailable()) {
-                    Intent intent = new Intent(this, BoothActivity.class);
-                    intent.putExtra("type","MEMBER");
+                    Intent intent = new Intent(this, CommitteeActivity.class);
+                    //intent.putExtra("type","MEMBER");
                     startActivity(intent);
                 } else {
                     showNoNetworkMsg();

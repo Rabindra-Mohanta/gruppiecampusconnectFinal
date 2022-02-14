@@ -133,7 +133,6 @@
 
                         <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_marginBottom="@dimen/padding_50dp"
                             android:layout_marginTop="@dimen/padding_5dp"
                             android:layout_height="wrap_content">
                             <EditText
@@ -152,6 +151,55 @@
                                 android:layout_height="24dp"/>
                         </FrameLayout>
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="@dimen/padding_15dp"
+                            android:text="@string/lbl_booth_address"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            style="@style/LabelNormal"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+
+
+                        <EditText
+                            android:id="@+id/etBoothAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:gravity="start"
+                            android:background="@drawable/edittext_bg"
+                            android:inputType="textMultiLine"
+                            android:layout_margin="@dimen/padding_5dp"
+                            android:textColor="@color/colorTextWhite"
+                            style="@style/RegEditText"
+                            android:minLines="2"
+                            android:lines="2"
+                            android:maxLines="2"
+                            />
+
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="@dimen/padding_15dp"
+                            android:text="@string/lbl_booth_about"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            style="@style/LabelNormal"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:layout_marginBottom="@dimen/padding_50dp"
+                            android:id="@+id/etAboutBooth"
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:layout_height="@dimen/login_button_height"
+                            android:inputType="text"
+                            android:maxLines="2"
+                            android:singleLine="true"
+                            style="@style/RegEditText" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
