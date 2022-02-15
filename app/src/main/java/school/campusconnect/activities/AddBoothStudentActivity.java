@@ -50,6 +50,7 @@ import butterknife.OnClick;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothMemberReq;
+import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.datamodel.test_exam.TestOfflineSubjectMark;
 import school.campusconnect.fragments.DatePickerFragment;
@@ -87,7 +88,7 @@ public class AddBoothStudentActivity extends BaseActivity {
     LeafManager leafManager;
 
     String group_id, team_id, category;
-
+    committeeResponse.committeeData committeeData;
     ContactsAdapter adapter;
     ArrayList<String> mobileList;
 
@@ -99,7 +100,6 @@ public class AddBoothStudentActivity extends BaseActivity {
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle("Add Booth Member");
-
         init();
     }
    /* @Override
@@ -140,6 +140,8 @@ public class AddBoothStudentActivity extends BaseActivity {
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
         category = getIntent().getStringExtra("category");
+        committeeData = new Gson().fromJson(getIntent().getStringExtra("committee_data"), committeeResponse.committeeData.class);
+        Log.e(TAG,"committee Data: "+new Gson().toJson(committeeData));
         mobileList = getIntent().getStringArrayListExtra("mobileList");
         adapter = new ContactsAdapter();
         rvSubjects.setAdapter(adapter);
@@ -238,9 +240,14 @@ public class AddBoothStudentActivity extends BaseActivity {
                 if(!TextUtils.isEmpty(str) || adapter.getList().size()>0){
                     BoothMemberReq req = new BoothMemberReq();
                     req.user = adapter.getList();
+
                     if(!TextUtils.isEmpty(str)){
                         req.user.add(str);
                     }
+
+                    req.dafaultCommittee = committeeData.getDefaultCommittee();
+                    req.committeeId = committeeData.getCommitteeId();
+
                     progressBar.setVisibility(View.VISIBLE);
                     leafManager.addBoothsMember(this, group_id, team_id, category, req);
                 }else {

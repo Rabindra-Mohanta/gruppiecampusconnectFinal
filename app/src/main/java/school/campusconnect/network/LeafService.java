@@ -15,6 +15,7 @@ import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
+import school.campusconnect.datamodel.committee.AddCommitteeReq;
 import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
@@ -1690,7 +1691,7 @@ public interface LeafService {
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id);
+    Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("committeeId") String committeeId);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/coordinator/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1767,6 +1768,20 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/comments/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<CommentTaskDetailsRes> getCommentTaskDetails(@Path("group_id") String group_id, @Path("issuePost_id") String postId);
+
+
+    @POST("/api/v1/groups/{group_id}/booth/team/{team_id}/committee/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addCommittee(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body AddCommitteeReq req);
+
+    @POST("/api/v1/groups/{group_id}/booth/team/{team_id}/committee/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateCommittee(@Path("group_id") String group_id, @Path("team_id") String teamId,@Query("committeeId") String committeeId, @Body AddCommitteeReq req);
+
+    @PUT("/api/v1/groups/{group_id}/booth/team/{team_id}/committee/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> removeCommittee(@Path("group_id") String group_id,@Path("team_id") String issuePost_id,@Query("committeeId") String committeeId);
+
 
     @GET("/api/v1/groups/{group_id}/booth/team/{team_id}/committees/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

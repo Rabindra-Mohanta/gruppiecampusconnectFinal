@@ -3,6 +3,7 @@ package school.campusconnect.network;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.ConstituencyRes;
@@ -16,6 +17,7 @@ import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
+import school.campusconnect.datamodel.committee.AddCommitteeReq;
 import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
@@ -449,8 +451,10 @@ public class LeafManager {
     public static final int APPROVED_TICKET = 293;
     public static final int ADD_COMMENT = 294;
     public static final int LIST_COMMENT = 295;
+    public static final int ADD_COMMITTEE = 297;
     public static final int LIST_COMMITTEE = 298;
-
+    public static final int UPDATE_COMMITTEE = 299;
+    public static final int REMOVE_COMMITTEE = 300;
 
     public LeafManager() {
 
@@ -10484,11 +10488,11 @@ public class LeafManager {
 
     }
 
-    public void getBoothMember(OnCommunicationListener listListener, String group_id, String teamId) {
+    public void getBoothMember(OnCommunicationListener listListener, String group_id, String teamId,String committeeID) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BoothMemberResponse> model = service.getBoothsMember(group_id, teamId);
+        final Call<BoothMemberResponse> model = service.getBoothsMember(group_id, teamId,committeeID);
         ResponseWrapper<BoothMemberResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
@@ -10629,6 +10633,10 @@ public class LeafManager {
     }
 
     public void addBoothsMember(OnCommunicationListener listListener, String group_id, String teamId, String category, BoothMemberReq boothData) {
+
+
+        Log.e(TAG,"Request"+new Gson().toJson(boothData));
+
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
@@ -10975,7 +10983,7 @@ public class LeafManager {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
+
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }
             }
@@ -10983,7 +10991,7 @@ public class LeafManager {
             @Override
             public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
+
                     mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
 
                 }
@@ -10991,7 +10999,7 @@ public class LeafManager {
             @Override
             public void handleException(int apiId, Exception e) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"handleError");
+
                     mOnCommunicationListener.onException(apiId, e.getMessage());
                 }
             }
@@ -11016,7 +11024,7 @@ public class LeafManager {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
+
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }
             }
@@ -11024,7 +11032,7 @@ public class LeafManager {
             @Override
             public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
+
                     mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
 
                 }
@@ -11032,7 +11040,7 @@ public class LeafManager {
             @Override
             public void handleException(int apiId, Exception e) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"handleError");
+
                     mOnCommunicationListener.onException(apiId, e.getMessage());
                 }
             }
@@ -11057,7 +11065,7 @@ public class LeafManager {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
+
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }
             }
@@ -11065,7 +11073,7 @@ public class LeafManager {
             @Override
             public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
+
                     mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
 
                 }
@@ -11073,7 +11081,7 @@ public class LeafManager {
             @Override
             public void handleException(int apiId, Exception e) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"handleError");
+
                     mOnCommunicationListener.onException(apiId, e.getMessage());
                 }
             }
@@ -11098,7 +11106,7 @@ public class LeafManager {
             @Override
             public void handle200(int apiId, CommentTaskDetailsRes response) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
+
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }
             }
@@ -11106,7 +11114,6 @@ public class LeafManager {
             @Override
             public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
                     mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
 
                 }
@@ -11114,7 +11121,44 @@ public class LeafManager {
             @Override
             public void handleException(int apiId, Exception e) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"handleError");
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void addCommittee(OnCommunicationListener listListener, String group_id, String teamId, AddCommitteeReq req) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.addCommittee(group_id,teamId,req);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(ADD_COMMITTEE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onException(apiId, e.getMessage());
                 }
             }
@@ -11123,11 +11167,11 @@ public class LeafManager {
     }
 
 
+
+
+
     public void getCommittee(OnCommunicationListener listListener, String group_id, String teamId) {
         mOnCommunicationListener = listListener;
-
-        AppLog.e(TAG,"group_id "+group_id);
-        AppLog.e(TAG,"teamId "+teamId);
 
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
@@ -11143,7 +11187,6 @@ public class LeafManager {
             @Override
             public void handle200(int apiId, committeeResponse response) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }
             }
@@ -11151,7 +11194,6 @@ public class LeafManager {
             @Override
             public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"success");
                     mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
 
                 }
@@ -11159,7 +11201,82 @@ public class LeafManager {
             @Override
             public void handleException(int apiId, Exception e) {
                 if (mOnCommunicationListener != null) {
-                    AppLog.e(TAG,"handleError");
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void updateCommittee(OnCommunicationListener listListener, String group_id, String teamId, String committeeID, AddCommitteeReq req) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.updateCommittee(group_id,teamId,committeeID,req);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(UPDATE_COMMITTEE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void removeCommittee(OnCommunicationListener listListener, String group_id, String teamId, String committeeID) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.removeCommittee(group_id,teamId,committeeID);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(REMOVE_COMMITTEE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onException(apiId, e.getMessage());
                 }
             }

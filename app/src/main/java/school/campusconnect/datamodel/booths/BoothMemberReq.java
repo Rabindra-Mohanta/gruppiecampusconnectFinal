@@ -9,4 +9,12 @@ public class BoothMemberReq {
     @SerializedName("user")
     @Expose
     public ArrayList<String> user;
+
+    @SerializedName("dafaultCommittee")
+    @Expose
+    public Boolean dafaultCommittee;
+
+    @SerializedName("committeeId")
+    @Expose
+    public String committeeId;
 }

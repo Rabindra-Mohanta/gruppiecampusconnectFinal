@@ -45,6 +45,9 @@ import school.campusconnect.utils.ImageUtil;
 public class CommitteeListFragment extends Fragment implements LeafManager.OnCommunicationListener {
 public static String TAG = "CommitteeListFragment";
 FragmentCommitteeListBinding binding;
+private String TeamID;
+private MyTeamData classData;
+private LeafManager leafManager;
     public static CommitteeListFragment newInstance() {
         CommitteeListFragment fragment = new CommitteeListFragment();
         Bundle args = new Bundle();
@@ -72,23 +75,45 @@ FragmentCommitteeListBinding binding;
     }
 
     private void inits() {
-        binding.progressBar.setVisibility(View.VISIBLE);
+
+        leafManager = new LeafManager();
+
+        if (getArguments() != null) {
+            classData = new Gson().fromJson(getArguments().getString("class_data"), MyTeamData.class);
+            AppLog.e(TAG, "classData : " + classData);
+            TeamID = classData.teamId;
+        }
+
+
     }
     @Override
     public void onStart() {
         super.onStart();
-        LeafManager leafManager = new LeafManager();
-        leafManager.getCommittee(this, GroupDashboardActivityNew.groupId,GroupDashboardActivityNew.team_id);
+        getCommittee();
+    }
+
+    private void getCommittee() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        leafManager.getCommittee(this, GroupDashboardActivityNew.groupId,TeamID);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         binding.progressBar.setVisibility(View.GONE);
-        committeeResponse res = (committeeResponse) response;
 
-        AppLog.e(TAG, "ClassResponse " + new Gson().toJson(res));
+        switch (apiId)
+        {
 
-        binding.rvCommitte.setAdapter(new CommitteeAdapter(res.getCommitteeData()));
+            case LeafManager.LIST_COMMITTEE:
+                committeeResponse res = (committeeResponse) response;
+                AppLog.e(TAG, "ClassResponse " + new Gson().toJson(res));
+                binding.rvCommitte.setAdapter(new CommitteeAdapter(res.getCommitteeData()));
+                break;
+
+            case LeafManager.REMOVE_COMMITTEE:
+                getCommittee();
+                break;
+        }
     }
 
     @Override
@@ -111,10 +136,10 @@ FragmentCommitteeListBinding binding;
         }
 
         @Override
-        public CommitteeAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_committee,parent,false);
-            return new CommitteeAdapter.ViewHolder(view);
+            return new ViewHolder(view);
         }
 
         @Override
@@ -122,7 +147,11 @@ FragmentCommitteeListBinding binding;
 
             final committeeResponse.committeeData item = list.get(position);
 
-            holder.txt_name.setText(item.getCommitteeName());
+            holder.txtCommitteeName.setText(item.getCommitteeName());
+
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRound(ImageUtil.getTextLetter(item.getCommitteeName()), ImageUtil.getRandomColor(position));
+            holder.img_lead_default.setImageDrawable(drawable);
         }
 
         @Override
@@ -150,23 +179,21 @@ FragmentCommitteeListBinding binding;
         public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-            @Bind(R.id.txt_name)
-            TextView txt_name;
+            @Bind(R.id.txtCommitteeName)
+            TextView txtCommitteeName;
 
             @Bind(R.id.img_tree)
             ImageView img_tree;
 
+            @Bind(R.id.img_lead_default)
+            ImageView img_lead_default;
 
             public ViewHolder(View itemView) {
                 super(itemView);
+
                 ButterKnife.bind(this,itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
-                    }
-                });
+
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -174,11 +201,42 @@ FragmentCommitteeListBinding binding;
                     }
                 });
 
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onTreeClick(list.get(getAdapterPosition()));
+                    }
+                });
+               /* imgDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onDeleteClick(list.get(getAdapterPosition()));
+                    }
+                });*/
+
             }
         }
     }
 
     private void onTreeClick(committeeResponse.committeeData committeeData) {
 
+
+        Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
+        intent.putExtra("class_data",new Gson().toJson(classData));
+        intent.putExtra("committee_data",new Gson().toJson(committeeData));
+        intent.putExtra("title",committeeData.getCommitteeName());
+        startActivity(intent);
+
+      /*  Intent intent = new Intent(getContext(), AddCommiteeActivity.class);
+        intent.putExtra("screen","update");
+        intent.putExtra("team_id",TeamID);
+        intent.putExtra("committee_id",committeeData.getCommitteeId());
+        intent.putExtra("committee_name",committeeData.getCommitteeName());
+        startActivity(intent);*/
+
+    }
+    private void onDeleteClick(committeeResponse.committeeData committeeData) {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        leafManager.removeCommittee(this,GroupDashboardActivityNew.groupId,TeamID,committeeData.getCommitteeId());
     }
 }

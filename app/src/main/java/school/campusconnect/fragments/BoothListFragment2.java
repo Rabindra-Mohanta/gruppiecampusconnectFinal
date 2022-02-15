@@ -29,6 +29,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.BoothCoordinateActivity;
 import school.campusconnect.activities.BoothStudentActivity;
 import school.campusconnect.activities.ClassStudentActivity;
+import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
@@ -190,6 +191,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
 
             @Bind(R.id.txt_count)
             TextView txt_count;
+
             @Bind(R.id.img_tree)
             ImageView img_tree;
 
@@ -204,6 +206,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
                         onTreeClick(list.get(getAdapterPosition()));
                     }
                 });
+
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -217,7 +220,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
 
     private void onTreeClick(MyTeamData classData) {
         if("MEMBER".equalsIgnoreCase(type)){
-            Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
+            Intent intent = new Intent(getActivity(), CommitteeActivity.class);
             intent.putExtra("class_data",new Gson().toJson(classData));
             intent.putExtra("title",classData.name);
             startActivity(intent);
