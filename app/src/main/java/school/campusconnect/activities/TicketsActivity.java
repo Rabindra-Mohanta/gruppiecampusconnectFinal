@@ -16,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.adapters.TicketsAdapter;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityTicketsBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupDetailResponse;
@@ -53,26 +54,25 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
         leafManager = new LeafManager();
 
-
-
         adapter = new TicketsAdapter(this);
         binding.rvTickets.setAdapter(adapter);
 
         binding.progressBar.setVisibility(View.VISIBLE);
+
         Log.e(TAG,"Group ID"+GroupDashboardActivityNew.groupId);
-        Log.e(TAG,"Role"+Role);
 
         leafManager.getGroupDetail(this, GroupDashboardActivityNew.groupId);
 
-        bindSp();
+
 
         //leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(Page));
     }
 
     private void bindSp() {
 
+        Log.e(TAG,"Role"+Role);
 
-  /*      if (Role.equalsIgnoreCase("isBoothCoordinator"))
+        if (Role.equalsIgnoreCase("isPartyTaskForce"))
         {
             approvalList = getResources().getStringArray(R.array.array_boothCoordinator);
         }
@@ -83,8 +83,8 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         else
         {
             approvalList = getResources().getStringArray(R.array.array_other);
-        }*/
-        approvalList = getResources().getStringArray(R.array.array_other);
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white,approvalList);
         binding.spApproval.setAdapter(adapter);
 
@@ -92,6 +92,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 AppLog.e(TAG, "onItemSelected : " + position);
+
                 Option = approvalList[position];
 
                 if (Option.equalsIgnoreCase("Not Approved"))
@@ -120,7 +121,6 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                     getTicketListApi();
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -142,19 +142,32 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-
         binding.progressBar.setVisibility(View.GONE);
 
         switch (apiId)
         {
             case LeafManager.API_ID_GROUP_DETAIL:
                 GroupDetailResponse res1 = (GroupDetailResponse) response;
+
                 AppLog.e(TAG, "GroupDetailResponse " + new Gson().toJson(res1));
-                Role = res1.data.get(0).type;
+
                 Log.e(TAG,"Role"+Role);
-                binding.progressBar.setVisibility(View.VISIBLE);
+
+                if (res1.data.get(0).isDepartmentTaskForce)
+                {
+                    Role = "isDepartmentTaskForce";
+                }
+                else if (res1.data.get(0).isPartyTaskForce)
+                {
+                    Role = "isPartyTaskForce";
+                }
+                else
+                {
+                    Role = "isAdmin";
+                }
+                bindSp();
                 getTicketListApi();
-                   break;
+                break;
 
             case LeafManager.API_LIST_TICKET:
                 isFirstTime = false;
@@ -177,7 +190,8 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         AppLog.e(TAG, "onException " + msg);
     }
     private void getTicketListApi() {
-        leafManager.getTickets(this,GroupDashboardActivityNew.groupId,"isBoothCoordinator","notApproved", String.valueOf(Page));
+        binding.progressBar.setVisibility(View.VISIBLE);
+        leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(Page));
     }
 
 }

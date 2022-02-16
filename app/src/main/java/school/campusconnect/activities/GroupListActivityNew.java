@@ -448,9 +448,11 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
             }
         } else if (apiId == LeafManager.API_ID_GET_PROFILE) {
             ProfileResponse res = (ProfileResponse) response;
+
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, res.data.name);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
+
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.EMAIL, res.data.email);
            AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
            AppLog.e("PROFILE IMAGE", "image is " + res.data.image);

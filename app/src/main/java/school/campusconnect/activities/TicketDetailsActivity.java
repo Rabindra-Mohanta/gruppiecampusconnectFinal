@@ -188,7 +188,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
             Log.e(TAG,"get Issue Text"+taskData.getIssueText());
 
-          /*  if (Role.equalsIgnoreCase("isBoothCoordinator"))
+            if (Role.equalsIgnoreCase("isPartyTaskForce"))
             {
                 if (Option != null)
                 {
@@ -228,7 +228,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             else
             {
                 llBtn.setVisibility(View.GONE);
-            }*/
+            }
 
             if (taskData != null)
             {

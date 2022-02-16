@@ -11,12 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +71,16 @@ public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.
                 if(Constants.FILE_TYPE_IMAGE.equals(fileTypeImageOrVideo)){
 //                    File file=new File(uploadImages.get(position));
 
-                    Picasso.with(context).load(uploadImages.get(position)).resize(80,80).into(holder.imgUpload);
+
+                    int size = dpToPx(context.getResources().getDisplayMetrics(), 80);
+
+                    RequestOptions reqOption = new RequestOptions();
+                    reqOption.override(size, size);
+
+                    Glide.with(context).load(uploadImages.get(position)).apply(reqOption).diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true).into(holder.imgUpload);
+
+              //      Picasso.with(context).load(uploadImages.get(position)).resize(80,80).into(holder.imgUpload);
                 }else {
                     // TODO : URI : Display Video Thumbnain from URI
                  //   Bitmap bMap = ThumbnailUtils.createVideoThumbnail(uploadImages.get(position) , MediaStore.Video.Thumbnails.MICRO_KIND);
@@ -83,6 +96,11 @@ public class UploadImageAdapter extends RecyclerView.Adapter<UploadImageAdapter.
                 AppLog.e("UploadImageAdapter" , "error on crateing bitmap : "+e.getLocalizedMessage());
                 e.printStackTrace();
             }
+    }
+
+    public static int dpToPx(DisplayMetrics displayMetrics, int dp) {
+
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     @Override

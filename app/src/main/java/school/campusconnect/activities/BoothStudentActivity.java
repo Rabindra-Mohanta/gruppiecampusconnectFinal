@@ -89,7 +89,7 @@ public class BoothStudentActivity extends BaseActivity {
                 Intent intent = new Intent(this, AddBoothStudentActivity.class);
                 intent.putExtra("group_id", mGroupId);
                 intent.putExtra("team_id", teamId);
-                intent.putExtra("group_id", mGroupId);
+                intent.putExtra("category", classData.category);
                 intent.putExtra("committee_data", new Gson().toJson(committeeData));
                 intent.putExtra("mobileList", classListFragment.getMobileList());
                 startActivity(intent);

@@ -140,6 +140,7 @@ public class AddBoothStudentActivity extends BaseActivity {
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
         category = getIntent().getStringExtra("category");
+        Log.e(TAG,"category "+category);
         committeeData = new Gson().fromJson(getIntent().getStringExtra("committee_data"), committeeResponse.committeeData.class);
         Log.e(TAG,"committee Data: "+new Gson().toJson(committeeData));
         mobileList = getIntent().getStringArrayListExtra("mobileList");
@@ -245,8 +246,12 @@ public class AddBoothStudentActivity extends BaseActivity {
                         req.user.add(str);
                     }
 
-                    req.dafaultCommittee = committeeData.getDefaultCommittee();
-                    req.committeeId = committeeData.getCommitteeId();
+
+                    if (committeeData != null)
+                    {
+                        req.dafaultCommittee = committeeData.getDefaultCommittee();
+                        req.committeeId = committeeData.getCommitteeId();
+                    }
 
                     progressBar.setVisibility(View.VISIBLE);
                     leafManager.addBoothsMember(this, group_id, team_id, category, req);

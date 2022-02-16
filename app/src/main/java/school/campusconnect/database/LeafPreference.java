@@ -26,6 +26,7 @@ public class LeafPreference {
     public static final String SCHOOL_LIST = "SCHOOL_LIST";
     public static final String GROUP_ID_LIST = "GROUP_ID_LIST";
     public static final String ROLE = "ROLE";
+
     private static LeafPreference sInstance;
     private static SharedPreferences sPref;
     private static SharedPreferences.Editor sEditor;
@@ -36,6 +37,7 @@ public class LeafPreference {
     public static final String EMAIL = "email";
     public static final String PROFILE_COMPLETE = "profilecompletion";
     public static final String PROFILE_IMAGE = "profileimage";
+
     public static final String COUNTRY_CODE = "country_code";
     public static final String CALLING_CODE = "calling_code";
     public static final String GCM_TOKEN = "gcmtoken";

@@ -598,7 +598,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_days">Days</string>
     <string name="lbl_add_issue">Add Issue</string>
     <string name="lbl_departmentMember">Department Member</string>
+    <string name="lbl_departmentTaskForce">Department Task Force</string>
     <string name="lbl_partyMember">Party Member</string>
+    <string name="lbl_partyTaskForce">Party Task Force</string>
     <string name="lbl_edit">Edit</string>
     <string name="strDelete">Delete</string>
     <string name="lbl_select_contact">Select Contacts</string>

@@ -139,15 +139,15 @@ public class EditIssueActivity extends BaseActivity implements LeafManager.OnAdd
                     }
 
                     issueData.departmentUser.name = etName.getText().toString();
-                    issueData.departmentUser.phone = etPhone.getText().toString();
+                    issueData.departmentUser.phone = "+91"+etPhone.getText().toString();
                     issueData.departmentUser.designation = etDesig.getText().toString();
 
                     issueData.partyUser.name = etName2.getText().toString();
-                    issueData.partyUser.phone = etPhone2.getText().toString();
+                    issueData.partyUser.phone = "+91"+etPhone2.getText().toString();
                     issueData.partyUser.designation = etDesig2.getText().toString();
 
                     progressBar.setVisibility(View.VISIBLE);
-                    AppLog.e(TAG, "request :" + issueData);
+                    AppLog.e(TAG, "request :" + new Gson().toJson(issueData));
                     leafManager.editIssue(this, GroupDashboardActivityNew.groupId, issueData.issueId, issueData);
 
                 }

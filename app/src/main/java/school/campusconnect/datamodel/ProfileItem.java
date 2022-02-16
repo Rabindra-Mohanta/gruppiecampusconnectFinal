@@ -10,6 +10,7 @@ public class ProfileItem {
     public String dob;
     public String qualification;
     public String occupation;
+    public String roleOnConstituency;
     public AddressItem address;
     public String profileCompletion;
     public String email;

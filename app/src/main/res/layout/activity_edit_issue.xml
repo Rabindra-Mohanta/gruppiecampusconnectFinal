@@ -53,7 +53,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding_15dp"
                             android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_departmentMember"
+                            android:text="@string/lbl_departmentTaskForce"
                             android:textAllCaps="true"
                             android:textColor="@color/colorPrimary" />
 
@@ -118,7 +118,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding_25dp"
                             android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_partyMember"
+                            android:text="@string/lbl_partyTaskForce"
                             android:textAllCaps="true"
                             android:textColor="@color/colorPrimary" />
 

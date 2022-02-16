@@ -250,6 +250,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             LeafPreference.getInstance(getContext()).setString(LeafPreference.NAME, res.data.name);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
+
             LeafPreference.getInstance(getContext()).setString(LeafPreference.EMAIL, res.data.email);
             AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
             AppLog.e("PROFILE IMAGE", "image is " + res.data.image);
