@@ -7,6 +7,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -44,6 +45,7 @@ import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 
@@ -142,7 +144,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     private Boolean expandable = false;
     private String callDepartment,callParty;
     private String Option,Role;
-
+    private String Status;
     public static final String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
     };
 
@@ -222,6 +224,27 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     {
                         btnApprove.setText("Open");
                         btnDeny.setText("Hold");
+                    }
+                }
+            }
+            else if (Role.equalsIgnoreCase("isAdmin"))
+            {
+                if (Option != null)
+                {
+                    if (Option.equalsIgnoreCase("approved"))
+                    {
+                        btnApprove.setText("Not Approve");
+                        btnDeny.setText("Deny");
+                    }
+                    else if (Option.equalsIgnoreCase("notApproved"))
+                    {
+                        btnApprove.setText("Approve");
+                        btnDeny.setText("Deny");
+                    }
+                    else if (Option.equalsIgnoreCase("deny"))
+                    {
+                        btnApprove.setText("Approve");
+                        btnDeny.setText("Not Approve");
                     }
                 }
             }
@@ -397,39 +420,75 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.btnApprove:
+
                 Log.e(TAG,"groupID"+GroupDashboardActivityNew.groupId);
 
-              /*  AppDialog.showConfirmDialog(this, "Are You Sure You Want to Approve Ticket ?", new AppDialog.AppDialogListener() {
+
+                if (btnApprove.getText().toString().equalsIgnoreCase("Not Approve"))
+                {
+                    Status = "notApproved";
+                }
+                else if (btnApprove.getText().toString().equalsIgnoreCase("Approve"))
+                {
+                    Status = "approved";
+                }
+                else if (btnApprove.getText().toString().equalsIgnoreCase("Close"))
+                {
+                    Status = "close";
+                }
+                else if (btnApprove.getText().toString().equalsIgnoreCase("Open"))
+                {
+                    Status = "open";
+                }
+                AppDialog.showConfirmDialog(this, "Are You Sure You Want to "+Status+" Ticket ?", new AppDialog.AppDialogListener() {
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
                         ProgressBar.setVisibility(View.VISIBLE);
-                        manager.setApprovedTicket(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),"approved");
+                        manager.setApprovedTicket(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
                     }
                     @Override
                     public void okCancelClick(DialogInterface dialog) {
                         dialog.dismiss();
                     }
-                });*/
+                });
                 break;
 
             case R.id.btnDeny:
 
                 Log.e(TAG,"groupID"+GroupDashboardActivityNew.groupId);
 
-              /*  AppDialog.showConfirmDialog(this, "Are You Sure You Want to Denied Ticket ?", new AppDialog.AppDialogListener() {
+                if (btnDeny.getText().toString().equalsIgnoreCase("Deny"))
+                {
+                    Status = "denied";
+                }
+                if (btnDeny.getText().toString().equalsIgnoreCase("Not Approve"))
+                {
+                    Status = "notApproved";
+                }
+                else if (btnDeny.getText().toString().equalsIgnoreCase("Hold"))
+                {
+                    Status = "hold";
+                }
+                else if (btnDeny.getText().toString().equalsIgnoreCase("Close"))
+                {
+                    Status = "close";
+                }
+
+
+                AppDialog.showConfirmDialog(this, "Are You Sure You Want to "+Status+" Ticket ?", new AppDialog.AppDialogListener() {
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
                         ProgressBar.setVisibility(View.VISIBLE);
-                        manager.setApprovedTicket(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),"denied");
+                        manager.setApprovedTicket(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
                     }
 
                     @Override
                     public void okCancelClick(DialogInterface dialog) {
                         dialog.dismiss();
                     }
-                });*/
+                });
                  break;
 
             case R.id.btnsendComment:

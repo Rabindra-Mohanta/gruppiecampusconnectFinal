@@ -28,7 +28,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
     public static String TAG = "TicketsActivity";
     ActivityTicketsBinding binding;
-    String Option = "notApproved";
+    String Option = null;
     String[] approvalList;
     int Page = 1;
     String Role = null;
@@ -47,6 +47,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
     }
 
     private void inits() {
+
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
@@ -57,15 +58,16 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         adapter = new TicketsAdapter(this);
         binding.rvTickets.setAdapter(adapter);
 
-        binding.progressBar.setVisibility(View.VISIBLE);
-
-        Log.e(TAG,"Group ID"+GroupDashboardActivityNew.groupId);
-
-        leafManager.getGroupDetail(this, GroupDashboardActivityNew.groupId);
 
 
+        if (getIntent() != null)
+        {
+            Role = getIntent().getStringExtra("Role");
+        }
+     //   leafManager.getGroupDetail(this, GroupDashboardActivityNew.groupId);
 
         //leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(Page));
+
     }
 
     private void bindSp() {
@@ -79,6 +81,10 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         else if (Role.equalsIgnoreCase("isDepartmentTaskForce"))
         {
             approvalList = getResources().getStringArray(R.array.array_isDepartmentTaskForce);
+        }
+        else if (Role.equalsIgnoreCase("isAdmin"))
+        {
+            approvalList = getResources().getStringArray(R.array.array_isAdmin);
         }
         else
         {
@@ -115,11 +121,12 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                 {
                     Option = "close";
                 }
-
-                if (!isFirstTime)
+                else if (Option.equalsIgnoreCase("Deny"))
                 {
-                    getTicketListApi();
+                    Option = "deny";
                 }
+
+                getTicketListApi();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -127,6 +134,12 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bindSp();
     }
 
     @Override
@@ -165,7 +178,6 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                 {
                     Role = "isAdmin";
                 }
-                bindSp();
                 getTicketListApi();
                 break;
 

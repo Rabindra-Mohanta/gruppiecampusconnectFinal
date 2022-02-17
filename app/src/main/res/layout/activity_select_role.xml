@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.SelectRoleActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include layout="@layout/layout_toolbar" />
+
+            </FrameLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/appBar"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_margin="@dimen/padding_15dp"
+
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:id="@+id/llisAdmin"
+                    app:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_margin="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:paddingVertical="@dimen/padding_20dp"
+                            android:layout_marginLeft="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/LabelHeader1"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="@string/hint_isAdmin"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_alignParentRight="true"
+                            android:layout_width="@dimen/padding_20dp"
+                            app:tint="@color/white"
+                            android:rotation="270"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_drop_down"
+                            android:layout_height="@dimen/padding_20dp"
+                            android:background="@drawable/round_primary_bg"/>
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:id="@+id/llisPartyTaskForce"
+                    app:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_margin="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:paddingVertical="@dimen/padding_20dp"
+                            android:layout_marginLeft="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/LabelHeader1"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="@string/hint_isPartyTaskForce"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_alignParentRight="true"
+                            android:layout_width="@dimen/padding_20dp"
+                            app:tint="@color/white"
+                            android:rotation="270"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_drop_down"
+                            android:layout_height="@dimen/padding_20dp"
+                            android:background="@drawable/round_primary_bg"/>
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:id="@+id/llisDepartMentTaskForce"
+                    app:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_margin="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:paddingVertical="@dimen/padding_20dp"
+                            android:layout_marginLeft="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/LabelHeader1"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="@string/hint_isDepartmentTaskForce"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_alignParentRight="true"
+                            android:layout_width="@dimen/padding_20dp"
+                            app:tint="@color/white"
+                            android:rotation="270"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_drop_down"
+                            android:layout_height="@dimen/padding_20dp"
+                            android:background="@drawable/round_primary_bg"/>
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:id="@+id/llisBoothPresident"
+                    app:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_margin="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:paddingVertical="@dimen/padding_20dp"
+                            android:layout_marginLeft="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/LabelHeader1"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="@string/hint_isBoothPresident"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_alignParentRight="true"
+                            android:layout_width="@dimen/padding_20dp"
+                            app:tint="@color/white"
+                            android:rotation="270"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_drop_down"
+                            android:layout_height="@dimen/padding_20dp"
+                            android:background="@drawable/round_primary_bg"/>
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:id="@+id/llisBoothMember"
+                    app:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_margin="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:paddingVertical="@dimen/padding_20dp"
+                            android:layout_marginLeft="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/LabelHeader1"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="@string/hint_isBoothMember"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_alignParentRight="true"
+                            android:layout_width="@dimen/padding_20dp"
+                            app:tint="@color/white"
+                            android:rotation="270"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_drop_down"
+                            android:layout_height="@dimen/padding_20dp"
+                            android:background="@drawable/round_primary_bg"/>
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+</layout>
+

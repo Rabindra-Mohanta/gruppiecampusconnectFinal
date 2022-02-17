@@ -48,7 +48,8 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.AddCommiteeActivity"></activity>
+        <activity android:name=".activities.SelectRoleActivity"></activity>
+        <activity android:name=".activities.AddCommiteeActivity" />
         <activity
             android:name=".activities.CommitteeActivity"
             android:exported="false" />

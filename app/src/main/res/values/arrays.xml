@@ -615,7 +615,12 @@
         <item>Hold</item>
     </string-array>
 
-
+    <string-array name="array_isAdmin">
+        <item>Approved</item>
+        <item>Not Approved</item>
+        <item>Deny</item>
+        <item>Hold</item>
+    </string-array>
     <string-array name="array_other">
         <item>Not Approved</item>
         <item>Open</item>

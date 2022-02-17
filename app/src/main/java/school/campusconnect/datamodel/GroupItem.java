@@ -22,6 +22,7 @@ public class GroupItem implements Parcelable {
     public boolean isAdmin;
     public boolean isPartyTaskForce;
     public boolean isDepartmentTaskForce;
+    public boolean isBoothMember;
     public String image;
     public int groupPostUnreadCount;
     public String category="";
@@ -59,6 +60,7 @@ public class GroupItem implements Parcelable {
         isAdminChangeAllowed = in.readByte() != 0;
         isAdmin = in.readByte() != 0;
         isPartyTaskForce = in.readByte() != 0;
+        isBoothMember = in.readByte() != 0;
         isDepartmentTaskForce = in.readByte() != 0;
         image = in.readString();
         groupPostUnreadCount = in.readInt();
@@ -189,6 +191,7 @@ public class GroupItem implements Parcelable {
         dest.writeString(boothId);
         dest.writeString(boothName);
         dest.writeInt(boothCount);
+        dest.writeInt((byte) (isBoothMember ? 1 : 0));
         dest.writeInt((byte) (isBoothPresident ? 1 : 0));
     }
 }

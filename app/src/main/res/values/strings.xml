@@ -50,6 +50,13 @@
     <string name="hint_email">Enter Your Email Id</string>
     <string name="hint_contact_no">Enter Your Contact Number</string>
 
+    <string name="hint_isAdmin">Admin</string>
+    <string name="hint_isPartyTaskForce">Party Task Force</string>
+    <string name="hint_isDepartmentTaskForce">Department Task Force</string>
+    <string name="hint_isBoothPresident">Booth President</string>
+    <string name="hint_isBoothMember">Booth Member</string>
+
+
     <string name="hint_lead_name">Enter Friend Name</string>
     <string name="hint_lead_email">Enter Friend Email Id</string>
     <string name="hint_lead_contact">Enter Friend Contact Number</string>
@@ -423,6 +430,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_add_class">Add Class</string>
     <string name="lbl_add_tikit">Add Ticket</string>
     <string name="lbl_tikit">Tickets</string>
+    <string name="lbl_select_role">Select Role</string>
     <string name="lbl_tikit_details">Ticket Details</string>
     <string name="lbl_task_force">Task Force</string>
     <string name="lbl_teacher_name">Class Teacher</string>

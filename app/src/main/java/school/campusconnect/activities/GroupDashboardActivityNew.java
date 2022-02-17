@@ -1098,6 +1098,9 @@ public class GroupDashboardActivityNew extends BaseActivity
 
 
     private void boothClick() {
+
+        AppLog.e(TAG,"boothClick ");
+
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         BoothListFragment classListFragment = new BoothListFragment();
@@ -1106,6 +1109,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     private void publicForumClick() {
+
+        AppLog.e(TAG,"publicForumClick ");
+
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         if (mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)) {
@@ -1327,6 +1333,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     public void onTeamSelected(MyTeamData team) {
+
+        AppLog.e(TAG,"onTeamSelected "+team.name);
+
         setBackEnabled(true);
         tvToolbar.setText(team.name);
         tv_Desc.setText("Members : "+team.members);
@@ -1342,6 +1351,10 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     public void onBoothTeams(String name, String team_id, boolean isBackStack) {
+
+        AppLog.e(TAG,"onBoothTeams "+name);
+
+
         setBackEnabled(true);
         tvToolbar.setText(name + "");
         tv_Desc.setVisibility(View.GONE);
@@ -1655,14 +1668,14 @@ public class GroupDashboardActivityNew extends BaseActivity
         } */
         else if (group.type.equals("Issues")){
             setBackEnabled(true);
-            Log.e(TAG,"TYPE"+LeafPreference.getInstance(this).getString(Constants.TYPE));
-            Intent intent = new Intent(this, TicketsActivity.class);
-            intent.putExtra("type", LeafPreference.getInstance(this).getString(Constants.TYPE));
+
+
+            Intent intent = new Intent(this, SelectRoleActivity.class);
             startActivity(intent);
         }
         else {
             setBackEnabled(true);
-            Log.e(TAG,"group name"+group.name);
+
             tvToolbar.setText(group.name);
             tv_Desc.setText("Members : "+group.members);
             tv_Desc.setVisibility(View.VISIBLE);
