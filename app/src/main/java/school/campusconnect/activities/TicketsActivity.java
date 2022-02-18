@@ -11,6 +11,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,7 +24,10 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityTicketsBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupDetailResponse;
+import school.campusconnect.datamodel.StudTestPaperItem;
+import school.campusconnect.datamodel.test_exam.TestPaperRes;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
+import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 
@@ -64,7 +71,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         {
             Role = getIntent().getStringExtra("Role");
         }
-     //   leafManager.getGroupDetail(this, GroupDashboardActivityNew.groupId);
+        //leafManager.getGroupDetail(this, GroupDashboardActivityNew.groupId);
 
         //leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(Page));
 
@@ -185,8 +192,99 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                 isFirstTime = false;
                 TicketListResponse res = (TicketListResponse) response;
                 AppLog.e(TAG, "TicketListResponse " + new Gson().toJson(res));
-                adapter.addData(res.getTicketData());
+
+                saveToLocal(res);
+
                 break;
+        }
+    }
+
+    private void saveToLocal(TicketListResponse res) {
+
+        TicketTBL.deleteAll(GroupDashboardActivityNew.groupId, Role, Option,String.valueOf(Page));
+
+        for (int i = 0; i < res.getTicketData().size(); i++) {
+
+            TicketListResponse.TicketData currentItem =  res.getTicketData().get(i);
+
+            TicketTBL item = new TicketTBL();
+
+            item.groupId = GroupDashboardActivityNew.groupId;
+            item.role = Role;
+            item.option = Option;
+            item.page = String.valueOf(Page);
+            item.issueText = currentItem.getIssueText();
+            item.issuePostId = currentItem.getIssuePostId();
+            item.issuePartyTaskForceStatus = currentItem.getIssuePartyTaskForceStatus();
+            item.issueLocation = new Gson().toJson(currentItem.getIssueLocation());
+            item.issueDepartmentTaskForceStatus = currentItem.getIssueDepartmentTaskForceStatus();
+            item.issueCreatedByPhone = currentItem.getIssueCreatedByPhone();
+            item.issueCreatedByName = currentItem.getIssueCreatedByName();
+            item.issueCreatedByImage = currentItem.getIssueCreatedByImage();
+            item.issueCreatedById = currentItem.getIssueCreatedById();
+            item.issueCreatedAt = currentItem.getIssueCreatedAt();
+            item.fileType = currentItem.getFileType();
+            item.fileName = new Gson().toJson(currentItem.getFileName());
+            item.constituencyIssuePartyTaskForce = new Gson().toJson(currentItem.getConstituencyIssuePartyTaskForce());
+            item.constituencyIssueJurisdiction = currentItem.getConstituencyIssueJurisdiction();
+            item.constituencyIssueDepartmentTaskForce = new Gson().toJson(currentItem.getConstituencyIssueDepartmentTaskForce());
+            item.constituencyIssue = currentItem.getConstituencyIssue();
+            item.boothIncharge = new Gson().toJson(currentItem.getBoothIncharge());
+            item.adminStatus = currentItem.getAdminStatus();
+            item.save();
+        }
+
+        showLocaly();
+
+    }
+
+    private void showLocaly() {
+
+
+        List<TicketTBL> list = TicketTBL.getAll(GroupDashboardActivityNew.groupId, Role, Option, String.valueOf(Page));
+
+        AppLog.e(TAG,"list");
+
+        if (list.size() != 0) {
+
+            ArrayList<TicketListResponse.TicketData> result = new ArrayList<>();
+
+            for (int i = 0; i < list.size(); i++) {
+
+                TicketTBL currentItem = list.get(i);
+
+                TicketListResponse.TicketData item = new TicketListResponse.TicketData();
+
+                item.setIssueText(currentItem.issueText);
+                item.setIssuePostId(currentItem.issuePostId);
+                item.setIssuePartyTaskForceStatus(currentItem.issuePartyTaskForceStatus);
+                item.setIssueLocation(new Gson().fromJson(currentItem.issueLocation, new TypeToken<TicketListResponse.IssueLocationData>() {}.getType()));
+                item.setIssueDepartmentTaskForceStatus(currentItem.issueDepartmentTaskForceStatus);
+                item.setIssueCreatedByPhone(currentItem.issueCreatedByPhone);
+                item.setIssueCreatedByName(currentItem.issueCreatedByName);
+                item.setIssueCreatedByImage(currentItem.issueCreatedByImage);
+                item.setIssueCreatedById(currentItem.issueCreatedById);
+                item.setIssueCreatedAt(currentItem.issueCreatedAt);
+                item.setFileType(currentItem.fileType);
+                item.setFileName(new Gson().fromJson(currentItem.fileName, new TypeToken<ArrayList<String>>() {}.getType()));
+                item.setConstituencyIssuePartyTaskForce(new Gson().fromJson(currentItem.constituencyIssuePartyTaskForce, new TypeToken<TicketListResponse.ConstituencyIssuePartyTaskForceData>() {}.getType()));
+                item.setConstituencyIssueJurisdiction(currentItem.constituencyIssueJurisdiction);
+                item.setConstituencyIssueDepartmentTaskForce(new Gson().fromJson(currentItem.constituencyIssueDepartmentTaskForce, new TypeToken<TicketListResponse.ConstituencyIssueDepartmentTaskForce>() {}.getType()));
+                item.setConstituencyIssue(currentItem.constituencyIssue);
+                item.setBoothIncharge(new Gson().fromJson(currentItem.boothIncharge, new TypeToken<ArrayList<TicketListResponse.BoothInchargeData>>() {}.getType()));
+                item.setAdminStatus(currentItem.adminStatus);
+
+                result.add(item);
+            }
+
+
+            adapter.addData(result);
+//
+
+          /*  getAssignment(false);*/
+//
+        } else {
+           // getAssignment(true);
         }
     }
 

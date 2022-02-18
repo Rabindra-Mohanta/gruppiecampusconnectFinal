@@ -71,7 +71,6 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
             holder.binding.tvCordinator.setText("Coordinator - "+data.getBoothCoordinators().get(0).getName());
         }*/
 
-
         if (data.getFileName() != null && data.getFileName().size()>0)
         {
             Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.binding.imgTicket,

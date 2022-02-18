@@ -49,9 +49,17 @@ public class TicketListResponse extends BaseResponse implements Serializable {
         @Expose
         private String issuePostId;
 
+        @SerializedName("issuePartyTaskForceStatus")
+        @Expose
+        private String issuePartyTaskForceStatus;
+
         @SerializedName("issueLocation")
         @Expose
         private IssueLocationData issueLocation;
+
+        @SerializedName("issueDepartmentTaskForceStatus")
+        @Expose
+        private String issueDepartmentTaskForceStatus;
 
         @SerializedName("issueCreatedByPhone")
         @Expose
@@ -109,6 +117,10 @@ public class TicketListResponse extends BaseResponse implements Serializable {
         @Expose
         private ArrayList<BoothInchargeData> boothIncharge;
 
+        @SerializedName("adminStatus")
+        @Expose
+        private String adminStatus;
+
 
         public String getIssueText() {
             return issueText;
@@ -126,12 +138,28 @@ public class TicketListResponse extends BaseResponse implements Serializable {
             this.issuePostId = issuePostId;
         }
 
+        public String getIssuePartyTaskForceStatus() {
+            return issuePartyTaskForceStatus;
+        }
+
+        public void setIssuePartyTaskForceStatus(String issuePartyTaskForceStatus) {
+            this.issuePartyTaskForceStatus = issuePartyTaskForceStatus;
+        }
+
         public IssueLocationData getIssueLocation() {
             return issueLocation;
         }
 
         public void setIssueLocation(IssueLocationData issueLocation) {
             this.issueLocation = issueLocation;
+        }
+
+        public String getIssueDepartmentTaskForceStatus() {
+            return issueDepartmentTaskForceStatus;
+        }
+
+        public void setIssueDepartmentTaskForceStatus(String issueDepartmentTaskForceStatus) {
+            this.issueDepartmentTaskForceStatus = issueDepartmentTaskForceStatus;
         }
 
         public String getIssueCreatedByPhone() {
@@ -252,6 +280,14 @@ public class TicketListResponse extends BaseResponse implements Serializable {
 
         public void setBoothIncharge(ArrayList<BoothInchargeData> boothIncharge) {
             this.boothIncharge = boothIncharge;
+        }
+
+        public String getAdminStatus() {
+            return adminStatus;
+        }
+
+        public void setAdminStatus(String adminStatus) {
+            this.adminStatus = adminStatus;
         }
     }
     public static class TeamDetailsData implements Serializable

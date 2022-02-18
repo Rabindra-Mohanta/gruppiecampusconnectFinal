@@ -209,6 +209,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
 
     private void getDataLocally() {
+
         List<StudTestPaperItem> list = StudTestPaperItem.getAll(item.testExamId, team_id, GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
             ArrayList<TestPaperRes.TestPaperData> result = new ArrayList<>();
@@ -228,6 +229,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 item.fileType = currentItem.fileType;
                 item.fileName = new Gson().fromJson(currentItem.fileName, new TypeToken<ArrayList<String>>() {
                 }.getType());
+
                 item.thumbnailImage = new Gson().fromJson(currentItem.thumbnailImage, new TypeToken<ArrayList<String>>() {
                 }.getType());
                 item.rollNumber = currentItem.rollNumber;
@@ -555,6 +557,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     }
 
     private void saveToDB(ArrayList<TestPaperRes.TestPaperData> data) {
+
         showHideSubmitButton(data);
 
         StudTestPaperItem.deleteAll(item.testExamId, team_id, group_id);

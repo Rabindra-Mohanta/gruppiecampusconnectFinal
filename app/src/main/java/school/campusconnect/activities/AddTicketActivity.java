@@ -79,8 +79,9 @@ import school.campusconnect.utils.address.FindAddress;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBDialogUtils;
+import school.campusconnect.views.SearchIssueFragmentDialog;
 
-public class AddTicketActivity extends BaseActivity implements View.OnClickListener, UploadImageAdapter.UploadImageListener, LocationListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, FindAddress.FindAddressListener {
+public class AddTicketActivity extends BaseActivity implements View.OnClickListener, UploadImageAdapter.UploadImageListener, LocationListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, FindAddress.FindAddressListener, SearchIssueFragmentDialog.SelectListener {
     ActivityAddTicketBinding binding;
     public static String TAG = "AddTicketActivity";
     LeafManager leafManager;
@@ -128,7 +129,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
     String TeamId = "",IssueID = "";
     String Team =null,Issue = null;
-
+    private SearchIssueFragmentDialog searchIssueFragmentDialog;
 
     boolean gotAddress;
     boolean gotGPS = false;
@@ -197,6 +198,9 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         leafManager = new LeafManager();
         transferUtility = AmazoneHelper.getTransferUtility(this);
 
+        searchIssueFragmentDialog = SearchIssueFragmentDialog.newInstance();
+        searchIssueFragmentDialog.setListener(this);
+
         leafManager.getIssues(this,GroupDashboardActivityNew.groupId);
 
         gotAddress = false;
@@ -222,7 +226,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         binding.llYoutubeLink.setOnClickListener(this);
         binding.llDoc.setOnClickListener(this);
         binding.etLocation.setOnClickListener(this);
-
+        binding.tvIssue.setOnClickListener(this);
         binding.btnSubmit.setOnClickListener(this);
     }
 
@@ -260,9 +264,10 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             case LeafManager.API_ISSUE_LIST:
                 IssueListResponse res = (IssueListResponse) response;
                 resultIssue = res.getData();
-                AppLog.e(TAG, "ClassResponse " + resultIssue);
+                AppLog.e(TAG, "ClassResponse " + new Gson().toJson(resultIssue));
                 bindIssue();
                 binding.progressBar.setVisibility(View.VISIBLE);
+                searchIssueFragmentDialog.setData(res.getData());
                 leafManager.getSubBooth(this,GroupDashboardActivityNew.groupId);
                 break;
 
@@ -298,7 +303,11 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
         if (resultIssue != null && resultIssue.size() > 0) {
 
-            String[] strIssue = new String[resultIssue.size()];
+            binding.tvIssue.setText(resultIssue.get(0).issue);
+            Issue = resultIssue.get(0).issue;
+            IssueID = resultIssue.get(0).issueId;
+
+           /* String[] strIssue = new String[resultIssue.size()];
 
             for (int i=0;i<resultIssue.size();i++){
                 strIssue[i]=resultIssue.get(i).issue;
@@ -316,16 +325,16 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
                     Issue = resultIssue.get(position).issue;
                     IssueID = resultIssue.get(position).issueId;
-                  /*  if(position != strIssue.length-1){
+                  *//*  if(position != strIssue.length-1){
 
-                    }*/
+                    }*//*
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
 
                 }
-            });
+            });*/
         }
     }
 
@@ -411,6 +420,11 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             case R.id.etLocation:
                 selectPlace();
                 break;
+
+            case R.id.tvIssue:
+                searchIssue();
+                break;
+
             case R.id.btnSubmit:
                 addTicket();
                 break;
@@ -418,6 +432,9 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private void searchIssue() {
+        searchIssueFragmentDialog.show(getSupportFragmentManager(), "");
+    }
 
     public void addTicket() {
         hide_keyboard();
@@ -1181,5 +1198,12 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
     }
 
-
+    @Override
+    public void onSelected(String Issue, String IssueID) {
+        Log.e(TAG,"Issue"+Issue);
+        Log.e(TAG,"Issue ID"+IssueID);
+        this.Issue = Issue;
+        this.IssueID = IssueID;
+        binding.tvIssue.setText(Issue);
+    }
 }

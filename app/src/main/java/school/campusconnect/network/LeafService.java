@@ -185,7 +185,6 @@ public interface LeafService {
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> loginConstituency(@Body LoginRequest request, @Query("constituencyName") String categoryName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
-
     @POST("/api/v1/login/individual?")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> loginIndividual(@Body LoginRequest request, @Query("appId") String group_id, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
@@ -253,7 +252,6 @@ public interface LeafService {
     @PUT("/api/v1/number/change")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> changeNumber(@Body ChangeNumberRequest request);
-
 
     @PUT("/api/v1/logout")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

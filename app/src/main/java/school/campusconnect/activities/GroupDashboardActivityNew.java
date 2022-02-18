@@ -1354,7 +1354,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         AppLog.e(TAG,"onBoothTeams "+name);
 
-
         setBackEnabled(true);
         tvToolbar.setText(name + "");
         tv_Desc.setVisibility(View.GONE);
@@ -1667,15 +1666,58 @@ public class GroupDashboardActivityNew extends BaseActivity
             }
         } */
         else if (group.type.equals("Issues")){
-            setBackEnabled(true);
 
+            int Count = 0;
+            String Role = null;
 
-            Intent intent = new Intent(this, SelectRoleActivity.class);
-            startActivity(intent);
+            if (mGroupItem.isAdmin)
+            {
+                Count++;
+                Role = "isAdmin";
+            }
+            if (mGroupItem.isPartyTaskForce)
+            {
+                Count++;
+                Role = "isPartyTaskForce";
+            }
+            if (mGroupItem.isDepartmentTaskForce)
+            {
+                Count++;
+                Role = "isDepartmentTaskForce";
+            }
+            if (mGroupItem.isBoothPresident)
+            {
+                Count++;
+                Role = "isBoothPresident";
+            }
+            if (mGroupItem.isBoothMember)
+            {
+                Count++;
+                Role = "isBoothMember";
+            }
+
+            if (Count > 1)
+            {
+                Intent intent = new Intent(this, SelectRoleActivity.class);
+                startActivity(intent);
+
+            }
+            else if (1 == Count)
+            {
+                Intent intent = new Intent(this, TicketsActivity.class);
+                intent.putExtra("Role", Role);
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent = new Intent(this, TicketsActivity.class);
+                intent.putExtra("Role", Role);
+                startActivity(intent);
+            }
+
         }
         else {
             setBackEnabled(true);
-
             tvToolbar.setText(group.name);
             tv_Desc.setText("Members : "+group.members);
             tv_Desc.setVisibility(View.VISIBLE);

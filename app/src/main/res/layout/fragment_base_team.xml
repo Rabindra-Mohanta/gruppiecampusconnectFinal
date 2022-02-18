@@ -20,6 +20,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/app_icon" />
     </FrameLayout>
+
 <!--
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"
