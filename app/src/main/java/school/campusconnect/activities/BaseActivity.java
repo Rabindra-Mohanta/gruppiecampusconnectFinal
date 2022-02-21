@@ -382,7 +382,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
         this.menu = menu;
 
-            getMenuInflater().inflate(R.menu.menu_save, menu);
+            getMenuInflater().inflate(R.menu.menu_save_v2, menu);
 
             menu.findItem(R.id.menu_add_friend).setVisible(false);
             menu.findItem(R.id.menu_add_post).setVisible(false);

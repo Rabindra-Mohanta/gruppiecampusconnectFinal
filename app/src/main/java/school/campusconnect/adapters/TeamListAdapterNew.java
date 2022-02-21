@@ -69,7 +69,9 @@ public class TeamListAdapterNew extends RecyclerView.Adapter<TeamListAdapterNew.
             holder.tvTeamName.setText(team.name);
 
             int postUnseenCount = 0;
+
             if(team.teamId != null && !team.teamId.equalsIgnoreCase(""))
+
             postUnseenCount = leafPreference.getInt(team.teamId+"_post");
             else if(team.name.equalsIgnoreCase("notice board"))
             {

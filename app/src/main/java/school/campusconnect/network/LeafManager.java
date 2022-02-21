@@ -15,6 +15,7 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -235,6 +236,7 @@ public class LeafManager {
     public static final int API_ID_ADD_GROUP_COMMENT = 580;
     public static final int API_ID_GET_GROUP_COMMENT = 585;
     public static final int API_MY_TEAM_LIST = 581;
+    public static final int API_MY_TEAM_LISTV2 = 581;
     public static final int API_TEAM_POST_LIST = 583;
     public static final int API_GROUP_COMMENT_LIKE = 586;
     public static final int API_REPORT_LIST = 587;
@@ -3158,6 +3160,45 @@ public class LeafManager {
         }.getType();
 
         wrapper.execute(API_MY_TEAM_LIST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    // Team Upadte UI Posts
+
+    public void myTeamListV2(OnCommunicationListener listListener, String group_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseTeamv2Response> model = service.getMyTeamsv2(group_id);
+        ResponseWrapper<BaseTeamv2Response> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_MY_TEAM_LISTV2, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {

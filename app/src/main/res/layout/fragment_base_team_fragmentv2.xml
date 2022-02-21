@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+        <RelativeLayout
+            android:layout_marginBottom="@dimen/padding_50dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            >
+
+            <!-- <FrameLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+
+                 <ImageView
+                     android:id="@+id/imgBackground"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:layout_gravity="center"
+                     android:adjustViewBounds="true"
+                     android:alpha="0.2"
+                     android:scaleType="centerCrop"
+                     android:src="@drawable/app_icon" />
+             </FrameLayout>-->
+
+
+
+
+
+            <FrameLayout
+                android:id="@+id/llFeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <androidx.cardview.widget.CardView
+                    app:cardElevation="4dp"
+                    android:paddingTop="@dimen/padding_20dp"
+                    android:layout_margin="@dimen/padding_20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:paddingBottom="@dimen/padding_20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="@dimen/padding_10dp"
+                        android:paddingHorizontal="@dimen/padding_10dp"
+                        android:paddingTop="@dimen/padding_10dp"
+                        >
+
+                        <RelativeLayout
+                            android:paddingHorizontal="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/LabelHeader1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lbl_feed"
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvFeed"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            tools:itemCount="4"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            android:orientation="vertical"
+                            tools:listitem="@layout/item_feed"
+                            android:layout_height="wrap_content"/>
+
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/expandFeed"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="5dp"
+                    app:cardElevation="@dimen/padding_5dp"
+                    android:layout_width="@dimen/padding_30dp"
+                    android:layout_height="@dimen/padding_30dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/padding_50dp"
+                    >
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:tint="@color/colorPrimary"
+                        android:src="@drawable/ic_drop_down"
+                        />
+                </androidx.cardview.widget.CardView>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/llGroups"
+                android:layout_below="@id/llFeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTeams"
+                    tools:itemCount="1"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
+                    tools:listitem="@layout/item_team_list_v2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </FrameLayout>
+
+
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

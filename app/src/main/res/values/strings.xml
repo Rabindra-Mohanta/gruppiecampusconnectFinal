@@ -437,6 +437,10 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_select_role">Select Role</string>
     <string name="lbl_tikit_details">Ticket Details</string>
     <string name="lbl_task_force">Task Force</string>
+    <string name="lbl_feed">Feed</string>
+    <string name="lbl_daily_activity">Daily Activity</string>
+    <string name="lbl_communication_message">Communication Or Message</string>
+    <string name="lbl_other_activity">Other Activity</string>
     <string name="lbl_teacher_name">Class Teacher</string>
     <string name="lbl_students">Students</string>
     <string name="lbl_class_register_student">Class/Student Register</string>

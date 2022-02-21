@@ -13,6 +13,7 @@ import java.util.List;
  */
 
 @Table(name = "BaseTeamTable")
+
 public class BaseTeamTable extends Model {
 
     @Column(name = "group_id")

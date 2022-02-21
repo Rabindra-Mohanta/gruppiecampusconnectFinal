@@ -13,6 +13,7 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -514,6 +515,11 @@ public interface LeafService {
     @GET("/api/v1/groups/{id}/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<MyTeamsResponse> getMyTeams(@Path("id") String group_id);
+
+
+    @GET("/api/v1/groups/{group_id}/home")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseTeamv2Response> getMyTeamsv2(@Path("group_id") String group_id);
 
     @GET("/api/v1/groups/{group_id}/my/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
