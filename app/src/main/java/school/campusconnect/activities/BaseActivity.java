@@ -43,6 +43,8 @@ import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.TestExamTBL;
+import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
+import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.fragments.BaseTeamFragment;
 import school.campusconnect.utils.AppLog;
 import android.util.TypedValue;
@@ -597,11 +599,14 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         PostDataItem.deleteAllPosts();
 //        NotificationModel.deleteAll();
         BaseTeamTable.deleteAll();
+        BaseTeamTableV2.deleteAll();
+        TicketTBL.deleteAll();
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();
         HwItem.deleteAll();
         TestExamTBL.deleteAll();
+
         ChapterTBL.deleteAll();
         EventTBL.deleteAll();
         ClassListTBL.deleteAll();
@@ -632,6 +637,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         PostDataItem.deleteAllPosts();
 //        NotificationModel.deleteAll();
         BaseTeamTable.deleteAll();
+        BaseTeamTableV2.deleteAll();
+        TicketTBL.deleteAll();
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();

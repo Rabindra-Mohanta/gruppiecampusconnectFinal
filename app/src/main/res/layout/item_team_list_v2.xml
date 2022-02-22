@@ -63,7 +63,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/expandFeed"
+                android:id="@+id/llisExpand"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginBottom="5dp"
                 app:cardElevation="@dimen/padding_5dp"
@@ -73,6 +73,7 @@
                 app:cardCornerRadius="@dimen/padding_50dp"
                 >
                 <ImageView
+                    android:id="@+id/imgExpand"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:tint="@color/colorPrimary"

@@ -143,11 +143,11 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
-            menu.findItem(R.id.menu_set_wallpaper).setVisible(false);
+
         } else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
-            menu.findItem(R.id.menu_set_wallpaper).setVisible(false);
+
         } else {
 
             menu.findItem(R.id.menu_logout).setVisible(true);
@@ -245,6 +245,10 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     private void inits() {
 
+        pref = LeafPreference.getInstance(getActivity());
+
+
+        databaseHandler = new DatabaseHandler(getActivity());
         binding.rvFeed.setAdapter(new FeedAdapter());
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
@@ -254,8 +258,6 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
         mAdapter = new TeamListAdapterNewV2(teamList,this);
         binding.rvTeams.setAdapter(mAdapter);
-
-
     }
 
     private void apiCall() {
@@ -444,19 +446,6 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                     dashboardCount.save();
                 }
                 subscribeUnsubscribeTeam(currentTopics);
-
-                break;
-
-            case LeafManager.API_ID_GROUP_DETAIL:
-
-                GroupDetailResponse gRes = (GroupDetailResponse) response;
-
-                AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
-                GroupDashboardActivityNew.total_user = gRes.data.get(0).totalUsers + "";
-                if (((GroupDashboardActivityNew) getActivity()).isBaseFragment()) {
-                    // ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
-                }
-//                checkVersionUpdate(gRes.data.get(0).appVersion);
                 break;
 
         }

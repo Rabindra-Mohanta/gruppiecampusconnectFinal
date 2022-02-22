@@ -97,4 +97,6 @@ public class BaseTeamTable extends Model {
     public static void deleteAll() {
         new Delete().from(BaseTeamTable.class).execute();
     }
+
+
 }

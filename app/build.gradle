@@ -33,8 +33,9 @@ android {
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')
+
                 // [1. Gruppie Campus constituency]
-               /* applicationId "gcm.gruppie"
+/*                applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'

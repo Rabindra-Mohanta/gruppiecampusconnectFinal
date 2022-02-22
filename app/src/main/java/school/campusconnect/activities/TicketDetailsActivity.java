@@ -445,7 +445,16 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
                         ProgressBar.setVisibility(View.VISIBLE);
-                        manager.setApprovedTicket(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
+
+                        if (Role.equalsIgnoreCase("isAdmin"))
+                        {
+                            manager.setApprovedTicketAdmin(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
+                        }
+                        else
+                        {
+                            manager.setApprovedTicket(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
+                        }
+
                     }
                     @Override
                     public void okCancelClick(DialogInterface dialog) {
@@ -481,7 +490,14 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
                         ProgressBar.setVisibility(View.VISIBLE);
-                        manager.setApprovedTicket(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
+                        if (Role.equalsIgnoreCase("isAdmin"))
+                        {
+                            manager.setApprovedTicketAdmin(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
+                        }
+                        else
+                        {
+                            manager.setApprovedTicket(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
+                        }
                     }
 
                     @Override

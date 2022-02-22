@@ -24,6 +24,7 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
     public static String TAG = "TeamListAdapterNewV2";
     private ArrayList<BaseTeamv2Response.TeamListData> teamData;
     private OnTeamClickListener listener;
+    private Boolean isExpanded = false;
 
     public TeamListAdapterNewV2(ArrayList<BaseTeamv2Response.TeamListData> teamList,OnTeamClickListener listener) {
         this.listener = listener;
@@ -45,6 +46,22 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
 
         holder.binding.tvActivityName.setText(data.getActivity());
         holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this));
+
+        holder.binding.llisExpand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isExpanded)
+                {
+                    isExpanded = false;
+                    holder.binding.imgExpand.setRotation(360);
+                }else
+                {
+                    isExpanded = true;
+                    holder.binding.imgExpand.setRotation(180);
+                }
+                ((TeamItemV2Adapter) holder.binding.rvActivityName.getAdapter()).isExpanded();
+            }
+        });
 
     }
 

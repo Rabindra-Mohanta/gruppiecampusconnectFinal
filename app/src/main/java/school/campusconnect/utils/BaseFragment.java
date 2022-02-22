@@ -38,10 +38,12 @@ import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.TestExamTBL;
+import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
 import school.campusconnect.datamodel.notifications.NotificationModel;
 import school.campusconnect.datamodel.personalchat.PersonalContactsModel;
+import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class BaseFragment extends Fragment {
@@ -214,6 +216,8 @@ public class BaseFragment extends Fragment {
             PostDataItem.deleteAllPosts();
 //            NotificationModel.deleteAll();
             BaseTeamTable.deleteAll();
+            BaseTeamTableV2.deleteAll();
+            TicketTBL.deleteAll();
             PostTeamDataItem.deleteAllPosts();
             PersonalContactsModel.deleteAll();
             GruppieContactsModel.deleteAll();

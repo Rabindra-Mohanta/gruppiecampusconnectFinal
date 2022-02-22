@@ -1765,6 +1765,11 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> ticketApproved(@Path("group_id") String group_id,@Path("issuePost_id") String issuePost_id,@Query("status") String status);
 
+    @PUT("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/admin/approve")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> ticketApprovedAdmin(@Path("group_id") String group_id,@Path("issuePost_id") String issuePost_id,@Query("status") String status);
+
+
     @POST("/api/v1/groups/{group_id}/issue/post/{post_id}/comment/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addCommentTaskDetails(@Path("group_id") String group_id, @Path("post_id") String postId, @Body AddCommentTaskDetailsReq addCommentTaskDetailsReq);

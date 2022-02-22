@@ -8,6 +8,7 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
+import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.StudTestPaperItem;
 
 @Table(name="TicketTBL")
@@ -95,5 +96,9 @@ public class TicketTBL extends Model {
 
     public static void deleteAll(String groupId,String Role,String Option,String page) {
         new Delete().from(TicketTBL.class).where("groupId = ?", groupId).where("role = ?", Role).where("option = ?", Option).where("page = ?", page).execute();
+    }
+
+    public static void deleteAll() {
+        new Delete().from(TicketTBL.class).execute();
     }
 }

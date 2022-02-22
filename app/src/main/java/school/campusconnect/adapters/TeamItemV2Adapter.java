@@ -1,10 +1,13 @@
 package school.campusconnect.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,7 +38,7 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
     Context context;
     OnTeamClickListener listener;
     LeafPreference leafPreference;
-
+    private Boolean isExpanded = false;
 
     public TeamItemV2Adapter(ArrayList<MyTeamData> featuredIconData, TeamListAdapterNewV2 listener) {
         this.featuredIconData = featuredIconData;
@@ -148,6 +151,28 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         holder.imgTeamAdd.setVisibility(View.GONE);
 
 
+        if (isExpanded)
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.trans_down_out);
+                    holder.itemView.startAnimation(animation1);
+                }
+            }, 200);
+        }
+        else
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.trans_up_in);
+                    holder.itemView.startAnimation(animation1);
+                }
+            }, 100);
+        }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,9 +205,22 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         });
     }
 
+    public void isExpanded()
+    {
+        if (isExpanded)
+        {
+            isExpanded = false;
+        }
+        else
+        {
+            isExpanded = true;
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
-        return featuredIconData != null ? featuredIconData.size() : 0;
+        return featuredIconData != null ? isExpanded ? featuredIconData.size() : 4 : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
