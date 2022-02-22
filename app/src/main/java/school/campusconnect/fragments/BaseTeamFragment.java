@@ -331,7 +331,9 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
     }
 
     private void getTeams() {
+
         List<BaseTeamTable> dataItemList = BaseTeamTable.getTeamList(GroupDashboardActivityNew.groupId);
+
         if (dataItemList != null && dataItemList.size() > 0) {
             teamList.clear();
             for (int i = 0; i < dataItemList.size(); i++) {

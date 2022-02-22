@@ -13,7 +13,9 @@ import android.widget.ArrayAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -26,10 +28,12 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.StudTestPaperItem;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
+import school.campusconnect.datamodel.ticket.TicketEventUpdateResponse;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.MixOperations;
 
 public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnClickListener, LeafManager.OnCommunicationListener  {
 
@@ -44,6 +48,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
     private Boolean isFirstTime = true;
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
+    TicketTBL currentItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +71,13 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         binding.rvTickets.setAdapter(adapter);
 
 
-
-        if (getIntent() != null)
+        if (getIntent() != null && getIntent().getStringExtra("Role") != null && !getIntent().getStringExtra("Role").isEmpty())
         {
             Role = getIntent().getStringExtra("Role");
+        }
+        else
+        {
+            Role = "isPublic";
         }
         //leafManager.getGroupDetail(this, GroupDashboardActivityNew.groupId);
 
@@ -83,7 +91,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
         if (Role.equalsIgnoreCase("isPartyTaskForce"))
         {
-            approvalList = getResources().getStringArray(R.array.array_boothCoordinator);
+            approvalList = getResources().getStringArray(R.array.array_isPartyTaskForce);
         }
         else if (Role.equalsIgnoreCase("isDepartmentTaskForce"))
         {
@@ -128,19 +136,21 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                 {
                     Option = "close";
                 }
-                else if (Option.equalsIgnoreCase("Deny"))
+                else if (Option.equalsIgnoreCase("Denied"))
                 {
                     Option = "deny";
                 }
-
-                getTicketListApi();
+                else if (Option.equalsIgnoreCase("Over Due"))
+                {
+                    Option = "overDue";
+                }
+                getUpdateTicketListApi();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-
     }
 
     @Override
@@ -168,82 +178,125 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         {
             case LeafManager.API_ID_GROUP_DETAIL:
                 GroupDetailResponse res1 = (GroupDetailResponse) response;
-
                 AppLog.e(TAG, "GroupDetailResponse " + new Gson().toJson(res1));
-
-                Log.e(TAG,"Role"+Role);
-
-                if (res1.data.get(0).isDepartmentTaskForce)
-                {
-                    Role = "isDepartmentTaskForce";
-                }
-                else if (res1.data.get(0).isPartyTaskForce)
-                {
-                    Role = "isPartyTaskForce";
-                }
-                else
-                {
-                    Role = "isAdmin";
-                }
-                getTicketListApi();
                 break;
 
             case LeafManager.API_LIST_TICKET:
                 isFirstTime = false;
                 TicketListResponse res = (TicketListResponse) response;
                 AppLog.e(TAG, "TicketListResponse " + new Gson().toJson(res));
-
                 saveToLocal(res);
-
                 break;
+
+            case LeafManager.UPDATED_TICKET_LIST_EVENT:
+
+                TicketEventUpdateResponse eventUpdateResponse = (TicketEventUpdateResponse) response;
+                AppLog.e(TAG, "TicketEventUpdateResponse " + new Gson().toJson(eventUpdateResponse));
+
+                compareLocally(eventUpdateResponse);
+
         }
     }
+
+    private void compareLocally(TicketEventUpdateResponse eventUpdateResponse) {
+
+
+        boolean apiCall = false;
+
+        if (currentItem == null)
+        {
+            Log.e(TAG,"_now");
+            apiCall = true;
+        }
+
+        if (currentItem != null)
+        {
+            if(MixOperations.isNewEvent(eventUpdateResponse.data.get(0).eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",currentItem._now)){
+                Log.e(TAG,"isNewEvent");
+                apiCall = true;
+            }
+        }
+
+        showLocaly();
+
+        if(apiCall){
+            Log.e(TAG,"call This");
+            getTicketListApi();
+        }
+        else
+        {
+            Log.e(TAG,"false This");
+        }
+
+    }
+
 
     private void saveToLocal(TicketListResponse res) {
 
         TicketTBL.deleteAll(GroupDashboardActivityNew.groupId, Role, Option,String.valueOf(Page));
 
+        Log.e(TAG,"saveToLocal "+res.getTicketData().size());
         for (int i = 0; i < res.getTicketData().size(); i++) {
 
-            TicketListResponse.TicketData currentItem =  res.getTicketData().get(i);
+            TicketListResponse.TicketData currentItemData =  res.getTicketData().get(i);
 
-            TicketTBL item = new TicketTBL();
+            currentItem = new TicketTBL();
 
-            item.groupId = GroupDashboardActivityNew.groupId;
-            item.role = Role;
-            item.option = Option;
-            item.page = String.valueOf(Page);
-            item.issueText = currentItem.getIssueText();
-            item.issuePostId = currentItem.getIssuePostId();
-            item.issuePartyTaskForceStatus = currentItem.getIssuePartyTaskForceStatus();
-            item.issueLocation = new Gson().toJson(currentItem.getIssueLocation());
-            item.issueDepartmentTaskForceStatus = currentItem.getIssueDepartmentTaskForceStatus();
-            item.issueCreatedByPhone = currentItem.getIssueCreatedByPhone();
-            item.issueCreatedByName = currentItem.getIssueCreatedByName();
-            item.issueCreatedByImage = currentItem.getIssueCreatedByImage();
-            item.issueCreatedById = currentItem.getIssueCreatedById();
-            item.issueCreatedAt = currentItem.getIssueCreatedAt();
-            item.fileType = currentItem.getFileType();
-            item.fileName = new Gson().toJson(currentItem.getFileName());
-            item.constituencyIssuePartyTaskForce = new Gson().toJson(currentItem.getConstituencyIssuePartyTaskForce());
-            item.constituencyIssueJurisdiction = currentItem.getConstituencyIssueJurisdiction();
-            item.constituencyIssueDepartmentTaskForce = new Gson().toJson(currentItem.getConstituencyIssueDepartmentTaskForce());
-            item.constituencyIssue = currentItem.getConstituencyIssue();
-            item.boothIncharge = new Gson().toJson(currentItem.getBoothIncharge());
-            item.adminStatus = currentItem.getAdminStatus();
-            item.save();
+            currentItem.groupId = GroupDashboardActivityNew.groupId;
+            currentItem.role = Role;
+            currentItem.option = Option;
+            currentItem.page = String.valueOf(Page);
+            currentItem.issueText = currentItemData.getIssueText();
+            currentItem.issuePostId = currentItemData.getIssuePostId();
+            currentItem.issuePartyTaskForceStatus = currentItemData.getIssuePartyTaskForceStatus();
+            currentItem.issueLocation = new Gson().toJson(currentItemData.getIssueLocation());
+            currentItem.issueDepartmentTaskForceStatus = currentItemData.getIssueDepartmentTaskForceStatus();
+            currentItem.issueCreatedByPhone = currentItemData.getIssueCreatedByPhone();
+            currentItem.issueCreatedByName = currentItemData.getIssueCreatedByName();
+            currentItem.issueCreatedByImage = currentItemData.getIssueCreatedByImage();
+            currentItem.issueCreatedById = currentItemData.getIssueCreatedById();
+            currentItem.issueCreatedAt = currentItemData.getIssueCreatedAt();
+            currentItem.fileType = currentItemData.getFileType();
+            currentItem.fileName = new Gson().toJson(currentItemData.getFileName());
+            currentItem.constituencyIssuePartyTaskForce = new Gson().toJson(currentItemData.getConstituencyIssuePartyTaskForce());
+            currentItem.constituencyIssueJurisdiction = currentItemData.getConstituencyIssueJurisdiction();
+            currentItem.constituencyIssueDepartmentTaskForce = new Gson().toJson(currentItemData.getConstituencyIssueDepartmentTaskForce());
+            currentItem.constituencyIssue = currentItemData.getConstituencyIssue();
+            currentItem.boothIncharge = new Gson().toJson(currentItemData.getBoothIncharge());
+            currentItem.adminStatus = currentItemData.getAdminStatus();
+            currentItem._now = getCurrentTimeStamp();
+            currentItem.save();
         }
 
-        showLocaly();
+        if (res.getTicketData().size()>0)
+        {
+            showLocaly();
+            Log.e(TAG,"show local list");
+        }
+        else
+        {
+            adapter.addData(res.getTicketData());
+        }
+    }
 
+    public static String getCurrentTimeStamp(){
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            String currentDateTime = dateFormat.format(new Date()); // Find todays date
+
+            return currentDateTime;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
     }
 
     private void showLocaly() {
 
-
         List<TicketTBL> list = TicketTBL.getAll(GroupDashboardActivityNew.groupId, Role, Option, String.valueOf(Page));
 
-        AppLog.e(TAG,"list");
+        Log.e(TAG,"list size in local"+list.size());
 
         if (list.size() != 0) {
 
@@ -251,7 +304,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
             for (int i = 0; i < list.size(); i++) {
 
-                TicketTBL currentItem = list.get(i);
+                currentItem = list.get(i);
 
                 TicketListResponse.TicketData item = new TicketListResponse.TicketData();
 
@@ -276,15 +329,9 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
                 result.add(item);
             }
-
-
             adapter.addData(result);
-//
-
-          /*  getAssignment(false);*/
-//
         } else {
-           // getAssignment(true);
+            getTicketListApi();
         }
     }
 
@@ -299,6 +346,11 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         binding.progressBar.setVisibility(View.GONE);
         AppLog.e(TAG, "onException " + msg);
     }
+    private void getUpdateTicketListApi() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        leafManager.getTicketsUpdateEvent(this,GroupDashboardActivityNew.groupId,Role,Option);
+    }
+
     private void getTicketListApi() {
         binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(Page));

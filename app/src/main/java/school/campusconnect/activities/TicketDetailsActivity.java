@@ -204,6 +204,15 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                         btnApprove.setText("Approve");
                         btnDeny.setText("Deny");
                     }
+                    else if (Option.equalsIgnoreCase("deny"))
+                    {
+                        btnApprove.setText("Approve");
+                        btnDeny.setText("Not Approve");
+                    }
+                    else if (Option.equalsIgnoreCase("overDue"))
+                    {
+                        llBtn.setVisibility(View.GONE);
+                    }
                 }
             }
             else if (Role.equalsIgnoreCase("isDepartmentTaskForce"))
@@ -225,6 +234,10 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                         btnApprove.setText("Open");
                         btnDeny.setText("Hold");
                     }
+                    else if (Option.equalsIgnoreCase("overDue"))
+                    {
+                        llBtn.setVisibility(View.GONE);
+                    }
                 }
             }
             else if (Role.equalsIgnoreCase("isAdmin"))
@@ -245,6 +258,10 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     {
                         btnApprove.setText("Approve");
                         btnDeny.setText("Not Approve");
+                    }
+                    else if (Option.equalsIgnoreCase("overDue"))
+                    {
+                        llBtn.setVisibility(View.GONE);
                     }
                 }
             }
@@ -448,7 +465,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
                         if (Role.equalsIgnoreCase("isAdmin"))
                         {
-                            manager.setApprovedTicketAdmin(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
+                            manager.setApprovedTicketByAdmin(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
                         }
                         else
                         {
@@ -492,7 +509,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                         ProgressBar.setVisibility(View.VISIBLE);
                         if (Role.equalsIgnoreCase("isAdmin"))
                         {
-                            manager.setApprovedTicketAdmin(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
+                            manager.setApprovedTicketByAdmin(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
                         }
                         else
                         {

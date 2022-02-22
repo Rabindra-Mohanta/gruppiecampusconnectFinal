@@ -603,9 +603,11 @@
         <item>US    +01</item>
     </string-array>
 
-    <string-array name="array_boothCoordinator">
+    <string-array name="array_isPartyTaskForce">
         <item>Not Approved</item>
         <item>Approved</item>
+        <item>Denied</item>
+        <item>Over Due</item>
     </string-array>
 
 
@@ -613,19 +615,22 @@
         <item>Open</item>
         <item>Close</item>
         <item>Hold</item>
+        <item>Over Due</item>
     </string-array>
 
     <string-array name="array_isAdmin">
-        <item>Approved</item>
         <item>Not Approved</item>
-        <item>Deny</item>
-        <item>Hold</item>
+        <item>Approved</item>
+        <item>Denied</item>
+        <item>Over Due</item>
     </string-array>
+
     <string-array name="array_other">
         <item>Not Approved</item>
-        <item>Open</item>
-        <item>Close</item>
         <item>Hold</item>
+        <item>Approved</item>
+        <item>Denied</item>
+        <item>Over Due</item>
     </string-array>
 
 

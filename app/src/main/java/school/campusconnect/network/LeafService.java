@@ -152,6 +152,7 @@ import school.campusconnect.datamodel.test_exam.OfflineTestRes;
 import school.campusconnect.datamodel.test_exam.TestExamRes;
 import school.campusconnect.datamodel.test_exam.TestLiveEventRes;
 import school.campusconnect.datamodel.test_exam.TestPaperRes;
+import school.campusconnect.datamodel.ticket.TicketEventUpdateResponse;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
@@ -1767,7 +1768,7 @@ public interface LeafService {
 
     @PUT("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/admin/approve")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> ticketApprovedAdmin(@Path("group_id") String group_id,@Path("issuePost_id") String issuePost_id,@Query("status") String status);
+    Call<BaseResponse> ticketApprovedByAdmin(@Path("group_id") String group_id,@Path("issuePost_id") String issuePost_id,@Query("status") String status);
 
 
     @POST("/api/v1/groups/{group_id}/issue/post/{post_id}/comment/add")
@@ -1795,6 +1796,10 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/booth/team/{team_id}/committees/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<committeeResponse> getCommittee(@Path("group_id") String group_id, @Path("team_id") String teamId);
+
+    @GET("/api/v1/groups/{group_id}/issues/tickets/events")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TicketEventUpdateResponse> getUpdatedTickets(@Path("group_id") String group_id, @Query("role") String role, @Query("option") String option);
 
 
 }

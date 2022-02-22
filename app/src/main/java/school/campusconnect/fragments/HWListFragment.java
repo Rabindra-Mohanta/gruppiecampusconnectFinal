@@ -106,7 +106,6 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
                 apiEvent = true;
             }
         }
-
         List<HwItem> list = HwItem.getAll(subject_id,team_id,GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
             ArrayList<HwRes.HwData> result= new ArrayList<>();

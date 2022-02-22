@@ -80,9 +80,8 @@ public class TicketTBL extends Model {
     @Column(name = "adminStatus")
     public String adminStatus;
 
-
-
-
+    @Column(name = "_now")
+    public String _now;
 
 
     public TicketTBL()
@@ -97,7 +96,6 @@ public class TicketTBL extends Model {
     public static void deleteAll(String groupId,String Role,String Option,String page) {
         new Delete().from(TicketTBL.class).where("groupId = ?", groupId).where("role = ?", Role).where("option = ?", Option).where("page = ?", page).execute();
     }
-
     public static void deleteAll() {
         new Delete().from(TicketTBL.class).execute();
     }
