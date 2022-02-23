@@ -9,11 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import school.campusconnect.R;
 import school.campusconnect.databinding.ItemFeedBinding;
+import school.campusconnect.datamodel.notificationList.NotificationListRes;
+import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.MixOperations;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
-    Context context;
+    private Context context;
+    private List<NotificationListRes.NotificationListData> results;
+    public boolean isExpand = false;
+
     @NonNull
     @Override
     public FeedAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -25,7 +33,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FeedAdapter.ViewHolder holder, int position) {
 
+        NotificationListRes.NotificationListData data = results.get(position);
+
         if (position == 0)
+        {
+            holder.binding.llBottomLine.setVisibility(View.GONE);
+        }
+
+        holder.binding.tvTime.setText(MixOperations.getFormattedDate(data.getInsertedAt(), Constants.DATE_FORMAT));
+        holder.binding.tvdesc.setText(data.getMessage());
+        /*if (position == 0)
         {
             holder.binding.llReaded.setBackground(null);
             holder.binding.viewReaded.setVisibility(View.INVISIBLE);
@@ -42,16 +59,34 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         {
             holder.binding.llReaded.setBackground(context.getResources().getDrawable(R.drawable.feed_transparent_bg));
             holder.binding.viewReaded.setVisibility(View.VISIBLE);
-        }
-        if (position == (getItemCount()-1))
+        }*/
+
+
+    }
+
+    public void add(List<NotificationListRes.NotificationListData> results)
+    {
+        this.results = results;
+        notifyDataSetChanged();
+    }
+    public void expand()
+    {
+        if (isExpand)
         {
-            holder.binding.llBottomLine.setVisibility(View.INVISIBLE);
+            isExpand = false;
         }
+        else
+        {
+            isExpand = true;
+        }
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return 4;
+
+        return results != null ?
+                isExpand ? Math.min(results.size(), 5) : 2 : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -54,6 +54,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.ChangePasswordActivity;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.NotificationListActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.adapters.FeedAdapter;
 import school.campusconnect.adapters.TeamListAdapterNew;
@@ -68,6 +69,7 @@ import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.notificationList.NotificationListRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
@@ -77,12 +79,14 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener {
+public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener {
     private static final String TAG = "BaseTeamFragmentv2";
 
 
     private LeafManager manager;
     private TeamListAdapterNewV2 mAdapter;
+    private FeedAdapter feedAdapter;
+    private Boolean isExpand = false;
     // PullRefreshLayout swipeRefreshLayout;
     DatabaseHandler databaseHandler;
     LeafPreference pref;
@@ -111,6 +115,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_base_team_fragmentv2, container, false);
 
         inits();
+
+        getNotification();
 
         getTeams();
 
@@ -247,20 +253,27 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
         pref = LeafPreference.getInstance(getActivity());
 
-
         databaseHandler = new DatabaseHandler(getActivity());
         binding.rvFeed.setAdapter(new FeedAdapter());
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
-
         manager = new LeafManager();
 
         mAdapter = new TeamListAdapterNewV2(teamList,this);
         binding.rvTeams.setAdapter(mAdapter);
+
+        feedAdapter = new FeedAdapter();
+        binding.rvFeed.setAdapter(feedAdapter);
+
+        binding.imgExpandFeedBefore.setOnClickListener(this);
+        binding.imgExpandFeedAfter.setOnClickListener(this);
+        binding.tvViewMoreFeed.setOnClickListener(this);
+
     }
 
     private void apiCall() {
+
         if (!isConnectionAvailable()) {
             return;
         }
@@ -378,7 +391,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                             }
                         }
                     } catch (NullPointerException e) {
-                        AppLog.e("CONTACTSS", "error is " + e.toString());
+                        AppLog.e("CONTACTS", "error is " + e.toString());
                     }
 
                     baseTeamTable.save();
@@ -388,54 +401,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                         currentTopics.add(topics);
                     }
 
-             /*       MyTeamData item = result.get(i);
 
-                    baseTeamTable.group_id = item.groupId;
-                    baseTeamTable.team_id = item.teamId;
-                    baseTeamTable.isClass = item.isClass;
-                    baseTeamTable.phone = item.phone;
-                    baseTeamTable.image = item.image;
-                    baseTeamTable.members = item.members;
-                    baseTeamTable.canAddUser = item.canAddUser;
-                    baseTeamTable.teamType = item.teamType;
-                    baseTeamTable.type = item.type;
-                    baseTeamTable.enableGps = item.enableGps;
-                    baseTeamTable.enableAttendance = item.enableAttendance;
-                    baseTeamTable.isTeamAdmin = item.isTeamAdmin;
-                    baseTeamTable.allowTeamPostAll = item.allowTeamPostAll;
-                    baseTeamTable.allowTeamPostCommentAll = item.allowTeamPostCommentAll;
-                    baseTeamTable.category = item.category;
-                    baseTeamTable.postUnseenCount = item.postUnseenCount;
-                    baseTeamTable.role = item.role;
-                    baseTeamTable.count = item.count;
-                    baseTeamTable.allowedToAddTeamPost = item.allowedToAddTeamPost;
-                    baseTeamTable.leaveRequest = item.leaveRequest;
-                    baseTeamTable.details = new Gson().toJson(item.details);
-
-                    try {
-                        if (!item.name.equalsIgnoreCase("My Team")) {
-                            if (databaseHandler.getCount() != 0) {
-                                try {
-                                    String name = databaseHandler.getNameFromNum(item.phone.replaceAll(" ", ""));
-                                    if (!TextUtils.isEmpty(name)) {
-                                        item.name = name + " Team";
-                                    }
-                                } catch (NullPointerException e) {
-                                }
-                            }
-                        }
-                    } catch (NullPointerException e) {
-                        AppLog.e("CONTACTSS", "error is " + e.toString());
-                    }
-
-                    baseTeamTable.name = item.name;
-                    baseTeamTable.save();
-
-                    if (!TextUtils.isEmpty(result.get(i).teamId)) {
-                        String topics = result.get(i).groupId + "_" + result.get(i).teamId;
-                        currentTopics.add(topics);
-                    }
-*/
                 }
                 teamList.addAll(result);
                 mAdapter.notifyDataSetChanged();
@@ -446,6 +412,14 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                     dashboardCount.save();
                 }
                 subscribeUnsubscribeTeam(currentTopics);
+                break;
+
+            case LeafManager.API_NOTIFICATION_LIST:
+
+                NotificationListRes res1 = (NotificationListRes) response;
+                List<NotificationListRes.NotificationListData> results = res1.getData();
+                AppLog.e(TAG, "notificationRes " + results);
+                feedAdapter.add(results);
                 break;
 
         }
@@ -583,6 +557,12 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         startActivity(new Intent(getActivity(), CreateTeamActivity.class));
     }
 
+    private void getNotification() {
+
+        manager.getNotificationList(this,GroupDashboardActivityNew.groupId);
+
+    }
+
     private void getTeams() {
 
         List<BaseTeamTableV2> dataItemList = BaseTeamTableV2.getTeamList(GroupDashboardActivityNew.groupId);
@@ -605,6 +585,37 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         if (apiCall) {
             AppLog.e(TAG, "---- Refresh Team -----");
             apiCall();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.imgExpandFeedBefore:
+                binding.imgExpandFeedAfter.setVisibility(View.VISIBLE);
+                binding.imgExpandFeedBefore.setVisibility(View.GONE);
+                binding.tvViewMoreFeed.setVisibility(View.VISIBLE);
+                feedAdapter.expand();
+                break;
+
+            case R.id.imgExpandFeedAfter:
+                binding.imgExpandFeedBefore.setVisibility(View.VISIBLE);
+                binding.imgExpandFeedAfter.setVisibility(View.GONE);
+                binding.tvViewMoreFeed.setVisibility(View.GONE);
+                feedAdapter.expand();
+                break;
+
+            case R.id.tvViewMoreFeed:
+                if (isConnectionAvailable()) {
+                    Intent intent = new Intent(getContext(), NotificationListActivity.class);
+                    intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                    intent.putExtra("title", mGroupItem.getName());
+                    startActivity(intent);
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
         }
     }
 }

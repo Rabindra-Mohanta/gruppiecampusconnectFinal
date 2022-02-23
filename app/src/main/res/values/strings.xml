@@ -207,6 +207,7 @@
 
     <string name="hint_search">Search contacts</string>
     <string name="hint_search_issue">Search Issue</string>
+    <string name="hint_view_more">View More...</string>
     <string name="hint_issue_not_found">Issue Not Found.......</string>
     <string name="hint_search_address">Search Address</string>
     <string name="action_register">New User ? Sign Up</string>

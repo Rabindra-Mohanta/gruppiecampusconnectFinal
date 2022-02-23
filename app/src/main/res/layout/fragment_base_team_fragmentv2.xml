@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:scrollbars="none">
         <RelativeLayout
-            android:layout_marginBottom="@dimen/padding_50dp"
+            android:layout_marginBottom="@dimen/padding_10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
@@ -43,28 +43,27 @@
                 >
 
                 <androidx.cardview.widget.CardView
-                    app:cardElevation="4dp"
-                    android:paddingTop="@dimen/padding_20dp"
-                    android:layout_margin="@dimen/padding_20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:layout_marginHorizontal="@dimen/padding_20dp"
+                    android:layout_marginBottom="@dimen/padding_20dp"
+                    android:orientation="vertical"
+                    app:cardElevation="4dp">
 
                     <LinearLayout
-                        android:paddingBottom="@dimen/padding_20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginTop="@dimen/padding_10dp"
+                        android:orientation="vertical"
                         android:paddingHorizontal="@dimen/padding_10dp"
-                        android:paddingTop="@dimen/padding_10dp"
-                        >
+                        android:paddingBottom="@dimen/padding_10dp">
 
                         <RelativeLayout
-                            android:paddingHorizontal="@dimen/padding_10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/padding_10dp">
 
                             <TextView
                                 style="@style/LabelHeader1"
@@ -78,13 +77,25 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvFeed"
-                            android:layout_marginTop="@dimen/padding_10dp"
                             android:layout_width="match_parent"
-                            tools:itemCount="4"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            tools:listitem="@layout/item_feed"
-                            android:layout_height="wrap_content"/>
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:itemCount="4"
+                            tools:listitem="@layout/item_feed" />
+
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:layout_gravity="right"
+                            android:id="@+id/tvViewMoreFeed"
+                            style="@style/LabelNormal"
+                            android:gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/colorPrimary"
+                            android:text="@string/hint_view_more"/>
 
 
                     </LinearLayout>
@@ -92,7 +103,27 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
+               <ImageView
+                    android:id="@+id/imgExpandFeedBefore"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:background="@drawable/expand_down"
+                    android:elevation="@dimen/padding_5dp"
+                    android:layout_width="34dp"
+                    android:layout_height="@dimen/padding_35dp"
+                    />
+
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/imgExpandFeedAfter"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:background="@drawable/expand_up"
+                    android:elevation="@dimen/padding_5dp"
+                    android:layout_width="34dp"
+                    android:layout_height="@dimen/padding_35dp"
+                    />
+
+
+              <!--  <androidx.cardview.widget.CardView
                     android:id="@+id/expandFeed"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="5dp"
@@ -103,13 +134,13 @@
                     app:cardCornerRadius="@dimen/padding_50dp"
                     >
                     <ImageView
+                        android:id="@+id/imgExpandFeed"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:tint="@color/colorPrimary"
                         android:src="@drawable/ic_drop_down"
                         />
-                </androidx.cardview.widget.CardView>
-
+                </androidx.cardview.widget.CardView>-->
             </FrameLayout>
 
             <FrameLayout

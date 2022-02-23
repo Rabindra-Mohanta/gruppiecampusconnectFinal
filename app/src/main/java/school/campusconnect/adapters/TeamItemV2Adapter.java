@@ -151,27 +151,6 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         holder.imgTeamAdd.setVisibility(View.GONE);
 
 
-        if (isExpanded)
-        {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.trans_down_out);
-                    holder.itemView.startAnimation(animation1);
-                }
-            }, 200);
-        }
-        else
-        {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.trans_up_in);
-                    holder.itemView.startAnimation(animation1);
-                }
-            }, 100);
-        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

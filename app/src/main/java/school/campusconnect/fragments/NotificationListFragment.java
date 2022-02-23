@@ -41,12 +41,12 @@ import school.campusconnect.utils.MixOperations;
 
 public class NotificationListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "TeamDiscussFragment";
+
     @Bind(R.id.rvTeams)
     public RecyclerView rvPeople;
 
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
-
 
 
     @Bind(R.id.progressBar)
@@ -62,11 +62,11 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
         rvPeople.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-
         LeafManager leafManager = new LeafManager();
         progressBar.setVisibility(View.VISIBLE);
 
         Bundle bundle=getArguments();
+
         if(bundle!=null)
         {
             isNest=bundle.getBoolean("isNest",false);

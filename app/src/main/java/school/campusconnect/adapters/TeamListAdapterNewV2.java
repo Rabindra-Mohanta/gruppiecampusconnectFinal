@@ -47,18 +47,21 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
         holder.binding.tvActivityName.setText(data.getActivity());
         holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this));
 
-        holder.binding.llisExpand.setOnClickListener(new View.OnClickListener() {
+        holder.binding.imgExpandFeedBefore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isExpanded)
-                {
-                    isExpanded = false;
-                    holder.binding.imgExpand.setRotation(360);
-                }else
-                {
-                    isExpanded = true;
-                    holder.binding.imgExpand.setRotation(180);
-                }
+
+                holder.binding.imgExpandFeedBefore.setVisibility(View.GONE);
+                holder.binding.imgExpandFeedAfter.setVisibility(View.VISIBLE);
+                ((TeamItemV2Adapter) holder.binding.rvActivityName.getAdapter()).isExpanded();
+            }
+        });
+        holder.binding.imgExpandFeedAfter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                holder.binding.imgExpandFeedAfter.setVisibility(View.GONE);
+                holder.binding.imgExpandFeedBefore.setVisibility(View.VISIBLE);
                 ((TeamItemV2Adapter) holder.binding.rvActivityName.getAdapter()).isExpanded();
             }
         });

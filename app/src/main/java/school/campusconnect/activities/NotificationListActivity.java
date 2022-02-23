@@ -38,7 +38,6 @@ public class NotificationListActivity extends BaseActivity {
         if(!isNest)
             setTitle(getResources().getString(R.string.text_notifications));
 
-
         NotificationListFragment notificationListFragment=new NotificationListFragment();
         notificationListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,notificationListFragment).commit();
