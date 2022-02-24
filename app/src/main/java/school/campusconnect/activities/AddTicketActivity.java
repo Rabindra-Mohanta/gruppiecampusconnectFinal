@@ -10,12 +10,14 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,9 +29,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -88,6 +94,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<IssueListResponse.IssueData> resultIssue;
 
     private ArrayList<SubBoothResponse.TeamData> resultTeam;
+    private searchIssueAdapter adapter;
+    ArrayList<IssueListResponse.IssueData> filteredList;
 
     public Uri imageCaptureFile;
 
@@ -226,7 +234,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         binding.llYoutubeLink.setOnClickListener(this);
         binding.llDoc.setOnClickListener(this);
         binding.etLocation.setOnClickListener(this);
-        binding.tvIssue.setOnClickListener(this);
+       // binding.tvIssue.setOnClickListener(this);
         binding.btnSubmit.setOnClickListener(this);
     }
 
@@ -303,9 +311,38 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
         if (resultIssue != null && resultIssue.size() > 0) {
 
-            binding.tvIssue.setText(resultIssue.get(0).issue);
+           /* binding.etIssue.setText(resultIssue.get(0).issue);
+
             Issue = resultIssue.get(0).issue;
-            IssueID = resultIssue.get(0).issueId;
+            IssueID = resultIssue.get(0).issueId;*/
+
+            binding.etIssue.addTextChangedListener(new TextWatcher() {
+
+                public void afterTextChanged(Editable s) {}
+
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                    if (s.toString().length() > 2)
+                    {
+                        searchData(s.toString());
+                    }
+                    else
+                    {
+                        if (binding.tvIssue.getVisibility() == View.GONE)
+                        {
+                            binding.tvIssue.setVisibility(View.VISIBLE);
+                        }
+                        binding.tvIssue.setText(getResources().getString(R.string.hint_issue_not_found));
+                        filteredList = new ArrayList<>();
+                        adapter = new searchIssueAdapter(filteredList);
+                        binding.rvSearchIssue.setAdapter(adapter);
+                    }
+                }
+            });
 
            /* String[] strIssue = new String[resultIssue.size()];
 
@@ -336,6 +373,29 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 }
             });*/
         }
+    }
+
+    private void searchData(String text) {
+
+        filteredList = new ArrayList<>();
+
+        for(IssueListResponse.IssueData item : resultIssue ){
+
+            if (item.issue.toLowerCase().contains(text.toLowerCase()) && item.issue.toLowerCase().contains(text.toLowerCase())){
+                filteredList.add(item);
+            }
+        }
+
+        if (filteredList.size()>0)
+        {
+            binding.tvIssue.setVisibility(View.GONE);
+        }
+        else
+        {
+            binding.tvIssue.setVisibility(View.VISIBLE);
+        }
+        adapter = new searchIssueAdapter(filteredList);
+        binding.rvSearchIssue.setAdapter(adapter);
     }
 
     private void bindTeam() {
@@ -421,9 +481,9 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 selectPlace();
                 break;
 
-            case R.id.tvIssue:
+            /*case R.id.tvIssue:
                 searchIssue();
-                break;
+                break;*/
 
             case R.id.btnSubmit:
                 addTicket();
@@ -492,7 +552,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     public boolean isValid(boolean showToast) {
         boolean valid = true;
 
-
+        Issue = null;
+        IssueID = null;
         Log.e("videoUrl : ", videoUrl);
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
@@ -502,9 +563,31 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 Toast.makeText(this, "Please Select Team", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (Issue == null) {
+
+        if (binding.etIssue.getText().toString().isEmpty())
+        {
             if (showToast)
-                Toast.makeText(this, "Please Select Issue", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please Add Issue", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!binding.etIssue.getText().toString().isEmpty()) {
+
+            for (int i=0;i<resultIssue.size();i++)
+            {
+                if (binding.etIssue.getText().toString().equals(resultIssue.get(i).issue))
+                {
+                    Issue = resultIssue.get(i).issue;
+                    IssueID = resultIssue.get(i).issueId;
+                }
+            }
+        }
+
+        Log.e(TAG,"Issue"+Issue);
+
+        if (Issue == null)
+        {
+            Toast.makeText(this, "Please Enter Valid Issue", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -1204,6 +1287,66 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         Log.e(TAG,"Issue ID"+IssueID);
         this.Issue = Issue;
         this.IssueID = IssueID;
-        binding.tvIssue.setText(Issue);
+       // binding.tvIssue.setText(Issue);
+    }
+
+
+    public class searchIssueAdapter extends RecyclerView.Adapter<searchIssueAdapter.ViewHolder>
+    {
+        ArrayList<IssueListResponse.IssueData> list;
+        private Context mContext;
+
+        public searchIssueAdapter(ArrayList<IssueListResponse.IssueData> list) {
+            this.list = list;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_issue,parent,false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+            final IssueListResponse.IssueData item = list.get(position);
+
+            holder.txt_issue.setText(item.issue);
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+
+            @Bind(R.id.txt_issue)
+            TextView txt_issue;
+
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                ButterKnife.bind(this,itemView);
+
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onTreeClick(list.get(getAdapterPosition()));
+                    }
+                });
+
+            }
+        }
+    }
+
+    private void onTreeClick(IssueListResponse.IssueData issueData) {
+
+        binding.etIssue.getText().clear();
+        binding.etIssue.setText(issueData.issue);
     }
 }

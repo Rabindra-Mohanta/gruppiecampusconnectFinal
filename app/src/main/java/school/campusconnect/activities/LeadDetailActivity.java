@@ -83,6 +83,37 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     @Bind(R.id.label_phone)
     TextView lblPhone;
 
+    @Bind(R.id.llEmail)
+    LinearLayout llEmail;
+
+    @Bind(R.id.llGender)
+    LinearLayout llGender;
+
+    @Bind(R.id.llDOB)
+    LinearLayout llDOB;
+
+    @Bind(R.id.llAddress)
+    LinearLayout llAddress;
+
+    @Bind(R.id.llCity)
+    LinearLayout llCity;
+
+    @Bind(R.id.llState)
+    LinearLayout llState;
+
+    @Bind(R.id.llPinCode)
+    LinearLayout llPinCode;
+
+    @Bind(R.id.llOtherFriend)
+    LinearLayout llOtherFriend;
+
+    @Bind(R.id.llDesignation)
+    LinearLayout llDesignation;
+
+    @Bind(R.id.llOcupation)
+    LinearLayout llOcupation;
+
+
     @Bind(R.id.switchAllowPost)
     public Switch switchAllowPost;
 
@@ -135,13 +166,36 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         type = getIntent().getExtras().getString("type");
         teamId = getIntent().getStringExtra("team_id");
 
-
         txtName.setText(mLeadItem.getName());
         txtPhone.setText(mLeadItem.getPhone());
+
+        if (mLeadItem.getEmail() == null || mLeadItem.getEmail().isEmpty())
+        {
+            llEmail.setVisibility(View.GONE);
+        }
+
         txtEmail.setText(mLeadItem.getEmail());
+
+        if (mLeadItem.getDob() == null || mLeadItem.getDob().isEmpty())
+        {
+            llDOB.setVisibility(View.GONE);
+        }
+
         txtDob.setText(mLeadItem.getDob());
-        txtLeadCount.setText(String.valueOf(mLeadItem.getLeadCount()));
+
+        if (mLeadItem.getGender() == null || mLeadItem.getGender().isEmpty())
+        {
+            llGender.setVisibility(View.GONE);
+        }
+
         txtGender.setText(mLeadItem.gender);
+        txtLeadCount.setText(String.valueOf(mLeadItem.getLeadCount()));
+
+        if (mLeadItem.getOccupation() == null || mLeadItem.getOccupation().isEmpty())
+        {
+            llOcupation.setVisibility(View.GONE);
+        }
+
         txtOcupation.setText(mLeadItem.getOccupation());
 
         if (!TextUtils.isEmpty(mLeadItem.getImage())) {
@@ -153,6 +207,8 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
             imgLead_Default.setImageDrawable(drawable);
         }
 
+
+        txtOcupation.setText(mLeadItem.getOccupation());
         if (mLeadItem.getAddress() != null) {
             if (mLeadItem.getAddress().line1 != null) {
                 txtAddr.setText(mLeadItem.getAddress().line1);
@@ -160,9 +216,36 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
                     txtAddr.setText(txtAddr.getText() + "," + mLeadItem.getAddress().line2);
                 }
             }
+            else
+            {
+                llAddress.setVisibility(View.GONE);
+            }
+
+            if (mLeadItem.getAddress().district == null || mLeadItem.getAddress().district.isEmpty())
+            {
+                llCity.setVisibility(View.GONE);
+            }
+
+            if (mLeadItem.getAddress().state == null || mLeadItem.getAddress().state.isEmpty())
+            {
+                llState.setVisibility(View.GONE);
+            }
+
+            if (mLeadItem.getAddress().pin == null || mLeadItem.getAddress().pin.isEmpty())
+            {
+                llPinCode.setVisibility(View.GONE);
+            }
+
             txtCity.setText(mLeadItem.getAddress().district);
             txtState.setText(mLeadItem.getAddress().state);
             txtPincode.setText(mLeadItem.getAddress().pin);
+        }
+        else
+        {
+            llAddress.setVisibility(View.GONE);
+            llCity.setVisibility(View.GONE);
+            llState.setVisibility(View.GONE);
+            llPinCode.setVisibility(View.GONE);
         }
 
         // txtOtherLeads.setText(TextUtils.join("\n", mLeadItem.getOtherLeads()));

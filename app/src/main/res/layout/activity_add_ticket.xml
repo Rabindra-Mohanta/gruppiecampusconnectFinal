@@ -84,7 +84,51 @@
                         android:textColor="@color/colorPrimary"
                         android:layout_height="wrap_content" />
 
-                    <FrameLayout
+                    <EditText
+                        android:id="@+id/etIssue"
+                        style="@style/commonSpinner"
+                        android:background="@drawable/spinner_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/login_button_height"
+                        android:layout_margin="@dimen/padding_5dp"
+                        />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvSearchIssue"
+                        android:layout_margin="@dimen/padding_5dp"
+                        android:layout_width="match_parent"
+                        android:text="@string/hint_issue_not_found"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_margin="@dimen/padding_5dp"
+                        app:cardUseCompatPadding="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:paddingVertical="@dimen/padding_10dp"
+                                android:id="@+id/tvIssue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/padding_10dp"
+                                android:layout_gravity="center"
+                                android:text="@string/hint_issue_not_found"
+                                android:textColor="@color/colorTextDark"
+                                style="@style/LabelNormal" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+                    <!--<FrameLayout
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:layout_width="match_parent"
                         android:layout_weight="1"
@@ -98,11 +142,11 @@
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
                             />
-                       <!-- <Spinner
+                       &lt;!&ndash; <Spinner
                             android:id="@+id/spIssue"
                             style="@style/commonSpinner"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/login_button_height" />-->
+                            android:layout_height="@dimen/login_button_height" />&ndash;&gt;
 
                         <ImageView
                             android:layout_width="25dp"
@@ -112,7 +156,7 @@
                             android:layout_gravity="right|center"
                             android:layout_height="25dp"/>
 
-                    </FrameLayout>
+                    </FrameLayout>-->
 
                     <TextView
                         android:layout_width="match_parent"

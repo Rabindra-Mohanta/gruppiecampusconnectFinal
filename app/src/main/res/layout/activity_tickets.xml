@@ -49,11 +49,8 @@
             android:layout_below="@id/llApproval"
             android:id="@+id/rvTickets"
             android:layout_width="match_parent"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_tickets"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical"/>
+            />
 
         <ProgressBar
             android:id="@+id/progressBar"

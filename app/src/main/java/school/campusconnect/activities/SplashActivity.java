@@ -288,6 +288,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
     private void gotoHomeScreen() {
+
         if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
                 Intent login = new Intent(this, ConstituencyListActivity.class);

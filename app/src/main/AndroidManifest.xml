@@ -55,6 +55,8 @@
         <activity
             android:name=".activities.AddCommiteeActivity"
             android:exported="false"/>
+        <activity android:name=".activities.LoginPinActivity"></activity>
+
         <activity
             android:name=".activities.CommitteeActivity"
             android:exported="false" />

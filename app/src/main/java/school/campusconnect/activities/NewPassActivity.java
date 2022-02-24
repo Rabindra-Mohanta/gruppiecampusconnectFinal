@@ -133,6 +133,7 @@ public class NewPassActivity extends BaseActivity {
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+
         if (apiId == LeafManager.API_ID_NEW_PASS) {
             LoginResponse response1 = (LoginResponse) response;
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.LOGIN_ID, response1.userId);
@@ -153,8 +154,6 @@ public class NewPassActivity extends BaseActivity {
 
 
             hide_keyboard();
-
-
 
             if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
                 LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, response1.groupCount);

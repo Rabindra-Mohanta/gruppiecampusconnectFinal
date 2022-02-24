@@ -2,6 +2,8 @@ package school.campusconnect.activities;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -40,8 +43,13 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
     public static String TAG = "TicketsActivity";
     ActivityTicketsBinding binding;
     String Option = null;
+    String OptionSelected = null;
+    public static final int REQUEST_TICKET_DETAILS_IMAGE = 101;
     String[] approvalList;
-    int Page = 1;
+
+    public int totalPages = 1;
+    public int currentPage = 1;
+    public boolean mIsLoading = false;
     String Role = null;
     LeafManager leafManager;
     TicketsAdapter adapter;
@@ -67,6 +75,8 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
         leafManager = new LeafManager();
 
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        binding.rvTickets.setLayoutManager(manager);
         adapter = new TicketsAdapter(this);
         binding.rvTickets.setAdapter(adapter);
 
@@ -79,12 +89,38 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         {
             Role = "isPublic";
         }
+
+
+        binding.rvTickets.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = manager.getChildCount();
+                int totalItemCount = manager.getItemCount();
+                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
+                int lastVisibleItemPosition = manager.findLastVisibleItemPosition();
+
+                if (!mIsLoading && totalPages > currentPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0
+                    ) {
+                        currentPage = currentPage + 1;
+                        getTicketListApi();
+                    }
+                }
+            }
+        });
+
+        bindSp();
         //leafManager.getGroupDetail(this, GroupDashboardActivityNew.groupId);
 
         //leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(Page));
-
     }
-
     private void bindSp() {
 
         Log.e(TAG,"Role"+Role);
@@ -116,6 +152,10 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
                 Option = approvalList[position];
 
+                AppLog.e(TAG, "Option Spinner: " + Option);
+
+                OptionSelected = approvalList[position];
+
                 if (Option.equalsIgnoreCase("Not Approved"))
                 {
                     Option = "notApproved";
@@ -138,7 +178,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                 }
                 else if (Option.equalsIgnoreCase("Denied"))
                 {
-                    Option = "deny";
+                    Option = "denied";
                 }
                 else if (Option.equalsIgnoreCase("Over Due"))
                 {
@@ -156,7 +196,6 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
     @Override
     protected void onStart() {
         super.onStart();
-        bindSp();
     }
 
     @Override
@@ -165,8 +204,9 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         Intent i = new Intent(getApplicationContext(),TicketDetailsActivity.class);
         i.putExtra("data",data);
         i.putExtra("Option",Option);
+        i.putExtra("SelectedOption",OptionSelected);
         i.putExtra("Role",Role);
-        startActivity(i);
+        startActivityForResult(i,REQUEST_TICKET_DETAILS_IMAGE);
     }
 
     @Override
@@ -185,6 +225,8 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                 isFirstTime = false;
                 TicketListResponse res = (TicketListResponse) response;
                 AppLog.e(TAG, "TicketListResponse " + new Gson().toJson(res));
+                totalPages = res.getTotalNumberOfPages();
+                mIsLoading = false;
                 saveToLocal(res);
                 break;
 
@@ -233,7 +275,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
     private void saveToLocal(TicketListResponse res) {
 
-        TicketTBL.deleteAll(GroupDashboardActivityNew.groupId, Role, Option,String.valueOf(Page));
+        TicketTBL.deleteAll(GroupDashboardActivityNew.groupId, Role, Option,String.valueOf(currentPage));
 
         Log.e(TAG,"saveToLocal "+res.getTicketData().size());
         for (int i = 0; i < res.getTicketData().size(); i++) {
@@ -245,7 +287,8 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
             currentItem.groupId = GroupDashboardActivityNew.groupId;
             currentItem.role = Role;
             currentItem.option = Option;
-            currentItem.page = String.valueOf(Page);
+            currentItem.page = String.valueOf(currentPage);
+            currentItem.TotalPage = String.valueOf(totalPages);
             currentItem.issueText = currentItemData.getIssueText();
             currentItem.issuePostId = currentItemData.getIssuePostId();
             currentItem.issuePartyTaskForceStatus = currentItemData.getIssuePartyTaskForceStatus();
@@ -294,7 +337,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
     private void showLocaly() {
 
-        List<TicketTBL> list = TicketTBL.getAll(GroupDashboardActivityNew.groupId, Role, Option, String.valueOf(Page));
+        List<TicketTBL> list = TicketTBL.getAll(GroupDashboardActivityNew.groupId, Role, Option, String.valueOf(currentPage));
 
         Log.e(TAG,"list size in local"+list.size());
 
@@ -353,7 +396,27 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
     private void getTicketListApi() {
         binding.progressBar.setVisibility(View.VISIBLE);
-        leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(Page));
+        mIsLoading = true;
+        leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(currentPage));
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_TICKET_DETAILS_IMAGE)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                Log.e(TAG,"Option Selected"+data.getStringExtra("Option"));
+                binding.spApproval.setSelection(Arrays.asList(approvalList).indexOf(data.getStringExtra("Option")));
+                getUpdateTicketListApi();
+            }
+
+            if (resultCode == RESULT_CANCELED)
+            {
+                binding.spApproval.setSelection(Arrays.asList(approvalList).indexOf(data.getStringExtra("Option")));
+            }
+        }
+    }
 }

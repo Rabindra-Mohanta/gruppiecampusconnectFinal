@@ -7,6 +7,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,7 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.github.siyamed.shapeimageview.CircularImageView;
 import com.google.gson.Gson;
+import com.scopely.fontain.views.FontTextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,8 +57,11 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     public static String TAG = "TicketDetailsActivity";
 
 
-    @Bind(R.id.toolbar)
-    public Toolbar mToolBar;
+    @Bind(R.id.iconBack)
+    public ImageView iconBack;
+
+    @Bind(R.id.tv_toolbar_title)
+    public FontTextView tv_toolbar_title;
 
     @Bind(R.id.btnDeny)
     public Button btnDeny;
@@ -143,7 +149,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     private TicketDetailsCommentAdpater ticketDetailsCommentAdpater;
     private Boolean expandable = false;
     private String callDepartment,callParty;
-    private String Option,Role;
+    private String Option,Role,SelectedOption;
     private String Status;
     public static final String[] permissions = new String[]{Manifest.permission.CALL_PHONE,
     };
@@ -172,11 +178,18 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
         ButterKnife.bind(this);
 
+        tv_toolbar_title.setText(getResources().getString(R.string.lbl_tikit_details));
+
+        iconBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         manager = new LeafManager();
 
-        setSupportActionBar(mToolBar);
-        setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_tikit_details));
+
         boothCordinatorAdapter = new BoothCordinatorAdapter();
         boothInChargeAdapter = new BoothInChargeAdapter();
         ticketDetailsCommentAdpater = new TicketDetailsCommentAdpater();
@@ -186,6 +199,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
         {
             taskData = (TicketListResponse.TicketData) getIntent().getSerializableExtra("data");
             Option = getIntent().getStringExtra("Option");
+            SelectedOption = getIntent().getStringExtra("SelectedOption");
             Role = getIntent().getStringExtra("Role");
 
             Log.e(TAG,"get Issue Text"+taskData.getIssueText());
@@ -204,7 +218,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                         btnApprove.setText("Approve");
                         btnDeny.setText("Deny");
                     }
-                    else if (Option.equalsIgnoreCase("deny"))
+                    else if (Option.equalsIgnoreCase("denied"))
                     {
                         btnApprove.setText("Approve");
                         btnDeny.setText("Not Approve");
@@ -254,7 +268,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                         btnApprove.setText("Approve");
                         btnDeny.setText("Deny");
                     }
-                    else if (Option.equalsIgnoreCase("deny"))
+                    else if (Option.equalsIgnoreCase("denied"))
                     {
                         btnApprove.setText("Approve");
                         btnDeny.setText("Not Approve");
@@ -336,6 +350,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+
     public void reqPermission(){
         if (!hasPermission(permissions)) {
             ActivityCompat.requestPermissions(this, permissions, 222);
@@ -373,6 +388,9 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             case LeafManager.APPROVED_TICKET:
                 BaseResponse res1 = (BaseResponse) response;
                 AppLog.e(TAG, "BaseResponse " + new Gson().toJson(res1));
+                Intent returnIntent = getIntent();
+                returnIntent.putExtra("Option",SelectedOption);
+                setResult(Activity.RESULT_OK,returnIntent);
                 finish();
                 break;
 
@@ -583,5 +601,14 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             imgDropdown.setRotation(180);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent returnIntent = getIntent();
+        returnIntent.putExtra("Option",SelectedOption);
+        setResult(Activity.RESULT_CANCELED,returnIntent);
+        finish();
     }
 }

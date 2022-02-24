@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -230,7 +231,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
     @Override
     public void onNameClick(LeadItem item) {
-        AppLog.e(TAG, "onNameClick()");
+        AppLog.e(TAG, "onNameClick()"+new Gson().toJson(item));
         if (isAdmin) {
             Intent intent = new Intent(getActivity(), LeadDetailActivity.class);
             Bundle b = new Bundle();

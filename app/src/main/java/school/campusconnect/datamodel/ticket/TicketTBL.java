@@ -26,6 +26,9 @@ public class TicketTBL extends Model {
     @Column(name = "page")
     public String page;
 
+    @Column(name = "TotalPage")
+    public String TotalPage;
+
     @Column(name = "issueText")
     public String issueText;
 

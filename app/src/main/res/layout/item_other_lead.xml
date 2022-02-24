@@ -141,6 +141,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -172,6 +173,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llGender"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -203,6 +205,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llDOB"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -234,6 +237,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llRole"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -266,6 +270,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -297,6 +302,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llCity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -327,6 +333,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llState"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -358,6 +365,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llPinCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -420,6 +428,8 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llOtherFriend"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -452,6 +462,8 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/llDesignation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -484,6 +496,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llOcupation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">

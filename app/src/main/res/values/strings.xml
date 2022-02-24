@@ -129,6 +129,9 @@
     <string name="lbl_state">State</string>
     <string name="lbl_pincode">Pincode</string>
     <string name="lbl_id_num">Id Number</string>
+    <string name="lbl_setPin">Set Pin</string>
+    <string name="lbl_conPin">Confirm Pin</string>
+    <string name="lbl_valPin">Validate Pin</string>
     <string name="lbl_leads">My Friends</string>
     <string name="lbl_likes">Likes</string>
     <string name="lbl_autho">Authorized Users</string>
@@ -171,6 +174,7 @@
     <string name="msg_profile_update">Successfully updated profile.</string>
 
     <string name="lbl_forgot_pwd">Forgot Password</string>
+    <string name="lbl_forgot_pin">Forgot Pin?</string>
     <string name="lbl_forgot_pwd_q">Forgot Password?</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -209,6 +213,7 @@
     <string name="hint_search_issue">Search Issue</string>
     <string name="hint_view_more">View More...</string>
     <string name="hint_issue_not_found">Issue Not Found.......</string>
+
     <string name="hint_search_address">Search Address</string>
     <string name="action_register">New User ? Sign Up</string>
     <string name="action_login_new">Registered? Sign In</string>
