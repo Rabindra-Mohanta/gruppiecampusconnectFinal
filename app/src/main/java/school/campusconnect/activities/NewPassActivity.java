@@ -152,10 +152,15 @@ public class NewPassActivity extends BaseActivity {
 
             hide_keyboard();
 
+            Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.putExtra("Role",response1.role);
+            i.putExtra("groupCount",response1.groupCount);
+            i.putExtra("groupID",response1.groupId);
+            startActivity(i);
+            finish();
 
-            hide_keyboard();
-
-            if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            /*if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
                 LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, response1.groupCount);
                 if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
                     Intent login = new Intent(this, ConstituencyListActivity.class);
@@ -186,7 +191,7 @@ public class NewPassActivity extends BaseActivity {
                         manager.getGroupDetail(this, response1.groupId);
                     }
                 }
-            }
+            }*/
 
         }
         if (apiId == LeafManager.API_ID_GROUP_DETAIL) {

@@ -210,6 +210,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     }
 
     private void verifyOtp() {
+
         if (isConnectionAvailable()) {
 
             if (!isValueValid(edtPassword))
@@ -431,17 +432,17 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
             hide_keyboard();
 
-           /* Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
+            Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             i.putExtra("Role",response1.role);
-            i.putExtra("groupCount",response1.groupCount);
+            i.putExtra("groupCount",String.valueOf(response1.groupCount));
             i.putExtra("groupID",response1.groupId);
             startActivity(i);
-            finish();*/
+            finish();
 
 
 
-            if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+          /*  if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
 
                 LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, response1.groupCount);
 
@@ -480,7 +481,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
                     manager.joinGroupDirect(this, BuildConfig.APP_ID);
                 }
-            }
+            }*/
         }
         if (apiId == LeafManager.API_JOIN_GROUP) {
             AppLog.e("UserExist->", "join group api response");
