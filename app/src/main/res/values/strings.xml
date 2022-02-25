@@ -151,10 +151,17 @@
     <string name="lbl_chat">Messages</string>
     <string name="lbl_que">Doubts</string>
     <string name="lbl_replies">Replies</string>
+
     <string name="lbl_notifications">Favourite Posts</string>
     <string name="lbl_posts">Posts</string>
     <string name="lbl_search_contact"><u>Add from contacts</u></string>
     <string name="lbl_or">OR</string>
+    <string name="lbl_TotalOpenIssueTickets">Total Open Issues Tickets</string>
+    <string name="lbl_TotalAnnouncementsCount">Total Announcements Count</string>
+    <string name="lbl_TotalBoothsDiscussionCount">Total Booths Discussion Count</string>
+    <string name="lbl_TotalPublicStreetsCount">Total Public Streets Count</string>
+    <string name="lbl_TotalPublicDiscussionCount">Total Public Discussion Count</string>
+    <string name="lbl_TotalBoothCount">Total Booths Count</string>
     <string name="msg_required">Required</string>
     <string name="msg_invalid">Invalid</string>
     <string name="msg_invalid_credentials">Invalid Credentials !</string>

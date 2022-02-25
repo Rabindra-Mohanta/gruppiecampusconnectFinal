@@ -18,6 +18,7 @@ import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
 import school.campusconnect.datamodel.committee.committeeResponse;
+import school.campusconnect.datamodel.feed.AdminFeederResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -1800,6 +1801,10 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/issues/tickets/events")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TicketEventUpdateResponse> getUpdatedTickets(@Path("group_id") String group_id, @Query("role") String role, @Query("option") String option);
+
+    @GET("/api/v1/groups/{group_id}/constituency/feeder")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<AdminFeederResponse> getAdminFeed(@Path("group_id") String group_id, @Query("role") String role);
 
 
 }

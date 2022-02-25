@@ -46,85 +46,213 @@
                     android:layout_height="wrap_content"
                     >
 
-                    <androidx.cardview.widget.CardView
+                    <FrameLayout
+                        android:visibility="gone"
+                        android:id="@+id/llNormalFeed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding_10dp"
-                        android:layout_marginHorizontal="@dimen/padding_20dp"
-                        android:layout_marginBottom="@dimen/padding_20dp"
-                        android:orientation="vertical"
-                        app:cardElevation="4dp">
+                        >
 
-                        <LinearLayout
+                        <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding_10dp"
+                            android:layout_marginHorizontal="@dimen/padding_20dp"
+                            android:layout_marginBottom="@dimen/padding_20dp"
                             android:orientation="vertical"
-                            android:paddingHorizontal="@dimen/padding_10dp"
-                            android:paddingBottom="@dimen/padding_10dp">
+                            app:cardElevation="4dp">
 
-                            <RelativeLayout
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:paddingHorizontal="@dimen/padding_10dp">
+                                android:layout_marginTop="@dimen/padding_10dp"
+                                android:orientation="vertical"
+                                android:paddingHorizontal="@dimen/padding_10dp"
+                                android:paddingBottom="@dimen/padding_10dp">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingHorizontal="@dimen/padding_10dp">
+
+                                    <TextView
+                                        style="@style/LabelHeader1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/lbl_feed"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textStyle="bold" />
+
+                                </RelativeLayout>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rvFeed"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    tools:itemCount="4"
+                                    tools:listitem="@layout/item_feed" />
 
                                 <TextView
-                                    style="@style/LabelHeader1"
+                                    android:visibility="gone"
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:layout_gravity="right"
+                                    android:id="@+id/tvViewMoreFeed"
+                                    style="@style/LabelNormal"
+                                    android:gravity="center_vertical"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/lbl_feed"
+                                    android:layout_height="match_parent"
                                     android:textColor="@color/colorPrimary"
-                                    android:textStyle="bold" />
+                                    android:text="@string/hint_view_more"/>
 
-                            </RelativeLayout>
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rvFeed"
+                            </LinearLayout>
+
+
+                        </androidx.cardview.widget.CardView>
+
+                        <ImageView
+                            android:id="@+id/imgExpandFeedBefore"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/expand_down"
+                            android:elevation="@dimen/padding_5dp"
+                            android:layout_width="34dp"
+                            android:layout_height="@dimen/padding_35dp"
+                            />
+
+                        <ImageView
+                            android:visibility="gone"
+                            android:id="@+id/imgExpandFeedAfter"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/expand_up"
+                            android:elevation="@dimen/padding_5dp"
+                            android:layout_width="34dp"
+                            android:layout_height="@dimen/padding_35dp"
+                            />
+
+
+                        <!--  <androidx.cardview.widget.CardView
+                              android:id="@+id/expandFeed"
+                              android:layout_gravity="bottom|center_horizontal"
+                              android:layout_marginBottom="5dp"
+                              app:cardElevation="@dimen/padding_5dp"
+                              android:layout_width="@dimen/padding_30dp"
+                              android:layout_height="@dimen/padding_30dp"
+                              app:cardBackgroundColor="@color/white"
+                              app:cardCornerRadius="@dimen/padding_50dp"
+                              >
+                              <ImageView
+                                  android:id="@+id/imgExpandFeed"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  app:tint="@color/colorPrimary"
+                                  android:src="@drawable/ic_drop_down"
+                                  />
+                          </androidx.cardview.widget.CardView>-->
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:visibility="gone"
+                        android:id="@+id/llAdminFeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:layout_marginHorizontal="@dimen/padding_20dp"
+                            android:layout_marginBottom="@dimen/padding_20dp"
+                            android:orientation="vertical"
+                            app:cardElevation="4dp">
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_10dp"
                                 android:orientation="vertical"
-                                android:layout_marginTop="@dimen/padding_5dp"
-                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                                tools:itemCount="4"
-                                tools:listitem="@layout/item_feed" />
+                                android:paddingHorizontal="@dimen/padding_10dp"
+                                android:paddingBottom="@dimen/padding_10dp">
 
-                            <TextView
-                                android:visibility="gone"
-                                android:layout_marginTop="@dimen/padding_5dp"
-                                android:layout_gravity="right"
-                                android:id="@+id/tvViewMoreFeed"
-                                style="@style/LabelNormal"
-                                android:gravity="center_vertical"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:textColor="@color/colorPrimary"
-                                android:text="@string/hint_view_more"/>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingHorizontal="@dimen/padding_10dp">
+
+                                    <TextView
+                                        style="@style/LabelHeader1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/lbl_feed"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textStyle="bold" />
+
+                                </RelativeLayout>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rvAdminFeed"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:paddingHorizontal="@dimen/padding_10dp"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    tools:itemCount="1"
+                                    tools:listitem="@layout/item_admin_feed" />
 
 
-                        </LinearLayout>
+                            </LinearLayout>
 
 
-                    </androidx.cardview.widget.CardView>
+                        </androidx.cardview.widget.CardView>
 
-                    <ImageView
-                        android:id="@+id/imgExpandFeedBefore"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:background="@drawable/expand_down"
-                        android:elevation="@dimen/padding_5dp"
-                        android:layout_width="34dp"
-                        android:layout_height="@dimen/padding_35dp"
-                        />
+                        <ImageView
+                            android:id="@+id/imgExpandAdminFeedBefore"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/expand_down"
+                            android:elevation="@dimen/padding_5dp"
+                            android:layout_width="34dp"
+                            android:layout_height="@dimen/padding_35dp"
+                            />
 
-                    <ImageView
-                        android:visibility="gone"
-                        android:id="@+id/imgExpandFeedAfter"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:background="@drawable/expand_up"
-                        android:elevation="@dimen/padding_5dp"
-                        android:layout_width="34dp"
-                        android:layout_height="@dimen/padding_35dp"
-                        />
+                        <ImageView
+                            android:visibility="gone"
+                            android:id="@+id/imgExpandAdminFeedAfter"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/expand_up"
+                            android:elevation="@dimen/padding_5dp"
+                            android:layout_width="34dp"
+                            android:layout_height="@dimen/padding_35dp"
+                            />
+
+
+                        <!--  <androidx.cardview.widget.CardView
+                              android:id="@+id/expandFeed"
+                              android:layout_gravity="bottom|center_horizontal"
+                              android:layout_marginBottom="5dp"
+                              app:cardElevation="@dimen/padding_5dp"
+                              android:layout_width="@dimen/padding_30dp"
+                              android:layout_height="@dimen/padding_30dp"
+                              app:cardBackgroundColor="@color/white"
+                              app:cardCornerRadius="@dimen/padding_50dp"
+                              >
+                              <ImageView
+                                  android:id="@+id/imgExpandFeed"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  app:tint="@color/colorPrimary"
+                                  android:src="@drawable/ic_drop_down"
+                                  />
+                          </androidx.cardview.widget.CardView>-->
+                    </FrameLayout>
+
+
+
 
 
                     <!--  <androidx.cardview.widget.CardView
@@ -146,6 +274,8 @@
                               />
                       </androidx.cardview.widget.CardView>-->
                 </FrameLayout>
+
+
 
                 <FrameLayout
                     android:id="@+id/llGroups"

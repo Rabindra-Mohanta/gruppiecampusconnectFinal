@@ -550,7 +550,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     }
 
     public boolean isValid(boolean showToast) {
-        boolean valid = true;
+
+
 
         Issue = null;
         IssueID = null;
@@ -594,13 +595,14 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
             if (showToast)
                 Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
-            valid = false;
+            return false;
         }
         if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
-            valid = false;
+
             removeImage();
             removePdf();
             Toast.makeText(this, "" + getResources().getString(R.string.msg_upload2), Toast.LENGTH_SHORT).show();
+            return false;
         }
 
         if (binding.etDescription.getText().toString().isEmpty()) {
@@ -614,8 +616,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             return false;
         }
 
-        AppLog.e(TAG, "valid : " + valid);
-        return valid;
+        return true;
     }
 
     public void showPhotoDialog(int resId) {

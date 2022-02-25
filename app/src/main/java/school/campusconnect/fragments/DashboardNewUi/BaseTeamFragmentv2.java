@@ -330,13 +330,15 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        binding.progressBar.setVisibility(View.GONE);
 
         if (getActivity() == null)
             return;
 
         switch (apiId) {
+
             case LeafManager.API_MY_TEAM_LISTV2:
+
+                binding.progressBar.setVisibility(View.GONE);
 
                 BaseTeamv2Response res = (BaseTeamv2Response) response;
                 AppLog.e(TAG, "BaseTeamv2Response " + new Gson().toJson(res.getTeamData()));
@@ -348,6 +350,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 BaseTeamTableV2.deleteTeams(GroupDashboardActivityNew.groupId);
 
                 teamList.clear();
+
                 ArrayList<String> currentTopics = new ArrayList<>();
                 for (int i = 0; i < result.size(); i++) {
 

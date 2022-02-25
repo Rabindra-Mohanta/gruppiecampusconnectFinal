@@ -6,6 +6,8 @@ import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
+import in.aabhasjindal.otptextview.OTPListener;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
@@ -28,7 +31,8 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
     public static String TAG = "LoginPinActivity";
     ActivityLoginPinBinding binding;
     private LeafManager manager;
-    private String groupId = null , groupCount = null ,Role = null;
+    private String ButtonValidation = null;
+    private String groupId = null , groupCount = null ,Role = null,Token = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,32 +53,74 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 groupId = getIntent().getStringExtra("groupID");
                 groupCount = getIntent().getStringExtra("groupCount");
                 Role =  getIntent().getStringExtra("Role");
+                Token = getIntent().getStringExtra("token");
 
                 binding.lblForgot.setVisibility(View.GONE);
+                ButtonValidation = "Confirm";
                 binding.lblHint.setText("Confirm Pin");
-                binding.btnNext.setText("Confirm");
+                binding.btnNext.setText("Done");
             }
             else
             {
                 groupId = getIntent().getStringExtra("groupID");
                 groupCount = getIntent().getStringExtra("groupCount");
                 Role =  getIntent().getStringExtra("Role");
-
+                Token = getIntent().getStringExtra("token");
                 binding.lblForgot.setVisibility(View.GONE);
+                ButtonValidation = "Set Pin";
                 binding.lblHint.setText("Set Pin");
-                binding.btnNext.setText("Set Pin");
+                binding.btnNext.setText("Next");
             }
         }
         else
         {
             binding.lblForgot.setVisibility(View.VISIBLE);
             binding.lblHint.setText("Pin");
-            binding.btnNext.setText("Next");
+            ButtonValidation = "Next";
+            binding.btnNext.setText("Done");
         }
+
+        binding.etPin.setOtpListener(new OTPListener() {
+            @Override
+            public void onInteractionListener() {
+
+            }
+
+            @Override
+            public void onOTPComplete(String otp) {
+
+                if (otp.length()>0)
+                {
+                    binding.lblError.setText("");
+                }
+            }
+        });
+
+       /* binding.etPin.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s.toString().length()>0)
+                {
+                    binding.lblError.setText("");
+                }
+            }
+        });*/
 
         binding.btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hide_keyboard();
                 HomeScreen();
             }
         });
@@ -88,19 +134,20 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
     private void HomeScreen() {
 
-        if (binding.btnNext.getText().toString().equalsIgnoreCase("Next"))
+        if (ButtonValidation.equalsIgnoreCase("Next"))
         {
             if (isValid())
             {
                gotoHomeScreenThroughSplash();
             }
         }
-
-        else if (binding.btnNext.getText().toString().equalsIgnoreCase("Confirm"))
+        else if (ButtonValidation.equalsIgnoreCase("Confirm"))
         {
             if (isValidConfirm())
             {
-                LeafPreference.getInstance(this).setString(LeafPreference.PIN,binding.etPin.getText().toString());
+                LeafPreference.getInstance(this).setString(LeafPreference.PIN,binding.etPin.getOTP());
+                LeafPreference.getInstance(this).setString(LeafPreference.TOKEN,Token);
+
                 if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
 
                     LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, Integer.parseInt(groupCount));
@@ -144,13 +191,14 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
             }
         }
 
-        else if (binding.btnNext.getText().toString().equalsIgnoreCase("Set Pin"))
+        else if (ButtonValidation.equalsIgnoreCase("Set Pin"))
         {
             if (isSetValid())
             {
                 Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
-                i.putExtra("set_otp",binding.etPin.getText().toString());
+                i.putExtra("set_otp",binding.etPin.getOTP());
                 i.putExtra("Role",Role);
+                i.putExtra("token",Token);
                 i.putExtra("groupCount",groupCount);
                 i.putExtra("groupID",groupId);
                 startActivity(i);
@@ -160,36 +208,36 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
     }
     private boolean isValidConfirm() {
 
-        if (binding.etPin.getText().toString().isEmpty() || binding.etPin.getText().toString().length() < 4)
+        if (binding.etPin.getOTP().isEmpty() || binding.etPin.getOTP().length() < 4)
         {
-            showToast("Enter Confirm Pin");
+            binding.lblError.setText("Enter Confirm Pin...");
             return false;
         }
-        if (!binding.etPin.getText().toString().equalsIgnoreCase(getIntent().getStringExtra("set_otp")))
+        if (!binding.etPin.getOTP().equalsIgnoreCase(getIntent().getStringExtra("set_otp")))
         {
-            showToast("Confirm Pin Wrong");
+            binding.lblError.setText("Confirm Pin Wrong...");
             return false;
         }
         return true;
     }
     private boolean isSetValid() {
-        if (binding.etPin.getText().toString().isEmpty() || binding.etPin.getText().toString().length() < 4)
+        if (binding.etPin.getOTP().isEmpty() || binding.etPin.getOTP().length() < 4)
         {
-            showToast("Enter Pin");
+            binding.lblError.setText("Enter Pin...");
             return false;
         }
         return true;
     }
     private boolean isValid() {
 
-        if (binding.etPin.getText().toString().isEmpty() || binding.etPin.getText().toString().length() < 4)
+        if (binding.etPin.getOTP().isEmpty() || binding.etPin.getOTP().length() < 4)
         {
-            showToast("Enter Pin");
+            binding.lblError.setText("Enter Pin...");
             return false;
         }
-        else if (!binding.etPin.getText().toString().equalsIgnoreCase(LeafPreference.getInstance(this).getString(LeafPreference.PIN)))
+        else if (!binding.etPin.getOTP().equalsIgnoreCase(LeafPreference.getInstance(this).getString(LeafPreference.PIN)))
         {
-            showToast("Enter Valid Pin");
+            binding.lblError.setText("Enter Valid Pin...");
             return false;
         }
         return true;

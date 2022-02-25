@@ -51,17 +51,60 @@
 
             <TextView
                 android:id="@+id/lblHint"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_35dp"
-                android:layout_marginRight="@dimen/padding_35dp"
                 android:layout_marginTop="@dimen/padding_20dp"
                 android:text="@string/lbl_setPin"
+                android:layout_gravity="center"
                 android:textColor="@color/colorTextWhite"
                 style="@style/LabelHeader2"
                  />
 
-            <EditText
+
+            <in.aabhasjindal.otptextview.OtpTextView
+                android:id="@+id/etPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                app:height="40dp"
+                app:width="40dp"
+                app:bar_enabled="true"
+                app:bar_height="2dp"
+                app:length="4"
+                app:bar_active_color="@color/white"
+                android:layout_gravity="center"
+                app:otp_text_size="24dp"/>
+
+            <!--<com.mukesh.OtpView
+                android:id="@+id/etPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:focusableInTouchMode="true"
+                android:inputType="numberPassword"
+                app:OtpHideLineWhenFilled="false"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:textColor="@color/white"
+                app:OtpItemCount="4"
+                app:OtpItemHeight="50dp"
+                app:OtpItemRadius="5dp"
+                app:OtpItemSpacing="@dimen/padding_10dp"
+                app:OtpItemWidth="50dp"
+                app:OtpLineColor="#FFFFFF"
+                app:OtpViewType="rectangle" />-->
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/lblError"
+                android:layout_marginTop="@dimen/padding_40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/red"
+                style="@style/LabelHeader2"
+                />
+
+           <!-- <EditText
                 android:id="@+id/etPin"
                 android:layout_marginTop="@dimen/padding_10dp"
                 android:layout_width="match_parent"
@@ -71,7 +114,7 @@
                 android:inputType="number"
                 android:maxLength="4"
                 android:imeOptions="actionDone"
-                style="@style/LoginEditText" />
+                style="@style/LoginEditText" />-->
 
         </LinearLayout>
 

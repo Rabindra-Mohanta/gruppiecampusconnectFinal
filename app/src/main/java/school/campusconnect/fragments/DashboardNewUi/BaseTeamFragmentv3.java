@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -51,11 +52,13 @@ import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.FragmentBaseTeamFragmentv2Binding;
 import school.campusconnect.databinding.FragmentBaseTeamFragmentv3Binding;
+import school.campusconnect.databinding.ItemAdminFeedBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.feed.AdminFeederResponse;
 import school.campusconnect.datamodel.notificationList.NotificationListRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
@@ -130,7 +133,6 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         } else {
             menu.findItem(R.id.menu_profile).setVisible(true);
         }
-
 
 
         if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
@@ -255,6 +257,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         binding.imgExpandFeedBefore.setOnClickListener(this);
         binding.imgExpandFeedAfter.setOnClickListener(this);
+        binding.imgExpandAdminFeedBefore.setOnClickListener(this);
+        binding.imgExpandAdminFeedAfter.setOnClickListener(this);
+
         binding.tvViewMoreFeed.setOnClickListener(this);
 
     }
@@ -336,13 +341,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        binding.progressBar.setVisibility(View.GONE);
+
 
         if (getActivity() == null)
             return;
 
         switch (apiId) {
             case LeafManager.API_MY_TEAM_LISTV2:
+
+                binding.progressBar.setVisibility(View.GONE);
 
                 BaseTeamv2Response res = (BaseTeamv2Response) response;
                 AppLog.e(TAG, "BaseTeamv2Response " + new Gson().toJson(res.getTeamData()));
@@ -418,6 +425,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     Count = results.size();
                 }
                 feedAdapter.add(results,Count);
+                break;
+
+            case LeafManager.ADMIN_FEEDER_LIST:
+
+                AdminFeederResponse adminFeederResponse = (AdminFeederResponse) response;
+
+                FeedAdminAdapter feedAdminAdapter = new FeedAdminAdapter(adminFeederResponse.getFeedData());
+                binding.rvAdminFeed.setAdapter(feedAdminAdapter);
+
                 break;
 
         }
@@ -557,8 +573,16 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     private void getNotification() {
 
-        manager.getNotificationList(this,GroupDashboardActivityNew.groupId);
-
+        if (mGroupItem.isAdmin)
+        {
+            binding.llAdminFeed.setVisibility(View.VISIBLE);
+            manager.getAdminFeederList(this,GroupDashboardActivityNew.groupId,"isAdmin");
+        }
+        else
+        {
+            binding.llNormalFeed.setVisibility(View.VISIBLE);
+            manager.getNotificationList(this,GroupDashboardActivityNew.groupId);
+        }
     }
 
     private void getTeams() {
@@ -604,6 +628,16 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 feedAdapter.expand();
                 break;
 
+            case R.id.imgExpandAdminFeedBefore:
+                binding.imgExpandAdminFeedAfter.setVisibility(View.VISIBLE);
+                binding.imgExpandAdminFeedBefore.setVisibility(View.GONE);
+                break;
+
+            case R.id.imgExpandAdminFeedAfter:
+                binding.imgExpandAdminFeedBefore.setVisibility(View.VISIBLE);
+                binding.imgExpandAdminFeedAfter.setVisibility(View.GONE);
+                break;
+
             case R.id.tvViewMoreFeed:
                 if (isConnectionAvailable()) {
                     Intent intent = new Intent(getContext(), NotificationListActivity.class);
@@ -614,6 +648,53 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     showNoNetworkMsg();
                 }
                 break;
+        }
+
+    }
+    public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {
+
+        private ArrayList<AdminFeederResponse.FeedData> feedData;
+
+        public FeedAdminAdapter(ArrayList<AdminFeederResponse.FeedData> feedData) {
+            this.feedData = feedData;
+        }
+
+        @NonNull
+        @Override
+        public FeedAdminAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ItemAdminFeedBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),R.layout.item_admin_feed,parent,false);
+            return new ViewHolder(binding);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull FeedAdminAdapter.ViewHolder holder, int position) {
+
+            AdminFeederResponse.FeedData data = feedData.get(position);
+
+            holder.binding.tvTotalOpenIssue.setText(String.valueOf(data.getTotalOpenIssuesCount()));
+            holder.binding.tvTotalAnnouncementCount.setText(String.valueOf(data.getTotalAnnouncementCount()));
+            holder.binding.tvTotalBoothCount.setText(String.valueOf(data.getTotalBoothsCount()));
+            holder.binding.tvTotalBoothsDiscussionCount.setText(String.valueOf(data.getTotalBoothsDiscussion()));
+            holder.binding.tvTotalPublicStreetsCount.setText(String.valueOf(data.getTotalSubBoothsCount()));
+            holder.binding.tvTotalPublicDiscussionCount.setText(String.valueOf(data.getTotalSubBoothDiscussion()));
+        }
+
+
+
+        @Override
+        public int getItemCount() {
+
+            return feedData != null ? feedData.size() : 0;
+
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            ItemAdminFeedBinding binding;
+            public ViewHolder(@NonNull ItemAdminFeedBinding itemView) {
+                super(itemView.getRoot());
+                binding = itemView;
+            }
         }
     }
 }

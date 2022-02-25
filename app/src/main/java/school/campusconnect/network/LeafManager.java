@@ -20,6 +20,7 @@ import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
 import school.campusconnect.datamodel.committee.committeeResponse;
+import school.campusconnect.datamodel.feed.AdminFeederResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -459,6 +460,7 @@ public class LeafManager {
     public static final int UPDATE_COMMITTEE = 299;
     public static final int REMOVE_COMMITTEE = 300;
     public static final int UPDATED_TICKET_LIST_EVENT = 301;
+    public static final int ADMIN_FEEDER_LIST = 307;
 
     public LeafManager() {
 
@@ -11132,48 +11134,6 @@ public class LeafManager {
 
     }
 
-    public void setApprovedTicketAdmin(OnCommunicationListener listListener, String group_id,String issuePostID,String status) {
-        mOnCommunicationListener = listListener;
-
-        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
-        LeafService service = apiClient.getService(LeafService.class);
-
-        final Call<BaseResponse> model = service.ticketApprovedAdmin(group_id,issuePostID,status);
-
-        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
-
-        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
-        }.getType();
-
-        wrapper.execute(APPROVED_TICKET, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
-            @Override
-            public void handle200(int apiId, BaseResponse response) {
-                if (mOnCommunicationListener != null) {
-
-                    mOnCommunicationListener.onSuccess(apiId, response);
-                }
-            }
-
-            @Override
-            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
-                if (mOnCommunicationListener != null) {
-
-                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
-
-                }
-            }
-            @Override
-            public void handleException(int apiId, Exception e) {
-                if (mOnCommunicationListener != null) {
-
-                    mOnCommunicationListener.onException(apiId, e.getMessage());
-                }
-            }
-        }, serviceErrorType);
-
-    }
-
-
     public void setAddCommentTaskDetails(OnCommunicationListener listListener, String group_id, String issuePostID, AddCommentTaskDetailsReq req) {
         mOnCommunicationListener = listListener;
 
@@ -11425,6 +11385,48 @@ public class LeafManager {
         }.getType();
 
         wrapper.execute(UPDATED_TICKET_LIST_EVENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+
+    public void getAdminFeederList(OnCommunicationListener listListener, String group_id,String role) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<AdminFeederResponse> model = service.getAdminFeed(group_id,role);
+
+
+        ResponseWrapper<AdminFeederResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(ADMIN_FEEDER_LIST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {

@@ -138,7 +138,7 @@ public class NewPassActivity extends BaseActivity {
             LoginResponse response1 = (LoginResponse) response;
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.LOGIN_ID, response1.userId);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.ROLE, response1.role);
-            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
+         //   LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, response1.name);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NUM, response1.phone);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE, response1.image);
@@ -155,6 +155,7 @@ public class NewPassActivity extends BaseActivity {
             Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             i.putExtra("Role",response1.role);
+            i.putExtra("token",response1.token);
             i.putExtra("groupCount",response1.groupCount);
             i.putExtra("groupID",response1.groupId);
             startActivity(i);

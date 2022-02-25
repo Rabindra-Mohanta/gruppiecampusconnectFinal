@@ -58,6 +58,7 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull TeamItemV2Adapter.ViewHolder holder, int position) {
+
         final MyTeamData team = featuredIconData.get(position);
 
         AppLog.e("TeamListAdapterNew", "item ; " + new Gson().toJson(team));
@@ -201,7 +202,7 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
 
     @Override
     public int getItemCount() {
-        return featuredIconData != null ? isExpanded ? featuredIconData.size() : itemCount : 0;
+        return featuredIconData != null ? isExpanded ? featuredIconData.size() : itemCount>featuredIconData.size()?featuredIconData.size():itemCount : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
