@@ -19,7 +19,8 @@ import school.campusconnect.utils.MixOperations;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     private Context context;
-    private List<NotificationListRes.NotificationListData> results;
+    public List<NotificationListRes.NotificationListData> results;
+    private int itemCount;
     public boolean isExpand = false;
 
     @NonNull
@@ -64,9 +65,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     }
 
-    public void add(List<NotificationListRes.NotificationListData> results)
+    public void add(List<NotificationListRes.NotificationListData> results,int itemCount)
     {
         this.results = results;
+        this.itemCount = itemCount;
         notifyDataSetChanged();
     }
     public void expand()
@@ -86,7 +88,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public int getItemCount() {
 
         return results != null ?
-                isExpand ? Math.min(results.size(), 5) : 2 : 0;
+                isExpand ? Math.min(results.size(), 5) : itemCount : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

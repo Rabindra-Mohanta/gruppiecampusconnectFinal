@@ -1,19 +1,14 @@
-package school.campusconnect.fragments;
+package school.campusconnect.fragments.DashboardNewUi;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,10 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,8 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,8 +33,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,27 +45,21 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.NotificationListActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.adapters.FeedAdapter;
-import school.campusconnect.adapters.TeamListAdapterNew;
 import school.campusconnect.adapters.TeamListAdapterNewV2;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.FragmentBaseTeamFragmentv2Binding;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.BaseTeamTable;
-import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.notificationList.NotificationListRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
-import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
-import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
-import school.campusconnect.views.SMBDialogUtils;
 
 public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener {
     private static final String TAG = "BaseTeamFragmentv2";
@@ -107,7 +89,6 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -260,7 +241,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
         manager = new LeafManager();
 
-        mAdapter = new TeamListAdapterNewV2(teamList,this);
+        mAdapter = new TeamListAdapterNewV2(teamList,this,BuildConfig.AppCategory);
         binding.rvTeams.setAdapter(mAdapter);
 
         feedAdapter = new FeedAdapter();
@@ -419,7 +400,20 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 NotificationListRes res1 = (NotificationListRes) response;
                 List<NotificationListRes.NotificationListData> results = res1.getData();
                 AppLog.e(TAG, "notificationRes " + results);
-                feedAdapter.add(results);
+
+
+                int Count = 0;
+
+                if (results.size()>2)
+                {
+                    Count = 2;
+                }
+                else
+                {
+                    Count = results.size();
+                }
+
+                feedAdapter.add(results,Count);
                 break;
 
         }

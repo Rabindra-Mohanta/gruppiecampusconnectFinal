@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
@@ -18,17 +17,18 @@ import school.campusconnect.R;
 import school.campusconnect.databinding.ItemTeamListV2Binding;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
-import school.campusconnect.fragments.BaseTeamFragmentv2;
 
 public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNewV2.ViewHolder> implements TeamItemV2Adapter.OnTeamClickListener {
     public static String TAG = "TeamListAdapterNewV2";
     private ArrayList<BaseTeamv2Response.TeamListData> teamData;
     private OnTeamClickListener listener;
     private Boolean isExpanded = false;
+    private String Category;
 
-    public TeamListAdapterNewV2(ArrayList<BaseTeamv2Response.TeamListData> teamList,OnTeamClickListener listener) {
+    public TeamListAdapterNewV2(ArrayList<BaseTeamv2Response.TeamListData> teamList,OnTeamClickListener listener,String Category) {
         this.listener = listener;
         this.teamData = teamList;
+        this.Category = Category;
     }
 
 
@@ -45,7 +45,16 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
         BaseTeamv2Response.TeamListData data = teamData.get(position);
 
         holder.binding.tvActivityName.setText(data.getActivity());
-        holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this));
+
+        if (Category.equalsIgnoreCase("constituency"))
+        {
+            holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this,8));
+        }
+        else
+        {
+            holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this,4));
+        }
+
 
         holder.binding.imgExpandFeedBefore.setOnClickListener(new View.OnClickListener() {
             @Override

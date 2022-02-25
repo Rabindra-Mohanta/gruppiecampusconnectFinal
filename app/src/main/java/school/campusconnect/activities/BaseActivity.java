@@ -2,7 +2,6 @@ package school.campusconnect.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -45,7 +44,8 @@ import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.ticket.TicketTBL;
-import school.campusconnect.fragments.BaseTeamFragment;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.utils.AppLog;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -78,7 +78,6 @@ import school.campusconnect.datamodel.PostTeamDataItem;
 import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
-import school.campusconnect.datamodel.notifications.NotificationModel;
 import school.campusconnect.datamodel.personalchat.PersonalContactsModel;
 import school.campusconnect.fragments.Fragment_GruppieContacts;
 import school.campusconnect.network.LeafManager;
@@ -429,7 +428,10 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
                 Fragment fm = this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-                if(fm instanceof BaseTeamFragment){
+                if(fm instanceof BaseTeamFragmentv2){
+                    menu.findItem(R.id.action_notification_list).setVisible(true);
+                }
+                if(fm instanceof BaseTeamFragmentv3){
                     menu.findItem(R.id.action_notification_list).setVisible(true);
                 }else{
                     menu.findItem(R.id.action_notification_list).setVisible(false);

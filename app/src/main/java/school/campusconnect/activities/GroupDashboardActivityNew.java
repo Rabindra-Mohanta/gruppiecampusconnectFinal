@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 
 import com.activeandroid.ActiveAndroid;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.cardview.widget.CardView;
@@ -37,23 +36,20 @@ import school.campusconnect.datamodel.LiveClassListTBL;
 import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
-import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
-import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
-import school.campusconnect.fragments.BaseTeamFragmentv2;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.BoothListFragment;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.MemberTeamListFragment;
 import school.campusconnect.fragments.PublicForumListFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -82,7 +78,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import school.campusconnect.fragments.BaseTeamFragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 import school.campusconnect.R;
 import school.campusconnect.database.DatabaseHandler;
@@ -429,7 +424,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     dashboardCount.groupId = groupId;
 
                     Fragment currFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    if (currFrag instanceof BaseTeamFragment) {
+                    if (currFrag instanceof BaseTeamFragmentv2) {
                         boolean apiCall = false;
                         if (dashboardCount.lastApiCalled != 0) {
                             if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
@@ -1330,9 +1325,20 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_Desc.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        BaseTeamFragmentv2 baseTeamFragment = new BaseTeamFragmentv2();
-        fragmentTransaction.replace(R.id.fragment_container, baseTeamFragment);
-        fragmentTransaction.commit();
+         if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+
+             BaseTeamFragmentv3 baseTeamFragment = new BaseTeamFragmentv3();
+             fragmentTransaction.replace(R.id.fragment_container, baseTeamFragment);
+             fragmentTransaction.commit();
+
+         }
+         else if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+
+             BaseTeamFragmentv2 baseTeamFragment = new BaseTeamFragmentv2();
+             fragmentTransaction.replace(R.id.fragment_container, baseTeamFragment);
+             fragmentTransaction.commit();
+
+        }
     }
 
     public void onTeamSelected(MyTeamData team) {

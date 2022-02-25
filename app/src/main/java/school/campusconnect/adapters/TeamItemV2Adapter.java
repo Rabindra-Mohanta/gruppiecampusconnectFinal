@@ -39,10 +39,12 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
     OnTeamClickListener listener;
     LeafPreference leafPreference;
     private Boolean isExpanded = false;
+    private int itemCount;
 
-    public TeamItemV2Adapter(ArrayList<MyTeamData> featuredIconData, TeamListAdapterNewV2 listener) {
+    public TeamItemV2Adapter(ArrayList<MyTeamData> featuredIconData, TeamListAdapterNewV2 listener,int itemCount) {
         this.featuredIconData = featuredIconData;
         this.listener = listener;
+        this.itemCount = itemCount;
     }
 
     @NonNull
@@ -199,7 +201,7 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
 
     @Override
     public int getItemCount() {
-        return featuredIconData != null ? isExpanded ? featuredIconData.size() : 4 : 0;
+        return featuredIconData != null ? isExpanded ? featuredIconData.size() : itemCount : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
