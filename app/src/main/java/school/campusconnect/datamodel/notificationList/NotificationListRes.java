@@ -3,6 +3,7 @@ package school.campusconnect.datamodel.notificationList;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 import school.campusconnect.datamodel.BaseResponse;
@@ -21,17 +22,24 @@ public class NotificationListRes extends BaseResponse {
         this.data = data;
     }
 
-    public class NotificationListData extends BaseResponse {
+    public static class NotificationListData extends BaseResponse implements Serializable {
+
+        @SerializedName(value = "idPrimary")
+        @Expose
+        private long idPrimary;
 
         @SerializedName(value = "id",alternate = "userId")
         @Expose
         private String userId;
+
         @SerializedName("type")
         @Expose
         private String type;
+
         @SerializedName("showComment")
         @Expose
         private boolean showComment;
+
         @SerializedName(value = "postId",alternate = "albumId")
         @Expose
         private String postId;
@@ -56,10 +64,30 @@ public class NotificationListRes extends BaseResponse {
         @SerializedName("createdById")
         @Expose
         private String createdById;
+
         @SerializedName("teamId")
         @Expose
         private String teamId;
 
+        @SerializedName(value = "readedComment")
+        @Expose
+        private Boolean readedComment;
+
+        public long getIdPrimary() {
+            return idPrimary;
+        }
+
+        public void setIdPrimary(long idPrimary) {
+            this.idPrimary = idPrimary;
+        }
+
+        public Boolean getReadedComment() {
+            return readedComment;
+        }
+
+        public void setReadedComment(Boolean readedComment) {
+            this.readedComment = readedComment;
+        }
 
         public String getUserId() {
             return userId;

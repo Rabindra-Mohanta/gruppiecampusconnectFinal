@@ -58,15 +58,17 @@ import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.feed.AdminFeedTable;
 import school.campusconnect.datamodel.feed.AdminFeederResponse;
 import school.campusconnect.datamodel.notificationList.NotificationListRes;
+import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 
-public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener{
+public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick {
 
 
     private static final String TAG = "BaseTeamFragmentv3";
@@ -75,12 +77,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     private LeafManager manager;
     private TeamListAdapterNewV2 mAdapter;
     private FeedAdapter feedAdapter;
+    private FeedAdminAdapter feedAdminAdapter;
     private Boolean isExpand = false;
     // PullRefreshLayout swipeRefreshLayout;
     DatabaseHandler databaseHandler;
     LeafPreference pref;
 
     ArrayList<BaseTeamv2Response.TeamListData> teamList = new ArrayList<>();
+    ArrayList<NotificationListRes.NotificationListData> notificationList = new ArrayList<>();
+    ArrayList<AdminFeederResponse.FeedData> adminNotificationList = new ArrayList<>();
 
     boolean isVisible;
 
@@ -150,7 +155,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         }
         menuItem = menu.findItem(R.id.action_notification_list);
         menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
-        menuItem.setVisible(true);
+        menuItem.setVisible(false);
 
         if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
             menu.findItem(R.id.menu_add_team).setVisible(true);
@@ -243,7 +248,6 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         pref = LeafPreference.getInstance(getActivity());
 
         databaseHandler = new DatabaseHandler(getActivity());
-        binding.rvFeed.setAdapter(new FeedAdapter());
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
@@ -252,8 +256,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         mAdapter = new TeamListAdapterNewV2(teamList,this,BuildConfig.AppCategory);
         binding.rvTeams.setAdapter(mAdapter);
 
-        feedAdapter = new FeedAdapter();
+        feedAdapter = new FeedAdapter(this);
         binding.rvFeed.setAdapter(feedAdapter);
+
+        feedAdminAdapter = new FeedAdminAdapter();
+        binding.rvAdminFeed.setAdapter(feedAdminAdapter);
 
         binding.imgExpandFeedBefore.setOnClickListener(this);
         binding.imgExpandFeedAfter.setOnClickListener(this);
@@ -412,28 +419,82 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                 NotificationListRes res1 = (NotificationListRes) response;
                 List<NotificationListRes.NotificationListData> results = res1.getData();
-                AppLog.e(TAG, "notificationRes " + results);
+
+                AppLog.e(TAG, "notificationRes " + new Gson().toJson(results));
+
+                NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
+
+                notificationList.clear();
+
+                for (int i = 0; i < results.size(); i++) {
+
+                    NotificationTable notificationTable = new NotificationTable();
+
+                    NotificationListRes.NotificationListData notificationListData= results.get(i);
+
+                    notificationTable.teamId = notificationListData.getTeamId();
+                    notificationTable.groupId = notificationListData.getGroupId();
+                    notificationTable.userId = notificationListData.getUserId();
+                    notificationTable.type = notificationListData.getType();
+                    notificationTable.showComment = notificationListData.getShowComment();
+                    notificationTable.postId = notificationListData.getPostId();
+                    notificationTable.message = notificationListData.getMessage();
+                    notificationTable.insertedAt = notificationListData.getInsertedAt();
+                    notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+                    notificationTable.createdByName = notificationListData.getCreatedByName();
+                    notificationTable.createdByImage = notificationListData.getCreatedByImage();
+                    notificationTable.createdById = notificationListData.getCreatedById();
+
+                    notificationTable.save();
+
+                }
+                notificationList.addAll(results);
 
                 int Count = 0;
 
-                if (results.size()>2)
+                if (notificationList.size()>2)
                 {
-                    Count = 4;
+                    Count = 2;
                 }
                 else
                 {
-                    Count = results.size();
+                    Count = notificationList.size();
                 }
-                feedAdapter.add(results,Count);
+
+                feedAdapter.add(notificationList,Count);
+
                 break;
 
             case LeafManager.ADMIN_FEEDER_LIST:
 
                 AdminFeederResponse adminFeederResponse = (AdminFeederResponse) response;
 
-                FeedAdminAdapter feedAdminAdapter = new FeedAdminAdapter(adminFeederResponse.getFeedData());
-                binding.rvAdminFeed.setAdapter(feedAdminAdapter);
+                List<AdminFeederResponse.FeedData> res1Data = adminFeederResponse.getFeedData();
 
+                AppLog.e(TAG, "AdminNotificationRes " + new Gson().toJson(res1Data));
+
+                AdminFeedTable.deleteAdminNotification(GroupDashboardActivityNew.groupId);
+
+                adminNotificationList.clear();
+
+                for (int i = 0; i < res1Data.size(); i++) {
+
+                    AdminFeedTable adminFeedTable = new AdminFeedTable();
+
+                    AdminFeederResponse.FeedData feedData= res1Data.get(i);
+
+                    adminFeedTable.groupID = GroupDashboardActivityNew.groupId;
+                    adminFeedTable.totalSubBoothsCount = feedData.getTotalSubBoothsCount();
+                    adminFeedTable.totalSubBoothDiscussion = feedData.getTotalSubBoothDiscussion();
+                    adminFeedTable.totalOpenIssuesCount = feedData.getTotalOpenIssuesCount();
+                    adminFeedTable.totalBoothsDiscussion = feedData.getTotalBoothsDiscussion();
+                    adminFeedTable.totalBoothsCount = feedData.getTotalBoothsCount();
+                    adminFeedTable.totalAnnouncementCount = feedData.getTotalAnnouncementCount();
+                    adminFeedTable.save();
+
+                }
+                adminNotificationList.addAll(res1Data);
+                feedAdminAdapter.add(adminNotificationList);
                 break;
 
         }
@@ -576,13 +637,92 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (mGroupItem.isAdmin)
         {
             binding.llAdminFeed.setVisibility(View.VISIBLE);
-            manager.getAdminFeederList(this,GroupDashboardActivityNew.groupId,"isAdmin");
+
+            List<AdminFeedTable> adminFeedTableList = AdminFeedTable.getAdminNotificationList(GroupDashboardActivityNew.groupId);
+
+            if (adminFeedTableList != null && adminFeedTableList.size() > 0)
+            {
+                adminNotificationList.clear();
+
+                for (int i=0;i<adminFeedTableList.size();i++)
+                {
+                    AdminFeederResponse.FeedData feedData = new AdminFeederResponse.FeedData();
+
+                    feedData.setTotalSubBoothsCount(adminFeedTableList.get(i).totalSubBoothsCount);
+                    feedData.setTotalSubBoothDiscussion(adminFeedTableList.get(i).totalSubBoothDiscussion);
+                    feedData.setTotalOpenIssuesCount(adminFeedTableList.get(i).totalOpenIssuesCount);
+                    feedData.setTotalBoothsDiscussion(adminFeedTableList.get(i).totalBoothsDiscussion);
+                    feedData.setTotalBoothsCount(adminFeedTableList.get(i).totalBoothsCount);
+                    feedData.setTotalAnnouncementCount(adminFeedTableList.get(i).totalAnnouncementCount);
+
+                    adminNotificationList.add(feedData);
+
+                }
+                feedAdminAdapter.add(adminNotificationList);
+            }
+            else
+            {
+                notificationApiCall();
+            }
         }
         else
         {
             binding.llNormalFeed.setVisibility(View.VISIBLE);
+
+            List<NotificationTable> notificationTableList = NotificationTable.getNotificationList(GroupDashboardActivityNew.groupId);
+
+            if (notificationTableList != null && notificationTableList.size() > 0)
+            {
+                notificationList.clear();
+                for (int i=0;i<notificationTableList.size();i++)
+                {
+                    NotificationListRes.NotificationListData notificationListData = new NotificationListRes.NotificationListData();
+                    notificationListData.setGroupId(notificationTableList.get(i).groupId);
+                    notificationListData.setUserId(notificationTableList.get(i).userId);
+                    notificationListData.setType(notificationTableList.get(i).type);
+                    notificationListData.setShowComment(notificationTableList.get(i).showComment);
+                    notificationListData.setPostId(notificationTableList.get(i).postId);
+                    notificationListData.setMessage(notificationTableList.get(i).message);
+                    notificationListData.setInsertedAt(notificationTableList.get(i).insertedAt);
+                    notificationListData.setCreatedByPhone(notificationTableList.get(i).createdByPhone);
+                    notificationListData.setCreatedByName(notificationTableList.get(i).createdByName);
+                    notificationListData.setCreatedByImage(notificationTableList.get(i).createdByImage);
+                    notificationListData.setCreatedById(notificationTableList.get(i).createdById);
+                    notificationListData.setTeamId(notificationTableList.get(i).teamId);
+
+                    notificationList.add(notificationListData);
+                }
+                if (notificationList.size()>2)
+                {
+                    feedAdapter.add(notificationList,2);
+                }
+                else
+                {
+                    feedAdapter.add(notificationList,notificationList.size());
+                }
+            }
+            else
+            {
+                notificationApiCall();
+            }
+        }
+    }
+
+    private void notificationApiCall() {
+
+        if (!isConnectionAvailable()) {
+            return;
+        }
+
+        if (mGroupItem.isAdmin)
+        {
+            manager.getAdminFeederList(this,GroupDashboardActivityNew.groupId,"isAdmin");
+        }
+        else
+        {
             manager.getNotificationList(this,GroupDashboardActivityNew.groupId);
         }
+
     }
 
     private void getTeams() {
@@ -651,13 +791,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         }
 
     }
+
+    @Override
+    public void setReadedComment(long idPrimary, Boolean readedComment) {
+
+    }
+
     public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {
 
         private ArrayList<AdminFeederResponse.FeedData> feedData;
-
-        public FeedAdminAdapter(ArrayList<AdminFeederResponse.FeedData> feedData) {
-            this.feedData = feedData;
-        }
 
         @NonNull
         @Override
@@ -679,7 +821,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             holder.binding.tvTotalPublicDiscussionCount.setText(String.valueOf(data.getTotalSubBoothDiscussion()));
         }
 
-
+        public void add(ArrayList<AdminFeederResponse.FeedData> feedData)
+        {
+            this.feedData = feedData;
+            notifyDataSetChanged();
+        }
 
         @Override
         public int getItemCount() {

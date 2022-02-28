@@ -44,6 +44,8 @@ import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
+import school.campusconnect.datamodel.feed.AdminFeedTable;
+import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
@@ -427,7 +429,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             if (this instanceof GroupDashboardActivityNew) {
                 menu.findItem(R.id.action_add_multi).setVisible(false);
 //                menu.findItem(R.id.action_add_count).setVisible(false);
-                menu.findItem(R.id.action_notification).setVisible(false);
+//                menu.findItem(R.id.action_notification).setVisible(false);
 
 
                 Fragment fm = this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -607,6 +609,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         BaseTeamTable.deleteAll();
         BaseTeamTableV2.deleteAll();
         TicketTBL.deleteAll();
+        NotificationTable.deleteAll();
+        AdminFeedTable.deleteAll();
 
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
@@ -645,6 +649,9 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         BaseTeamTable.deleteAll();
         BaseTeamTableV2.deleteAll();
         TicketTBL.deleteAll();
+        NotificationTable.deleteAll();
+        AdminFeedTable.deleteAll();
+
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();

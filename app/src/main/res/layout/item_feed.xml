@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <RelativeLayout
+        android:id="@+id/item"
+        android:clickable="true"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/padding_10dp"
@@ -29,6 +31,7 @@
                 android:background="@color/colorPrimary"/>
 
             <TextView
+                android:visibility="gone"
                 android:layout_toRightOf="@id/viewReaded"
                 android:layout_marginLeft="@dimen/padding_5dp"
                 android:id="@+id/tvTime"
@@ -41,6 +44,7 @@
 
             <View
                 android:id="@+id/view"
+                android:visibility="gone"
                 android:layout_marginLeft="@dimen/padding_10dp"
                 android:layout_toRightOf="@id/tvTime"
                 android:layout_width="1dp"

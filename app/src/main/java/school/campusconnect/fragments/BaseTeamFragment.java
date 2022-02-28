@@ -189,7 +189,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         }
         menuItem = menu.findItem(R.id.action_notification_list);
         menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
-        menuItem.setVisible(true);
+        menuItem.setVisible(false);
 
         if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
             menu.findItem(R.id.menu_add_team).setVisible(true);

@@ -55,13 +55,14 @@ import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.notificationList.NotificationListRes;
+import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 
-public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener {
+public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick {
     private static final String TAG = "BaseTeamFragmentv2";
 
 
@@ -70,11 +71,11 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
     private FeedAdapter feedAdapter;
     private Boolean isExpand = false;
     // PullRefreshLayout swipeRefreshLayout;
-    DatabaseHandler databaseHandler;
+    private DatabaseHandler databaseHandler;
     LeafPreference pref;
 
     ArrayList<BaseTeamv2Response.TeamListData> teamList = new ArrayList<>();
-
+    ArrayList<NotificationListRes.NotificationListData> notificationList = new ArrayList<>();
     boolean isVisible;
 
     private MenuItem menuItem;
@@ -142,7 +143,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         }
         menuItem = menu.findItem(R.id.action_notification_list);
         menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
-        menuItem.setVisible(true);
+        menuItem.setVisible(false);
 
         if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
             menu.findItem(R.id.menu_add_team).setVisible(true);
@@ -235,7 +236,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         pref = LeafPreference.getInstance(getActivity());
 
         databaseHandler = new DatabaseHandler(getActivity());
-        binding.rvFeed.setAdapter(new FeedAdapter());
+
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
@@ -244,7 +245,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         mAdapter = new TeamListAdapterNewV2(teamList,this,BuildConfig.AppCategory);
         binding.rvTeams.setAdapter(mAdapter);
 
-        feedAdapter = new FeedAdapter();
+        feedAdapter = new FeedAdapter(this);
+        feedAdapter.add(notificationList,0);
         binding.rvFeed.setAdapter(feedAdapter);
 
         binding.imgExpandFeedBefore.setOnClickListener(this);
@@ -260,6 +262,13 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         }
         binding.progressBar.setVisibility(View.VISIBLE);
         manager.myTeamListV2(this, GroupDashboardActivityNew.groupId);
+    }
+    private void notificationApiCall() {
+
+        if (!isConnectionAvailable()) {
+            return;
+        }
+        manager.getNotificationList(this,GroupDashboardActivityNew.groupId);
     }
     @Override
     public void onStart() {
@@ -352,7 +361,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 teamList.clear();
 
                 ArrayList<String> currentTopics = new ArrayList<>();
-                for (int i = 0; i < result.size(); i++) {
+                   for (int i = 0; i < result.size(); i++) {
 
                     BaseTeamTableV2 baseTeamTable = new BaseTeamTableV2();
 
@@ -402,21 +411,35 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
                 NotificationListRes res1 = (NotificationListRes) response;
                 List<NotificationListRes.NotificationListData> results = res1.getData();
-                AppLog.e(TAG, "notificationRes " + results);
+                AppLog.e(TAG, "notificationRes " + new Gson().toJson(results));
 
+                NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
 
-                int Count = 0;
+                notificationList.clear();
 
-                if (results.size()>2)
-                {
-                    Count = 2;
+                for (int i = 0; i < results.size(); i++) {
+
+                    NotificationTable notificationTable = new NotificationTable();
+                    NotificationListRes.NotificationListData notificationListData= results.get(i);
+                    notificationTable.teamId = notificationListData.getTeamId();
+                    notificationTable.groupId = notificationListData.getGroupId();
+                    notificationTable.userId = notificationListData.getUserId();
+                    notificationTable.type = notificationListData.getType();
+                    notificationTable.showComment = notificationListData.getShowComment();
+                    notificationTable.postId = notificationListData.getPostId();
+                    notificationTable.message = notificationListData.getMessage();
+                    notificationTable.insertedAt = notificationListData.getInsertedAt();
+                    notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+                    notificationTable.createdByName = notificationListData.getCreatedByName();
+                    notificationTable.createdByImage = notificationListData.getCreatedByImage();
+                    notificationTable.createdById = notificationListData.getCreatedById();
+                    notificationTable.readedComment = false;
+
+                    notificationTable.save();
+
                 }
-                else
-                {
-                    Count = results.size();
-                }
+                getNotification();
 
-                feedAdapter.add(results,Count);
                 break;
 
         }
@@ -556,9 +579,47 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     private void getNotification() {
 
-        manager.getNotificationList(this,GroupDashboardActivityNew.groupId);
+        List<NotificationTable> notificationTableList = NotificationTable.getNotificationList(GroupDashboardActivityNew.groupId);
 
+        if (notificationTableList != null && notificationTableList.size() > 0)
+        {
+            notificationList.clear();
+
+            for (int i=0;i<notificationTableList.size();i++)
+            {
+                NotificationListRes.NotificationListData notificationListData = new NotificationListRes.NotificationListData();
+                notificationListData.setGroupId(notificationTableList.get(i).groupId);
+                notificationListData.setUserId(notificationTableList.get(i).userId);
+                notificationListData.setType(notificationTableList.get(i).type);
+                notificationListData.setShowComment(notificationTableList.get(i).showComment);
+                notificationListData.setPostId(notificationTableList.get(i).postId);
+                notificationListData.setMessage(notificationTableList.get(i).message);
+                notificationListData.setInsertedAt(notificationTableList.get(i).insertedAt);
+                notificationListData.setCreatedByPhone(notificationTableList.get(i).createdByPhone);
+                notificationListData.setCreatedByName(notificationTableList.get(i).createdByName);
+                notificationListData.setCreatedByImage(notificationTableList.get(i).createdByImage);
+                notificationListData.setCreatedById(notificationTableList.get(i).createdById);
+                notificationListData.setTeamId(notificationTableList.get(i).teamId);
+                notificationListData.setIdPrimary(notificationTableList.get(i).getId());
+                notificationListData.setReadedComment(notificationTableList.get(i).readedComment);
+                Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
+                notificationList.add(notificationListData);
+            }
+            if (notificationList.size()>2)
+            {
+                feedAdapter.add(notificationList,2);
+            }
+            else
+            {
+                feedAdapter.add(notificationList,notificationList.size());
+            }
+        }
+        else
+        {
+            notificationApiCall();
+        }
     }
+
 
     private void getTeams() {
 
@@ -614,5 +675,11 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 }
                 break;
         }
+    }
+
+    @Override
+    public void setReadedComment(long idPrimary, Boolean readedComment) {
+
+        NotificationTable.updateNotification(readedComment,idPrimary);
     }
 }

@@ -424,6 +424,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     dashboardCount.groupId = groupId;
 
                     Fragment currFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
                     if (currFrag instanceof BaseTeamFragmentv2) {
                         boolean apiCall = false;
                         if (dashboardCount.lastApiCalled != 0) {
