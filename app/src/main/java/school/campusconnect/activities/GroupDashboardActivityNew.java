@@ -48,6 +48,7 @@ import school.campusconnect.fragments.PublicForumListFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -904,8 +905,11 @@ public class GroupDashboardActivityNew extends BaseActivity
     private void enableOptions() {
 
         AppLog.e(TAG,"mGroupItem.category"+mGroupItem.category);
+        AppLog.e(TAG,"mGroupItem.isAdmin"+mGroupItem.isAdmin);
+
+        //remove 3 option view discuss,my people and bookmarks 3-1-22
         if (mGroupItem.isAdmin) {
-            llDiscuss.setVisibility(View.VISIBLE);
+            llDiscuss.setVisibility(View.GONE);
         } else {
             llDiscuss.setVisibility(View.GONE);
         }
@@ -1402,12 +1406,14 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     public void groupSelected(MyTeamData group) {
 
+        Log.e(TAG,"Group Type "+group.type);
 
         if (group.type.equals("Video Class")) {
             Intent intent = new Intent(this, VideoClassActivity.class);
             intent.putExtra("title", group.name);
             intent.putExtra("category", group.category);
             startActivity(intent);
+
         }else if (group.type.equals("My Family")) {
             startActivity(new Intent(this, FamilyMemberActivity.class));
         }
@@ -1449,7 +1455,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 if (group.count == 1) {
                     if (group.type.equals("Home Work") || group.type.equals("Recorded Class")) {
                         intent = new Intent(this, HWClassSubjectActivity.class);
-                    } else if (group.type.equals("Marks Card")) {
+                } else if (group.type.equals("Marks Card")) {
                         intent = new Intent(this, MarksCardActivity2.class);
                     } else {
                         intent = new Intent(this, TimeTabelActivity2.class);
@@ -1746,10 +1752,21 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
         else {
+
+            Log.e(TAG,"GeneralPostFragment Start");
             setBackEnabled(true);
             tvToolbar.setText(group.name);
             tv_Desc.setText("Members : "+group.members);
-            tv_Desc.setVisibility(View.VISIBLE);
+
+            if (group.name.equalsIgnoreCase("Notice Board"))
+            {
+                tv_Desc.setVisibility(View.GONE);
+            }
+            else
+            {
+                tv_Desc.setVisibility(View.VISIBLE);
+            }
+
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(group.groupId)).addToBackStack("home").commitAllowingStateLoss();
             tabLayout.setVisibility(View.GONE);
         }

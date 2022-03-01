@@ -28,7 +28,7 @@
                 android:textSize="@dimen/text_size_20sp"
                 android:textColor="@color/colorTextDark"
                 style="@style/LabelNormal" />
-            <ImageView
+         <!--   <ImageView
                 android:id="@+id/imgRemove"
                 android:layout_width="@dimen/padding_30dp"
                 android:layout_gravity="center"
@@ -36,7 +36,7 @@
                 android:src="@drawable/ic_delete_black"
                 android:tint="@android:color/black"
                 android:layout_marginEnd="@dimen/dimen_16"
-                android:layout_height="@dimen/padding_30dp"/>
+                android:layout_height="@dimen/padding_30dp"/>-->
             <ImageView
                 android:id="@+id/imgDown"
                 android:layout_width="@dimen/padding_30dp"

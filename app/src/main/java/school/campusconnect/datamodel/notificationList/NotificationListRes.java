@@ -71,7 +71,7 @@ public class NotificationListRes extends BaseResponse {
 
         @SerializedName(value = "readedComment")
         @Expose
-        private Boolean readedComment;
+        private String readedComment;
 
         public long getIdPrimary() {
             return idPrimary;
@@ -81,11 +81,11 @@ public class NotificationListRes extends BaseResponse {
             this.idPrimary = idPrimary;
         }
 
-        public Boolean getReadedComment() {
+        public String getReadedComment() {
             return readedComment;
         }
 
-        public void setReadedComment(Boolean readedComment) {
+        public void setReadedComment(String readedComment) {
             this.readedComment = readedComment;
         }
 

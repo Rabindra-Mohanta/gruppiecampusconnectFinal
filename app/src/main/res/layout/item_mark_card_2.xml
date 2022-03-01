@@ -177,7 +177,7 @@
             android:layout_height="@dimen/list_button_height"
             android:layout_marginTop="@dimen/padding_10dp"
             android:layout_marginBottom="@dimen/padding_10dp"
-            android:text="@string/lbl_add" />
+            android:text="@string/lbl_edit" />
     </LinearLayout>
 
     <View

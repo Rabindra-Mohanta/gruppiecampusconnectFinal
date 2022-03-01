@@ -761,6 +761,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         Log.e("videoUrl : ", videoUrl);
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
+
         if (!isValueValidOnly(edtTitle)) {
             if (showToast)
                 Toast.makeText(this, "Please Enter Topic Name", Toast.LENGTH_SHORT).show();

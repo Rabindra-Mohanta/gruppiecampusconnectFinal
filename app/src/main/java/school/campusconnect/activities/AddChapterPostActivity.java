@@ -123,6 +123,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.img_image)
     ImageView img_image;
 
+    @Bind(R.id.imgAddChapter)
+    ImageView imgAddChapter;
+
     @Bind(R.id.img_youtube)
     ImageView img_youtube;
 
@@ -143,6 +146,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Bind(R.id.btnShare)
     Button btnShare;
+
+    @Bind(R.id.btnCancel)
+    Button btnCancel;
 
     @Bind(R.id.rvImages)
     RecyclerView rvImages;
@@ -202,7 +208,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private String receiverToken = "";
     private String receiverDeviceType = "";
     private ProgressDialog progressDialog;
-    private boolean isEdit;
+    private boolean isEdit = true;
     private String chapter_id;
     private ArrayList<ChapterRes.ChapterData> chapterList;
     private String sharePath;
@@ -258,7 +264,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         llYoutubeLink.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+        imgAddChapter.setOnClickListener(this);
+
         btnShare.setEnabled(false);
+
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -747,6 +757,23 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 addPost();
                 break;
 
+            case R.id.imgAddChapter:
+                imgAddChapter.setVisibility(View.GONE);
+                btnCancel.setVisibility(View.VISIBLE);
+                llTop.setVisibility(View.GONE);
+                edtTitle.setHint("");
+                cardChapterName.setVisibility(View.VISIBLE);
+                isEdit = false;
+                break;
+
+            case R.id.btnCancel:
+                imgAddChapter.setVisibility(View.VISIBLE);
+                btnCancel.setVisibility(View.GONE);
+                isEdit = true;
+                llTop.setVisibility(View.VISIBLE);
+                cardChapterName.setVisibility(View.GONE);
+                break;
+
             case R.id.llImage:
                 if (checkPermissionForWriteExternal()) {
                    /* if (listImages.size() > 0) {
@@ -826,13 +853,12 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void bindChapter() {
 
         if (chapterList != null && chapterList.size() > 0) {
-            llTop.setVisibility(View.VISIBLE);
-            cardChapterName.setVisibility(View.GONE);
-            String[] strChapter = new String[chapterList.size()+1];
+
+            String[] strChapter = new String[chapterList.size()];
             for (int i=0;i<chapterList.size();i++){
                 strChapter[i]=chapterList.get(i).chapterName;
             }
-            strChapter[strChapter.length-1]="Create New Chapter";
+
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner,strChapter);
             spChapter.setAdapter(adapter);
 
@@ -840,16 +866,19 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     AppLog.e(TAG, "onItemSelected : " + position);
-                    if(position==strChapter.length-1){
+                    /*if(position==strChapter.length-1){
                         cardChapterName.setVisibility(View.VISIBLE);
                         edtTitle.setText("");
                         isEdit = false;
                     }else {
-                        isEdit = true;
-                        edtTitle.setText(chapterList.get(position).chapterName);
-                        chapter_id = chapterList.get(position).chapterId;
-                        cardChapterName.setVisibility(View.GONE);
-                    }
+
+
+                    }*/
+
+/*                    edtTitle.setText("");
+                    edtTitle.setText(chapterList.get(position).chapterName);*/
+                    chapter_id = chapterList.get(position).chapterId;
+                   // cardChapterName.setVisibility(View.GONE);
 
                 }
 
@@ -863,6 +892,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             isEdit = false;
             llTop.setVisibility(View.GONE);
             cardChapterName.setVisibility(View.VISIBLE);
+            imgAddChapter.setVisibility(View.GONE);
         }
 
     }

@@ -96,6 +96,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void init() {
+
+        AppLog.e(TAG, "HWClassListFragment");
       /*  swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

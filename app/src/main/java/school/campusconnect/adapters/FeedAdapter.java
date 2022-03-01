@@ -55,7 +55,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         Log.e(TAG,"NotificationListData "+data.getIdPrimary());
         Log.e(TAG,"NotificationListData "+data.getReadedComment());
 
-        if (data.getReadedComment())
+        if (data.getReadedComment()!= null && data.getReadedComment().equalsIgnoreCase("true"))
         {
             holder.binding.llReaded.setBackground(context.getResources().getDrawable(R.drawable.feed_transparent_bg));
             holder.binding.viewReaded.setVisibility(View.VISIBLE);
@@ -72,7 +72,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 Log.e(TAG,"notificationClick "+data.getIdPrimary());
                 Log.e(TAG,"notificationClick "+data.getReadedComment());
 
-                if (data.getReadedComment())
+                if (data.getReadedComment().equalsIgnoreCase("true"))
                 {
                     onClick.setReadedComment(data.getIdPrimary(),false);
                     holder.binding.llReaded.setBackground(null);

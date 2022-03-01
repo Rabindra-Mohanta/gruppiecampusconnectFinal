@@ -53,7 +53,7 @@ public class NotificationTable extends Model {
     public String createdById;
 
     @Column(name  = "readedComment")
-    public Boolean readedComment;
+    public String readedComment;
 
     public static List<NotificationTable> getAll() {
         return new Select().from(NotificationTable.class).execute();
@@ -71,7 +71,7 @@ public class NotificationTable extends Model {
         new Delete().from(NotificationTable.class).execute();
     }
 
-    public static void updateNotification(Boolean value,long id) {
+    public static void updateNotification(String value,long id) {
         new Update(NotificationTable.class).set("readedComment = ?", value).where("Id = ?", id).execute();
     }
 }

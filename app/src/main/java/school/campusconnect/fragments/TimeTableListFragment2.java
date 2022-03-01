@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -177,7 +178,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
 
             holder.rvSession.setAdapter(new SessionAdapter(item.getSessions()));
 
-            if("admin".equalsIgnoreCase(role)){
+           /* if("admin".equalsIgnoreCase(role)){
                 holder.imgRemove.setVisibility(View.VISIBLE);
                 holder.imgRemove.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -187,7 +188,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
                 });
             }else {
                 holder.imgRemove.setVisibility(View.GONE);
-            }
+            }*/
 
         }
 
@@ -237,9 +238,6 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             @Bind(R.id.imgDown)
             ImageView imgDown;
 
-            @Bind(R.id.imgRemove)
-            ImageView imgRemove;
-
             @Bind(R.id.rvSession)
             RecyclerView rvSession;
 
@@ -252,6 +250,8 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     }
 
     private void deleteTimeTableDay(TimeTableList2Response.TimeTableData2 item) {
+
+        Log.e(TAG,"Which day delete :"+item.day);
         SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete time-table day?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

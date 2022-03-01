@@ -15,25 +15,40 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <include layout="@layout/layout_toolbar_home_back" />
+
+            <ImageView
+                android:id="@+id/imgAddChapter"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="@dimen/padding_5dp"
+                android:scaleType="centerCrop"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/btnShare"
+                android:src="@drawable/add_round"
+                />
+
+
             <Button
+                android:layout_alignParentRight="true"
                 android:id="@+id/btnShare"
                 android:layout_width="wrap_content"
-                android:layout_gravity="right|center"
+               android:layout_centerVertical="true"
                 android:background="@android:color/transparent"
                 android:text="Share"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:layout_height="wrap_content" />
-        </FrameLayout>
+        </RelativeLayout>
 
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:layout_above="@id/btnCancel"
         android:layout_width="match_parent"
         android:layout_below="@id/appBar"
         android:layout_height="match_parent">
@@ -66,11 +81,13 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
+
                     <Spinner
                         android:id="@+id/spChapter"
                         style="@style/RegEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height" />
+
                     <ImageView
                         android:layout_width="25dp"
                         android:src="@drawable/icon_down_white"
@@ -333,6 +350,19 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:visibility="gone"
+        style="@style/AddPostButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/padding_20dp"
+        android:layout_marginTop="@dimen/padding_20dp"
+        android:layout_marginEnd="@dimen/padding_20dp"
+        android:layout_marginBottom="@dimen/padding_20dp"
+        android:text="@string/places_cancel" />
 
     <ProgressBar
         android:id="@+id/progressBar"

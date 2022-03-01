@@ -444,6 +444,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     notificationTable.createdByName = notificationListData.getCreatedByName();
                     notificationTable.createdByImage = notificationListData.getCreatedByImage();
                     notificationTable.createdById = notificationListData.getCreatedById();
+                    notificationTable.readedComment = "true";
 
                     notificationTable.save();
 
@@ -689,6 +690,10 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     notificationListData.setCreatedByImage(notificationTableList.get(i).createdByImage);
                     notificationListData.setCreatedById(notificationTableList.get(i).createdById);
                     notificationListData.setTeamId(notificationTableList.get(i).teamId);
+                    notificationListData.setIdPrimary(notificationTableList.get(i).getId());
+                    Log.e(TAG,"ID "+notificationTableList.get(i).readedComment);
+                    notificationListData.setReadedComment(notificationTableList.get(i).readedComment);
+                    Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
 
                     notificationList.add(notificationListData);
                 }
@@ -794,7 +799,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void setReadedComment(long idPrimary, Boolean readedComment) {
-
+        NotificationTable.updateNotification(String.valueOf(readedComment),idPrimary);
+        getNotification();
     }
 
     public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {

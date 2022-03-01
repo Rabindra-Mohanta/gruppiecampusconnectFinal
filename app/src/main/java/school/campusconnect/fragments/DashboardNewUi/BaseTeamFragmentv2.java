@@ -433,7 +433,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                     notificationTable.createdByName = notificationListData.getCreatedByName();
                     notificationTable.createdByImage = notificationListData.getCreatedByImage();
                     notificationTable.createdById = notificationListData.getCreatedById();
-                    notificationTable.readedComment = false;
+                    notificationTable.readedComment = "true";
 
                     notificationTable.save();
 
@@ -585,6 +585,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         {
             notificationList.clear();
 
+            Log.e(TAG,"size notification table list "+notificationTableList.size());
+
             for (int i=0;i<notificationTableList.size();i++)
             {
                 NotificationListRes.NotificationListData notificationListData = new NotificationListRes.NotificationListData();
@@ -601,6 +603,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 notificationListData.setCreatedById(notificationTableList.get(i).createdById);
                 notificationListData.setTeamId(notificationTableList.get(i).teamId);
                 notificationListData.setIdPrimary(notificationTableList.get(i).getId());
+                Log.e(TAG,"ID "+notificationTableList.get(i).readedComment);
                 notificationListData.setReadedComment(notificationTableList.get(i).readedComment);
                 Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
                 notificationList.add(notificationListData);
@@ -680,6 +683,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void setReadedComment(long idPrimary, Boolean readedComment) {
 
-        NotificationTable.updateNotification(readedComment,idPrimary);
+        NotificationTable.updateNotification(String.valueOf(readedComment),idPrimary);
+        getNotification();
     }
 }

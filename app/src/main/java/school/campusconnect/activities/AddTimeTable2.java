@@ -2,10 +2,13 @@ package school.campusconnect.activities;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,10 +48,11 @@ import school.campusconnect.utils.AppLog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import school.campusconnect.views.SMBDialogUtils;
 
 public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
 
-    private static final String TAG = "CreateTeamActivity";
+    private static final String TAG = "AddTimeTable2";
     @Bind(R.id.spDay)
     Spinner spDay;
 
@@ -75,6 +79,9 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
     private String team_id;
     private String day = "";
     private String period = "";
+
+    private ArrayList<TimeTableList2Response.SessionsTimeTable> periodList = new ArrayList<>();
+    private String periodLast;
     private ArrayList<SubjectStaffTTResponse.SubjectStaffTTData> subjStaffList;
     private ArrayList<SubjectStaffTTResponse.SubjectStaffTTData> subjStaffListDialog;
 
@@ -92,6 +99,32 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         LeafManager leafManager = new LeafManager();
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getSubjectStaffTT(this, GroupDashboardActivityNew.groupId, team_id, subStaffTTReq);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_delete_tt,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+
+            case R.id.menu_delete:
+                SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete time-table day?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        LeafManager leafManager=new LeafManager();
+                        progressBar.setVisibility(View.VISIBLE);
+                        leafManager.deleteTTNewByDay(AddTimeTable2.this,GroupDashboardActivityNew.groupId,team_id,day);
+                    }
+                });
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
@@ -115,6 +148,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         days[4] = "Friday";
         days[5] = "Saturday";
         days[6] = "Sunday";
+
         ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, days);
         spDay.setAdapter(bloodGrpAdapter);
 
@@ -124,6 +158,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 day = (position + 1) + "";
+                Log.e(TAG,"day "+day);
                 callCurrentTimeTableApi();
             }
 
@@ -227,6 +262,11 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 Toast.makeText(this, "Successfully Added Time Table", Toast.LENGTH_SHORT).show();
                 callCurrentTimeTableApi();
                 break;
+
+            case LeafManager.API_TT_REMOVE_DAY:
+                finish();
+                break;
+
             case LeafManager.API_TT_ADD:
                 progressBar.setVisibility(View.GONE);
                 SubjectStaffTTResponse res = (SubjectStaffTTResponse) response;
@@ -247,9 +287,13 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 if (res2.getData() != null && res2.getData().size() > 0 && res2.getData().get(0).getSessions() != null) {
                     rvTimeTable.setAdapter(new SessionAdapter(res2.getData().get(0).getSessions()));
                     et_period.setText((res2.getData().get(0).getSessions().size() + 1) + "");
+                    periodList = res2.getData().get(0).getSessions();
+                    periodLast = res2.getData().get(0).getSessions().size() + 1 + "";
                 } else {
+                    periodList = new ArrayList<>();
                     rvTimeTable.setAdapter(new SessionAdapter(null));
                     et_period.setText("1");
+                    periodLast = 1 + "";
                 }
                 break;
         }
@@ -391,9 +435,31 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         et_period_dialog.setText(item.getPeriod());
         spSubject_dialog = dialog.findViewById(R.id.spSubject);
         spStaff_dialog = dialog.findViewById(R.id.spStaff);
+
+
         dialog.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Log.e(TAG,"Last Index of Period Item"+periodLast);
+
+                if (periodList.size() > 0)
+                {
+                    for (int i = 0;i<periodList.size();i++)
+                    {
+                        if (periodList.get(i).getPeriod().toLowerCase().trim().equalsIgnoreCase(et_period_dialog.getText().toString().toLowerCase().trim()))
+                        {
+                            Toast.makeText(AddTimeTable2.this, "Period Value Already Used...", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                }
+
+                if (periodLast.equalsIgnoreCase(et_period_dialog.getText().toString().toLowerCase().trim()))
+                {
+                    Toast.makeText(AddTimeTable2.this, "Period Value Already Used...", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(spSubject_dialog.getSelectedItemPosition()==-1 || spStaff_dialog.getSelectedItemPosition()==-1){
                     Toast.makeText(AddTimeTable2.this, "Please Select Subject and Staff", Toast.LENGTH_SHORT).show();
                     return;
