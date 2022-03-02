@@ -1,6 +1,5 @@
 package school.campusconnect.datamodel.notificationList;
 
-
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -10,10 +9,9 @@ import com.activeandroid.query.Update;
 
 import java.util.List;
 
-import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
+@Table(name = "AllNotificationTable")
 
-@Table(name = "NotificationTable")
-public class NotificationTable extends Model {
+public class AllNotificationTable extends Model {
 
     @Column(name  = "groupId")
     public String groupId;
@@ -54,24 +52,20 @@ public class NotificationTable extends Model {
     @Column(name  = "readedComment")
     public String readedComment;
 
-    public static List<NotificationTable> getAll() {
-        return new Select().from(NotificationTable.class).execute();
+    public static List<AllNotificationTable> getAll() {
+        return new Select().from(AllNotificationTable.class).execute();
     }
 
-    public static List<NotificationTable> getNotificationList(String group_id) {
-        return new Select().from(NotificationTable.class).where("groupId = ?", group_id).execute();
+    public static List<AllNotificationTable> getAllNotificationList(String group_id) {
+        return new Select().from(AllNotificationTable.class).where("groupId = ?", group_id).execute();
     }
 
-    public static void deleteNotification(String group_id) {
-        new Delete().from(NotificationTable.class).where("groupId = ?", group_id).execute();
+    public static void deleteAllNotification(String group_id) {
+        new Delete().from(AllNotificationTable.class).where("groupId = ?", group_id).execute();
     }
 
     public static void deleteAll() {
-        new Delete().from(NotificationTable.class).execute();
+        new Delete().from(AllNotificationTable.class).execute();
     }
 
-    public static void updateNotification(String value,long id) {
-        new Update(NotificationTable.class).set("readedComment = ?", value).where("Id = ?", id).execute();
-    }
 }
-

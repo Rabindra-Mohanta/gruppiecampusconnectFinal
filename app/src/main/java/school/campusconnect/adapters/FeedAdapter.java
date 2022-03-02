@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.logging.Handler;
 
 import school.campusconnect.R;
 import school.campusconnect.databinding.ItemFeedBinding;
@@ -52,8 +53,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         holder.binding.tvTime.setText(MixOperations.getFormattedDate(data.getInsertedAt(), Constants.DATE_FORMAT));
         holder.binding.tvdesc.setText(data.getMessage());
 
-        Log.e(TAG,"NotificationListData "+data.getIdPrimary());
-        Log.e(TAG,"NotificationListData "+data.getReadedComment());
 
         if (data.getReadedComment()!= null && data.getReadedComment().equalsIgnoreCase("true"))
         {
@@ -69,20 +68,45 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG,"notificationClick "+data.getIdPrimary());
-                Log.e(TAG,"notificationClick "+data.getReadedComment());
+
+               // onClick.onItemClick(data);
 
                 if (data.getReadedComment().equalsIgnoreCase("true"))
                 {
-                    onClick.setReadedComment(data.getIdPrimary(),false);
-                    holder.binding.llReaded.setBackground(null);
-                    holder.binding.viewReaded.setVisibility(View.INVISIBLE);
+                  //  onClick.setReadedComment(data.getIdPrimary(),false);
+                    onClick.onItemClick(data,false);
+                 /*   holder.binding.llReaded.setBackground(null);
+                    holder.binding.viewReaded.setVisibility(View.INVISIBLE);*/
                 }
                 else
                 {
-                    onClick.setReadedComment(data.getIdPrimary(),true);
-                    holder.binding.llReaded.setBackground(context.getResources().getDrawable(R.drawable.feed_transparent_bg));
-                    holder.binding.viewReaded.setVisibility(View.VISIBLE);
+                  //  onClick.setReadedComment(data.getIdPrimary(),true);
+                    onClick.onItemClick(data,true);
+                  /*  holder.binding.llReaded.setBackground(context.getResources().getDrawable(R.drawable.feed_transparent_bg));
+                    holder.binding.viewReaded.setVisibility(View.VISIBLE);*/
+                }
+            }
+        });
+
+        holder.binding.tvdesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // onClick.onItemClick(data);
+
+                if (data.getReadedComment().equalsIgnoreCase("true"))
+                {
+                    //  onClick.setReadedComment(data.getIdPrimary(),false);
+                    onClick.onItemClick(data,false);
+                 /*   holder.binding.llReaded.setBackground(null);
+                    holder.binding.viewReaded.setVisibility(View.INVISIBLE);*/
+                }
+                else
+                {
+                    //  onClick.setReadedComment(data.getIdPrimary(),true);
+                    onClick.onItemClick(data,true);
+                  /*  holder.binding.llReaded.setBackground(context.getResources().getDrawable(R.drawable.feed_transparent_bg));
+                    holder.binding.viewReaded.setVisibility(View.VISIBLE);*/
                 }
             }
         });
@@ -147,5 +171,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public interface onClick
     {
         public void setReadedComment(long idPrimary, Boolean readedComment);
+        public void onItemClick(NotificationListRes.NotificationListData data,Boolean readComment);
     }
 }

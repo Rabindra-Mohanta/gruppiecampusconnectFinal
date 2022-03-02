@@ -226,7 +226,6 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
                 if (currentPage == 1) {
                     PostDataItem.deleteGeneralPosts(mGroupId+"");
                     listData.clear();
-
                     listData.addAll(res.data);
                     AppLog.e(TAG, "current page 1");
 

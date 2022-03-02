@@ -81,6 +81,21 @@ public class StudentRes extends BaseResponse {
         @Expose
         public String address;
 
+        @SerializedName("aadharNumber")
+        @Expose
+        public String aadharNumber;
+
+        @SerializedName("religion")
+        @Expose
+        public String religion;
+
+        @SerializedName("caste")
+        @Expose
+        public String caste;
+
+        @SerializedName("bloodGroup")
+        @Expose
+        public String bloodGroup;
 
         @SerializedName("countryCode")
         @Expose
@@ -116,6 +131,14 @@ public class StudentRes extends BaseResponse {
 
         public void setUserId(String userId) {
             this.userId = userId;
+        }
+
+        public String getBloodGroup() {
+            return bloodGroup;
+        }
+
+        public void setBloodGroup(String bloodGroup) {
+            this.bloodGroup = bloodGroup;
         }
 
         public String getTeamId() {
@@ -244,6 +267,30 @@ public class StudentRes extends BaseResponse {
 
         public void setAdmissionNumber(String admissionNumber) {
             this.admissionNumber = admissionNumber;
+        }
+
+        public String getAadharNumber() {
+            return aadharNumber;
+        }
+
+        public void setAadharNumber(String aadharNumber) {
+            this.aadharNumber = aadharNumber;
+        }
+
+        public String getReligion() {
+            return religion;
+        }
+
+        public void setReligion(String religion) {
+            this.religion = religion;
+        }
+
+        public String getCaste() {
+            return caste;
+        }
+
+        public void setCaste(String caste) {
+            this.caste = caste;
         }
 
         public String getAddress() {

@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -30,8 +32,12 @@ import school.campusconnect.activities.GalleryActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.PeopleActivity;
 import school.campusconnect.activities.ReadMoreActivity;
+import school.campusconnect.adapters.TicketsAdapter;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.PostDataItem;
+import school.campusconnect.datamodel.notificationList.AllNotificationTable;
 import school.campusconnect.datamodel.notificationList.NotificationListRes;
+import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
@@ -47,23 +53,30 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
 
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
-
-
+    LeafManager leafManager;
+    List<NotificationListRes.NotificationListData> notificationList = new ArrayList<>();
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
     private boolean isNest;
     private String userId;
+    PeopleAdapter adapter;
+    public int totalPages = 1;
+    public int currentPage = 1;
+    public boolean mIsLoading = false;
+    public int Offset = 0;
 
+    public boolean isFirstTime = true;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification_list,container,false);
         ButterKnife.bind(this,view);
-        rvPeople.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-        LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        //rvPeople.setLayoutManager(new LinearLayoutManager(getActivity()));
+        inits();
+
+
 
         Bundle bundle=getArguments();
 
@@ -75,26 +88,167 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
 
         if(!isNest)
         {
-            progressBar.setVisibility(View.VISIBLE);
+          /*  progressBar.setVisibility(View.VISIBLE);
             //leafManager.getMyPeople(this,GroupDashboardActivityNew.groupId);
-            leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId);
+            leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId);*/
+
+            getNotificationListApi();
+
+           // getDataLocally();
+
         }
         else
         {
-            progressBar.setVisibility(View.VISIBLE);
+           /* progressBar.setVisibility(View.VISIBLE);
             leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId);
+*/
+            getNotificationListApi();
+           // getDataLocally();
+
         }
         return view;
     }
 
+    private void getDataLocally() {
+
+        List<AllNotificationTable> notificationTableList = AllNotificationTable.getAllNotificationList(GroupDashboardActivityNew.groupId);
+
+        if (notificationTableList != null && notificationTableList.size() > 0)
+        {
+            Log.e(TAG,"size notification table list "+notificationTableList.size());
+
+            notificationList.clear();
+
+            for (int i=0;i<notificationTableList.size();i++)
+            {
+                NotificationListRes.NotificationListData notificationListData = new NotificationListRes.NotificationListData();
+                notificationListData.setGroupId(notificationTableList.get(i).groupId);
+                notificationListData.setUserId(notificationTableList.get(i).userId);
+                notificationListData.setType(notificationTableList.get(i).type);
+                notificationListData.setShowComment(notificationTableList.get(i).showComment);
+                notificationListData.setPostId(notificationTableList.get(i).postId);
+                notificationListData.setMessage(notificationTableList.get(i).message);
+                notificationListData.setInsertedAt(notificationTableList.get(i).insertedAt);
+                notificationListData.setCreatedByPhone(notificationTableList.get(i).createdByPhone);
+                notificationListData.setCreatedByName(notificationTableList.get(i).createdByName);
+                notificationListData.setCreatedByImage(notificationTableList.get(i).createdByImage);
+                notificationListData.setCreatedById(notificationTableList.get(i).createdById);
+                notificationListData.setTeamId(notificationTableList.get(i).teamId);
+                notificationListData.setIdPrimary(notificationTableList.get(i).getId());
+                Log.e(TAG,"ID "+notificationTableList.get(i).readedComment);
+                notificationListData.setReadedComment(notificationTableList.get(i).readedComment);
+                Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
+                notificationList.add(notificationListData);
+            }
+            adapter.notifyDataSetChanged();
+        }
+        else
+        {
+            getNotificationListApi();
+        }
+
+    }
+
+    private void getNotificationListApi() {
+
+        if(isConnectionAvailable())
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            mIsLoading = true;
+            leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId,String.valueOf(currentPage));
+        }
+        else {
+            showNoNetworkMsg();
+        }
+    }
+
+
+    private void inits() {
+
+        leafManager= new LeafManager();
+
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        rvPeople.setLayoutManager(manager);
+        adapter = new PeopleAdapter(notificationList);
+        rvPeople.setAdapter(adapter);
+
+        rvPeople.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = manager.getChildCount();
+                int totalItemCount = manager.getItemCount();
+                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
+                int lastVisibleItemPosition = manager.findLastVisibleItemPosition();
+
+                if (!mIsLoading && totalPages > currentPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0
+                    ) {
+                        currentPage = currentPage + 1;
+                       /// Offset = Offset + 20;
+                        getNotificationListApi();
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+
         progressBar.setVisibility(View.GONE);
+
         NotificationListRes res = (NotificationListRes) response;
+        totalPages = res.getTotalNumberOfPages();
+        AppLog.e(TAG, "totalPages " + totalPages);
         List<NotificationListRes.NotificationListData> result = res.getData();
         AppLog.e(TAG, "notificationRes " + result);
+        mIsLoading = false;
 
-        rvPeople.setAdapter(new PeopleAdapter(result));
+        if (isFirstTime)
+        {
+            AllNotificationTable.deleteAllNotification(GroupDashboardActivityNew.groupId);
+            isFirstTime = false;
+        }
+        for (int i = 0; i < result.size(); i++) {
+
+            AllNotificationTable notificationTable = new AllNotificationTable();
+            NotificationListRes.NotificationListData notificationListData= result.get(i);
+            notificationTable.teamId = notificationListData.getTeamId();
+            notificationTable.groupId = notificationListData.getGroupId();
+            notificationTable.userId = notificationListData.getUserId();
+            notificationTable.type = notificationListData.getType();
+            notificationTable.showComment = notificationListData.getShowComment();
+            notificationTable.postId = notificationListData.getPostId();
+            notificationTable.message = notificationListData.getMessage();
+            notificationTable.insertedAt = notificationListData.getInsertedAt();
+            notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+            notificationTable.createdByName = notificationListData.getCreatedByName();
+            notificationTable.createdByImage = notificationListData.getCreatedByImage();
+            notificationTable.createdById = notificationListData.getCreatedById();
+            notificationTable.readedComment = "true";
+
+            notificationTable.save();
+
+        }
+
+        getDataLocally();
+
+       /* if (currentPage == 1) {
+            notificationList.clear();
+            notificationList.addAll(res.getData());
+            AppLog.e(TAG, "current page 1");
+        } else {
+            notificationList.addAll(res.getData());
+            AppLog.e(TAG, "current page " + currentPage);
+        }
+        adapter.notifyDataSetChanged();*/
     }
 
     @Override
@@ -174,6 +328,10 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
                 if(list.size()==0)
                 {
                     txtEmpty.setText("No Notification found.");
+                }
+                else
+                {
+                    txtEmpty.setText("");
                 }
                 return list.size();
             }

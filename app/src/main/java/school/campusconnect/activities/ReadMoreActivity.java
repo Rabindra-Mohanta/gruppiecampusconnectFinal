@@ -1,6 +1,9 @@
 package school.campusconnect.activities;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -447,6 +450,16 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         AppLog.e(TAG, "type : " + type);
         AppLog.e(TAG, "team_id : " + mTeamId);
         AppLog.e(TAG, "userId : " + userId);
+
+        txt_title.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager cManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData cData = ClipData.newPlainText("text", txt_title.getText());
+                cManager.setPrimaryClip(cData);
+                return true;
+            }
+        });
     }
 
     private void getData() {

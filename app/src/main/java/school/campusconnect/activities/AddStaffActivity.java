@@ -53,6 +53,13 @@ public class AddStaffActivity extends BaseActivity {
     @Bind(R.id.etPhone)
     public EditText etPhone;
 
+    @Bind(R.id.etdob)
+    public EditText etdob;
+
+    @Bind(R.id.etAadhar)
+    public EditText etAadhar;
+
+
     @Bind(R.id.btnAdd)
     public Button btnAdd;
 
@@ -71,8 +78,7 @@ public class AddStaffActivity extends BaseActivity {
     @Bind(R.id.etQuali)
     public EditText etQuali;
 
-    @Bind(R.id.etdob)
-    public EditText etdob;
+
     @Bind(R.id.etdoj)
     public EditText etdoj;
     @Bind(R.id.etReligion)
@@ -201,8 +207,14 @@ public class AddStaffActivity extends BaseActivity {
 
         if (isEdit) {
             studentData = new Gson().fromJson(getIntent().getStringExtra("staff_data"), StaffResponse.StaffData.class);
+
+
+            Log.e(TAG,"student Data"+new Gson().toJson(studentData));
+
             etName.setText(studentData.name);
             etPhone.setText(studentData.phone);
+            etdob.setText(studentData.dob);
+            etAadhar.setText(studentData.aadharNumber);
             etStudentId.setText(studentData.staffId);
             etDesig.setText(studentData.designation);
             etClass.setText(studentData.className);
@@ -272,6 +284,8 @@ public class AddStaffActivity extends BaseActivity {
                     } else {
                         addStudentReq.gender = "";
                     }
+                    addStudentReq.aadharNumber = etAadhar.getText().toString();
+                    addStudentReq.dob = etdob.getText().toString();
                     addStudentReq.DOJ = etdob.getText().toString();
                     addStudentReq.qualification = etQuali.getText().toString();
                     addStudentReq.religion = etReligion.getText().toString();

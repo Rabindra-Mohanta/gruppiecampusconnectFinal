@@ -205,6 +205,7 @@
     <string name="msg_uploady">Please Upload A File Or Enter Video URL.</string>
     <string name="msg_upload2"> File And Video Can\'t Be Posted Same Time.</string>
     <string name="msg_termnotaccepted">Please Accept Terms And Conditions.</string>
+    <string name="msg_AddharValidate">Aadhar Card Number Length is 12 Digits.</string>
     <string name="msg_selectcountry">Please Select Country To Proceed.</string>
     <string name="msg_or">Or</string>
 
@@ -444,6 +445,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_no_user_found">No User Found</string>
     <string name="lbl_classes">All Classes</string>
     <string name="lbl_class_name">Class</string>
+    <string name="lbl_addharCard">Aadhaar Card</string>
     <string name="lbl_add_class">Add Class</string>
     <string name="lbl_add_tikit">Add Ticket</string>
     <string name="lbl_tikit">Tickets</string>
@@ -642,6 +644,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_booth_number">Booth Number*</string>
     <string name="lbl_booth_address">Booth Address*</string>
     <string name="lbl_booth_about">Booth About*</string>
+    <string name="lbl_print_attendance_report">Print Attendance Report</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

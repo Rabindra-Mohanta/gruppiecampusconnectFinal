@@ -67,9 +67,16 @@ public class StaffResponse extends BaseResponse {
         @SerializedName("bloodGroup")
         @Expose
         public String bloodGroup;
+
+        @SerializedName("dob")
+        @Expose
+        public String dob;
+
         @SerializedName("aadharNumber")
         @Expose
         public String aadharNumber;
+
+
         public boolean isSelected;
 
         @SerializedName("isAllowedToPost")
@@ -210,6 +217,14 @@ public class StaffResponse extends BaseResponse {
 
         public void setDesignation(String designation) {
             this.designation = designation;
+        }
+
+        public String getDob() {
+            return dob;
+        }
+
+        public void setDob(String dob) {
+            this.dob = dob;
         }
     }
 }

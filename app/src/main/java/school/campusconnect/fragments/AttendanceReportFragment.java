@@ -1,9 +1,16 @@
 package school.campusconnect.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,7 +24,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -25,13 +40,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.activities.AttendanceDetailActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.MixOperations;
 
@@ -63,8 +82,10 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     public ProgressBar progressBar;
     Calendar calendar;
     private ArrayList<ClassResponse.ClassData> listClass;
+    private ArrayList<AttendanceReportRes.AttendanceReportData> attendanceReportList;
     private String selectedTeamId="";
     private String className="";
+    private String classNameExcel="";
 
     @Nullable
     @Override
@@ -102,6 +123,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(listClass!=null){
                     selectedTeamId = listClass.get(i).getId();
+                    classNameExcel = listClass.get(i).getName();
                     getAttendanceReport();
                 }
             }
@@ -157,6 +179,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         }
         else {
             AttendanceReportRes res = (AttendanceReportRes) response;
+            attendanceReportList = res.result;
             rvStudents.setAdapter(new ReportStudentAdapter(res.result));
         }
 
@@ -220,6 +243,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+
             @Bind(R.id.tvRollNo) TextView tvRollNo;
 
             @Bind(R.id.tvName) TextView tvName;
@@ -241,6 +265,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             }
         }
     }
+
     private void editStudent(AttendanceReportRes.AttendanceReportData studentData) {
         Intent intent = new Intent(getActivity(), AttendanceDetailActivity.class);
         intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
@@ -250,5 +275,100 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         intent.putExtra("userId",studentData.getUserId());
         intent.putExtra("rollNo",studentData.getRollNumber());
         startActivity(intent);
+    }
+
+
+    private boolean checkPermissionForWriteExternal() {
+        int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            AppLog.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            AppLog.e("External" + "permission", "checkpermission , denied");
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
+            }
+            return false;
+        }
+    }
+    public void exportDataToCSV() {
+
+        if (!checkPermissionForWriteExternal()) {
+            return;
+        }
+
+        File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        File csvFolder = new File(mainFolder,"Excel");
+        if (!csvFolder.exists()) {
+            csvFolder.mkdir();
+        }
+        File file = new File(csvFolder, classNameExcel+"_"+tvMonth.getText().toString() + ".xls");
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet firstSheet = workbook.createSheet(classNameExcel+"_"+tvMonth.getText().toString());
+
+            HSSFRow rowA = firstSheet.createRow(0);
+            rowA.createCell(0).setCellValue("Roll No");
+            rowA.createCell(1).setCellValue("Name");
+            rowA.createCell(2).setCellValue("Morning Attendance");
+            rowA.createCell(3).setCellValue("Evening Attendance");
+
+
+            if (attendanceReportList != null)
+            {
+                for(int i=0;i<attendanceReportList.size();i++){
+
+                    AttendanceReportRes.AttendanceReportData item = attendanceReportList.get(i);
+                    HSSFRow rowData = firstSheet.createRow(i + 1);
+                    rowData.createCell(0).setCellValue(item.getRollNumber());
+                    rowData.createCell(1).setCellValue(item.getStudentName());
+                    rowData.createCell(2).setCellValue(item.getMorningPresentCount()+"("+item.getTotalMorningAttendance()+")");
+                    rowData.createCell(3).setCellValue(item.getAfternoonPresentCount()+"("+item.getTotalAfternoonAttendance()+")");
+
+                }
+            }
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file);
+                workbook.write(fos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            shareFile(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void shareFile(File file) {
+        Uri uriFile;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            uriFile = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
+        } else {
+            uriFile = Uri.fromFile(file);
+        }
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile) ;
+        sharingIntent.setType("text/csv");
+        startActivity(Intent.createChooser(sharingIntent, "share file with"));
     }
 }

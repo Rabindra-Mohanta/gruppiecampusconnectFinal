@@ -1255,7 +1255,7 @@ public interface LeafService {
 
     @GET("/api/v1/groups/{group_id}/notifications/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<NotificationListRes> getNotificationList(@Path("group_id") String groupId);
+    Call<NotificationListRes> getNotificationList(@Path("group_id") String groupId,@Query("page") String page);
 
     @GET("/api/v1/groups/{groupId}/post/{postId}/read")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

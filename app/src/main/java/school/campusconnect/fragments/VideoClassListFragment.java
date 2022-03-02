@@ -68,9 +68,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1499,6 +1501,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 progressBar.setVisibility(View.GONE);
                 progressBarZoom.setVisibility(View.GONE);
 
+
+             //   startTimer();
                 /*if (getActivity() != null) {
                     ((VideoClassActivity) getActivity()).startBubbleService();
                 }*/
@@ -1523,6 +1527,23 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             }
         }
     };
+
+    private void startTimer() {
+
+        timer = new CountDownTimer(15000, 1000) {
+            @Override
+            public void onTick(long l) {
+
+              Log.e(TAG,"timer Count Down "+  l / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                Log.e(TAG,"onFinish ");
+
+            }
+        }.start();
+    }
 
     CountDownTimer timer;
     long timeOfStopMeeting;
@@ -1921,5 +1942,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
     }
+
 
 }

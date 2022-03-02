@@ -112,6 +112,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getDataLocally() {
+
         List<ClassListTBL> list = ClassListTBL.getAll(GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
             ArrayList<ClassResponse.ClassData> result = new ArrayList<>();

@@ -10,9 +10,21 @@ import school.campusconnect.datamodel.BaseResponse;
 
 public class NotificationListRes extends BaseResponse {
 
+    @SerializedName("totalNumberOfPages")
+    @Expose
+    public int totalNumberOfPages;
+
     @SerializedName("data")
     @Expose
     public List<NotificationListData> data;
+
+    public int getTotalNumberOfPages() {
+        return totalNumberOfPages;
+    }
+
+    public void setTotalNumberOfPages(int totalNumberOfPages) {
+        this.totalNumberOfPages = totalNumberOfPages;
+    }
 
     public List<NotificationListData> getData() {
         return data;

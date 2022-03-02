@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,11 +42,14 @@ import java.util.List;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.CalendarActivity;
 import school.campusconnect.activities.ChangePasswordActivity;
 import school.campusconnect.activities.CreateTeamActivity;
+import school.campusconnect.activities.GalleryActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.NotificationListActivity;
 import school.campusconnect.activities.ProfileActivity2;
+import school.campusconnect.activities.ReadMoreActivity;
 import school.campusconnect.adapters.FeedAdapter;
 import school.campusconnect.adapters.TeamListAdapterNewV2;
 import school.campusconnect.database.DatabaseHandler;
@@ -725,7 +729,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         }
         else
         {
-            manager.getNotificationList(this,GroupDashboardActivityNew.groupId);
+            manager.getNotificationList(this,GroupDashboardActivityNew.groupId,"1");
         }
 
     }
@@ -799,8 +803,99 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void setReadedComment(long idPrimary, Boolean readedComment) {
-        NotificationTable.updateNotification(String.valueOf(readedComment),idPrimary);
-        getNotification();
+       /* NotificationTable.updateNotification(String.valueOf(readedComment),idPrimary);
+        getNotification();*/
+    }
+    public void onItemClick(NotificationListRes.NotificationListData item,Boolean readComment)
+    {
+        AppLog.d(TAG,"onItemClick()");
+
+        Intent i = new Intent(getContext(), ReadMoreActivity.class);
+        Bundle bundle = new Bundle();
+
+        if("schoolCalendar".equals(item.getType())){
+            startActivity(new Intent(getContext(), CalendarActivity.class).putExtra("date",item.getInsertedAt()));
+            return;
+        }
+
+        if("groupPost".equals(item.getType()) && !item.getShowComment())
+        {
+            //then redirect to "/api/v1/groups/{groupId}/post/{postId}/read"
+            bundle.putString("groupId",item.getGroupId());
+            bundle.putString("postId",item.getPostId());
+            bundle.putString("type",item.getType());
+            bundle.putString("userId",item.getUserId());
+            i.putExtras(bundle);
+            startActivity(i);
+        }
+        else if("gallery".equals(item.getType()) && !item.getShowComment())
+        {
+            startActivity(new Intent(getContext(), GalleryActivity.class));
+        }
+        else   if("teamPost".equals(item.getType()) && !item.getShowComment())
+        {
+            //"/api/v1/groups/{groupId}/team/{teamId}/post/{postId}/read"
+            bundle.putString("groupId",item.getGroupId());
+            bundle.putString("teamId",item.getTeamId());
+            bundle.putString("postId",item.getPostId());
+            bundle.putString("type",item.getType());
+            bundle.putString("userId",item.getCreatedById());
+            i.putExtras(bundle);
+            startActivity(i);
+        }
+        else if("individualPost".equals(item.getType()) && !item.getShowComment())
+        {
+            //"/api/v1/groups/{groupId}/user/{userId}/post/{postId}/read"
+            bundle.putString("groupId",item.getGroupId());
+            bundle.putString("userId",item.getUserId());
+            bundle.putString("postId",item.getPostId());
+            bundle.putString("type",item.getType());
+            i.putExtras(bundle);
+            startActivity(i);
+        }
+        else if("groupPostComment".equals(item.getType()) && item.getShowComment())
+        {
+            //"/api/v1/groups/{groupId}/post/{postId}/read"
+            bundle.putString("groupId",item.getGroupId());
+            bundle.putString("postId",item.getPostId());
+            bundle.putString("type",item.getType());
+            bundle.putString("userId",item.getUserId());
+            i.putExtras(bundle);
+            startActivity(i);
+        }
+        else if("teamPostComment".equals(item.getType())  && item.getShowComment())
+        {
+            ///api/v1/groups/{groupId}/team/{teamId}/post/{postId}/read"
+            bundle.putString("groupId",item.getGroupId());
+            bundle.putString("teamId",item.getTeamId());
+            bundle.putString("postId",item.getPostId());
+            bundle.putString("type",item.getType());
+            bundle.putString("userId",item.getCreatedById());
+            i.putExtras(bundle);
+            startActivity(i);
+
+        }
+        else if("individualPostComment".equals(item.getType()) && item.getShowComment())
+        {
+            ///api/v1/groups/{groupId}/user/{userId}/post/{postId}/read"
+            bundle.putString("groupId",item.getGroupId());
+            bundle.putString("userId",item.getUserId());
+            bundle.putString("postId",item.getPostId());
+            bundle.putString("type",item.getType());
+            i.putExtras(bundle);
+            startActivity(i);
+        }
+
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NotificationTable.updateNotification(String.valueOf(readComment),item.getIdPrimary());
+                getNotification();
+            }
+        },1000);
+
     }
 
     public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {

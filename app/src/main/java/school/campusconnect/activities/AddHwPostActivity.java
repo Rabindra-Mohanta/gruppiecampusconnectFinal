@@ -437,6 +437,10 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                     progressDialog.show();
                     uploadToAmazone(mainRequest);
                 }
+                else
+                {
+                    manager.addHwPost(this, group_id, team_id, subject_id, mainRequest);
+                }
             }
         } else {
             showNoNetworkMsg();
@@ -777,7 +781,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
             return false;
         }*/
 
-        if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
+       /* if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
             if (showToast)
                 Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
             valid = false;
@@ -787,7 +791,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
             removeImage();
             removePdf();
             Toast.makeText(this, "" + getResources().getString(R.string.msg_upload2), Toast.LENGTH_SHORT).show();
-        }
+        }*/
         AppLog.e(TAG, "valid : " + valid);
         return valid;
     }

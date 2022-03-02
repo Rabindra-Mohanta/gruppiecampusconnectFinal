@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +70,18 @@ public class AddClassStudentActivity extends BaseActivity {
     @Bind(R.id.etsection)
     public EditText etsection;
 
+    @Bind(R.id.etAadhar)
+    public EditText etAadhar;
+
+    @Bind(R.id.etReligion)
+    public EditText etReligion;
+
+    @Bind(R.id.etCast)
+    public EditText etCast;
+
+    @Bind(R.id.etBlood)
+    public Spinner etBlood;
+
     @Bind(R.id.etdob)
     public EditText etdob;
     @Bind(R.id.etdoj)
@@ -117,6 +131,7 @@ public class AddClassStudentActivity extends BaseActivity {
         String[] str = getResources().getStringArray(R.array.array_country);
         etCountry.setText(str[0]);
 
+
         setImageFragment();
     }
     @Override
@@ -157,10 +172,20 @@ public class AddClassStudentActivity extends BaseActivity {
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
         isEdit = getIntent().getBooleanExtra("isEdit",false);
+
+        String[] bloodGrpArray = getResources().getStringArray(R.array.blood_group);
+        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
+        etBlood.setAdapter(bloodGrpAdapter);
+
         if(isEdit){
             studentData = new Gson().fromJson(getIntent().getStringExtra("student_data"), StudentRes.StudentData.class);
+
+            Log.e(TAG,"student Data"+new Gson().toJson(studentData));
             etName.setText(studentData.name);
             etPhone.setText(studentData.phone);
+            etAadhar.setText(studentData.aadharNumber);
+            etReligion.setText(studentData.religion);
+            etCast.setText(studentData.caste);
             etStudentId.setText(studentData.studentId);
             etAdmissionNumber.setText(studentData.admissionNumber);
             etRollNo.setText(studentData.rollNumber);
@@ -175,6 +200,13 @@ public class AddClassStudentActivity extends BaseActivity {
             etEmail.setText(studentData.email);
             etAddress.setText(studentData.address);
             etPhone.setEnabled(false);
+
+            for (int i = 0; i < bloodGrpArray.length; i++) {
+                if (bloodGrpArray[i].equals(studentData.bloodGroup)) {
+                    etBlood.setSelection(i);
+                    break;
+                }
+            }
         }
 
     }
@@ -216,6 +248,9 @@ public class AddClassStudentActivity extends BaseActivity {
                     addStudentReq.admissionNumber = etAdmissionNumber.getText().toString();
                     addStudentReq.rollNumber = etRollNo.getText().toString();
                     addStudentReq._class = etClass.getText().toString();
+                    addStudentReq.aadharNumber = etAadhar.getText().toString();
+                    addStudentReq.religion = etReligion.getText().toString();
+                    addStudentReq.caste = etCast.getText().toString();
                     addStudentReq.section = etsection.getText().toString();
                     addStudentReq.dob = etdob.getText().toString();
                     addStudentReq.doj = etdoj.getText().toString();

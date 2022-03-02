@@ -4359,12 +4359,12 @@ public class LeafManager {
     }
 
 
-    public void getNotificationList(OnCommunicationListener listener, String groupId) {
+    public void getNotificationList(OnCommunicationListener listener, String groupId,String Page) {
 
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<NotificationListRes> model = service.getNotificationList(groupId);
+        final Call<NotificationListRes> model = service.getNotificationList(groupId,Page);
         ResponseWrapper<NotificationListRes> wrapper = new ResponseWrapper<>(model);
 
         AppLog.e(TAG, model.request().url().toString());

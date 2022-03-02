@@ -113,6 +113,7 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
             mGroupId = GroupDashboardActivityNew.groupId;
             teamId = classData.getId();
         }
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
