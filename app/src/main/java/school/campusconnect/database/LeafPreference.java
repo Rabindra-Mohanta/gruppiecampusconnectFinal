@@ -59,6 +59,8 @@ public class LeafPreference {
     public static String Subscribed_Teams="Subscribed_Teams";
     public static final String OFFLINE_VIDEONAMES = "offlinevideonames";
 
+    public static final String VIDEO_CALL_START_TIME = "videocallstarttime";
+
     private LeafPreference(Context context) {
         sPref = context.getSharedPreferences("nnr.electionleaf", Context.MODE_PRIVATE);
         sEditor = sPref.edit();

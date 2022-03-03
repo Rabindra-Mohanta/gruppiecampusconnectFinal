@@ -3,6 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="Add/Update Time Table"
         android:id="@+id/menu_add"
-        android:icon="@drawable/ic_vector_add"
+        android:icon="@drawable/posticon"
         app:showAsAction="ifRoom"/>
 </menu>

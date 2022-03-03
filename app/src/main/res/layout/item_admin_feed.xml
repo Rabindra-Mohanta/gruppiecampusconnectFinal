@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/padding_10dp"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalOpenIssueTickets"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                   />
+
+
+                <TextView
+                    android:id="@+id/tvTotalOpenIssue"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalAnnouncementsCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalAnnouncementCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalBoothCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalBoothCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalBoothsDiscussionCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalBoothsDiscussionCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalPublicStreetsCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalPublicStreetsCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalPublicDiscussionCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalPublicDiscussionCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

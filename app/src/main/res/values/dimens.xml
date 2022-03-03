@@ -67,7 +67,7 @@
 
 
     <dimen name="user_image_size">50dp</dimen>
-
+    <dimen name="user_image_size_v2">40dp</dimen>
     <dimen name="floating_button_size">56dp</dimen>
 
 

@@ -387,6 +387,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     progressDialog.setMessage("Preparing Pdf...");
                     progressDialog.show();
                     uploadToAmazone(mainRequest);
+
                 } else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     mainRequest.fileType = fileTypeImageOrVideo;
                     Log.e(TAG, "send data " + new Gson().toJson(mainRequest));
@@ -641,6 +642,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             }
 
         } else {
+
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
 
             TransferObserver observer ;
@@ -723,11 +725,16 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         Log.e("videoUrl : ", videoUrl);
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
-        if (!isValueValidOnly(edtTitle)) {
-            if (showToast)
-                Toast.makeText(this, "Please Enter Chapter Name", Toast.LENGTH_SHORT).show();
-            return false;
+
+        if (edtTitle.getVisibility() == View.VISIBLE)
+        {
+            if (!isValueValidOnly(edtTitle)) {
+                if (showToast)
+                    Toast.makeText(this, "Please Enter Chapter Name", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
+
         if (!isValueValidOnly(edtDesc)) {
             if (showToast)
                 Toast.makeText(this, "Please Enter Topic Name", Toast.LENGTH_SHORT).show();

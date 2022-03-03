@@ -3,13 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:layout_marginTop="@dimen/padding_5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <!-- Your main layout here -->
+    <androidx.cardview.widget.CardView
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true"
+        android:layout_marginHorizontal="@dimen/padding_15dp"
+        app:cardCornerRadius="@dimen/padding_5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/rlMain"
             android:layout_width="match_parent"
-            android:padding="@dimen/padding_10dp"
+            android:padding="@dimen/padding_15dp"
             android:layout_height="match_parent" >
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgTeam"
@@ -63,10 +70,9 @@
                 android:paddingBottom="@dimen/padding_5dp"
                 android:paddingRight="16dp" />
         </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+        <!-- Your main layout here -->
 
 
-    <View
-        android:layout_width="match_parent"
-        android:background="@color/color_divider"
-        android:layout_height="0.1dp"/>
+
 </LinearLayout>

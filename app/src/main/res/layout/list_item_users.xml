@@ -2,80 +2,91 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+
+    <androidx.cardview.widget.CardView
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true"
+        android:layout_marginHorizontal="@dimen/padding_15dp"
+        app:cardCornerRadius="@dimen/padding_5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-
         <RelativeLayout
-            android:id="@+id/relative_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/list_divider"
-            android:padding="10dp">
+            android:layout_height="wrap_content">
 
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_lead"
-                android:layout_width="@dimen/user_image_size"
-                android:layout_height="@dimen/user_image_size"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/icon_default_user" />
-
-            <ImageView
-                android:id="@+id/img_lead_default"
-                android:layout_width="@dimen/user_image_size"
-                android:layout_height="@dimen/user_image_size"
-                android:visibility="invisible"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/icon_default_user" />
-
-            <LinearLayout
-                android:id="@+id/relative"
+            <RelativeLayout
+                android:id="@+id/relative_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/img_lead"
+                android:background="@drawable/list_divider"
+                android:padding="10dp">
 
-                android:layout_toStartOf="@+id/img_call"
-                android:orientation="vertical">
 
-                <com.scopely.fontain.views.FontTextView
-                    android:id="@+id/txt_name"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_lead"
+                    android:layout_width="@dimen/user_image_size_v2"
+                    android:layout_height="@dimen/user_image_size_v2"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/icon_default_user" />
+
+                <ImageView
+                    android:id="@+id/img_lead_default"
+                    android:layout_width="@dimen/user_image_size_v2"
+                    android:layout_height="@dimen/user_image_size_v2"
+                    android:visibility="invisible"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/icon_default_user" />
+
+                <LinearLayout
+                    android:id="@+id/relative"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:paddingEnd="@dimen/padding_16dp"
-                    android:paddingStart="16dp"
-                    android:text="ssd"
-                    android:textColor="@color/color_grey_icon"
-                    android:textAppearance="@style/TextAppearance.Regular"
-                    app:caps_mode="words"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/txt_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@id/img_lead"
 
-                    android:gravity="center_vertical"
-                    android:paddingEnd="@dimen/padding_16dp"
-                    android:paddingStart="16dp"
-                    android:text="ssd"
-                    android:textColor="@color/color_grey_icon"
-                    android:textAppearance="@style/TextAppearance.Light"
-                    android:textSize="14sp" />
+                    android:layout_toStartOf="@+id/img_call"
+                    android:orientation="vertical">
+
+                    <com.scopely.fontain.views.FontTextView
+                        android:id="@+id/txt_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:paddingEnd="@dimen/padding_16dp"
+                        android:paddingStart="16dp"
+                        android:text="ssd"
+                        android:textColor="@color/color_grey_icon"
+                        android:textAppearance="@style/TextAppearance.Regular"
+                        app:caps_mode="words"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/txt_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/img_lead"
+
+                        android:gravity="center_vertical"
+                        android:paddingEnd="@dimen/padding_16dp"
+                        android:paddingStart="16dp"
+                        android:text="ssd"
+                        android:textColor="@color/color_grey_icon"
+                        android:textAppearance="@style/TextAppearance.Light"
+                        android:textSize="14sp" />
 
 
-            </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+
         </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
-
-    </RelativeLayout>
 </LinearLayout>

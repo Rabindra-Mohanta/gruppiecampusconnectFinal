@@ -51,6 +51,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+import com.zipow.videobox.confapp.SuspendFeature;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -69,6 +70,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -148,7 +150,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     boolean videoClassClicked = false;
 
-
+    boolean isFirstTime = true;
     ClassesAdapter classesAdapter = new ClassesAdapter();
     private ArrayList<SubjectStaffResponse.SubjectData> subjectList;
     private ArrayList<VideoClassResponse.ClassData> result;
@@ -870,6 +872,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void startMeeting() {
+
         try {
             Log.e(TAG, "On Click To startMeeting called : " + item.createdByName);
 
@@ -1497,10 +1500,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
             Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
 
+            long saveTime = 0;
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
                 progressBar.setVisibility(View.GONE);
                 progressBarZoom.setVisibility(View.GONE);
 
+                saveTime = System.currentTimeMillis();
+            //    LeafPreference.getInstance(getContext()).setString(LeafPreference.VIDEO_CALL_START_TIME,item.className+"_"+getCurrentTimeStamp());
 
              //   startTimer();
                 /*if (getActivity() != null) {
@@ -1517,16 +1523,104 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 isZoomStarted = false;
 
+
+
+
+
+                if (isFirstTime)
+                {
+                  /*  Log.e(TAG,"prefrence save time"+ LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME));
+                    String savedTime = LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME);
+
+                    String[] savedValuePart = savedTime.split("_");
+                    String StartTime = savedValuePart[1];*/
+
+                    if(checkTiming(saveTime))
+                    {
+                        isFirstTime = false;
+                        LeafPreference.getInstance(getContext()).remove(LeafPreference.VIDEO_CALL_START_TIME);
+                        new SendNotificationResume(item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        startZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, "", item.className, item.jitsiToken);
+                    }
+                    else
+                    {
+                        dialogMeetingConfirmation();
+                    }
+                }
+                else
+                {
+                    dialogMeetingConfirmation();
+                }
+
           /*      try {
                     ((VideoClassActivity) getActivity()).removeBubble();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }*/
 
-                dialogMeetingConfirmation();
+
             }
+
         }
     };
+
+    public String getCurrentTimeStamp(){
+        try {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentDateTime = dateFormat.format(new Date()); // Find todays date
+            return currentDateTime;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    private boolean checkTiming(long time) {
+
+        long diff = System.currentTimeMillis() - time;
+
+        if (diff >= (5*60*1000))
+        {
+            return true;
+        }
+
+
+     /*   Log.e(TAG,"time "+time);
+
+        try {
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date oldDate = format.parse(time);
+
+            Date currentDate = new Date();
+
+            long seconds = diff / 1000;
+            long minutes = seconds / 60;
+            long hours = minutes / 60;
+            long days = hours / 24;
+
+            Log.e(TAG,"Hours "+hours);
+            Log.e(TAG,"minutes "+minutes);
+            Log.e(TAG,"seconds "+seconds);
+            Log.e(TAG,"days "+days);
+
+            if (minutes >= 1 || minutes <=3)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+            Log.e(TAG,"Exception "+e.getMessage());
+        }*/
+        return false;
+    }
 
     private void startTimer() {
 

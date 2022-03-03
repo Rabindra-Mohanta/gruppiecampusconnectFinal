@@ -2,96 +2,105 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
-
+    <androidx.cardview.widget.CardView
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true"
+        android:layout_marginHorizontal="@dimen/padding_15dp"
+        app:cardCornerRadius="@dimen/padding_5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-
         <RelativeLayout
-            android:id="@+id/relative"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/list_divider"
-            android:padding="10dp">
+            android:layout_height="wrap_content">
 
-
-            <ImageView
-                android:id="@+id/img_chat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:paddingEnd="16dp"
-                android:src="@drawable/ic_chat" />
-
-            <ImageView
-                android:id="@+id/img_call"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/img_chat"
-                android:paddingEnd="16dp"
-                android:src="@drawable/ic_phone" />
 
             <RelativeLayout
-                android:id="@+id/relative_name"
+                android:id="@+id/relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:background="@drawable/list_divider"
+                android:padding="@dimen/padding_15dp">
 
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_lead"
-                    android:layout_width="@dimen/user_image_size"
-                    android:layout_height="@dimen/user_image_size"
-                    android:layout_alignParentStart="true"
-                    android:src="@drawable/icon_default_user" />
 
                 <ImageView
-                    android:id="@+id/img_lead_default"
-                    android:layout_width="@dimen/user_image_size"
-                    android:layout_height="@dimen/user_image_size"
-                    android:layout_alignParentStart="true"
-                    android:visibility="invisible"
-                    android:src="@drawable/icon_default_user" />
+                    android:id="@+id/img_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:paddingEnd="16dp"
+                    android:src="@drawable/ic_chat" />
 
-                <LinearLayout android:orientation="vertical" android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/img_lead"
-                    android:layout_width="wrap_content"   android:paddingStart="16dp"   android:paddingEnd="4dp"
-                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/img_chat"
+                    android:paddingEnd="16dp"
+                    android:src="@drawable/ic_phone" />
 
-                    <com.scopely.fontain.views.FontTextView
-                        android:id="@+id/txt_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:text="ssd"
-                        android:singleLine="true"
-                        android:textColor="@color/color_grey_icon"
-                        android:textAppearance="@style/TextAppearance.Regular"
-                        app:caps_mode="words"
-                        android:textSize="16sp" />
+                <RelativeLayout
+                    android:id="@+id/relative_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
 
-                    <TextView
-                        android:id="@+id/txt_phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_lead"
+                        android:layout_width="@dimen/user_image_size_v2"
+                        android:layout_height="@dimen/user_image_size_v2"
+                        android:layout_alignParentStart="true"
+                        android:src="@drawable/icon_default_user" />
 
-                        android:gravity="center_vertical"
-                        android:text=""
-                        android:textColor="@color/color_grey_icon"
-                        android:textAppearance="@style/TextAppearance.Light"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                    <ImageView
+                        android:id="@+id/img_lead_default"
+                        android:layout_width="@dimen/user_image_size_v2"
+                        android:layout_height="@dimen/user_image_size_v2"
+                        android:layout_alignParentStart="true"
+                        android:visibility="invisible"
+                        android:src="@drawable/icon_default_user" />
+
+                    <LinearLayout android:orientation="vertical" android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/img_lead"
+                        android:layout_width="wrap_content"   android:paddingStart="16dp"   android:paddingEnd="4dp"
+                        android:layout_height="wrap_content">
+
+                        <com.scopely.fontain.views.FontTextView
+                            android:id="@+id/txt_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="ssd"
+                            android:singleLine="true"
+                            android:textColor="@color/color_grey_icon"
+                            android:textAppearance="@style/TextAppearance.Regular"
+                            app:caps_mode="words"
+                            android:textSize="16sp" />
+
+
+                        <TextView
+                            android:id="@+id/txt_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:gravity="center_vertical"
+                            android:text=""
+                            android:textColor="@color/color_grey_icon"
+                            android:textAppearance="@style/TextAppearance.Light"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
+
+
         </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
-
-    </RelativeLayout>
 </LinearLayout>
