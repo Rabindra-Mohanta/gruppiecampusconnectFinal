@@ -62,6 +62,10 @@ public class NotificationTable extends Model {
         return new Select().from(NotificationTable.class).where("groupId = ?", group_id).execute();
     }
 
+    public static List<NotificationTable> getAllNotificationList(String group_id,int page) {
+        return new Select().from(NotificationTable.class).where("groupId = ?", group_id).orderBy("datetime(insertedAt) DESC").limit(20).offset((page-1)*20).execute();
+    }
+
     public static void deleteNotification(String group_id) {
         new Delete().from(NotificationTable.class).where("groupId = ?", group_id).execute();
     }

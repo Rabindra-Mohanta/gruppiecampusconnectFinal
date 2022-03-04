@@ -22,6 +22,12 @@ public class TeamCountTBL extends Model {
     @Column(name = "lastApiCalled")
     public long lastApiCalled;
 
+    @Column(name = "lastApiCalledNotification")
+    public long lastApiCalledNotification;
+
+    @Column(name = "lastNotificationAt")
+    public String lastNotificationAt;
+
     @Column(name = "lastInsertedTeamTime")
     public String lastInsertedTeamTime;
 

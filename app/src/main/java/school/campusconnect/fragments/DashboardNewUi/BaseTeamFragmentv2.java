@@ -405,11 +405,17 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 mAdapter.notifyDataSetChanged();
 
                 TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
+
+                Log.e(TAG,"dashboardCount"+dashboardCount);
+
                 if (dashboardCount != null) {
+                    Log.e(TAG,"dashboardCount"+dashboardCount);
                     dashboardCount.lastApiCalled = System.currentTimeMillis();
                     dashboardCount.save();
                 }
+
                 subscribeUnsubscribeTeam(currentTopics);
+
                 break;
 
             case LeafManager.API_NOTIFICATION_LIST:
@@ -444,6 +450,12 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
                 }
                 getNotification();
+
+                TeamCountTBL dashboardCountv2 = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
+                if (dashboardCountv2 != null) {
+                    dashboardCountv2.lastApiCalledNotification = System.currentTimeMillis();
+                    dashboardCountv2.save();
+                }
 
                 break;
 
@@ -613,9 +625,9 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
                 notificationList.add(notificationListData);
             }
-            if (notificationList.size()>2)
+            if (notificationList.size()>3)
             {
-                feedAdapter.add(notificationList,2);
+                feedAdapter.add(notificationList,3);
             }
             else
             {
@@ -651,6 +663,13 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         if (apiCall) {
             AppLog.e(TAG, "---- Refresh Team -----");
             apiCall();
+        }
+    }
+    public void checkAndRefreshNotification(boolean apiCall) {
+        AppLog.e(TAG, "---- Refresh Team -----"+apiCall);
+        if (apiCall) {
+            AppLog.e(TAG, "---- Refresh Team -----");
+            notificationApiCall();
         }
     }
 

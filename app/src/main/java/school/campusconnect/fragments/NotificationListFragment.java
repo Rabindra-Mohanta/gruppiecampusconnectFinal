@@ -33,6 +33,7 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.PeopleActivity;
 import school.campusconnect.activities.ReadMoreActivity;
 import school.campusconnect.adapters.TicketsAdapter;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.notificationList.AllNotificationTable;
@@ -86,15 +87,19 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
             userId=bundle.getString("userId","");
         }
 
+        if (LeafPreference.getInstance(getActivity()).getString(LeafPreference.TOTAL_PAGE_NOTIFICATION) != null && !LeafPreference.getInstance(getActivity()).getString(LeafPreference.TOTAL_PAGE_NOTIFICATION).isEmpty())
+        {
+            totalPages = Integer.parseInt(LeafPreference.getInstance(getActivity()).getString(LeafPreference.TOTAL_PAGE_NOTIFICATION));
+        }
         if(!isNest)
         {
           /*  progressBar.setVisibility(View.VISIBLE);
             //leafManager.getMyPeople(this,GroupDashboardActivityNew.groupId);
             leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId);*/
 
-            getNotificationListApi();
+            //getNotificationListApi();
 
-           // getDataLocally();
+            getDataLocally(currentPage);
 
         }
         else
@@ -102,22 +107,22 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
            /* progressBar.setVisibility(View.VISIBLE);
             leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId);
 */
-            getNotificationListApi();
+            getDataLocally(currentPage);
            // getDataLocally();
 
         }
         return view;
     }
 
-    private void getDataLocally() {
+    private void getDataLocally(int currentPage) {
 
-        List<AllNotificationTable> notificationTableList = AllNotificationTable.getAllNotificationList(GroupDashboardActivityNew.groupId);
+        List<AllNotificationTable> notificationTableList = AllNotificationTable.getAllNotificationList(GroupDashboardActivityNew.groupId,currentPage);
 
         if (notificationTableList != null && notificationTableList.size() > 0)
         {
             Log.e(TAG,"size notification table list "+notificationTableList.size());
 
-            notificationList.clear();
+           // notificationList.clear();
 
             for (int i=0;i<notificationTableList.size();i++)
             {
@@ -135,9 +140,7 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
                 notificationListData.setCreatedById(notificationTableList.get(i).createdById);
                 notificationListData.setTeamId(notificationTableList.get(i).teamId);
                 notificationListData.setIdPrimary(notificationTableList.get(i).getId());
-                Log.e(TAG,"ID "+notificationTableList.get(i).readedComment);
                 notificationListData.setReadedComment(notificationTableList.get(i).readedComment);
-                Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
                 notificationList.add(notificationListData);
             }
             adapter.notifyDataSetChanged();
@@ -149,8 +152,26 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
 
     }
 
-    private void getNotificationListApi() {
+    public void callNotification(Boolean isEvent) {
 
+        Log.e(TAG,"Refresh notification list"+isEvent);
+        if (isEvent)
+        {
+            if(isConnectionAvailable())
+            {
+                progressBar.setVisibility(View.VISIBLE);
+                mIsLoading = true;
+                leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId,String.valueOf(currentPage));
+            }
+            else {
+                showNoNetworkMsg();
+            }
+        }
+
+    }
+
+    private void getNotificationListApi()
+    {
         if(isConnectionAvailable())
         {
             progressBar.setVisibility(View.VISIBLE);
@@ -161,7 +182,6 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
             showNoNetworkMsg();
         }
     }
-
 
     private void inits() {
 
@@ -192,11 +212,17 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
                     ) {
                         currentPage = currentPage + 1;
                        /// Offset = Offset + 20;
-                        getNotificationListApi();
+                        getDataLocally(currentPage);
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        callNotification(GroupDashboardActivityNew.notificationApiCall);
     }
 
     @Override
@@ -207,15 +233,16 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
         NotificationListRes res = (NotificationListRes) response;
         totalPages = res.getTotalNumberOfPages();
         AppLog.e(TAG, "totalPages " + totalPages);
+        LeafPreference.getInstance(getActivity()).setString(LeafPreference.TOTAL_PAGE_NOTIFICATION,String.valueOf(totalPages));
         List<NotificationListRes.NotificationListData> result = res.getData();
         AppLog.e(TAG, "notificationRes " + result);
         mIsLoading = false;
 
-        if (isFirstTime)
+     /*   if (isFirstTime)
         {
             AllNotificationTable.deleteAllNotification(GroupDashboardActivityNew.groupId);
             isFirstTime = false;
-        }
+        }*/
         for (int i = 0; i < result.size(); i++) {
 
             AllNotificationTable notificationTable = new AllNotificationTable();
@@ -238,7 +265,7 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
 
         }
 
-        getDataLocally();
+        getDataLocally(currentPage);
 
        /* if (currentPage == 1) {
             notificationList.clear();

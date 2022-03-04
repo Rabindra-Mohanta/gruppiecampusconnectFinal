@@ -58,7 +58,7 @@ public class LeafPreference {
     public static final String ISWALKTHROUGHDONE = "walkthrough";
     public static String Subscribed_Teams="Subscribed_Teams";
     public static final String OFFLINE_VIDEONAMES = "offlinevideonames";
-
+    public static final String TOTAL_PAGE_NOTIFICATION = "totalpagenotification";
     public static final String VIDEO_CALL_START_TIME = "videocallstarttime";
 
     private LeafPreference(Context context) {

@@ -44,6 +44,7 @@ import school.campusconnect.fragments.BoothListFragment;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.MemberTeamListFragment;
+import school.campusconnect.fragments.NotificationListFragment;
 import school.campusconnect.fragments.PublicForumListFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
@@ -199,6 +200,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     public static String image;
     public static boolean mAllowPostAll;
+    public static boolean notificationApiCall = false;
     public static int imageHeight;
     public static String share_image;
     public static int imageWidth;
@@ -381,6 +383,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                         groupCount.oldCount = teamCount.schoolGroupCount;
                     }
                     groupCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
+                    groupCount.lastNotificationAt = teamCount.lastNotificationAt;
                     groupCount.count = teamCount.schoolGroupCount;
                     groupCount.groupId = groupId;
                     groupCount.save();
@@ -396,6 +399,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                         liveCount.typeOfTeam = "LIVE";
                         liveCount.oldCount = teamCount.liveClassTeamCount;
                     }
+                    liveCount.lastNotificationAt = teamCount.lastNotificationAt;
                     liveCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
                     liveCount.count = teamCount.liveClassTeamCount;
                     liveCount.groupId = groupId;
@@ -408,6 +412,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                         allCount.typeOfTeam = "ALL";
                         allCount.oldCount = teamCount.getAllClassTeamCount;
                     }
+                    allCount.lastNotificationAt = teamCount.lastNotificationAt;
                     allCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
                     allCount.count = teamCount.getAllClassTeamCount;
                     allCount.groupId = groupId;
@@ -420,6 +425,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                         dashboardCount.typeOfTeam = "DASHBOARD";
                         dashboardCount.oldCount = teamCount.dashboardTeamCount;
                     }
+                    dashboardCount.lastNotificationAt = teamCount.lastNotificationAt;
                     dashboardCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
                     dashboardCount.count = teamCount.dashboardTeamCount;
                     dashboardCount.groupId = groupId;
@@ -428,9 +434,16 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                     if (currFrag instanceof BaseTeamFragmentv2) {
                         boolean apiCall = false;
+                        boolean apiCallNotification = false;
                         if (dashboardCount.lastApiCalled != 0) {
                             if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
                                 apiCall = true;
+                            }
+                        }
+
+                        if (dashboardCount.lastApiCalledNotification != 0) {
+                            if (MixOperations.isNewEvent(dashboardCount.lastNotificationAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalledNotification)) {
+                                apiCallNotification = true;
                             }
                         }
 
@@ -439,10 +452,38 @@ public class GroupDashboardActivityNew extends BaseActivity
                             dashboardCount.save();
                             apiCall = true;
                         }
+                        notificationApiCall = apiCallNotification;
                         ((BaseTeamFragmentv2) currFrag).checkAndRefresh(apiCall);
+                        ((BaseTeamFragmentv2) currFrag).checkAndRefreshNotification(apiCallNotification);
                     }
-                    dashboardCount.save();
 
+                    if (currFrag instanceof BaseTeamFragmentv3) {
+                        boolean apiCall = false;
+                        boolean apiCallNotification = false;
+                        if (dashboardCount.lastApiCalled != 0) {
+                            if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
+                                apiCall = true;
+                            }
+                        }
+
+                        if (dashboardCount.lastApiCalledNotification != 0) {
+                            if (MixOperations.isNewEvent(dashboardCount.lastNotificationAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalledNotification)) {
+                                apiCallNotification = true;
+                            }
+                        }
+
+                        if (dashboardCount.oldCount != dashboardCount.count) {
+                            dashboardCount.oldCount = dashboardCount.count;
+                            dashboardCount.save();
+                            apiCall = true;
+                        }
+                        notificationApiCall = apiCallNotification;
+                        ((BaseTeamFragmentv3) currFrag).checkAndRefresh(apiCall);
+                        ((BaseTeamFragmentv3) currFrag).checkAndRefreshNotification(apiCallNotification);
+
+                    }
+
+                    dashboardCount.save();
 
                     ArrayList<UpdateDataEventRes.SubjectCountList> subCountList = res.data.get(0).subjectCountList;
                     for (int i = 0; i < subCountList.size(); i++) {

@@ -57,6 +57,9 @@ public class UpdateDataEventRes extends BaseResponse {
         @SerializedName("liveClassTeamCount")
         @Expose
         public int liveClassTeamCount;
+        @SerializedName("lastNotificationAt")
+        @Expose
+        public String lastNotificationAt;
         @SerializedName("lastInsertedTeamTime")
         @Expose
         public String lastInsertedTeamTime;

@@ -453,20 +453,13 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     notificationTable.save();
 
                 }
-                notificationList.addAll(results);
+                getNotification();
 
-                int Count = 0;
-
-                if (notificationList.size()>2)
-                {
-                    Count = 2;
+                TeamCountTBL dashboardCountv2 = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
+                if (dashboardCountv2 != null) {
+                    dashboardCountv2.lastApiCalledNotification = System.currentTimeMillis();
+                    dashboardCountv2.save();
                 }
-                else
-                {
-                    Count = notificationList.size();
-                }
-
-                feedAdapter.add(notificationList,Count);
 
                 break;
 
@@ -500,6 +493,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 }
                 adminNotificationList.addAll(res1Data);
                 feedAdminAdapter.add(adminNotificationList);
+
+
                 break;
 
         }
@@ -701,9 +696,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                     notificationList.add(notificationListData);
                 }
-                if (notificationList.size()>2)
+                if (notificationList.size()>3)
                 {
-                    feedAdapter.add(notificationList,2);
+                    feedAdapter.add(notificationList,3);
                 }
                 else
                 {
@@ -753,6 +748,12 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     }
 
     public void checkAndRefresh(boolean apiCall) {
+        if (apiCall) {
+            AppLog.e(TAG, "---- Refresh Team -----");
+            apiCall();
+        }
+    }
+    public void checkAndRefreshNotification(boolean apiCall) {
         if (apiCall) {
             AppLog.e(TAG, "---- Refresh Team -----");
             apiCall();

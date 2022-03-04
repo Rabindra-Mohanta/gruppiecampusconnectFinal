@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -112,6 +113,9 @@ public class MixOperations {
             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
             inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             long eventAtMillisec = inputFormat.parse(eventAt).getTime();
+
+            Log.e(TAG,"now "+now);
+            Log.e(TAG,"eventAtMillisec "+eventAtMillisec);
             if(now<eventAtMillisec){
                 return true;
             }

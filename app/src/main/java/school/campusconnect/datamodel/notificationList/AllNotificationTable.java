@@ -52,12 +52,13 @@ public class AllNotificationTable extends Model {
     @Column(name  = "readedComment")
     public String readedComment;
 
+
     public static List<AllNotificationTable> getAll() {
         return new Select().from(AllNotificationTable.class).execute();
     }
 
-    public static List<AllNotificationTable> getAllNotificationList(String group_id) {
-        return new Select().from(AllNotificationTable.class).where("groupId = ?", group_id).execute();
+    public static List<AllNotificationTable> getAllNotificationList(String group_id,int page) {
+        return new Select().from(AllNotificationTable.class).where("groupId = ?", group_id).orderBy("datetime(insertedAt) DESC").limit(20).offset((page-1)*20).execute();
     }
 
     public static void deleteAllNotification(String group_id) {
