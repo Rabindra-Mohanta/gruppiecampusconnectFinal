@@ -547,6 +547,11 @@
         <item>Choose from Library</item>
     </string-array>
 
+    <string-array name="array_audio">
+        <item>Record a Audio</item>
+        <item>Choose from Library</item>
+    </string-array>
+
 
     <string-array name="array_image_modify">
         <item>Take a Photo</item>

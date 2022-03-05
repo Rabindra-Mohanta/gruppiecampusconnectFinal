@@ -116,7 +116,7 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
 
     private void getDataLocally(int currentPage) {
 
-        List<AllNotificationTable> notificationTableList = AllNotificationTable.getAllNotificationList(GroupDashboardActivityNew.groupId,currentPage);
+        List<NotificationTable> notificationTableList = NotificationTable.getAllNotificationList(GroupDashboardActivityNew.groupId,currentPage);
 
         if (notificationTableList != null && notificationTableList.size() > 0)
         {
@@ -245,7 +245,7 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
         }*/
         for (int i = 0; i < result.size(); i++) {
 
-            AllNotificationTable notificationTable = new AllNotificationTable();
+            NotificationTable notificationTable = new NotificationTable();
             NotificationListRes.NotificationListData notificationListData= result.get(i);
             notificationTable.teamId = notificationListData.getTeamId();
             notificationTable.groupId = notificationListData.getGroupId();

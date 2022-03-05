@@ -424,7 +424,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 List<NotificationListRes.NotificationListData> results = res1.getData();
                 AppLog.e(TAG, "notificationRes " + new Gson().toJson(results));
 
-                NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
+              //  NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
 
                 notificationList.clear();
 
@@ -596,7 +596,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     private void getNotification() {
 
-        List<NotificationTable> notificationTableList = NotificationTable.getNotificationList(GroupDashboardActivityNew.groupId);
+        List<NotificationTable> notificationTableList = NotificationTable.getAllNotificationList(GroupDashboardActivityNew.groupId,1);
 
         if (notificationTableList != null && notificationTableList.size() > 0)
         {

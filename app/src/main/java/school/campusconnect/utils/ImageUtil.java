@@ -478,6 +478,34 @@ public class ImageUtil {
         return mediaFile;
     }
 
+    public static File getOutputMediaAudio() {
+
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                AppLog.d("Merchant", "Oops! Failed create "
+                        + IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile = null;
+
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "AUDIO_" + timeStamp + ".mp3");
+
+        return mediaFile;
+    }
+
 
     public static File getOutputMediaVideo(int count) {
 

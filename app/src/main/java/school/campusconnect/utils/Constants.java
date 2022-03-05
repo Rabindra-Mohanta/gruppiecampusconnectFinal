@@ -20,6 +20,7 @@ public class Constants {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String FILE_TYPE_PDF = "pdf";
+    public static final String FILE_TYPE_AUDIO = "audio";
     public static final String FILE_TYPE_YOUTUBE = "youtube";
     public static final String FILE_TYPE_IMAGE = "image";
 

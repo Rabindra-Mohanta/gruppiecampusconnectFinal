@@ -1581,7 +1581,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         long diff = System.currentTimeMillis() - time;
 
-        if (diff >= (5*60*1000))
+        if (diff >= (39*60*1000))
         {
             return true;
         }
@@ -1622,22 +1622,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         return false;
     }
 
-    private void startTimer() {
-
-        timer = new CountDownTimer(15000, 1000) {
-            @Override
-            public void onTick(long l) {
-
-              Log.e(TAG,"timer Count Down "+  l / 1000);
-            }
-
-            @Override
-            public void onFinish() {
-                Log.e(TAG,"onFinish ");
-
-            }
-        }.start();
-    }
 
     CountDownTimer timer;
     long timeOfStopMeeting;

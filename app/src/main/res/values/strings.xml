@@ -94,6 +94,7 @@
     <string name="action_creategroup">Create New Group</string>
     <string name="please_wait">Please wait...</string>
     <string name="lbl_select_img">Select Image</string>
+    <string name="lbl_select_audio">Select Audio</string>
     <string name="lbl_select_video">Select Video</string>
     <string name="lbl_share">Share</string>
     <string name="lbl_push">Push</string>
@@ -397,6 +398,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_image">Image</string>
     <string name="lbl_video">Video</string>
     <string name="lbl_documents">Doc</string>
+    <string name="lbl_audio">Audio</string>
     <string name="lbl_create_post">Create Post</string>
 
     <string name="lbl_country">Country*</string>
@@ -625,6 +627,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_family">FAMILY INFO</string>
     <string name="lbl_save">Save</string>
     <string name="lbl_RegisterIssue">Issue/TaskForce Register</string>
+    <string name="lbl_RecordAudio">Record Audio</string>
     <string name="lbl_jurisdiction">Jurisdiction/Place*</string>
     <string name="lbl_issue">Issue*</string>
     <string name="lbl_days">Days</string>
