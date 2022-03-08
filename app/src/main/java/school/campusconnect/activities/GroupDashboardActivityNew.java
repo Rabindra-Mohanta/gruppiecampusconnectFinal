@@ -1792,6 +1792,11 @@ public class GroupDashboardActivityNew extends BaseActivity
             }
 
         }
+        else if (group.type.equals("Master List")){
+
+            Intent intent = new Intent(this, MasterListActivity.class);
+            startActivity(intent);
+        }
         else {
 
             Log.e(TAG,"GeneralPostFragment Start");

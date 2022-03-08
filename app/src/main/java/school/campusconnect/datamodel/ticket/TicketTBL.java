@@ -84,7 +84,7 @@ public class TicketTBL extends Model {
     public String adminStatus;
 
     @Column(name = "_now")
-    public String _now;
+    public long _now;
 
 
     public TicketTBL()

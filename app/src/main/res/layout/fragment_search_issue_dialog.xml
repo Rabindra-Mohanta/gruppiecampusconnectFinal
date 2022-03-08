@@ -38,59 +38,71 @@
         </RelativeLayout>
 
 
-        <EditText
+        <LinearLayout
             android:layout_margin="@dimen/padding_20dp"
-            android:id="@+id/edtSearch"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/search_edittext_background"
-            android:drawableLeft="@android:drawable/ic_menu_search"
-            android:drawablePadding="@dimen/padding_8dp"
-            android:hint="@string/hint_search_issue"
-            android:imeOptions="actionSearch"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textColor="@color/color_grey_icon"
-            android:textColorHint="@color/color_label"
-            android:textAppearance="@style/TextAppearance.Light"
-            android:textSize="@dimen/text_size_14sp"
-            app:layout_scrollFlags="scroll|enterAlways" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSearchIssue"
-            android:layout_marginHorizontal="@dimen/padding_20dp"
-            android:layout_width="match_parent"
-            android:text="@string/hint_issue_not_found"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical"
-            android:layout_height="wrap_content" />
-
-        <androidx.cardview.widget.CardView
-            android:layout_marginHorizontal="@dimen/padding_20dp"
-            app:cardUseCompatPadding="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_marginHorizontal="@dimen/padding_10dp"
+            <EditText
+                android:id="@+id/edtSearch"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="50dp"
+                android:background="@drawable/search_edittext_background"
+                android:drawableLeft="@android:drawable/ic_menu_search"
+                android:drawablePadding="@dimen/padding_8dp"
+                android:hint="@string/hint_search_issue"
+                android:imeOptions="actionSearch"
+                android:padding="10dp"
+                android:layout_marginBottom="@dimen/padding_20dp"
+                android:singleLine="true"
+                android:textColor="@color/color_grey_icon"
+                android:textColorHint="@color/color_label"
+                android:textAppearance="@style/TextAppearance.Light"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_scrollFlags="scroll|enterAlways" />
 
-                <TextView
-                    android:paddingVertical="@dimen/padding_10dp"
-                    android:id="@+id/tvIssue"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSearchIssue"
+                android:layout_width="match_parent"
+                android:text="@string/hint_issue_not_found"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                android:layout_height="wrap_content" />
+
+            <androidx.cardview.widget.CardView
+                app:cardUseCompatPadding="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_10dp"
-                    android:layout_gravity="center"
-                    android:text="@string/hint_issue_not_found"
-                    android:textColor="@color/colorTextDark"
-                    style="@style/LabelNormal" />
+                    android:layout_height="wrap_content">
 
-            </LinearLayout>
+                    <TextView
+                        android:paddingVertical="@dimen/padding_10dp"
+                        android:id="@+id/tvIssue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_10dp"
+                        android:layout_gravity="center"
+                        android:text="@string/hint_issue_not_found"
+                        android:visibility="gone"
+                        android:textColor="@color/colorTextDark"
+                        style="@style/LabelNormal" />
 
-        </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+
+
+
 
    <!--     <Button
             android:id="@+id/btnSave"

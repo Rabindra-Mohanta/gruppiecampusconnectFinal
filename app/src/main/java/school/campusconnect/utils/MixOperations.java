@@ -115,6 +115,7 @@ public class MixOperations {
             long eventAtMillisec = inputFormat.parse(eventAt).getTime();
 
             Log.e(TAG,"now "+now);
+
             Log.e(TAG,"eventAtMillisec "+eventAtMillisec);
             if(now<eventAtMillisec){
                 return true;
@@ -127,6 +128,8 @@ public class MixOperations {
     }
     public static boolean isNewEvent(String eventAt, String inputPattern,String now)
     {
+        Log.e(TAG,"eventAt"+eventAt);
+        Log.e(TAG,"now"+now);
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
             inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));

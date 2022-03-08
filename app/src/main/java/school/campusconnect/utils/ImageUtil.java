@@ -478,12 +478,11 @@ public class ImageUtil {
         return mediaFile;
     }
 
-    public static File getOutputMediaAudio() {
+    public static File getOutputMediaAudio(Context context) {
+
 
         // External sdcard location
-        File mediaStorageDir = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+        File mediaStorageDir = new File( context.getCacheDir(),
                 IMAGE_DIRECTORY_NAME);
 
         // Create the storage directory if it does not exist

@@ -102,7 +102,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 else
                 {
                     //  onClick.setReadedComment(data.getIdPrimary(),true);
-                    onClick.onItemClick(data,true);
+                    onClick.onItemClick(data,false);
                   /*  holder.binding.llReaded.setBackground(context.getResources().getDrawable(R.drawable.feed_transparent_bg));
                     holder.binding.viewReaded.setVisibility(View.VISIBLE);*/
                 }

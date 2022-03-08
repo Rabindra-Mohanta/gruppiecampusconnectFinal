@@ -242,7 +242,6 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
     private void compareLocally(TicketEventUpdateResponse eventUpdateResponse) {
 
-
         boolean apiCall = false;
 
         if (currentItem == null)
@@ -307,7 +306,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
             currentItem.constituencyIssue = currentItemData.getConstituencyIssue();
             currentItem.boothIncharge = new Gson().toJson(currentItemData.getBoothIncharge());
             currentItem.adminStatus = currentItemData.getAdminStatus();
-            currentItem._now = getCurrentTimeStamp();
+            currentItem._now = System.currentTimeMillis();
             currentItem.save();
         }
 

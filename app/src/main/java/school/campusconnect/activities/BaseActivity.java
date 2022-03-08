@@ -45,6 +45,10 @@ import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
+import school.campusconnect.datamodel.masterList.MasterBoothListTBL;
+import school.campusconnect.datamodel.masterList.StreetListTBL;
+import school.campusconnect.datamodel.masterList.WorkerListTBL;
+import school.campusconnect.datamodel.notificationList.AllNotificationTable;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
@@ -609,7 +613,11 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         BaseTeamTable.deleteAll();
         BaseTeamTableV2.deleteAll();
         TicketTBL.deleteAll();
+        MasterBoothListTBL.deleteAll();
+        WorkerListTBL.deleteAll();
+        StreetListTBL.deleteAll();
         NotificationTable.deleteAll();
+        AllNotificationTable.deleteAll();
         AdminFeedTable.deleteAll();
 
         PostTeamDataItem.deleteAllPosts();
@@ -648,8 +656,12 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 //        NotificationModel.deleteAll();
         BaseTeamTable.deleteAll();
         BaseTeamTableV2.deleteAll();
+        MasterBoothListTBL.deleteAll();
+        WorkerListTBL.deleteAll();
+        StreetListTBL.deleteAll();
         TicketTBL.deleteAll();
         NotificationTable.deleteAll();
+        AllNotificationTable.deleteAll();
         AdminFeedTable.deleteAll();
 
         PostTeamDataItem.deleteAllPosts();

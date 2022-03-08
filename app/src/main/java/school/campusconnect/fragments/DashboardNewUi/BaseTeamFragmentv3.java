@@ -372,7 +372,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 BaseTeamTableV2.deleteTeams(GroupDashboardActivityNew.groupId);
 
                 teamList.clear();
+
                 ArrayList<String> currentTopics = new ArrayList<>();
+
                 for (int i = 0; i < result.size(); i++) {
 
                     BaseTeamTableV2 baseTeamTable = new BaseTeamTableV2();

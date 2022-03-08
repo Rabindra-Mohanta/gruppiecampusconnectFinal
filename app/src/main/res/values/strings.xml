@@ -621,6 +621,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_adharNumber">Aadhar Number</string>
     <string name="lbl_role">Role</string>
     <string name="lbl_Booths">Booths</string>
+    <string name="lbl_Workers">Workers List</string>
+    <string name="lbl_Street">Street List</string>
     <string name="lbl_public_forum">Public Forum</string>
     <string name="strMsgConst">Do you want to continue live meeting?</string>
     <string name="lbl_my_profile">MY INFO</string>
@@ -630,6 +632,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_RecordAudio">Record Audio</string>
     <string name="lbl_jurisdiction">Jurisdiction/Place*</string>
     <string name="lbl_issue">Issue*</string>
+    <string name="lbl_V1_issue">Issue</string>
     <string name="lbl_days">Days</string>
     <string name="lbl_add_issue">Add Issue</string>
     <string name="lbl_departmentMember">Department Member</string>

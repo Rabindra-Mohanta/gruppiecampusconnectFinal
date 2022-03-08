@@ -48,33 +48,49 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".utils.RecordAudioActivity"></activity>
+        <activity android:name=".activities.AddVoterActivity"></activity>
+        <activity android:name=".activities.StreetListActivity" />
+        <activity android:name=".activities.WorkerListActivity" />
+        <activity android:name=".activities.MasterListActivity" />
+        <activity
+            android:name=".utils.RecordAudioActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SelectRoleActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddCommiteeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.LoginPinActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CommitteeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.TicketDetailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.TicketsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".utils.address.AddressActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddTicketActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.TalukListActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Home"
@@ -383,7 +399,7 @@
             android:value="1" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="school.campusconnect.datamodel.StudTestPaperItem,             school.campusconnect.datamodel.TestExamTBL,             school.campusconnect.datamodel.notificationList.NotificationTable,             school.campusconnect.datamodel.notificationList.AllNotificationTable,             school.campusconnect.datamodel.feed.AdminFeedTable,             school.campusconnect.datamodel.ChapterTBL,             school.campusconnect.datamodel.BaseTeamTable,             school.campusconnect.datamodel.baseTeam.BaseTeamTableV2,             school.campusconnect.datamodel.LiveClassListTBL,             school.campusconnect.datamodel.ClassListTBL,             school.campusconnect.datamodel.TeamCountTBL,             school.campusconnect.datamodel.SubjectCountTBL,             school.campusconnect.datamodel.EventTBL,             school.campusconnect.datamodel.HwItem,             school.campusconnect.datamodel.StudAssignementItem,             school.campusconnect.datamodel.SubjectItem,             school.campusconnect.datamodel.EBookItem,             school.campusconnect.datamodel.EBookClassItem,             school.campusconnect.datamodel.GroupDataItem,             school.campusconnect.datamodel.PostDataItem,             school.campusconnect.datamodel.notifications.NotificationModel,             school.campusconnect.datamodel.PostTeamDataItem,             school.campusconnect.datamodel.personalchat.PersonalContactsModel,             school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel,             school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel,             school.campusconnect.datamodel.gruppiecontacts.AllContactModel,             school.campusconnect.datamodel.ticket.TicketTBL" /> <!-- rajini.gruppie.datamodel.gruppiecontacts.GruppieContactAddressModel, -->
+            android:value="school.campusconnect.datamodel.StudTestPaperItem,             school.campusconnect.datamodel.TestExamTBL,             school.campusconnect.datamodel.notificationList.NotificationTable,             school.campusconnect.datamodel.notificationList.AllNotificationTable,             school.campusconnect.datamodel.feed.AdminFeedTable,             school.campusconnect.datamodel.ChapterTBL,             school.campusconnect.datamodel.BaseTeamTable,             school.campusconnect.datamodel.baseTeam.BaseTeamTableV2,             school.campusconnect.datamodel.LiveClassListTBL,             school.campusconnect.datamodel.ClassListTBL,             school.campusconnect.datamodel.TeamCountTBL,             school.campusconnect.datamodel.SubjectCountTBL,             school.campusconnect.datamodel.EventTBL,             school.campusconnect.datamodel.HwItem,             school.campusconnect.datamodel.StudAssignementItem,             school.campusconnect.datamodel.SubjectItem,             school.campusconnect.datamodel.EBookItem,             school.campusconnect.datamodel.EBookClassItem,             school.campusconnect.datamodel.GroupDataItem,             school.campusconnect.datamodel.PostDataItem,             school.campusconnect.datamodel.notifications.NotificationModel,             school.campusconnect.datamodel.PostTeamDataItem,             school.campusconnect.datamodel.personalchat.PersonalContactsModel,             school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel,             school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel,             school.campusconnect.datamodel.gruppiecontacts.AllContactModel,             school.campusconnect.datamodel.ticket.TicketTBL,             school.campusconnect.datamodel.masterList.MasterBoothListTBL,             school.campusconnect.datamodel.masterList.WorkerListTBL,             school.campusconnect.datamodel.masterList.StreetListTBL" /> <!-- rajini.gruppie.datamodel.gruppiecontacts.GruppieContactAddressModel, -->
         <activity
             android:name=".activities.CommentsLikeActivity"
             android:screenOrientation="portrait"

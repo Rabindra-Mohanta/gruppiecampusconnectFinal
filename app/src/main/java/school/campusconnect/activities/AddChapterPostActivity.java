@@ -382,9 +382,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     Log.e(TAG, "send data " + new Gson().toJson(mainRequest));
 
                     if (isEdit) {
+
                         mainRequest.fileType = Constants.FILE_TYPE_YOUTUBE;
                         mainRequest.fileName = new ArrayList<>();
                         mainRequest.fileName.add(videoUrl);
+
                         manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
                     } else {
                         manager.addChapterPost(this, group_id, team_id, subject_id, mainRequest);
@@ -396,7 +398,16 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     progressDialog.show();
                     uploadToAmazone(mainRequest);
 
-                } else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
+                }
+                else if (!TextUtils.isEmpty(audioPath)) {
+
+                    mainRequest.fileType = Constants.FILE_TYPE_AUDIO;
+                    progressDialog.setMessage("Preparing Audio...");
+                    progressDialog.show();
+                    uploadToAmazone(mainRequest);
+
+                }
+                else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     mainRequest.fileType = fileTypeImageOrVideo;
                     Log.e(TAG, "send data " + new Gson().toJson(mainRequest));
                     startService();
@@ -548,7 +559,13 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                 }
             }, Constants.FILE_TYPE_VIDEO);
-        } else {
+        }
+        else if (request.fileType.equals(Constants.FILE_TYPE_AUDIO)){
+            listImages.clear();
+            listImages.add(audioPath);
+            upLoadImageOnCloud(0);
+        }
+        else {
             for (int i = 0; i < listImages.size(); i++) {
                 try {
                     File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
@@ -687,6 +704,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                         } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
                             progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                         }
+                        else if (Constants.FILE_TYPE_AUDIO.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Audio " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        }
 
                         AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                                 + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
@@ -732,6 +752,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         Log.e("edtDesc : ", edtTitle.getText().toString());
         Log.e("videoUrl : ", videoUrl);
+        Log.e("audioUrl : ", audioPath);
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
 
@@ -750,9 +771,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             return false;
         }
 
-        if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
+        if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath) && TextUtils.isEmpty(audioPath)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please Add Image or video or pdf or audio", Toast.LENGTH_SHORT).show();
             valid = false;
         }
         if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -1168,6 +1189,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
+                removeImage();
                /* if (selectedImageURI.toString().startsWith("content")) {
                     pdfUri = ImageUtil.getPath(this, selectedImageURI);
                 } else {
@@ -1209,14 +1231,16 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             }
         }
         else if (requestCode == REQUEST_LOAD_AUDIO) {
-            if (resultCode == Activity.RESULT_OK) {
 
-                audioPath = data.getData().getPath();
+            if (resultCode == Activity.RESULT_OK) {
+                final Uri selectedAudio = data.getData();
+                audioPath = selectedAudio.toString();
                 Log.e(TAG,"audioPath"+ audioPath);
 
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
+                removeImage();
                /* if (selectedImageURI.toString().startsWith("content")) {
                     pdfUri = ImageUtil.getPath(this, selectedImageURI);
                 } else {

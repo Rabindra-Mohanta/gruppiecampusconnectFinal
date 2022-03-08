@@ -48,6 +48,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
     private ArrayList<IssueListResponse.IssueData> issueData;
     private Adapter adapter;
     ArrayList<IssueListResponse.IssueData> filteredList;
+
     public static SearchIssueFragmentDialog newInstance()
     {
         return new SearchIssueFragmentDialog();
@@ -76,6 +77,20 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
 
       //  binding.btnSave.setOnClickListener(this);
         binding.imgClose.setOnClickListener(this);
+        adapter = new Adapter();
+        binding.rvSearchIssue.setAdapter(adapter);
+        adapter.add(issueData);
+
+        if (issueData.size()>5)
+        {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+            binding.rvSearchIssue.setLayoutParams(params);
+        }
+        else
+        {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            binding.rvSearchIssue.setLayoutParams(params);
+        }
 
         binding.edtSearch.addTextChangedListener(new TextWatcher() {
 
@@ -87,21 +102,33 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
+
                 if (s.toString().length() > 2)
                 {
                     searchData(s.toString());
                 }
                 else
                 {
+                    if (binding.rvSearchIssue.getVisibility() == View.GONE)
+                    {
+                        binding.tvIssue.setVisibility(View.GONE);
+                        binding.rvSearchIssue.setVisibility(View.VISIBLE);
+                    }
+
+                    adapter.add(issueData);
+                }
+                /*else
+                {
                     if (binding.tvIssue.getVisibility() == View.GONE)
                     {
                         binding.tvIssue.setVisibility(View.VISIBLE);
                     }
+
                     binding.tvIssue.setText(getResources().getString(R.string.hint_issue_not_found));
                     filteredList = new ArrayList<>();
                     adapter = new Adapter(filteredList);
                     binding.rvSearchIssue.setAdapter(adapter);
-                }
+                }*/
             }
         });
     }
@@ -119,14 +146,15 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
 
         if (filteredList.size()>0)
         {
-         binding.tvIssue.setVisibility(View.GONE);
+            binding.rvSearchIssue.setVisibility(View.VISIBLE);
+            binding.tvIssue.setVisibility(View.GONE);
         }
         else
         {
+            binding.rvSearchIssue.setVisibility(View.GONE);
             binding.tvIssue.setVisibility(View.VISIBLE);
         }
-        adapter = new Adapter(filteredList);
-        binding.rvSearchIssue.setAdapter(adapter);
+        adapter.add(filteredList);
     }
 
     @Override
@@ -146,8 +174,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
             case R.id.imgClose:
                 binding.edtSearch.getText().clear();
                 filteredList = new ArrayList<>();
-                adapter = new Adapter(filteredList);
-                binding.rvSearchIssue.setAdapter(adapter);
+                adapter.add(filteredList);
                 dismiss();
                 break;
         }
@@ -171,8 +198,11 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
         ArrayList<IssueListResponse.IssueData> list;
         private Context mContext;
 
-        public Adapter(ArrayList<IssueListResponse.IssueData> list) {
+
+        public void add(ArrayList<IssueListResponse.IssueData> list)
+        {
             this.list = list;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -223,8 +253,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
 
         binding.edtSearch.getText().clear();
         filteredList = new ArrayList<>();
-        adapter = new Adapter(filteredList);
-        binding.rvSearchIssue.setAdapter(adapter);
+        adapter.add(filteredList);
 
         listener.onSelected(issueData.issue,issueData.issueId);
         dismiss();

@@ -234,6 +234,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         binding.llYoutubeLink.setOnClickListener(this);
         binding.llDoc.setOnClickListener(this);
         binding.etLocation.setOnClickListener(this);
+        binding.etIssue.setOnClickListener(this);
+        binding.btnSearchIssue.setOnClickListener(this);
        // binding.tvIssue.setOnClickListener(this);
         binding.btnSubmit.setOnClickListener(this);
     }
@@ -311,11 +313,11 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
         if (resultIssue != null && resultIssue.size() > 0) {
 
-           /* binding.etIssue.setText(resultIssue.get(0).issue);
+            binding.etIssue.setText(resultIssue.get(0).issue);
 
             Issue = resultIssue.get(0).issue;
-            IssueID = resultIssue.get(0).issueId;*/
-
+            IssueID = resultIssue.get(0).issueId;
+/*
             binding.etIssue.addTextChangedListener(new TextWatcher() {
 
                 public void afterTextChanged(Editable s) {}
@@ -342,7 +344,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                         binding.rvSearchIssue.setAdapter(adapter);
                     }
                 }
-            });
+            });*/
 
            /* String[] strIssue = new String[resultIssue.size()];
 
@@ -386,7 +388,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
-        if (filteredList.size()>0)
+        /*if (filteredList.size()>0)
         {
             binding.tvIssue.setVisibility(View.GONE);
         }
@@ -395,7 +397,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             binding.tvIssue.setVisibility(View.VISIBLE);
         }
         adapter = new searchIssueAdapter(filteredList);
-        binding.rvSearchIssue.setAdapter(adapter);
+        binding.rvSearchIssue.setAdapter(adapter);*/
     }
 
     private void bindTeam() {
@@ -481,9 +483,13 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 selectPlace();
                 break;
 
-            /*case R.id.tvIssue:
+            case R.id.etIssue:
                 searchIssue();
-                break;*/
+                break;
+
+            case R.id.btnSearchIssue:
+                searchIssue();
+                break;
 
             case R.id.btnSubmit:
                 addTicket();
@@ -1288,7 +1294,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         Log.e(TAG,"Issue ID"+IssueID);
         this.Issue = Issue;
         this.IssueID = IssueID;
-       // binding.tvIssue.setText(Issue);
+
+        binding.etIssue.setText(Issue);
     }
 
 
@@ -1346,8 +1353,9 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void onTreeClick(IssueListResponse.IssueData issueData) {
-
         binding.etIssue.getText().clear();
         binding.etIssue.setText(issueData.issue);
+
+
     }
 }

@@ -2,11 +2,16 @@ package school.campusconnect.utils;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -15,6 +20,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import butterknife.Bind;
@@ -38,7 +45,7 @@ ActivityRecordAudioBinding binding;
     long secs;
     long mins;
     MediaRecorder mediaRecorder;
-    private String fileRecordAudio;
+    private File fileRecordAudio;
     private Uri uriRecordAudio;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +55,16 @@ ActivityRecordAudioBinding binding;
         setSupportActionBar(mToolBar);
         setBackEnabled(false);
         setTitle(getResources().getString(R.string.lbl_RecordAudio));
-        MediaRecorderReady();
-        inits();
+        if (checkPermissionForWriteExternal())
+        {
+            MediaRecorderReady();
+            inits();
+        }
+        else
+        {
+            requestPermissionForWriteExternal(1);
+        }
+
     }
 
     private void inits() {
@@ -78,9 +93,11 @@ ActivityRecordAudioBinding binding;
 
                 if (isAudio)
                 {
-                    Log.e(TAG,"uri "+fileRecordAudio);
+
+                    String uri = Uri.fromFile(fileRecordAudio).toString();
+                    Log.e(TAG,"uri "+uri);
                     Intent i = new Intent();
-                    i.putExtra("AudioData",fileRecordAudio);
+                    i.putExtra("AudioData",uri);
                     setResult(RESULT_OK,i);
                     finish();
                 }
@@ -91,14 +108,74 @@ ActivityRecordAudioBinding binding;
             }
         });
     }
+    private boolean checkPermissionForWriteExternal() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            Log.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            Log.e("External" + "permission", "checkpermission , denied");
+            return false;
+        }
+    }
+    public void requestPermissionForWriteExternal(int code) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            AppLog.e(TAG, "requestPermissionForWriteExternal");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    MediaRecorderReady();
+                    inits();
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
 
+        }
+    }
     public void MediaRecorderReady(){
-        fileRecordAudio = ImageUtil.getOutputMediaAudio().getAbsolutePath();
-        mediaRecorder=new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(fileRecordAudio);
+
+        try {
+            fileRecordAudio = ImageUtil.getOutputMediaAudio(getApplicationContext());
+            mediaRecorder=new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+
+            Log.e(TAG,"fileRecordAudio "+fileRecordAudio.getAbsolutePath());
+            Log.e(TAG,"fileRecordAudio URL "+Uri.fromFile(fileRecordAudio));
+
+            try {
+                FileDescriptor fileDescriptor = getContentResolver().openFileDescriptor(Uri.fromFile(fileRecordAudio),"rwt").getFileDescriptor();
+                mediaRecorder.setOutputFile(fileDescriptor);
+             /*   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                }
+                else
+                {
+                    mediaRecorder.setOutputFile(fileRecordAudio.getAbsolutePath());
+                }*/
+            } catch (FileNotFoundException e) {
+                //e.printStackTrace();
+                Log.e(TAG,"FileNotFoundException "+e.getMessage());
+            }
+
+
+
+        } catch(RuntimeException stopException) {
+            // handle cleanup here
+            Log.e(TAG,"RuntimeException "+stopException.getMessage());
+        }
+
     }
 
     private void startAudio() {
@@ -111,8 +188,10 @@ ActivityRecordAudioBinding binding;
             customHandler.postDelayed(updateTimerThread, 0);
         } catch (IllegalStateException e) {
             e.printStackTrace();
+            Log.e(TAG,"IllegalStateException "+e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e(TAG,"IOException "+e.getMessage());
         }
     }
 

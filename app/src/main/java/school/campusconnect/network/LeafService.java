@@ -19,6 +19,9 @@ import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
 import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.feed.AdminFeederResponse;
+import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
+import school.campusconnect.datamodel.masterList.StreetListModelResponse;
+import school.campusconnect.datamodel.masterList.WorkerListResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -1805,6 +1808,19 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/constituency/feeder")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AdminFeederResponse> getAdminFeed(@Path("group_id") String group_id, @Query("role") String role);
+
+
+    @GET("/api/v1/groups/{group_id}/all/booths/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothMasterListModelResponse> getMasterListBooth(@Path("group_id") String group_id, @Query("type") String type);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<WorkerListResponse> getWorkerList(@Path("group_id") String group_id,@Path("team_id") String team_id, @Query("committeeId") String committeeId);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StreetListModelResponse> getWorkerStreetList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("type") String type);
 
 
 }
