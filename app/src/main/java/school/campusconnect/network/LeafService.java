@@ -21,6 +21,7 @@ import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.feed.AdminFeederResponse;
 import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListModelResponse;
+import school.campusconnect.datamodel.masterList.VoterListModelResponse;
 import school.campusconnect.datamodel.masterList.WorkerListResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
@@ -1821,6 +1822,14 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<StreetListModelResponse> getWorkerStreetList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("type") String type);
+
+    @POST("api/v1/groups/{group_id}/team/{team_id}/add/voters/masterlist")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addVoter(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body VoterListModelResponse.AddVoterReq req);
+
+    @GET("api/v1/groups/{group_id}/team/{team_id}/get/voters/masterlist")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<VoterListModelResponse.VoterListRes> getVoterList(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
 
 }

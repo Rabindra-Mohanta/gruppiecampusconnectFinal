@@ -44,6 +44,9 @@ public class ViewPDFActivity extends BaseActivity {
     FloatingActionButton fabButton;
     private int totalCount;
     private int currentPage=0;
+
+    ImageView imgDownloadPdf;
+    ImageView thumbnail;
     AmazoneDownload asyncTask;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,8 @@ public class ViewPDFActivity extends BaseActivity {
         fabButton = findViewById(R.id.fabButton);
         tvCurrentPage = findViewById(R.id.tvCurrentPage);
 
+        imgDownloadPdf = (ImageView) findViewById(R.id.imgDownloadPdf);
+        thumbnail = (ImageView) findViewById(R.id.thumbnail);
         itemData = new ArrayList<>();
 
         final Intent intent = getIntent();

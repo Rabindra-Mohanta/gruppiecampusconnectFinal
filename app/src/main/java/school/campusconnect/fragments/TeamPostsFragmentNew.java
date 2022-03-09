@@ -455,7 +455,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         if (!isFromMain)
             return;
 
-        if (teamData.teamType.equalsIgnoreCase(Constants.TEAM_TYPE_CREATED) && teamData.enableGps) {
+     //   if (teamData.teamType.equalsIgnoreCase(Constants.TEAM_TYPE_CREATED) && teamData.enableGps) // remove this 9-3-22 (client change)
+
+        if (teamData.enableGps)
+        {
             mBinding.fabTrack.setVisibility(View.VISIBLE);
         } else {
             mBinding.fabTrack.setVisibility(View.GONE);

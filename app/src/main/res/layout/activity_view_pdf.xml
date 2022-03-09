@@ -8,8 +8,15 @@
     android:orientation="vertical"
     tools:context=".activities.ViewPDFActivity">
 
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -36,6 +43,18 @@
             android:text="0/0"
             android:textColor="@color/white" />
     </FrameLayout>
+
+
+    <ImageView
+        android:id="@+id/imgDownloadPdf"
+        android:layout_width="@dimen/pdf_download_icon_size"
+        android:layout_height="@dimen/pdf_download_icon_size"
+        android:layout_margin="@dimen/padding_15dp"
+        android:layout_marginTop="@dimen/padding_10dp"
+        android:adjustViewBounds="true"
+        android:visibility="gone"
+        android:src="@drawable/pdf_download_icon"
+        android:layout_centerInParent="true" />
 
 
     <FrameLayout

@@ -119,10 +119,13 @@
     <string name="lbl_phone">Phone Number*</string>
     <string name="lbl_booth_president_phone">PRESIDENT PHONE NUMBER*</string>
     <string name="lbl_phone2">Phone Number</string>
+    <string name="lbl_father_name">Father Name</string>
+    <string name="lbl_husband_name">Husband Name</string>
     <string name="lbl_email">Email</string>
     <string name="lbl_other_leads">Other Friends</string>
     <string name="lbl_gender">Gender</string>
     <string name="lbl_dob">Date of Birth</string>
+    <string name="lbl_age">Age</string>
     <string name="lbl_roll">Roll</string>
     <string name="lbl_address">Address</string>
     <string name="lbl_landmark">Landmark</string>
@@ -618,11 +621,13 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_update_committee">Update Committee</string>
     <string name="relationship">Relationship*</string>
     <string name="lbl_voterId">Voter Id</string>
+    <string name="lbl_voterId2">Voter Id*</string>
     <string name="lbl_adharNumber">Aadhar Number</string>
     <string name="lbl_role">Role</string>
     <string name="lbl_Booths">Booths</string>
     <string name="lbl_Workers">Workers List</string>
     <string name="lbl_Street">Street List</string>
+    <string name="lbl_Voter">Voter List</string>
     <string name="lbl_public_forum">Public Forum</string>
     <string name="strMsgConst">Do you want to continue live meeting?</string>
     <string name="lbl_my_profile">MY INFO</string>
@@ -647,6 +652,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_booth_coordinate">Booth Coordinator</string>
     <string name="lbl_booth_in_charge">Booth In Charge</string>
     <string name="lbl_salary">Salary</string>
+    <string name="lbl_serial_number">Serial Number</string>
     <string name="lbl_booth_number">Booth Number*</string>
     <string name="lbl_booth_address">Booth Address*</string>
     <string name="lbl_booth_about">Booth About*</string>

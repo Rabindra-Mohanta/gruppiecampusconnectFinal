@@ -47,6 +47,7 @@ import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
 import school.campusconnect.datamodel.masterList.MasterBoothListTBL;
 import school.campusconnect.datamodel.masterList.StreetListTBL;
+import school.campusconnect.datamodel.masterList.VoterListTBL;
 import school.campusconnect.datamodel.masterList.WorkerListTBL;
 import school.campusconnect.datamodel.notificationList.AllNotificationTable;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
@@ -615,6 +616,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         TicketTBL.deleteAll();
         MasterBoothListTBL.deleteAll();
         WorkerListTBL.deleteAll();
+        VoterListTBL.deleteAll();
         StreetListTBL.deleteAll();
         NotificationTable.deleteAll();
         AllNotificationTable.deleteAll();
@@ -661,6 +663,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         StreetListTBL.deleteAll();
         TicketTBL.deleteAll();
         NotificationTable.deleteAll();
+        VoterListTBL.deleteAll();
         AllNotificationTable.deleteAll();
         AdminFeedTable.deleteAll();
 

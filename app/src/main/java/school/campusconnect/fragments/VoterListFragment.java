@@ -29,33 +29,33 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddVoterActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VoterListActivity;
-import school.campusconnect.activities.WorkerListActivity;
-import school.campusconnect.curl.CurlMesh;
 import school.campusconnect.databinding.FragmentStreetListBinding;
+import school.campusconnect.databinding.FragmentVoterListBinding;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListTBL;
+import school.campusconnect.datamodel.masterList.VoterListModelResponse;
+import school.campusconnect.datamodel.masterList.VoterListTBL;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
+public class VoterListFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
 
-public class StreetListFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
+    public static String TAG = "VoterListFragment";
+    private String team_id;
 
-    public static String TAG = "StreetListFragment";
-    FragmentStreetListBinding binding;
-    String teamId;
+    FragmentVoterListBinding binding;
+    private ArrayList<VoterListModelResponse.VoterData> voterData = new ArrayList<>();
     LeafManager manager;
-    private ArrayList<StreetListModelResponse.StreetData> streetDataArrayList = new ArrayList<>();
-    private StreetAdapter streetAdapter;
-
-    public static StreetListFragment newInstance() {
-        StreetListFragment fragment = new StreetListFragment();
+    private VoterAdapter voterAdapter;
+    public static VoterListFragment newInstance() {
+        VoterListFragment fragment = new VoterListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -65,69 +65,86 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_street_list, container, false);
-        return binding.getRoot();
 
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_voter_list, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         inits();
-
-        getDataLocally();
+        //getDataLocaly();
     }
 
-    private void getDataLocally() {
+    private void inits() {
 
-        List<StreetListTBL> streetListTBLS = StreetListTBL.getStreetListAll(teamId);
+        manager = new LeafManager();
 
-        if (streetListTBLS.size() != 0)
+        if (getArguments() != null)
         {
-            ArrayList<StreetListModelResponse.StreetData> data = new ArrayList<>();
+            team_id = getArguments().getString("team_id");
+        }
 
-            for (int i= 0; i<streetListTBLS.size();i++)
+        voterAdapter = new VoterAdapter(voterData);
+        binding.rvVoter.setAdapter(voterAdapter);
+
+    }
+    private void getDataLocaly() {
+
+        List<VoterListTBL> voterListTBLS = VoterListTBL.getVoterListTBLAll(team_id);
+
+        if (voterListTBLS.size() != 0)
+        {
+            ArrayList<VoterListModelResponse.VoterData> data = new ArrayList<>();
+
+            for (int i= 0; i<voterListTBLS.size();i++)
             {
-                StreetListTBL currentItem = streetListTBLS.get(i);
+                VoterListTBL currentItem = voterListTBLS.get(i);
 
-                StreetListModelResponse.StreetData streetData= new StreetListModelResponse.StreetData();
+                VoterListModelResponse.VoterData voterData = new VoterListModelResponse.VoterData();
 
-                streetData.voterId = currentItem.voterId;
-                streetData.userId = currentItem.userId;
-                streetData.roleOnConstituency = currentItem.roleOnConstituency;
-                streetData.phone = currentItem.phone;
-                streetData.name = currentItem.name;
-                streetData.image = currentItem.image;
-                streetData.gender = currentItem.gender;
-                streetData.dob = currentItem.dob;
-                streetData.bloodGroup = currentItem.bloodGroup;
-                streetData.allowedToAddUser = currentItem.allowedToAddUser;
-                streetData.allowedToAddTeamPostComment = currentItem.allowedToAddTeamPostComment;
-                streetData.allowedToAddTeamPost = currentItem.allowedToAddTeamPost;
-                streetData.address = currentItem.address;
-                streetData.aadharNumber = currentItem.aadharNumber;
-                data.add(streetData);
+                voterData.teamId = currentItem.teamId;
+                voterData.voterId = currentItem.voterId;
+                voterData.serialNumber = currentItem.serialNumber;
+                voterData.phone = currentItem.phone;
+                voterData.name = currentItem.name;
+                voterData.image = currentItem.image;
+                voterData.husbandName = currentItem.husbandName;
+                voterData.groupId = currentItem.groupId;
+                voterData.gender = currentItem.gender;
+                voterData.fatherName = currentItem.fatherName;
+                voterData.email = currentItem.email;
+                voterData.dob = currentItem.dob;
+                voterData.bloodGroup = currentItem.bloodGroup;
+                voterData.age = currentItem.age;
+                voterData.address = currentItem.address;
+                voterData.aadharNumber = currentItem.aadharNumber;
+
+                data.add(voterData);
             }
-            streetDataArrayList.addAll(data);
-            streetAdapter.notifyDataSetChanged();
-
+            voterData.addAll(data);
+            voterAdapter.notifyDataSetChanged();
         }
         else
         {
-            streetListApiCall(true);
+            voterListApiCall(true);
         }
-
     }
 
-    private void streetListApiCall(boolean b) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        voterListApiCall(true);
+    }
+
+    private void voterListApiCall(boolean b) {
         if (b)
         {
             if (isConnectionAvailable())
             {
                 binding.progressBar.setVisibility(View.VISIBLE);
-                manager.getWorkerStreetList(this, GroupDashboardActivityNew.groupId,teamId,"masterList");
+                manager.voterMasterList(this, GroupDashboardActivityNew.groupId,team_id);
             }
             else
             {
@@ -136,88 +153,74 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
         }
     }
 
-    private void inits() {
-
-        manager = new LeafManager();
-
-        Bundle bundle=getArguments();
-
-        if(bundle!=null)
-        {
-            teamId = getArguments().getString("teamID");
-        }
-        streetAdapter = new StreetAdapter(streetDataArrayList);
-        binding.rvStreets.setAdapter(streetAdapter);
-    }
-
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         binding.progressBar.setVisibility(View.GONE);
 
-        if (LeafManager.WORKER_STREET_LIST == apiId)
+        if (apiId == LeafManager.VOTER_MASTER_LIST)
         {
-            StreetListModelResponse res = (StreetListModelResponse) response;
+            VoterListModelResponse.VoterListRes res = (VoterListModelResponse.VoterListRes) response;
 
-            ArrayList<StreetListModelResponse.StreetData> resList= res.getData();
+            ArrayList<VoterListModelResponse.VoterData> voterDataList = res.getData();
 
-            if (resList.size()>0)
+            if (voterDataList.size() > 0)
             {
-                saveToLocally(resList);
+                saveToLocally(voterDataList);
             }
         }
     }
 
-    private void saveToLocally(ArrayList<StreetListModelResponse.StreetData> resList) {
+    private void saveToLocally(ArrayList<VoterListModelResponse.VoterData> voterDataList) {
 
-        StreetListTBL.deleteStreetList(teamId);
+        VoterListTBL.deleteVoterList(team_id);
 
-        for (int i=0;i<resList.size();i++)
+        for (int i=0;i<voterDataList.size();i++)
         {
-            StreetListTBL streetListTBL = new StreetListTBL();
+            VoterListTBL voterListTBL = new VoterListTBL();
 
-            StreetListModelResponse.StreetData data = resList.get(i);
-            streetListTBL.teamId = teamId;
-            streetListTBL.now = System.currentTimeMillis();
-            streetListTBL.voterId = data.voterId;
-            streetListTBL.userId =data.userId;
-            streetListTBL.roleOnConstituency = data.roleOnConstituency;
-            streetListTBL.phone = data.phone;
-            streetListTBL.name = data.name;
-            streetListTBL.image = data.image;
-            streetListTBL.gender =  data.gender;
-            streetListTBL.dob =  data.dob;
-            streetListTBL.bloodGroup = data.bloodGroup;
-            streetListTBL.allowedToAddUser =data.allowedToAddUser;
-            streetListTBL.allowedToAddTeamPostComment = data.allowedToAddTeamPostComment;
-            streetListTBL.allowedToAddTeamPost = data.allowedToAddTeamPost;
-            streetListTBL.address = data.address;
-            streetListTBL.aadharNumber = data.aadharNumber;
+            VoterListModelResponse.VoterData data = voterDataList.get(i);
+            voterListTBL.teamId = data.teamId;
+            voterListTBL.voterId = data.voterId;
+            voterListTBL.serialNumber = data.serialNumber;
+            voterListTBL.phone = data.phone;
+            voterListTBL.name = data.name;
+            voterListTBL.image = data.image;
+            voterListTBL.husbandName = data.husbandName;
+            voterListTBL.groupId = data.groupId;
+            voterListTBL.gender = data.gender;
+            voterListTBL.fatherName = data.fatherName;
+            voterListTBL.email = data.email;
+            voterListTBL.dob = data.dob;
+            voterListTBL.bloodGroup = data.bloodGroup;
+            voterListTBL.age = data.age;
+            voterListTBL.address = data.address;
+            voterListTBL.aadharNumber = data.aadharNumber;
+            voterListTBL.now = System.currentTimeMillis();
 
-            streetListTBL.save();
+            voterListTBL.save();
         }
-        streetDataArrayList.addAll(resList);
-        streetAdapter.notifyDataSetChanged();
+        voterData.addAll(voterDataList);
+        voterAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
         binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onFailure"+msg);
-
     }
 
     @Override
     public void onException(int apiId, String msg) {
         binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onException"+msg);
-    }
 
-    public class StreetAdapter extends RecyclerView.Adapter<StreetAdapter.ViewHolder>
+    }
+    public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>
     {
-        List<StreetListModelResponse.StreetData> list;
+        List<VoterListModelResponse.VoterData> list;
         private Context mContext;
 
-        public StreetAdapter(List<StreetListModelResponse.StreetData> list) {
+        public VoterAdapter(List<VoterListModelResponse.VoterData> list) {
             this.list = list;
         }
 
@@ -230,7 +233,7 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            final StreetListModelResponse.StreetData item = list.get(position);
+            final VoterListModelResponse.VoterData item = list.get(position);
 
             if (!TextUtils.isEmpty(item.image)) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
@@ -282,7 +285,7 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
             {
                 if(list.size()==0)
                 {
-                    binding.txtEmpty.setText("No Streets found.");
+                    binding.txtEmpty.setText("No Voters found.");
                 }
                 else {
                     binding.txtEmpty.setText("");
@@ -292,7 +295,7 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
             }
             else
             {
-                binding.txtEmpty.setText("No Streets found.");
+                binding.txtEmpty.setText("No Voters found.");
                 return 0;
             }
 
@@ -318,9 +321,10 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
         }
     }
 
-    private void onTreeClick(StreetListModelResponse.StreetData classData) {
-        Intent intent = new Intent(getActivity(), VoterListActivity.class);
-        intent.putExtra("team_id",teamId);
-        startActivity(intent);
+    private void onTreeClick(VoterListModelResponse.VoterData classData) {
+        /*Intent intent = new Intent(getContext(), AddVoterActivity.class);
+        intent.putExtra("team_id",classData.teamId);
+        intent.putExtra("edit",true);
+        startActivity(intent);*/
     }
 }

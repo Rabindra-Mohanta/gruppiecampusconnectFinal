@@ -23,6 +23,7 @@ import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.feed.AdminFeederResponse;
 import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListModelResponse;
+import school.campusconnect.datamodel.masterList.VoterListModelResponse;
 import school.campusconnect.datamodel.masterList.WorkerListResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
@@ -467,6 +468,8 @@ public class LeafManager {
     public static final int MASTER_BOOTH_LIST = 301; //UPDATE EVENT TICKET AND MASTER LIST Booth LIST 301 CODE USED
     public static final int WORKER_LIST = 302;
     public static final int WORKER_STREET_LIST = 303;
+    public static final int ADD_VOTER_MASTER_LIST = 304;
+    public static final int VOTER_MASTER_LIST = 305;
     public LeafManager() {
 
     }
@@ -11582,6 +11585,87 @@ public class LeafManager {
 
     }
 
+
+    public void addVoterMasterList(OnCommunicationListener listListener, String group_id, String team_id, VoterListModelResponse.AddVoterReq req) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.addVoter(group_id,team_id,req);
+
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(ADD_VOTER_MASTER_LIST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void voterMasterList(OnCommunicationListener listListener, String group_id, String team_id) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<VoterListModelResponse.VoterListRes> model = service.getVoterList(group_id,team_id);
+
+        ResponseWrapper<VoterListModelResponse.VoterListRes> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(VOTER_MASTER_LIST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
 
 
     public interface OnCommunicationListener {

@@ -44,6 +44,7 @@ import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
 import school.campusconnect.datamodel.masterList.MasterBoothListTBL;
 import school.campusconnect.datamodel.masterList.StreetListTBL;
+import school.campusconnect.datamodel.masterList.VoterListTBL;
 import school.campusconnect.datamodel.masterList.WorkerListTBL;
 import school.campusconnect.datamodel.notificationList.AllNotificationTable;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
@@ -226,11 +227,12 @@ public class BaseFragment extends Fragment {
             MasterBoothListTBL.deleteAll();
             WorkerListTBL.deleteAll();
             StreetListTBL.deleteAll();
+
             TicketTBL.deleteAll();
             NotificationTable.deleteAll();
             AllNotificationTable.deleteAll();
             AdminFeedTable.deleteAll();
-
+            VoterListTBL.deleteAll();
             PostTeamDataItem.deleteAllPosts();
             PersonalContactsModel.deleteAll();
             GruppieContactsModel.deleteAll();
