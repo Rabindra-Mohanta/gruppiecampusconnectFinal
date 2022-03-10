@@ -3,27 +3,42 @@ package school.campusconnect.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jaygoo.widget.OnRangeChangedListener;
+
+
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,6 +50,7 @@ import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.chapter.ChapterRes;
+import school.campusconnect.utils.AmazoneAudioDownload;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
@@ -50,6 +66,12 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
     private OnItemClickListener listener;
     private Context mContext;
     ChapterRes.TopicData item;
+    MediaPlayer mediaPlayer  = new MediaPlayer();;
+    private Handler mHandler = new Handler();
+    Runnable myRunnable;
+    int pos;
+
+    AmazoneAudioDownload asyncTask;
 
     public TopicPostAdapter(List<ChapterRes.TopicData> list, OnItemClickListener listener,boolean canEdit) {
         if (list == null) return;
@@ -91,7 +113,9 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                 }
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.imgPhoto.setVisibility(View.GONE);
-            } else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
+                holder.llAudio.setVisibility(View.GONE);
+            }
+            else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
                 if (item.fileName != null) {
                     ChildVideoAdapter adapter;
                     if (item.fileName.size() == 3) {
@@ -104,11 +128,14 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                 }
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.imgPhoto.setVisibility(View.GONE);
-            } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+                holder.llAudio.setVisibility(View.GONE);
+            }
+            else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
                 holder.constThumb.setVisibility(View.VISIBLE);
                 holder.imgPhoto.setVisibility(View.GONE);
                 holder.recyclerView.setVisibility(View.GONE);
                 holder.imgPlay.setVisibility(View.GONE);
+                holder.llAudio.setVisibility(View.GONE);
                 if (item.thumbnailImage != null && item.thumbnailImage.size() > 0) {
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
 
@@ -121,20 +148,46 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                     }
                 }
 
-            } else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            }
+            else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
                 holder.imgPhoto.getLayoutParams().height = (Constants.screen_width * 204) / 480;
                 holder.imgPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Picasso.with(mContext).load(item.thumbnail).into(holder.imgPhoto);
                 holder.imgPhoto.setVisibility(View.VISIBLE);
+                holder.llAudio.setVisibility(View.GONE);
                 holder.imgPlay.setVisibility(View.VISIBLE);
                 holder.recyclerView.setVisibility(View.GONE);
-            } else {
+            }
+            else if (item.fileType.equals(Constants.FILE_TYPE_AUDIO))
+            {
+                holder.llAudio.setVisibility(View.VISIBLE);
+                holder.imgPhoto.setVisibility(View.GONE);
+                holder.imgPlay.setVisibility(View.GONE);
+                holder.recyclerView.setVisibility(View.GONE);
+
+                if (AmazoneAudioDownload.isAudioDownloaded(item.fileName.get(0)))
+                {
+                    holder.imgPlayAudio.setVisibility(View.VISIBLE);
+                    holder.imgDownloadAudio.setVisibility(View.GONE);
+                    holder.imgPauseAudio.setVisibility(View.GONE);
+                    holder.llProgress.setVisibility(View.GONE);
+                }
+                else
+                {
+                    holder.imgDownloadAudio.setVisibility(View.VISIBLE);
+                    holder.imgPlayAudio.setVisibility(View.GONE);
+                    holder.imgPauseAudio.setVisibility(View.GONE);
+                    holder.llProgress.setVisibility(View.GONE);
+                }
+            }
+            else {
+                holder.llAudio.setVisibility(View.GONE);
                 holder.imgPhoto.setVisibility(View.GONE);
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.recyclerView.setVisibility(View.GONE);
             }
         } else {
-
+            holder.llAudio.setVisibility(View.GONE);
             holder.imgPhoto.setVisibility(View.GONE);
             holder.imgPlay.setVisibility(View.GONE);
             holder.recyclerView.setVisibility(View.GONE);
@@ -184,9 +237,167 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         holder.txt_title.setText(item.topicName);
         holder.txt_createdBy.setText(item.createdByName);
         holder.txtDate.setText(MixOperations.getFormattedDate(item.insertedAt, Constants.DATE_FORMAT));
+
+        holder.imgDownloadAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.llProgress.setVisibility(View.VISIBLE);
+                startProcess(item.fileName.get(0),holder);
+
+            }
+        });
+        holder.imgCancelDownloadAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asyncTask.cancel(true);
+            }
+        });
+
+        holder.imgPlayAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try{
+
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+
+
+                    holder.imgPauseAudio.setVisibility(View.VISIBLE);
+                    holder.imgPlayAudio.setVisibility(View.GONE);
+
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            notifyItemChanged(position);
+                        }
+                    });
+
+                    ((AppCompatActivity) mContext).runOnUiThread(myRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                            Log.e(TAG,"mCurrentPosition"+ mCurrentPosition);
+                            holder.tvTimeAudio.setText(formatDate(mCurrentPosition));
+                            holder.seekBarAudio.setProgress(mCurrentPosition*10);
+                            mHandler.postDelayed(myRunnable, 1000);
+                        }
+                    });
+                    Log.e(TAG,"media Player data"+mediaPlayer.getCurrentPosition()+"\n"+mediaPlayer.getDuration());
+                }catch(Exception e){e.printStackTrace();
+                    Log.e(TAG,"Exception"+e.getMessage());}
+            }
+        });
+
+        holder.imgPauseAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try{
+                    mHandler.removeCallbacks(myRunnable);
+                    mediaPlayer.pause();
+                    holder.imgPauseAudio.setVisibility(View.GONE);
+                    holder.imgPlayAudio.setVisibility(View.VISIBLE);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG,"Exception"+e.getMessage());
+                }
+            }
+        });
+
+        holder.seekBarAudio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mediaPlayer.seekTo(progress);//if user drags the seekbar, it gets the position and updates in textView.
+                }
+                Log.e(TAG,"progress"+progress);
+
+                if (progress == 100)
+                {
+                    mHandler.removeCallbacks(myRunnable);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
+
     }
 
+    private void startProcess(String s, ImageViewHolder holder) {
+        if (isConnectionAvailable()) {
+            asyncTask = AmazoneAudioDownload.download(mContext, s, new AmazoneAudioDownload.AmazoneDownloadSingleListener() {
+                @Override
+                public void onDownload(File file) {
+                    notifyItemChanged(holder.getAdapterPosition());
+                }
 
+                @Override
+                public void error(String msg) {
+
+                }
+
+                @Override
+                public void progressUpdate(int progress, int max) {
+                 /*   if(progress>0){
+                        holder.progressBarAudioDownload.setVisibility(View.GONE);
+                    }*/
+                    holder.progressBarAudioDownload.setProgress(progress);
+
+                }
+            });
+        } else {
+            showNoNetworkMsg();
+        }
+    }
+
+    private String formatDate(int second) /* This is your topStory.getTime()*1000 */ {
+      /*  DateFormat sdf = new SimpleDateFormat("mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(second);
+        TimeZone tz = TimeZone.getDefault();
+        sdf.setTimeZone(tz);*/
+        String seconds , minutes;
+        if(second>60)
+        {
+            if(second % 60 < 10)
+            seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+
+            if(second/60 < 10)
+            minutes = "0"+second/60;
+            else
+                minutes = ""+second/60;
+        }
+        else
+        {
+            minutes = "00";
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+        }
+
+
+
+        return minutes+":"+seconds;
+    //    return sdf.format(calendar.getTime());
+    }
     @Override
     public int getItemCount() {
         if (list != null)
@@ -251,10 +462,8 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         @Bind(R.id.txt_createdBy)
         TextView txt_createdBy;
 
-
         @Bind(R.id.txt_readmore)
         TextView txt_readmore;
-
 
         @Bind(R.id.img_lead)
         CircleImageView imgLead;
@@ -325,9 +534,41 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         @Bind(R.id.chkCompleted)
         SwitchCompat chkCompleted;
 
+        /*Audio View*/
+
+        @Bind(R.id.llAudio)
+        RelativeLayout llAudio;
+
+        @Bind(R.id.imgDownloadAudio)
+        ImageView imgDownloadAudio;
+
+        @Bind(R.id.imgPlayAudio)
+        ImageView imgPlayAudio;
+
+        @Bind(R.id.imgPauseAudio)
+        ImageView imgPauseAudio;
+
+        @Bind(R.id.llProgress)
+        FrameLayout llProgress;
+
+        @Bind(R.id.progressBarAudioDownload)
+        ProgressBar progressBarAudioDownload;
+
+        @Bind(R.id.imgCancelDownloadAudio)
+        ImageView imgCancelDownloadAudio;
+
+        @Bind(R.id.tvTimeAudio)
+        TextView tvTimeAudio;
+
+        @Bind(R.id.seekBarAudio)
+        SeekBar seekBarAudio;
+
+
         public ImageViewHolder(View itemView) {
             super(itemView);
+
             ButterKnife.bind(this, itemView);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

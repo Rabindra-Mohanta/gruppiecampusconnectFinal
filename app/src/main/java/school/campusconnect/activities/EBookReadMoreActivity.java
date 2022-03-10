@@ -140,6 +140,7 @@ public class EBookReadMoreActivity extends BaseActivity{
                     public void onClick(View v) {
                         Intent i = new Intent(EBookReadMoreActivity.this, ViewPDFActivity.class);
                         i.putExtra("pdf", list.get(getAdapterPosition()));
+                        i.putExtra("thumbnail", thumbnailImage.get(getAdapterPosition()));
                         i.putExtra("name", subjectName);
                         startActivity(i);
                     }

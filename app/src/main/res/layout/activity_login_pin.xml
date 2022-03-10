@@ -71,6 +71,7 @@
                 app:bar_enabled="true"
                 app:bar_height="2dp"
                 app:length="4"
+                app:hide_otp="true"
                 app:bar_active_color="@color/white"
                 android:layout_gravity="center"
                 app:otp_text_size="24dp"/>

@@ -2,98 +2,108 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
+        app:cardElevation="3dp"
+        app:cardUseCompatPadding="true"
+        android:layout_marginHorizontal="@dimen/padding_15dp"
+        app:cardCornerRadius="@dimen/padding_5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-
         <RelativeLayout
-            android:id="@+id/relative"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/list_divider"
-            android:padding="@dimen/padding_15dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_lead"
-                android:layout_width="@dimen/user_image_size"
-                android:layout_height="@dimen/user_image_size"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/icon_default_user" />
+            android:layout_height="wrap_content">
 
 
-            <ImageView
-                android:id="@+id/img_lead_default"
-                android:layout_width="@dimen/user_image_size"
-                android:layout_height="@dimen/user_image_size"
-                android:layout_alignParentStart="true"
-                android:visibility="invisible"
-                android:src="@drawable/icon_default_user" />
-
-
-
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/img_lead"
-                android:orientation="vertical"
-                android:paddingEnd="@dimen/padding_16dp"
-                android:paddingStart="16dp">
+                android:background="@drawable/list_divider"
+                android:padding="@dimen/padding_15dp">
 
-                <com.scopely.fontain.views.FontTextView
-                    android:id="@+id/txt_name"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_lead"
+                    android:layout_width="@dimen/user_image_size"
+                    android:layout_height="@dimen/user_image_size"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/icon_default_user" />
+
+
+                <ImageView
+                    android:id="@+id/img_lead_default"
+                    android:layout_width="@dimen/user_image_size"
+                    android:layout_height="@dimen/user_image_size"
+                    android:layout_alignParentStart="true"
+                    android:visibility="invisible"
+                    android:src="@drawable/icon_default_user" />
+
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ssd"
-                    android:textColor="@color/color_grey_icon"
-                    android:textAppearance="@style/TextAppearance.Regular"
-                    app:caps_mode="words"
-                    android:textSize="16sp" />
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/img_lead"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/padding_16dp"
+                    android:paddingStart="16dp">
 
-                <TextView
-                    android:id="@+id/txt_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/color_grey_icon"
-                    android:textAppearance="@style/TextAppearance.Light"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    <com.scopely.fontain.views.FontTextView
+                        android:id="@+id/txt_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ssd"
+                        android:textColor="@color/color_grey_icon"
+                        android:textAppearance="@style/TextAppearance.Regular"
+                        app:caps_mode="words"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/txt_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_grey_icon"
+                        android:textAppearance="@style/TextAppearance.Light"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relative"
+                android:ellipsize="end"
+                android:paddingBottom="8dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:paddingTop="20dp"
+                android:textColor="@color/color_grey_icon"
+                android:textAppearance="@style/TextAppearance.Regular"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/txt_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relative"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingBottom="8dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:paddingTop="8dp"
+                android:textColor="@color/color_grey_icon"
+                android:textAppearance="@style/TextAppearance.Light"
+                android:textSize="12sp" />
+
+
         </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/txt_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/relative"
-            android:ellipsize="end"
-            android:paddingBottom="8dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:paddingTop="20dp"
-            android:textColor="@color/color_grey_icon"
-            android:textAppearance="@style/TextAppearance.Regular"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:id="@+id/txt_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/relative"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:paddingBottom="8dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:paddingTop="8dp"
-            android:textColor="@color/color_grey_icon"
-            android:textAppearance="@style/TextAppearance.Light"
-            android:textSize="12sp" />
-
-
-    </RelativeLayout>
 </LinearLayout>

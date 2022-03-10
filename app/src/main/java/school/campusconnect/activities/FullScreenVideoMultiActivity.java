@@ -66,6 +66,7 @@ public class FullScreenVideoMultiActivity extends BaseActivity implements MultiV
     public void onImageClick(String imagePath) {
         Intent i = new Intent(this, VideoPlayActivity.class);
         i.putExtra("video", imagePath);
+        i.putExtra("thumbnail", thumbnailImages.get(0));
         startActivity(i);
     }
 }

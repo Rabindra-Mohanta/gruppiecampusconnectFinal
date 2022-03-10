@@ -462,6 +462,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.topicName);
             startActivity(i);
 
@@ -482,6 +483,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.studentName);
             startActivity(i);
 
@@ -1582,6 +1584,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.topicName);
             i.putExtra("from", "floatservice");
             startActivity(i);

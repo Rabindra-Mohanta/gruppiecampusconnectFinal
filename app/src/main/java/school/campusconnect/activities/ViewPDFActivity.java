@@ -18,9 +18,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
@@ -29,6 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import school.campusconnect.R;
+import school.campusconnect.utils.Constants;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class ViewPDFActivity extends BaseActivity {
@@ -38,6 +41,7 @@ public class ViewPDFActivity extends BaseActivity {
     private ImageView ivDownload;
     private String title = "";
     private String pdf = "";
+    private String thumbnailPath = null;
     ProgressBar progressBar;
     PDFView pdfView;
     TextView tvCurrentPage;
@@ -45,6 +49,8 @@ public class ViewPDFActivity extends BaseActivity {
     private int totalCount;
     private int currentPage=0;
 
+    RelativeLayout llAfterDownload;
+    RelativeLayout llBeforeDownload;
     ImageView imgDownloadPdf;
     ImageView thumbnail;
     AmazoneDownload asyncTask;
@@ -60,25 +66,76 @@ public class ViewPDFActivity extends BaseActivity {
 
         imgDownloadPdf = (ImageView) findViewById(R.id.imgDownloadPdf);
         thumbnail = (ImageView) findViewById(R.id.thumbnail);
+        llAfterDownload = (RelativeLayout) findViewById(R.id.llAfterDownload);
+        llBeforeDownload = (RelativeLayout) findViewById(R.id.llBeforeDownload);
+
         itemData = new ArrayList<>();
 
-        final Intent intent = getIntent();
-        if (intent.getExtras() != null) {
-            pdf = intent.getExtras().getString("pdf", "");
-            AppLog.e("PGFVIEW", "pdf string is " + pdf);
 
-            if (checkPermissionForWriteExternal()) {
-                download(pdf);
-            } else {
-                requestPermissionForWriteExternal(22);
-            }
+
+        if (checkPermissionForWriteExternal()) {
+            inits();
+        } else {
+            requestPermissionForWriteExternal(22);
         }
+        ;
+
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSelectPageDialog();
             }
         });
+
+        imgDownloadPdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                llBeforeDownload.setVisibility(View.GONE);
+                llAfterDownload.setVisibility(View.VISIBLE);
+                download(pdf);
+            }
+        });
+    }
+
+    private void inits() {
+
+        final Intent intent = getIntent();
+        if (intent.getExtras() != null) {
+            pdf = intent.getExtras().getString("pdf", "");
+            AppLog.e("PGFVIEW", "pdf string is " + pdf);
+
+
+
+
+           /* if (checkPermissionForWriteExternal()) {
+                download(pdf);
+            } else {
+                requestPermissionForWriteExternal(22);
+            }*/
+        }
+
+        if (AmazoneDownload.isPdfDownloaded(pdf))
+        {
+            llAfterDownload.setVisibility(View.VISIBLE);
+            llBeforeDownload.setVisibility(View.GONE);
+            download(pdf);
+        }
+        else
+        {
+            llAfterDownload.setVisibility(View.GONE);
+            llBeforeDownload.setVisibility(View.VISIBLE);
+
+            if (intent.getStringExtra("thumbnail") != null && !intent.getStringExtra("thumbnail").isEmpty())
+            {
+                thumbnailPath = intent.getStringExtra("thumbnail");
+                AppLog.e("PGFVIEW", "thumbnailPath " + thumbnailPath);
+            }
+
+            if (thumbnailPath != null)
+            {
+                Glide.with(this).load(Constants.decodeUrlToBase64(thumbnailPath)).into(thumbnail);
+            }
+        }
     }
 
     @Override
@@ -182,7 +239,7 @@ public class ViewPDFActivity extends BaseActivity {
         switch (requestCode) {
             case 22:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    download(pdf);
+                    inits();
                     AppLog.e("AddPost" + "permission", "granted camera");
                 } else {
                     AppLog.e("AddPost" + "permission", "denied camera");

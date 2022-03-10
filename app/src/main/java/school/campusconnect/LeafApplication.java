@@ -28,6 +28,7 @@ public class LeafApplication extends Application  {
 
     private static final String TAG = "LeafApplication";
     private LeafApiClient apiClient;
+    public static final String IMAGE_DIRECTORY_NAME = "school";
 
     private static LeafApplication sIntance;
     ArrayList<String> shareFileList;
@@ -163,6 +164,15 @@ public class LeafApplication extends Application  {
 
     public File AppFilesPath(){
         File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        return mainFolder;
+    }
+
+    public File AppFilesAudioPath(){
+        File mainFolder = new File( getCacheDir(),
+                IMAGE_DIRECTORY_NAME);
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }

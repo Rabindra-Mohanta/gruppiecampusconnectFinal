@@ -359,6 +359,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", "");
             startActivity(i);
 
@@ -379,6 +380,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.studentName);
             startActivity(i);
 

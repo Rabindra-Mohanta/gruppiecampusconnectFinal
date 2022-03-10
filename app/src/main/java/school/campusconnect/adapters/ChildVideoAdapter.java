@@ -177,8 +177,10 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
                 @Override
                 public void onClick(View v) {
                     if (allImageList.size() == 1){
+
                         Intent i = new Intent(mContext, VideoPlayActivity.class);
                         i.putExtra("video", allImageList.get(0));
+                        i.putExtra("thumbnail", thumbnailImages.get(0));
                         mContext.startActivity(i);
                     } else {
                         Intent i = new Intent(mContext, FullScreenVideoMultiActivity.class);

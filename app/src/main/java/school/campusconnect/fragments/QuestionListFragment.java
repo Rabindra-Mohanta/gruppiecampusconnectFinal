@@ -357,6 +357,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.pdf);
             i.putExtra("name", item.questionFrom);
+            i.putExtra("thumbnail", item.image);
             startActivity(i);
         } else if (item.image != null) {
             Intent i = new Intent(getActivity(), FullScreenActivity.class);

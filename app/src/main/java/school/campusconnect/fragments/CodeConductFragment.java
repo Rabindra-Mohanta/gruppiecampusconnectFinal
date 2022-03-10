@@ -404,6 +404,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
         if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.title);
             startActivity(i);
 

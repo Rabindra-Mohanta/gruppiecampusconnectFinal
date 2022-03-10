@@ -441,6 +441,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.topicName);
             startActivity(i);
 
@@ -510,6 +511,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", "" + item.studentName);
             startActivity(i);
         } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
@@ -1586,6 +1588,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.topicName);
             startActivity(i);
 

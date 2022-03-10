@@ -325,6 +325,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
                             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
                             i.putExtra("pdf", list.get(getAdapterPosition()).fileName.get(0));
                             i.putExtra("name", list.get(getAdapterPosition()).subjectName);
+                            i.putExtra("thumbnail", list.get(getAdapterPosition()).thumbnailImage.get(0));
                             startActivity(i);
                         }
                     }

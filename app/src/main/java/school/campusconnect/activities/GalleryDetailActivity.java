@@ -231,7 +231,6 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
 
     public void onPostClick(GalleryPostRes.GalleryData item) {
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
-
             Intent browserIntent = new Intent(this, TestActivity.class);
             browserIntent.putExtra("url", item.video);
             startActivity(browserIntent);
@@ -239,6 +238,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.albumName);
             startActivity(i);
 
@@ -334,6 +334,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
             if (allImageList.size() == 1){
                 Intent i = new Intent(this, VideoPlayActivity.class);
                 i.putExtra("video", allImageList.get(0));
+                i.putExtra("thumbnail", thumbnailImages.get(0));
                 this.startActivity(i);
             } else {
                 Intent i = new Intent(this, FullScreenVideoMultiActivity.class);

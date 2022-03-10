@@ -6,10 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.gson.Gson;
@@ -29,22 +33,76 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.Constants;
 
 public class VideoPlayActivity extends AppCompatActivity implements OnPreparedListener {
 
+    public static final String TAG = "VideoPlayActivity";
     VideoView playerView;
+
+    ImageView imgDownload;
+    ImageView thumbnail;
+    RelativeLayout beforeDownload;
+    RelativeLayout afterDownload;
+    String thumbnailPath;
     AmazoneVideoDownload asyncTask;
+    ProgressBar progressBar;
+    ProgressBar progressBar1;
+    View llProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_play);
 
         playerView = findViewById(R.id.video_view);
-        View llProgress = findViewById(R.id.llProgress);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
-        ProgressBar progressBar1 = findViewById(R.id.progressBar1);
+        imgDownload = findViewById(R.id.imgDownload);
+        thumbnail = findViewById(R.id.thumbnail);
+        beforeDownload = findViewById(R.id.llBeforeDownload);
+        afterDownload = findViewById(R.id.llAfterDownload);
+
+        llProgress = findViewById(R.id.llProgress);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar1 = findViewById(R.id.progressBar1);
         progressBar1.setVisibility(View.VISIBLE);
         llProgress.setVisibility(View.VISIBLE);
+
+        if (new AmazoneVideoDownload(this).isVideoDownloaded(getIntent().getStringExtra("video")))
+        {
+            beforeDownload.setVisibility(View.GONE);
+            afterDownload.setVisibility(View.VISIBLE);
+            startProcess();
+        }
+        else
+        {
+            beforeDownload.setVisibility(View.VISIBLE);
+            afterDownload.setVisibility(View.GONE);
+            thumbnailPath = getIntent().getStringExtra("thumbnail");
+            Log.e(TAG,"thumbnailPath"+thumbnailPath);
+
+            Glide.with(this).load(Constants.decodeUrlToBase64(thumbnailPath)).into(thumbnail);
+        }
+
+        imgDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                beforeDownload.setVisibility(View.GONE);
+                afterDownload.setVisibility(View.VISIBLE);
+                startProcess();
+            }
+        });
+
+        findViewById(R.id.imgCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asyncTask.cancel(true);
+                finish();
+            }
+        });
+        playerView.setOnPreparedListener(this);
+    }
+
+    private void startProcess()
+    {
         asyncTask = AmazoneVideoDownload.download(this, getIntent().getStringExtra("video"), new AmazoneVideoDownload.AmazoneDownloadSingleListener() {
             @Override
             public void onDownload(File file) {
@@ -87,16 +145,7 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
                 });
             }
         });
-        findViewById(R.id.imgCancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                asyncTask.cancel(true);
-                finish();
-            }
-        });
-        playerView.setOnPreparedListener(this);
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
