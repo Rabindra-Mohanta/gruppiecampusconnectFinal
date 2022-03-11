@@ -6,7 +6,9 @@
         android:visible="false"
         android:title="Change Password"/>
 
-
+    <item android:id="@+id/menu_change_pin"
+        android:visible="false"
+        android:title="Change Pin"/>
 
     <item android:id="@+id/menu_set_wallpaper"
         android:visible="false"

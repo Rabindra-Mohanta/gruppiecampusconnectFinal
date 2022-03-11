@@ -426,37 +426,41 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
               //  NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
 
-                notificationList.clear();
+                if(results.size()>0)
+                {
+                    notificationList.clear();
 
-                for (int i = 0; i < results.size(); i++) {
 
-                    NotificationTable notificationTable = new NotificationTable();
-                    NotificationListRes.NotificationListData notificationListData= results.get(i);
-                    notificationTable.teamId = notificationListData.getTeamId();
-                    notificationTable.groupId = notificationListData.getGroupId();
-                    notificationTable.userId = notificationListData.getUserId();
-                    notificationTable.type = notificationListData.getType();
-                    notificationTable.showComment = notificationListData.getShowComment();
-                    notificationTable.postId = notificationListData.getPostId();
-                    notificationTable.message = notificationListData.getMessage();
-                    notificationTable.insertedAt = notificationListData.getInsertedAt();
-                    notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
-                    notificationTable.createdByName = notificationListData.getCreatedByName();
-                    notificationTable.createdByImage = notificationListData.getCreatedByImage();
-                    notificationTable.createdById = notificationListData.getCreatedById();
-                    notificationTable.readedComment = "true";
+                    for (int i = 0; i < results.size(); i++) {
 
-                    notificationTable.save();
+                        NotificationTable notificationTable = new NotificationTable();
+                        NotificationListRes.NotificationListData notificationListData= results.get(i);
+                        notificationTable.teamId = notificationListData.getTeamId();
+                        notificationTable.groupId = notificationListData.getGroupId();
+                        notificationTable.userId = notificationListData.getUserId();
+                        notificationTable.type = notificationListData.getType();
+                        notificationTable.showComment = notificationListData.getShowComment();
+                        notificationTable.postId = notificationListData.getPostId();
+                        notificationTable.message = notificationListData.getMessage();
+                        notificationTable.insertedAt = notificationListData.getInsertedAt();
+                        notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+                        notificationTable.createdByName = notificationListData.getCreatedByName();
+                        notificationTable.createdByImage = notificationListData.getCreatedByImage();
+                        notificationTable.createdById = notificationListData.getCreatedById();
+                        notificationTable.readedComment = "true";
+
+                        notificationTable.save();
+
+                    }
+                    getNotification();
+
+                    TeamCountTBL dashboardCountv2 = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
+                    if (dashboardCountv2 != null) {
+                        dashboardCountv2.lastApiCalledNotification = System.currentTimeMillis();
+                        dashboardCountv2.save();
+                    }
 
                 }
-                getNotification();
-
-                TeamCountTBL dashboardCountv2 = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
-                if (dashboardCountv2 != null) {
-                    dashboardCountv2.lastApiCalledNotification = System.currentTimeMillis();
-                    dashboardCountv2.save();
-                }
-
                 break;
 
         }
@@ -692,14 +696,23 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 break;
 
             case R.id.tvViewMoreFeed:
-                if (isConnectionAvailable()) {
-                    Intent intent = new Intent(getContext(), NotificationListActivity.class);
-                    intent.putExtra("id", GroupDashboardActivityNew.groupId);
-                    intent.putExtra("title", mGroupItem.getName());
-                    startActivity(intent);
-                } else {
-                    showNoNetworkMsg();
+
+                if (notificationList != null && notificationList.size()>0)
+                {
+                    if (isConnectionAvailable()) {
+                        Intent intent = new Intent(getContext(), NotificationListActivity.class);
+                        intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                        intent.putExtra("title", mGroupItem.getName());
+                        startActivity(intent);
+                    } else {
+                        showNoNetworkMsg();
+                    }
                 }
+                else
+                {
+                    Toast.makeText(getContext(),"Notification Not Found...",Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
     }

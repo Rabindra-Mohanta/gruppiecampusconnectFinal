@@ -110,7 +110,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                             && firstVisibleItemPosition >= 0
                     ) {
                         currentPage = currentPage + 1;
-                        getTicketListApi();
+                        showLocaly();
                     }
                 }
             }
@@ -227,7 +227,9 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                 AppLog.e(TAG, "TicketListResponse " + new Gson().toJson(res));
                 totalPages = res.getTotalNumberOfPages();
                 mIsLoading = false;
+
                 saveToLocal(res);
+
                 break;
 
             case LeafManager.UPDATED_TICKET_LIST_EVENT:
@@ -312,6 +314,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
         if (res.getTicketData().size()>0)
         {
+            binding.txtEmpty.setText("");
             showLocaly();
             Log.e(TAG,"show local list");
         }
@@ -371,8 +374,10 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
                 result.add(item);
             }
+            binding.txtEmpty.setText("");
             adapter.addData(result);
         } else {
+            binding.txtEmpty.setText("No Tickets Found...");
             getTicketListApi();
         }
     }

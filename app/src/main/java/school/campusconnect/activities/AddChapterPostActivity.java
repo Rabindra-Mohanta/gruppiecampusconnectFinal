@@ -1043,12 +1043,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             startActivityForResult(Intent.createChooser(audioIntent, "Select Audio"), requestCode);
         }
         else {
-            requestPermissionForRecordAudio(24);
+            requestPermissionForRecordAudio(25);
         }
     }
 
     private void startRecording(int requestCode) {
-
 
         if(checkPermissionForAudio())
         {
@@ -1058,17 +1057,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         else {
             requestPermissionForRecordAudio(24);
         }
-       /* Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            cameraFile = ImageUtil.getOutputMediaFile();
-            imageCaptureFile = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
-        } else {
-            cameraFile = ImageUtil.getOutputMediaFile();
-            imageCaptureFile = Uri.fromFile(cameraFile);
-        }
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureFile);
-        startActivityForResult(intent, requestCode);*/
-
     }
 
 
@@ -1189,6 +1177,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
+                showLastImage();
+                removePdf();
                 removeImage();
                /* if (selectedImageURI.toString().startsWith("content")) {
                     pdfUri = ImageUtil.getPath(this, selectedImageURI);
@@ -1240,6 +1230,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
+
+                removePdf();
                 removeImage();
                /* if (selectedImageURI.toString().startsWith("content")) {
                     pdfUri = ImageUtil.getPath(this, selectedImageURI);
@@ -1325,6 +1317,15 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+
+            case 25:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectAudioFromFile(REQUEST_LOAD_AUDIO);
                     Log.e("AddPost" + "permission", "granted camera");
                 } else {
                     Log.e("AddPost" + "permission", "denied camera");

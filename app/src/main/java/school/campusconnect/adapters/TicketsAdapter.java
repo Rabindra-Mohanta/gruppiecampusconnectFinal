@@ -98,6 +98,9 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
                     });
         }
 
+
+
+
         holder.binding.imgDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

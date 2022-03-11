@@ -24,7 +24,11 @@ import school.campusconnect.Assymetric.AGVRecyclerViewAdapter;
 import school.campusconnect.Assymetric.AsymmetricItem;
 import school.campusconnect.Assymetric.multiimages.ItemImage;
 import school.campusconnect.R;
+import school.campusconnect.activities.FullScreenActivity;
+import school.campusconnect.activities.FullScreenMultiActivity;
+import school.campusconnect.activities.FullScreenVideoMultiActivity;
 import school.campusconnect.activities.GalleryDetailActivity;
+import school.campusconnect.activities.VideoPlayActivity;
 import school.campusconnect.datamodel.GalleryPostRes;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.utils.Constants;
@@ -39,8 +43,9 @@ public class TicketDetailsImageAdapter extends AGVRecyclerViewAdapter<TicketDeta
     private int mTotal = 0;
     private Context context;
     TicketListResponse.TicketData item;
-
-    public TicketDetailsImageAdapter(int mDisplay, int mTotal, Context context, TicketListResponse.TicketData item) {
+    ListenerOnclick listener;
+    public TicketDetailsImageAdapter(ListenerOnclick listener,int mDisplay, int mTotal, Context context, TicketListResponse.TicketData item) {
+        this.listener = listener;
         this.allImageList = item.getFileName();
         this.item = item;
         this.mDisplay = mDisplay;
@@ -99,6 +104,19 @@ public class TicketDetailsImageAdapter extends AGVRecyclerViewAdapter<TicketDeta
     public void onBindViewHolder(@NonNull TicketDetailsImageAdapter.ViewHolder holder, int position) {
         Log.d("RecyclerViewActivity", "onBindView position=" + position);
         holder.bind(items, position, mDisplay, mTotal, context);
+
+        holder.mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (listener != null)
+                {
+                    listener.onClick(item,allImageList);
+                }
+
+
+            }
+        });
     }
 
     @Override
@@ -175,15 +193,13 @@ public class TicketDetailsImageAdapter extends AGVRecyclerViewAdapter<TicketDeta
                 textView.setVisibility(View.INVISIBLE);
             }
 
-          /*  mImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, GalleryDetailActivity.class);
-                    intent.putExtra("data", new Gson().toJson(TicketDetailsImageAdapter.this.item));
-                    context.startActivity(intent);
-                }
-            });*/
+
 
         }
+    }
+
+    public interface ListenerOnclick
+    {
+        void onClick(TicketListResponse.TicketData item, ArrayList<String> allImageList);
     }
 }

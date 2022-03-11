@@ -451,16 +451,118 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+
+
                     <RelativeLayout
                         android:id="@+id/llAttachment"
                         android:layout_width="match_parent"
-                        android:layout_height="150dp">
+                        android:layout_height="wrap_content">
 
+                        <RelativeLayout
+                            android:id="@+id/llAudio"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:id="@+id/llLeftAudioView"
+                                android:layout_width="@dimen/pdf_download_icon_size"
+                                android:layout_margin="@dimen/padding_15dp"
+                                android:layout_marginTop="@dimen/padding_10dp"
+                                android:layout_height="@dimen/pdf_download_icon_size"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:visibility="visible"
+                                    android:id="@+id/imgDownloadAudio"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:adjustViewBounds="true"
+                                    android:src="@drawable/pdf_download_icon"
+                                    />
+
+                                <ImageView
+                                    android:id="@+id/imgPlayAudio"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:adjustViewBounds="true"
+                                    android:src="@drawable/ic_play_audio"
+                                    app:tint="@color/colorPrimary"
+                                    android:visibility="gone"
+                                    />
+
+                                <ImageView
+                                    android:id="@+id/imgPauseAudio"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:adjustViewBounds="true"
+                                    android:src="@drawable/ic__stop_audio"
+                                    app:tint="@color/colorPrimary"
+                                    android:visibility="gone"
+                                    />
+                                <FrameLayout
+                                    android:id="@+id/llProgress"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:visibility="gone">
+
+                                    <ProgressBar
+                                        android:id="@+id/progressBarAudioDownload"
+                                        style="?android:attr/progressBarStyleHorizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="center"
+                                        android:background="@drawable/circle_shape"
+                                        android:indeterminate="false"
+                                        android:max="100"
+                                        android:progress="0"
+                                        android:progressDrawable="@drawable/circular_progress_bar" />
+
+                                    <ImageView
+                                        android:id="@+id/imgCancelDownloadAudio"
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:layout_gravity="center"
+                                        android:padding="5dp"
+                                        android:src="@drawable/ic_close"
+                                        app:tint="@color/colorPrimary" />
+
+                                </FrameLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@+id/llLeftAudioView"
+                                android:orientation="vertical">
+                                <SeekBar
+                                    android:id="@+id/seekBarAudio"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:color="@color/colorPrimary"
+                                    android:clickable="false"
+                                    android:focusableInTouchMode="false"
+                                    android:enabled="false"
+                                    />
+
+                                <TextView
+                                    android:layout_marginLeft="@dimen/padding_15dp"
+                                    android:id="@+id/tvTimeAudio"
+                                    style="@style/LabelSmall"
+                                    android:layout_width="wrap_content"
+                                    android:gravity="center"
+                                    android:layout_height="wrap_content"
+                                    android:text="00:00"
+                                    android:textColor="@color/colorTextLight" />
+                            </LinearLayout>
+
+
+                        </RelativeLayout>
 
                         <school.campusconnect.Assymetric.AsymmetricRecyclerView
                             android:id="@+id/rvimgAttachment"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="150dp"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
@@ -475,6 +577,7 @@
                             android:gravity="center_horizontal"
                             android:listSelector="#00000000"
                             android:src="#d3d3d3"
+                            android:visibility="gone"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
                     </RelativeLayout>

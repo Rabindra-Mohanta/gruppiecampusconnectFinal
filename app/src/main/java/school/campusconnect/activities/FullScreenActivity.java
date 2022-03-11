@@ -12,10 +12,14 @@ import android.provider.MediaStore;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import school.campusconnect.utils.AppLog;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -34,6 +38,7 @@ import school.campusconnect.utils.Constants;
 
 public class FullScreenActivity extends BaseActivity {
 
+    public static String TAG = "FullScreenActivity";
     @Bind(R.id.ivImage)
     ImageView ivImage;
     @Bind(R.id.ivDownload)
@@ -52,8 +57,34 @@ public class FullScreenActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         image = Constants.decodeUrlToBase64(getIntent().getStringExtra("image"));
-        Picasso.with(this).load(image).into(ivImage);
 
+        Log.e(TAG,"image path"+image);
+
+      //  Picasso.with(this).load(image).into(ivImage);
+
+        Picasso.with(this).load(image).placeholder(R.drawable.placeholder_image).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(ivImage,
+                new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                        Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.placeholder_image).fit().centerCrop().into(ivImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+                                Log.e("Picasso", "Error : ");
+                            }
+                        });
+                    }
+                });
         ivDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

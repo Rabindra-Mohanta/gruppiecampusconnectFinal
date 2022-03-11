@@ -428,39 +428,42 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                 AppLog.e(TAG, "notificationRes " + new Gson().toJson(results));
 
-                NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
+                //NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
 
-                notificationList.clear();
+                if(results.size()>0)
+                {
+                    notificationList.clear();
 
-                for (int i = 0; i < results.size(); i++) {
+                    for (int i = 0; i < results.size(); i++) {
 
-                    NotificationTable notificationTable = new NotificationTable();
+                        NotificationTable notificationTable = new NotificationTable();
 
-                    NotificationListRes.NotificationListData notificationListData= results.get(i);
+                        NotificationListRes.NotificationListData notificationListData= results.get(i);
 
-                    notificationTable.teamId = notificationListData.getTeamId();
-                    notificationTable.groupId = notificationListData.getGroupId();
-                    notificationTable.userId = notificationListData.getUserId();
-                    notificationTable.type = notificationListData.getType();
-                    notificationTable.showComment = notificationListData.getShowComment();
-                    notificationTable.postId = notificationListData.getPostId();
-                    notificationTable.message = notificationListData.getMessage();
-                    notificationTable.insertedAt = notificationListData.getInsertedAt();
-                    notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
-                    notificationTable.createdByName = notificationListData.getCreatedByName();
-                    notificationTable.createdByImage = notificationListData.getCreatedByImage();
-                    notificationTable.createdById = notificationListData.getCreatedById();
-                    notificationTable.readedComment = "true";
+                        notificationTable.teamId = notificationListData.getTeamId();
+                        notificationTable.groupId = notificationListData.getGroupId();
+                        notificationTable.userId = notificationListData.getUserId();
+                        notificationTable.type = notificationListData.getType();
+                        notificationTable.showComment = notificationListData.getShowComment();
+                        notificationTable.postId = notificationListData.getPostId();
+                        notificationTable.message = notificationListData.getMessage();
+                        notificationTable.insertedAt = notificationListData.getInsertedAt();
+                        notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+                        notificationTable.createdByName = notificationListData.getCreatedByName();
+                        notificationTable.createdByImage = notificationListData.getCreatedByImage();
+                        notificationTable.createdById = notificationListData.getCreatedById();
+                        notificationTable.readedComment = "true";
 
-                    notificationTable.save();
+                        notificationTable.save();
 
-                }
-                getNotification();
+                    }
+                    getNotification();
 
-                TeamCountTBL dashboardCountv2 = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
-                if (dashboardCountv2 != null) {
-                    dashboardCountv2.lastApiCalledNotification = System.currentTimeMillis();
-                    dashboardCountv2.save();
+                    TeamCountTBL dashboardCountv2 = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
+                    if (dashboardCountv2 != null) {
+                        dashboardCountv2.lastApiCalledNotification = System.currentTimeMillis();
+                        dashboardCountv2.save();
+                    }
                 }
 
                 break;

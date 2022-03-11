@@ -80,6 +80,7 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.RecordAudioActivity;
 import school.campusconnect.utils.address.AddressActivity;
 import school.campusconnect.utils.address.FindAddress;
 import school.campusconnect.utils.GetThumbnail;
@@ -103,7 +104,10 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
     public static final int REQUEST_LOAD_PDF = 103;
     public static final int REQUEST_LOAD_VIDEO = 104;
+    public static final int REQUEST_LOAD_RECORD_AUDIO = 105;
+    public static final int REQUEST_LOAD_AUDIO = 106;
 
+    private String audioPath = "";
     String videoUrl = "";
     String fileTypeImageOrVideo;
 
@@ -236,6 +240,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         binding.etLocation.setOnClickListener(this);
         binding.etIssue.setOnClickListener(this);
         binding.btnSearchIssue.setOnClickListener(this);
+        binding.llAudio.setOnClickListener(this);
        // binding.tvIssue.setOnClickListener(this);
         binding.btnSubmit.setOnClickListener(this);
     }
@@ -464,6 +469,14 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                     requestPermissionForWriteExternal(22);
                 }
                 break;
+
+            case R.id.llAudio:
+                if (checkPermissionForWriteExternal()) {
+                    showAudioDialog(R.array.array_audio);
+                } else {
+                    requestPermissionForWriteExternal(24);
+                }
+                break;
             case R.id.llYoutubeLink:
                 // if (checkPermissionForWriteExternal()) {
                 showYoutubeDialog();
@@ -498,6 +511,53 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    public void showAudioDialog(int resId) {
+        SMBDialogUtils.showSMBSingleChoiceDialog(AddTicketActivity.this,
+                R.string.lbl_select_audio, resId, 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ListView lw = ((AlertDialog) dialog).getListView();
+                        switch (lw.getCheckedItemPosition()) {
+                            case 0:
+                                startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                                break;
+                            case 1:
+                                selectAudioFromFile(REQUEST_LOAD_AUDIO);
+                                break;
+                        }
+                    }
+                });
+    }
+
+    private void startRecording(int requestCode) {
+
+
+        if(checkPermissionForAudio())
+        {
+            Intent intent = new Intent(getApplicationContext(), RecordAudioActivity.class);
+            startActivityForResult(intent, requestCode);
+        }
+        else {
+            requestPermissionForRecordAudio(24);
+        }
+
+    }
+
+    private void selectAudioFromFile(int requestCode)
+    {
+        if(checkPermissionForAudio())
+        {
+            Intent audioIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            audioIntent.setType("audio/*");
+            startActivityForResult(Intent.createChooser(audioIntent, "Select Audio"), requestCode);
+        }
+        else {
+            requestPermissionForRecordAudio(25);
+        }
+    }
+
+
     private void searchIssue() {
         searchIssueFragmentDialog.show(getSupportFragmentManager(), "");
     }
@@ -523,16 +583,25 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
                 if (!TextUtils.isEmpty(videoUrl)) {
 
-                    mainRequest.fileType = Constants.FILE_TYPE_YOUTUBE;
+                    mainRequest.fileType = Constants.FILE_TYPE_VIDEO;
 
                     Log.e(TAG, "send data " + new Gson().toJson(mainRequest));
-                    mainRequest.fileType = Constants.FILE_TYPE_YOUTUBE;
+                    mainRequest.fileType = Constants.FILE_TYPE_VIDEO;
                     mainRequest.fileName = new ArrayList<>();
                     mainRequest.fileName.add(videoUrl);
 
                     leafManager.addTicket(this, GroupDashboardActivityNew.groupId, TeamId, IssueID, mainRequest);
 
-                } else if (!TextUtils.isEmpty(pdfPath)) {
+                }
+                else if (!TextUtils.isEmpty(audioPath)) {
+
+                    mainRequest.fileType = Constants.FILE_TYPE_AUDIO;
+                    progressDialog.setMessage("Preparing Audio...");
+                    progressDialog.show();
+                    uploadToAmazone(mainRequest);
+
+                }
+                else if (!TextUtils.isEmpty(pdfPath)) {
                     mainRequest.fileType = Constants.FILE_TYPE_PDF;
                     progressDialog.setMessage("Preparing Pdf...");
                     progressDialog.show();
@@ -598,13 +667,14 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             return false;
         }
 
-        if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
+        if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(audioPath)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please Add Image or video or Audio", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
 
+            removeAudio();
             removeImage();
             removePdf();
             Toast.makeText(this, "" + getResources().getString(R.string.msg_upload2), Toast.LENGTH_SHORT).show();
@@ -677,6 +747,17 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         startActivityForResult(intent, requestCode);
     }
 
+    private boolean checkPermissionForAudio() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            Log.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            Log.e("External" + "permission", "checkpermission , denied");
+            return false;
+        }
+    }
+
     private boolean checkPermissionForWriteExternal() {
         int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (result == PackageManager.PERMISSION_GRANTED) {
@@ -688,6 +769,13 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    public void requestPermissionForRecordAudio(int code) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+            Toast.makeText(this, "Audio permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
+        }
+    }
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
@@ -728,6 +816,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             }
             showLastImage();
             removePdf();
+            removeAudio();
 
         }
 
@@ -739,6 +828,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             listImages.add(imageCaptureFile.toString());
             showLastImage();
             removePdf();
+            removeAudio();
         }  else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
             listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_VIDEO;
@@ -758,8 +848,42 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             }
             showLastImage();
             removePdf();
-        } else if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_LOAD_PDF) {
+            removeAudio();
+        }
+        else if (requestCode == REQUEST_LOAD_RECORD_AUDIO) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                audioPath = data.getStringExtra("AudioData");
+                Log.e(TAG,"audioPath"+ audioPath);
+
+
+                listImages.clear();
+                fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
+                listImages.add(audioPath);
+
+                removePdf();
+                removeImage();
+
+            }
+        }
+        else if (requestCode == REQUEST_LOAD_AUDIO) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                final Uri selectedAudio = data.getData();
+                audioPath = selectedAudio.toString();
+                Log.e(TAG,"audioPath"+ audioPath);
+
+                listImages.clear();
+                fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
+                listImages.add(audioPath);
+
+                removePdf();
+                removeImage();
+
+            }
+        }
+        else if (requestCode == REQUEST_LOAD_PDF)  {
+            if (resultCode == Activity.RESULT_OK) {
                 pdfPath = data.getData().toString();
                 Log.e("pdfUri : ", pdfPath);
                /* if (selectedImageURI.toString().startsWith("content")) {
@@ -795,6 +919,10 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         showLastImage();
     }
 
+    private void removeAudio() {
+
+        audioPath = "";
+    }
     private void removePdf() {
         pdfPath = "";
         Picasso.with(this).load(R.drawable.icon_doc).into(binding.imgDoc);
@@ -824,6 +952,25 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             case 23:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     selectPdf(REQUEST_LOAD_PDF);
+                } else {
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+
+            case 24:
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+
+            case 25:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectAudioFromFile(REQUEST_LOAD_AUDIO);
+                    Log.e("AddPost" + "permission", "granted camera");
                 } else {
                     Log.e("AddPost" + "permission", "denied camera");
                 }
@@ -960,7 +1107,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
                 }
             }, Constants.FILE_TYPE_PDF);
-        } else if (request.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
+        }
+        else if (request.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
             AppLog.e(TAG, "Final videos :: " + listImages.toString());
             GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
                 @Override
@@ -973,7 +1121,12 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
                 }
             }, Constants.FILE_TYPE_VIDEO);
-        } else {
+        }
+        else if (request.fileType.equals(Constants.FILE_TYPE_AUDIO)){
+            listImages.clear();
+            listImages.add(audioPath);
+            upLoadImageOnCloud(0);
+        }else {
             for (int i = 0; i < listImages.size(); i++) {
                 try {
                     File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
@@ -1108,6 +1261,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                             progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                         } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
                             progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        }else if (Constants.FILE_TYPE_AUDIO.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Audio " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                         }
 
                         AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent

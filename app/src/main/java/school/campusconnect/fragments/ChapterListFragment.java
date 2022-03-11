@@ -98,6 +98,10 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         return view;
     }
 
+
+
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -399,5 +403,14 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         } else {
             showNoNetworkMsg();
         }
+    }
+
+    public void removeAdapterMedia()
+    {
+        if(adapter != null)
+        {
+            adapter.RemoveAll();
+        }
+
     }
 }

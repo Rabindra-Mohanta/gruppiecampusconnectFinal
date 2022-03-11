@@ -376,6 +376,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menu_change_pass).setVisible(true);
         menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
+
         removeWallMenu = menu.findItem(R.id.menu_remove_wallpaper);
         if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
             removeWallMenu.setVisible(true);

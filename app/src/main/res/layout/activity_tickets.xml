@@ -59,5 +59,16 @@
             android:layout_centerInParent="true"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/txtEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text=""
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textSize="18sp" />
+
     </RelativeLayout>
 </layout>

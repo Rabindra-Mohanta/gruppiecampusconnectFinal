@@ -1,6 +1,7 @@
 package school.campusconnect.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.NestedScrollView;
@@ -11,16 +12,21 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +34,10 @@ import android.widget.Toast;
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.google.gson.Gson;
 import com.scopely.fontain.views.FontTextView;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,14 +58,17 @@ import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AmazoneAudioDownload;
+import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 
-public class TicketDetailsActivity extends BaseActivity implements View.OnClickListener, LeafManager.OnCommunicationListener {
+public class TicketDetailsActivity extends BaseActivity implements View.OnClickListener, LeafManager.OnCommunicationListener, TicketDetailsImageAdapter.ListenerOnclick {
 
     public static String TAG = "TicketDetailsActivity";
 
+    AmazoneAudioDownload asyncTask;
 
     @Bind(R.id.iconBack)
     public ImageView iconBack;
@@ -126,6 +139,9 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     @Bind(R.id.rvimgAttachment)
     public AsymmetricRecyclerView rvimgAttachment;
 
+    @Bind(R.id.llAudio)
+    public RelativeLayout llAudio;
+
     @Bind(R.id.rvBoothCordinator)
     public RecyclerView rvBoothCordinator;
 
@@ -140,6 +156,52 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
     @Bind(R.id.scrollView)
     public NestedScrollView scrollView;
+
+    @Bind(R.id.imgDownloadAudio)
+    ImageView imgDownloadAudio;
+
+    @Bind(R.id.imgPlayAudio)
+    ImageView imgPlayAudio;
+
+    @Bind(R.id.imgPauseAudio)
+    ImageView imgPauseAudio;
+
+    @Bind(R.id.llProgress)
+    FrameLayout llProgress;
+
+    @Bind(R.id.progressBarAudioDownload)
+    ProgressBar progressBarAudioDownload;
+
+    @Bind(R.id.imgCancelDownloadAudio)
+    ImageView imgCancelDownloadAudio;
+
+    @Bind(R.id.tvTimeAudio)
+    TextView tvTimeAudio;
+
+    @Bind(R.id.seekBarAudio)
+    SeekBar seekBarAudio;
+
+    MediaPlayer mediaPlayer  = new MediaPlayer();
+    private Handler mHandler = new Handler();
+
+    Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+
+            try{
+                int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                Log.e(TAG,"mCurrentPosition"+ mCurrentPosition);
+                tvTimeAudio.setText(formatDate(mCurrentPosition));
+                seekBarAudio.setProgress(mCurrentPosition*10);
+                mHandler.postDelayed(myRunnable, 1000);
+            }catch (Exception e)
+            {
+                Log.e(TAG,"exception"+ e.getMessage());
+            }
+
+        }
+    };
 
    // ActivityTicketDetailsBinding binding;
     private LeafManager manager;
@@ -163,6 +225,32 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
         listner();
     }
 
+    private String formatDate(int second)  {
+
+        String seconds , minutes;
+        if(second>60)
+        {
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+
+            if(second/60 < 10)
+                minutes = "0"+second/60;
+            else
+                minutes = ""+second/60;
+        }
+        else
+        {
+            minutes = "00";
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+        }
+        return minutes+":"+seconds;
+    }
+
     private void listner() {
 
         btnDeny.setOnClickListener(this);
@@ -172,6 +260,12 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
         imgDropdown.setOnClickListener(this);
         btnsendComment.setOnClickListener(this);
         llRedirectMap.setOnClickListener(this);
+
+        imgPlayAudio.setOnClickListener(this);
+        imgDownloadAudio.setOnClickListener(this);
+        imgCancelDownloadAudio.setOnClickListener(this);
+        imgPauseAudio.setOnClickListener(this);
+
     }
 
     private void inits() {
@@ -323,24 +417,45 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
                 if (taskData.getFileName() != null &&  taskData.getFileName().size()> 0)
                 {
-                    TicketDetailsImageAdapter adapter;
-
-                    rvimgAttachment.setRequestedHorizontalSpacing(Utils.dpToPx(getApplicationContext(), 3));
-                    rvimgAttachment.addItemDecoration(
-                            new SpacesItemDecoration(getResources().getDimensionPixelSize(R.dimen.padding_3dp)));
-                    if(taskData.getFileName().size()==3)
+                    if (taskData.getFileType().equals(Constants.FILE_TYPE_AUDIO))
                     {
-                        adapter = new TicketDetailsImageAdapter(2, taskData.getFileName().size(), getApplicationContext(), taskData);
+                        if (AmazoneAudioDownload.isAudioDownloaded(taskData.getFileName().get(0))) {
+                            imgDownloadAudio.setVisibility(View.GONE);
+                            imgPlayAudio.setVisibility(View.VISIBLE);
+                        } else {
+                            imgDownloadAudio.setVisibility(View.VISIBLE);
+                        }
+
+                        rvimgAttachment.setVisibility(View.GONE);
+                        llAudio.setVisibility(View.VISIBLE);
+
                     }
                     else
                     {
-                        adapter = new TicketDetailsImageAdapter( Constants.MAX_IMAGE_NUM, taskData.getFileName().size(), getApplicationContext(), taskData);
+                        rvimgAttachment.setVisibility(View.VISIBLE);
+                        llAudio.setVisibility(View.GONE);
+
+                        TicketDetailsImageAdapter adapter;
+
+                        rvimgAttachment.setRequestedHorizontalSpacing(Utils.dpToPx(getApplicationContext(), 3));
+                        rvimgAttachment.addItemDecoration(
+                                new SpacesItemDecoration(getResources().getDimensionPixelSize(R.dimen.padding_3dp)));
+                        if(taskData.getFileName().size()==3)
+                        {
+                            adapter = new TicketDetailsImageAdapter(this,2, taskData.getFileName().size(), getApplicationContext(), taskData);
+                        }
+                        else
+                        {
+                            adapter = new TicketDetailsImageAdapter( this,Constants.MAX_IMAGE_NUM, taskData.getFileName().size(), getApplicationContext(), taskData);
+                        }
+                        rvimgAttachment.setAdapter(new AsymmetricRecyclerViewAdapter<>(getApplicationContext(), rvimgAttachment, adapter));
+
                     }
-                    rvimgAttachment.setAdapter(new AsymmetricRecyclerViewAdapter<>(getApplicationContext(), rvimgAttachment, adapter));
                 }
                 else
                 {
                     rvimgAttachment.setVisibility(View.GONE);
+                    llAudio.setVisibility(View.GONE);
                 }
                 getComment();
 
@@ -348,6 +463,40 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
             reqPermission();
         }
+
+        seekBarAudio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                if (progress == 100)
+                {
+                    mHandler.removeCallbacks(myRunnable);
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                    imgPauseAudio.setVisibility(View.GONE);
+                    imgPlayAudio.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mHandler.removeCallbacks(myRunnable);
+            }
+        });
     }
 
 
@@ -548,8 +697,101 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     sendComment();
                 }
                 break;
+
+            case R.id.imgDownloadAudio:
+                startDownload();
+                break;
+
+            case R.id.imgCancelDownloadAudio:
+                cancelDownload();
+                break;
+
+            case R.id.imgPlayAudio:
+                playAudio();
+                break;
+
+            case R.id.imgPauseAudio:
+                pauseAudio();
+                break;
         }
     }
+
+    private void startDownload() {
+        imgDownloadAudio.setVisibility(View.GONE);
+        llProgress.setVisibility(View.VISIBLE);
+        if (isConnectionAvailable()) {
+            asyncTask = AmazoneAudioDownload.download(this,taskData.getFileName().get(0) , new AmazoneAudioDownload.AmazoneDownloadSingleListener() {
+                @Override
+                public void onDownload(File file) {
+                  llProgress.setVisibility(View.GONE);
+                  imgPlayAudio.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void error(String msg) {
+                    Toast.makeText(getApplicationContext(),"error in Download :"+msg,Toast.LENGTH_SHORT).show();
+                    imgDownloadAudio.setVisibility(View.VISIBLE);
+                    llProgress.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void progressUpdate(int progress, int max) {
+
+                   progressBarAudioDownload.setProgress(progress);
+
+                }
+            });
+        } else {
+            showNoNetworkMsg();
+        }
+    }
+    private void cancelDownload() {
+        imgDownloadAudio.setVisibility(View.VISIBLE);
+        llProgress.setVisibility(View.GONE);
+        asyncTask.cancel(true);
+    }
+    private void playAudio() {
+
+        try {
+            if (mediaPlayer != null && mediaPlayer.isPlaying())
+            {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+                mediaPlayer.setDataSource(Constants.decodeUrlToBase64(taskData.getFileName().get(0)));
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+                imgPlayAudio.setVisibility(View.GONE);
+                imgPauseAudio.setVisibility(View.VISIBLE);
+
+                runOnUiThread(myRunnable);
+            }
+            else
+            {
+                mediaPlayer.setDataSource(Constants.decodeUrlToBase64(taskData.getFileName().get(0)));
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+
+                imgPauseAudio.setVisibility(View.VISIBLE);
+                imgPlayAudio.setVisibility(View.GONE);
+                runOnUiThread(myRunnable);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+    private void pauseAudio() {
+
+        mHandler.removeCallbacks(myRunnable);
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        imgPauseAudio.setVisibility(View.GONE);
+        imgPlayAudio.setVisibility(View.VISIBLE);
+    }
+
     private Boolean isValid()
     {
         if (etComment.getText().toString().isEmpty())
@@ -606,9 +848,42 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
 
+        if (mediaPlayer.isPlaying())
+        {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
+        mHandler.removeCallbacks(myRunnable);
         Intent returnIntent = getIntent();
         returnIntent.putExtra("Option",SelectedOption);
         setResult(Activity.RESULT_CANCELED,returnIntent);
         finish();
+    }
+
+    @Override
+    public void onClick(TicketListResponse.TicketData item, ArrayList<String> allImageList) {
+        if(item.getFileType().equals(Constants.FILE_TYPE_IMAGE)){
+            if (allImageList.size() == 1){
+                Intent i = new Intent(this, FullScreenActivity.class);
+                i.putExtra("image", item.getFileName().get(0));
+                this.startActivity(i);
+            } else {
+                Intent i = new Intent(this, FullScreenMultiActivity.class);
+                i.putStringArrayListExtra("image_list", item.getFileName());
+                this.startActivity(i);
+            }
+        }/*else {
+            if (allImageList.size() == 1){
+                Intent i = new Intent(this, VideoPlayActivity.class);
+                i.putExtra("video", allImageList.get(0));
+                i.putExtra("thumbnail", thumbnailImages.get(0));
+                this.startActivity(i);
+            } else {
+                Intent i = new Intent(this, FullScreenVideoMultiActivity.class);
+                i.putStringArrayListExtra("video_list", allImageList);
+                i.putStringArrayListExtra("thumbnailImages", thumbnailImages);
+                this.startActivity(i);
+            }
+        }*/
     }
 }

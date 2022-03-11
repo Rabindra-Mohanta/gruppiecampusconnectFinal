@@ -33,7 +33,7 @@ public class ChapterActivity extends BaseActivity {
 
     @Bind(R.id.imgHome)
     public ImageView imgHome;
-
+    ChapterListFragment classListFragment;
 
     boolean canPost;
     String team_id;
@@ -71,13 +71,14 @@ public class ChapterActivity extends BaseActivity {
         path = getIntent().getStringExtra("path");
 
 
-        ChapterListFragment classListFragment=new ChapterListFragment();
+        classListFragment=new ChapterListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
 
     }
     @Override
     public void onBackPressed() {
+        classListFragment.removeAdapterMedia();
         super.onBackPressed();
     }
 
@@ -126,6 +127,7 @@ public class ChapterActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
+
 
     BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override

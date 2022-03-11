@@ -83,7 +83,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
 
         if (issueData.size()>5)
         {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 800);
             binding.rvSearchIssue.setLayoutParams(params);
         }
         else

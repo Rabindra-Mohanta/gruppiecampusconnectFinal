@@ -951,6 +951,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         //remove 3 option view discuss,my people and bookmarks 3-1-22
         if (mGroupItem.isAdmin) {
             llDiscuss.setVisibility(View.GONE);
+            llBothCoordinateRegister.setVisibility(View.GONE);
         } else {
             llDiscuss.setVisibility(View.GONE);
         }
@@ -986,7 +987,11 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                 llIssueRegister.setVisibility(View.VISIBLE);
                 llBothRegister.setVisibility(View.VISIBLE);
-                llBothCoordinateRegister.setVisibility(View.VISIBLE);
+
+                if (mGroupItem.isAdmin)
+                {
+                    llBothCoordinateRegister.setVisibility(View.VISIBLE);
+                }
 
                 tabText = new String[4];
                 tabIcon = new int[4];
