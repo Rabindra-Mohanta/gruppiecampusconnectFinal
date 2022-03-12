@@ -374,10 +374,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     };
 
     private int getPositionOf(String teamId) {
-        for (int i = 0; i < result.size(); i++) {
+        if(result !=null)
+        {
+             for (int i = 0; i < result.size(); i++) {
             if (result.get(i).getId().equalsIgnoreCase(teamId)) {
                 listItemData = result.get(i);
                 return i;
+            }
             }
         }
 

@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import io.reactivex.exceptions.UndeliverableException;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 import school.campusconnect.utils.AppLog;
 
@@ -51,6 +53,17 @@ public class LeafApplication extends Application  {
         ActivityLifecycleCallback.register(this);
         super.onCreate();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+        RxJavaPlugins.setErrorHandler(e -> {
+            if (e instanceof UndeliverableException) {
+                e = e.getCause();
+            }
+            else
+            {
+                Thread.currentThread().getUncaughtExceptionHandler().uncaughtException(Thread.currentThread() , e);
+            }
+
+        });
         sIntance = this;
         MultiDex.install(this);
       /*  Picasso.Builder builder = new Picasso.Builder(this);

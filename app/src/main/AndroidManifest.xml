@@ -48,11 +48,35 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.VoterListActivity"></activity>
-        <activity android:name=".activities.AddVoterActivity" />
-        <activity android:name=".activities.StreetListActivity" />
-        <activity android:name=".activities.WorkerListActivity" />
-        <activity android:name=".activities.MasterListActivity" />
+
+        <activity android:name=".activities.ChangePinActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.VoterListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.AddVoterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.StreetListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.WorkerListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.MasterListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".utils.RecordAudioActivity"
             android:exported="false"

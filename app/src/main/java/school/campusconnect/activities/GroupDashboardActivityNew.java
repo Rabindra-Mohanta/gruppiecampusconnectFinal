@@ -304,6 +304,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
+
+
     public void callEventApi() {
         new EventAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -43,6 +43,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddPostActivity;
 import school.campusconnect.activities.CalendarActivity;
 import school.campusconnect.activities.ChangePasswordActivity;
+import school.campusconnect.activities.ChangePinActivity;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.activities.GalleryActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
@@ -120,6 +121,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+
         if (GroupDashboardActivityNew.allowedToAddUser)
             menu.findItem(R.id.menu_add_team).setVisible(true);
         else
@@ -136,16 +138,19 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
+            menu.findItem(R.id.menu_change_pin).setVisible(false);
 
         } else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
+            menu.findItem(R.id.menu_change_pin).setVisible(false);
 
         } else {
-
+            menu.findItem(R.id.menu_change_pin).setVisible(true);
             menu.findItem(R.id.menu_logout).setVisible(true);
             menu.findItem(R.id.menu_change_pass).setVisible(true);
         }
+
         menuItem = menu.findItem(R.id.action_notification_list);
         menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
         menuItem.setVisible(false);
@@ -189,6 +194,12 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
                 startActivity(intent);
                 return true;
+
+            case R.id.menu_change_pin:
+                Intent intentpin= new Intent(getActivity(), ChangePinActivity.class);
+                startActivity(intentpin);
+                return true;
+
             case R.id.menu_logout:
                 logout();
                 getActivity().finish();
@@ -290,6 +301,16 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
         //   ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(GroupDashboardActivityNew.total_user + " users");
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (feedAdapter != null)
+        {
+            feedAdapter.removeCallBack();
+        }
     }
 
     @Override
@@ -629,9 +650,9 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
                 notificationList.add(notificationListData);
             }
-            if (notificationList.size()>3)
+            if (notificationList.size()>1)
             {
-                feedAdapter.add(notificationList,3);
+                feedAdapter.add(notificationList,1);
             }
             else
             {

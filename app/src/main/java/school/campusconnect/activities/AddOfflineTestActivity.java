@@ -559,7 +559,12 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    list.get(pos).maxMarks = s.toString();
+
+                    if(list.size() > pos)
+                    {
+                        list.get(pos).maxMarks = s.toString();
+                    }
+
                 }
             });
 
@@ -576,7 +581,10 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    list.get(pos).minMarks = s.toString();
+                    if(list.size() > pos)
+                    {
+                        list.get(pos).minMarks = s.toString();
+                    }
                 }
             });
 

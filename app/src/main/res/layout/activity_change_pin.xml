@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimaryBg"
+        android:layout_height="match_parent"
+        tools:context=".activities.ChangePinActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:id="@+id/toolbar">
+            <Button
+                android:id="@+id/btnNext"
+                android:layout_width="@dimen/login_button_width"
+                android:text="@string/done"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/padding_20dp"
+                android:paddingRight="@dimen/padding_10dp"
+                style="@style/LoginButton_Top"
+                android:textStyle="bold"
+                android:gravity="right|center_vertical"
+                android:layout_height="@dimen/login_button_height" />
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/login_button_height"
+                android:src="@drawable/icon_back_white"/>
+        </RelativeLayout>
+
+
+
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="@dimen/padding_20dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:layout_below="@id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="@dimen/padding_40dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/app_icon"
+                android:visibility="visible" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:text="@string/lbl_setOldPin"
+                android:layout_gravity="center"
+                android:textColor="@color/colorTextWhite"
+                style="@style/LabelHeader2"
+                />
+
+            <in.aabhasjindal.otptextview.OtpTextView
+                android:id="@+id/etOldPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                app:height="40dp"
+                app:width="40dp"
+                app:bar_enabled="true"
+                app:bar_height="2dp"
+                app:length="4"
+                app:hide_otp="true"
+                app:bar_active_color="@color/white"
+                android:layout_gravity="center"
+                app:otp_text_size="24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:text="@string/lbl_setNewPin"
+                android:layout_gravity="center"
+                android:textColor="@color/colorTextWhite"
+                style="@style/LabelHeader2"
+                />
+
+            <in.aabhasjindal.otptextview.OtpTextView
+                android:id="@+id/etNewPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                app:height="40dp"
+                app:width="40dp"
+                app:bar_enabled="true"
+                app:bar_height="2dp"
+                app:length="4"
+                app:hide_otp="true"
+                app:bar_active_color="@color/white"
+                android:layout_gravity="center"
+                app:otp_text_size="24dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:text="@string/lbl_conPin"
+                android:layout_gravity="center"
+                android:textColor="@color/colorTextWhite"
+                style="@style/LabelHeader2"
+                />
+
+            <in.aabhasjindal.otptextview.OtpTextView
+                android:id="@+id/etConfirmPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                app:height="40dp"
+                app:width="40dp"
+                app:bar_enabled="true"
+                app:bar_height="2dp"
+                app:length="4"
+                app:hide_otp="true"
+                app:bar_active_color="@color/white"
+                android:layout_gravity="center"
+                app:otp_text_size="24dp"/>
+
+
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/lblError"
+                android:layout_marginTop="@dimen/padding_40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/red"
+                style="@style/LabelHeader2"
+                />
+
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</layout>

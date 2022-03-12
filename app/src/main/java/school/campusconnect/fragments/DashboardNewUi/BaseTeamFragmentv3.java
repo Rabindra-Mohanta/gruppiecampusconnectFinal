@@ -1,26 +1,37 @@
 package school.campusconnect.fragments.DashboardNewUi;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +39,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,14 +48,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.CalendarActivity;
 import school.campusconnect.activities.ChangePasswordActivity;
+import school.campusconnect.activities.ChangePinActivity;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.activities.GalleryActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
@@ -71,13 +88,21 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.PicassoImageLoadingService;
+import school.campusconnect.utils.SliderAdapter;
+import school.campusconnect.views.SMBDialogUtils;
+import ss.com.bannerslider.Slider;
+import ss.com.bannerslider.viewholder.ImageSlideViewHolder;
 
-public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick {
+import static android.app.Activity.RESULT_OK;
+
+public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick, SliderAdapter.Listner {
 
 
     private static final String TAG = "BaseTeamFragmentv3";
 
-
+    //SliderBannerAdapter SliderBannerAdapter;
     private LeafManager manager;
     private TeamListAdapterNewV2 mAdapter;
     private FeedAdapter feedAdapter;
@@ -87,9 +112,12 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     DatabaseHandler databaseHandler;
     LeafPreference pref;
 
+    int pos = 0;
+    private Boolean isEdit = false;
     ArrayList<BaseTeamv2Response.TeamListData> teamList = new ArrayList<>();
     ArrayList<NotificationListRes.NotificationListData> notificationList = new ArrayList<>();
     ArrayList<AdminFeederResponse.FeedData> adminNotificationList = new ArrayList<>();
+    ArrayList<String> imageSlider = new ArrayList<>();
 
     boolean isVisible;
 
@@ -97,6 +125,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     private MenuItem removeWallMenu;
     private GroupItem mGroupItem;
+
+    private File cameraFile;
+    public Uri imageCaptureFile;
+
+
+    public static final int REQUEST_LOAD_CAMERA_IMAGE = 101;
+    public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
+
 
     FragmentBaseTeamFragmentv3Binding binding;
 
@@ -120,8 +156,13 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         getTeams();
 
+
+
         return binding.getRoot();
     }
+
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,17 +187,20 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
+            menu.findItem(R.id.menu_change_pin).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
 
         } else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
+            menu.findItem(R.id.menu_change_pin).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
 
         } else {
-
+            menu.findItem(R.id.menu_change_pin).setVisible(true);
             menu.findItem(R.id.menu_logout).setVisible(true);
             menu.findItem(R.id.menu_change_pass).setVisible(true);
         }
+
         menuItem = menu.findItem(R.id.action_notification_list);
         menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
         menuItem.setVisible(false);
@@ -200,6 +244,12 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
                 startActivity(intent);
                 return true;
+
+            case R.id.menu_change_pin:
+                Intent intentpin= new Intent(getActivity(), ChangePinActivity.class);
+                startActivity(intentpin);
+                return true;
+
             case R.id.menu_logout:
                 logout();
                 getActivity().finish();
@@ -272,6 +322,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         binding.imgExpandAdminFeedAfter.setOnClickListener(this);
 
         binding.tvViewMoreFeed.setOnClickListener(this);
+        binding.imgEditBanner.setOnClickListener(this);
+
+        Slider.init(new PicassoImageLoadingService(getContext()));
+        imageSlider.add("https://i.picsum.photos/id/0/5616/3744.jpg?hmac=3GAAioiQziMGEtLbfrdbcoenXoWAW-zlyEAMkfEdBzQ");
+        binding.llSlider.setAdapter(new SliderBannerAdapter(imageSlider,getActivity()));
+     /*   SnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(binding.llSlider);
+        binding.llSlider.setAdapter(new SliderAdapter(imageSlider,getContext(),this,mGroupItem.isAdmin));*/
 
     }
 
@@ -701,9 +759,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                     notificationList.add(notificationListData);
                 }
-                if (notificationList.size()>3)
+                if (notificationList.size()>1)
                 {
-                    feedAdapter.add(notificationList,3);
+                    feedAdapter.add(notificationList,1);
                 }
                 else
                 {
@@ -793,6 +851,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 binding.imgExpandAdminFeedAfter.setVisibility(View.GONE);
                 break;
 
+            case R.id.imgEditBanner:
+                if (checkPermissionForWriteExternal()) {
+                    showPhotoDialog(R.array.array_image);
+                } else {
+                    requestPermissionForWriteExternal(21);
+                }
+                break;
+
             case R.id.tvViewMoreFeed:
                 if (isConnectionAvailable()) {
                     Intent intent = new Intent(getContext(), NotificationListActivity.class);
@@ -807,6 +873,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (feedAdapter != null)
+        {
+            feedAdapter.removeCallBack();
+        }
+    }
     @Override
     public void setReadedComment(long idPrimary, Boolean readedComment) {
        /* NotificationTable.updateNotification(String.valueOf(readedComment),idPrimary);
@@ -904,6 +979,122 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     }
 
+    @Override
+    public void startEditBanner(Uri uri,int position) {
+
+
+        pos = position;
+        isEdit = true;
+        /*if (checkPermissionForWriteExternal()) {
+                   *//* if (listImages.size() > 0) {
+                        showPhotoDialog(R.array.array_image_modify);
+                    } else {*//*
+            showPhotoDialog(R.array.array_image);
+            //}
+
+        } else {
+            requestPermissionForWriteExternal(21);
+        }*/
+
+        CropImage.activity(uri)
+                .start(getContext(),this);
+
+    }
+
+    public void showPhotoDialog(int resId) {
+        SMBDialogUtils.showSMBSingleChoiceDialog(getActivity(),
+                R.string.lbl_select_img, resId, 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ListView lw = ((AlertDialog) dialog).getListView();
+                        switch (lw.getCheckedItemPosition()) {
+                            case 0:
+                                startCamera(REQUEST_LOAD_CAMERA_IMAGE);
+                                break;
+                            case 1:
+                                startGallery(REQUEST_LOAD_GALLERY_IMAGE);
+                                break;
+
+                        }
+                    }
+                });
+    }
+
+    private void startCamera(int requestCode) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            cameraFile = ImageUtil.getOutputMediaFile();
+            imageCaptureFile = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
+        } else {
+            cameraFile = ImageUtil.getOutputMediaFile();
+            imageCaptureFile = Uri.fromFile(cameraFile);
+        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCaptureFile);
+        startActivityForResult(intent, requestCode);
+
+    }
+    protected void startGallery(int requestCode) {
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), requestCode);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if (resultCode == RESULT_OK) {
+
+                Uri resultUri = result.getUri();
+                Log.e(TAG,"result Uri Crop Image"+resultUri);
+               /* if (isEdit)
+                {
+                    imageSlider.set(pos,resultUri.getPath());
+                    binding.llSlider.setAdapter(new SliderAdapter(imageSlider,getActivity(),this,false));
+                }
+                else
+                {
+
+                }*/
+
+                imageSlider.add(resultUri.getPath());
+                binding.llSlider.setAdapter(new SliderBannerAdapter(imageSlider,getActivity()));
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.e(TAG,"error"+error);
+            }
+        }
+
+        if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            final Uri selectedImage = data.getData();
+            AppLog.e(TAG, "selectedImage : " + selectedImage);
+
+            isEdit = false;
+            CropImage.activity(selectedImage)
+                    .start(getContext(),this);
+        }
+        else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
+               AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
+
+
+            CropImage.activity(imageCaptureFile)
+                    .start(getContext(),this);
+        }
+    }
+
     public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {
 
         private ArrayList<AdminFeederResponse.FeedData> feedData;
@@ -949,5 +1140,43 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 binding = itemView;
             }
         }
+    }
+
+    public class SliderBannerAdapter extends ss.com.bannerslider.adapters.SliderAdapter
+    {
+
+        ArrayList<String> urls;
+        Context context;
+
+        public SliderBannerAdapter(ArrayList<String> urls, Context context) {
+            this.urls = urls;
+            this.context = context;
+        }
+
+        @Override
+        public int getItemCount() {
+            return urls.size();
+        }
+
+        @Override
+        public void onBindImageSlide(int position, ImageSlideViewHolder imageSlideViewHolder) {
+            imageSlideViewHolder.bindImageSlide(urls.get(position));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 21:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showPhotoDialog(R.array.array_image);
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+        }
+
     }
 }

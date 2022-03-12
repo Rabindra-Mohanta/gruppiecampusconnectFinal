@@ -292,6 +292,7 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
+        //menu.findItem(R.id.menu_change_pin).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -301,6 +302,11 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
             case R.id.menu_logout:
                 logout();
                 finish();
+                return true;
+
+            case R.id.menu_change_pin:
+                Intent intentpin= new Intent(this, ChangePinActivity.class);
+                startActivity(intentpin);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

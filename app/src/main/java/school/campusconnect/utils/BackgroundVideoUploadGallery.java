@@ -9,10 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,24 +29,13 @@ import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import id.zelory.compressor.Compressor;
-import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
-import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddGalleryPostRequest;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;

@@ -33,11 +33,8 @@ import com.activeandroid.ActiveAndroid;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
-
-import java.util.Map;
 
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;

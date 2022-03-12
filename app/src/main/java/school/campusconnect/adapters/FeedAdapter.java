@@ -1,17 +1,20 @@
 package school.campusconnect.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.logging.Handler;
 
 import school.campusconnect.R;
 import school.campusconnect.databinding.ItemFeedBinding;
@@ -23,9 +26,90 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public static String TAG = "FeedAdapter";
     private Context context;
     public List<NotificationListRes.NotificationListData> results;
+
     private int itemCount;
+
+    private Boolean isAssigned = false;
     public boolean isExpand = false;
     private onClick onClick;
+    int CountScroll = 0;
+
+
+    int totalItem = 0;
+    ViewHolder viewHolder;
+
+    private Handler mHandler = new Handler();
+
+    Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+
+
+            try{
+                if (totalItem == CountScroll)
+                {
+                  /*  Animation anim = new AlphaAnimation(0.0f, 1.0f);
+                    anim.setDuration(500); //You can manage the blinking time with this parameter
+                    anim.setStartOffset(20);
+                    anim.setRepeatMode(Animation.REVERSE);
+                    anim.setRepeatCount(0);
+                    viewHolder.itemView.startAnimation(anim);*/
+
+                    if (results.get(totalItem-CountScroll+1).getReadedComment()!= null && results.get(totalItem-CountScroll+1).getReadedComment().equalsIgnoreCase("true"))
+                    {
+                        viewHolder.binding.llReaded.setBackground(context.getResources().getDrawable(R.drawable.feed_transparent_bg));
+                        viewHolder.binding.viewReaded.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        viewHolder.binding.llReaded.setBackground(null);
+                        viewHolder.binding.viewReaded.setVisibility(View.INVISIBLE);
+                    }
+
+                    viewHolder.binding.tvdesc.setText(results.get(totalItem-CountScroll+1).getMessage());
+                    Log.e(TAG,"Msg totalItem"+results.get(totalItem-CountScroll+1).getMessage());
+                    CountScroll = 0;
+
+
+
+                }
+                else
+                {
+                    Animation anim = new AlphaAnimation(0.0f, 1.0f);
+                    anim.setDuration(500); //You can manage the blinking time with this parameter
+                    anim.setStartOffset(20);
+                    anim.setRepeatMode(Animation.REVERSE);
+                    anim.setRepeatCount(0);
+                    viewHolder.itemView.startAnimation(anim);
+
+                    if (results.get(CountScroll).getReadedComment()!= null && results.get(CountScroll).getReadedComment().equalsIgnoreCase("true"))
+                    {
+                        viewHolder.binding.llReaded.setBackground(context.getResources().getDrawable(R.drawable.feed_transparent_bg));
+                        viewHolder.binding.viewReaded.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        viewHolder.binding.llReaded.setBackground(null);
+                        viewHolder.binding.viewReaded.setVisibility(View.INVISIBLE);
+                    }
+
+                    viewHolder.binding.tvdesc.setText(results.get(CountScroll).getMessage());
+                    Log.e(TAG,"Msg "+results.get(CountScroll).getMessage());
+
+
+                    CountScroll = CountScroll + 1;
+                }
+                mHandler.postDelayed(myRunnable, 3000);
+
+            }catch (Exception e)
+            {
+                Log.e(TAG,"exception"+ e.getMessage());
+            }
+
+        }
+    };
+
 
     public FeedAdapter(FeedAdapter.onClick onClick) {
         this.onClick = onClick;
@@ -42,7 +126,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FeedAdapter.ViewHolder holder, int position) {
 
+        viewHolder = holder;
+
+        if (!isAssigned)
+        {
+            ((AppCompatActivity) context).runOnUiThread(myRunnable);
+            isAssigned = true;
+        }
+
+
         NotificationListRes.NotificationListData data = results.get(position);
+
 
         if (position == 0)
         {
@@ -109,6 +203,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             }
         });
 
+
+
         /*if (position == 0)
         {
             holder.binding.llReaded.setBackground(null);
@@ -129,11 +225,22 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         }*/
 
 
+
     }
 
     public void add(List<NotificationListRes.NotificationListData> results,int itemCount)
     {
         this.results = results;
+
+        if (results.size()>=10)
+        {
+            this.totalItem = 10;
+        }
+        else
+        {
+            this.totalItem = results.size();
+        }
+
         this.itemCount = itemCount;
         notifyDataSetChanged();
     }
@@ -141,15 +248,23 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     {
         if (isExpand)
         {
+            ((AppCompatActivity) context).runOnUiThread(myRunnable);
             isExpand = false;
         }
         else
         {
+            mHandler.removeCallbacks(myRunnable);
             isExpand = true;
+            CountScroll = 0;
         }
         notifyDataSetChanged();
     }
 
+    public void removeCallBack()
+    {
+        isAssigned = false;
+        mHandler.removeCallbacks(myRunnable);
+    }
     @Override
     public int getItemCount() {
 

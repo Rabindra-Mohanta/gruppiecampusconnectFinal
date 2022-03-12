@@ -134,6 +134,8 @@
     <string name="lbl_pincode">Pincode</string>
     <string name="lbl_id_num">Id Number</string>
     <string name="lbl_setPin">Set Pin</string>
+    <string name="lbl_setOldPin">Old Pin</string>
+    <string name="lbl_setNewPin">New Pin</string>
     <string name="lbl_conPin">Confirm Pin</string>
     <string name="lbl_valPin">Validate Pin</string>
     <string name="lbl_leads">My Friends</string>
@@ -155,6 +157,8 @@
     <string name="lbl_chat">Messages</string>
     <string name="lbl_que">Doubts</string>
     <string name="lbl_replies">Replies</string>
+    <string name="lbl_my_family">My Family</string>
+    <string name="lbl_my_issue">My Issues</string>
 
     <string name="lbl_notifications">Favourite Posts</string>
     <string name="lbl_posts">Posts</string>
@@ -610,6 +614,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_obtain">Obtained</string>
     <string name="lbl_about_constituency">About Constituency</string>
     <string name="lbl_booth_register">Booth/Member Register</string>
+    <string name="lbl_booths_register">Booth Register</string>
     <string name="lbl_committee">Committee</string>
     <string name="strDeleteCommittee">Delete Committee</string>
     <string name="strEditCommittee">Edit Committee</string>

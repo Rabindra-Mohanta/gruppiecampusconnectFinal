@@ -45,12 +45,9 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.ChangePasswordActivity;
@@ -72,7 +69,6 @@ import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
-import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew.OnTeamClickListener, LeafManager.OnCommunicationListener {

@@ -93,7 +93,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         }
     };
     int pos;
-    Timer t = new Timer();
+
 
     AmazoneAudioDownload asyncTask;
 

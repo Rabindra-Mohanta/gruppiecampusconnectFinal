@@ -63,6 +63,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_search_issue_dialog, container, false);
         return binding.getRoot();
     }
@@ -81,7 +82,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
         binding.rvSearchIssue.setAdapter(adapter);
         adapter.add(issueData);
 
-        if (issueData.size()>5)
+       /* if (issueData.size()>5)
         {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 800);
             binding.rvSearchIssue.setLayoutParams(params);
@@ -90,7 +91,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
         {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             binding.rvSearchIssue.setLayoutParams(params);
-        }
+        }*/
 
         binding.edtSearch.addTextChangedListener(new TextWatcher() {
 
@@ -217,7 +218,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
 
             final IssueListResponse.IssueData item = list.get(position);
 
-            holder.txt_issue.setText(item.issue);
+            holder.txt_issue.setText(item.issue+" ("+item.jurisdiction+")");
         }
 
         @Override

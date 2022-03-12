@@ -26,22 +26,22 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-           /*     applicationId "school.campusconnect"
+              /*  applicationId "school.campusconnect"
                 versionCode 12
                 versionName "1.3"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')*/
-                // [1. Gruppie Campus constituency]
 
-         /*       applicationId "gcm.gruppie"
+                // [1. Gruppie Campus constituency]
+                applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
-                buildConfigField("String", "APP_ID",  '"constituency"')*/
+                buildConfigField("String", "APP_ID",  '"constituency"')
 
                 /*applicationId "kreis.gruppie"
                 versionCode 3
@@ -183,27 +183,28 @@ android {
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
-                applicationId "mgv.gruppie"
-                versionCode 3
-                versionName "3.0"
+           /*     applicationId "mgv.gruppie"
+                versionCode 4
+                versionName "4.0"
                 resValue "string", "app_name", '"MGV School"'
                 buildConfigField("String", "AppName", '"MGV School"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
 
-                   ndk {
+                  /* ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
-                       abiFilters 'armeabi-v7a'//
-                   }
+                       abiFilters 'armeabi-v7a','armeabi-v8a'//
+                   }*/
             }
     buildTypes {
         release {
             debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"'
+
+ //             buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"'
 
 //            buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://hoysala.gruppie.in"'
@@ -219,8 +220,8 @@ android {
         }
         debug
          {
-            buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"'
- //          buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
+     //       buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"'
+            buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'
           //   buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'
 //           buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'
 //           buildConfigField "String", "BASE_URL", '"https://lite.gruppie.in"'
@@ -387,19 +388,23 @@ dependencies {
     implementation 'com.burhanrashid52:photoeditor:1.5.1'
     implementation 'com.otaliastudios:zoomlayout:1.8.0'
 
-    implementation 'com.github.instacart.truetime-android:library-extension-rx:3.4'
+    implementation 'com.github.instacart.truetime-android:library-extension-rx:3.5'
 
     implementation 'com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview:1.1.0'
 
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
+    //crop image
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
     /*otp view*/
     implementation 'com.github.aabhasr1:OtpView:v1.1.2'
 
     /*range bar*/
     implementation 'com.github.Jay-Goo:RangeSeekBar:2.0.4'
+
+    implementation 'com.ss.bannerslider:bannerslider:2.0.0'
 
 
 }

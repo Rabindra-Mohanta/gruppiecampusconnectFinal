@@ -387,6 +387,7 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
             Intent intent = new Intent(this, NotificationsActivity.class);
             startActivity(intent);
         } else*/
+
         if (item.getItemId() == R.id.nav_logout) {
             if (isConnectionAvailable()) {
                 logoutUser();

@@ -371,7 +371,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_booth_register"
+                            android:text="@string/lbl_booths_register"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                     <LinearLayout

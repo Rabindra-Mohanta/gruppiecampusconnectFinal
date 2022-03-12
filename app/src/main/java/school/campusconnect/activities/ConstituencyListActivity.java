@@ -36,23 +36,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
@@ -60,7 +55,6 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ConstituencyRes;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupItem;
-import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
@@ -376,7 +370,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menu_change_pass).setVisible(true);
         menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
-
+        menu.findItem(R.id.menu_change_pin).setVisible(true);
         removeWallMenu = menu.findItem(R.id.menu_remove_wallpaper);
         if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
             removeWallMenu.setVisible(true);
@@ -432,6 +426,13 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
                 Intent intent = new Intent(this, ChangePasswordActivity.class);
                 startActivity(intent);
                 return true;
+
+            case R.id.menu_change_pin:
+                Intent intentpin= new Intent(this, ChangePinActivity.class);
+                startActivity(intentpin);
+                return true;
+
+
             case R.id.menu_set_wallpaper:
                 if (checkPermissionForWriteExternal()) {
                     startGallery(REQUEST_LOAD_GALLERY_IMAGE);
