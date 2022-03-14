@@ -18,6 +18,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,6 +65,7 @@ import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.views.SMBDialogUtils;
 
 public class TicketDetailsActivity extends BaseActivity implements View.OnClickListener, LeafManager.OnCommunicationListener, TicketDetailsImageAdapter.ListenerOnclick {
 
@@ -72,6 +75,9 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
     @Bind(R.id.iconBack)
     public ImageView iconBack;
+
+    @Bind(R.id.toolbar)
+    public Toolbar toolbar;
 
     @Bind(R.id.tv_toolbar_title)
     public FontTextView tv_toolbar_title;
@@ -225,6 +231,26 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
         listner();
     }
 
+
+    private void deleteTicket() {
+
+        if (isConnectionAvailable()) {
+
+            SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ProgressBar.setVisibility(View.VISIBLE);
+                    manager.deleteTicket(TicketDetailsActivity.this, GroupDashboardActivityNew.groupId,taskData.getIssuePostId());
+                }
+            });
+        }
+        else
+        {
+            showNoNetworkMsg();
+        }
+    }
+
+
     private String formatDate(int second)  {
 
         String seconds , minutes;
@@ -272,7 +298,24 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
         ButterKnife.bind(this);
 
+        manager = new LeafManager();
+
         tv_toolbar_title.setText(getResources().getString(R.string.lbl_tikit_details));
+
+        toolbar.inflateMenu(R.menu.menu_delete_ticket);
+
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                if (item.getItemId() == R.id.menuDeleteTicket) {
+                    deleteTicket();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,7 +324,6 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             }
         });
 
-        manager = new LeafManager();
 
 
         boothCordinatorAdapter = new BoothCordinatorAdapter();
@@ -534,6 +576,15 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
         switch (apiId)
         {
+
+            case LeafManager.API_DELETE_TICKET:
+                Intent returnIntentv1 = getIntent();
+                returnIntentv1.putExtra("Option",SelectedOption);
+                setResult(Activity.RESULT_OK,returnIntentv1);
+                finish();
+                break;
+
+
             case LeafManager.APPROVED_TICKET:
                 BaseResponse res1 = (BaseResponse) response;
                 AppLog.e(TAG, "BaseResponse " + new Gson().toJson(res1));
@@ -848,16 +899,23 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
 
+
+        Intent returnIntent = getIntent();
+        returnIntent.putExtra("Option",SelectedOption);
+        setResult(Activity.RESULT_CANCELED,returnIntent);
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
         if (mediaPlayer.isPlaying())
         {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
         mHandler.removeCallbacks(myRunnable);
-        Intent returnIntent = getIntent();
-        returnIntent.putExtra("Option",SelectedOption);
-        setResult(Activity.RESULT_CANCELED,returnIntent);
-        finish();
     }
 
     @Override

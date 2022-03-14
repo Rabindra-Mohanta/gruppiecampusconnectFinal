@@ -52,6 +52,7 @@ import com.google.gson.Gson;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONObject;
 
@@ -194,6 +195,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     private ProgressDialog progressDialog;
     private boolean isFromCamera;
+
+    private Boolean isGalleryMultiple = false;
+    private Boolean isClear = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1193,35 +1197,95 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             return;
         }
 
-        if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            listImages.clear();
-            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+
+            Log.e(TAG,"result Uri Crop Image "+result.getUri());
+
+            if (resultCode == RESULT_OK) {
+
+
+                Uri resultUri = result.getUri();
+                Log.e(TAG,"result Uri Crop Image "+resultUri);
+
+                if (isGalleryMultiple)
+                {
+                    if (isClear)
+                    {
+                        isClear = false;
+                        listImages.clear();
+
+                    }
+                    fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+                    listImages.add(resultUri.toString());
+                }
+                else
+                {
+                    listImages.clear();
+                    fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+
+                    listImages.add(resultUri.toString());
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.e(TAG,"error"+error);
+            }
+
+            showLastImage();
+            removePdf();
+
+        }
+
+        else if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+
+
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
+
+            isClear = true;
+
             if (clipData == null) {
+
+                isGalleryMultiple = false;
 //                String path = ImageUtil.getPath(this, selectedImage);
-                listImages.add(selectedImage.toString());
+                //  listImages.add(selectedImage.toString());
+                CropImage.activity(selectedImage)
+                        .start(this);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
 //                    String path = ImageUtil.getPath(this, uri1);
-                    listImages.add(uri1.toString());
+                    //    listImages.add(uri1.toString());
+                    isGalleryMultiple = true;
+                    CropImage.activity(uri1)
+                            .start(this);
                 }
             }
-            showLastImage();
-            removePdf();
 
         }
         else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            listImages.clear();
-            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+           /* listImages.clear();
+            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
 //            String path = cameraFile.getAbsolutePath();
             AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
-            listImages.add(imageCaptureFile.toString());
-            showLastImage();
+            //          listImages.add(imageCaptureFile.toString());
+            isGalleryMultiple = false;
+
+         /*   showLastImage();
             removePdf();
-        } else if (requestCode == REQUEST_RECORD_VIDEO && resultCode == Activity.RESULT_OK) {
+            removeAudio();*/
+
+            CropImage.activity(imageCaptureFile)
+                    .setOutputUri(imageCaptureFile)
+                    .start(this);
+
+        }
+
+        else if (requestCode == REQUEST_RECORD_VIDEO && resultCode == Activity.RESULT_OK) {
             listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_VIDEO;
             isFromCamera = true;

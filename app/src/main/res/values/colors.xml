@@ -6,6 +6,7 @@
     <color name="colorPrimary">#293f6e</color>
     <color name="colorPrimaryBg">#293f6e</color>
     <color name="colorPrimaryDark">#293f6e</color>
+    <color name="colorPrimaryLight">#6093FF</color>
     <color name="colorAccent">#293f6e</color>
     <color name="black">#000000</color>
 

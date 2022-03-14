@@ -3,14 +3,18 @@ package school.campusconnect.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +25,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -34,6 +39,7 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.issue.IssueListResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -52,19 +58,86 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    @Bind(R.id.edtSearch)
+    public EditText edtSearch;
+
+    private List<MyTeamData> filteredList;
+    private List<MyTeamData> myTeamDataList;
+
     String type;
+
+    ClassesAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
-        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        type = getArguments().getString("type");
-
         progressBar.setVisibility(View.VISIBLE);
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        inits();
+    }
+
+    private void inits() {
+
+        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+        type = getArguments().getString("type");
+        adapter = new ClassesAdapter();
+        rvClass.setAdapter(adapter);
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+                if (s.toString().length() > 2)
+                {
+                    searchData(s.toString());
+                }
+                else
+                {
+                    adapter.add(myTeamDataList);
+                }
+
+
+                /*else
+                {
+                    if (binding.tvIssue.getVisibility() == View.GONE)
+                    {
+                        binding.tvIssue.setVisibility(View.VISIBLE);
+                    }
+
+                    binding.tvIssue.setText(getResources().getString(R.string.hint_issue_not_found));
+                    filteredList = new ArrayList<>();
+                    adapter = new Adapter(filteredList);
+                    binding.rvSearchIssue.setAdapter(adapter);
+                }*/
+            }
+        });
+    }
+
+    private void searchData(String text) {
+
+        filteredList = new ArrayList<>();
+
+        for(MyTeamData item : myTeamDataList){
+
+            if (item.name.toLowerCase().contains(text.toLowerCase())){
+                filteredList.add(item);
+            }
+        }
+
+        adapter.add(filteredList);
     }
 
     @Override
@@ -85,8 +158,9 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
         BoothResponse res = (BoothResponse) response;
         List<MyTeamData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
-
-        rvClass.setAdapter(new ClassesAdapter(result));
+        myTeamDataList = result;
+        adapter.add(myTeamDataList);
+        rvClass.setAdapter(adapter);
     }
 
     @Override
@@ -104,9 +178,9 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
         List<MyTeamData> list;
         private Context mContext;
 
-        public ClassesAdapter(List<MyTeamData> list) {
-            this.list = list;
-        }
+       /* public ClassesAdapter(List<MyTeamData> list) {
+
+        }*/
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -163,7 +237,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText("No Booths found.");
                 }
                 else {
                     txtEmpty.setText("");
@@ -173,10 +247,15 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText("No Booths found.");
                 return 0;
             }
 
+        }
+
+        public void add(List<MyTeamData> list) {
+            this.list = list;
+            notifyDataSetChanged();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

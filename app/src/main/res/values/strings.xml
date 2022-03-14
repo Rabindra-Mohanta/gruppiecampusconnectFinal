@@ -227,6 +227,7 @@
 
     <string name="hint_search">Search contacts</string>
     <string name="hint_search_issue">Search Issue</string>
+    <string name="hint_search_booth">Search Booth</string>
     <string name="hint_view_more">View More...</string>
     <string name="hint_issue_not_found">Issue Not Found.......</string>
 
@@ -462,6 +463,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_tikit_details">Ticket Details</string>
     <string name="lbl_task_force">Task Force</string>
     <string name="lbl_feed">Feed</string>
+    <string name="lbl_dashboard">Dashboard</string>
     <string name="lbl_daily_activity">Daily Activity</string>
     <string name="lbl_communication_message">Communication Or Message</string>
     <string name="lbl_other_activity">Other Activity</string>
@@ -651,6 +653,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_partyTaskForce">Party Task Force</string>
     <string name="lbl_edit">Edit</string>
     <string name="strDelete">Delete</string>
+    <string name="strTicket">Delete Ticket</string>
     <string name="lbl_select_contact">Select Contacts</string>
     <string name="strSelect">Select</string>
     <string name="lbl_booth_coordinate_register">Booth Coordinator register</string>
@@ -660,7 +663,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_serial_number">Serial Number</string>
     <string name="lbl_booth_number">Booth Number*</string>
     <string name="lbl_booth_address">Booth Address*</string>
+    <string name="lbl_booth_ads">Booth Address</string>
     <string name="lbl_booth_about">Booth About*</string>
+    <string name="lbl_about_booth">About Booth</string>
     <string name="lbl_print_attendance_report">Print Attendance Report</string>
 
     <string-array name="publc_private_array">

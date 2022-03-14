@@ -313,12 +313,12 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
             Toast.makeText(this,"Please enter valid phone",Toast.LENGTH_SHORT).show();
             valid = false;
         }*/
-        else if (!isValueValid(etBoothAddress)) {
+      /*  else if (!isValueValid(etBoothAddress)) {
             valid = false;
         }
         else if (!isValueValid(etAboutBooth)) {
             valid = false;
-        }
+        }*/
         return valid;
     }
 

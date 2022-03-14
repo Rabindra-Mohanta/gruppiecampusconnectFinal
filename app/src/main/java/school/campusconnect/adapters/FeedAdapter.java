@@ -71,8 +71,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                     Log.e(TAG,"Msg totalItem"+results.get(totalItem-CountScroll+1).getMessage());
                     CountScroll = 0;
 
-
-
                 }
                 else
                 {

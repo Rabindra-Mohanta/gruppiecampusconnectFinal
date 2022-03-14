@@ -154,7 +154,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_marginTop="@dimen/padding_15dp"
-                            android:text="@string/lbl_booth_address"
+                            android:text="@string/lbl_booth_ads"
                             android:paddingLeft="@dimen/padding_10dp"
                             style="@style/LabelNormal"
                             android:textAllCaps="true"
@@ -183,7 +183,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_marginTop="@dimen/padding_15dp"
-                            android:text="@string/lbl_booth_about"
+                            android:text="@string/lbl_about_booth"
                             android:paddingLeft="@dimen/padding_10dp"
                             style="@style/LabelNormal"
                             android:textAllCaps="true"

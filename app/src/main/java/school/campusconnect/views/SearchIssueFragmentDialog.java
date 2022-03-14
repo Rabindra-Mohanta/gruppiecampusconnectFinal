@@ -1,5 +1,6 @@
 package school.campusconnect.views;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,9 +64,21 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);
+        //setStyle(DialogFragment.STYLE_NORMAL, R.style.dialog_theme);
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_search_issue_dialog, container, false);
         return binding.getRoot();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog d = getDialog();
+        if (d!=null){
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+            d.getWindow().setLayout(width, height);
+        }
     }
 
     @Override

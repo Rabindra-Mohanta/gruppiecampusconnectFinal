@@ -19,6 +19,8 @@
                 android:layout_marginBottom="@dimen/padding_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:outlineSpotShadowColor="@color/colorPrimaryLight"
+                android:outlineAmbientShadowColor="@color/colorPrimaryLight"
                 android:orientation="vertical">
 
                 <LinearLayout

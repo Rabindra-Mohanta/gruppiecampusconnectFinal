@@ -1763,7 +1763,12 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TicketListResponse> getTickets(@Path("group_id") String group_id,@Query("role") String role,@Query("option") String option,@Query("page") String page);
 
-   /* @GET("/api/v1/groups/{group_id}/issues/tickets/get?")
+    @PUT("/api/v1/groups/{group_id}/issue/{issue_id}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteTicket(@Path("group_id") String group_id,@Path("issue_id") String issue_id);
+
+
+    /* @GET("/api/v1/groups/{group_id}/issues/tickets/get?")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TicketListResponse> getTicketWithoutRole(@Path("group_id") String group_id,@Query("option") String option,@Query("page") String page);
 */

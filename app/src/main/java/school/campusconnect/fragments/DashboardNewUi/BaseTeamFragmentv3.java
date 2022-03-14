@@ -19,6 +19,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -43,6 +44,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -66,6 +68,7 @@ import school.campusconnect.activities.GalleryActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.NotificationListActivity;
 import school.campusconnect.activities.ProfileActivity2;
+import school.campusconnect.activities.ProfileConstituencyActivity;
 import school.campusconnect.activities.ReadMoreActivity;
 import school.campusconnect.adapters.FeedAdapter;
 import school.campusconnect.adapters.TeamListAdapterNewV2;
@@ -117,8 +120,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     ArrayList<BaseTeamv2Response.TeamListData> teamList = new ArrayList<>();
     ArrayList<NotificationListRes.NotificationListData> notificationList = new ArrayList<>();
     ArrayList<AdminFeederResponse.FeedData> adminNotificationList = new ArrayList<>();
-    ArrayList<String> imageSlider = new ArrayList<>();
-
+    ArrayList<Uri> imageSlider = new ArrayList<>();
+    private SliderAdapter sliderAdapter;
     boolean isVisible;
 
     private MenuItem menuItem;
@@ -323,13 +326,17 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         binding.tvViewMoreFeed.setOnClickListener(this);
         binding.imgEditBanner.setOnClickListener(this);
+        binding.imgEditVoter.setOnClickListener(this);
 
-        Slider.init(new PicassoImageLoadingService(getContext()));
-        imageSlider.add("https://i.picsum.photos/id/0/5616/3744.jpg?hmac=3GAAioiQziMGEtLbfrdbcoenXoWAW-zlyEAMkfEdBzQ");
-        binding.llSlider.setAdapter(new SliderBannerAdapter(imageSlider,getActivity()));
-     /*   SnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(binding.llSlider);
-        binding.llSlider.setAdapter(new SliderAdapter(imageSlider,getContext(),this,mGroupItem.isAdmin));*/
+       /* *//*Slider.init(new PicassoImageLoadingService(getContext()));*//*
+        imageSlider.add(Uri.parse("https://i.picsum.photos/id/0/5616/3744.jpg?hmac=3GAAioiQziMGEtLbfrdbcoenXoWAW-zlyEAMkfEdBzQ"));
+     //   binding.llSlider.setAdapter(new SliderBannerAdapter(imageSlider,getActivity()));
+        SnapHelper snapHelper = new PagerSnapHelper();
+
+        snapHelper.attachToRecyclerView(binding.rvSlider);
+        sliderAdapter = new SliderAdapter(getContext(),this,mGroupItem.isAdmin);
+        binding.rvSlider.setAdapter(sliderAdapter);
+        sliderAdapter.add(imageSlider);*/
 
     }
 
@@ -844,11 +851,13 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             case R.id.imgExpandAdminFeedBefore:
                 binding.imgExpandAdminFeedAfter.setVisibility(View.VISIBLE);
                 binding.imgExpandAdminFeedBefore.setVisibility(View.GONE);
+                feedAdminAdapter.expand();
                 break;
 
             case R.id.imgExpandAdminFeedAfter:
                 binding.imgExpandAdminFeedBefore.setVisibility(View.VISIBLE);
                 binding.imgExpandAdminFeedAfter.setVisibility(View.GONE);
+                feedAdminAdapter.expand();
                 break;
 
             case R.id.imgEditBanner:
@@ -856,6 +865,16 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     showPhotoDialog(R.array.array_image);
                 } else {
                     requestPermissionForWriteExternal(21);
+                }
+                break;
+
+            case R.id.imgEditVoter:
+                if (isConnectionAvailable()) {
+                    Intent intent;
+                    intent = new Intent(getActivity(), ProfileConstituencyActivity.class);
+                    startActivity(intent);
+                } else {
+                    showNoNetworkMsg();
                 }
                 break;
 
@@ -1058,19 +1077,21 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             if (resultCode == RESULT_OK) {
 
                 Uri resultUri = result.getUri();
-                Log.e(TAG,"result Uri Crop Image"+resultUri);
-               /* if (isEdit)
+                Log.e(TAG,"result Uri Crop Image "+resultUri);
+
+                Glide.with(getContext()).load(resultUri).into(binding.imgSlider);
+
+             /*   if (isEdit)
                 {
-                    imageSlider.set(pos,resultUri.getPath());
-                    binding.llSlider.setAdapter(new SliderAdapter(imageSlider,getActivity(),this,false));
+                    imageSlider.set(pos,resultUri);
+                    sliderAdapter.add(imageSlider);
                 }
                 else
                 {
-
+                    imageSlider.add(resultUri);
+                    sliderAdapter.add(imageSlider);
                 }*/
 
-                imageSlider.add(resultUri.getPath());
-                binding.llSlider.setAdapter(new SliderBannerAdapter(imageSlider,getActivity()));
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -1082,15 +1103,18 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             final Uri selectedImage = data.getData();
             AppLog.e(TAG, "selectedImage : " + selectedImage);
 
-            isEdit = false;
+          //  isEdit = false;
+
             CropImage.activity(selectedImage)
                     .start(getContext(),this);
         }
         else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
                AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
 
+//            isEdit = false;
 
             CropImage.activity(imageCaptureFile)
+                    .setOutputUri(imageCaptureFile)
                     .start(getContext(),this);
         }
     }
@@ -1098,7 +1122,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {
 
         private ArrayList<AdminFeederResponse.FeedData> feedData;
-
+        public boolean isExpand = false;
         @NonNull
         @Override
         public FeedAdminAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -1117,8 +1141,33 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             holder.binding.tvTotalBoothsDiscussionCount.setText(String.valueOf(data.getTotalBoothsDiscussion()));
             holder.binding.tvTotalPublicStreetsCount.setText(String.valueOf(data.getTotalSubBoothsCount()));
             holder.binding.tvTotalPublicDiscussionCount.setText(String.valueOf(data.getTotalSubBoothDiscussion()));
+            
+            if (!isExpand)
+            {
+                holder.binding.llTotalDiscussionCount.setVisibility(View.GONE);
+                holder.binding.llTotalPublicStreet.setVisibility(View.GONE);
+            }else
+            {
+                holder.binding.llTotalDiscussionCount.setVisibility(View.VISIBLE);
+                holder.binding.llTotalPublicStreet.setVisibility(View.VISIBLE);
+            }
+           
         }
 
+        public void expand()
+        {
+            if (isExpand)
+            {
+                isExpand = false;
+            }
+            else
+            {
+                isExpand = true;
+            }
+            notifyDataSetChanged();
+        }
+
+        
         public void add(ArrayList<AdminFeederResponse.FeedData> feedData)
         {
             this.feedData = feedData;

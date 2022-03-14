@@ -99,7 +99,8 @@ public class AddBoothStudentActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Booth Member");
+        setTitle("Add " +
+                "Booth Member");
         init();
     }
    /* @Override

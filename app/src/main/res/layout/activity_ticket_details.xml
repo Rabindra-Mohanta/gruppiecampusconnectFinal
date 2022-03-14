@@ -8,6 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.TicketDetailsActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -46,7 +47,7 @@
             <com.scopely.fontain.views.FontTextView
                 android:id="@+id/tv_toolbar_title"
                 style="@style/Toolbar.TitleText"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -158,6 +159,17 @@
                                     android:layout_width="@dimen/padding_30dp"
                                     android:layout_height="@dimen/padding_30dp"
                                     />
+
+                                <ImageView
+                                    android:id="@+id/whtsappDepartmentName"
+                                    android:layout_marginRight="@dimen/padding_10dp"
+                                    android:layout_toLeftOf="@+id/callDepartmentName"
+                                    android:src="@drawable/whatsapp"
+                                    android:layout_width="@dimen/padding_30dp"
+                                    android:layout_height="@dimen/padding_30dp"
+                                    />
+
+
 
                             </RelativeLayout>
 
