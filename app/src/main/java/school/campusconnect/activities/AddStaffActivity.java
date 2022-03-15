@@ -224,7 +224,7 @@ public class AddStaffActivity extends BaseActivity {
             etCast.setText(studentData.caste);
             etEmail.setText(studentData.email);
             etAddress.setText(studentData.address);
-            etPhone.setEnabled(false);
+            etPhone.setEnabled(true);
 
 
             for (int i = 0; i < bloodGrpArray.length; i++) {
@@ -398,6 +398,15 @@ public class AddStaffActivity extends BaseActivity {
                 finish();
                 break;
             case LeafManager.API_STAFF_EDIT:
+                StaffResponse.StaffData req = new StaffResponse.StaffData();
+                String[] str = getResources().getStringArray(R.array.array_country_values);
+                req.countryCode = str[currentCountry - 1];
+                req.phone = etPhone.getText().toString();
+                progressBar.setVisibility(View.VISIBLE);
+                leafManager.editStaffPhone(this, group_id, studentData.getUserId(), req);
+                break;
+
+            case LeafManager.UPDATE_PHONE_STAFF:
                 Toast.makeText(this, "Edit Staff successfully", Toast.LENGTH_SHORT).show();
                 finish();
                 break;

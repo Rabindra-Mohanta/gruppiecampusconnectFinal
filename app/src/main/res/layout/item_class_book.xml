@@ -23,7 +23,7 @@
                 android:id="@+id/relative"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_15dp">
+                android:padding="@dimen/padding_10dp">
 
                 <LinearLayout
                     android:id="@+id/llRight"
@@ -65,7 +65,7 @@
                         android:src="@drawable/icon_right_arraw"
                         android:tint="@color/colorPrimary"
                         android:layout_centerVertical="true"
-                        android:layout_height="35dp" />
+                        android:layout_height="wrap_content" />
                     <ImageView
                         android:id="@+id/btnUpload"
                         android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
                         android:src="@drawable/ic_av_upload"
                         android:tint="@color/colorPrimary"
                         android:layout_centerVertical="true"
-                        android:layout_height="35dp" />
+                        android:layout_height="30dp" />
 
                 </LinearLayout>
 

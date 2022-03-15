@@ -6,10 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
     <RelativeLayout
-        android:layout_marginBottom="@dimen/padding_10dp"
+        android:paddingBottom="@dimen/padding_10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="#F2F8FF"
         >
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
@@ -49,15 +49,16 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="130dp"
-                        android:layout_marginTop="@dimen/padding_10dp"
-                        android:layout_marginHorizontal="@dimen/padding_20dp"
-                        android:layout_marginBottom="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:layout_marginHorizontal="@dimen/padding_10dp"
+                        android:layout_marginBottom="@dimen/padding_5dp"
                         android:orientation="vertical"
                         android:outlineSpotShadowColor="@color/colorPrimaryLight"
                         android:outlineAmbientShadowColor="@color/colorPrimaryLight"
                         app:cardElevation="4dp">
 
                         <RelativeLayout
+                            android:background="@drawable/light_primary_border_bg"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
                            <!-- <ss.com.bannerslider.Slider
@@ -121,9 +122,9 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="130dp"
-                        android:layout_marginTop="@dimen/padding_10dp"
-                        android:layout_marginHorizontal="@dimen/padding_20dp"
-                        android:layout_marginBottom="@dimen/padding_10dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginHorizontal="@dimen/padding_10dp"
+                        android:layout_marginBottom="@dimen/padding_5dp"
                         android:orientation="vertical"
                         android:outlineSpotShadowColor="@color/colorPrimaryLight"
                         android:outlineAmbientShadowColor="@color/colorPrimaryLight"
@@ -131,6 +132,7 @@
 
 
                         <RelativeLayout
+                            android:background="@drawable/light_primary_border_bg"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
@@ -447,8 +449,8 @@
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/padding_10dp"
-                            android:layout_marginHorizontal="@dimen/padding_20dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
                             android:layout_marginBottom="@dimen/padding_20dp"
                             android:orientation="vertical"
                             android:outlineSpotShadowColor="@color/colorPrimaryLight"
@@ -556,8 +558,8 @@
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/padding_10dp"
-                            android:layout_marginHorizontal="@dimen/padding_20dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
                             android:layout_marginBottom="@dimen/padding_20dp"
                             android:orientation="vertical"
                             android:outlineSpotShadowColor="@color/colorPrimaryLight"
@@ -565,9 +567,10 @@
                             app:cardElevation="4dp">
 
                             <LinearLayout
+                                android:background="@drawable/light_primary_border_bg"
+                                android:paddingTop="@dimen/padding_10dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/padding_10dp"
                                 android:orientation="vertical"
                                 android:paddingHorizontal="@dimen/padding_10dp"
                                 android:paddingBottom="@dimen/padding_10dp">

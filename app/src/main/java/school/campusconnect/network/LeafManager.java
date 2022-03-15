@@ -470,6 +470,8 @@ public class LeafManager {
     public static final int WORKER_STREET_LIST = 303;
     public static final int ADD_VOTER_MASTER_LIST = 304;
     public static final int VOTER_MASTER_LIST = 305;
+    public static final int UPDATE_PHONE_STAFF = 308;
+    public static final int API_UPDATE_PHONE_STUDENT = 309;
     public LeafManager() {
 
     }
@@ -7378,6 +7380,37 @@ public class LeafManager {
         }, ErrorResponse.class);
     }
 
+    public void editClassStudentPhone(OnCommunicationListener listener, String groupId, String userId, StudentRes.StudentData addStudentReq) {
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.editClassStudentPhone(groupId, userId, addStudentReq);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_UPDATE_PHONE_STUDENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+
     public void editStaff(OnCommunicationListener listener, String groupId, String userId, StaffResponse.StaffData data) {
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
@@ -7385,6 +7418,36 @@ public class LeafManager {
         final Call<BaseResponse> model = service.editStaff(groupId, userId, data);
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
         wrapper.execute(API_STAFF_EDIT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+
+    public void editStaffPhone(OnCommunicationListener listener, String groupId, String userId, StaffResponse.StaffData data) {
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.editStaffPhone(groupId, userId, data);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+        wrapper.execute(UPDATE_PHONE_STAFF, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {

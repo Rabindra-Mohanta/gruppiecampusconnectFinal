@@ -199,7 +199,7 @@ public class AddClassStudentActivity extends BaseActivity {
             etmotherNumber.setText(studentData.motherNumber);
             etEmail.setText(studentData.email);
             etAddress.setText(studentData.address);
-            etPhone.setEnabled(false);
+            etPhone.setEnabled(true);
 
             for (int i = 0; i < bloodGrpArray.length; i++) {
                 if (bloodGrpArray[i].equals(studentData.bloodGroup)) {
@@ -269,8 +269,9 @@ public class AddClassStudentActivity extends BaseActivity {
                         {
                             addStudentReq.image=imageFragment.getmProfileImage();
                         }
+
                         addStudentReq.phone = null;
-                        AppLog.e(TAG, "send data : " + addStudentReq);
+                        AppLog.e(TAG, "send data : " + new Gson().toJson(addStudentReq));
                         progressBar.setVisibility(View.VISIBLE);
                         leafManager.editClassStudent(this, group_id, team_id,studentData.getUserId(), addStudentReq);
                     }
@@ -373,9 +374,21 @@ public class AddClassStudentActivity extends BaseActivity {
                 finish();
                 break;
             case LeafManager.API_EDIT_STUDENTS:
+                StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
+                String[] str = getResources().getStringArray(R.array.array_country_values);
+                addStudentReq.countryCode = str[currentCountry - 1];
+                addStudentReq.phone = etPhone.getText().toString();
+                progressBar.setVisibility(View.VISIBLE);
+                leafManager.editClassStudentPhone(this, group_id,studentData.getUserId(), addStudentReq);
+               /* Toast.makeText(this, "Edit Student successfully", Toast.LENGTH_SHORT).show();
+                finish();*/
+                break;
+
+            case LeafManager.API_UPDATE_PHONE_STUDENT:
                 Toast.makeText(this, "Edit Student successfully", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
+
             case LeafManager.API_DELETE_STUDENTS:
                 Toast.makeText(this, "Delete Student successfully", Toast.LENGTH_SHORT).show();
                 finish();

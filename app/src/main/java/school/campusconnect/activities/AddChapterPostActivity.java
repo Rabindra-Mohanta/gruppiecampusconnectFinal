@@ -1167,7 +1167,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         }
 
-        if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+        else if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
 
 
             final Uri selectedImage = data.getData();

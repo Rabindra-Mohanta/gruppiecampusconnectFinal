@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -40,9 +41,13 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONObject;
 
@@ -134,7 +139,8 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
     String group_id;
 
     public Uri imageCaptureFile;
-
+    private Boolean isGalleryMultiple = false;
+    private Boolean isClear = true;
 
     public static final int REQUEST_LOAD_CAMERA_IMAGE = 101;
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
@@ -781,33 +787,101 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
             return;
         }
 
-        if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            listImages.clear();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+
+
+
+
+            Log.e(TAG,"result Uri Crop Image "+result.getUri());
+
+            if (resultCode == RESULT_OK) {
+
+
+
+
+                Uri resultUri = result.getUri();
+                Log.e(TAG,"result Uri Crop Image "+resultUri);
+
+                if (isGalleryMultiple)
+                {
+                    if (isClear)
+                    {
+                        isClear = false;
+                        listImages.clear();
+
+                    }
+
+                    listImages.add(resultUri.toString());
+                }
+                else
+                {
+                    listImages.clear();
+
+
+                    listImages.add(resultUri.toString());
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.e(TAG,"error"+error);
+            }
+
+            showLastImage();
+            removePdf();
+
+        }
+
+        else if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null)
+        {
+
+
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
+
+            isClear = true;
+
             if (clipData == null) {
+
+                isGalleryMultiple = false;
 //                String path = ImageUtil.getPath(this, selectedImage);
-                listImages.add(selectedImage.toString());
+                //  listImages.add(selectedImage.toString());
+                CropImage.activity(selectedImage)
+                        .start(this);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
 //                    String path = ImageUtil.getPath(this, uri1);
-                    listImages.add(uri1.toString());
+                    //    listImages.add(uri1.toString());
+                    isGalleryMultiple = true;
+                    CropImage.activity(uri1)
+                            .start(this);
                 }
             }
-            showLastImage();
-            removePdf();
 
         }
         else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            listImages.clear();
+           /* listImages.clear();
+            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
 //            String path = cameraFile.getAbsolutePath();
             AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
-            listImages.add(imageCaptureFile.toString());
-            showLastImage();
+            //          listImages.add(imageCaptureFile.toString());
+            isGalleryMultiple = false;
+
+         /*   showLastImage();
             removePdf();
-        } else if (resultCode == Activity.RESULT_OK) {
+            removeAudio();*/
+
+            CropImage.activity(imageCaptureFile)
+                    .setOutputUri(imageCaptureFile)
+                    .start(this);
+
+        }
+
+        else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
                 pdfPath = data.getData().toString();
                 Log.e("pdfUri : ", pdfPath);
@@ -833,10 +907,22 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
         shareButtonEnableDisable();
 
     }
+    public static int dpToPx(DisplayMetrics displayMetrics, int dp) {
 
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
     private void showLastImage() {
+
         if (listImages.size() > 0) {
-            Picasso.with(this).load(new File(listImages.get(listImages.size() - 1))).resize(100, 100).into(img_image);
+
+            int size = dpToPx(getResources().getDisplayMetrics(), 80);
+
+            RequestOptions reqOption = new RequestOptions();
+            reqOption.override(size, size);
+
+            Glide.with(this).load(listImages.get(listImages.size() - 1)).apply(reqOption).diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true).into(img_image);
+           // Picasso.with(this).load(new File(listImages.get(listImages.size() - 1))).resize(100, 100).into(img_image);
         } else {
             Toast.makeText(this, getResources().getString(R.string.lbl_select_img), Toast.LENGTH_SHORT).show();
         }

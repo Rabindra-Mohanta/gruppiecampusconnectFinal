@@ -49,12 +49,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             try{
                 if (totalItem == CountScroll)
                 {
-                  /*  Animation anim = new AlphaAnimation(0.0f, 1.0f);
-                    anim.setDuration(500); //You can manage the blinking time with this parameter
+                    Animation anim = new AlphaAnimation(0.0f, 1.0f);
+                    anim.setDuration(1000); //You can manage the blinking time with this parameter
                     anim.setStartOffset(20);
                     anim.setRepeatMode(Animation.REVERSE);
                     anim.setRepeatCount(0);
-                    viewHolder.itemView.startAnimation(anim);*/
+                    viewHolder.itemView.startAnimation(anim);
 
                     if (results.get(totalItem-CountScroll+1).getReadedComment()!= null && results.get(totalItem-CountScroll+1).getReadedComment().equalsIgnoreCase("true"))
                     {
@@ -75,7 +75,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 else
                 {
                     Animation anim = new AlphaAnimation(0.0f, 1.0f);
-                    anim.setDuration(500); //You can manage the blinking time with this parameter
+                    anim.setDuration(1000); //You can manage the blinking time with this parameter
                     anim.setStartOffset(20);
                     anim.setRepeatMode(Animation.REVERSE);
                     anim.setRepeatCount(0);
@@ -98,7 +98,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
                     CountScroll = CountScroll + 1;
                 }
-                mHandler.postDelayed(myRunnable, 3000);
+                mHandler.postDelayed(myRunnable, 4000);
 
             }catch (Exception e)
             {

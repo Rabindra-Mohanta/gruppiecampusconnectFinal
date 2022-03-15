@@ -70,7 +70,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
+        View view = inflater.inflate(R.layout.fragment_booth_list2,container,false);
         ButterKnife.bind(this,view);
         progressBar.setVisibility(View.VISIBLE);
         return view;
