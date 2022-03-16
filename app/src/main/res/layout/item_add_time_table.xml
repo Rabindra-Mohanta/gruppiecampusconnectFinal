@@ -18,6 +18,20 @@
         android:textStyle="bold"
         android:textSize="@dimen/text_size_16sp"
         style="@style/RegEditText" />
+    <EditText
+        android:id="@+id/et_time"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:layout_marginBottom="@dimen/padding_5dp"
+        android:layout_height="@dimen/login_button_height"
+        android:gravity="center"
+        android:singleLine="true"
+        android:layout_marginStart="@dimen/padding_10dp"
+        android:focusable="false"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_16sp"
+        style="@style/RegEditText" />
 
     <FrameLayout
         android:layout_width="0dp"

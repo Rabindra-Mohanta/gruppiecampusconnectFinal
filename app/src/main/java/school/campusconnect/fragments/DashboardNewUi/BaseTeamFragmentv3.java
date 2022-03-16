@@ -1142,7 +1142,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             holder.binding.tvTotalPublicStreetsCount.setText(String.valueOf(data.getTotalSubBoothsCount()));
             holder.binding.tvTotalPublicDiscussionCount.setText(String.valueOf(data.getTotalSubBoothDiscussion()));
             
-            if (!isExpand)
+            /*if (!isExpand)
             {
                 holder.binding.llTotalDiscussionCount.setVisibility(View.GONE);
                 holder.binding.llTotalPublicStreet.setVisibility(View.GONE);
@@ -1150,7 +1150,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             {
                 holder.binding.llTotalDiscussionCount.setVisibility(View.VISIBLE);
                 holder.binding.llTotalPublicStreet.setVisibility(View.VISIBLE);
-            }
+            }*/
            
         }
 
@@ -1164,7 +1164,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             {
                 isExpand = true;
             }
-            notifyDataSetChanged();
+           // notifyDataSetChanged();
         }
 
         

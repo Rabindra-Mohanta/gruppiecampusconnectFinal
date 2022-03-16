@@ -54,6 +54,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
     LeafManager leafManager;
     TicketsAdapter adapter;
     private Boolean isFirstTime = true;
+    private Boolean isAction = false;
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
     TicketTBL currentItem = null;
@@ -184,6 +185,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
                 {
                     Option = "overDue";
                 }
+
                 getUpdateTicketListApi();
             }
             @Override
@@ -414,7 +416,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
             {
                 Log.e(TAG,"Option Selected"+data.getStringExtra("Option"));
                 binding.spApproval.setSelection(Arrays.asList(approvalList).indexOf(data.getStringExtra("Option")));
-                getUpdateTicketListApi();
+                getTicketListApi();
             }
 
             if (resultCode == RESULT_CANCELED)

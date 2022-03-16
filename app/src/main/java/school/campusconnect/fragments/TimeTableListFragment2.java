@@ -2,6 +2,7 @@ package school.campusconnect.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import school.campusconnect.R;
+import school.campusconnect.activities.AddTimeTable2;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
@@ -35,7 +37,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class TimeTableListFragment2 extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "TimeTableListFragment2";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -46,8 +48,10 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     public ProgressBar progressBar;
 
     String team_id;
+    String team_name;
     String role;
     private ArrayList<TimeTableList2Response.TimeTableData2> result;
+    private ArrayList<TimeTableList2Response.TimeTableData2> resultv2;
 
     @Nullable
     @Override
@@ -55,8 +59,10 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
         View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+      //  rvClass.setAdapter(new SubjectAdapterv2());
 
         team_id=getArguments().getString("team_id");
+        team_name = getArguments().getString("team_name");
         role=getArguments().getString("role");
 
         return view;
@@ -90,17 +96,45 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             default:
                 TimeTableList2Response res = (TimeTableList2Response) response;
                 result = res.getData();
+
                 AppLog.e(TAG, "ClassResponse " + result);
                 if(result!=null){
                     int currDay = getIntDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
                     AppLog.e(TAG,"currDay : "+currDay);
+
+                    resultv2 = new ArrayList<>();
                     for (int i=0;i<result.size();i++){
                         if(result.get(i).getDay().equals(currDay+"")){
                             result.get(i).isSelected = true;
                         }
                     }
+
+                    for (int i=0;i<7;i++)
+                    {
+                            int isInList = -1;
+                            for (int j= 0;j<result.size();j++)
+                            {
+                                if(result.get(j).getDay().equals(""+(i+1))){
+                                    isInList = j;
+                                }
+                            }
+                            if(isInList == -1)
+                            {
+                                TimeTableList2Response.TimeTableData2 tt2 = new TimeTableList2Response.TimeTableData2();
+                                tt2.setDay(""+(i+1));
+                                resultv2.add(tt2);
+                            }
+                            else
+                            {
+                                resultv2.add(result.get(isInList));
+                            }
+
+
+
+                    }
                 }
-                rvClass.setAdapter(new SubjectAdapter(result));
+
+                rvClass.setAdapter(new SubjectAdapter(resultv2));
         }
 
     }
@@ -176,6 +210,27 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
                 }
             });
 
+            if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.allowedToAddUser)
+            {
+                holder.imgEdit.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.imgEdit.setVisibility(View.GONE);
+            }
+
+            holder.imgEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), AddTimeTable2.class);
+                    intent.putExtra("team_id",team_id);
+                    intent.putExtra("team_name",team_name);
+                    intent.putExtra("day",item.day);
+                    startActivity(intent);
+                }
+            });
+
+
             holder.rvSession.setAdapter(new SessionAdapter(item.getSessions()));
 
            /* if("admin".equalsIgnoreCase(role)){
@@ -204,6 +259,8 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             }
             return "";
         }
+
+
 
         @Override
         public int getItemCount() {
@@ -241,6 +298,8 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             @Bind(R.id.rvSession)
             RecyclerView rvSession;
 
+            @Bind(R.id.imgEdit)
+            ImageView imgEdit;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -263,6 +322,9 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
 
 
     }
+
+
+
 
     public void deleteTT() {
         if(result!=null && result.size()>0){
@@ -296,9 +358,13 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final TimeTableList2Response.SessionsTimeTable item = list.get(position);
+
             holder.txt_period.setText(item.getPeriod());
-            holder.txt_subject.setText(item.getSubjectName());
-            holder.txt_staff.setText(item.getTeacherName());
+            holder.txt_time.setText(item.getStartTime()+"-"+item.getEndTime());
+            holder.txt_subject_staff.setText(item.getTeacherName());
+
+          /*  holder.txt_subject.setText(item.getSubjectName());
+            holder.txt_staff.setText(item.getTeacherName());*/
         }
         @Override
         public int getItemCount() {
@@ -327,11 +393,11 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             @Bind(R.id.txt_period)
             TextView txt_period;
 
-            @Bind(R.id.txt_subject)
-            TextView txt_subject;
+            @Bind(R.id.txt_time)
+            TextView txt_time;
 
-            @Bind(R.id.txt_staff)
-            TextView txt_staff;
+            @Bind(R.id.txt_subject_staff)
+            TextView txt_subject_staff;
 
             public ViewHolder(View itemView) {
                 super(itemView);

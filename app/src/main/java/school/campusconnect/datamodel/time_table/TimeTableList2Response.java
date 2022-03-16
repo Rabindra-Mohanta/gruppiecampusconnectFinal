@@ -63,6 +63,15 @@ public class TimeTableList2Response extends BaseResponse {
         @Expose
         private String period;
 
+        @SerializedName("startTime")
+        @Expose
+        private String startTime;
+
+        @SerializedName("endTime")
+        @Expose
+        private String endTime;
+
+
         public String getTeacherName() {
             return teacherName;
         }
@@ -85,6 +94,22 @@ public class TimeTableList2Response extends BaseResponse {
 
         public void setPeriod(String period) {
             this.period = period;
+        }
+
+        public String getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(String startTime) {
+            this.startTime = startTime;
+        }
+
+        public String getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(String endTime) {
+            this.endTime = endTime;
         }
     }
 }

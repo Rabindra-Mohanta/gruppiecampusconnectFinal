@@ -26,13 +26,25 @@
             style="@style/LabelNormal" />
 
         <TextView
-            android:id="@+id/txt_subject"
+            android:id="@+id/txt_time"
             android:layout_width="0dp"
-            android:layout_marginStart="@dimen/padding_10dp"
             android:layout_marginEnd="@dimen/padding_10dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:text="Time"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_16sp"
+            android:textColor="@color/colorTextDark"
+            style="@style/LabelNormal" />
+
+        <TextView
+            android:id="@+id/txt_subject"
+            android:layout_width="0dp"
+            android:layout_marginEnd="@dimen/padding_10dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
             android:text="Select Subject"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_16sp"
@@ -65,6 +77,19 @@
             android:singleLine="true"
             android:inputType="number"
             android:digits="1234567890"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_16sp"
+            style="@style/RegEditText" />
+
+        <EditText
+            android:id="@+id/et_time"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="@dimen/login_button_height"
+            android:gravity="center"
+            android:layout_marginStart="@dimen/padding_10dp"
+            android:singleLine="true"
+            android:focusable="false"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_16sp"
             style="@style/RegEditText" />

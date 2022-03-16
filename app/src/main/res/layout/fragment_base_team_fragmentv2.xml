@@ -6,10 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
     <RelativeLayout
-        android:layout_marginBottom="@dimen/padding_10dp"
+        android:paddingBottom="@dimen/padding_10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="#F2F8FF"
         >
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"

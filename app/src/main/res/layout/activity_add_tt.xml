@@ -41,7 +41,7 @@
                         android:layout_marginBottom="@dimen/padding_10dp"
                         android:orientation="vertical">
 
-                        <FrameLayout
+                        <!--<FrameLayout
                             android:layout_width="220dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/padding_30dp"
@@ -58,7 +58,7 @@
                                 android:layout_marginEnd="@dimen/padding_15dp"
                                 android:layout_gravity="right|center"
                                 android:layout_height="20dp"/>
-                        </FrameLayout>
+                        </FrameLayout>-->
                         <LinearLayout
                             android:id="@+id/llMain"
                             android:layout_marginTop="@dimen/dimen_16"
@@ -74,7 +74,20 @@
                                 android:singleLine="true"
                                 android:text="Period"
                                 android:textStyle="bold"
-                                android:textSize="@dimen/text_size_16sp"
+                                android:textSize="@dimen/text_size_12sp"
+                                android:textColor="@color/colorTextDark"
+                                style="@style/LabelNormal" />
+
+                            <TextView
+                                android:id="@+id/txt_time"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.5"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="Time"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_12sp"
                                 android:textColor="@color/colorTextDark"
                                 style="@style/LabelNormal" />
 
@@ -88,7 +101,7 @@
                                 android:gravity="center"
                                 android:text="Select Subject"
                                 android:textStyle="bold"
-                                android:textSize="@dimen/text_size_16sp"
+                                android:textSize="@dimen/text_size_12sp"
                                 android:textColor="@color/colorTextDark"
                                 style="@style/LabelNormal" />
 
@@ -100,7 +113,7 @@
                                 android:text="Select Staff"
                                 android:gravity="center"
                                 android:textStyle="bold"
-                                android:textSize="@dimen/text_size_16sp"
+                                android:textSize="@dimen/text_size_12sp"
                                 android:textColor="@color/colorTextDark"
                                 style="@style/LabelNormal" />
 
@@ -128,6 +141,20 @@
                                 android:focusable="false"
                                 android:inputType="numberDecimal"
                                 android:digits="1234567890"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_16sp"
+                                style="@style/RegEditText" />
+
+                            <EditText
+                                android:id="@+id/etTimeAddNew"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.5"
+                                android:layout_marginBottom="@dimen/padding_5dp"
+                                android:layout_height="@dimen/login_button_height"
+                                android:gravity="center"
+                                android:layout_marginStart="@dimen/padding_10dp"
+                                android:focusable="false"
+                                android:singleLine="true"
                                 android:textStyle="bold"
                                 android:textSize="@dimen/text_size_16sp"
                                 style="@style/RegEditText" />

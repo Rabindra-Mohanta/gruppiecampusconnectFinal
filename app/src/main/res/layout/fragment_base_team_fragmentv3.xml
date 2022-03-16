@@ -458,9 +458,10 @@
                             app:cardElevation="4dp">
 
                             <LinearLayout
+                                android:background="@drawable/light_primary_border_bg"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/padding_10dp"
+                                android:paddingTop="@dimen/padding_10dp"
                                 android:orientation="vertical"
                                 android:paddingHorizontal="@dimen/padding_10dp"
                                 android:paddingBottom="@dimen/padding_10dp">
@@ -597,7 +598,6 @@
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical"
                                     android:layout_marginTop="@dimen/padding_5dp"
-                                    android:paddingHorizontal="@dimen/padding_10dp"
                                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                     tools:itemCount="1"
                                     tools:listitem="@layout/item_admin_feed" />

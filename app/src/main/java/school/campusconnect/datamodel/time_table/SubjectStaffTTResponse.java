@@ -19,12 +19,23 @@ public class SubjectStaffTTResponse extends BaseResponse {
     }
 
     public static class SubjectStaffTTData {
+
         @SerializedName("day")
         @Expose
         public String day;
         @SerializedName("period")
         @Expose
         public String period;
+
+        @SerializedName("startTime")
+        @Expose
+        public String startTime;
+
+        @SerializedName("endTime")
+        @Expose
+        public String endTime;
+
+
         @SerializedName("subjectName")
         @Expose
         public String subjectName;
@@ -35,6 +46,24 @@ public class SubjectStaffTTResponse extends BaseResponse {
         @SerializedName(value = "subjectWithStaffs")
         @Expose
         public ArrayList<SubjectWithStaffs> subjectWithStaffs;
+
+
+        public String getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(String startTime) {
+            this.startTime = startTime;
+        }
+
+        public String getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(String endTime) {
+            this.endTime = endTime;
+        }
+
         public String getDay() {
             return day;
         }

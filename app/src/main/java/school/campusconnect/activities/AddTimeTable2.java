@@ -1,14 +1,18 @@
 package school.campusconnect.activities;
 
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,14 +28,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import school.campusconnect.R;
 import school.campusconnect.datamodel.BaseResponse;
@@ -53,8 +62,8 @@ import school.campusconnect.views.SMBDialogUtils;
 public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
 
     private static final String TAG = "AddTimeTable2";
-    @Bind(R.id.spDay)
-    Spinner spDay;
+    /*@Bind(R.id.spDay)
+    Spinner spDay;*/
 
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -65,6 +74,9 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
     @Bind(R.id.et_period)
     EditText et_period;
 
+    @Bind(R.id.etTimeAddNew)
+    EditText etTimeAddNew;
+
     @Bind(R.id.spSubject)
     Spinner spSubject;
 
@@ -74,18 +86,28 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
     @Bind(R.id.rvTimeTable)
     RecyclerView rvTimeTable;
 
-
+    private TextView tvTimePickerTitle;
     LeafManager leafManager;
     private String team_id;
     private String day = "";
     private String period = "";
+    private String start_time = "09:00 AM";
+    private String end_time = "09:40 AM";
 
+
+    private String start_time_edit = "";
+    private String end_time_edit = "";
+    private String start_time_new = "";
+    private String end_time_new = "";
     private ArrayList<TimeTableList2Response.SessionsTimeTable> periodList = new ArrayList<>();
     private String periodLast;
     private ArrayList<SubjectStaffTTResponse.SubjectStaffTTData> subjStaffList;
     private ArrayList<SubjectStaffTTResponse.SubjectStaffTTData> subjStaffListDialog;
 
     boolean isAddStaffApiForEdit = false;
+
+    boolean isNewAdd = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,9 +115,11 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
         init();
 
+
     }
 
     private void getSubjectStaff(SubStaffTTReq subStaffTTReq) {
+        Log.e(TAG,"SubStaffTTReq"+new Gson().toJson(subStaffTTReq));
         LeafManager leafManager = new LeafManager();
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getSubjectStaffTT(this, GroupDashboardActivityNew.groupId, team_id, subStaffTTReq);
@@ -134,13 +158,21 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
 
+        tvTimePickerTitle = new TextView(getApplicationContext());
+        tvTimePickerTitle.setPadding(0, 20, 00, 20);
+        tvTimePickerTitle.setGravity(Gravity.CENTER);
+        tvTimePickerTitle.setTextSize(TypedValue.COMPLEX_UNIT_DIP,20);
+        tvTimePickerTitle.setTextColor(Color.parseColor("#293f6e"));
+        tvTimePickerTitle.setBackgroundColor(Color.parseColor("#FFFFFF"));
         leafManager = new LeafManager();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             team_id = bundle.getString("team_id");
+            day = bundle.getString("day");
             setTitle(bundle.getString("team_name"));
         }
         String[] days = new String[7];
+
         days[0] = "Monday";
         days[1] = "Tuesday";
         days[2] = "Wednesday";
@@ -149,12 +181,16 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         days[5] = "Saturday";
         days[6] = "Sunday";
 
-        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, days);
-        spDay.setAdapter(bloodGrpAdapter);
-
         reset();
 
-        spDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        callCurrentTimeTableApi();
+
+       /* ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, days);
+        spDay.setAdapter(bloodGrpAdapter);*/
+
+
+
+        /*spDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 day = (position + 1) + "";
@@ -166,7 +202,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
         et_period.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -212,11 +248,11 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         /*AppLog.e(TAG,"callSubjectStaffApi : day of week: "+Calendar.getInstance().get(Calendar.DAY_OF_WEEK));*/
         if (!TextUtils.isEmpty(day) && !TextUtils.isEmpty(period)) {
             reset();
-            getSubjectStaff(new SubStaffTTReq(day, period));
+            getSubjectStaff(new SubStaffTTReq(day, period,start_time,end_time));
         }
     }
 
-    @OnClick({R.id.btnAdd})
+    @OnClick({R.id.btnAdd,R.id.etTimeAddNew})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnAdd:
@@ -226,7 +262,10 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                         showNoNetworkMsg();
                         return;
                     }
-                    SubStaffTTReq request = new SubStaffTTReq(day, period);
+
+                    SubStaffTTReq request = new SubStaffTTReq(day, period,start_time_new,end_time_new);
+                    start_time_new = "";
+                    end_time_new = "";
                     AppLog.e(TAG, "request :" + request);
                     String subject_with_staff_id = subjStaffList.get(spSubject.getSelectedItemPosition()).getSubjectWithStaffId();
                     String staff_id = subjStaffList.get(spSubject.getSelectedItemPosition()).getSubjectWithStaffs().get(spStaff.getSelectedItemPosition()).getStaffId();
@@ -236,6 +275,41 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
                 }
                 break;
+
+            case R.id.etTimeAddNew:
+
+                isNewAdd = true;
+
+                final Calendar calendar = Calendar.getInstance();
+
+                TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Material_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+                        openEndTimeDialog(format.format(calendar.getTime()));
+
+                        // holder.et_time.setText(format.format(calendar.getTime()));
+                    }
+                },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
+
+                fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        etTimeAddNew.setText("");
+                    }
+                });
+
+                if (tvTimePickerTitle.getParent() != null)
+                {
+                    ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
+                }
+                tvTimePickerTitle.setText("Start Time : ");
+                fragment.setCustomTitle(tvTimePickerTitle);
+                fragment.show();
+                break;
         }
     }
 
@@ -243,7 +317,11 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         boolean valid = true;
         if (!isValueValid(et_period)) {
             valid = false;
-        } else if (subjStaffList == null) {
+        }
+        else if (etTimeAddNew.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Please Select Start and End Time", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }else if (subjStaffList == null) {
             Toast.makeText(this, "Please Select Subject and Staff", Toast.LENGTH_SHORT).show();
             valid = false;
         }
@@ -259,6 +337,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
         switch (apiId) {
             case LeafManager.API_TT_ADD_SUB_Staff:
+                etTimeAddNew.setText("");
                 Toast.makeText(this, "Successfully Added Time Table", Toast.LENGTH_SHORT).show();
                 callCurrentTimeTableApi();
                 break;
@@ -377,6 +456,8 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
             final TimeTableList2Response.SessionsTimeTable item = list.get(position);
             holder.et_period.setText(item.getPeriod());
 
+            holder.et_time.setText(item.getStartTime()+" to "+item.getEndTime());
+
             holder.spSubject.setAdapter(new ArrayAdapter<String>(AddTimeTable2.this, R.layout.item_spinner2, R.id.tvItem, new String[]{item.getSubjectName()}));
 
             holder.spStaff.setAdapter(new ArrayAdapter<String>(AddTimeTable2.this, R.layout.item_spinner2, R.id.tvItem, new String[]{item.getTeacherName()}));
@@ -387,6 +468,47 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                     showEdit(item);
                 }
             });
+
+            /*holder.et_time.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final Calendar calendar = Calendar.getInstance();
+
+                    TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Material_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            calendar.set(Calendar.MINUTE, minute);
+                            SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+                            openEndTimeDialog(holder.et_time,format.format(calendar.getTime()));
+
+                           // holder.et_time.setText(format.format(calendar.getTime()));
+                        }
+                    },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
+
+                    fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            holder.et_time.setText("");
+                        }
+                    });
+                    fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            holder.et_time.setText("");
+                        }
+                    });
+                    if (tvTimePickerTitle.getParent() != null)
+                    {
+                        ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
+                    }
+                    tvTimePickerTitle.setText("Start Time : ");
+                    fragment.setCustomTitle(tvTimePickerTitle);
+                    fragment.show();
+                }
+            });*/
         }
 
         @Override
@@ -403,6 +525,9 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
             @Bind(R.id.et_period)
             EditText et_period;
+
+            @Bind(R.id.et_time)
+            EditText et_time;
 
             @Bind(R.id.spSubject)
             Spinner spSubject;
@@ -421,7 +546,65 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         }
     }
 
+    private void openEndTimeDialog(String startDate) {
+
+        final Calendar calendar = Calendar.getInstance();
+
+        TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Material_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+                if (isNewAdd)
+                {
+                    start_time_new = startDate;
+                    end_time_new = format.format(calendar.getTime());
+                    etTimeAddNew.setText(start_time_new+" to "+end_time_new);
+
+                }
+                else
+                {
+                    start_time_edit = startDate;
+                    end_time_edit = format.format(calendar.getTime());
+                    et_time.setText(start_time_edit+" to "+end_time_edit);
+                }
+
+
+            }
+        },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
+
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (isNewAdd)
+                {
+                    etTimeAddNew.setText("");
+                }
+                else
+                {
+                    et_time.setText("");
+                }
+
+            }
+        });
+
+
+        if (tvTimePickerTitle.getParent() != null)
+        {
+            ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
+        }
+        tvTimePickerTitle.setText("End Time : ");
+        fragment.setCustomTitle(tvTimePickerTitle);
+        fragment.show();
+    }
+
+
     EditText et_period_dialog;
+
+    EditText et_time;
 
     Spinner spSubject_dialog;
 
@@ -432,9 +615,50 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.edit_tt_dialog);
         et_period_dialog = dialog.findViewById(R.id.et_period);
+        et_time = dialog.findViewById(R.id.et_time);
+        et_time.setText(item.getStartTime()+" to "+item.getEndTime());
         et_period_dialog.setText(item.getPeriod());
         spSubject_dialog = dialog.findViewById(R.id.spSubject);
         spStaff_dialog = dialog.findViewById(R.id.spStaff);
+
+
+        et_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                isNewAdd = false;
+
+                final Calendar calendar = Calendar.getInstance();
+
+                TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Material_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+                        openEndTimeDialog(format.format(calendar.getTime()));
+
+                        // holder.et_time.setText(format.format(calendar.getTime()));
+                    }
+                },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
+
+                fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        et_time.setText("");
+                    }
+                });
+
+                if (tvTimePickerTitle.getParent() != null)
+                {
+                    ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
+                }
+                tvTimePickerTitle.setText("Start Time : ");
+                fragment.setCustomTitle(tvTimePickerTitle);
+                fragment.show();
+            }
+        });
 
 
         dialog.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
@@ -460,6 +684,13 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                     Toast.makeText(AddTimeTable2.this, "Period Value Already Used...", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                if (et_time.getText().toString().isEmpty())
+                {
+                    Toast.makeText(AddTimeTable2.this, "Select Start and End Time...", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if(spSubject_dialog.getSelectedItemPosition()==-1 || spStaff_dialog.getSelectedItemPosition()==-1){
                     Toast.makeText(AddTimeTable2.this, "Please Select Subject and Staff", Toast.LENGTH_SHORT).show();
                     return;
@@ -468,7 +699,9 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                     showNoNetworkMsg();
                     return;
                 }
-                SubStaffTTReq request = new SubStaffTTReq(day, item.getPeriod());
+                SubStaffTTReq request = new SubStaffTTReq(day, item.getPeriod(),start_time_edit,end_time_edit);
+                start_time_edit = "";
+                end_time_edit = "";
                 AppLog.e(TAG, "request :" + request);
                 String subject_with_staff_id = subjStaffListDialog.get(spSubject_dialog.getSelectedItemPosition()).getSubjectWithStaffId();
                 String staff_id = subjStaffListDialog.get(spSubject_dialog.getSelectedItemPosition()).getSubjectWithStaffs().get(spStaff_dialog.getSelectedItemPosition()).getStaffId();
@@ -478,11 +711,15 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 dialog.dismiss();
             }
         });
+
         dialog.show();
         isAddStaffApiForEdit = true;
         SubStaffTTReq subStaffTTReq = new SubStaffTTReq();
         subStaffTTReq.setDay(day);
         subStaffTTReq.setPeriod(item.getPeriod());
+        subStaffTTReq.setStartTime(start_time);
+        subStaffTTReq.setEndTime(end_time);
+
         getSubjectStaff(subStaffTTReq);
     }
 

@@ -47,9 +47,9 @@ public class TimeTabelActivity2 extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if("admin".equals(role)){
+       /* if("admin".equals(role)){
             getMenuInflater().inflate(R.menu.menu_tt_updated,menu);
-        }
+        }*/
         return super.onCreateOptionsMenu(menu);
     }
 
