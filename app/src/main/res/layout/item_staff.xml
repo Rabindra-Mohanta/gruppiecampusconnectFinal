@@ -59,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:paddingEnd="16dp"
                         android:src="@drawable/icon_right_arraw"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:tint="@color/colorTextDark"
                         android:paddingRight="16dp" />
 

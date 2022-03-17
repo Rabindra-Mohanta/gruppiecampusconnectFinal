@@ -280,7 +280,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
                 super(itemView);
                 ButterKnife.bind(this,itemView);
                 txt_count.setVisibility(View.GONE);
-                img_tree.setVisibility(View.GONE);
+                //img_tree.setVisibility(View.GONE);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

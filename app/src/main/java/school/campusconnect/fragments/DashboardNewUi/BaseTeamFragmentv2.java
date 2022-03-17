@@ -443,9 +443,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
                 NotificationListRes res1 = (NotificationListRes) response;
                 List<NotificationListRes.NotificationListData> results = res1.getData();
-                AppLog.e(TAG, "notificationRes " + new Gson().toJson(results));
 
-              //  NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
 
                 if(results.size()>0)
                 {
@@ -627,7 +625,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         {
             notificationList.clear();
 
-            Log.e(TAG,"size notification table list "+notificationTableList.size());
+
 
             for (int i=0;i<notificationTableList.size();i++)
             {
@@ -645,9 +643,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 notificationListData.setCreatedById(notificationTableList.get(i).createdById);
                 notificationListData.setTeamId(notificationTableList.get(i).teamId);
                 notificationListData.setIdPrimary(notificationTableList.get(i).getId());
-                Log.e(TAG,"ID "+notificationTableList.get(i).readedComment);
+
                 notificationListData.setReadedComment(notificationTableList.get(i).readedComment);
-                Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
                 notificationList.add(notificationListData);
             }
             if (notificationList.size()>1)
@@ -747,7 +744,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     public void onItemClick(NotificationListRes.NotificationListData item,Boolean readComment)
     {
-        AppLog.d(TAG,"onItemClick()");
+        AppLog.d(TAG,"onItemClick()"+item.getType()+"getShowComment"+item.getShowComment());
 
         Intent i = new Intent(getContext(), ReadMoreActivity.class);
         Bundle bundle = new Bundle();

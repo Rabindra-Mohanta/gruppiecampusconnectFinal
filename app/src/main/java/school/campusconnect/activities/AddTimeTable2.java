@@ -36,9 +36,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -169,7 +171,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         if (bundle != null) {
             team_id = bundle.getString("team_id");
             day = bundle.getString("day");
-            setTitle(bundle.getString("team_name"));
+            setTitle(bundle.getString("team_name")+" ( "+getWeekDay(day)+" )");
         }
         String[] days = new String[7];
 
@@ -230,13 +232,26 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         leafManager.getTTNewDayWise(this, GroupDashboardActivityNew.groupId, team_id, day);
     }
 
+    private String getWeekDay(String day) {
+        switch (day){
+            case "1":return "Monday";
+            case "2":return "Tuesday";
+            case "3":return "Wednesday";
+            case "4":return "Thursday";
+            case "5":return "Friday";
+            case "6":return "Saturday";
+            case "7":return "Sunday";
+        }
+        return "";
+    }
+
 
     private void reset() {
 
-        ArrayAdapter<String> spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner2, R.id.tvItem, new String[]{"Select"});
+        ArrayAdapter<String> spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_new, R.id.tvItem, new String[]{"Select"});
         spSubject.setAdapter(spSubAdapter);
 
-        ArrayAdapter<String> spStaffAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner2, R.id.tvItem, new String[]{"Select"});
+        ArrayAdapter<String> spStaffAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_new, R.id.tvItem, new String[]{"Select"});
         spStaff.setAdapter(spStaffAdapter);
 
 
@@ -306,7 +321,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 {
                     ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
                 }
-                tvTimePickerTitle.setText("Start Time : ");
+                tvTimePickerTitle.setText("Select Start Time");
                 fragment.setCustomTitle(tvTimePickerTitle);
                 fragment.show();
                 break;
@@ -384,7 +399,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         for (int i = 0; i < subjStaffList.size(); i++) {
             subject[i] = subjStaffList.get(i).subjectName;
         }
-        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner2, R.id.tvItem, subject);
+        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_new, R.id.tvItem, subject);
         spSubject.setAdapter(bloodGrpAdapter);
 
         spSubject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -406,7 +421,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         for (int i = 0; i < subjectWithStaffs.size(); i++) {
             staff[i] = subjectWithStaffs.get(i).getStaffName();
         }
-        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner2, R.id.tvItem, staff);
+        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_new, R.id.tvItem, staff);
         spStaff.setAdapter(bloodGrpAdapter);
     }
 
@@ -458,11 +473,15 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
             holder.et_time.setText(item.getStartTime()+" to "+item.getEndTime());
 
-            holder.spSubject.setAdapter(new ArrayAdapter<String>(AddTimeTable2.this, R.layout.item_spinner2, R.id.tvItem, new String[]{item.getSubjectName()}));
+            holder.et_subject.setText(item.getSubjectName());
 
-            holder.spStaff.setAdapter(new ArrayAdapter<String>(AddTimeTable2.this, R.layout.item_spinner2, R.id.tvItem, new String[]{item.getTeacherName()}));
+            holder.et_staff.setText(item.getTeacherName());
 
-            holder.imgEdit.setOnClickListener(new View.OnClickListener() {
+        /*    holder.spSubject.setAdapter(new ArrayAdapter<String>(AddTimeTable2.this, R.layout.item_spinner_new, R.id.tvItem, new String[]{item.getSubjectName()}));
+
+            holder.spStaff.setAdapter(new ArrayAdapter<String>(AddTimeTable2.this, R.layout.item_spinner_new, R.id.tvItem, new String[]{item.getTeacherName()}));
+
+         */   holder.imgEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showEdit(item);
@@ -529,11 +548,18 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
             @Bind(R.id.et_time)
             EditText et_time;
 
-            @Bind(R.id.spSubject)
+            @Bind(R.id.et_staff)
+            EditText et_staff;
+
+            @Bind(R.id.et_subject)
+            EditText et_subject;
+
+
+         /*   @Bind(R.id.spSubject)
             Spinner spSubject;
 
             @Bind(R.id.spStaff)
-            Spinner spStaff;
+            Spinner spStaff;*/
 
             @Bind(R.id.imgEdit)
             ImageView imgEdit;
@@ -544,6 +570,26 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 ButterKnife.bind(this, itemView);
             }
         }
+    }
+    private boolean checktimings(String time, String endtime) {
+
+        String pattern = "hh:mm a";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+        try {
+            Date date1 = sdf.parse(time);
+            Date date2 = sdf.parse(endtime);
+
+            if(date1.before(date2)) {
+                return true;
+            } else {
+
+                return false;
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private void openEndTimeDialog(String startDate) {
@@ -558,23 +604,42 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 calendar.set(Calendar.MINUTE, minute);
                 SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-                if (isNewAdd)
-                {
-                    start_time_new = startDate;
-                    end_time_new = format.format(calendar.getTime());
-                    etTimeAddNew.setText(start_time_new+" to "+end_time_new);
 
+                if (checktimings(startDate,format.format(calendar.getTime())))
+                {
+                    if (isNewAdd)
+                    {
+                        start_time_new = startDate;
+                        end_time_new = format.format(calendar.getTime());
+                        etTimeAddNew.setText(start_time_new+" to "+end_time_new);
+
+                    }
+                    else
+                    {
+                        start_time_edit = startDate;
+                        end_time_edit = format.format(calendar.getTime());
+                        et_time.setText(start_time_edit+" to "+end_time_edit);
+                    }
                 }
                 else
                 {
-                    start_time_edit = startDate;
-                    end_time_edit = format.format(calendar.getTime());
-                    et_time.setText(start_time_edit+" to "+end_time_edit);
+
+                    if (isNewAdd)
+                    {
+                        etTimeAddNew.setText("");
+                    }
+                    else
+                    {
+                        et_time.setText("");
+                    }
+                    openEndTimeDialog(startDate);
+                    Toast.makeText(getApplicationContext(),"Select End Time After a Start Time",Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
+
+        Button button1 = (Button) fragment.getButton(fragment.BUTTON_POSITIVE);
+
 
         fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -596,7 +661,8 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         {
             ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
         }
-        tvTimePickerTitle.setText("End Time : ");
+        tvTimePickerTitle.setText("Select End Time");
+
         fragment.setCustomTitle(tvTimePickerTitle);
         fragment.show();
     }
@@ -654,7 +720,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 {
                     ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
                 }
-                tvTimePickerTitle.setText("Start Time : ");
+                tvTimePickerTitle.setText("Select Start Time");
                 fragment.setCustomTitle(tvTimePickerTitle);
                 fragment.show();
             }
@@ -730,7 +796,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         for (int i = 0; i < subjStaffListDialog.size(); i++) {
             subject[i] = subjStaffListDialog.get(i).subjectName;
         }
-        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner2, R.id.tvItem, subject);
+        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_new, R.id.tvItem, subject);
         spSubject_dialog.setAdapter(bloodGrpAdapter);
 
         spSubject_dialog.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -752,7 +818,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         for (int i = 0; i < subjectWithStaffs.size(); i++) {
             staff[i] = subjectWithStaffs.get(i).getStaffName();
         }
-        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner2, R.id.tvItem, staff);
+        ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_new, R.id.tvItem, staff);
         spStaff_dialog.setAdapter(bloodGrpAdapter);
     }
 

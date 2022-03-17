@@ -63,6 +63,17 @@
                     android:textColor="@color/colorTextLight"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/img_tree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icon_right_arraw"
+                android:tint="@color/colorTextDark"
+                />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

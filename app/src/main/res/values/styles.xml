@@ -236,6 +236,15 @@
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
+
+
+    <style name="commonSpinnerWhite" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/spinner_white_bg</item>
+    </style>
+
     <style name="RegEditTextWhite" parent="Base.Widget.AppCompat.EditText">
         <item name="android:textColor">@color/colorTextDark</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>

@@ -26,9 +26,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:tint="@color/colorTextDark"
             android:paddingEnd="16dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_arrow" />
+            android:visibility="visible"
+            android:src="@drawable/icon_right_arraw" />
 
         <!--<View
             android:id="@+id/line"

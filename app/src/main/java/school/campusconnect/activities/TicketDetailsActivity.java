@@ -304,7 +304,6 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
         toolbar.inflateMenu(R.menu.menu_delete_ticket);
 
-
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -338,7 +337,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             SelectedOption = getIntent().getStringExtra("SelectedOption");
             Role = getIntent().getStringExtra("Role");
 
-            Log.e(TAG,"get Issue Text"+taskData.getIssueText());
+            Log.e(TAG,"Role"+ Role);
 
             if (Role.equalsIgnoreCase("isPartyTaskForce"))
             {

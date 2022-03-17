@@ -81,7 +81,20 @@
 
 
                     </LinearLayout>
+
+
                 </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/img_tree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_right_arraw"
+                    android:visibility="visible"
+                    android:tint="@color/colorTextDark"
+                    />
 
             </RelativeLayout>
         </RelativeLayout>

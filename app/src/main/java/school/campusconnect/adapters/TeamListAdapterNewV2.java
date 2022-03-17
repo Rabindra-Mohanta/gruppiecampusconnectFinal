@@ -52,7 +52,7 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
         }
         else
         {
-            holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this,4));
+            holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this,8));
         }
 
 
