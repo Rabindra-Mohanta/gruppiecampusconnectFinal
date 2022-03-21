@@ -159,9 +159,8 @@
         android:id="@+id/txtEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:gravity="center"
-        android:paddingEnd="16dp"
         android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:textSize="18sp" />
 </RelativeLayout>

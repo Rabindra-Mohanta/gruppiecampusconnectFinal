@@ -160,10 +160,11 @@
                                         android:layout_height="wrap_content"
                                         android:orientation="horizontal">
                                         <androidx.appcompat.widget.AppCompatImageView
-                                            android:src="@drawable/icon_authorized_user"
+                                            android:src="@drawable/ic_period"
                                             app:tint="@color/colorPrimary"
-                                            android:layout_width="@dimen/padding_30dp"
-                                            android:layout_height="@dimen/padding_30dp"/>
+                                            android:layout_gravity="center"
+                                            android:layout_width="@dimen/padding_25dp"
+                                            android:layout_height="@dimen/padding_25dp"/>
 
                                         <EditText
                                             android:layout_marginLeft="@dimen/padding_15dp"
@@ -192,10 +193,11 @@
                                         android:layout_height="wrap_content"
                                         android:orientation="horizontal">
                                         <androidx.appcompat.widget.AppCompatImageView
-                                            android:src="@drawable/icon_authorized_user"
+                                            android:src="@drawable/ic_time"
                                             app:tint="@color/colorPrimary"
-                                            android:layout_width="@dimen/padding_30dp"
-                                            android:layout_height="@dimen/padding_30dp"/>
+                                            android:layout_gravity="center"
+                                            android:layout_width="@dimen/padding_25dp"
+                                            android:layout_height="@dimen/padding_25dp"/>
 
                                         <EditText
                                             android:layout_marginLeft="@dimen/padding_15dp"
@@ -224,10 +226,11 @@
                                         android:layout_height="wrap_content"
                                         android:orientation="horizontal">
                                         <androidx.appcompat.widget.AppCompatImageView
-                                            android:src="@drawable/icon_authorized_user"
+                                            android:src="@drawable/ic_select_subject"
                                             app:tint="@color/colorPrimary"
-                                            android:layout_width="@dimen/padding_30dp"
-                                            android:layout_height="@dimen/padding_30dp"/>
+                                            android:layout_gravity="center"
+                                            android:layout_width="@dimen/padding_25dp"
+                                            android:layout_height="@dimen/padding_25dp"/>
 
                                         <FrameLayout
                                             android:layout_width="match_parent"
@@ -259,10 +262,11 @@
                                         android:layout_height="wrap_content"
                                         android:orientation="horizontal">
                                         <androidx.appcompat.widget.AppCompatImageView
-                                            android:src="@drawable/icon_authorized_user"
+                                            android:src="@drawable/ic_select_staff"
                                             app:tint="@color/colorPrimary"
-                                            android:layout_width="@dimen/padding_30dp"
-                                            android:layout_height="@dimen/padding_30dp"/>
+                                            android:layout_gravity="center"
+                                            android:layout_width="@dimen/padding_25dp"
+                                            android:layout_height="@dimen/padding_25dp"/>
 
                                         <FrameLayout
                                             android:layout_width="match_parent"

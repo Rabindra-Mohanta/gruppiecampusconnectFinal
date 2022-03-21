@@ -11,9 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +47,10 @@ import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.activities.AttendanceDetailActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.adapters.FixedGridLayoutManager;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
+import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.network.LeafManager;
@@ -83,10 +87,12 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     Calendar calendar;
     private ArrayList<ClassResponse.ClassData> listClass;
     private ArrayList<AttendanceReportRes.AttendanceReportData> attendanceReportList;
+    private ArrayList<AttendanceReportResv2.AttendanceReportData> attendanceReportListv2;
     private String selectedTeamId="";
     private String className="";
     private String classNameExcel="";
 
+    private int ColumnCount = 0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -116,8 +122,22 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
     private void init() {
 
-        rvStudents.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+
+
+
+
+
+
         calendar = Calendar.getInstance();
+
+        ColumnCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) + 2;
+        Log.e(TAG,"RowCount"+ColumnCount);
+        FixedGridLayoutManager fixedGridLayoutManager = new FixedGridLayoutManager();
+        fixedGridLayoutManager.setTotalColumnCount(5);
+        rvStudents.setLayoutManager(fixedGridLayoutManager);
+
         spClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -139,7 +159,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         progressBar.setVisibility(View.VISIBLE);
         tvMonth.setText(MixOperations.getMonth(calendar.getTime()).toUpperCase());
         LeafManager leafManager = new LeafManager();
-        leafManager.getAttendanceReport(this,GroupDashboardActivityNew.groupId,selectedTeamId,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
+        leafManager.getAttendanceReportOffline(this,GroupDashboardActivityNew.groupId,selectedTeamId,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
     }
 
     @Override
@@ -178,9 +198,10 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             spClass.setAdapter(adapter);
         }
         else {
-            AttendanceReportRes res = (AttendanceReportRes) response;
-            attendanceReportList = res.result;
-            rvStudents.setAdapter(new ReportStudentAdapter(res.result));
+            AttendanceReportResv2 res = (AttendanceReportResv2) response;
+            attendanceReportListv2 = res.result;
+
+            rvStudents.setAdapter(new ReportStudentAdapterV2(res.result));
         }
 
     }
@@ -262,6 +283,77 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
                         editStudent(list.get(getAdapterPosition()));
                     }
                 });
+            }
+        }
+    }
+
+    public class ReportStudentAdapterV2 extends RecyclerView.Adapter<ReportStudentAdapterV2.ViewHolder>
+    {
+        List<AttendanceReportResv2.AttendanceReportData> list;
+        private Context mContext;
+
+        public ReportStudentAdapterV2(List<AttendanceReportResv2.AttendanceReportData> list) {
+            this.list = list;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_report_student_date,parent,false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+            Log.e(TAG,"onBindViewHolder"+getItemCount());
+        /*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*/
+
+
+
+        }
+
+        @Override
+        public int getItemCount() {
+            if(list!=null)
+            {
+                if(list.size()==0)
+                {
+                    txtEmpty.setText("No Data found.");
+                    return ColumnCount * 5;
+                }else {
+                    txtEmpty.setText("");
+                }
+                return ColumnCount * 5;
+              //  return list.size();
+            }
+            else
+            {
+                txtEmpty.setText("No Data found.");
+                return ColumnCount * 5;
+            }
+
+        }
+
+
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            /*@Bind(R.id.tvStudentData)
+            TextView tvStudentData;*/
+
+
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this,itemView);
+
+               /* itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        editStudent(list.get(getAdapterPosition()));
+                    }
+                });*/
             }
         }
     }

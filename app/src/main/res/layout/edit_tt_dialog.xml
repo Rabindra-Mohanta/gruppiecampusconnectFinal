@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:padding="@dimen/padding_10dp"
     android:gravity="center"
-
     android:layout_height="wrap_content">
     <LinearLayout
         android:visibility="gone"
@@ -87,10 +86,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:src="@drawable/icon_authorized_user"
+                        android:src="@drawable/ic_period"
+                        android:layout_gravity="center"
                         app:tint="@color/colorPrimary"
-                        android:layout_width="@dimen/padding_30dp"
-                        android:layout_height="@dimen/padding_30dp"/>
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"/>
 
                     <EditText
                         android:layout_marginLeft="@dimen/padding_15dp"
@@ -117,10 +117,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:src="@drawable/icon_authorized_user"
+                        android:src="@drawable/ic_time"
+                        android:layout_gravity="center"
                         app:tint="@color/colorPrimary"
-                        android:layout_width="@dimen/padding_30dp"
-                        android:layout_height="@dimen/padding_30dp"/>
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"/>
 
                     <EditText
                         android:layout_marginLeft="@dimen/padding_15dp"
@@ -128,6 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/padding_30dp"
                         android:singleLine="true"
+                        android:textStyle="bold"
                         android:focusable="false"
                         android:background="@null"
                         android:textColor="@color/colorPrimary"
@@ -147,14 +149,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:src="@drawable/icon_authorized_user"
+                        android:src="@drawable/ic_select_subject"
                         app:tint="@color/colorPrimary"
-                        android:layout_width="@dimen/padding_30dp"
-                        android:layout_height="@dimen/padding_30dp"/>
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"
-
                         android:layout_height="wrap_content">
                         <Spinner
                             style="@style/commonSpinnerWhite"
@@ -183,10 +185,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:src="@drawable/icon_authorized_user"
+                        android:src="@drawable/ic_select_staff"
                         app:tint="@color/colorPrimary"
-                        android:layout_width="@dimen/padding_30dp"
-                        android:layout_height="@dimen/padding_30dp"/>
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"

@@ -13,6 +13,7 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
@@ -1195,6 +1196,10 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/team/{team_id}/attendance/report/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AttendanceReportRes> getAttendanceReport(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/offline/attendance/report/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<AttendanceReportResv2> getAttendanceReportOffline(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/online/attendance/report")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

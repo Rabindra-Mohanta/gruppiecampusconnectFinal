@@ -93,8 +93,8 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
     private String team_id;
     private String day = "";
     private String period = "";
-    private String start_time = "09:00 AM";
-    private String end_time = "09:40 AM";
+    private String start_time = "";
+    private String end_time = "";
 
 
     private String start_time_edit = "";

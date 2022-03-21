@@ -15,6 +15,7 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
@@ -292,7 +293,7 @@ public class LeafManager {
     public static final int API_END_TRIP = 634;
     public static final int API_GET_LOCATION = 635;
     public static final int API_ENABLE_ATTENANCE = 636;
-    public static final int API_GET_ATTENDANCE = 637;
+    public static final int API_GET_ATTENDANCE = 637; //314  get new student attandance with last 5 day
     public static final int API_EDIT_ATTENDANCE = 638;
     public static final int API_REMOVE_ATTENDANCE = 639;
     public static final int API_ABSENTIES_ATTENDANCE = 640;
@@ -336,6 +337,7 @@ public class LeafManager {
     public static final int API_EDIT_STUDENTS = 157;
     public static final int API_DELETE_STUDENTS = 158;
     public static final int API_ATTENDANCE_REPORT = 159;
+
     public static final int API_ATTENDANCE_DETAIL = 160;
     public static final int API_ADD_EVENT = 161;
     public static final int API_GET_EVENTS = 162;
@@ -472,6 +474,7 @@ public class LeafManager {
     public static final int VOTER_MASTER_LIST = 305;
     public static final int UPDATE_PHONE_STAFF = 308;
     public static final int API_UPDATE_PHONE_STUDENT = 309;
+    public static final int API_ATTENDANCE_REPORT_OFFLINE = 316;
     public LeafManager() {
 
     }
@@ -7543,6 +7546,36 @@ public class LeafManager {
         wrapper.execute(API_ATTENDANCE_REPORT, new ResponseWrapper.ResponseHandler<AttendanceReportRes, ErrorResponse>() {
             @Override
             public void handle200(int apiId, AttendanceReportRes response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+    public void getAttendanceReportOffline(OnCommunicationListener listener, String groupId, String teamId, int month, int year) {
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<AttendanceReportResv2> model = service.getAttendanceReportOffline(groupId, teamId, month, year);
+        ResponseWrapper<AttendanceReportResv2> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ATTENDANCE_REPORT_OFFLINE, new ResponseWrapper.ResponseHandler<AttendanceReportResv2, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, AttendanceReportResv2 response) {
                 if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }

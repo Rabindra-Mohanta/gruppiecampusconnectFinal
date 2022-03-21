@@ -54,6 +54,9 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
 
         holder.chkAttendance.setChecked(item.isChecked);
 
+        holder.rvStudentAttendance.setAdapter(new AttendanceItemAdapter(item.lastDaysAttendance));
+
+
         if (!TextUtils.isEmpty(item.studentImage))
         {
             holder.imgLead_default.setVisibility(View.INVISIBLE);
@@ -83,6 +86,8 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
             holder.imgLead_default.setImageDrawable(drawable);
         }
 
+
+
     }
 
     @Override
@@ -99,6 +104,9 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
 
         @Bind(R.id.tvNumber)
         TextView tvNumber;
+
+        @Bind(R.id.rvStudentAttendance)
+        RecyclerView rvStudentAttendance;
 
         @Bind(R.id.imgEdit)
         ImageView imgEdit;
