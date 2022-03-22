@@ -38,6 +38,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.AbsentSubjectReq;
 import school.campusconnect.datamodel.subjects.SubjectResponse;
 import butterknife.Bind;
@@ -50,6 +51,7 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AbsentAttendanceRes;
 import school.campusconnect.datamodel.AttendanceListRes;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 
@@ -74,7 +76,7 @@ public class AttendanceActivity extends BaseActivity {
     ArrayList<AttendanceListRes.AttendanceData> listAbsent = new ArrayList<>();
     AttendanceAdapter attendanceAdapter;
     private ArrayList<String> userIds = new ArrayList<>();
-    private ArrayList<String> subjectList;
+    private ArrayList<SubjectResponsev1.SubjectData> subjectList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +232,7 @@ public class AttendanceActivity extends BaseActivity {
         });
         rvSubject.setAdapter(subjectAdapter);
         tvStudents.setText(absentName);
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,6 +251,8 @@ public class AttendanceActivity extends BaseActivity {
     }
 
     private void callAbsentStudentApi(String subjectName) {
+
+
         userIds.clear();
         if (!isConnectionAvailable()) {
             showNoNetworkMsg();
@@ -257,10 +262,22 @@ public class AttendanceActivity extends BaseActivity {
 
 
         for (int i = 0; i < listAbsent.size(); i++) {
-            userIds.add(listAbsent.get(i).userId + "," + listAbsent.get(i).rollNumber);
+       //     userIds.add(listAbsent.get(i).userId + "," + listAbsent.get(i).rollNumber);
+            userIds.add(listAbsent.get(i).userId);
         }
 
-        leafManager.sendAbsenties(this, groupId, teamId, userIds,new AbsentSubjectReq(TextUtils.isEmpty(subjectName)?null:subjectName));
+        AbsentStudentReq req = new AbsentStudentReq();
+
+        if (!subjectName.isEmpty())
+        {
+            req.setSubjectId(subjectName);
+        }
+        req.setAbsentStudentIds(userIds);
+
+        Log.e(TAG,"req "+new Gson().toJson(req));
+
+        leafManager.sendAbsentiesv1(this,groupId,teamId,req);
+       // leafManager.sendAbsenties(this, groupId, teamId, userIds,new AbsentSubjectReq(TextUtils.isEmpty(subjectName)?null:subjectName));
     }
 
 /*
@@ -317,17 +334,19 @@ public class AttendanceActivity extends BaseActivity {
                 }
                 attendanceAdapter.notifyDataSetChanged();
                 break;
-            case LeafManager.API_ABSENTIES_ATTENDANCE:
+            case LeafManager.API_TAKE_ATTENDANCE:
                 Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-                AbsentAttendanceRes absentAttendanceRes = (AbsentAttendanceRes) response;
-                AppLog.e(TAG, "AbsentAttendanceRes : " + absentAttendanceRes);
+              /*  AbsentAttendanceRes absentAttendanceRes = (AbsentAttendanceRes) response;
+                AppLog.e(TAG, "AbsentAttendanceRes : " + absentAttendanceRes);*/
                 new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 finish();
                 break;
+
             case LeafManager.API_ATTENDANCE_SUBJECT:
-                SubjectResponse subjectResponse = (SubjectResponse) response;
+                SubjectResponsev1 subjectResponse = (SubjectResponsev1) response;
+
                 if(subjectResponse.getData()!=null && subjectResponse.getData().size()>0){
-                    subjectList=subjectResponse.getData().get(0).getSubjects();
+                    subjectList= subjectResponse.getData();
                 }
                 break;
         }
@@ -353,6 +372,12 @@ public class AttendanceActivity extends BaseActivity {
         } else {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onException(int apiId, String msg) {
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
     }
 
     private class SendNotification extends AsyncTask<String, String, String> {
@@ -460,10 +485,10 @@ public class AttendanceActivity extends BaseActivity {
 
     public class AttendanceSubjectAdapter extends RecyclerView.Adapter<AttendanceSubjectAdapter.ViewHolder> {
         int checkPos = -1;
-        private final ArrayList<String> listSubject;
+        private final ArrayList<SubjectResponsev1.SubjectData> listSubject;
         private Context mContext;
         AttendanceSubjectListener listener;
-        public AttendanceSubjectAdapter(ArrayList<String> listSubject,AttendanceSubjectListener listener) {
+        public AttendanceSubjectAdapter(ArrayList<SubjectResponsev1.SubjectData> listSubject,AttendanceSubjectListener listener) {
             this.listSubject=listSubject;
             this.listener=listener;
         }
@@ -477,7 +502,8 @@ public class AttendanceActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final AttendanceSubjectAdapter.ViewHolder holder, final int position) {
-            holder.tvName.setText(listSubject.get(position));
+
+            holder.tvName.setText(listSubject.get(position).subjectName);
             if(checkPos==position){
                 holder.chkAttendance.setChecked(true);
             }else {
@@ -491,8 +517,9 @@ public class AttendanceActivity extends BaseActivity {
         }
 
         public String getSelected() {
+
             if(checkPos>=0){
-                return listSubject.get(checkPos);
+                return listSubject.get(checkPos).subjectId;
             }else {
                 return "";
             }

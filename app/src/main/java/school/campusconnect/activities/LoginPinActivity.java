@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
         manager = new LeafManager();
 
+
         if (LeafPreference.getInstance(this).getString(LeafPreference.PIN).isEmpty())
         {
             if (getIntent()!= null && getIntent().getStringExtra("set_otp") != null)
@@ -79,6 +81,10 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
             ButtonValidation = "Next";
             binding.btnNext.setText("Done");
         }
+
+        Log.e(TAG,"groupId "+groupId);
+        Log.e(TAG,"groupCount "+groupCount);
+
 
         binding.etPin.setOtpListener(new OTPListener() {
             @Override
@@ -149,6 +155,9 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 LeafPreference.getInstance(this).setString(LeafPreference.TOKEN,Token);
 
                 if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+
+                    Log.e(TAG,"groupId "+groupId);
+                    Log.e(TAG,"groupCount "+groupCount);
 
                     LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, Integer.parseInt(groupCount));
 

@@ -58,7 +58,7 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
 public class HomeFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "HomeFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 

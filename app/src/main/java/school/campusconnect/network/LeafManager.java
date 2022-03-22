@@ -26,6 +26,8 @@ import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListModelResponse;
 import school.campusconnect.datamodel.masterList.VoterListModelResponse;
 import school.campusconnect.datamodel.masterList.WorkerListResponse;
+import school.campusconnect.datamodel.subjects.AbsentStudentReq;
+import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -474,6 +476,7 @@ public class LeafManager {
     public static final int VOTER_MASTER_LIST = 305;
     public static final int UPDATE_PHONE_STAFF = 308;
     public static final int API_UPDATE_PHONE_STUDENT = 309;
+    public static final int API_TAKE_ATTENDANCE = 315;
     public static final int API_ATTENDANCE_REPORT_OFFLINE = 316;
     public LeafManager() {
 
@@ -7074,12 +7077,12 @@ public class LeafManager {
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<SubjectResponse> model = service.getAttendanceSubject(groupId, teamId);
-        ResponseWrapper<SubjectResponse> wrapper = new ResponseWrapper<>(model);
+        final Call<SubjectResponsev1> model = service.getAttendanceSubjectv2(groupId, teamId);
+        ResponseWrapper<SubjectResponsev1> wrapper = new ResponseWrapper<>(model);
 
-        wrapper.execute(API_ATTENDANCE_SUBJECT, new ResponseWrapper.ResponseHandler<SubjectResponse, ErrorResponse>() {
+        wrapper.execute(API_ATTENDANCE_SUBJECT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
             @Override
-            public void handle200(int apiId, SubjectResponse response) {
+            public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }
@@ -7200,6 +7203,7 @@ public class LeafManager {
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
+
         final Call<AbsentAttendanceRes> model = service.sendAbsenties(groupId, teamId, sudentIds, absentSubjectReq);
         ResponseWrapper<AbsentAttendanceRes> wrapper = new ResponseWrapper<>(model);
 
@@ -7227,6 +7231,38 @@ public class LeafManager {
         }, ErrorResponse.class);
     }
 
+
+    public void sendAbsentiesv1(OnCommunicationListener listener, String groupId, String teamId, AbsentStudentReq absentStudentReq) {
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.sendAbsentiesv1(groupId, teamId, absentStudentReq);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_TAKE_ATTENDANCE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
 
     public void addStudent(OnCommunicationListener listener, String groupId, String teamId, AddStudentReq addStudentReq) {
         mOnCommunicationListener = listener;

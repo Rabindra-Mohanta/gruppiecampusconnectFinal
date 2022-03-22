@@ -24,6 +24,7 @@ public class SubjectResponse extends BaseResponse {
         @SerializedName(value = "classSubjects",alternate = "subjects")
         @Expose
         public ArrayList<String> subjects;
+
         @SerializedName("subjectId")
         @Expose
         public String subjectId;

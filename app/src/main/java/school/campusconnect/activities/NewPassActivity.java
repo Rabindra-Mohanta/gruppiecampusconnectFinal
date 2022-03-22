@@ -5,6 +5,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -136,6 +137,9 @@ public class NewPassActivity extends BaseActivity {
 
         if (apiId == LeafManager.API_ID_NEW_PASS) {
             LoginResponse response1 = (LoginResponse) response;
+
+            Log.e(TAG,"LoginResponse"+new Gson().toJson(response1));
+
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.LOGIN_ID, response1.userId);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.ROLE, response1.role);
          //   LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
@@ -156,7 +160,10 @@ public class NewPassActivity extends BaseActivity {
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             i.putExtra("Role",response1.role);
             i.putExtra("token",response1.token);
-            i.putExtra("groupCount",response1.groupCount);
+
+            AppLog.e("groupCount", "id is " + response1.groupCount);
+
+            i.putExtra("groupCount",String.valueOf(response1.groupCount));
             i.putExtra("groupID",response1.groupId);
             startActivity(i);
             finish();
@@ -264,6 +271,7 @@ public class NewPassActivity extends BaseActivity {
                     show = true;
                 }
                 break;
+
             case R.id.imgEye2:
                 if (show2) {
                     imgEye2.setImageDrawable(getResources().getDrawable(R.drawable.icon_eye_hide));

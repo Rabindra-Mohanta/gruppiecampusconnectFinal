@@ -52,6 +52,7 @@
                     tools:listitem="@layout/single_attendance_subject"
                     android:layout_height="wrap_content"/>
                 <EditText
+                    android:visibility="gone"
                     android:id="@+id/etSubject"
                     android:layout_width="match_parent"
                     android:hint="Enter Subject Name"

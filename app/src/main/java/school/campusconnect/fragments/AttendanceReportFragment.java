@@ -128,11 +128,10 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
 
 
-
-
         calendar = Calendar.getInstance();
 
         ColumnCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) + 2;
+
         Log.e(TAG,"RowCount"+ColumnCount);
         FixedGridLayoutManager fixedGridLayoutManager = new FixedGridLayoutManager();
         fixedGridLayoutManager.setTotalColumnCount(5);

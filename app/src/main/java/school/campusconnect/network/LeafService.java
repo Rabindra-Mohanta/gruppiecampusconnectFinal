@@ -24,6 +24,8 @@ import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListModelResponse;
 import school.campusconnect.datamodel.masterList.VoterListModelResponse;
 import school.campusconnect.datamodel.masterList.WorkerListResponse;
+import school.campusconnect.datamodel.subjects.AbsentStudentReq;
+import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -1129,6 +1131,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<SubjectResponse> getAttendanceSubject(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubjectResponsev1> getAttendanceSubjectv2(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
     @GET("/api/v1/groups/{group_id}/team/{team_id}/attendance/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AttendanceListRes> getAttendance(@Path("group_id") String group_id, @Path("team_id") String team_id);
@@ -1149,6 +1155,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AbsentAttendanceRes> sendAbsenties(@Path("group_id") String group_id, @Path("team_id") String team_id,
                                             @Query(value = "userIds[]", encoded = true) ArrayList<String> userIds, @Body AbsentSubjectReq absentSubjectReq);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/attendance/take")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> sendAbsentiesv1(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body AbsentStudentReq absentStudentReq);
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/attendance/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

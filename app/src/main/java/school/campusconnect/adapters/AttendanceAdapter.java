@@ -54,7 +54,17 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
 
         holder.chkAttendance.setChecked(item.isChecked);
 
-        holder.rvStudentAttendance.setAdapter(new AttendanceItemAdapter(item.lastDaysAttendance));
+        if (item.lastDaysAttendance !=null && item.lastDaysAttendance.size()>0)
+        {
+            holder.rvStudentAttendance.setVisibility(View.VISIBLE);
+            holder.rvStudentAttendance.setAdapter(new AttendanceItemAdapter(item.lastDaysAttendance));
+        }
+        else
+        {
+            holder.rvStudentAttendance.setVisibility(View.GONE);
+            holder.rvStudentAttendance.setAdapter(null);
+        }
+
 
 
         if (!TextUtils.isEmpty(item.studentImage))
