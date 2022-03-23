@@ -61,8 +61,8 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
     @Bind(R.id.edtSearch)
     public EditText edtSearch;
 
-    private List<MyTeamData> filteredList;
-    private List<MyTeamData> myTeamDataList;
+    private List<MyTeamData> filteredList = new ArrayList<>();
+    private List<MyTeamData> myTeamDataList = new ArrayList<>();
 
     String type;
 
@@ -108,20 +108,6 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
                 {
                     adapter.add(myTeamDataList);
                 }
-
-
-                /*else
-                {
-                    if (binding.tvIssue.getVisibility() == View.GONE)
-                    {
-                        binding.tvIssue.setVisibility(View.VISIBLE);
-                    }
-
-                    binding.tvIssue.setText(getResources().getString(R.string.hint_issue_not_found));
-                    filteredList = new ArrayList<>();
-                    adapter = new Adapter(filteredList);
-                    binding.rvSearchIssue.setAdapter(adapter);
-                }*/
             }
         });
     }
@@ -160,7 +146,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
         AppLog.e(TAG, "ClassResponse " + result);
         myTeamDataList = result;
         adapter.add(myTeamDataList);
-        rvClass.setAdapter(adapter);
+      //  rvClass.setAdapter(adapter);
     }
 
     @Override

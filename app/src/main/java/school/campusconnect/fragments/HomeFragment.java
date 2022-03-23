@@ -188,7 +188,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             GroupDetailResponse gRes = (GroupDetailResponse) response;
             AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
             LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
-
+            LeafPreference.getInstance(getActivity()).setString(Constants.TYPE,categoryName);
 
 
             //save group detail

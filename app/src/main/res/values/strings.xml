@@ -383,6 +383,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_personal">Chat</string>
     <string name="lbl_more">More</string>
     <string name="lbl_profile">Profile</string>
+    <string name="lbl_make_app_admin">Make App Admin</string>
     <string name="lbl_join_gruppie">Join Gruppie</string>
     <string name="lbl_friends">Friends</string>
     <string name="lbl_notification">Notification</string>

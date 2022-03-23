@@ -113,11 +113,11 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.tabLayout)
     public TabLayout tabLayout;
 
-    @Bind(R.id.fabAddTicket)
+   /* @Bind(R.id.fabAddTicket)
     public TextView fabAddTicket;
 
     @Bind(R.id.llAdTicket)
-    public CardView llAdTicket;
+    public CardView llAdTicket;*/
 
     @Bind(R.id.llAuthorizedUser)
     LinearLayout llAuthorizedUser;
@@ -160,6 +160,9 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.llStaffReg)
     LinearLayout llStaffReg;
+
+    @Bind(R.id.llMakeAdmin)
+    LinearLayout llMakeAdmin;
 
     @Bind(R.id.llBusRegister)
     LinearLayout llBusRegister;
@@ -672,7 +675,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg, R.id.fabAddTicket})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -711,6 +714,15 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
+
+            case R.id.llMakeAdmin:
+                if (isConnectionAvailable()) {
+                    Toast.makeText(getApplicationContext(),"Under Construction...",Toast.LENGTH_SHORT).show();
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+
             case R.id.llFavourite:
                 if (isConnectionAvailable()) {
                     Intent intent = new Intent(this, FavoritePostActivity.class);
@@ -835,14 +847,14 @@ public class GroupDashboardActivityNew extends BaseActivity
                 }
                 break;
 
-            case R.id.fabAddTicket:
+           /* case R.id.fabAddTicket:
 
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, AddTicketActivity.class));
                 } else {
                     showNoNetworkMsg();
                 }
-                break;
+                break;*/
 
             case R.id.llStaffReg:
                 if (isConnectionAvailable()) {
@@ -977,12 +989,22 @@ public class GroupDashboardActivityNew extends BaseActivity
             llAttendanceReport.setVisibility(View.GONE);
             tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
 
+            if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA"))
+            {
+                llMakeAdmin.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                llMakeAdmin.setVisibility(View.GONE);
+            }
+
             llDiscuss.setVisibility(View.GONE);
             llPeople.setVisibility(View.GONE);
 
-            llFamily.setVisibility(View.VISIBLE);
-            llAdTicket.setVisibility(View.VISIBLE);
+            llFamily.setVisibility(View.GONE);
+     //       llAdTicket.setVisibility(View.VISIBLE);
             tabLayout.setVisibility(View.VISIBLE);
+
 
 
             if (mGroupItem.canPost) {
@@ -992,7 +1014,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                 if (mGroupItem.isAdmin)
                 {
-                    llBothCoordinateRegister.setVisibility(View.VISIBLE);
+                    llBothCoordinateRegister.setVisibility(View.GONE);
                 }
 
                 tabText = new String[4];
@@ -1053,7 +1075,9 @@ public class GroupDashboardActivityNew extends BaseActivity
                 tabLayout.addTab(tabLayout.newTab().setText(tabText[1]));
             }
 
-        } else {
+        }
+
+        else {
 
             tabText = new String[2];
             tabIcon = new int[2];
@@ -1248,10 +1272,10 @@ public class GroupDashboardActivityNew extends BaseActivity
             if (fm.getBackStackEntryCount() == 1) {
                 if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
                     tabLayout.setVisibility(View.VISIBLE);
-                    fabAddTicket.setVisibility(View.VISIBLE);
+                 //   fabAddTicket.setVisibility(View.VISIBLE);
                 } else if (mGroupItem.canPost)
                     tabLayout.setVisibility(View.VISIBLE);
-                    fabAddTicket.setVisibility(View.VISIBLE);
+              //      fabAddTicket.setVisibility(View.VISIBLE);
             }
             super.onBackPressed();
         } else {

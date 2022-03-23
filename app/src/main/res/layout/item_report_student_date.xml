@@ -5,12 +5,13 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/tvStudentData"
-        android:layout_width="80dp"
+        android:id="@+id/tvData"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
+        android:padding="@dimen/padding_10dp"
         android:gravity="center"
-        android:singleLine="true"
-        android:text="Roll No"
+        android:text="Date One"
+        android:background="@drawable/primary_border_rec_btn_bg"
         android:textSize="@dimen/text_size_14sp"
         android:textStyle="bold" />
 

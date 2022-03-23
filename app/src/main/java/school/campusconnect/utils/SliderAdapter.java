@@ -24,25 +24,19 @@ import school.campusconnect.databinding.ItemSliderBinding;
 
 public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.ViewHolder> {
     public static String TAG = "SliderAdapter";
-    ArrayList<Uri> urls;
+    ArrayList<String> urls;
     Context context;
-    private Boolean isAdmin;
-    private Listner listner;
 
-    public SliderAdapter(Context context, Listner listner,Boolean isAdmin) {
-        this.context = context;
-        this.listner = listner;
-        this.isAdmin = isAdmin;
-    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         ItemSliderBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_slider,parent,false);
         return new ViewHolder(binding);
     }
 
-    public void add(ArrayList<Uri> urls)
+    public void add(ArrayList<String> urls)
     {
         this.urls = urls;
         notifyDataSetChanged();
@@ -50,7 +44,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Uri uri = urls.get(position);
+        String uri = urls.get(position);
         Log.e(TAG,"Url "+uri);
       //  Glide.with(context).load(uri).into(holder.binding.imgSlider);
 
@@ -73,12 +67,6 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.ViewHolder
         Glide.with(context).load(uri).apply(reqOption).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true).into(holder.binding.imgSlider);
 
-        holder.binding.imgEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                     listner.startEditBanner(uri,position);
-            }
-        });
 
 
     }

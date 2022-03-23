@@ -2,6 +2,7 @@ package school.campusconnect.fragments.DashboardNewUi;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
@@ -44,6 +45,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,19 +60,24 @@ import com.google.gson.reflect.TypeToken;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
+import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.AddChapterPostActivity;
+import school.campusconnect.activities.AddTicketActivity;
 import school.campusconnect.activities.CalendarActivity;
 import school.campusconnect.activities.ChangePasswordActivity;
 import school.campusconnect.activities.ChangePinActivity;
 import school.campusconnect.activities.CreateTeamActivity;
+import school.campusconnect.activities.FamilyMemberActivity;
 import school.campusconnect.activities.GalleryActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.IssueActivity;
 import school.campusconnect.activities.NotificationListActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ProfileConstituencyActivity;
@@ -80,6 +92,8 @@ import school.campusconnect.databinding.ItemAdminFeedBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamCountTBL;
+import school.campusconnect.datamodel.banner.BannerAddReq;
+import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
@@ -88,6 +102,7 @@ import school.campusconnect.datamodel.notificationList.NotificationListRes;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
@@ -115,12 +130,18 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     DatabaseHandler databaseHandler;
     LeafPreference pref;
 
+    private int multiGalleryCount = 0;
+    private Boolean isGalleryMultiple = false;
+    private Boolean isClear = true;
+    private TransferUtility transferUtility;
+
     int pos = 0;
     private Boolean isEdit = false;
     ArrayList<BaseTeamv2Response.TeamListData> teamList = new ArrayList<>();
     ArrayList<NotificationListRes.NotificationListData> notificationList = new ArrayList<>();
     ArrayList<AdminFeederResponse.FeedData> adminNotificationList = new ArrayList<>();
-    ArrayList<Uri> imageSlider = new ArrayList<>();
+    ArrayList<String> imageSliderList = new ArrayList<>();
+    ArrayList<String> listAmazonS3Url = new ArrayList<>();
     private SliderAdapter sliderAdapter;
     boolean isVisible;
 
@@ -136,6 +157,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public static final int REQUEST_LOAD_CAMERA_IMAGE = 101;
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
 
+
+    private ProgressDialog progressDialog;
 
     FragmentBaseTeamFragmentv3Binding binding;
 
@@ -155,10 +178,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         inits();
 
+        bannerListApiCall();
+
         getNotification();
 
         getTeams();
-
 
 
         return binding.getRoot();
@@ -305,6 +329,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         pref = LeafPreference.getInstance(getActivity());
 
         databaseHandler = new DatabaseHandler(getActivity());
+        transferUtility = AmazoneHelper.getTransferUtility(getActivity());
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
@@ -326,7 +351,20 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         binding.tvViewMoreFeed.setOnClickListener(this);
         binding.imgEditBanner.setOnClickListener(this);
+
         binding.imgEditVoter.setOnClickListener(this);
+
+        binding.llMyFamily.setOnClickListener(this);
+        binding.llMyIssue.setOnClickListener(this);
+
+        binding.llAdTicket.setOnClickListener(this);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCancelable(false);
+
+        enableOption();
+
+
 
        /* *//*Slider.init(new PicassoImageLoadingService(getContext()));*//*
         imageSlider.add(Uri.parse("https://i.picsum.photos/id/0/5616/3744.jpg?hmac=3GAAioiQziMGEtLbfrdbcoenXoWAW-zlyEAMkfEdBzQ"));
@@ -339,6 +377,18 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         sliderAdapter.add(imageSlider);*/
 
     }
+
+    private void enableOption() {
+
+        if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA")) {
+            binding.llAdTicket.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            binding.llAdTicket.setVisibility(View.GONE);
+        }
+    }
+
 
     private void apiCall() {
 
@@ -567,6 +617,28 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                 break;
 
+            case LeafManager.API_BANNER_LIST:
+
+                BannerRes bannerRes = (BannerRes) response;
+
+
+                if (bannerRes.getBannerData().get(0).getFileName() != null && bannerRes.getBannerData().get(0).getFileName().size()>0)
+                {
+                    binding.rvSliderBanner.setVisibility(View.VISIBLE);
+                    binding.imgSlider.setVisibility(View.GONE);
+                }
+                else
+                {
+                    binding.rvSliderBanner.setVisibility(View.GONE);
+                    binding.imgSlider.setVisibility(View.VISIBLE);
+                }
+                break;
+
+
+            case LeafManager.API_ADD_BANNER_LIST:
+                bannerListApiCall();
+                break;
+
         }
     }
     private void subscribeUnsubscribeTeam(ArrayList<String> currentTopics) {
@@ -685,6 +757,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
 
 
+
     @Override
     public void onTeamClick(MyTeamData team) {
         Log.e(TAG,"Team Data :"+new Gson().toJson(team));
@@ -799,6 +872,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     }
 
+    private void bannerListApiCall() {
+
+        if (!isConnectionAvailable()) {
+            return;
+        }
+
+        manager.getBannerList(this,GroupDashboardActivityNew.groupId);
+    }
+
     private void getTeams() {
 
         List<BaseTeamTableV2> dataItemList = BaseTeamTableV2.getTeamList(GroupDashboardActivityNew.groupId);
@@ -868,7 +950,16 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 }
                 break;
 
+            case R.id.llAdTicket:
+                if (isConnectionAvailable()) {
+                    startActivity(new Intent(getActivity(), AddTicketActivity.class));
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+
             case R.id.imgEditVoter:
+                AppLog.e(TAG,"imgEditVoter");
                 if (isConnectionAvailable()) {
                     Intent intent;
                     intent = new Intent(getActivity(), ProfileConstituencyActivity.class);
@@ -876,6 +967,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 } else {
                     showNoNetworkMsg();
                 }
+                break;
+
+            case R.id.llMyFamily:
+                startActivity(new Intent(getActivity(), FamilyMemberActivity.class));
+                break;
+
+            case R.id.llMyIssue:
+                startActivity(new Intent(getActivity(), IssueActivity.class));
                 break;
 
             case R.id.tvViewMoreFeed:
@@ -1079,7 +1178,23 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 Uri resultUri = result.getUri();
                 Log.e(TAG,"result Uri Crop Image "+resultUri);
 
-                Glide.with(getContext()).load(resultUri).into(binding.imgSlider);
+
+                if (isGalleryMultiple)
+                {
+                    if (isClear)
+                    {
+                        isClear = false;
+                        imageSliderList.clear();
+
+                    }
+                    imageSliderList.add(resultUri.toString());
+                }
+                else
+                {
+                    imageSliderList.clear();
+                    imageSliderList.add(resultUri.toString());
+                }
+                //Glide.with(getContext()).load(resultUri).into(binding.imgSlider);
 
              /*   if (isEdit)
                 {
@@ -1092,6 +1207,16 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     sliderAdapter.add(imageSlider);
                 }*/
 
+                if (multiGalleryCount == imageSliderList.size())
+                {
+                    multiGalleryCount = 0;
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    progressDialog.setMessage("Uploading Image...");
+                    progressDialog.show();
+                    uploadToAmazon();
+
+                }
+
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -1103,20 +1228,147 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             final Uri selectedImage = data.getData();
             AppLog.e(TAG, "selectedImage : " + selectedImage);
 
-          //  isEdit = false;
+            ClipData clipData = data.getClipData();
 
-            CropImage.activity(selectedImage)
-                    .start(getContext(),this);
+            if (clipData == null) {
+
+                multiGalleryCount = 1;
+                isGalleryMultiple = false;
+//                String path = ImageUtil.getPath(this, selectedImage);
+                //  listImages.add(selectedImage.toString());
+                CropImage.activity(selectedImage)
+                        .start(getContext(),this);
+            } else {
+
+                multiGalleryCount = clipData.getItemCount();
+
+                for (int i = 0; i < clipData.getItemCount(); i++) {
+                    ClipData.Item item = clipData.getItemAt(i);
+                    final Uri uri1 = item.getUri();
+//                    String path = ImageUtil.getPath(this, uri1);
+                    //    listImages.add(uri1.toString());
+                    isGalleryMultiple = true;
+                    CropImage.activity(uri1)
+                            .start(getContext(),this);
+                }
+            }
+
+
+
         }
         else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
                AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
 
+               multiGalleryCount = 1;
+
 //            isEdit = false;
+            isGalleryMultiple = false;
 
             CropImage.activity(imageCaptureFile)
                     .setOutputUri(imageCaptureFile)
                     .start(getContext(),this);
         }
+    }
+
+    private void uploadToAmazon() {
+
+        for (int i = 0; i < imageSliderList.size(); i++) {
+            try {
+                File newFile = new Compressor(getContext()).setMaxWidth(1000).setQuality(90).compressToFile(new File(imageSliderList.get(i)));
+                imageSliderList.set(i, newFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        AppLog.e(TAG, "Final PAth :: " + imageSliderList.toString());
+        upLoadImageOnCloud(0);
+
+    }
+
+    private void upLoadImageOnCloud(final int pos) {
+
+        BannerAddReq req = new BannerAddReq();
+
+        if (pos == imageSliderList.size()) {
+            if (progressDialog!=null) {
+                progressDialog.dismiss();
+            }
+          ///  mainRequest.fileName = listAmazonS3Url;
+
+
+            req.setBannerFile(listAmazonS3Url);
+            req.setBannerFileType("image");
+
+            AppLog.e(TAG, "send data : " + new Gson().toJson(req));
+
+            manager.addBannerList(this,GroupDashboardActivityNew.groupId,req);
+
+
+        } else {
+            final String key = AmazoneHelper.getAmazonS3Key("image");
+
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key, getContext().getContentResolver().openInputStream(Uri.parse(imageSliderList.get(pos))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                            updateList(pos, key);
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            Toast.makeText(getContext(), "Failed to upload", Toast.LENGTH_SHORT).show();
+                            if(progressDialog!=null)
+                                progressDialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + imageSliderList.size() + ", please wait...");
+
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        binding.progressBar.setVisibility(View.GONE);
+                        if (progressDialog != null) {
+                            progressDialog.dismiss();
+                        }
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(getContext(), getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+    }
+    private void updateList(int pos, String key) {
+        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+
+        Log.e("FINALURL", "url is " + _finalUrl);
+
+        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+
+        Log.e("FINALURL", "encoded url is " + _finalUrl);
+
+        listAmazonS3Url.add(_finalUrl);
+
+        upLoadImageOnCloud(pos + 1);
     }
 
     public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {

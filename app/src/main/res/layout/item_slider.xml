@@ -12,7 +12,7 @@
             android:scaleType="centerCrop"
             />
 
-        <ImageView
+       <!-- <ImageView
             android:id="@+id/imgEdit"
             android:layout_width="@dimen/padding_25dp"
             android:layout_height="@dimen/padding_25dp"
@@ -22,6 +22,6 @@
             android:padding="@dimen/padding_5dp"
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/padding_10dp"
-            />
+            />-->
     </RelativeLayout>
 </layout>

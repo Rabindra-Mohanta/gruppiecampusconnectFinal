@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,6 +29,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -45,16 +49,26 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
 public class PublicForumListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "PublicForumListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
+
+    @Bind(R.id.edtSearch)
+    public EditText edtSearch;
 
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
+
+
+    ClassesAdapter adapter;
+
     private GroupItem mGroupItem;
+
+    private List<MyTeamData> filteredList = new ArrayList<>();
+    private List<MyTeamData> myTeamDataList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -65,9 +79,12 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         _init();
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new ClassesAdapter();
+        rvClass.setAdapter(adapter);
 
         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
+
         if(mGroupItem.canPost){
             leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
         }else {
@@ -78,7 +95,48 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
     }
 
     private void _init() {
+
+
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
+        edtSearch.setVisibility(View.VISIBLE);
+
+        edtSearch.setHint("Search Booth");
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+                if (s.toString().length() > 2)
+                {
+                    searchData(s.toString());
+                }
+                else
+                {
+                    adapter.add(myTeamDataList);
+                }
+            }
+        });
+    }
+
+    private void searchData(String text) {
+
+        filteredList = new ArrayList<>();
+
+        for(MyTeamData item : myTeamDataList){
+
+            if (item.name.toLowerCase().contains(text.toLowerCase())){
+                filteredList.add(item);
+            }
+        }
+
+        adapter.add(filteredList);
     }
 
     @Override
@@ -113,8 +171,9 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         BoothResponse res = (BoothResponse) response;
         List<MyTeamData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
-
-        rvClass.setAdapter(new ClassesAdapter(result));
+        myTeamDataList = result;
+        adapter.add(myTeamDataList);
+        rvClass.setAdapter(adapter);
     }
 
     @Override
@@ -132,9 +191,9 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         List<MyTeamData> list;
         private Context mContext;
 
-        public ClassesAdapter(List<MyTeamData> list) {
+        /*public ClassesAdapter(List<MyTeamData> list) {
             this.list = list;
-        }
+        }*/
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -186,6 +245,11 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
             holder.txt_name.setText(item.name);
             holder.txt_count.setText("");
             holder.txt_count.setVisibility(View.GONE);
+        }
+
+        public void add(List<MyTeamData> list) {
+            this.list = list;
+            notifyDataSetChanged();
         }
 
         @Override

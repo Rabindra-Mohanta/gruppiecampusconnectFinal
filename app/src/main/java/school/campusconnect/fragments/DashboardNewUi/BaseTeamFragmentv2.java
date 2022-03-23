@@ -253,7 +253,6 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
         databaseHandler = new DatabaseHandler(getActivity());
 
-
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
         manager = new LeafManager();

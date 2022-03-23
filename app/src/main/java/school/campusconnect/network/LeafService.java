@@ -14,6 +14,8 @@ import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
+import school.campusconnect.datamodel.banner.BannerAddReq;
+import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
@@ -1858,6 +1860,14 @@ public interface LeafService {
     @GET("api/v1/groups/{group_id}/team/{team_id}/get/voters/masterlist")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<VoterListModelResponse.VoterListRes> getVoterList(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @GET("api/v1/groups/{group_id}/banner/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BannerRes> getBannerList(@Path("group_id") String group_id);
+
+    @POST("api/v1/groups/{group_id}/banner/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addBannerList(@Path("group_id") String group_id,@Body BannerAddReq req);
 
 
 }

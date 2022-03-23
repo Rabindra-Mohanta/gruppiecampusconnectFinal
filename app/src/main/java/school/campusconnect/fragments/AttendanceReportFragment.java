@@ -35,6 +35,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -61,7 +62,7 @@ import school.campusconnect.utils.MixOperations;
 import static school.campusconnect.network.LeafManager.API_CLASSES;
 
 public class AttendanceReportFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static String TAG = "AttendanceReportFragment";
     @Bind(R.id.spClass)
     public Spinner spClass;
 
@@ -81,6 +82,9 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     @Bind(R.id.llClass)
     public LinearLayout llClass;
 
+    @Bind(R.id.rvAttendTitle)
+    public RecyclerView rvAttendTitle;
+
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
@@ -91,6 +95,9 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     private String selectedTeamId="";
     private String className="";
     private String classNameExcel="";
+
+    private ArrayList<String> attendanceTitle = new ArrayList<>();
+    private ArrayList<String> attendanceData = new ArrayList<>();
 
     private int ColumnCount = 0;
     @Nullable
@@ -123,16 +130,28 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     private void init() {
 
 
-
-
-
-
+        attendanceTitle.add("Roll No");
+        attendanceTitle.add("Name");
 
         calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH ,1);
 
-        ColumnCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) + 2;
 
-        Log.e(TAG,"RowCount"+ColumnCount);
+        ColumnCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        Log.e(TAG,"ColumnCount"+ColumnCount);
+        Log.e(TAG,"YEAR"+calendar.get(Calendar.YEAR));
+        Log.e(TAG,"MONTH"+calendar.get(Calendar.MONTH)+1);
+
+        for (int i=0;i<ColumnCount;i++)
+        {
+           // attendanceTitle.add(i+"/"+calendar.get(Calendar.MONTH)+1+"/"+calendar.get(Calendar.YEAR));
+            attendanceTitle.add(new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+            calendar.add(Calendar.DAY_OF_MONTH,1);
+        }
+
+        rvAttendTitle.setAdapter(new AttendHeadAdpater(attendanceTitle));
+
+
         FixedGridLayoutManager fixedGridLayoutManager = new FixedGridLayoutManager();
         fixedGridLayoutManager.setTotalColumnCount(5);
         rvStudents.setLayoutManager(fixedGridLayoutManager);
@@ -200,7 +219,11 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             AttendanceReportResv2 res = (AttendanceReportResv2) response;
             attendanceReportListv2 = res.result;
 
-            rvStudents.setAdapter(new ReportStudentAdapterV2(res.result));
+
+
+
+           // rvAttendTitle.setAdapter(new AttendHeadAdpater(attendanceTitle));
+            //rvStudents.setAdapter(new ReportStudentAdapterV2(res.result));
         }
 
     }
@@ -286,7 +309,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         }
     }
 
-    public class ReportStudentAdapterV2 extends RecyclerView.Adapter<ReportStudentAdapterV2.ViewHolder>
+   /* public class ReportStudentAdapterV2 extends RecyclerView.Adapter<ReportStudentAdapterV2.ViewHolder>
     {
         List<AttendanceReportResv2.AttendanceReportData> list;
         private Context mContext;
@@ -306,7 +329,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             Log.e(TAG,"onBindViewHolder"+getItemCount());
-        /*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*/
+        *//*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*//*
 
 
 
@@ -338,8 +361,8 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            /*@Bind(R.id.tvStudentData)
-            TextView tvStudentData;*/
+            *//*@Bind(R.id.tvStudentData)
+            TextView tvStudentData;*//*
 
 
 
@@ -347,15 +370,15 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
                 super(itemView);
                 ButterKnife.bind(this,itemView);
 
-               /* itemView.setOnClickListener(new View.OnClickListener() {
+               *//* itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         editStudent(list.get(getAdapterPosition()));
                     }
-                });*/
+                });*//*
             }
         }
-    }
+    }*/
 
     private void editStudent(AttendanceReportRes.AttendanceReportData studentData) {
         Intent intent = new Intent(getActivity(), AttendanceDetailActivity.class);
@@ -461,5 +484,127 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile) ;
         sharingIntent.setType("text/csv");
         startActivity(Intent.createChooser(sharingIntent, "share file with"));
+    }
+
+
+    public class AttendHeadAdpater extends RecyclerView.Adapter<AttendHeadAdpater.ViewHolder>
+    {
+        ArrayList<String> list;
+        Context context;
+        public AttendHeadAdpater(ArrayList<String> list) {
+            this.list = list;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            context = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_atttendance_head,parent,false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+            Log.e(TAG,"onBindViewHolder"+getItemCount());
+            /*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*/
+
+            //if(position ==0)
+            for (int i = 0; i < list.size()*7; i++) {
+
+                TextView valueTV = new TextView(context);
+                valueTV.setText(list.get(i%list.size()));
+                valueTV.setId(position*33+i);
+                valueTV.setLayoutParams(new LinearLayout.LayoutParams(80, LinearLayout.LayoutParams.WRAP_CONTENT));
+                holder.llLinear.addView(valueTV);
+            }
+          /*  else
+            {
+
+            }*/
+          //  holder.tvTitle.setText(list.get(position));
+
+        //    holder.rvData.setAdapter(new ReportStudentAdapterV2());
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 50;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+        /*    @Bind(R.id.tvTitle)
+            TextView tvTitle;*/
+
+            @Bind(R.id.llLinear)
+            LinearLayout llLinear;
+
+           /* @Bind(R.id.rvData)
+            RecyclerView rvData;*/
+
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this,itemView);
+
+               /* itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        editStudent(list.get(getAdapterPosition()));
+                    }
+                });*/
+            }
+        }
+    }
+
+
+    public class ReportStudentAdapterV2 extends RecyclerView.Adapter<ReportStudentAdapterV2.ViewHolder>
+    {
+
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_report_student_date,parent,false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+            Log.e(TAG,"onBindViewHolder"+getItemCount());
+            /*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*/
+
+
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 50;
+
+        }
+
+
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            @Bind(R.id.tvData)
+            TextView tvData;
+
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this,itemView);
+
+               /* itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        editStudent(list.get(getAdapterPosition()));
+                    }
+                });*/
+            }
+        }
     }
 }

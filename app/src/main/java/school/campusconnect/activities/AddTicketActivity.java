@@ -685,11 +685,11 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             return false;
         }
 
-        if (binding.etDescription.getText().toString().isEmpty()) {
+        /*if (binding.etDescription.getText().toString().isEmpty()) {
             if (showToast)
                 Toast.makeText(this, "Please Enter Description", Toast.LENGTH_SHORT).show();
             return false;
-        }
+        }*/
         if (binding.etLocation.getText().toString().isEmpty()) {
             if (showToast)
                 Toast.makeText(this, "Please Select Location", Toast.LENGTH_SHORT).show();
@@ -1184,7 +1184,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             listImages.clear();
             listImages.add(audioPath);
             upLoadImageOnCloud(0);
-        }else {
+        }
+        else {
             for (int i = 0; i < listImages.size(); i++) {
                 try {
                     File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));

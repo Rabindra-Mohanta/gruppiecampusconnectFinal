@@ -70,13 +70,13 @@
                                 app:slider_loopSlides="true" />-->
 
 
-                            <!-- <androidx.recyclerview.widget.RecyclerView
-                                   android:id="@+id/rvSlider"
+                             <androidx.recyclerview.widget.RecyclerView
+                                   android:id="@+id/rvSliderBanner"
                                    android:layout_width="match_parent"
                                    android:layout_height="130dp"
                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                    android:orientation="horizontal"
-                                   />-->
+                                   />
 
 
                             <ImageView
@@ -160,8 +160,8 @@
                                     <ImageView
                                         android:layout_alignParentRight="true"
                                         android:id="@+id/imgEditVoter"
-                                        android:layout_width="@dimen/padding_20dp"
-                                        android:layout_height="@dimen/padding_20dp"
+                                        android:layout_width="@dimen/padding_25dp"
+                                        android:layout_height="@dimen/padding_25dp"
                                         android:background="@drawable/round_primary_bg"
                                         android:scaleType="centerCrop"
                                         android:src="@drawable/ic_edit_white"
@@ -200,8 +200,10 @@
                                     android:textColor="@color/black" />
 
                                 <LinearLayout
+                                    android:layout_below="@id/tvVoterId"
                                     android:layout_width="match_parent"
                                     android:weightSum="2"
+                                    android:gravity="bottom"
                                     android:layout_alignParentBottom="true"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal">
@@ -237,6 +239,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_centerInParent="true"
                                                     android:text="@string/lbl_my_family"
+                                                    android:singleLine="true"
                                                     android:textColor="@color/colorPrimary"
                                                     style="@style/LabelNormal" />
 
@@ -274,6 +277,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_centerInParent="true"
                                                     android:text="@string/lbl_my_issue"
+                                                    android:singleLine="true"
                                                     android:textColor="@color/colorPrimary"
                                                     style="@style/LabelNormal" />
 
@@ -696,6 +700,40 @@
 
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/llAdTicket"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/padding_5dp"
+            android:layout_marginRight="@dimen/padding_10dp"
+            android:layout_alignParentBottom="true"
+            app:cardCornerRadius="@dimen/padding_50dp"
+            app:cardElevation="5dp">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+
+            <TextView
+                android:id="@+id/fabAddTicket"
+                style="@style/LabelSmall"
+                android:background="@drawable/fab_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Add\nTicket"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
 
         <ProgressBar
             android:id="@+id/progressBar"
