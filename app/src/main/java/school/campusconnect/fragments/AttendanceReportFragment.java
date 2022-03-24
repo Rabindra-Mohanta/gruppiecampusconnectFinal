@@ -82,8 +82,8 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     @Bind(R.id.llClass)
     public LinearLayout llClass;
 
-    @Bind(R.id.rvAttendTitle)
-    public RecyclerView rvAttendTitle;
+    /*@Bind(R.id.rvAttendTitle)
+    public RecyclerView rvAttendTitle;*/
 
 
     @Bind(R.id.progressBar)
@@ -130,11 +130,13 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     private void init() {
 
 
-        attendanceTitle.add("Roll No");
-        attendanceTitle.add("Name");
+        rvStudents.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        /*attendanceTitle.add("Roll No");
+        attendanceTitle.add("Name");*/
 
         calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH ,1);
+        /*calendar.set(Calendar.DAY_OF_MONTH ,1);
 
 
         ColumnCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -154,7 +156,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
         FixedGridLayoutManager fixedGridLayoutManager = new FixedGridLayoutManager();
         fixedGridLayoutManager.setTotalColumnCount(5);
-        rvStudents.setLayoutManager(fixedGridLayoutManager);
+        rvStudents.setLayoutManager(fixedGridLayoutManager);*/
 
         spClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -177,7 +179,8 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         progressBar.setVisibility(View.VISIBLE);
         tvMonth.setText(MixOperations.getMonth(calendar.getTime()).toUpperCase());
         LeafManager leafManager = new LeafManager();
-        leafManager.getAttendanceReportOffline(this,GroupDashboardActivityNew.groupId,selectedTeamId,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
+       // leafManager.getAttendanceReportOffline(this,GroupDashboardActivityNew.groupId,selectedTeamId,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
+        leafManager.getAttendanceReport(this,GroupDashboardActivityNew.groupId,selectedTeamId,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
     }
 
     @Override
@@ -216,9 +219,11 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             spClass.setAdapter(adapter);
         }
         else {
-            AttendanceReportResv2 res = (AttendanceReportResv2) response;
-            attendanceReportListv2 = res.result;
+            /*AttendanceReportResv2 res = (AttendanceReportResv2) response;
+            attendanceReportListv2 = res.result;*/
 
+            AttendanceReportRes res = (AttendanceReportRes) response;
+            rvStudents.setAdapter(new ReportStudentAdapter(res.result));
 
 
 

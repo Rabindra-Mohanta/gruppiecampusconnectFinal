@@ -387,6 +387,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         {
             binding.llAdTicket.setVisibility(View.GONE);
         }
+
+        if (mGroupItem.isAdmin)
+        {
+            binding.imgEditBanner.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            binding.imgEditBanner.setVisibility(View.GONE);
+        }
     }
 
 
@@ -619,6 +628,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
             case LeafManager.API_BANNER_LIST:
 
+                binding.progressBarBanner.setVisibility(View.GONE);
+
                 BannerRes bannerRes = (BannerRes) response;
 
 
@@ -626,6 +637,10 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 {
                     binding.rvSliderBanner.setVisibility(View.VISIBLE);
                     binding.imgSlider.setVisibility(View.GONE);
+
+                    sliderAdapter = new SliderAdapter();
+                    binding.rvSliderBanner.setAdapter(sliderAdapter);
+                    sliderAdapter.add(bannerRes.getBannerData().get(0).fileName);
                 }
                 else
                 {
@@ -633,7 +648,6 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     binding.imgSlider.setVisibility(View.VISIBLE);
                 }
                 break;
-
 
             case LeafManager.API_ADD_BANNER_LIST:
                 bannerListApiCall();
@@ -730,6 +744,10 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public void onFailure(int apiId, String msg) {
         binding.progressBar.setVisibility(View.GONE);
 
+        if (apiId == LeafManager.API_BANNER_LIST)
+        {
+            binding.progressBarBanner.setVisibility(View.GONE);
+        }
         if (getActivity() != null) {
 
             if (msg.contains("401:Unauthorized")) {
@@ -751,6 +769,12 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onException(int apiId, String msg) {
         binding.progressBar.setVisibility(View.GONE);
+
+        if (apiId == LeafManager.API_BANNER_LIST)
+        {
+            binding.progressBarBanner.setVisibility(View.GONE);
+        }
+
         if (getActivity() != null)
             Toast.makeText(getActivity(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
@@ -877,7 +901,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (!isConnectionAvailable()) {
             return;
         }
-
+        binding.progressBarBanner.setVisibility(View.VISIBLE);
         manager.getBannerList(this,GroupDashboardActivityNew.groupId);
     }
 
@@ -1210,7 +1234,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 if (multiGalleryCount == imageSliderList.size())
                 {
                     multiGalleryCount = 0;
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                 //   binding.progressBar.setVisibility(View.VISIBLE);
                     progressDialog.setMessage("Uploading Image...");
                     progressDialog.show();
                     uploadToAmazon();
@@ -1371,7 +1395,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         upLoadImageOnCloud(pos + 1);
     }
 
-    public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {
+    public class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {
 
         private ArrayList<AdminFeederResponse.FeedData> feedData;
         public boolean isExpand = false;
@@ -1403,8 +1427,53 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 holder.binding.llTotalDiscussionCount.setVisibility(View.VISIBLE);
                 holder.binding.llTotalPublicStreet.setVisibility(View.VISIBLE);
             }*/
-           
+
+            holder.binding.llOpenTickets.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).issueClick();
+                }
+            });
+
+            holder.binding.llAnnouncement.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).announcementClick();
+                }
+            });
+
+            holder.binding.llBoothCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  //  ((GroupDashboardActivityNew) getActivity()).updateTabIcons(1);
+                    ((GroupDashboardActivityNew) getActivity()).tabLayout.getTabAt(1).select();
+                }
+            });
+
+            holder.binding.llDiscuss.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).tabLayout.getTabAt(1).select();
+
+                }
+            });
+
+            holder.binding.llPublicStreet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).tabLayout.getTabAt(2).select();
+                }
+            });
+
+            holder.binding.llPublicDiscussion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).tabLayout.getTabAt(2).select();
+
+                }
+            });
         }
+
 
         public void expand()
         {

@@ -39,6 +39,8 @@ import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
+import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
@@ -227,7 +229,8 @@ public class BaseFragment extends Fragment {
             MasterBoothListTBL.deleteAll();
             WorkerListTBL.deleteAll();
             StreetListTBL.deleteAll();
-
+            BoothsTBL.deleteAll();
+            PublicFormBoothTBL.deleteAll();
             TicketTBL.deleteAll();
             NotificationTable.deleteAll();
             AllNotificationTable.deleteAll();

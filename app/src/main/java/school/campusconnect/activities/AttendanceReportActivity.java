@@ -22,6 +22,7 @@ public class AttendanceReportActivity extends BaseActivity {
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
+    public String className;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,16 @@ public class AttendanceReportActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_attendance_report)+" - ("+getIntent().getStringExtra("className")+")");
+
+        if (getIntent() != null)
+        {
+            setTitle(getResources().getString(R.string.lbl_attendance_report)+" - ("+getIntent().getStringExtra("className")+")");
+        }
+        else
+        {
+            setTitle(getResources().getString(R.string.lbl_attendance_report));
+        }
+
 
         AttendanceReportFragment attendanceReportFragment=new AttendanceReportFragment();
         attendanceReportFragment.setArguments(getIntent().getExtras());

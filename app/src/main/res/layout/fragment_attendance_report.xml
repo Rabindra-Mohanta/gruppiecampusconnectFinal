@@ -63,7 +63,7 @@
                 android:layout_height="40dp" />
         </LinearLayout>
 
-        <!--<LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:background="@drawable/ract_border"
             android:gravity="center"
@@ -143,9 +143,9 @@
                 </LinearLayout>
             </LinearLayout>
 
-        </LinearLayout>-->
+        </LinearLayout>
 
-        <HorizontalScrollView
+       <!-- <HorizontalScrollView
             android:scrollbars="none"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -160,27 +160,24 @@
                 tools:itemCount="3"
                 tools:listitem="@layout/item_atttendance_head"
                 />
-        </HorizontalScrollView>
+        </HorizontalScrollView>-->
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvStudents"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
+   <!-- <androidx.core.widget.NestedScrollView
         android:layout_below="@+id/llTop"
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvStudents"
-            android:visibility="gone"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/padding_10dp"
-            android:nestedScrollingEnabled="false"
-            android:layout_height="match_parent"/>
-    </androidx.core.widget.NestedScrollView>
+
+    </androidx.core.widget.NestedScrollView>-->
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -27,6 +27,9 @@ public class LeafPreference {
     public static final String GROUP_ID_LIST = "GROUP_ID_LIST";
     public static final String ROLE = "ROLE";
 
+    public static final String SECRET_KEY = "SECRET_KEY";
+    public static final String ACCESS_KEY = "ACCESS_KEY";
+
     private static LeafPreference sInstance;
     private static SharedPreferences sPref;
     private static SharedPreferences.Editor sEditor;

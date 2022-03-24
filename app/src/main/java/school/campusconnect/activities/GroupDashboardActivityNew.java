@@ -325,6 +325,9 @@ public class GroupDashboardActivityNew extends BaseActivity
                     if (res.data == null || res.data.size() == 0)
                         return;
 
+                    LeafPreference.getInstance(GroupDashboardActivityNew.this).setString(LeafPreference.ACCESS_KEY,res.data.get(0).teamsListCount.accessKey);
+                    LeafPreference.getInstance(GroupDashboardActivityNew.this).setString(LeafPreference.SECRET_KEY,res.data.get(0).teamsListCount.secretKey);
+
                     LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("PREVIEW_URL",res.data.get(0).imagePreviewUrl);
                     ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
 
@@ -908,7 +911,10 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
 
-    private void updateTabIcons(int pos) {
+    public void updateTabIcons(int pos) {
+
+        Log.e(TAG,"position Tab"+pos);
+
         for (int i = 0; i < tabText.length; i++) {
             View v = tabLayout.getTabAt(i).getCustomView();
             TextView tv = (TextView) v.findViewById(R.id.tab_badge);
@@ -997,6 +1003,15 @@ public class GroupDashboardActivityNew extends BaseActivity
             {
                 llMakeAdmin.setVisibility(View.GONE);
             }
+
+            if (mGroupItem.isAdmin || mGroupItem.isPartyTaskForce || mGroupItem.isDepartmentTaskForce || mGroupItem.isBoothPresident || mGroupItem.isBoothMember) {
+                llArchiveTeam.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                llArchiveTeam.setVisibility(View.GONE);
+            }
+
 
             llDiscuss.setVisibility(View.GONE);
             llPeople.setVisibility(View.GONE);
@@ -1172,7 +1187,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
 
-    private void boothClick() {
+    public void boothClick() {
 
         AppLog.e(TAG,"boothClick ");
 
@@ -1183,13 +1198,14 @@ public class GroupDashboardActivityNew extends BaseActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
     }
 
-    private void publicForumClick() {
+    public void publicForumClick() {
 
         AppLog.e(TAG,"publicForumClick ");
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         if (mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)) {
+
             PublicForumListFragment classListFragment = new PublicForumListFragment();
             classListFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
@@ -1830,7 +1846,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
         else {
 
-            Log.e(TAG,"GeneralPostFragment Start");
+            Log.e(TAG,"GeneralPostFragment Start"+group.name);
             setBackEnabled(true);
             tvToolbar.setText(group.name);
             tv_Desc.setText("Members : "+group.members);
@@ -1848,6 +1864,66 @@ public class GroupDashboardActivityNew extends BaseActivity
             tabLayout.setVisibility(View.GONE);
         }
 
+    }
+
+    public void announcementClick()
+    {
+        setBackEnabled(true);
+        tvToolbar.setText("Announcement");
+        tv_Desc.setText("Members : "+"0");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(groupId)).addToBackStack("home").commitAllowingStateLoss();
+        tabLayout.setVisibility(View.GONE);
+    }
+
+    public void issueClick()
+    {
+        int Count = 0;
+        String Role = null;
+
+        if (mGroupItem.isAdmin)
+        {
+            Count++;
+            Role = "isAdmin";
+        }
+        if (mGroupItem.isPartyTaskForce)
+        {
+            Count++;
+            Role = "isPartyTaskForce";
+        }
+        if (mGroupItem.isDepartmentTaskForce)
+        {
+            Count++;
+            Role = "isDepartmentTaskForce";
+        }
+        if (mGroupItem.isBoothPresident)
+        {
+            Count++;
+            Role = "isBoothPresident";
+        }
+        if (mGroupItem.isBoothMember)
+        {
+            Count++;
+            Role = "isBoothMember";
+        }
+
+        if (Count > 1)
+        {
+            Intent intent = new Intent(this, SelectRoleActivity.class);
+            startActivity(intent);
+
+        }
+        else if (1 == Count)
+        {
+            Intent intent = new Intent(this, TicketsActivity.class);
+            intent.putExtra("Role", Role);
+            startActivity(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(this, TicketsActivity.class);
+            intent.putExtra("Role", Role);
+            startActivity(intent);
+        }
     }
 
 /*    public void groupSelectedV2(BaseTeamv2Response.featuredIconData group) {
