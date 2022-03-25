@@ -17,6 +17,7 @@ import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -1706,6 +1707,10 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/all/booths/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothResponse> getBooths(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{booth_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothVotersListResponse> getBoothVoters(@Path("group_id") String group_id, @Path("booth_id") String booth_id);
 
     @GET("/api/v1/groups/{group_id}/all/booths/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

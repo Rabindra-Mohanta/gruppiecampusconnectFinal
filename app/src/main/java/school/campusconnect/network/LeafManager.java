@@ -19,6 +19,7 @@ import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -448,6 +449,7 @@ public class LeafManager {
     public static final int API_ADD_BOOTH_MEMEBER = 273;
     public static final int API_UPDATE_BOOTH_MEMEBER = 277;
     public static final int API_GET_BOOTH_MEMEBER = 274;
+    public static final int API_BOOTH_VOTER_LIST = 275;
     public static final int API_GET_FAMILY_MEMBER = 275;
     public static final int API_CREATE_FAMILY_MEMBER = 276;
     public static final int API_GET_BOOTH_TEAMS = 280;
@@ -483,6 +485,7 @@ public class LeafManager {
 
     public static final int API_ADD_BANNER_LIST = 321;
     public static final int API_BANNER_LIST = 322;
+
     public LeafManager() {
 
     }
@@ -11919,6 +11922,47 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
+
+    public void getBoothVoterList(OnCommunicationListener listListener, String group_id,String boothID) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BoothVotersListResponse> model = service.getBoothVoters(group_id,boothID);
+
+        ResponseWrapper<BoothVotersListResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_BOOTH_VOTER_LIST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
 
 
     public interface OnCommunicationListener {

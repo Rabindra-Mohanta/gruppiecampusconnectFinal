@@ -62,7 +62,7 @@ import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.UploadCircleImageFragment;
 
 public class ProfileFragmentConst extends BaseFragment implements LeafManager.OnCommunicationListener, LeafManager.OnAddUpdateListener<ProfileValidationError> {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "ProfileFragmentConst";
 
     @Bind(R.id.etName)
     public EditText etName;
@@ -70,8 +70,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Bind(R.id.etPhone)
     public EditText etPhone;
 
-    @Bind(R.id.etRelationShip)
-    public EditText etRelationShip;
+   /* @Bind(R.id.etRelationShip)
+    public EditText etRelationShip;*/
     @Bind(R.id.etAddress)
     public EditText etAddress;
 
@@ -275,11 +275,11 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
     private void fillDetails(ProfileItem item) {
         etName.setText(item.name);
-        etRelationShip.setText(item.relationship);
+  //      etRelationShip.setText(item.relationship);
         etAddress.setText(item.email);
         etPhone.setText(item.phone);
         etPhone.setEnabled(false);
-        etRelationShip.setEnabled(false);
+    //    etRelationShip.setEnabled(false);
 
         int index = 0;
         for (int i = 0; i < genderArray.length; i++) {

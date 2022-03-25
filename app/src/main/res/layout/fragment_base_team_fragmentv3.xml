@@ -61,23 +61,21 @@
                             android:background="@drawable/light_primary_border_bg"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
-                           <!-- <ss.com.bannerslider.Slider
-                                android:id="@+id/llSlider"
+                            <ss.com.bannerslider.Slider
+                                android:id="@+id/rvSliderBanner"
                                 android:layout_width="match_parent"
                                 android:layout_height="130dp"
                                 app:slider_defaultBanner="1"
-                                app:slider_interval="7000"
-                                app:slider_loopSlides="true" />-->
+                                app:slider_loopSlides="true" />
 
 
-                             <androidx.recyclerview.widget.RecyclerView
+                             <!--<androidx.recyclerview.widget.RecyclerView
                                    android:visibility="gone"
                                    android:id="@+id/rvSliderBanner"
                                    android:layout_width="match_parent"
                                    android:layout_height="130dp"
-                                   app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                    android:orientation="horizontal"
-                                   />
+                                   />-->
 
 
                             <ImageView

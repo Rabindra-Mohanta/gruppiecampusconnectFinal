@@ -25,6 +25,19 @@ public class BoothsTBL extends Model {
     @Column(name = "name")
     public String name;
 
+    @Column(name = "userName")
+    public String userName;
+
+    @Column(name = "userImage")
+    public String userImage;
+
+    @Column(name = "adminName")
+    public String adminName;
+
+    @Column(name = "boothId")
+    public String boothId;
+
+
     @Column(name = "members")
     public int members;
 
@@ -78,6 +91,8 @@ public class BoothsTBL extends Model {
 
     @Column(name = "leaveRequest")
     public Boolean leaveRequest;
+
+
 
     @Column(name = "TeamDetails")
     public String TeamDetails;

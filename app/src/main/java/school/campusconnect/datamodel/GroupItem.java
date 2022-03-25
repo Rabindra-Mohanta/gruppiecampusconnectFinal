@@ -24,6 +24,7 @@ public class GroupItem implements Parcelable {
     public boolean isDepartmentTaskForce;
     public boolean isBoothMember;
     public String image;
+    public boolean isBoothWorker;
     public int groupPostUnreadCount;
     public String category="";
     public boolean canPost;
@@ -84,6 +85,7 @@ public class GroupItem implements Parcelable {
         boothName = in.readString();
         boothCount = in.readInt();
         isBoothPresident = in.readByte() != 0;
+        isBoothWorker = in.readByte() != 0;
     }
 
     public static final Creator<GroupItem> CREATOR = new Creator<GroupItem>() {
@@ -193,5 +195,6 @@ public class GroupItem implements Parcelable {
         dest.writeInt(boothCount);
         dest.writeInt((byte) (isBoothMember ? 1 : 0));
         dest.writeInt((byte) (isBoothPresident ? 1 : 0));
+        dest.writeInt((byte) (isBoothWorker ? 1 : 0));
     }
 }

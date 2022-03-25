@@ -1,6 +1,5 @@
 package school.campusconnect.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +19,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,25 +37,32 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.activities.AddBoothActivity;
+import school.campusconnect.activities.BoothCoordinateActivity;
+import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
-import school.campusconnect.database.LeafPreference;
+
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.booths.BoothsTBL;
-import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
-public class PublicForumListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "PublicForumListFragment";
+public class BoothListMyTeamFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
+
+    public static String TAG = "BoothListMyTeamFragment";
+
+    private List<MyTeamData> filteredList = new ArrayList<>();
+    private List<MyTeamData> myTeamDataList = new ArrayList<>();
+
+    ClassesAdapter adapter;
+
     @Bind(R.id.rvTeams)
-    public RecyclerView rvClass;
+    public RecyclerView rvTeams;
 
     @Bind(R.id.edtSearch)
     public EditText edtSearch;
@@ -67,42 +74,23 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
     public ProgressBar progressBar;
 
 
-    ClassesAdapter adapter;
-
-    private GroupItem mGroupItem;
-
-    private List<MyTeamData> filteredList = new ArrayList<>();
-    private List<MyTeamData> myTeamDataList = new ArrayList<>();
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
-
-        _init();
+        Log.e(TAG,"onViewCreated");
+        inits();
 
         getDataLocally();
-
 
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.e(TAG,"onDestroyView");
-    }
 
     private void getDataLocally() {
 
-        List<PublicFormBoothTBL> boothListTBl;
-        if(mGroupItem.canPost){
-            boothListTBl = PublicFormBoothTBL.getBoothList(GroupDashboardActivityNew.groupId,"Booth");
-        }else {
-
-            boothListTBl = PublicFormBoothTBL.getBoothList(GroupDashboardActivityNew.groupId,"MyBooth");
-        }
+        List<BoothsTBL> boothListTBl = BoothsTBL.getBoothList(GroupDashboardActivityNew.groupId);
 
         myTeamDataList.clear();
 
@@ -112,7 +100,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
             for (int i=0;i<boothListTBl.size();i++)
             {
-                PublicFormBoothTBL boothList = boothListTBl.get(i);
+                BoothsTBL boothList = boothListTBl.get(i);
 
                 MyTeamData myTeamData = new MyTeamData();
                 myTeamData.teamId = boothList.teamId;
@@ -133,6 +121,11 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
                 myTeamData.enableAttendance = boothList.enableAttendance;
                 myTeamData.type = boothList.type;
 
+                myTeamData.userName = boothList.userName;
+                myTeamData.adminName = boothList.adminName;
+                myTeamData.userImage = boothList.userImage;
+                myTeamData.boothId = boothList.boothId;
+
                 myTeamData.category = boothList.category;
                 myTeamData.role = boothList.role;
                 myTeamData.count = boothList.count;
@@ -150,18 +143,17 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         {
             boothListApiCall();
         }
+
     }
 
-    private void _init() {
+    private void inits() {
 
-        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        rvTeams.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new ClassesAdapter();
-        rvClass.setAdapter(adapter);
+        rvTeams.setAdapter(adapter);
 
-        mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
         edtSearch.setVisibility(View.VISIBLE);
-
-        edtSearch.setHint("Search Booth");
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 
@@ -185,7 +177,6 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
             }
         });
     }
-
     private void searchData(String text) {
 
         filteredList = new ArrayList<>();
@@ -196,6 +187,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
                 filteredList.add(item);
             }
         }
+
         adapter.add(filteredList);
     }
 
@@ -213,55 +205,37 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-                return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (getActivity() != null) {
-            ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
-            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
-        }
-    }
 
     private void boothListApiCall() {
 
         if (!isConnectionAvailable()) {
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-
-        if(mGroupItem.canPost){
-            leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
-        }else {
-            leafManager.getMyBooths(this,GroupDashboardActivityNew.groupId);
-        }
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
         BoothResponse res = (BoothResponse) response;
-        List<MyTeamData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
-      /*  myTeamDataList = result;
-        adapter.add(myTeamDataList);
-        rvClass.setAdapter(adapter);*/
+        //result = res.getData();
+
         saveToLocally(res.getData());
+        // rvClass.setAdapter(new ClassesAdapter(result));
     }
+
     private void saveToLocally(ArrayList<MyTeamData> boothList) {
 
-        if(mGroupItem.canPost){
-            PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId,"Booth");
-        }else {
-            PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId,"MyBooth");
-        }
+        BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
 
         for (int i = 0;i<boothList.size();i++)
         {
-            PublicFormBoothTBL boothsTBL = new PublicFormBoothTBL();
+            BoothsTBL boothsTBL = new BoothsTBL();
 
             boothsTBL.teamId = boothList.get(i).teamId;
             boothsTBL.postUnseenCount = boothList.get(i).postUnseenCount;
@@ -281,19 +255,17 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
             boothsTBL.enableAttendance = boothList.get(i).enableAttendance;
             boothsTBL.type = boothList.get(i).type;
 
+            boothsTBL.userName = boothList.get(i).userName;
+            boothsTBL.adminName = boothList.get(i).adminName;
+            boothsTBL.userImage = boothList.get(i).userImage;
+            boothsTBL.boothId = boothList.get(i).boothId;
+
             boothsTBL.category = boothList.get(i).category;
             boothsTBL.role = boothList.get(i).role;
             boothsTBL.count = boothList.get(i).count;
             boothsTBL.allowedToAddTeamPost = boothList.get(i).allowedToAddTeamPost;
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
-
-            if(mGroupItem.canPost){
-                boothsTBL.boothType = "Booth";
-            }else {
-                boothsTBL.boothType = "MyBooth";
-            }
-
             boothsTBL._now = System.currentTimeMillis();
             boothsTBL.save();
         }
@@ -313,26 +285,23 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         progressBar.setVisibility(View.GONE);
     }
 
+
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
     {
         List<MyTeamData> list;
         private Context mContext;
 
-        /*public ClassesAdapter(List<MyTeamData> list) {
-            this.list = list;
-        }*/
-
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class_student,parent,false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-            final MyTeamData item = list.get(position);
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
 
+            final MyTeamData item = list.get(position);
 
             if (!TextUtils.isEmpty(item.image)) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
@@ -368,15 +337,8 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
-
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("");
-            holder.txt_count.setVisibility(View.GONE);
-        }
-
-        public void add(List<MyTeamData> list) {
-            this.list = list;
-            notifyDataSetChanged();
+            holder.txt_count.setText("Member : "+String.valueOf(item.members));
         }
 
         @Override
@@ -401,6 +363,11 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
         }
 
+        public void add(List<MyTeamData> list) {
+            this.list = list;
+            notifyDataSetChanged();
+        }
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             @Bind(R.id.img_lead)
             ImageView imgTeam;
@@ -414,16 +381,26 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
             @Bind(R.id.txt_count)
             TextView txt_count;
 
+            @Bind(R.id.img_tree)
+            ImageView img_tree;
+
+
             public ViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this, itemView);
+                ButterKnife.bind(this,itemView);
+
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         onTreeClick(list.get(getAdapterPosition()));
                     }
+                });
 
-                    //}
+                img_tree.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onTreeClick(list.get(getAdapterPosition()));
+                    }
                 });
 
             }
@@ -432,6 +409,8 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
     private void onTreeClick(MyTeamData classData) {
 
-        ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.teamId,"normal",true);
+        ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.boothId,"myTeam",true);
     }
+
+
 }

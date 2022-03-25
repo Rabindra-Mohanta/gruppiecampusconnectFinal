@@ -92,6 +92,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
         List<BoothsTBL> boothListTBl = BoothsTBL.getBoothList(GroupDashboardActivityNew.groupId);
 
+        result.clear();
+
         if (boothListTBl != null && boothListTBl.size() > 0)
         {
             ArrayList<MyTeamData> resultData = new ArrayList<>();
@@ -105,6 +107,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
                 myTeamData.postUnseenCount = boothList.postUnseenCount;
                 myTeamData.phone = boothList.phone;
                 myTeamData.name = boothList.name;
+                myTeamData.boothId = boothList.boothId;
                 myTeamData.members = boothList.members;
                 myTeamData.boothNumber = boothList.boothNumber;
                 myTeamData.groupId = boothList.groupId;
@@ -118,6 +121,10 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
                 myTeamData.enableGps = boothList.enableGps;
                 myTeamData.enableAttendance = boothList.enableAttendance;
                 myTeamData.type = boothList.type;
+
+                myTeamData.userName = boothList.userName;
+                myTeamData.adminName = boothList.adminName;
+                myTeamData.userImage = boothList.userImage;
 
                 myTeamData.category = boothList.category;
                 myTeamData.role = boothList.role;
@@ -262,6 +269,11 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             boothsTBL.enableGps = boothList.get(i).enableGps;
             boothsTBL.enableAttendance = boothList.get(i).enableAttendance;
             boothsTBL.type = boothList.get(i).type;
+
+            boothsTBL.userName = boothList.get(i).userName;
+            boothsTBL.adminName = boothList.get(i).adminName;
+            boothsTBL.userImage = boothList.get(i).userImage;
+            boothsTBL.boothId = boothList.get(i).boothId;
 
             boothsTBL.category = boothList.get(i).category;
             boothsTBL.role = boothList.get(i).role;

@@ -1,11 +1,16 @@
 package school.campusconnect.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.gson.Gson;
@@ -31,15 +31,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.activities.BoothCoordinateActivity;
-import school.campusconnect.activities.BoothStudentActivity;
-import school.campusconnect.activities.ClassStudentActivity;
-import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.booths.BoothResponse;
-import school.campusconnect.datamodel.classs.ClassResponse;
-import school.campusconnect.datamodel.issue.IssueListResponse;
+import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -47,10 +41,22 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
-public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "BoothListFragment2";
+
+public class MyTeamVoterListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
+
+    public static String TAG = "MyTeamVoterListFragment";
+
+    private List<BoothVotersListResponse.VoterData> filteredList = new ArrayList<>();
+    private List<BoothVotersListResponse.VoterData> myTeamDataList = new ArrayList<>();
+
+    ClassesAdapter adapter;
+
+    private String boothID;
     @Bind(R.id.rvTeams)
-    public RecyclerView rvClass;
+    public RecyclerView rvTeams;
+
+    @Bind(R.id.edtSearch)
+    public EditText edtSearch;
 
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
@@ -58,36 +64,47 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
-    @Bind(R.id.edtSearch)
-    public EditText edtSearch;
-
-    private List<MyTeamData> filteredList = new ArrayList<>();
-    private List<MyTeamData> myTeamDataList = new ArrayList<>();
-
-    String type;
-
-    ClassesAdapter adapter;
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_booth_list2,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
-        progressBar.setVisibility(View.VISIBLE);
+        Log.e(TAG,"onViewCreated");
+        inits();
+
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        inits();
+
+    public static MyTeamVoterListFragment newInstance(String boothID) {
+        MyTeamVoterListFragment fragment = new MyTeamVoterListFragment();
+        Bundle b = new Bundle();
+        b.putString("boothID", boothID);
+        fragment.setArguments(b);
+        return fragment;
     }
+
+    private void voterListApiCall() {
+
+        if (!isConnectionAvailable()) {
+            return;
+        }
+        LeafManager leafManager = new LeafManager();
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getBoothVoterList(this, GroupDashboardActivityNew.groupId,boothID);
+    }
+
 
     private void inits() {
 
-        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
-        type = getArguments().getString("type");
+        boothID = getArguments().getString("boothID");
+
+        rvTeams.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new ClassesAdapter();
-        rvClass.setAdapter(adapter);
+        rvTeams.setAdapter(adapter);
+
+        edtSearch.setVisibility(View.VISIBLE);
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 
@@ -112,72 +129,41 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
         });
     }
 
-    private void searchData(String text) {
-
-        filteredList = new ArrayList<>();
-
-        for(MyTeamData item : myTeamDataList){
-
-            if (item.name.toLowerCase().contains(text.toLowerCase())){
-                filteredList.add(item);
-            }
-        }
-
-        adapter.add(filteredList);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        LeafManager leafManager = new LeafManager();
-        if("MEMBER".equalsIgnoreCase(type)){
-            leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
-        }else {
-            leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"boothCoordinator");
-        }
+    private void searchData(String toString) {
 
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
-        BoothResponse res = (BoothResponse) response;
-        List<MyTeamData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
-        myTeamDataList = result;
-        adapter.add(myTeamDataList);
-      //  rvClass.setAdapter(adapter);
+
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
     {
-        List<MyTeamData> list;
+        List<BoothVotersListResponse.VoterData> list;
         private Context mContext;
 
-       /* public ClassesAdapter(List<MyTeamData> list) {
-
-        }*/
-
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ClassesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class_student,parent,false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            final MyTeamData item = list.get(position);
+
+            final BoothVotersListResponse.VoterData item = list.get(position);
 
             if (!TextUtils.isEmpty(item.image)) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
@@ -214,7 +200,6 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             }
 
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Member : "+item.members);
         }
 
         @Override
@@ -223,7 +208,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Booths found.");
+                    txtEmpty.setText("No Voters found.");
                 }
                 else {
                     txtEmpty.setText("");
@@ -233,13 +218,13 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             }
             else
             {
-                txtEmpty.setText("No Booths found.");
+                txtEmpty.setText("No Voters found.");
                 return 0;
             }
 
         }
 
-        public void add(List<MyTeamData> list) {
+        public void add(List<BoothVotersListResponse.VoterData> list) {
             this.list = list;
             notifyDataSetChanged();
         }
@@ -283,17 +268,6 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
         }
     }
 
-    private void onTreeClick(MyTeamData classData) {
-        if("MEMBER".equalsIgnoreCase(type)){
-            Intent intent = new Intent(getActivity(), CommitteeActivity.class);
-            intent.putExtra("class_data",new Gson().toJson(classData));
-            intent.putExtra("title",classData.name);
-            startActivity(intent);
-        }else {
-            Intent intent = new Intent(getActivity(), BoothCoordinateActivity.class);
-            intent.putExtra("class_data",new Gson().toJson(classData));
-            intent.putExtra("title",classData.name);
-            startActivity(intent);
-        }
+    private void onTreeClick(BoothVotersListResponse.VoterData myTeamData) {
     }
 }

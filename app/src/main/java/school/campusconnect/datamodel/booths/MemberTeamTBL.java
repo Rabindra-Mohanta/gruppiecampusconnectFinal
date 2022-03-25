@@ -8,8 +8,9 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
-@Table(name = "PublicFormBoothTBL")
-public class PublicFormBoothTBL extends Model {
+@Table(name = "MemberTeamTBL")
+public class MemberTeamTBL extends Model {
+
 
     @Column(name = "teamId")
     public String teamId;
@@ -19,9 +20,6 @@ public class PublicFormBoothTBL extends Model {
 
     @Column(name = "phone")
     public String phone;
-
-    @Column(name = "boothType")
-    public String boothType;
 
     @Column(name = "name")
     public String name;
@@ -86,19 +84,31 @@ public class PublicFormBoothTBL extends Model {
     @Column(name = "_now")
     public long _now;
 
-    public static List<PublicFormBoothTBL> getAll() {
-        return new Select().from(PublicFormBoothTBL.class).execute();
+    @Column(name = "userName")
+    public String userName;
+
+    @Column(name = "userImage")
+    public String userImage;
+
+    @Column(name = "adminName")
+    public String adminName;
+
+    @Column(name = "boothId")
+    public String boothId;
+
+    public static List<MemberTeamTBL> getAll() {
+        return new Select().from(MemberTeamTBL.class).execute();
     }
 
-    public static List<PublicFormBoothTBL> getBoothList(String group_id,String boothType) {
-        return new Select().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).where("boothType = ?",boothType).execute();
+    public static List<MemberTeamTBL> getMemeberBoothList(String group_id,String teamId) {
+        return new Select().from(MemberTeamTBL.class).where("groupId = ?", group_id).where("teamId = ?", teamId).execute();
     }
 
-    public static void deleteBooth(String group_id,String boothType) {
-        new Delete().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).where("boothType = ?",boothType).execute();
+    public static void deleteMemberBooth(String group_id,String teamId) {
+        new Delete().from(MemberTeamTBL.class).where("groupId = ?", group_id).where("teamId = ?", teamId).execute();
     }
 
     public static void deleteAll() {
-        new Delete().from(PublicFormBoothTBL.class).execute();
+        new Delete().from(MemberTeamTBL.class).execute();
     }
 }

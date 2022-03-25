@@ -8,9 +8,8 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
-@Table(name = "PublicFormBoothTBL")
-public class PublicFormBoothTBL extends Model {
-
+@Table(name = "BoothPresidentTBL")
+public class BoothPresidentTBL extends Model {
     @Column(name = "teamId")
     public String teamId;
 
@@ -20,11 +19,17 @@ public class PublicFormBoothTBL extends Model {
     @Column(name = "phone")
     public String phone;
 
-    @Column(name = "boothType")
-    public String boothType;
-
     @Column(name = "name")
     public String name;
+
+    @Column(name = "userName")
+    public String userName;
+
+    @Column(name = "userImage")
+    public String userImage;
+
+    @Column(name = "adminName")
+    public String adminName;
 
     @Column(name = "members")
     public int members;
@@ -86,19 +91,23 @@ public class PublicFormBoothTBL extends Model {
     @Column(name = "_now")
     public long _now;
 
-    public static List<PublicFormBoothTBL> getAll() {
-        return new Select().from(PublicFormBoothTBL.class).execute();
+    @Column(name = "boothType")
+    public String boothType;
+
+    public static List<BoothPresidentTBL> getAll() {
+        return new Select().from(BoothPresidentTBL.class).execute();
     }
 
-    public static List<PublicFormBoothTBL> getBoothList(String group_id,String boothType) {
-        return new Select().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).where("boothType = ?",boothType).execute();
+    public static List<BoothPresidentTBL> getBoothList(String group_id,String boothTpye) {
+        return new Select().from(BoothPresidentTBL.class).where("groupId = ?", group_id).where("boothType = ?", boothTpye).execute();
     }
 
-    public static void deleteBooth(String group_id,String boothType) {
-        new Delete().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).where("boothType = ?",boothType).execute();
+    public static void deleteBooth(String group_id,String boothTpye) {
+        new Delete().from(BoothPresidentTBL.class).where("groupId = ?", group_id).where("boothType = ?", boothTpye).execute();
     }
 
     public static void deleteAll() {
-        new Delete().from(PublicFormBoothTBL.class).execute();
+        new Delete().from(BoothPresidentTBL.class).execute();
     }
+
 }

@@ -18,7 +18,6 @@ import com.activeandroid.ActiveAndroid;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -39,12 +38,14 @@ import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
+import school.campusconnect.fragments.BoothListMyTeamFragment;
+import school.campusconnect.fragments.BoothPresidentListMyTeamFragment;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.BoothListFragment;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.MemberTeamListFragment;
-import school.campusconnect.fragments.NotificationListFragment;
+import school.campusconnect.fragments.MyTeamVoterListFragment;
 import school.campusconnect.fragments.PublicForumListFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
@@ -175,6 +176,9 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.llBothCoordinateRegister)
     LinearLayout llBothCoordinateRegister;
+
+    @Bind(R.id.llMyTeam)
+    LinearLayout llMyTeam;
 
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
@@ -678,7 +682,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin,R.id.llMyTeam})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -725,6 +729,13 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
+
+            case R.id.llMyTeam:
+                rlMore.setVisibility(View.GONE);
+
+                myTeamClick();
+                return;
+
 
             case R.id.llFavourite:
                 if (isConnectionAvailable()) {
@@ -997,12 +1008,25 @@ public class GroupDashboardActivityNew extends BaseActivity
 
             if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA"))
             {
-                llMakeAdmin.setVisibility(View.VISIBLE);
+                if (mGroupItem.isAdmin)
+                {
+                    llMakeAdmin.setVisibility(View.VISIBLE);
+                }
             }
             else
             {
                 llMakeAdmin.setVisibility(View.GONE);
             }
+
+            if (mGroupItem.isAdmin || mGroupItem.isBoothPresident) {
+
+                llMyTeam.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                llMyTeam.setVisibility(View.GONE);
+            }
+
 
             if (mGroupItem.isAdmin || mGroupItem.isPartyTaskForce || mGroupItem.isDepartmentTaskForce || mGroupItem.isBoothPresident || mGroupItem.isBoothMember) {
                 llArchiveTeam.setVisibility(View.VISIBLE);
@@ -1210,10 +1234,44 @@ public class GroupDashboardActivityNew extends BaseActivity
             classListFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
         } else {
-            onBoothTeams(mGroupItem.boothName, mGroupItem.boothId, false);
+            onBoothTeams(mGroupItem.boothName, mGroupItem.boothId,"normal", false);
         }
 
     }
+
+
+    private void myTeamClick() {
+
+        tvToolbar.setText(GroupDashboardActivityNew.group_name);
+        tv_Desc.setVisibility(View.GONE);
+
+        if (mGroupItem.isAdmin) {
+
+            setBackEnabled(true);
+            tabLayout.setVisibility(View.GONE);
+            BoothListMyTeamFragment boothListMyTeamFragment = new BoothListMyTeamFragment();
+            boothListMyTeamFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, boothListMyTeamFragment).commit();
+
+         //   getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, BoothListMyTeamsFragment.newInstance()).addToBackStack("home").commitAllowingStateLoss();
+          //  tabLayout.setVisibility(View.GONE);
+        }
+        if (mGroupItem.isBoothPresident) {
+            BoothPresidentListMyTeamFragment classListFragment = new BoothPresidentListMyTeamFragment();
+            classListFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
+        }
+
+        if (mGroupItem.isBoothWorker)
+        {
+
+        }
+
+
+
+
+    }
+
 
     public void getContactsWithPermission() {
         AppLog.e(TAG, "getContactsWithPermission ");
@@ -1440,12 +1498,29 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         setBackEnabled(true);
         tvToolbar.setText(team.name);
-        tv_Desc.setText("Members : "+team.members);
+        tv_Desc.setText("Members : "+String.valueOf(team.members));
         tv_Desc.setVisibility(View.VISIBLE);
         AppLog.e("getActivity", "team name is =>" + team.name);
 
         TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
+        showTeamInfoWindow();
+
+        tabLayout.setVisibility(View.GONE);
+
+    }
+    public void onTeamSelectedVoter(MyTeamData team) {
+
+        AppLog.e(TAG,"onTeamSelectedVoter "+team.name);
+
+        setBackEnabled(true);
+        tvToolbar.setText(team.name);
+        tv_Desc.setText("Members : "+String.valueOf(team.members));
+        tv_Desc.setVisibility(View.VISIBLE);
+        AppLog.e("getActivity", "team name is =>" + team.name);
+
+        MyTeamVoterListFragment myTeamVoterListFragment = MyTeamVoterListFragment.newInstance(team.boothId);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myTeamVoterListFragment).addToBackStack("home").commit();
         showTeamInfoWindow();
 
         tabLayout.setVisibility(View.GONE);
@@ -1471,7 +1546,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     }*/
 
 
-    public void onBoothTeams(String name, String team_id, boolean isBackStack) {
+    public void onBoothTeams(String name, String team_id,String screen, boolean isBackStack) {
 
         AppLog.e(TAG,"onBoothTeams "+name);
 
@@ -1482,6 +1557,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         Bundle bundle = new Bundle();
         bundle.putString("team_id", team_id);
         bundle.putString("name", name);
+        bundle.putString("screen",screen);
         fragTeamPost.setArguments(bundle);
         if (isBackStack) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost)

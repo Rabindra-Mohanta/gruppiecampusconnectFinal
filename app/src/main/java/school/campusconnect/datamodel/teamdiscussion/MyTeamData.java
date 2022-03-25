@@ -12,6 +12,11 @@ import school.campusconnect.datamodel.BaseResponse;
 public class MyTeamData extends BaseResponse {
 
     public String teamId;
+
+    public String adminName;
+    public String userName;
+    public String userImage;
+    public String boothId;
     public int postUnseenCount;
     public String phone;
 
