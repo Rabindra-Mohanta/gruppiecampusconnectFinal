@@ -10,6 +10,7 @@ import java.util.List;
 
 @Table(name = "BoothPresidentTBL")
 public class BoothPresidentTBL extends Model {
+
     @Column(name = "teamId")
     public String teamId;
 

@@ -13,6 +13,9 @@ public class GroupItem implements Parcelable {
     public String type;
     public int totalUsers;
     public int totalPostsCount;
+    public int subBoothCount;
+    public String subBoothName;
+    public String subBoothId;
     public int totalCommentsCount;
     public String subCategory;
     @SerializedName(value = "name",alternate = "groupName")
@@ -52,8 +55,11 @@ public class GroupItem implements Parcelable {
     protected GroupItem(Parcel in) {
         id = in.readString();
         type = in.readString();
+        subBoothName = in.readString();
+        subBoothId = in.readString();
         totalUsers = in.readInt();
         totalPostsCount = in.readInt();
+        subBoothCount = in.readInt();
         totalCommentsCount = in.readInt();
         subCategory = in.readString();
         name = in.readString();
@@ -162,8 +168,11 @@ public class GroupItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(type);
+        dest.writeString(subBoothName);
+        dest.writeString(subBoothId);
         dest.writeInt(totalUsers);
         dest.writeInt(totalPostsCount);
+        dest.writeInt(subBoothCount);
         dest.writeInt(totalCommentsCount);
         dest.writeString(subCategory);
         dest.writeString(name);

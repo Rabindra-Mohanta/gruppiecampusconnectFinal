@@ -411,7 +411,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
         if (screen.equalsIgnoreCase("myTeam"))
         {
-            ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(classData);
+            ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(classData.name,classData.members,classData.boothId);
         }
         else
         {

@@ -41,6 +41,8 @@ public class LeafPreference {
     public static final String EMAIL = "email";
     public static final String PROFILE_COMPLETE = "profilecompletion";
     public static final String PROFILE_IMAGE = "profileimage";
+    public static final String PROFILE_NAME = "PROFILE_NAME";
+    public static final String PROFILE_VOTERID = "PROFILE_VOTERID";
 
     public static final String COUNTRY_CODE = "country_code";
     public static final String CALLING_CODE = "calling_code";

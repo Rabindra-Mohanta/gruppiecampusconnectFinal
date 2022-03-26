@@ -45,6 +45,7 @@ import school.campusconnect.fragments.BoothListFragment;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.MemberTeamListFragment;
+import school.campusconnect.fragments.MyTeamSubBoothFragment;
 import school.campusconnect.fragments.MyTeamVoterListFragment;
 import school.campusconnect.fragments.PublicForumListFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
@@ -316,6 +317,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void callEventApi() {
         new EventAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+
 
     class EventAsync extends AsyncTask<Void, Void, Void> {
         @Override
@@ -1018,7 +1021,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 llMakeAdmin.setVisibility(View.GONE);
             }
 
-            if (mGroupItem.isAdmin || mGroupItem.isBoothPresident) {
+            if (mGroupItem.isAdmin || mGroupItem.isBoothPresident || mGroupItem.isBoothWorker) {
 
                 llMyTeam.setVisibility(View.VISIBLE);
             }
@@ -1224,7 +1227,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     public void publicForumClick() {
 
-        AppLog.e(TAG,"publicForumClick ");
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
@@ -1245,29 +1247,51 @@ public class GroupDashboardActivityNew extends BaseActivity
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
 
+        tabLayout.setVisibility(View.GONE);
+
         if (mGroupItem.isAdmin) {
 
             setBackEnabled(true);
-            tabLayout.setVisibility(View.GONE);
+
             BoothListMyTeamFragment boothListMyTeamFragment = new BoothListMyTeamFragment();
             boothListMyTeamFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, boothListMyTeamFragment).commit();
 
-         //   getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, BoothListMyTeamsFragment.newInstance()).addToBackStack("home").commitAllowingStateLoss();
-          //  tabLayout.setVisibility(View.GONE);
         }
         if (mGroupItem.isBoothPresident) {
-            BoothPresidentListMyTeamFragment classListFragment = new BoothPresidentListMyTeamFragment();
-            classListFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
+
+            if (mGroupItem.boothCount > 1)
+            {
+
+                setBackEnabled(true);
+
+                BoothPresidentListMyTeamFragment classListFragment = new BoothPresidentListMyTeamFragment();
+                classListFragment.setArguments(getIntent().getExtras());
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
+            }
+            else
+            {
+                onBoothTeams(mGroupItem.boothName, mGroupItem.boothId,"myTeam", false);
+            }
         }
 
         if (mGroupItem.isBoothWorker)
         {
+                if (mGroupItem.subBoothCount > 1)
+                {
 
+                    setBackEnabled(true);
+
+                    MyTeamSubBoothFragment classListFragment = new MyTeamSubBoothFragment();
+                    classListFragment.setArguments(getIntent().getExtras());
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
+
+                }
+                else
+                {
+                    onTeamSelectedVoter(mGroupItem.subBoothName,mGroupItem.subBoothCount, mGroupItem.subBoothId);
+                }
         }
-
-
 
 
     }
@@ -1509,42 +1533,21 @@ public class GroupDashboardActivityNew extends BaseActivity
         tabLayout.setVisibility(View.GONE);
 
     }
-    public void onTeamSelectedVoter(MyTeamData team) {
 
-        AppLog.e(TAG,"onTeamSelectedVoter "+team.name);
+    public void onTeamSelectedVoter(String name, int members, String boothId) {
+
+        Log.e(TAG,"boothId"+boothId);
 
         setBackEnabled(true);
-        tvToolbar.setText(team.name);
-        tv_Desc.setText("Members : "+String.valueOf(team.members));
+        tvToolbar.setText(name);
+        tv_Desc.setText("Members : "+String.valueOf(members));
         tv_Desc.setVisibility(View.VISIBLE);
-        AppLog.e("getActivity", "team name is =>" + team.name);
 
-        MyTeamVoterListFragment myTeamVoterListFragment = MyTeamVoterListFragment.newInstance(team.boothId);
+        MyTeamVoterListFragment myTeamVoterListFragment = MyTeamVoterListFragment.newInstance(boothId);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myTeamVoterListFragment).addToBackStack("home").commit();
-        showTeamInfoWindow();
-
         tabLayout.setVisibility(View.GONE);
 
     }
-
-/*    public void onTeamSelectedv2(BaseTeamv2Response.featuredIconData team) {
-
-        AppLog.e(TAG,"onTeamSelected "+team.getName());
-
-        setBackEnabled(true);
-        tvToolbar.setText(team.getName());
-        tv_Desc.setText("Members : "+team.getMembers());
-        tv_Desc.setVisibility(View.VISIBLE);
-        AppLog.e("getActivity", "team name is =>" + team.getName());
-
-       *//* TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
-        showTeamInfoWindow();*//*
-
-        tabLayout.setVisibility(View.GONE);
-
-    }*/
-
 
     public void onBoothTeams(String name, String team_id,String screen, boolean isBackStack) {
 
@@ -2002,361 +2005,6 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-/*    public void groupSelectedV2(BaseTeamv2Response.featuredIconData group) {
-
-
-        if (group.getType().equals("Video Class")) {
-            Intent intent = new Intent(this, VideoClassActivity.class);
-            intent.putExtra("title", group.getName());
-            intent.putExtra("category", group.getCategory());
-            startActivity(intent);
-        }else if (group.getType().equals("My Family")) {
-            startActivity(new Intent(this, FamilyMemberActivity.class));
-        }
-        *//*else if (group.type.equals("Recorded Class")) {
-            Intent intent;
-            if ("admin".equalsIgnoreCase(group.role)) {
-                intent = new Intent(this, RecordedClassActivity.class);
-                intent.putExtra("title", group.name);
-            } else {
-                if (group.count == 1) {
-                    intent = new Intent(this, RecClassSubjectActivity.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.details.teamId);
-                    intent.putExtra("title", group.details.studentName);
-                } else {
-                    intent = new Intent(this, RecordedClassActivity.class);
-                    intent.putExtra("title", group.name);
-                }
-            }
-            intent.putExtra("type", group.type);
-            intent.putExtra("role", group.role);
-            startActivity(intent);
-
-        }*//*
-        else if (group.getType().equals("Home Work") || group.getType().equals("Recorded Class")
-                || group.getType().equals("Time Table") || group.getType().equals("Marks Card")) {
-
-            if (group.getType().equalsIgnoreCase("Home Work")) {
-                LeafPreference.getInstance(this).remove(groupId + "_HOMEWORK_NOTI_COUNT");
-            } else if (group.getType().equalsIgnoreCase("Recorded Class")) {
-                LeafPreference.getInstance(this).remove(groupId + "_NOTES_VIDEO_NOTI_COUNT");
-            }
-
-            Intent intent;
-            if ("admin".equalsIgnoreCase(group.getRole())) {
-                intent = new Intent(this, HWClassActivity.class);
-                intent.putExtra("title", group.getName());
-            } else {
-                if (group.getCount() == 1) {
-                    if (group.getType().equals("Home Work") || group.getType().equals("Recorded Class")) {
-                        intent = new Intent(this, HWClassSubjectActivity.class);
-                    } else if (group.getType().equals("Marks Card")) {
-                        intent = new Intent(this, MarksCardActivity2.class);
-                    } else {
-                        intent = new Intent(this, TimeTabelActivity2.class);
-                    }
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.getDetails().getTeamId());
-                    intent.putExtra("title", group.getDetails().getStudentName());
-
-                } else {
-                    intent = new Intent(this, HWClassActivity.class);
-                    intent.putExtra("title", group.getName());
-                }
-            }
-
-            intent.putExtra("type", group.getType());
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-        } else if (group.getType().equals("Test")) {
-            LeafPreference.getInstance(this).remove(groupId + "_TEST_EXAM_NOTI_COUNT");
-            Intent intent;
-            if ("admin".equalsIgnoreCase(group.getRole())) {
-                intent = new Intent(this, TestClassActivity.class);
-                intent.putExtra("title", group.getName());
-            } else {
-                if (group.getCount() == 1) {
-                    intent = new Intent(this, TestClassSubjectActivity.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.getDetails().getTeamId());
-                    intent.putExtra("title", group.getDetails().getTeamId());
-
-                    // GETTING CLASSLIST TO SEND TO EXAM SCREEN...
-                    List<LiveClassListTBL> list = LiveClassListTBL.getAll(GroupDashboardActivityNew.groupId);
-                    ArrayList<VideoClassResponse.ClassData> result = new ArrayList<>();
-
-                    if (list.size() != 0) {
-
-                        for (int i = 0; i < list.size(); i++) {
-                            LiveClassListTBL currentItem = list.get(i);
-                            VideoClassResponse.ClassData item = new VideoClassResponse.ClassData();
-                            item.zoomPassword = currentItem.zoomPassword;
-                            item.zoomName = new Gson().fromJson(currentItem.zoomName, new TypeToken<ArrayList<String>>() {
-                            }.getType());
-                            item.zoomMail = currentItem.zoomMail;
-                            item.zoomSecret = currentItem.zoomSecret;
-                            item.zoomMeetingPassword = currentItem.zoomMeetingPassword;
-                            item.zoomKey = currentItem.zoomKey;
-                            item.id = currentItem.teamId;
-                            item.className = currentItem.name;
-                            item.jitsiToken = currentItem.jitsiToken;
-                            item.groupId = currentItem.groupId;
-                            item.canPost = currentItem.canPost;
-                            result.add(item);
-                        }
-
-                    }
-
-                    if (result != null && result.size() > 0)
-                        intent.putExtra("liveClass", new Gson().toJson(result.get(0)));
-
-
-                } else {
-                    intent = new Intent(this, TestClassActivity.class);
-                    intent.putExtra("title", group.getName());
-                }
-            }
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-        }
-
-        *//*else if (group.type.equals("Time Table")) {
-            Intent intent;
-            if ("admin".equalsIgnoreCase(group.role)) {
-                intent = new Intent(this, TimeTableClassActivity2.class);
-                intent.putExtra("title", group.name);
-            } else {
-                if (group.count == 1) {
-                    intent = new Intent(this, TimeTabelActivity2.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.details.teamId);
-                    intent.putExtra("team_name", group.details.studentName);
-                } else {
-                    intent = new Intent(this, TimeTableClassActivity2.class);
-                    intent.putExtra("title", group.name);
-                }
-            }
-            intent.putExtra("role", group.role);
-            startActivity(intent);
-
-        }*//*
-        else if (group.getType().equals("Gallery")) {
-            startActivity(new Intent(this, GalleryActivity.class));
-        } else if (group.getType().equalsIgnoreCase("Calendar")) {
-            startActivity(new Intent(this, CalendarActivity.class));
-        } else if (group.getType().equals("Fees")) {
-
-            if ("admin".equalsIgnoreCase(group.getRole())) {
-                Intent intent = new Intent(this, FeesClassActivity.class);
-                intent.putExtra("title", group.getName());
-                intent.putExtra("role", group.getRole());
-                startActivity(intent);
-            } else {
-                if (group.getCount() == 1) {
-                    Intent intent;
-                    if ("teacher".equalsIgnoreCase(group.getRole())) {
-                        intent = new Intent(this, FeesListActivity.class);
-                        intent.putExtra("group_id", groupId);
-                        intent.putExtra("team_id", group.getDetails().getTeamId());
-                        intent.putExtra("title", group.getDetails().getStudentName());
-                        intent.putExtra("role", group.getRole());
-                    } else {
-                        intent = new Intent(this, StudentFeesActivity.class);
-                        intent.putExtra("groupId", groupId);
-                        intent.putExtra("title",  group.getDetails().getStudentName());
-                        intent.putExtra("team_id", group.getDetails().getTeamId());
-                        intent.putExtra("user_id", group.getDetails().getUserId());
-                    }
-                    startActivity(intent);
-
-                } else {
-                    Intent intent = new Intent(this, FeesClassActivity.class);
-                    intent.putExtra("title", group.getName());
-                    intent.putExtra("role", group.getRole());
-                    startActivity(intent);
-                }
-            }
-
-        } else if (group.getType().equals("Chat")) {
-            Intent intent = new Intent(this, ChatActivity.class);
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-        } else if (group.getType().equals("Vendor Connect")) {
-            Intent intent = new Intent(this, VendorActivity.class);
-            intent.putExtra("group_id", groupId);
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-        } else if (group.getType().equals("E-Books")) {
-            if (group.getCount() == 0) {
-                Intent intent = new Intent(this, EBookClassActivity.class);
-                intent.putExtra("group_id", groupId);
-                intent.putExtra("title", group.getName());
-                intent.putExtra("role", group.getRole());
-                startActivity(intent);
-            } else if (group.getCount() == 1) {
-                Intent intent = new Intent(this, EBookPdfForTeamActivity.class);
-                intent.putExtra("group_id", groupId);
-                intent.putExtra("team_id", group.getDetails().getTeamId());
-                intent.putExtra("title", group.getDetails().getTeamName());
-                intent.putExtra("role", group.getRole());
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(this, ParentKidsForEBookActivity.class);
-                intent.putExtra("group_id", groupId);
-                intent.putExtra("title", group.getName());
-                intent.putExtra("role", group.getRole());
-                startActivity(intent);
-            }
-        } else if (group.getType().equals("Code Of Conduct")) {
-            Intent intent = new Intent(this, CodeConductActivity.class);
-            intent.putExtra("group_id", groupId);
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-
-        } else if (group.getType().equals("Attendance")) {
-            if ("teacher".equalsIgnoreCase(group.getRole()) && group.getCount() == 1) {
-                if ("preschool".equalsIgnoreCase(group.getDetails().getCategory().category)) {
-                    Intent intent = new Intent(this, AttendancePareSchool.class);
-                    intent.putExtra("isTeamAdmin", true);
-                    intent.putExtra("team_id", group.getDetails().getTeamId());
-                    intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(this, AttendanceActivity.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.getDetails().getTeamId());
-                    intent.putExtra("className", group.getDetails().getTeamName());
-                    startActivity(intent);
-                }
-
-            }
-            if ("teacher".equalsIgnoreCase(group.getRole()) && group.getCount() > 1) {
-                Intent intent = new Intent(this, TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance", true);
-                startActivity(intent);
-            }
-            if ("admin".equalsIgnoreCase(group.getRole())) {
-                Intent intent = new Intent(this, TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance", true);
-                intent.putExtra("role", "admin");
-                startActivity(intent);
-            }
-
-
-            if ("parent".equalsIgnoreCase(group.getRole()) && group.getCount() == 1) {
-                Intent intent = new Intent(this, AttendanceDetailActivity.class);
-                intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
-                intent.putExtra("team_id", group.getDetails().getTeamId());
-                intent.putExtra("title",group.getDetails().getStudentName());
-                intent.putExtra("userId",group.getDetails().getUserId());
-                intent.putExtra("rollNo",group.getDetails().getRollNumber());
-                startActivity(intent);
-            }
-            if ("parent".equalsIgnoreCase(group.getRole()) && group.getCount() > 1) {
-                Intent intent = new Intent(this, ParentKidsActivity.class);
-                intent.putExtra("is_for_attendance", true);
-                startActivity(intent);
-            }
-
-        }*//* else if (group.type.equals("Marks Card")) {
-            if ("teacher".equalsIgnoreCase(group.role) && group.count == 1) {
-                Intent intent = new Intent(this, MarksheetActivity.class);
-                intent.putExtra("team_id", group.details.teamId);
-                intent.putExtra("className", group.details.teamName);
-                intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
-                startActivity(intent);
-            }
-            if ("teacher".equalsIgnoreCase(group.role) && group.count > 1) {
-                Intent intent = new Intent(this, TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance", false);
-                startActivity(intent);
-            }
-
-            if ("admin".equalsIgnoreCase(group.role)) {
-                Intent intent = new Intent(this, TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance", false);
-                intent.putExtra("role", "admin");
-                startActivity(intent);
-            }
-            if ("parent".equalsIgnoreCase(group.role) && group.count == 1) {
-                Intent intent = new Intent(this, MarkSheetListActivity.class);
-                intent.putExtra("group_id", groupId);
-                intent.putExtra("team_id", group.details.teamId);
-                intent.putExtra("className", group.details.teamName);
-                intent.putExtra("user_id", group.details.userId);
-                intent.putExtra("name", group.details.studentName);
-                intent.putExtra("roll_no", group.details.rollNumber);
-                intent.putExtra("role", "parent");
-                startActivity(intent);
-            }
-            if ("parent".equalsIgnoreCase(group.role) && group.count > 1) {
-                Intent intent = new Intent(this, ParentKidsActivity.class);
-                intent.putExtra("is_for_attendance", false);
-                startActivity(intent);
-            }
-        } *//*
-        else if (group.getType().equals("Issues")){
-
-            int Count = 0;
-            String Role = null;
-
-            if (mGroupItem.isAdmin)
-            {
-                Count++;
-                Role = "isAdmin";
-            }
-            if (mGroupItem.isPartyTaskForce)
-            {
-                Count++;
-                Role = "isPartyTaskForce";
-            }
-            if (mGroupItem.isDepartmentTaskForce)
-            {
-                Count++;
-                Role = "isDepartmentTaskForce";
-            }
-            if (mGroupItem.isBoothPresident)
-            {
-                Count++;
-                Role = "isBoothPresident";
-            }
-            if (mGroupItem.isBoothMember)
-            {
-                Count++;
-                Role = "isBoothMember";
-            }
-
-            if (Count > 1)
-            {
-                Intent intent = new Intent(this, SelectRoleActivity.class);
-                startActivity(intent);
-
-            }
-            else if (1 == Count)
-            {
-                Intent intent = new Intent(this, TicketsActivity.class);
-                intent.putExtra("Role", Role);
-                startActivity(intent);
-            }
-            else
-            {
-                Intent intent = new Intent(this, TicketsActivity.class);
-                intent.putExtra("Role", Role);
-                startActivity(intent);
-            }
-
-        }
-        else {
-            setBackEnabled(true);
-            tvToolbar.setText(group.getName());
-            tv_Desc.setText("Members : "+group.getMembers());
-            tv_Desc.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(group.getGroupId())).addToBackStack("home").commitAllowingStateLoss();
-            tabLayout.setVisibility(View.GONE);
-        }
-
-    }*/
 
 
     public void showTeamInfoWindow() {

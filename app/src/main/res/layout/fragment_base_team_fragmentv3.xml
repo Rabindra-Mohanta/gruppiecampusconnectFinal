@@ -154,7 +154,6 @@
                                         android:layout_width="130dp"
                                         android:layout_height="130dp"
                                         android:layout_centerHorizontal="true"
-                                        android:src="@drawable/default_user"
                                         android:scaleType="centerCrop"
                                         />
 
@@ -183,9 +182,10 @@
                                     android:layout_marginTop="@dimen/padding_10dp"
                                     android:id="@+id/tvVoterName"
                                     style="@style/LabelHeader1"
+                                    android:singleLine="true"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Name : Nishant.G"
+
                                     android:layout_centerHorizontal="true"
                                     android:textColor="@color/black" />
 
@@ -194,9 +194,10 @@
                                     android:layout_marginTop="@dimen/padding_5dp"
                                     android:id="@+id/tvVoterId"
                                     style="@style/LabelNormal"
+                                    android:singleLine="true"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Voter ID : 00101001000000"
+
                                     android:layout_centerHorizontal="true"
                                     android:textColor="@color/black" />
 

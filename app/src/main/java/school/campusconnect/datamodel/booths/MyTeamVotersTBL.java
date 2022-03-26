@@ -42,13 +42,13 @@ public class MyTeamVotersTBL extends Model {
     public String bloodGroup;
 
     @Column(name = "allowedToAddUser")
-    public String allowedToAddUser;
+    public boolean allowedToAddUser;
 
     @Column(name = "allowedToAddTeamPostComment")
-    public String allowedToAddTeamPostComment;
+    public boolean allowedToAddTeamPostComment;
 
     @Column(name = "allowedToAddTeamPost")
-    public String allowedToAddTeamPost;
+    public boolean allowedToAddTeamPost;
 
     @Column(name = "groupId")
     public String groupId;

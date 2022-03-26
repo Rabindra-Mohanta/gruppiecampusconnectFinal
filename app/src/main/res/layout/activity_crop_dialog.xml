@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        >
+
+        <RelativeLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/colorPrimary">
+            <TextView
+                android:id="@+id/btnCrop"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="?actionBarSize"
+                android:text="@string/crop"
+                android:textColor="@color/white"
+                android:gravity="center"
+                style="@style/LabelHeader1"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:layout_marginRight="@dimen/padding_10dp"/>
+
+            <ImageView
+                android:id="@+id/btnCancel"
+                android:layout_width="@dimen/padding_25dp"
+                android:layout_height="@dimen/padding_25dp"
+                android:src="@drawable/icon_back_white"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                />
+
+        </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/toolbar"
+            android:layout_centerInParent="true"
+            android:id="@+id/cardImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardUseCompatPadding="false"
+            >
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                />
+        </androidx.cardview.widget.CardView>
+
+
+        <!--<LinearLayout
+            android:id="@+id/llBtn"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/padding_20dp"
+            android:layout_marginHorizontal="@dimen/padding_20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_20dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="@dimen/padding_10dp"
+                android:gravity="center"
+                android:text="@string/places_cancel"
+                android:background="@drawable/primary_border_rec_btn_bg"
+                android:textColor="@color/colorPrimary"
+                />
+
+            <Button
+                android:id="@+id/btnCrop"
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/crop"
+                android:background="@drawable/primary_rec_btn_bg"
+                android:textColor="@color/white"
+                />
+
+
+        </LinearLayout>-->
+
+    </RelativeLayout>
+</layout>

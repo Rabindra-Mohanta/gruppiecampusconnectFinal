@@ -71,9 +71,9 @@ public class BoothVotersListResponse extends BaseResponse {
         @Expose
         public boolean allowedToAddTeamPost;
 
-        @SerializedName("address")
+      /*  @SerializedName("address")
         @Expose
-        public String address;
+        public String address;*/
 
         @SerializedName("aadharNumber")
         @Expose
@@ -175,13 +175,13 @@ public class BoothVotersListResponse extends BaseResponse {
             this.allowedToAddTeamPost = allowedToAddTeamPost;
         }
 
-        public String getAddress() {
+    /*    public String getAddress() {
             return address;
         }
 
         public void setAddress(String address) {
             this.address = address;
-        }
+        }*/
 
         public String getAadharNumber() {
             return aadharNumber;

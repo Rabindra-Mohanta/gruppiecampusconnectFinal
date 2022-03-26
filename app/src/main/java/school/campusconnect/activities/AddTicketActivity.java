@@ -50,6 +50,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -73,6 +74,7 @@ import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.adapters.UploadImageAdapter;
 import school.campusconnect.databinding.ActivityAddTicketBinding;
+import school.campusconnect.databinding.DialogCropImageBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.booths.SubBoothResponse;
@@ -86,6 +88,7 @@ import school.campusconnect.utils.address.AddressActivity;
 import school.campusconnect.utils.address.FindAddress;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.views.SMBDialogUtils;
 import school.campusconnect.views.SearchIssueFragmentDialog;
 
@@ -796,7 +799,22 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         if (resultCode == Activity.RESULT_CANCELED) {
             return;
         }
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+        if (requestCode == 10)
+        {
+            String uri = data.getStringExtra("Data");
+            Log.e(TAG,"uri"+ uri);
+
+
+            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+            listImages.add(uri);
+
+            showLastImage();
+            removePdf();
+            removeAudio();
+
+        }
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
 
@@ -848,6 +866,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
 
+            listImages.clear();
+
             isClear = true;
 
             if (clipData == null) {
@@ -855,22 +875,31 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 isGalleryMultiple = false;
 //                String path = ImageUtil.getPath(this, selectedImage);
                 //  listImages.add(selectedImage.toString());
+/*
+
                 CropImage.activity(selectedImage)
                         .start(this);
+*/
+                showCropDialog(selectedImage,false);
+
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
 //                    String path = ImageUtil.getPath(this, uri1);
                     //    listImages.add(uri1.toString());
-                    isGalleryMultiple = true;
+                    showCropDialog(uri1,false);
+                  /*  isGalleryMultiple = true;
                     CropImage.activity(uri1)
-                            .start(this);
+                            .start(this);*/
                 }
             }
 
         }
         else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
+
+            listImages.clear();
+
            /* listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
 //            String path = cameraFile.getAbsolutePath();
@@ -882,9 +911,10 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             removePdf();
             removeAudio();*/
 
-            CropImage.activity(imageCaptureFile)
+            showCropDialog(imageCaptureFile,true);
+           /* CropImage.activity(imageCaptureFile)
                     .setOutputUri(imageCaptureFile)
-                    .start(this);
+                    .start(this);*/
 
         }
         else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
@@ -963,6 +993,42 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
+
+    }
+
+    private void showCropDialog(Uri imageCapture,boolean isCamera) {
+
+        Log.e(TAG,"imageGEt "+imageCapture);
+        Intent i = new Intent(getApplicationContext(), CropDialogActivity.class);
+        i.putExtra("path",String.valueOf(imageCapture));
+        i.putExtra("isCamera",isCamera);
+        startActivityForResult(i,10);
+
+
+       /* final Dialog dialog = new Dialog(this, R.style.FragmentDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        DialogCropImageBinding cropImageBinding = DataBindingUtil.setContentView(this,R.layout.dialog_crop_image);
+        dialog.setCanceledOnTouchOutside(false);
+
+        Glide.with(this).load(imageCaptureFile).into(cropImageBinding.img);
+
+        cropImageBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        cropImageBinding.btnCrop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CropImage.activity(imageCaptureFile)
+                        .setOutputUri(imageCaptureFile)
+                        .start(AddTicketActivity.this);
+            }
+        });
+        dialog.show();*/
 
     }
 

@@ -88,6 +88,22 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Bind(R.id.etVoterId)
     public EditText etVoterId;
 
+    @Bind(R.id.etProfession)
+    public EditText etProfession;
+
+    @Bind(R.id.etEducation)
+    public EditText etEducation;
+
+
+    @Bind(R.id.etCaste)
+    public EditText etCaste;
+
+    @Bind(R.id.etSubCaste)
+    public EditText etSubCaste;
+
+    @Bind(R.id.etReligion)
+    public EditText etReligion;
+
     @Bind(R.id.etAadhar)
     public EditText etAadhar;
 
@@ -175,9 +191,13 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             item.dob = etdob.getText().toString();
             item.email = etAddress.getText().toString();
             item.address = this.item.address;
-
             item.occupation = this.item.occupation;
-            item.qualification = this.item.qualification;
+
+            item.qualification = etEducation.getText().toString();
+            item.caste = etCaste.getText().toString();
+            item.subcaste = etSubCaste.getText().toString();
+            item.religion = etReligion.getText().toString();
+            item.designation = etProfession.getText().toString();
 
             if (etGender.getSelectedItemPosition() > 0) {
                 item.gender = etGender.getSelectedItem().toString();
@@ -194,6 +214,12 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             progressBar.setVisibility(View.VISIBLE);
 
+
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, imageFragment.getmProfileImage());
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, etName.getText().toString());
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, etVoterId.getText().toString());
+
+
             if (imageFragment.isImageChanged && TextUtils.isEmpty(imageFragment.getmProfileImage())) {
                 manager.deleteProPic(this);
                 manager.updateProfileDetails(this, item);
@@ -203,6 +229,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     AppLog.e("Profile Activity", "Image Changed.." + new Gson().toJson(item));
                     item.image = imageFragment.getmProfileImage();
                 }
+                LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, item.image);
                 AppLog.e("Profile Activity", "Image Not Changed.." + new Gson().toJson(item));
                 manager.updateProfileDetails(this, item);
             }
@@ -250,6 +277,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             LeafPreference.getInstance(getContext()).setString(LeafPreference.NAME, res.data.name);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, res.data.voterId);
 
             LeafPreference.getInstance(getContext()).setString(LeafPreference.EMAIL, res.data.email);
             AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
@@ -278,6 +306,13 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
   //      etRelationShip.setText(item.relationship);
         etAddress.setText(item.email);
         etPhone.setText(item.phone);
+
+        etCaste.setText(item.caste);
+        etEducation.setText(item.qualification);
+        etReligion.setText(item.religion);
+        etSubCaste.setText(item.subcaste);
+        etProfession.setText(item.designation);
+        
         etPhone.setEnabled(false);
     //    etRelationShip.setEnabled(false);
 

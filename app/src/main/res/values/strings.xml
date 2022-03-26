@@ -115,6 +115,7 @@
     <string name="msg_no_noti">No notifications.</string>
     <string name="msg_no_groups">No Groups found.</string>
     <string name="crop__pick_error">No image sources available</string>
+    <string name="crop">Crop</string>
     <string name="lbl_lead_count">Friends Count</string>
     <string name="lbl_phone">Phone Number*</string>
     <string name="lbl_booth_president_phone">PRESIDENT PHONE NUMBER*</string>

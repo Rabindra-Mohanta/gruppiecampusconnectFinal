@@ -342,8 +342,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         pref = LeafPreference.getInstance(getActivity());
 
+       // Log.e(TAG,"profile Image"+pref.getString(LeafPreference.PROFILE_IMAGE));
+
         databaseHandler = new DatabaseHandler(getActivity());
         transferUtility = AmazoneHelper.getTransferUtility(getActivity());
+
+        Glide.with(getContext()).load(Constants.decodeUrlToBase64(pref.getString(LeafPreference.PROFILE_IMAGE))).into(binding.imgVoter);
+        binding.tvVoterName.setText("Name : "+pref.getString(LeafPreference.NAME));
+        binding.tvVoterId.setText("Voter ID : "+pref.getString(LeafPreference.PROFILE_VOTERID));
+
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
@@ -433,6 +440,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         isVisible = true;
         if (getActivity() == null)
             return;
+
 
         if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(mGroupItem.category)) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
@@ -1276,6 +1284,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             } else {
 
                 multiGalleryCount = clipData.getItemCount();
+                isClear = true;
 
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);

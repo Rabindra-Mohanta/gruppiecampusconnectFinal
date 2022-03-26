@@ -31,7 +31,7 @@ import school.campusconnect.views.SMBDialogUtils;
 
 public class EditIssueActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
 
-    private static final String TAG = "CreateTeamActivity";
+    private static final String TAG = "EditIssueActivity";
     @Bind(R.id.etName)
     EditText etName;
     @Bind(R.id.etPhone)
@@ -88,11 +88,17 @@ public class EditIssueActivity extends BaseActivity implements LeafManager.OnAdd
         etDesig2.setText(issueData.partyUser.designation);
 
         etName.setEnabled(false);
+        etName.setTextColor(getResources().getColor(R.color.grey));
         etPhone.setEnabled(false);
+        etPhone.setTextColor(getResources().getColor(R.color.grey));
         etDesig.setEnabled(false);
+        etDesig.setTextColor(getResources().getColor(R.color.grey));
         etName2.setEnabled(false);
+        etName2.setTextColor(getResources().getColor(R.color.grey));
         etPhone2.setEnabled(false);
+        etPhone2.setTextColor(getResources().getColor(R.color.grey));
         etDesig2.setEnabled(false);
+        etPhone2.setTextColor(getResources().getColor(R.color.grey));
 
     }
 
@@ -119,6 +125,14 @@ public class EditIssueActivity extends BaseActivity implements LeafManager.OnAdd
                     etName2.setEnabled(true);
                     etPhone2.setEnabled(true);
                     etDesig2.setEnabled(true);
+
+                    etName.setTextColor(getResources().getColor(R.color.white));
+                    etPhone.setTextColor(getResources().getColor(R.color.white));
+                    etDesig.setTextColor(getResources().getColor(R.color.white));
+                    etName2.setTextColor(getResources().getColor(R.color.white));
+                    etPhone2.setTextColor(getResources().getColor(R.color.white));
+                    etDesig2.setTextColor(getResources().getColor(R.color.white));
+
                     btnCreateClass.setText("Save");
                     return;
                 }

@@ -155,6 +155,8 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
 
         edtSearch.setVisibility(View.VISIBLE);
 
+        edtSearch.setHint("Search Booths");
+
         edtSearch.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -337,7 +339,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
-            holder.txt_name.setText(item.name);
+            holder.txt_name.setText(item.adminName+"( "+item.name+" )");
             holder.txt_count.setText("Member : "+String.valueOf(item.members));
         }
 
@@ -409,7 +411,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
 
     private void onTreeClick(MyTeamData classData) {
 
-        ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.boothId,"myTeam",true);
+        ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.boothId,"myTeam",false);
     }
 
 

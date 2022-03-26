@@ -1,15 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,9 +16,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -38,30 +33,25 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
-import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
-import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
+import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
-import school.campusconnect.datamodel.masterList.VoterListTBL;
-import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
+public class MyTeamSubBoothFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
+public static String TAG = "MyTeamSubBoothFragment";
 
-public class MyTeamVoterListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-
-    public static String TAG = "MyTeamVoterListFragment";
-
-    private List<BoothVotersListResponse.VoterData> filteredList = new ArrayList<>();
-    private List<BoothVotersListResponse.VoterData> myTeamDataList = new ArrayList<>();
+    private List<MyTeamSubBoothResponse.TeamData> filteredList = new ArrayList<>();
+    private List<MyTeamSubBoothResponse.TeamData> myTeamDataList = new ArrayList<>();
 
     ClassesAdapter adapter;
 
-    private String boothID;
     @Bind(R.id.rvTeams)
     public RecyclerView rvTeams;
 
@@ -74,10 +64,10 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
         Log.e(TAG,"onViewCreated");
@@ -88,35 +78,32 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
     private void getLocally() {
 
-        List<MyTeamVotersTBL> voterListTBLList = MyTeamVotersTBL.getBoothList(GroupDashboardActivityNew.groupId,boothID);
+        List<MyTeamSubBoothTBL> subBoothTBLList = MyTeamSubBoothTBL.getSubBoothList(GroupDashboardActivityNew.groupId);
 
         myTeamDataList.clear();
 
-        if (voterListTBLList != null && voterListTBLList.size() > 0)
+        if (subBoothTBLList != null && subBoothTBLList.size()>0)
         {
-            ArrayList<BoothVotersListResponse.VoterData> resultData = new ArrayList<>();
+            ArrayList<MyTeamSubBoothResponse.TeamData> resultData = new ArrayList<>();
 
-            for (int i=0;i<voterListTBLList.size();i++)
+            for (int i=0;i<subBoothTBLList.size();i++)
             {
-                MyTeamVotersTBL votersTBL = voterListTBLList.get(i);
+                MyTeamSubBoothTBL teamSubBoothTBL = subBoothTBLList.get(i);
 
-                BoothVotersListResponse.VoterData voterData = new BoothVotersListResponse.VoterData();
+                MyTeamSubBoothResponse.TeamData teamData = new MyTeamSubBoothResponse.TeamData();
+                teamData.teamId = teamSubBoothTBL.teamID;
+                teamData.name = teamSubBoothTBL.name;
+                teamData.subBoothId = teamSubBoothTBL.subBoothId;
+                teamData.members = teamSubBoothTBL.members;
+                teamData.isTeamAdmin = teamSubBoothTBL.isTeamAdmin;
+                teamData.image = teamSubBoothTBL.image;
+                teamData.groupId = teamSubBoothTBL.groupId;
+                teamData.category = teamSubBoothTBL.category;
+                teamData.canAddUser = teamSubBoothTBL.canAddUser;
+                teamData.allowTeamPostCommentAll = teamSubBoothTBL.allowTeamPostCommentAll;
+                teamData.allowTeamPostAll = teamSubBoothTBL.allowTeamPostAll;
 
-                voterData.userId = votersTBL.userId;
-                voterData.voterId = votersTBL.voterId;
-                voterData.roleOnConstituency = votersTBL.roleOnConstituency;
-                voterData.phone = votersTBL.phone;
-                voterData.name = votersTBL.name;
-                voterData.image = votersTBL.image;
-                voterData.gender = votersTBL.gender;
-                voterData.dob = votersTBL.dob;
-                voterData.bloodGroup = votersTBL.bloodGroup;
-                voterData.allowedToAddUser = votersTBL.allowedToAddUser;
-                voterData.allowedToAddTeamPost = votersTBL.allowedToAddTeamPost;
-                voterData.allowedToAddTeamPostComment = votersTBL.allowedToAddTeamPostComment;
-            //    voterData.address = votersTBL.address;
-                voterData.aadharNumber = votersTBL.aadharNumber;
-                resultData.add(voterData);
+                resultData.add(teamData);
 
             }
             myTeamDataList.addAll(resultData);
@@ -124,17 +111,18 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         }
         else
         {
-            voterListApiCall();
+            subBoothListApiCall();
         }
     }
 
+    private void subBoothListApiCall() {
 
-    public static MyTeamVoterListFragment newInstance(String boothID) {
-        MyTeamVoterListFragment fragment = new MyTeamVoterListFragment();
-        Bundle b = new Bundle();
-        b.putString("boothID", boothID);
-        fragment.setArguments(b);
-        return fragment;
+        if (!isConnectionAvailable()) {
+            return;
+        }
+        LeafManager leafManager = new LeafManager();
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getMyTeamSubBooth(this,GroupDashboardActivityNew.groupId);
     }
 
     @Override
@@ -154,26 +142,15 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         return super.onOptionsItemSelected(item);
     }
 
-    private void voterListApiCall() {
-
-        if (!isConnectionAvailable()) {
-            return;
-        }
-        LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
-        leafManager.getBoothVoterList(this, GroupDashboardActivityNew.groupId,boothID);
-    }
-
-
     private void inits() {
 
-        boothID = getArguments().getString("boothID");
+
 
         rvTeams.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new ClassesAdapter();
         rvTeams.setAdapter(adapter);
 
-        edtSearch.setHint("Search Voter");
+        edtSearch.setHint("Search Sub Booth");
 
         edtSearch.setVisibility(View.VISIBLE);
 
@@ -204,7 +181,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
         filteredList = new ArrayList<>();
 
-        for(BoothVotersListResponse.VoterData item : myTeamDataList){
+        for(MyTeamSubBoothResponse.TeamData item : myTeamDataList){
 
             if (item.name.toLowerCase().contains(text.toLowerCase())){
                 filteredList.add(item);
@@ -215,83 +192,62 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
     }
 
-    @Override
-    public void onSuccess(int apiId, BaseResponse response) {
+    private void saveToLocally(ArrayList<MyTeamSubBoothResponse.TeamData> data) {
 
-        progressBar.setVisibility(View.GONE);
-
-        if (apiId == LeafManager.API_BOOTH_VOTER_LIST)
-        {
-            BoothVotersListResponse res = (BoothVotersListResponse) response;
-            saveToLocally(res.getData());
-        }
-
-
-    }
-
-    private void saveToLocally(ArrayList<BoothVotersListResponse.VoterData> data) {
-
-        MyTeamVotersTBL.deleteBooth(GroupDashboardActivityNew.groupId,boothID);
+        MyTeamSubBoothTBL.deleteSubBooth(GroupDashboardActivityNew.groupId);
 
         for (int i=0;i<data.size();i++)
         {
-            BoothVotersListResponse.VoterData voterData= data.get(i);
+            MyTeamSubBoothResponse.TeamData teamData = data.get(i);
 
-            MyTeamVotersTBL voterListTBL = new MyTeamVotersTBL();
+            MyTeamSubBoothTBL teamSubBoothTBL = new MyTeamSubBoothTBL();
 
-            voterListTBL.voterId = voterData.voterId;
-            voterListTBL.boothId = boothID;
-            voterListTBL.userId = voterData.userId;
-            voterListTBL.roleOnConstituency = voterData.roleOnConstituency;
-            voterListTBL.phone = voterData.phone;
-            voterListTBL.name = voterData.name;
-            voterListTBL.image = voterData.image;
-            voterListTBL.gender = voterData.gender;
-            voterListTBL.dob = voterData.dob;
+            teamSubBoothTBL.teamID =teamData.teamId;
+            teamSubBoothTBL.subBoothId = teamData.subBoothId;
+            teamSubBoothTBL.name = teamData.name;
+            teamSubBoothTBL.members = teamData.members;
+            teamSubBoothTBL.isTeamAdmin = teamData.isTeamAdmin;
+            teamSubBoothTBL.image = teamData.image;
+            teamSubBoothTBL.groupId = teamData.groupId;
+            teamSubBoothTBL.category = teamData.category;
+            teamSubBoothTBL.canAddUser = teamData.canAddUser;
+            teamSubBoothTBL.allowTeamPostCommentAll = teamData.allowTeamPostCommentAll;
+            teamSubBoothTBL.allowTeamPostAll = teamData.allowTeamPostAll;
+            teamSubBoothTBL._now = System.currentTimeMillis();
+            teamSubBoothTBL.save();
 
-            voterListTBL.bloodGroup = voterData.bloodGroup;
-            voterListTBL.allowedToAddUser = voterData.allowedToAddUser;
-            voterListTBL.allowedToAddTeamPostComment = voterData.allowedToAddTeamPostComment;
-
-            voterListTBL.allowedToAddTeamPost = voterData.allowedToAddTeamPost;
-            voterListTBL.groupId = GroupDashboardActivityNew.groupId;
-            voterListTBL.address = "null";
-
-            voterListTBL.aadharNumber = voterData.aadharNumber;
-            voterListTBL.now = System.currentTimeMillis();
-
-            voterListTBL.save();
         }
 
         myTeamDataList.addAll(data);
         adapter.add(myTeamDataList);
+    }
+
+    @Override
+    public void onSuccess(int apiId, BaseResponse response) {
+        progressBar.setVisibility(View.GONE);
+        MyTeamSubBoothResponse res = (MyTeamSubBoothResponse) response;
+
+        saveToLocally(res.getData());
 
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
-
-        Log.e(TAG,"onFailure"+msg);
-
     }
 
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
-
-        Log.e(TAG,"onException"+msg);
     }
-
-
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
     {
-        List<BoothVotersListResponse.VoterData> list;
+        List<MyTeamSubBoothResponse.TeamData> list;
         private Context mContext;
 
         @Override
-        public ClassesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class_student,parent,false);
             return new ViewHolder(view);
@@ -300,7 +256,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-            final BoothVotersListResponse.VoterData item = list.get(position);
+            final MyTeamSubBoothResponse.TeamData item = list.get(position);
 
             if (!TextUtils.isEmpty(item.image)) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
@@ -337,9 +293,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             }
 
             holder.txt_name.setText(item.name);
-
-            holder.img_tree.setVisibility(View.GONE);
-            holder.txt_count.setVisibility(View.GONE);
+            holder.txt_count.setText("Members: "+item.members);
         }
 
         @Override
@@ -364,7 +318,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
         }
 
-        public void add(List<BoothVotersListResponse.VoterData> list) {
+        public void add(List<MyTeamSubBoothResponse.TeamData> list) {
             this.list = list;
             notifyDataSetChanged();
         }
@@ -389,7 +343,6 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this,itemView);
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -408,10 +361,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         }
     }
 
-    private void onTreeClick(BoothVotersListResponse.VoterData myTeamData) {
-        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-        i.putExtra("userID",myTeamData.userId);
-        i.putExtra("name",myTeamData.name);
-        startActivity(i);
+    private void onTreeClick(MyTeamSubBoothResponse.TeamData myTeamData) {
+
+        ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(myTeamData.name,myTeamData.members,myTeamData.subBoothId);
     }
 }

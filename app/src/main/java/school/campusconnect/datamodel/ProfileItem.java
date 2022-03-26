@@ -3,6 +3,7 @@ package school.campusconnect.datamodel;
 
 public class ProfileItem {
 
+    public String voterId;
     public String image;
     public String name;
     public String phone;
@@ -10,6 +11,8 @@ public class ProfileItem {
     public String dob;
     public String qualification;
     public String occupation;
+
+
     public String roleOnConstituency;
     public AddressItem address;
     public String profileCompletion;
@@ -22,4 +25,9 @@ public class ProfileItem {
 
     public String relationship;
     public String bloodGroup;
+
+    public String caste;
+    public String subcaste;
+    public String religion;
+    public String designation;
 }
