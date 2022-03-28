@@ -25,66 +25,71 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
+       <!-- <androidx.core.widget.NestedScrollView
             android:layout_below="@id/appBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
+        </androidx.core.widget.NestedScrollView>-->
+
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_15dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_15dp">
-                <LinearLayout
+                android:layout_marginStart="@dimen/padding_10dp"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:orientation="vertical">
+                <!--     <FrameLayout
+                         android:id="@+id/fragment_container"
+                         android:layout_width="120dp"
+                         android:layout_gravity="center"
+                         android:layout_marginTop="@dimen/padding_15dp"
+                         android:layout_height="120dp" />-->
+                <TextView
+                    style="@style/LabelNormal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/padding_10dp"
-                    android:layout_marginEnd="@dimen/padding_10dp"
-                    android:orientation="vertical">
-                    <FrameLayout
-                        android:id="@+id/fragment_container"
-                        android:layout_width="120dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/padding_15dp"
-                        android:layout_height="120dp" />
-                    <TextView
-                        style="@style/LabelNormal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding_20dp"
-                        android:paddingLeft="@dimen/padding_10dp"
-                        android:text="@string/lbl_name"
-                        android:textAllCaps="true"
-                        android:textColor="@color/colorPrimary" />
+                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:paddingLeft="@dimen/padding_10dp"
+                    android:text="@string/lbl_name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary" />
 
-                    <EditText
-                        android:id="@+id/etName"
-                        style="@style/RegEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/login_button_height"
-                        android:layout_marginTop="@dimen/padding_5dp"
-                        android:inputType="textPersonName|textCapWords" />
+                <EditText
+                    android:id="@+id/etName"
+                    style="@style/RegEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:singleLine="true"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:inputType="textPersonName|textCapWords" />
 
-                    <!-- <TextView
-                         style="@style/LabelNormal"
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:layout_marginTop="@dimen/padding_20dp"
-                         android:paddingLeft="@dimen/padding_10dp"
-                         android:text="@string/relationship"
-                         android:textAllCaps="true"
-                         android:textColor="@color/colorPrimary" />
+                <!-- <TextView
+                     style="@style/LabelNormal"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="@dimen/padding_20dp"
+                     android:paddingLeft="@dimen/padding_10dp"
+                     android:text="@string/relationship"
+                     android:textAllCaps="true"
+                     android:textColor="@color/colorPrimary" />
 
-                     <EditText
-                         android:id="@+id/etRelationShip"
-                         style="@style/RegEditText"
-                         android:layout_width="match_parent"
-                         android:layout_height="@dimen/login_button_height"
-                         android:layout_marginTop="@dimen/padding_5dp"
-                         android:inputType="textPersonName|textCapWords" />-->
+                 <EditText
+                     android:id="@+id/etRelationShip"
+                     style="@style/RegEditText"
+                     android:layout_width="match_parent"
+                     android:layout_height="@dimen/login_button_height"
+                     android:layout_marginTop="@dimen/padding_5dp"
+                     android:inputType="textPersonName|textCapWords" />-->
 
-                    <TextView
+                <!--    <TextView
                         style="@style/LabelNormal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -101,56 +106,57 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
                         android:layout_marginTop="@dimen/padding_5dp"
-                        android:inputType="textPersonName|textCapWords" />
+                        android:inputType="textPersonName|textCapWords" />-->
 
 
-                    <TextView
-                        android:id="@+id/labelPhone"
-                        style="@style/LabelNormal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding_15dp"
-                        android:paddingLeft="@dimen/padding_10dp"
-                        android:text="@string/lbl_phone2"
-                        android:textAllCaps="true"
-                        android:textColor="@color/colorPrimary" />
+                <TextView
+                    android:id="@+id/labelPhone"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:paddingLeft="@dimen/padding_10dp"
+                    android:text="@string/lbl_phone"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary" />
 
-                    <EditText
-                        android:id="@+id/etPhone"
-                        style="@style/RegEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/login_button_height"
-                        android:layout_marginTop="@dimen/padding_5dp"
-                        android:layout_marginBottom="@dimen/padding_10dp"
-                        android:inputType="phone" />
+                <EditText
+                    android:id="@+id/etPhone"
+                    style="@style/RegEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:singleLine="true"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_marginBottom="@dimen/padding_10dp"
+                    android:inputType="phone" />
 
-                    <TextView
+                <!--  <TextView
+                      style="@style/LabelNormal"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="@dimen/padding_10dp"
+                      android:paddingLeft="@dimen/padding_10dp"
+                      android:text="@string/lbl_dob"
+                      android:textAllCaps="true"
+                      android:textColor="@color/colorPrimary" />
+
+                  <EditText
+                      android:id="@+id/etdob"
+                      style="@style/RegEditText"
+                      android:layout_width="match_parent"
+                      android:layout_height="@dimen/login_button_height"
+                      android:layout_marginTop="@dimen/padding_5dp"
+                      android:inputType="textPersonName|textCapWords" />-->
+
+
+
+
+
+                <!--    <TextView
                         style="@style/LabelNormal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding_10dp"
-                        android:paddingLeft="@dimen/padding_10dp"
-                        android:text="@string/lbl_dob"
-                        android:textAllCaps="true"
-                        android:textColor="@color/colorPrimary" />
-
-                    <EditText
-                        android:id="@+id/etdob"
-                        style="@style/RegEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/login_button_height"
-                        android:layout_marginTop="@dimen/padding_5dp"
-                        android:inputType="textPersonName|textCapWords" />
-
-
-
-
-
-                    <TextView
-                        style="@style/LabelNormal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding_20dp"
                         android:paddingLeft="@dimen/padding_10dp"
                         android:text="@string/lbl_gender"
                         android:textAllCaps="true"
@@ -161,9 +167,9 @@
                         style="@style/RegEditText"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
-                        android:layout_marginTop="@dimen/padding_5dp" />
+                        android:layout_marginTop="@dimen/padding_5dp" />-->
 
-                    <TextView
+                <!--    <TextView
                         style="@style/LabelNormal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -222,24 +228,22 @@
                         android:layout_marginBottom="@dimen/padding_10dp"
                         android:inputType="text"
                         android:visibility="visible"
-                        android:singleLine="true" />
+                        android:singleLine="true" />-->
 
 
-
-
-                </LinearLayout>
-                <Button
-                    android:id="@+id/btnAdd"
-                    style="@style/AddPostButton"
-                    android:layout_width="@dimen/login_button_width"
-                    android:layout_height="@dimen/login_button_height"
-                    android:layout_marginTop="@dimen/padding_20dp"
-                    android:text="@string/lbl_edit" />
 
 
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+            <Button
+                android:id="@+id/btnAdd"
+                style="@style/AddPostButton"
+                android:layout_width="@dimen/login_button_width"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:text="@string/lbl_edit" />
 
+
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progressBar"

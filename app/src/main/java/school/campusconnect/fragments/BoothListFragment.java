@@ -204,6 +204,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             case R.id.menu_add_booth:
                 startActivity(new Intent(getContext(), AddBoothActivity.class));
                 return true;
+
             case R.id.menu_search:
                 showHideSearch();
                 return true;

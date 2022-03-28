@@ -211,7 +211,10 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
                 }
             });
 
-            if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.allowedToAddUser)
+            Log.e(TAG,"isAdmin"+GroupDashboardActivityNew.isAdmin);
+            Log.e(TAG,"allowedToAddUser"+GroupDashboardActivityNew.allowedToAddUser);
+
+            if (GroupDashboardActivityNew.mGroupItem.isAdmin || GroupDashboardActivityNew.mGroupItem.canPost)
             {
                 holder.imgEdit.setVisibility(View.VISIBLE);
             }

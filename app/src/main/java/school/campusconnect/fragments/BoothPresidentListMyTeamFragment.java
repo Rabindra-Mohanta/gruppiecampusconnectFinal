@@ -158,8 +158,6 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
-        edtSearch.setVisibility(View.VISIBLE);
-
         edtSearch.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {}
@@ -192,12 +190,30 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.action_notification_list).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+
+
+            case R.id.menu_search:
+                showHideSearch();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showHideSearch() {
+
+        if (edtSearch.getVisibility() == View.VISIBLE) {
+            edtSearch.setVisibility(View.GONE);
+        } else {
+            edtSearch.setVisibility(View.VISIBLE);
+        }
     }
 
 

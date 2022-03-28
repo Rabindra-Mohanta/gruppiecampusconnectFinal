@@ -134,12 +134,30 @@ public static String TAG = "MyTeamSubBoothFragment";
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.action_notification_list).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+
+
+            case R.id.menu_search:
+                showHideSearch();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showHideSearch() {
+
+        if (edtSearch.getVisibility() == View.VISIBLE) {
+            edtSearch.setVisibility(View.GONE);
+        } else {
+            edtSearch.setVisibility(View.VISIBLE);
+        }
     }
 
     private void inits() {
@@ -151,8 +169,6 @@ public static String TAG = "MyTeamSubBoothFragment";
         rvTeams.setAdapter(adapter);
 
         edtSearch.setHint("Search Sub Booth");
-
-        edtSearch.setVisibility(View.VISIBLE);
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 

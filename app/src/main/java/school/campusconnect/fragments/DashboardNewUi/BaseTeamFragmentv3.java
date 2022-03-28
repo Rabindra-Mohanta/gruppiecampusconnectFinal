@@ -347,11 +347,6 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         databaseHandler = new DatabaseHandler(getActivity());
         transferUtility = AmazoneHelper.getTransferUtility(getActivity());
 
-        Glide.with(getContext()).load(Constants.decodeUrlToBase64(pref.getString(LeafPreference.PROFILE_IMAGE))).into(binding.imgVoter);
-        binding.tvVoterName.setText("Name : "+pref.getString(LeafPreference.NAME));
-        binding.tvVoterId.setText("Voter ID : "+pref.getString(LeafPreference.PROFILE_VOTERID));
-
-
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
         manager = new LeafManager();
@@ -441,6 +436,18 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (getActivity() == null)
             return;
 
+        String name = pref.getString(LeafPreference.PROFILE_NAME);
+        String voterID = pref.getString(LeafPreference.PROFILE_VOTERID);
+        String image = pref.getString(LeafPreference.PROFILE_IMAGE_NEW);
+
+        AppLog.e(TAG,"name "+name);
+        AppLog.e(TAG,"voter Id"+voterID);
+        AppLog.e(TAG,"image "+image);
+
+        binding.tvVoterName.setText("Name : "+name);
+        binding.tvVoterId.setText("Voter ID : "+voterID);
+
+        Glide.with(getContext()).load(Constants.decodeUrlToBase64(image)).into(binding.imgVoter);
 
         if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(mGroupItem.category)) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);

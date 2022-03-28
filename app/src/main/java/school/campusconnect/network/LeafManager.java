@@ -21,6 +21,7 @@ import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
+import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -486,6 +487,7 @@ public class LeafManager {
 
     public static final int API_ADD_BANNER_LIST = 321;
     public static final int API_BANNER_LIST = 322;
+    public static final int API_VOTER_PROFILE_GET = 326;
 
     public LeafManager() {
 
@@ -7611,11 +7613,11 @@ public class LeafManager {
             }
         }, ErrorResponse.class);
     }
-    public void getAttendanceReportOffline(OnCommunicationListener listener, String groupId, String teamId, int month, int year) {
+    public void getAttendanceReportOffline(OnCommunicationListener listener, String groupId, String teamId, int month, int year,int startDate,int endDate) {
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<AttendanceReportResv2> model = service.getAttendanceReportOffline(groupId, teamId, month, year);
+        final Call<AttendanceReportResv2> model = service.getAttendanceReportOffline(groupId, teamId, String.valueOf(month), String.valueOf(year),String.valueOf(startDate),String.valueOf(endDate));
         ResponseWrapper<AttendanceReportResv2> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_ATTENDANCE_REPORT_OFFLINE, new ResponseWrapper.ResponseHandler<AttendanceReportResv2, ErrorResponse>() {
@@ -11977,6 +11979,44 @@ public class LeafManager {
         }.getType();
 
         wrapper.execute(API_SUB_BOOTH_TEAM_LIST, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void getVoterProfile(OnCommunicationListener listListener, String group_id,String user_id) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<VoterProfileResponse> model = service.getVoterProfile(group_id,user_id);
+
+        ResponseWrapper<VoterProfileResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_VOTER_PROFILE_GET, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {

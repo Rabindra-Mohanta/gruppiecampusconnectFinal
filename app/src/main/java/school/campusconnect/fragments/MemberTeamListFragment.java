@@ -159,8 +159,6 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         adapter = new ClassesAdapter();
         rvClass.setAdapter(adapter);
 
-        edtSearch.setVisibility(View.VISIBLE);
-
         edtSearch.setHint("Search Booth Team");
 
         edtSearch.addTextChangedListener(new TextWatcher() {
@@ -209,12 +207,30 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.action_notification_list).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+
+
+            case R.id.menu_search:
+                showHideSearch();
+                return true;
+            default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showHideSearch() {
+
+        if (edtSearch.getVisibility() == View.VISIBLE) {
+            edtSearch.setVisibility(View.GONE);
+        } else {
+            edtSearch.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

@@ -19,6 +19,7 @@ import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
+import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -1213,7 +1214,7 @@ public interface LeafService {
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/offline/attendance/report/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<AttendanceReportResv2> getAttendanceReportOffline(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year);
+    Call<AttendanceReportResv2> getAttendanceReportOffline(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") String month, @Query("year") String year,@Query("startDate") String startDate, @Query("endDate") String endDate);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/online/attendance/report")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1878,6 +1879,10 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/booth/subbooth/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<MyTeamSubBoothResponse> getMyTeamSubBooths(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/user/{user_id}/profile/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<VoterProfileResponse> getVoterProfile(@Path("group_id") String group_id, @Path("user_id") String user_id);
 
 
 }

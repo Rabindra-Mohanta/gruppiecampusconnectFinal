@@ -37,6 +37,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddBoothActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.BaseResponse;
@@ -146,12 +147,30 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.action_notification_list).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+
+
+            case R.id.menu_search:
+                showHideSearch();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showHideSearch() {
+
+        if (edtSearch.getVisibility() == View.VISIBLE) {
+            edtSearch.setVisibility(View.GONE);
+        } else {
+            edtSearch.setVisibility(View.VISIBLE);
+        }
     }
 
     private void voterListApiCall() {
@@ -174,8 +193,6 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         rvTeams.setAdapter(adapter);
 
         edtSearch.setHint("Search Voter");
-
-        edtSearch.setVisibility(View.VISIBLE);
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 

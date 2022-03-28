@@ -38,7 +38,7 @@ public class AttendanceReportResv2 extends BaseResponse {
 
         @SerializedName("attendanceReport")
         @Expose
-        private attendanceReportsdata attendanceReport;
+        private ArrayList<attendanceReportsdata> attendanceReport;
 
         public String getUserId() {
             return userId;
@@ -64,11 +64,11 @@ public class AttendanceReportResv2 extends BaseResponse {
             this.rollNumber = rollNumber;
         }
 
-        public attendanceReportsdata getAttendanceReport() {
+        public ArrayList<attendanceReportsdata> getAttendanceReport() {
             return attendanceReport;
         }
 
-        public void setAttendanceReport(attendanceReportsdata attendanceReport) {
+        public void setAttendanceReport(ArrayList<attendanceReportsdata> attendanceReport) {
             this.attendanceReport = attendanceReport;
         }
     }

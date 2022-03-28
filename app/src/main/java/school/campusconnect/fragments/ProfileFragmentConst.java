@@ -182,6 +182,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     }
 
     public void callUpdateProfileApi() {
+
         if (isValid()) {
             hide_keyboard();
 
@@ -214,10 +215,13 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             progressBar.setVisibility(View.VISIBLE);
 
+            Log.e(TAG,"profile image "+imageFragment.getmProfileImage());
+            Log.e(TAG,"profile name "+ etName.getText().toString());
+            Log.e(TAG,"profile voterID "+etVoterId.getText().toString());
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, imageFragment.getmProfileImage());
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, etName.getText().toString());
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, etVoterId.getText().toString());
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, item.name);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, item.voterId);
 
 
             if (imageFragment.isImageChanged && TextUtils.isEmpty(imageFragment.getmProfileImage())) {
@@ -229,8 +233,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     AppLog.e("Profile Activity", "Image Changed.." + new Gson().toJson(item));
                     item.image = imageFragment.getmProfileImage();
                 }
-                LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, item.image);
                 AppLog.e("Profile Activity", "Image Not Changed.." + new Gson().toJson(item));
+                LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
                 manager.updateProfileDetails(this, item);
             }
 
@@ -274,10 +278,14 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             AppLog.e(TAG, "ProfileResponse" + res);
 
             item = res.data;
+
             LeafPreference.getInstance(getContext()).setString(LeafPreference.NAME, res.data.name);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, res.data.voterId);
+
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, item.name);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, item.voterId);
 
             LeafPreference.getInstance(getContext()).setString(LeafPreference.EMAIL, res.data.email);
             AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
@@ -312,6 +320,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         etReligion.setText(item.religion);
         etSubCaste.setText(item.subcaste);
         etProfession.setText(item.designation);
+        etVoterId.setText(item.voterId);
         
         etPhone.setEnabled(false);
     //    etRelationShip.setEnabled(false);
@@ -343,6 +352,10 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             Log.e("ProfileActivity", "image is Null From API ");
             imageFragment.setInitialLatterImage(item.name);
         }
+
+        Log.e(TAG,"profile image "+imageFragment.getmProfileImage());
+        Log.e(TAG,"profile name "+ etName.getText().toString());
+        Log.e(TAG,"profile voterID "+etVoterId.getText().toString());
     }
 
     @Override

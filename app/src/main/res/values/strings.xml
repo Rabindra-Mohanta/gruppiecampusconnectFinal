@@ -50,6 +50,7 @@
     <string name="hint_name">Enter Name</string>
     <string name="hint_imp_name">Enter Name</string>
     <string name="hint_email">Enter Your Email Id</string>
+    <string name="search_contact">Search Contact</string>
     <string name="hint_contact_no">Enter Your Contact Number</string>
 
     <string name="hint_isAdmin">Admin</string>

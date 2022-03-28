@@ -204,7 +204,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     LeafManager manager;
 
-    public GroupItem mGroupItem;
+    public static GroupItem mGroupItem;
 
     public static String image;
     public static boolean mAllowPostAll;

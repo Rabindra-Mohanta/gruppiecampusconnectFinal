@@ -420,9 +420,9 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, response1.name);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NUM, response1.phone);
 
-            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE, response1.image);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, response1.image);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_NAME, response1.name);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_VOTERID, response1.voterId);
-
 
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.CALLING_CODE, response1.counryTelephoneCode);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.COUNTRY_CODE, response1.countryAlpha2Code);
