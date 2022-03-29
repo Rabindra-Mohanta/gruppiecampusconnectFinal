@@ -2,6 +2,7 @@ package school.campusconnect.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
@@ -107,7 +109,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 myTeamData.boothNumber = boothList.boothNumber;
                 myTeamData.groupId = boothList.groupId;
                 myTeamData.canAddUser = boothList.canAddUser;
-
+                myTeamData.userId = boothList.userID;
                 myTeamData.allowTeamPostCommentAll = boothList.allowTeamPostCommentAll;
                 myTeamData.allowTeamPostAll = boothList.allowTeamPostAll;
                 myTeamData.isTeamAdmin = boothList.isTeamAdmin;
@@ -281,7 +283,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             boothsTBL.enableGps = boothList.get(i).enableGps;
             boothsTBL.enableAttendance = boothList.get(i).enableAttendance;
             boothsTBL.type = boothList.get(i).type;
-
+            boothsTBL.userID = boothList.get(i).userId;
             boothsTBL.userName = boothList.get(i).userName;
             boothsTBL.adminName = boothList.get(i).adminName;
             boothsTBL.userImage = boothList.get(i).userImage;
@@ -363,6 +365,24 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
+            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
+            holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
 
             holder.txt_name.setText(item.name);
             holder.txt_count.setText("Members: "+item.members);

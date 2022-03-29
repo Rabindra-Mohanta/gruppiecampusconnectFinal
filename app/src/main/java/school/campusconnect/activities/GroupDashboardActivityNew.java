@@ -685,7 +685,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin,R.id.llMyTeam})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin,R.id.llMyTeam,R.id.iv_toolbar_icon})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -702,6 +702,18 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
+
+
+            case R.id.iv_toolbar_icon:
+                if (isConnectionAvailable()) {
+                    Intent intent;
+                    intent = new Intent(this, ProfileConstituencyActivity.class);
+                    startActivity(intent);
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+
             case R.id.llJoinGruppie:
                 joinGruppieEvent();
                 break;
@@ -1009,12 +1021,14 @@ public class GroupDashboardActivityNew extends BaseActivity
             llAttendanceReport.setVisibility(View.GONE);
             tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
 
-            if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA"))
+         /*   if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA"))
             {
-                if (mGroupItem.isAdmin)
-                {
-                    llMakeAdmin.setVisibility(View.VISIBLE);
-                }
+
+            }*/
+
+            if (mGroupItem.isAdmin)
+            {
+                llMakeAdmin.setVisibility(View.VISIBLE);
             }
             else
             {
@@ -1220,6 +1234,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
+        tv_toolbar_icon.setVisibility(View.GONE);
+
         BoothListFragment classListFragment = new BoothListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
@@ -1230,6 +1246,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
+        tv_toolbar_icon.setVisibility(View.GONE);
+
         if (mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)) {
 
             PublicForumListFragment classListFragment = new PublicForumListFragment();
@@ -1246,6 +1264,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
+        tv_toolbar_icon.setVisibility(View.GONE);
 
         tabLayout.setVisibility(View.GONE);
 
@@ -1520,17 +1539,47 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         AppLog.e(TAG,"onTeamSelected "+team.name);
 
-        setBackEnabled(true);
-        tvToolbar.setText(team.name);
-        tv_Desc.setText("Members : "+String.valueOf(team.members));
-        tv_Desc.setVisibility(View.VISIBLE);
-        AppLog.e("getActivity", "team name is =>" + team.name);
+        if (mGroupItem.isAdmin || mGroupItem.isBoothPresident)
+        {
+            if (team.name.equalsIgnoreCase("Booth Presidents"))
+            {
+                Intent intent = new Intent(this, CommitteeActivity.class);
+                intent.putExtra("class_data",new Gson().toJson(team));
+                intent.putExtra("title",team.name);
+                startActivity(intent);
+            }
+            else
+            {
+                setBackEnabled(true);
+                tvToolbar.setText(team.name);
+                tv_toolbar_icon.setVisibility(View.GONE);
+                tv_Desc.setText("Members : "+String.valueOf(team.members));
+                tv_Desc.setVisibility(View.VISIBLE);
 
-        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
-        showTeamInfoWindow();
+                AppLog.e("getActivity", "team name is =>" + team.name);
 
-        tabLayout.setVisibility(View.GONE);
+                TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
+                showTeamInfoWindow();
+
+                tabLayout.setVisibility(View.GONE);
+            }
+        }
+        else {
+            setBackEnabled(true);
+            tvToolbar.setText(team.name);
+            tv_toolbar_icon.setVisibility(View.GONE);
+            tv_Desc.setText("Members : "+String.valueOf(team.members));
+            tv_Desc.setVisibility(View.VISIBLE);
+
+            AppLog.e("getActivity", "team name is =>" + team.name);
+
+            TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
+            showTeamInfoWindow();
+
+            tabLayout.setVisibility(View.GONE);
+        }
 
     }
 
@@ -1542,6 +1591,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tvToolbar.setText(name);
         tv_Desc.setText("Members : "+String.valueOf(members));
         tv_Desc.setVisibility(View.VISIBLE);
+        tv_toolbar_icon.setVisibility(View.GONE);
 
         MyTeamVoterListFragment myTeamVoterListFragment = MyTeamVoterListFragment.newInstance(boothId);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myTeamVoterListFragment).addToBackStack("home").commit();
@@ -1928,6 +1978,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             Log.e(TAG,"GeneralPostFragment Start"+group.name);
             setBackEnabled(true);
             tvToolbar.setText(group.name);
+            tv_toolbar_icon.setVisibility(View.GONE);
             tv_Desc.setText("Members : "+group.members);
 
             if (group.name.equalsIgnoreCase("Notice Board"))
@@ -1948,6 +1999,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void announcementClick()
     {
         setBackEnabled(true);
+        tv_toolbar_icon.setVisibility(View.GONE);
         tvToolbar.setText("Announcement");
         tv_Desc.setText("Members : "+"0");
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(groupId)).addToBackStack("home").commitAllowingStateLoss();

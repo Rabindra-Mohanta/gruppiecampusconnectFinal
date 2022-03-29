@@ -92,6 +92,9 @@ public class BoothPresidentTBL extends Model {
     @Column(name = "_now")
     public long _now;
 
+    @Column(name = "userId")
+    public String userId;
+
     @Column(name = "boothType")
     public String boothType;
 

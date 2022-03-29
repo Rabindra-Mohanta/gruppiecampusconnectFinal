@@ -47,8 +47,16 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.VoterProfileActivity"></activity>
-        <activity android:name=".utils.crop.CropDialogActivity" />
+        <activity android:name=".activities.RemoveBannerActivity"></activity>
+        <activity
+            android:name=".activities.VoterProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".utils.crop.CropDialogActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ChangePinActivity"
             android:exported="false"
@@ -369,8 +377,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ProfileConstituencyActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
         <service android:name=".utils.MyFirebaseMessagingService">
             <intent-filter>

@@ -69,6 +69,9 @@ public class MemberTeamTBL extends Model {
     @Column(name = "role")
     public String role;
 
+    @Column(name = "userID")
+    public String userID;
+
     @Column(name = "count")
     public int count;
 

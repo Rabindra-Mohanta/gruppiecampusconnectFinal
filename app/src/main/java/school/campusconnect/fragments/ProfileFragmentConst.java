@@ -53,6 +53,7 @@ import school.campusconnect.datamodel.ProfileResponse;
 import school.campusconnect.datamodel.ProfileValidationError;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.family.FamilyMemberResponse;
+import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -143,6 +144,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     }
 
     private void init() {
+
         profileImage = "";
         leafManager = new LeafManager();
 
@@ -296,7 +298,14 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             imageFragment.isImageChanged = false;
             LeafPreference.getInstance(getContext()).setBoolean(LeafPreference.ISPROFILEUPDATED, true);
             AmazoneRemove.remove(item.image);
-        } else {
+        }
+        else if (LeafManager.API_RELIGION_GET == apiId)
+        {
+            ReligionResponse res = (ReligionResponse) response;
+            AppLog.e(TAG, "ProfileResponse" + res);
+        }
+        else
+            {
             LeafPreference.getInstance(getContext()).setBoolean(LeafPreference.ISPROFILEUPDATED, true);
             Toast.makeText(getContext(), getString(R.string.msg_profile_update), Toast.LENGTH_LONG).show();
             imageFragment.isImageChanged = false;
@@ -308,6 +317,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     public void onFailure(int apiId, ErrorResponseModel<ProfileValidationError> error) {
 
     }
+
 
     private void fillDetails(ProfileItem item) {
         etName.setText(item.name);
@@ -323,6 +333,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         etVoterId.setText(item.voterId);
         
         etPhone.setEnabled(false);
+
+        etdob.setText(item.dob);
     //    etRelationShip.setEnabled(false);
 
         int index = 0;
@@ -356,6 +368,9 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         Log.e(TAG,"profile image "+imageFragment.getmProfileImage());
         Log.e(TAG,"profile name "+ etName.getText().toString());
         Log.e(TAG,"profile voterID "+etVoterId.getText().toString());
+
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getReligion(this);
     }
 
     @Override

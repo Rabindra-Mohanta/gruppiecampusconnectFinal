@@ -40,6 +40,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddBoothActivity;
 import school.campusconnect.activities.BoothStudentActivity;
 import school.campusconnect.activities.ClassStudentActivity;
+import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.adapters.TeamListAdapterNew;
 import school.campusconnect.datamodel.BaseResponse;
@@ -121,6 +122,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
                 myTeamData.enableGps = boothList.enableGps;
                 myTeamData.enableAttendance = boothList.enableAttendance;
                 myTeamData.type = boothList.type;
+                myTeamData.userId = boothList.userId;
 
                 myTeamData.userName = boothList.userName;
                 myTeamData.adminName = boothList.adminName;
@@ -270,7 +272,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             boothsTBL.enableGps = boothList.get(i).enableGps;
             boothsTBL.enableAttendance = boothList.get(i).enableAttendance;
             boothsTBL.type = boothList.get(i).type;
-
+            boothsTBL.userId = boothList.get(i).userId;
             boothsTBL.userName = boothList.get(i).userName;
             boothsTBL.adminName = boothList.get(i).adminName;
             boothsTBL.userImage = boothList.get(i).userImage;
@@ -433,6 +435,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     }
 
     private void onTreeClick(MyTeamData classData) {
+
+
 
         ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData);
 //

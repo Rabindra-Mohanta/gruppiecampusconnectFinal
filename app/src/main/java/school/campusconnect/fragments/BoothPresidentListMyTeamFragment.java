@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
@@ -116,7 +118,7 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
                 myTeamData.enableGps = boothList.enableGps;
                 myTeamData.enableAttendance = boothList.enableAttendance;
                 myTeamData.type = boothList.type;
-
+                myTeamData.userId = boothList.userId;
                 myTeamData.category = boothList.category;
                 myTeamData.role = boothList.role;
                 myTeamData.count = boothList.count;
@@ -274,7 +276,7 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
             boothsTBL.allowedToAddTeamPost = boothList.get(i).allowedToAddTeamPost;
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
-
+            boothsTBL.userId = boothList.get(i).userId;
             boothsTBL.boothType = "myBooth";
             boothsTBL._now = System.currentTimeMillis();
             boothsTBL.save();
@@ -347,7 +349,24 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
                         .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
                 holder.img_lead_default.setImageDrawable(drawable);
             }
-
+            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
+            holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
             holder.txt_name.setText(item.name);
             holder.txt_count.setText("Member : "+String.valueOf(item.members));
         }

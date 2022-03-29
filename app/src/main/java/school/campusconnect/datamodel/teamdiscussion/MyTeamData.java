@@ -17,6 +17,7 @@ public class MyTeamData extends BaseResponse {
     public String userName;
     public String userImage;
     public String boothId;
+    public String userId;
     public int postUnseenCount;
     public String phone;
 

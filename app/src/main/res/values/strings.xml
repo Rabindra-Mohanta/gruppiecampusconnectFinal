@@ -124,12 +124,14 @@
     <string name="lbl_father_name">Father Name</string>
     <string name="lbl_husband_name">Husband Name</string>
     <string name="lbl_email">Email</string>
+    <string name="lbl_email_v2">Email*</string>
     <string name="lbl_other_leads">Other Friends</string>
     <string name="lbl_gender">Gender</string>
     <string name="lbl_dob">Date of Birth</string>
     <string name="lbl_age">Age</string>
     <string name="lbl_roll">Roll</string>
     <string name="lbl_address">Address</string>
+    <string name="lbl_address_v2">Address*</string>
     <string name="lbl_landmark">Landmark</string>
     <string name="lbl_lead_city">City</string>
     <string name="lbl_state">State</string>
@@ -631,6 +633,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_update_committee">Update Committee</string>
     <string name="relationship">Relationship*</string>
     <string name="lbl_voterId">Voter Id</string>
+    <string name="lbl_voterId_v2">Voter Id*</string>
     <string name="lbl_education">Education</string>
     <string name="lbl_profession">Profession</string>
     <string name="lbl_caste">Caste</string>

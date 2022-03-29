@@ -41,7 +41,7 @@
 
 
 
-                <FrameLayout
+                <!--<FrameLayout
                     android:layout_marginTop="@dimen/padding_5dp"
                     android:id="@+id/llVoterProfile"
                     android:layout_width="match_parent"
@@ -156,14 +156,14 @@
                                                 android:layout_height="wrap_content"
                                                 >
 
-                                              <!--  <ImageView
+                                              &lt;!&ndash;  <ImageView
                                                     android:layout_alignParentRight="true"
                                                     android:id="@+id/imgMyFamily"
                                                     android:layout_width="@dimen/padding_20dp"
                                                     android:layout_height="@dimen/padding_20dp"
                                                     android:src="@drawable/icon_right_arraw"
                                                     app:tint="@color/colorPrimary" />
--->
+&ndash;&gt;
                                                 <TextView
                                                     android:id="@+id/tvMyFamily"
                                                     android:layout_width="wrap_content"
@@ -194,14 +194,14 @@
                                                 android:layout_height="wrap_content"
                                                 >
 
-                                          <!--      <ImageView
+                                          &lt;!&ndash;      <ImageView
                                                     android:layout_alignParentRight="true"
                                                     android:id="@+id/imgMyIssue"
                                                     android:layout_width="@dimen/padding_20dp"
                                                     android:layout_height="@dimen/padding_20dp"
                                                     android:src="@drawable/icon_right_arraw"
                                                     app:tint="@color/colorPrimary" />
--->
+&ndash;&gt;
                                                 <TextView
                                                     android:id="@+id/tvMyIssue"
                                                     android:layout_width="wrap_content"
@@ -222,7 +222,7 @@
                         </RelativeLayout>
 
 
-                       <!-- <LinearLayout
+                       &lt;!&ndash; <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:weightSum="2"
@@ -361,15 +361,14 @@
                                 </LinearLayout>
                             </RelativeLayout>
 
-                        </LinearLayout>-->
+                        </LinearLayout>&ndash;&gt;
 
 
                     </androidx.cardview.widget.CardView>
-                </FrameLayout>
+                </FrameLayout>-->
 
                 <FrameLayout
                     android:id="@+id/llBanner"
-                    android:layout_below="@id/llVoterProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     >
@@ -442,7 +441,7 @@
                 </FrameLayout>
 
                 <FrameLayout
-                    android:layout_below="@+id/llVoterProfile"
+                    android:layout_below="@+id/llBanner"
                     android:id="@+id/llFeed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

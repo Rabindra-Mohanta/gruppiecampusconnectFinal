@@ -542,6 +542,12 @@
         <item>Choose from Library</item>
     </string-array>
 
+    <string-array name="array_image_banner">
+        <item>Take a Photo</item>
+        <item>Choose from Library</item>
+        <item>Remove Banner</item>
+    </string-array>
+
     <string-array name="array_video">
         <item>Record a Video</item>
         <item>Choose from Library</item>

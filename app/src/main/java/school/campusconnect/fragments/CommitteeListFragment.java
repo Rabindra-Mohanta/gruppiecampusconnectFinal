@@ -46,6 +46,7 @@ public class CommitteeListFragment extends Fragment implements LeafManager.OnCom
 public static String TAG = "CommitteeListFragment";
 FragmentCommitteeListBinding binding;
 private String TeamID;
+private String TeamName;
 private MyTeamData classData;
 private LeafManager leafManager;
     public static CommitteeListFragment newInstance() {
@@ -82,6 +83,7 @@ private LeafManager leafManager;
             classData = new Gson().fromJson(getArguments().getString("class_data"), MyTeamData.class);
             AppLog.e(TAG, "classData : " + classData);
             TeamID = classData.teamId;
+            TeamName = getArguments().getString("title");
         }
 
 
@@ -221,11 +223,20 @@ private LeafManager leafManager;
     private void onTreeClick(committeeResponse.committeeData committeeData) {
 
 
+      /*  if (TeamName.equalsIgnoreCase("Booth Presidents"))
+        {
+
+        }
+        else
+        {
+
+        }*/
         Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
         intent.putExtra("class_data",new Gson().toJson(classData));
         intent.putExtra("committee_data",new Gson().toJson(committeeData));
         intent.putExtra("title",committeeData.getCommitteeName());
         startActivity(intent);
+
 
       /*  Intent intent = new Intent(getContext(), AddCommiteeActivity.class);
         intent.putExtra("screen","update");

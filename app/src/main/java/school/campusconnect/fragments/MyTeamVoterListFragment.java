@@ -355,7 +355,6 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
             holder.txt_name.setText(item.name);
 
-            holder.img_tree.setVisibility(View.GONE);
             holder.txt_count.setVisibility(View.GONE);
         }
 

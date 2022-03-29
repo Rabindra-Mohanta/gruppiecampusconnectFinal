@@ -24,6 +24,7 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.opengl.GLES10;
 import android.os.Build;
@@ -31,9 +32,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import school.campusconnect.utils.AppLog;
+
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import java.io.IOException;
@@ -65,7 +70,8 @@ public class CropImageActivity extends MonitoredActivity {
     private Uri saveUri;
 
     private boolean isSaving;
-
+    private ImageView rotate,cancel;
+    private TextView save;
     private int sampleSize;
     private RotateBitmap rotateBitmap;
     private CropImageView imageView;
@@ -97,6 +103,11 @@ public class CropImageActivity extends MonitoredActivity {
         setContentView(R.layout.crop_activity_crop);
 
         imageView = (CropImageView) findViewById(R.id.crop_image);
+        save = (TextView) findViewById(R.id.done);
+        rotate = (ImageView) findViewById(R.id.rotate);
+        cancel = (ImageView) findViewById(R.id.cancel);
+
+
         imageView.context = this;
         imageView.setRecycler(new ImageViewTouchBase.Recycler() {
             @Override
@@ -106,14 +117,22 @@ public class CropImageActivity extends MonitoredActivity {
             }
         });
 
-        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+
+        cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
         });
 
-        findViewById(R.id.btn_done).setOnClickListener(new View.OnClickListener() {
+        rotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.setRotation(imageView.getRotation() + 90);
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onSaveClicked();
             }
@@ -183,6 +202,7 @@ public class CropImageActivity extends MonitoredActivity {
         }
     }
 
+
     private int getMaxTextureSize() {
         // The OpenGL texture size is the maximum size that can be drawn in an ImageView
         int[] maxSize = new int[1];
@@ -194,6 +214,7 @@ public class CropImageActivity extends MonitoredActivity {
         if (isFinishing()) {
             return;
         }
+
         imageView.setImageRotateBitmapResetBase(rotateBitmap, true);
         CropUtil.startBackgroundJob(this, null, getResources().getString(R.string.please_wait),
                 new Runnable() {
@@ -321,6 +342,40 @@ public class CropImageActivity extends MonitoredActivity {
         }
     }
 
+    public static Bitmap getRotateImage(String photoPath, Bitmap bitmap) throws IOException {
+        ExifInterface ei = new ExifInterface(photoPath);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        Bitmap rotatedBitmap = null;
+        switch (orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotatedBitmap = rotateImage(bitmap, 90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotatedBitmap = rotateImage(bitmap, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotatedBitmap = rotateImage(bitmap, 270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                rotatedBitmap = bitmap;
+        }
+
+        return rotatedBitmap;
+
+    }
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
     private Bitmap decodeRegionCrop(Rect rect, int outWidth, int outHeight) {
         // Release memory now
         clearImageView();
@@ -380,6 +435,14 @@ public class CropImageActivity extends MonitoredActivity {
     }
 
     private void saveOutput(Bitmap croppedImage) {
+
+       /* try {
+            croppedImage =  getRotateImage(sourceUri.toString(),croppedImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("IOException","e "+e.getMessage());
+        }*/
+
         if (saveUri != null) {
             OutputStream outputStream = null;
             try {
@@ -399,8 +462,10 @@ public class CropImageActivity extends MonitoredActivity {
                     CropUtil.getFromMediaUri(this, getContentResolver(), saveUri)
             );
 
+
             setResultUri(saveUri);
         }
+
 
         final Bitmap b = croppedImage;
         handler.post(new Runnable() {

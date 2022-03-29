@@ -20,6 +20,7 @@ import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
+import school.campusconnect.datamodel.booths.VoterProfileUpdate;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -29,6 +30,7 @@ import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListModelResponse;
 import school.campusconnect.datamodel.masterList.VoterListModelResponse;
 import school.campusconnect.datamodel.masterList.WorkerListResponse;
+import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
@@ -1876,13 +1878,22 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addBannerList(@Path("group_id") String group_id,@Body BannerAddReq req);
 
-    @GET("/api/v1/groups/{group_id}/booth/subbooth/teams")
+    @GET("/api/v1/groups/{group_id}/my/subbooth/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<MyTeamSubBoothResponse> getMyTeamSubBooths(@Path("group_id") String group_id);
 
     @GET("/api/v1/groups/{group_id}/user/{user_id}/profile/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<VoterProfileResponse> getVoterProfile(@Path("group_id") String group_id, @Path("user_id") String user_id);
+
+    @PUT("/api/v1/groups/{group_id}/user/{user_id}/profile/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateVoterProfile(@Path("group_id") String group_id, @Path("user_id") String user_id,@Body VoterProfileUpdate request);
+
+    @GET("/api/v1/caste/religions")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ReligionResponse> getReligion();
+
 
 
 }

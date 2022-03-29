@@ -41,6 +41,7 @@ import school.campusconnect.activities.BoothCoordinateActivity;
 import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.booths.BoothsTBL;
@@ -125,7 +126,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
                 myTeamData.adminName = boothList.adminName;
                 myTeamData.userImage = boothList.userImage;
                 myTeamData.boothId = boothList.boothId;
-
+                myTeamData.userId = boothList.userId;
                 myTeamData.category = boothList.category;
                 myTeamData.role = boothList.role;
                 myTeamData.count = boothList.count;
@@ -285,6 +286,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             boothsTBL.allowedToAddTeamPost = boothList.get(i).allowedToAddTeamPost;
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
+            boothsTBL.userId =  boothList.get(i).userId;
             boothsTBL._now = System.currentTimeMillis();
             boothsTBL.save();
         }
@@ -358,6 +360,26 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
 
             holder.txt_name.setText(item.adminName+"( "+item.name+" )");
             holder.txt_count.setText("Member : "+String.valueOf(item.members));
+
+
+            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
+            holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
         }
 
         @Override
@@ -408,12 +430,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
                 super(itemView);
                 ButterKnife.bind(this,itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
-                    }
-                });
+
 
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -428,7 +445,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
 
     private void onTreeClick(MyTeamData classData) {
 
-        ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.boothId,"myTeam",false);
+        ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.boothId,"myTeam",true);
     }
 
 

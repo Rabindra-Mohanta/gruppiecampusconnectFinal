@@ -22,6 +22,7 @@ import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
+import school.campusconnect.datamodel.booths.VoterProfileUpdate;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -31,6 +32,7 @@ import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListModelResponse;
 import school.campusconnect.datamodel.masterList.VoterListModelResponse;
 import school.campusconnect.datamodel.masterList.WorkerListResponse;
+import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
@@ -488,7 +490,9 @@ public class LeafManager {
     public static final int API_ADD_BANNER_LIST = 321;
     public static final int API_BANNER_LIST = 322;
     public static final int API_VOTER_PROFILE_GET = 326;
+    public static final int API_VOTER_PROFILE_UPDATE = 327;
 
+    public static final int API_RELIGION_GET = 330;
     public LeafManager() {
 
     }
@@ -12042,6 +12046,76 @@ public class LeafManager {
 
     }
 
+    public void updateProfileVoter(OnCommunicationListener listListener,String group_id,String user_id, VoterProfileUpdate request) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.updateVoterProfile(group_id,user_id,request);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<ProfileValidationError>>() {
+        }.getType();
+        wrapper.execute(API_VOTER_PROFILE_UPDATE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+    }
+
+
+    public void getReligion(OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<ReligionResponse> model = service.getReligion();
+        ResponseWrapper<ReligionResponse> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<ProfileValidationError>>() {
+        }.getType();
+        wrapper.execute(API_RELIGION_GET, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+    }
 
 
     public interface OnCommunicationListener {

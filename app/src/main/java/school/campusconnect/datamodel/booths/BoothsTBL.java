@@ -92,7 +92,8 @@ public class BoothsTBL extends Model {
     @Column(name = "leaveRequest")
     public Boolean leaveRequest;
 
-
+    @Column(name = "userId")
+    public String userId;
 
     @Column(name = "TeamDetails")
     public String TeamDetails;

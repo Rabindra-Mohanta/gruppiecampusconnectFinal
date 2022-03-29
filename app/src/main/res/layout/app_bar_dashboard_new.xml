@@ -31,7 +31,6 @@
                 android:id="@+id/iv_toolbar_icon"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:layout_marginLeft="@dimen/padding_5dp"
                 android:layout_marginRight="@dimen/padding_5dp"
                 android:foregroundGravity="left"
                 android:scaleType="centerCrop"
@@ -46,6 +45,7 @@
                 android:foregroundGravity="left"
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
+
             <RelativeLayout
                 android:id="@+id/lin_toolbar"
                 android:layout_width="match_parent"
