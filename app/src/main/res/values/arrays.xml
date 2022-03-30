@@ -614,6 +614,11 @@
         <item>US    +01</item>
     </string-array>
 
+    <string-array name="booth">
+        <item>Add Booth</item>
+        <item>Add Member</item>
+    </string-array>
+
     <string-array name="array_isPartyTaskForce">
         <item>Not Approved</item>
         <item>Approved</item>

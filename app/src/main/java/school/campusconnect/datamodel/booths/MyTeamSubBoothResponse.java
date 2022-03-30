@@ -26,6 +26,10 @@ public class MyTeamSubBoothResponse extends BaseResponse {
         @Expose
         public String teamId;
 
+        @SerializedName("userId")
+        @Expose
+        public String userId;
+
         @SerializedName("name")
         @Expose
         public String name;
@@ -66,6 +70,14 @@ public class MyTeamSubBoothResponse extends BaseResponse {
         @Expose
         public boolean allowTeamPostAll;
 
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
 
         public String getTeamId() {
             return teamId;

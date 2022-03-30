@@ -180,13 +180,9 @@
         android:title="Change Password"/>
 
 
-
-
-
     <item android:id="@+id/menu_logout"
         android:visible="false"
         android:title="Logout"/>
-
 
 
     <item android:id="@+id/menu_search"

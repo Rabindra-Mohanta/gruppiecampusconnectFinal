@@ -18,9 +18,11 @@ package school.campusconnect.utils.crop;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -41,6 +43,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -76,6 +80,8 @@ public class CropImageActivity extends MonitoredActivity {
     private RotateBitmap rotateBitmap;
     private CropImageView imageView;
     private HighlightView cropView;
+
+    private int RotateValue;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -342,40 +348,8 @@ public class CropImageActivity extends MonitoredActivity {
         }
     }
 
-    public static Bitmap getRotateImage(String photoPath, Bitmap bitmap) throws IOException {
-        ExifInterface ei = new ExifInterface(photoPath);
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED);
 
-        Bitmap rotatedBitmap = null;
-        switch (orientation) {
 
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                rotatedBitmap = rotateImage(bitmap, 90);
-                break;
-
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                rotatedBitmap = rotateImage(bitmap, 180);
-                break;
-
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                rotatedBitmap = rotateImage(bitmap, 270);
-                break;
-
-            case ExifInterface.ORIENTATION_NORMAL:
-            default:
-                rotatedBitmap = bitmap;
-        }
-
-        return rotatedBitmap;
-
-    }
-    public static Bitmap rotateImage(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
-                matrix, true);
-    }
     private Bitmap decodeRegionCrop(Rect rect, int outWidth, int outHeight) {
         // Release memory now
         clearImageView();
@@ -389,6 +363,8 @@ public class CropImageActivity extends MonitoredActivity {
             final int height = decoder.getHeight();
 
             if (exifRotation != 0) {
+
+                AppLog.e("CropImageActivity","exifRotation" + exifRotation + "imageview rotation "+imageView.getRotation());
                 // Adjust crop area to account for image rotation
                 Matrix matrix = new Matrix();
                 matrix.setRotate(-exifRotation);
@@ -400,6 +376,24 @@ public class CropImageActivity extends MonitoredActivity {
                 adjusted.offset(adjusted.left < 0 ? width : 0, adjusted.top < 0 ? height : 0);
                 rect = new Rect((int) adjusted.left, (int) adjusted.top, (int) adjusted.right, (int) adjusted.bottom);
             }
+            /*else
+            {
+                AppLog.e("CropImageActivity","exifRotation e;" + exifRotation + "imageview rotation "+imageView.getRotation());
+                // Adjust crop area to account for image rotation
+                Matrix matrix = new Matrix();
+                matrix.setRotate(imageView.getRotation());
+
+                RectF adjusted = new RectF();
+                matrix.mapRect(adjusted, new RectF(rect));
+
+                // Adjust to account for origin at 0,0
+                Log.e("CropImageActivity","rect" + rect);
+                adjusted.offset(adjusted.left < 0 ? width : 0, adjusted.top < 0 ? height : 0);
+                rect = new Rect((int) adjusted.left, (int) adjusted.top, (int) adjusted.right, (int) adjusted.bottom);
+                Log.e("CropImageActivity","rect" + rect);
+
+            }*/
+
 
             try {
                 croppedImage = decoder.decodeRegion(rect, new BitmapFactory.Options());
@@ -451,8 +445,8 @@ public class CropImageActivity extends MonitoredActivity {
                     croppedImage.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
                 }
             } catch (IOException e) {
+               AppLog.e("CropImageActivity" + saveUri, e.toString());
                 setResultException(e);
-               AppLog.e("Cannot open file: " + saveUri, e.toString());
             } finally {
                 CropUtil.closeSilently(outputStream);
             }
@@ -466,8 +460,8 @@ public class CropImageActivity extends MonitoredActivity {
             setResultUri(saveUri);
         }
 
-
         final Bitmap b = croppedImage;
+
         handler.post(new Runnable() {
             public void run() {
                 imageView.clear();
@@ -477,6 +471,11 @@ public class CropImageActivity extends MonitoredActivity {
 
         finish();
     }
+
+
+
+
+
 
     @Override
     protected void onDestroy() {

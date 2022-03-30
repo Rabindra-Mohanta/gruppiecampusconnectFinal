@@ -47,6 +47,7 @@ public class MyTeamData extends BaseResponse {
     public String category="";
     public String role="";
     public int count;
+    public String subCategory;
 
     // for view discussion
     public boolean allowedToAddTeamPost;

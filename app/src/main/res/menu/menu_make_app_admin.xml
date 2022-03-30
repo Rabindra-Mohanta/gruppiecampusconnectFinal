@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_add_committee"
-        android:icon="@drawable/posticon"
-        app:showAsAction="always"
-        android:title="Add Committee"/>
+    <item
+        android:id="@+id/menu_make_admin"
+        android:title="Make App Admin" />
+
 </menu>

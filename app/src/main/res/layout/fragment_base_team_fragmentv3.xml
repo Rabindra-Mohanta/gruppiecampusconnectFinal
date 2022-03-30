@@ -9,7 +9,7 @@
         android:paddingBottom="@dimen/padding_10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F2F8FF"
+        android:background="#F9F6F4"
         >
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"

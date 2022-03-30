@@ -1005,31 +1005,6 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         startActivityForResult(i,10);
 
 
-       /* final Dialog dialog = new Dialog(this, R.style.FragmentDialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        DialogCropImageBinding cropImageBinding = DataBindingUtil.setContentView(this,R.layout.dialog_crop_image);
-        dialog.setCanceledOnTouchOutside(false);
-
-        Glide.with(this).load(imageCaptureFile).into(cropImageBinding.img);
-
-        cropImageBinding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        cropImageBinding.btnCrop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                CropImage.activity(imageCaptureFile)
-                        .setOutputUri(imageCaptureFile)
-                        .start(AddTicketActivity.this);
-            }
-        });
-        dialog.show();*/
-
     }
 
     private void showLastImage() {

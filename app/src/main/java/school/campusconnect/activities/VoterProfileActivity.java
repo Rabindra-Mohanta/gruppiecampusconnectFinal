@@ -5,12 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -33,8 +37,13 @@ import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
 import school.campusconnect.datamodel.masterList.VoterListModelResponse;
+import school.campusconnect.datamodel.profileCaste.CasteResponse;
+import school.campusconnect.datamodel.profileCaste.ReligionResponse;
+import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.fragments.DatePickerFragment;
+import school.campusconnect.fragments.ProfileFragmentConst;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.UploadCircleImageFragment;
@@ -51,8 +60,29 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
     String[] bloodGrpArray;
     String[] genderArray;
+
+
     ArrayAdapter<String> genderAdapter;
     ArrayAdapter<String> bloodGrpAdapter;
+    ArrayAdapter<String> religionAdapter;
+    ArrayAdapter<String> casteAdapter;
+    ArrayAdapter<String> subCasteAdapter;
+
+    ArrayList<String> religionList = new ArrayList<>();
+    ArrayList<String> casteList = new ArrayList<>();
+    ArrayList<String> subCasteList = new ArrayList<>();
+    ArrayList<CasteResponse.CasteData> casteDataList = new ArrayList<>();
+
+
+    boolean isFirstTimeReligion = true;
+    boolean isFirstTimeCaste = true;
+    boolean isFirstTimeSubCaste = true;
+
+    String casteId = null;
+
+    String religion = null;
+    String caste = null;
+    String subcaste = null;
 
     LeafManager manager;
 
@@ -87,8 +117,50 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         }
     }
 
-    private void inits() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_make_app_admin, menu);
 
+        if(GroupDashboardActivityNew.makeAdmin)
+        {
+            menu.findItem(R.id.menu_make_admin).setVisible(true);
+        }
+        else
+        {
+            menu.findItem(R.id.menu_make_admin).setVisible(false);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.menu_make_admin) {
+            AppDialog.showConfirmDialog(VoterProfileActivity.this, "Are you sure you want to Make Admin ?", new AppDialog.AppDialogListener() {
+                @Override
+                public void okPositiveClick(DialogInterface dialog) {
+                    makeAppAdmin();
+                }
+
+                @Override
+                public void okCancelClick(DialogInterface dialog) {
+
+                }
+            });
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void makeAppAdmin() {
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+        manager.makeAppAdmin(this,GroupDashboardActivityNew.groupId,userID);
+
+    }
+
+    private void inits() {
 
 
         ButterKnife.bind(this);
@@ -130,6 +202,46 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             }
         });
 
+
+         binding.etReligion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                manager.getCaste(VoterProfileActivity.this,binding.etReligion.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        binding.etCaste.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                for (int i=0;i<casteDataList.size();i++)
+                {
+                    if (binding.etCaste.getSelectedItem().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
+                    {
+                        casteId = casteDataList.get(i).getCasteId();
+                        binding.etCategory.setText(casteDataList.get(i).getCategoryName());
+                    }
+                }
+
+                if (casteId != null)
+                {
+                    manager.getSubCaste(VoterProfileActivity.this,casteId);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         binding.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,14 +274,16 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                     binding.etProfession.setEnabled(true);
                     binding.etProfession.setTextColor(getResources().getColor(R.color.white));
 
-                    binding.etCaste.setEnabled(true);
+                    binding.etCategory.setTextColor(getResources().getColor(R.color.white));
+
+                    /*binding.etCaste.setEnabled(true);
                     binding.etCaste.setTextColor(getResources().getColor(R.color.white));
 
                     binding.etSubCaste.setEnabled(true);
                     binding.etSubCaste.setTextColor(getResources().getColor(R.color.white));
 
                     binding.etReligion.setEnabled(true);
-                    binding.etReligion.setTextColor(getResources().getColor(R.color.white));
+                    binding.etReligion.setTextColor(getResources().getColor(R.color.white));*/
 
                     genderAdapter = new ArrayAdapter<String>(VoterProfileActivity.this, R.layout.item_spinner, R.id.tvItem, genderArray);
                     binding.etGender.setAdapter(genderAdapter);
@@ -181,6 +295,21 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
                     binding.etGender.setSelection(indexGender);
                     binding.etBlood.setSelection(indexBlood);
+
+                    religionAdapter = new ArrayAdapter<String>(VoterProfileActivity.this, R.layout.item_spinner, R.id.tvItem, religionList);
+                    binding.etReligion.setAdapter(religionAdapter);
+                    binding.etReligion.setEnabled(true);
+                    binding.etReligion.setSelection(religionAdapter.getPosition(religion));
+
+                    casteAdapter = new ArrayAdapter<String>(VoterProfileActivity.this, R.layout.item_spinner, R.id.tvItem, casteList);
+                    binding.etCaste.setAdapter(casteAdapter);
+                    binding.etCaste.setEnabled(true);
+                    binding.etCaste.setSelection(casteAdapter.getPosition(caste));
+
+                    subCasteAdapter = new ArrayAdapter<String>(VoterProfileActivity.this, R.layout.item_spinner, R.id.tvItem, subCasteList);
+                    binding.etSubCaste.setAdapter(subCasteAdapter);
+                    binding.etSubCaste.setEnabled(true);
+                    binding.etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));
 
                     binding.btnAdd.setText("Save");
                     return;
@@ -213,9 +342,9 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         item.qualification = binding.etEducation.getText().toString();
         item.designation = binding.etProfession.getText().toString();
 
-        item.caste = binding.etCaste.getText().toString();
-        item.subcaste = binding.etSubCaste.getText().toString();
-        item.religion = binding.etReligion.getText().toString();
+        item.caste = binding.etCaste.getSelectedItem().toString();
+        item.subcaste = binding.etSubCaste.getSelectedItem().toString();
+        item.religion = binding.etReligion.getSelectedItem().toString();
 
 
         if (binding.etGender.getSelectedItemPosition() > 0) {
@@ -249,6 +378,120 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             fillDetails(res.getData());
 
         }
+
+        if (apiId == LeafManager.API_MAKE_ADMIN)
+        {
+
+            Toast.makeText(getApplicationContext(), getString(R.string.msg_profile_update), Toast.LENGTH_LONG).show();
+            finish();
+
+        }
+
+        else if (LeafManager.API_RELIGION_GET == apiId)
+        {
+            ReligionResponse res = (ReligionResponse) response;
+
+            AppLog.e(TAG, "ReligionResponse" + res);
+
+
+            religionList.clear();
+            religionList.addAll(res.getReligionData().get(0).getReligionList());
+
+            if (res.getReligionData().size() > 0)
+            {
+                religionAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem, religionList);
+                binding.etReligion.setAdapter(religionAdapter);
+                binding.etReligion.setSelection(religionAdapter.getPosition(religion));
+            }
+            if (isFirstTimeReligion)
+            {
+                isFirstTimeReligion = false;
+                binding.etReligion.setEnabled(false);
+            }
+
+        }
+
+        else if (LeafManager.API_CASTE_GET == apiId)
+        {
+            CasteResponse res = (CasteResponse) response;
+
+            AppLog.e(TAG, "CasteResponse" + res);
+
+            casteDataList.clear();
+            casteDataList.addAll(res.getCasteData());
+
+            casteList.clear();
+
+            for (int i=0;i<res.getCasteData().size();i++)
+            {
+                casteList.add(res.getCasteData().get(i).getCasteName());
+            }
+
+            if (casteList.size() > 0)
+            {
+                if (isFirstTimeCaste)
+                {
+                    casteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem,casteList);
+                    binding.etCaste.setAdapter(casteAdapter);
+                    binding.etCaste.setSelection(casteAdapter.getPosition(caste));
+                }
+                else
+                {
+                    casteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, R.id.tvItem,casteList);
+                    binding.etCaste.setAdapter(casteAdapter);
+                    binding.etCaste.setSelection(casteAdapter.getPosition(caste));
+
+                }
+
+            }
+
+            if (isFirstTimeCaste)
+            {
+                isFirstTimeCaste = false;
+                binding.etCaste.setEnabled(false);
+            }
+
+        }
+
+        else if (LeafManager.API_SUB_CASTE_GET == apiId)
+        {
+            SubCasteResponse res = (SubCasteResponse) response;
+
+            AppLog.e(TAG, "SubCasteResponse" + res);
+
+            casteId = null;
+
+            subCasteList.clear();
+
+            for (int i=0;i<res.getSubCasteData().size();i++)
+            {
+                subCasteList.add(res.getSubCasteData().get(i).getSubCasteName());
+            }
+
+            if (subCasteList.size() > 0)
+            {
+
+                if (isFirstTimeSubCaste)
+                {
+                    subCasteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem,subCasteList);
+                    binding.etSubCaste.setAdapter(subCasteAdapter);
+                    binding.etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));
+                }
+                else
+                {
+                    subCasteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, R.id.tvItem,subCasteList);
+                    binding.etSubCaste.setAdapter(subCasteAdapter);
+                    binding.etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));
+                }
+            }
+
+            if (isFirstTimeSubCaste)
+            {
+                isFirstTimeSubCaste = false;
+                binding.etSubCaste.setEnabled(false);
+            }
+        }
+
         if (apiId == LeafManager.API_VOTER_PROFILE_UPDATE)
         {
             Toast.makeText(getApplicationContext(), getString(R.string.msg_profile_update), Toast.LENGTH_LONG).show();
@@ -291,14 +534,20 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         binding.etProfession.setEnabled(false);
         binding.etProfession.setTextColor(getResources().getColor(R.color.grey));
 
-        binding.etCaste.setEnabled(false);
+        binding.etCategory.setTextColor(getResources().getColor(R.color.grey));
+
+   /*     binding.etCaste.setEnabled(false);
         binding.etCaste.setTextColor(getResources().getColor(R.color.grey));
 
         binding.etSubCaste.setEnabled(false);
         binding.etSubCaste.setTextColor(getResources().getColor(R.color.grey));
 
         binding.etReligion.setEnabled(false);
-        binding.etReligion.setTextColor(getResources().getColor(R.color.grey));
+        binding.etReligion.setTextColor(getResources().getColor(R.color.grey));*/
+
+        religion = data.religion;
+        caste = data.caste;
+        subcaste = data.subcaste;
 
 
         binding.etName.setText(data.name);
@@ -309,9 +558,9 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         binding.etdob.setText(data.dob);
         binding.etEducation.setText(data.qualification);
         binding.etProfession.setText(data.designation);
-        binding.etCaste.setText(data.caste);
+       /* binding.etCaste.setText(data.caste);
         binding.etSubCaste.setText(data.subcaste);
-        binding.etReligion.setText(data.religion);
+        binding.etReligion.setText(data.religion);*/
 
 
        int index = 0;
@@ -348,6 +597,9 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             Log.e("ProfileActivity", "image is Null From API ");
             imageFragment.setInitialLatterImage(data.name);
         }
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+        manager.getReligion(this);
 
     }
     private boolean isValid() {

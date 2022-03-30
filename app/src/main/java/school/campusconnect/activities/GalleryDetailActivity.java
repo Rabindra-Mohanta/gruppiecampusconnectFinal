@@ -155,7 +155,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_add_post).setIcon(R.drawable.add_team_icon);
+        menu.findItem(R.id.menu_add_post).setIcon(R.drawable.ic_post_new);
         if (item.canEdit)
             menu.findItem(R.id.menu_add_post).setVisible(true);
         else

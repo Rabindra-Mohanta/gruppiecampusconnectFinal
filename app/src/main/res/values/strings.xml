@@ -46,6 +46,9 @@
     <string name="lbl_no_account">Don\'t have a group?</string>
     <string name="lbl_search_issue">Search Issue</string>
 
+    <string name="lbl_search_caste">Search Caste</string>
+    <string name="lbl_search_sub_caste">Search Sub Caste</string>
+
     <string name="hint_group">Enter Group Name</string>
     <string name="hint_name">Enter Name</string>
     <string name="hint_imp_name">Enter Name</string>
@@ -234,6 +237,8 @@
     <string name="hint_search_booth">Search Booth</string>
     <string name="hint_view_more">View More...</string>
     <string name="hint_issue_not_found">Issue Not Found.......</string>
+    <string name="hint_caste_not_found">Caste Not Found.......</string>
+    <string name="hint_sub_caste_not_found">Sub Caste Not Found.......</string>
 
     <string name="hint_search_address">Search Address</string>
     <string name="action_register">New User ? Sign Up</string>
@@ -633,6 +638,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_update_committee">Update Committee</string>
     <string name="relationship">Relationship*</string>
     <string name="lbl_voterId">Voter Id</string>
+    <string name="lbl_category">Category</string>
     <string name="lbl_voterId_v2">Voter Id*</string>
     <string name="lbl_education">Education</string>
     <string name="lbl_profession">Profession</string>

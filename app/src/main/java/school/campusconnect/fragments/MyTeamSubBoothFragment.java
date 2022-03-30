@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
@@ -92,6 +94,7 @@ public static String TAG = "MyTeamSubBoothFragment";
 
                 MyTeamSubBoothResponse.TeamData teamData = new MyTeamSubBoothResponse.TeamData();
                 teamData.teamId = teamSubBoothTBL.teamID;
+                teamData.userId = teamSubBoothTBL.userId;
                 teamData.name = teamSubBoothTBL.name;
                 teamData.subBoothId = teamSubBoothTBL.subBoothId;
                 teamData.members = teamSubBoothTBL.members;
@@ -221,6 +224,7 @@ public static String TAG = "MyTeamSubBoothFragment";
             teamSubBoothTBL.teamID =teamData.teamId;
             teamSubBoothTBL.subBoothId = teamData.subBoothId;
             teamSubBoothTBL.name = teamData.name;
+            teamSubBoothTBL.userId = teamData.userId;
             teamSubBoothTBL.members = teamData.members;
             teamSubBoothTBL.isTeamAdmin = teamData.isTeamAdmin;
             teamSubBoothTBL.image = teamData.image;
@@ -310,6 +314,25 @@ public static String TAG = "MyTeamSubBoothFragment";
 
             holder.txt_name.setText(item.name);
             holder.txt_count.setText("Members: "+item.members);
+
+            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
+            holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
         }
 
         @Override

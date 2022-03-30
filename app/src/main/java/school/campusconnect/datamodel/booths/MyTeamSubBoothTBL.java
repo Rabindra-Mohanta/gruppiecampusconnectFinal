@@ -17,6 +17,9 @@ public class MyTeamSubBoothTBL extends Model {
     @Column(name = "subBoothId")
     public String subBoothId;
 
+    @Column(name = "userId")
+    public String userId;
+
     @Column(name = "name")
     public String name;
 

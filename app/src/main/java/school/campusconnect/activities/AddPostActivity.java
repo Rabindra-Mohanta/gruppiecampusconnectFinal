@@ -89,6 +89,7 @@ import school.campusconnect.utils.BackgroundVideoUploadService;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -616,6 +617,17 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 progressDialog.dismiss();
             }
         }
+    }
+
+    private void showCropDialog(Uri imageCapture,boolean isCamera) {
+
+        Log.e(TAG,"imageGEt "+imageCapture);
+        Intent i = new Intent(getApplicationContext(), CropDialogActivity.class);
+        i.putExtra("path",String.valueOf(imageCapture));
+        i.putExtra("isCamera",isCamera);
+        startActivityForResult(i,10);
+
+
     }
 
     private void uploadToAmazone(AddPostRequest request) {
@@ -1197,6 +1209,21 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             return;
         }
 
+        if (requestCode == 10)
+        {
+            String uri = data.getStringExtra("Data");
+            Log.e(TAG,"uri"+ uri);
+
+
+            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+            listImages.add(uri);
+
+            showLastImage();
+            removePdf();
+
+
+        }
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
@@ -1244,7 +1271,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
-
+            listImages.clear();
             isClear = true;
 
             if (clipData == null) {
@@ -1252,8 +1279,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 isGalleryMultiple = false;
 //                String path = ImageUtil.getPath(this, selectedImage);
                 //  listImages.add(selectedImage.toString());
-                CropImage.activity(selectedImage)
-                        .start(this);
+                showCropDialog(selectedImage,false);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
@@ -1261,8 +1287,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 //                    String path = ImageUtil.getPath(this, uri1);
                     //    listImages.add(uri1.toString());
                     isGalleryMultiple = true;
-                    CropImage.activity(uri1)
-                            .start(this);
+                    showCropDialog(selectedImage,false);
                 }
             }
 
@@ -1278,10 +1303,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
          /*   showLastImage();
             removePdf();
             removeAudio();*/
-
-            CropImage.activity(imageCaptureFile)
-                    .setOutputUri(imageCaptureFile)
-                    .start(this);
+            listImages.clear();
+            showCropDialog(imageCaptureFile,true);
 
         }
 

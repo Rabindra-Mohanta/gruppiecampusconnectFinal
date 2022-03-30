@@ -221,6 +221,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     public static boolean mAllowPostQuestion;
     public static boolean mAllowDuplicate;
 
+    public static boolean makeAdmin = false;
+
     public static String group_name = "";
 
     public static boolean is_share_edit;
@@ -738,16 +740,13 @@ public class GroupDashboardActivityNew extends BaseActivity
                 break;
 
             case R.id.llMakeAdmin:
-                if (isConnectionAvailable()) {
-                    Toast.makeText(getApplicationContext(),"Under Construction...",Toast.LENGTH_SHORT).show();
-                } else {
-                    showNoNetworkMsg();
-                }
-                break;
+                rlMore.setVisibility(View.GONE);
+                makeAdminClick();
+                return;
+
 
             case R.id.llMyTeam:
                 rlMore.setVisibility(View.GONE);
-
                 myTeamClick();
                 return;
 
@@ -1259,6 +1258,26 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     }
 
+    private void makeAdminClick()
+    {
+        tvToolbar.setText(GroupDashboardActivityNew.group_name);
+        tv_Desc.setVisibility(View.GONE);
+        tv_toolbar_icon.setVisibility(View.GONE);
+
+        makeAdmin = true;
+
+        tabLayout.setVisibility(View.GONE);
+
+        if (mGroupItem.isAdmin) {
+
+            setBackEnabled(true);
+
+            BoothListMyTeamFragment boothListMyTeamFragment = new BoothListMyTeamFragment();
+            boothListMyTeamFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, boothListMyTeamFragment).commit();
+
+        }
+    }
 
     private void myTeamClick() {
 
@@ -1267,6 +1286,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_toolbar_icon.setVisibility(View.GONE);
 
         tabLayout.setVisibility(View.GONE);
+
+        makeAdmin = false;
 
         if (mGroupItem.isAdmin) {
 
@@ -1541,7 +1562,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (mGroupItem.isAdmin || mGroupItem.isBoothPresident)
         {
-            if (team.name.equalsIgnoreCase("Booth Presidents"))
+            if (team.subCategory != null && team.subCategory.equalsIgnoreCase("boothPresidents"))
             {
                 Intent intent = new Intent(this, CommitteeActivity.class);
                 intent.putExtra("class_data",new Gson().toJson(team));

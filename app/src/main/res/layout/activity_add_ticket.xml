@@ -104,8 +104,6 @@
                         <Button
                             android:id="@+id/btnSearchIssue"
                             android:layout_width="wrap_content"
-                            android:src="@drawable/icon_down_white"
-                            app:tint="@color/colorPrimary"
                             style="@style/AddPostButton"
                             android:text="@string/strSelect"
                             android:layout_marginEnd="@dimen/padding_10dp"

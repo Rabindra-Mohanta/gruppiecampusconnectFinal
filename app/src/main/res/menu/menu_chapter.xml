@@ -6,7 +6,7 @@
         android:title="Delete Chapter" />
     <item
         android:id="@+id/menu_add_post"
-        android:icon="@drawable/posticon"
+        android:icon="@drawable/ic_post_new"
         android:title="Add Chapter"
         app:showAsAction="always" />
 
