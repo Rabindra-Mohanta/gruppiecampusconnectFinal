@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,6 +37,7 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.PhoneContactsItems;
 import school.campusconnect.datamodel.issue.IssueListResponse;
 import school.campusconnect.datamodel.staff.StaffResponse;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.IssueFragment;
 import school.campusconnect.utils.AppLog;
 
@@ -46,6 +50,9 @@ public class SelectContactActivity extends BaseActivity {
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
+    @Bind(R.id.edtSearch)
+    public EditText edtSearch;
+
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -55,6 +62,7 @@ public class SelectContactActivity extends BaseActivity {
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
     ArrayList<PhoneContactsItems> list = new ArrayList<>();
+    ArrayList<PhoneContactsItems> filterList = new ArrayList<>();
     private DatabaseHandler databaseHandler;
     private ArrayList<String> mobileList;
     private StaffAdapter adapter;
@@ -69,12 +77,59 @@ public class SelectContactActivity extends BaseActivity {
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle(getResources().getString(R.string.lbl_select_contact));
+
+        inits();
+
+    }
+
+    private void inits() {
+
         rvClass.setLayoutManager(new LinearLayoutManager(this));
         mobileList = getIntent().getStringArrayListExtra("mobileList");
 
         databaseHandler = new DatabaseHandler(this);
 
+        adapter=new StaffAdapter();
+        rvClass.setAdapter(adapter);
+
         new TaskForGetContacts().execute();
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+                if (s.toString().length() > 2)
+                {
+                    searchData(s.toString());
+                }
+                else
+                {
+                    adapter.add(list);
+                }
+            }
+        });
+    }
+
+    private void searchData(String text) {
+
+        filterList = new ArrayList<>();
+
+        for(PhoneContactsItems item : list){
+
+            if (item.getName().toLowerCase().contains(text.toLowerCase())){
+                filterList.add(item);
+            }
+        }
+
+        adapter.add(filterList);
+
     }
 
     @Override
@@ -94,8 +149,22 @@ public class SelectContactActivity extends BaseActivity {
             case R.id.menuSelect:
                 select();
                 return true;
+
+            case R.id.menu_search:
+                showHideSearch();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showHideSearch() {
+
+        if (edtSearch.getVisibility() == View.VISIBLE) {
+            edtSearch.setVisibility(View.GONE);
+        } else {
+            edtSearch.setVisibility(View.VISIBLE);
         }
     }
 
@@ -124,8 +193,8 @@ public class SelectContactActivity extends BaseActivity {
             super.onPostExecute(aVoid);
 
             progressBar.setVisibility(View.GONE);
-            adapter=new StaffAdapter(list);
-            rvClass.setAdapter(adapter);
+            adapter.add(list);
+
         }
     }
 
@@ -162,9 +231,6 @@ public class SelectContactActivity extends BaseActivity {
         List<PhoneContactsItems> list;
         private Context mContext;
 
-        public StaffAdapter(ArrayList<PhoneContactsItems> list) {
-            this.list = list;
-        }
 
         @Override
         public StaffAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -219,6 +285,12 @@ public class SelectContactActivity extends BaseActivity {
             }
             return selected;
         }
+
+        public void add(ArrayList<PhoneContactsItems> list) {
+            this.list = list;
+            notifyDataSetChanged();
+        }
+
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             @Bind(R.id.chkName)

@@ -94,6 +94,7 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.RecordAudioActivity;
+import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -1107,6 +1108,16 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
         }
     }
+    private void showCropDialog(Uri imageCapture,boolean isCamera) {
+
+        Log.e(TAG,"imageGEt "+imageCapture);
+        Intent i = new Intent(getApplicationContext(), CropDialogActivity.class);
+        i.putExtra("path",String.valueOf(imageCapture));
+        i.putExtra("isCamera",isCamera);
+        startActivityForResult(i,10);
+
+
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -1119,17 +1130,28 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             return;
         }
 
+        if (requestCode == 10)
+        {
+            String uri = data.getStringExtra("Data");
+            Log.e(TAG,"uri"+ uri);
+
+
+            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+            listImages.add(uri);
+
+            showLastImage();
+            removePdf();
+            removeAudio();
+
+        }
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
-
-
 
 
             Log.e(TAG,"result Uri Crop Image "+result.getUri());
 
             if (resultCode == RESULT_OK) {
-
 
 
 
@@ -1175,29 +1197,29 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
             isClear = true;
 
+            listImages.clear();
+
             if (clipData == null) {
 
                 isGalleryMultiple = false;
 //                String path = ImageUtil.getPath(this, selectedImage);
               //  listImages.add(selectedImage.toString());
-                CropImage.activity(selectedImage)
-                        .start(this);
+                showCropDialog(selectedImage,false);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
 //                    String path = ImageUtil.getPath(this, uri1);
                 //    listImages.add(uri1.toString());
-                    isGalleryMultiple = true;
-                    CropImage.activity(uri1)
-                            .start(this);
+               //     isGalleryMultiple = true;
+                    showCropDialog(uri1,false);
                 }
             }
 
         }
         else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-           /* listImages.clear();
-            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
+            listImages.clear();
+            /*fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
 //            String path = cameraFile.getAbsolutePath();
             AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
   //          listImages.add(imageCaptureFile.toString());
@@ -1207,9 +1229,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             removePdf();
             removeAudio();*/
 
-            CropImage.activity(imageCaptureFile)
-                    .setOutputUri(imageCaptureFile)
-                    .start(this);
+            showCropDialog(imageCaptureFile,true);
 
         }
         else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {

@@ -32,6 +32,7 @@ public class ProfileConstituencyActivity extends BaseActivity {
 
     FamilyListFragment familyListFragment;
     ProfileFragmentConst profileFragmentConst;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

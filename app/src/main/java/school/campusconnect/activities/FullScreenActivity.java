@@ -62,7 +62,7 @@ public class FullScreenActivity extends BaseActivity {
 
       //  Picasso.with(this).load(image).into(ivImage);
 
-        Picasso.with(this).load(image).placeholder(R.drawable.placeholder_image).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(ivImage,
+        Picasso.with(this).load(image).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage,
                 new Callback() {
                     @Override
                     public void onSuccess() {
@@ -72,7 +72,7 @@ public class FullScreenActivity extends BaseActivity {
                     @Override
                     public void onError() {
 
-                        Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.placeholder_image).fit().centerCrop().into(ivImage, new Callback() {
+                        Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
                             @Override
                             public void onSuccess() {
 

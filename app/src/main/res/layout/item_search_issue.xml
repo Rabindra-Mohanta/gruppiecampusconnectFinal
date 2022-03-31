@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_10dp"
             android:layout_gravity="center"
-            android:text="Issue"
+            android:text=""
             android:textColor="@color/colorTextDark"
             style="@style/LabelNormal" />
 

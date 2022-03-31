@@ -1,12 +1,16 @@
 package school.campusconnect.activities;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.gson.Gson;
@@ -17,6 +21,7 @@ import school.campusconnect.R;
 import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.BoothStudentListFragment;
+import school.campusconnect.views.SMBDialogUtils;
 
 public class BoothStudentActivity extends BaseActivity {
 
@@ -86,13 +91,22 @@ public class BoothStudentActivity extends BaseActivity {
         switch (item.getItemId()) {
 
             case R.id.menu_add_member: {
-                Intent intent = new Intent(this, AddBoothStudentActivity.class);
-                intent.putExtra("group_id", mGroupId);
-                intent.putExtra("team_id", teamId);
-                intent.putExtra("category", classData.category);
-                intent.putExtra("committee_data", new Gson().toJson(committeeData));
-                intent.putExtra("mobileList", classListFragment.getMobileList());
-                startActivity(intent);
+
+                if (classData.subCategory != null && classData.subCategory.equalsIgnoreCase("boothPresidents"))
+                {
+                    show_Dialog(R.array.booth);
+                }
+                else
+                {
+                    Intent intent = new Intent(getApplicationContext(), AddBoothStudentActivity.class);
+                    intent.putExtra("group_id", mGroupId);
+                    intent.putExtra("team_id", teamId);
+                    intent.putExtra("category", classData.category);
+                    intent.putExtra("committee_data", new Gson().toJson(committeeData));
+                    intent.putExtra("mobileList", classListFragment.getMobileList());
+                    startActivity(intent);
+                }
+
                 return true;
             }
 
@@ -112,6 +126,34 @@ public class BoothStudentActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+
+    public void show_Dialog(int resId) {
+        SMBDialogUtils.showSMBSingleChoiceDialog(this ,resId, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ListView lw = ((AlertDialog) dialog).getListView();
+
+                        switch (lw.getCheckedItemPosition()) {
+
+                            case 0:
+                                startActivity(new Intent(getApplicationContext(), AddBoothActivity.class));
+                                break;
+                            case 1:
+                                Intent intent = new Intent(getApplicationContext(), AddBoothStudentActivity.class);
+                                intent.putExtra("group_id", mGroupId);
+                                intent.putExtra("team_id", teamId);
+                                intent.putExtra("category", classData.category);
+                                intent.putExtra("committee_data", new Gson().toJson(committeeData));
+                                intent.putExtra("mobileList", classListFragment.getMobileList());
+                                startActivity(intent);
+                                break;
+
+                        }
+                    }
+                });
     }
 
     @Override

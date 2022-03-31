@@ -140,7 +140,7 @@ public class TimeTableTeamFragment extends BaseFragment implements LeafManager.O
             }
 
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Members : "+item.members);
+            holder.txt_count.setText("Members : "+String.valueOf(item.members));
         }
 
         @Override

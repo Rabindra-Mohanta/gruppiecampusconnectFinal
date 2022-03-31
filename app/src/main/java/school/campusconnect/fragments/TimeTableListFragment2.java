@@ -189,6 +189,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final TimeTableList2Response.TimeTableData2 item = list.get(position);
             holder.txt_name.setText(getWeekDay(item.getDay()));
+
             if(item.isSelected){
                 holder.imgDown.setImageResource(R.drawable.arrow_up);
                 holder.rvSession.setVisibility(View.VISIBLE);
@@ -210,7 +211,10 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
                 }
             });
 
-            if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.allowedToAddUser)
+            Log.e(TAG,"isAdmin"+GroupDashboardActivityNew.isAdmin);
+            Log.e(TAG,"allowedToAddUser"+GroupDashboardActivityNew.allowedToAddUser);
+
+            if (GroupDashboardActivityNew.mGroupItem.isAdmin || GroupDashboardActivityNew.mGroupItem.canPost)
             {
                 holder.imgEdit.setVisibility(View.VISIBLE);
             }
@@ -360,7 +364,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             final TimeTableList2Response.SessionsTimeTable item = list.get(position);
 
             holder.txt_period.setText(item.getPeriod());
-            holder.txt_time.setText(item.getStartTime()+"-"+item.getEndTime());
+            holder.txt_time.setText(item.getStartTime()+" - "+item.getEndTime());
             holder.txt_subject_staff.setText(item.getTeacherName());
 
           /*  holder.txt_subject.setText(item.getSubjectName());
@@ -372,7 +376,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Session found.");
+                    txtEmpty.setText("No TimeTable found.");
                 }
                 else {
                     txtEmpty.setText("");
@@ -382,7 +386,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No Session found.");
+                txtEmpty.setText("No TimeTable found.");
                 return 0;
             }
 

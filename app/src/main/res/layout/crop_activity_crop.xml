@@ -5,16 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include android:layout_alignParentBottom="true"
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/cancel"
+            android:layout_width="@dimen/padding_30dp"
+            android:layout_height="@dimen/padding_30dp"
+            android:src="@drawable/icon_back_white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/padding_10dp"/>
+
+        <ImageView
+            android:id="@+id/rotate"
+            android:layout_width="@dimen/padding_30dp"
+            android:layout_height="@dimen/padding_30dp"
+            android:src="@drawable/crop_image_menu_rotate_right"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/done"
+            android:layout_marginRight="@dimen/padding_10dp"/>
+
+        <TextView
+            android:id="@+id/done"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/padding_30dp"
+            android:text="Crop"
+            android:textSize="@dimen/text_size_20sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/padding_10dp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+
+  <!--  <include
+        android:layout_alignParentBottom="true"
         android:id="@+id/done_cancel_bar"
-        layout="@layout/done_cancel"   android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        layout="@layout/done_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />-->
 
     <school.campusconnect.utils.crop.CropImageView
         android:id="@+id/crop_image"
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000"
-        android:layout_above="@id/done_cancel_bar" />
+        />
 
 </RelativeLayout>

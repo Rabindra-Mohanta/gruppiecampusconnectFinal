@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menuAdd"
-        android:icon="@drawable/posticon"
+        android:icon="@drawable/ic_post_new"
         app:showAsAction="ifRoom"
         android:title="Add"/>
 </menu>

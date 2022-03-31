@@ -12,6 +12,12 @@ import school.campusconnect.datamodel.BaseResponse;
 public class MyTeamData extends BaseResponse {
 
     public String teamId;
+
+    public String adminName;
+    public String userName;
+    public String userImage;
+    public String boothId;
+    public String userId;
     public int postUnseenCount;
     public String phone;
 
@@ -41,6 +47,7 @@ public class MyTeamData extends BaseResponse {
     public String category="";
     public String role="";
     public int count;
+    public String subCategory;
 
     // for view discussion
     public boolean allowedToAddTeamPost;

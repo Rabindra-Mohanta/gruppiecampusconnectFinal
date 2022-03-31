@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="match_parent"
+        tools:context=".activities.RemoveBannerActivity">
+
+        <RelativeLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            >
+            <ImageView
+                android:id="@+id/cancel"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/padding_30dp"
+                android:src="@drawable/icon_back_white"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/padding_10dp"/>
+
+            <TextView
+                android:id="@+id/done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Banners"
+                android:textSize="@dimen/text_size_20sp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_toRightOf="@id/cancel"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_below="@id/toolbar"
+            android:layout_above="@id/updateBannerList"
+            android:id="@+id/rvBannerList"
+            android:layout_marginHorizontal="@dimen/padding_10dp"
+            tools:listitem="@layout/item_banner_remove"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:spanCount="2"/>
+
+        <Button
+            android:id="@+id/updateBannerList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/AddPostButton"
+            android:layout_alignParentBottom="true"
+            android:text="@string/lbl_update"
+            android:layout_margin="@dimen/padding_20dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

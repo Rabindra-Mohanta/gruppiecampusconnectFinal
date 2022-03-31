@@ -17,6 +17,10 @@ import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.booths.BoothVotersListResponse;
+import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
+import school.campusconnect.datamodel.booths.VoterProfileResponse;
+import school.campusconnect.datamodel.booths.VoterProfileUpdate;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -26,6 +30,9 @@ import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
 import school.campusconnect.datamodel.masterList.StreetListModelResponse;
 import school.campusconnect.datamodel.masterList.VoterListModelResponse;
 import school.campusconnect.datamodel.masterList.WorkerListResponse;
+import school.campusconnect.datamodel.profileCaste.CasteResponse;
+import school.campusconnect.datamodel.profileCaste.ReligionResponse;
+import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
@@ -1211,7 +1218,7 @@ public interface LeafService {
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/offline/attendance/report/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<AttendanceReportResv2> getAttendanceReportOffline(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year);
+    Call<AttendanceReportResv2> getAttendanceReportOffline(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") String month, @Query("year") String year,@Query("startDate") String startDate, @Query("endDate") String endDate);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/online/attendance/report")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1707,6 +1714,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothResponse> getBooths(@Path("group_id") String group_id);
 
+    @GET("/api/v1/groups/{group_id}/team/{booth_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothVotersListResponse> getBoothVoters(@Path("group_id") String group_id, @Path("booth_id") String booth_id);
+
     @GET("/api/v1/groups/{group_id}/all/booths/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothResponse> getBoothsCoordinator(@Path("group_id") String group_id,@Query("boothCoordinator") String option);
@@ -1853,21 +1864,52 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<StreetListModelResponse> getWorkerStreetList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("type") String type);
 
-    @POST("api/v1/groups/{group_id}/team/{team_id}/add/voters/masterlist")
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/add/voters/masterlist")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addVoter(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body VoterListModelResponse.AddVoterReq req);
 
-    @GET("api/v1/groups/{group_id}/team/{team_id}/get/voters/masterlist")
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/get/voters/masterlist")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<VoterListModelResponse.VoterListRes> getVoterList(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
-    @GET("api/v1/groups/{group_id}/banner/get")
+    @GET("/api/v1/groups/{group_id}/banner/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BannerRes> getBannerList(@Path("group_id") String group_id);
 
-    @POST("api/v1/groups/{group_id}/banner/add")
+    @POST("/api/v1/groups/{group_id}/banner/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addBannerList(@Path("group_id") String group_id,@Body BannerAddReq req);
+
+    @GET("/api/v1/groups/{group_id}/my/subbooth/teams")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<MyTeamSubBoothResponse> getMyTeamSubBooths(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/user/{user_id}/profile/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<VoterProfileResponse> getVoterProfile(@Path("group_id") String group_id, @Path("user_id") String user_id);
+
+    @PUT("/api/v1/groups/{group_id}/user/{user_id}/profile/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateVoterProfile(@Path("group_id") String group_id, @Path("user_id") String user_id,@Body VoterProfileUpdate request);
+
+    @GET("/api/v1/caste/religions")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ReligionResponse> getReligion();
+
+    @GET("/api/v1/caste/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<CasteResponse> getCaste(@Query("religion") String religion);
+
+    @GET("/api/v1/caste/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubCasteResponse> getSubCaste(@Query("casteId") String casteId);
+
+    @PUT("/api/v1/admin/groups/{group_id}/users/{user_id}/allow/post")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> makeAppAdmin(@Path("group_id") String group_id,@Path("user_id") String user_id);
+
+
+
 
 
 }

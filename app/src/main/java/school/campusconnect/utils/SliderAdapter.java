@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -26,6 +29,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.ViewHolder
     public static String TAG = "SliderAdapter";
     ArrayList<String> urls;
     Context context;
+    AmazoneImageDownload asyncTask;
 
 
     @NonNull
@@ -64,7 +68,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.ViewHolder
         RequestOptions reqOption = new RequestOptions();
         reqOption.override(size, size);
 
-        Glide.with(context).load(uri).apply(reqOption).diskCacheStrategy(DiskCacheStrategy.NONE)
+        Glide.with(context).load(Constants.decodeUrlToBase64(uri)).apply(reqOption).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true).into(holder.binding.imgSlider);
 
 

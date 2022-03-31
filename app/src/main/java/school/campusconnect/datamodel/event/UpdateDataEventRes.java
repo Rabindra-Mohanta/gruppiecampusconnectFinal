@@ -72,6 +72,14 @@ public class UpdateDataEventRes extends BaseResponse {
         @SerializedName("schoolGroupCount")
         @Expose
         public int schoolGroupCount;
+
+        @SerializedName("secretKey")
+        @Expose
+        public String secretKey;
+
+        @SerializedName("accessKey")
+        @Expose
+        public String accessKey;
     }
     public static class SubjectCountList {
         @SerializedName("teamId")

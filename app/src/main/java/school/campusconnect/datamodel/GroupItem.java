@@ -13,6 +13,9 @@ public class GroupItem implements Parcelable {
     public String type;
     public int totalUsers;
     public int totalPostsCount;
+    public int subBoothCount;
+    public String subBoothName;
+    public String subBoothId;
     public int totalCommentsCount;
     public String subCategory;
     @SerializedName(value = "name",alternate = "groupName")
@@ -24,6 +27,7 @@ public class GroupItem implements Parcelable {
     public boolean isDepartmentTaskForce;
     public boolean isBoothMember;
     public String image;
+    public boolean isBoothWorker;
     public int groupPostUnreadCount;
     public String category="";
     public boolean canPost;
@@ -51,8 +55,11 @@ public class GroupItem implements Parcelable {
     protected GroupItem(Parcel in) {
         id = in.readString();
         type = in.readString();
+        subBoothName = in.readString();
+        subBoothId = in.readString();
         totalUsers = in.readInt();
         totalPostsCount = in.readInt();
+        subBoothCount = in.readInt();
         totalCommentsCount = in.readInt();
         subCategory = in.readString();
         name = in.readString();
@@ -84,6 +91,7 @@ public class GroupItem implements Parcelable {
         boothName = in.readString();
         boothCount = in.readInt();
         isBoothPresident = in.readByte() != 0;
+        isBoothWorker = in.readByte() != 0;
     }
 
     public static final Creator<GroupItem> CREATOR = new Creator<GroupItem>() {
@@ -160,8 +168,11 @@ public class GroupItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(type);
+        dest.writeString(subBoothName);
+        dest.writeString(subBoothId);
         dest.writeInt(totalUsers);
         dest.writeInt(totalPostsCount);
+        dest.writeInt(subBoothCount);
         dest.writeInt(totalCommentsCount);
         dest.writeString(subCategory);
         dest.writeString(name);
@@ -193,5 +204,6 @@ public class GroupItem implements Parcelable {
         dest.writeInt(boothCount);
         dest.writeInt((byte) (isBoothMember ? 1 : 0));
         dest.writeInt((byte) (isBoothPresident ? 1 : 0));
+        dest.writeInt((byte) (isBoothWorker ? 1 : 0));
     }
 }

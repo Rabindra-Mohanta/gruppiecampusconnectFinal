@@ -60,7 +60,7 @@ import school.campusconnect.utils.UploadImageFragment;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class AddBoothStudentActivity extends BaseActivity {
-    private static final String TAG = "AddStudentActivity";
+    private static final String TAG = "AddBoothStudentActivity";
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
 

@@ -293,7 +293,8 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
                     }
                 });
                 imageCompressionAsyncTask.execute(uri.toString());
-            } else {
+            }
+            else {
                 onImageSelected(data, 109);
             }
 

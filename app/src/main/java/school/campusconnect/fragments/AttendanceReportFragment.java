@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -39,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -76,16 +79,20 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     @Bind(R.id.rvStudents)
     public RecyclerView rvStudents;
 
-
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
     @Bind(R.id.llClass)
     public LinearLayout llClass;
 
-    @Bind(R.id.rvAttendTitle)
-    public RecyclerView rvAttendTitle;
+    /*@Bind(R.id.rvAttendTitle)
+    public RecyclerView rvAttendTitle;*/
 
+    private int StartDate;
+    private int CurrentDate;
+    private int EndDate;
 
+    private int CurrentMonth;
+    private int Month;
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
     Calendar calendar;
@@ -100,6 +107,17 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     private ArrayList<String> attendanceData = new ArrayList<>();
 
     private int ColumnCount = 0;
+
+    @Bind(R.id.imgLeftDate)
+    public ImageView imgLeftDate;
+
+    @Bind(R.id.imgRightDate)
+    public ImageView imgRightDate;
+
+    String[] monthName= {"January","February","March", "April", "May", "June", "July",
+            "August", "September", "October", "November",
+            "December"};
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -107,7 +125,6 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         ButterKnife.bind(this,view);
 
         init();
-
 
 
         if(getArguments()!=null){
@@ -130,11 +147,13 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     private void init() {
 
 
-        attendanceTitle.add("Roll No");
-        attendanceTitle.add("Name");
+        rvStudents.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        /*attendanceTitle.add("Roll No");
+        attendanceTitle.add("Name");*/
 
         calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH ,1);
+        /*calendar.set(Calendar.DAY_OF_MONTH ,1);
 
 
         ColumnCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -154,7 +173,28 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
         FixedGridLayoutManager fixedGridLayoutManager = new FixedGridLayoutManager();
         fixedGridLayoutManager.setTotalColumnCount(5);
-        rvStudents.setLayoutManager(fixedGridLayoutManager);
+        rvStudents.setLayoutManager(fixedGridLayoutManager);*/
+
+        CurrentDate = calendar.get(Calendar.DATE);
+
+        if (CurrentDate == 1)
+        {
+            EndDate = CurrentDate;
+            StartDate = CurrentDate;
+            imgLeftDate.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            EndDate = CurrentDate;
+            StartDate = EndDate-2;
+        }
+
+
+        String month = monthName[calendar.get(Calendar.MONTH)];
+        CurrentMonth = getMonthNumber(month);
+        Month = CurrentMonth;
+
+        Log.e(TAG,"currentMonth"+CurrentMonth);
 
         spClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -171,29 +211,204 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
             }
         });
+
     }
 
+    private int getMonthNumber(String month) {
+        switch (month){
+            case "January":return 1;
+            case "February":return 2;
+            case "March":return 3;
+            case "April":return 4;
+            case "May":return 5;
+            case "June":return 6;
+            case "July":return 7;
+            case "August":return 8;
+            case "September":return 9;
+            case "October":return 10;
+            case "November":return 11;
+            case "December":return 12;
+
+        }
+        return 0;
+    }
+
+    private String getMonth(int month) {
+        switch (month){
+            case 1 : return "Jan";
+            case 2 : return "Feb";
+            case 3 : return "Mar";
+            case 4 : return "Apr";
+            case 5 : return "May";
+            case 6 : return "Jun";
+            case 7 : return "Jul";
+            case 8 : return "Aug";
+            case 9 : return "Sep";
+            case 10 : return "Oct";
+            case 11 : return "Nov";
+            case 12 : return "Dec";
+
+        }
+        return "";
+    }
+
+
+    private int getLastDateOfMonth(int month) {
+
+        switch (month){
+
+
+            case 1 : return 31;
+            case 2 :    if (calendar.get(Calendar.YEAR) % 4 == 0)
+                        {
+                            return 29;
+                        }
+                        else
+                        {
+                            return 28;
+                        }
+
+
+            case 3 : return 31;
+            case 4 : return 30;
+            case 5 : return 31;
+            case 6 : return 30;
+            case 7 : return 31;
+            case 8 : return 31;
+            case 9 : return 30;
+            case 10 : return 31;
+            case 11 : return 30;
+            case 12 : return 31;
+
+        }
+        return 0;
+    }
+
+
+
     private void getAttendanceReport() {
+
+
+        Log.e(TAG,"month"+Month);
+        Log.e(TAG,"start Date"+StartDate);
+        Log.e(TAG,"End Date"+EndDate);
+
+        tvMonth.setText(getMonth(Month).toUpperCase());
+
         progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getAttendanceReportOffline(this,GroupDashboardActivityNew.groupId,selectedTeamId,Month,calendar.get(Calendar.YEAR),StartDate,EndDate);
+       /* progressBar.setVisibility(View.VISIBLE);
         tvMonth.setText(MixOperations.getMonth(calendar.getTime()).toUpperCase());
         LeafManager leafManager = new LeafManager();
-        leafManager.getAttendanceReportOffline(this,GroupDashboardActivityNew.groupId,selectedTeamId,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
+        leafManager.getAttendanceReportOffline(this,GroupDashboardActivityNew.groupId,selectedTeamId,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR),StartDate,EndDate);*/
+       // leafManager.getAttendanceReport(this,GroupDashboardActivityNew.groupId,selectedTeamId,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
     }
 
     @Override
     public void onStart() {
         super.onStart();
     }
-    @OnClick({R.id.imgLeft,R.id.imgRight})
+
+
+    @OnClick({R.id.imgLeft,R.id.imgRight,R.id.imgRightDate,R.id.imgLeftDate})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.imgLeft:
-                calendar.add(Calendar.MONTH,-1);
+                //calendar.add(Calendar.MONTH,-1);
+                Month = Month-1;
+
+                if (Month == 1)
+                {
+                    imgLeft.setVisibility(View.INVISIBLE);
+                }
+
+                if (imgLeftDate.getVisibility() == View.INVISIBLE)
+                {
+                    imgLeftDate.setVisibility(View.VISIBLE);
+                }
+
+                if (imgRight.getVisibility() == View.INVISIBLE)
+                {
+                    imgRight.setVisibility(View.VISIBLE);
+                }
+
+
+                EndDate = getLastDateOfMonth(Month);
+                StartDate = EndDate-2;
+
                 getAttendanceReport();
                 break;
             case R.id.imgRight:
-                calendar.add(Calendar.MONTH,1);
+               // calendar.add(Calendar.MONTH,1);
+                Month = Month+1;
+
+                if (Month == CurrentMonth)
+                {
+                    if (CurrentDate == 1)
+                    {
+                        EndDate = CurrentDate;
+                        StartDate = CurrentDate;
+                        imgLeftDate.setVisibility(View.INVISIBLE);
+                        imgRightDate.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                    {
+                        EndDate = CurrentDate;
+                        StartDate = EndDate-2;
+                    }
+                    imgRight.setVisibility(View.INVISIBLE);
+                }
+                else
+                {
+                    EndDate = getLastDateOfMonth(Month);
+                    StartDate = EndDate-2;
+                }
+
+                if (imgLeft.getVisibility() == View.INVISIBLE)
+                {
+                    imgLeft.setVisibility(View.VISIBLE);
+                }
+
+
                 getAttendanceReport();
+                break;
+
+            case R.id.imgRightDate:
+
+                EndDate = EndDate+1;
+                StartDate = EndDate -2;
+
+                if (EndDate == CurrentDate)
+                {
+                    imgRightDate.setVisibility(View.INVISIBLE);
+                }
+
+                if (EndDate == getLastDateOfMonth(Month))
+                {
+                    imgRightDate.setVisibility(View.INVISIBLE);
+                }
+                if (imgLeftDate.getVisibility() == View.INVISIBLE)
+                {
+                    imgLeftDate.setVisibility(View.VISIBLE);
+                }
+                getAttendanceReport();
+                break;
+
+            case R.id.imgLeftDate:
+                EndDate = EndDate-1;
+                StartDate = EndDate -2;
+                if (StartDate == 1)
+                {
+                    imgLeftDate.setVisibility(View.INVISIBLE);
+                }
+
+                if (imgRightDate.getVisibility() == View.INVISIBLE)
+                {
+                    imgRightDate.setVisibility(View.VISIBLE);
+                }
+                getAttendanceReport();
+
                 break;
 
         }
@@ -215,11 +430,23 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,stud);
             spClass.setAdapter(adapter);
         }
-        else {
+
+        if (apiId == LeafManager.API_ATTENDANCE_REPORT_OFFLINE)
+        {
             AttendanceReportResv2 res = (AttendanceReportResv2) response;
             attendanceReportListv2 = res.result;
 
+            rvStudents.setAdapter(new ReportStudentAdapterV2(res.result));
 
+        }
+
+        else {
+            /*AttendanceReportResv2 res = (AttendanceReportResv2) response;
+            attendanceReportListv2 = res.result;*/
+
+         /*   AttendanceReportRes res = (AttendanceReportRes) response;
+            rvStudents.setAdapter(new ReportStudentAdapter(res.result));
+*/
 
 
            // rvAttendTitle.setAdapter(new AttendHeadAdpater(attendanceTitle));
@@ -309,7 +536,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         }
     }
 
-   /* public class ReportStudentAdapterV2 extends RecyclerView.Adapter<ReportStudentAdapterV2.ViewHolder>
+    public class ReportStudentAdapterV2 extends RecyclerView.Adapter<ReportStudentAdapterV2.ViewHolder>
     {
         List<AttendanceReportResv2.AttendanceReportData> list;
         private Context mContext;
@@ -321,21 +548,95 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_report_student_date,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_atttendance_head,parent,false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-            Log.e(TAG,"onBindViewHolder"+getItemCount());
-        *//*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*//*
+            if (position == 0)
+            {
+
+                holder.llLinear.removeAllViews();
+
+                for (int i = 0; i < list.get(0).getAttendanceReport().size()+2; i++) {
+
+                    TextView valueTV = new TextView(mContext);
+
+                    if (i>=2)
+                    {
+                        valueTV.setText(list.get(0).getAttendanceReport().get(i-2).getDate()+"\n( "+list.get(0).getAttendanceReport().get(i-2).getSubjectName()+" )");
+                        valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_120dp), mContext.getResources().getDimensionPixelSize(R.dimen.padding_50dp)));
+
+                    }
+                    else
+                    {
+                        if (i==0)
+                        {
+                            valueTV.setText("Roll No\n( Student )");
+                            valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_70dp), mContext.getResources().getDimensionPixelSize(R.dimen.padding_50dp)));
+                        }
+                         if(i==1)
+                         {
+                             valueTV.setText("Name \n( Student )");
+                             valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_80dp), mContext.getResources().getDimensionPixelSize(R.dimen.padding_50dp)));
+                         }
+                    }
+                    valueTV.setId((list.get(0).getAttendanceReport().size()+2)*position+i);
+
+                    valueTV.setPadding(10,10,10,10);
+                    valueTV.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                    valueTV.setBackground(mContext.getResources().getDrawable(R.drawable.primary_border_rec_btn_bg));
+                    valueTV.setGravity(Gravity.CENTER);
+                    holder.llLinear.addView(valueTV);
+                }
+            }
+            else
+            {
+                holder.llLinear.removeAllViews();
+
+
+                for (int i = 0; i < list.get(position-1).getAttendanceReport().size()+2; i++) {
+
+                    TextView valueTV = new TextView(mContext);
+
+                    if (i>=2)
+                    {
+                        valueTV.setText(list.get(position-1).getAttendanceReport().get(i-2).getAttendance()?"P":"A");
+                        valueTV.setMinLines(2);
+                        valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_120dp), LinearLayout.LayoutParams.WRAP_CONTENT));
+                    }
+                    else
+                    {
+                        if (i==0)
+                        {
+                            valueTV.setText(list.get(position-1).getRollNumber());
+                            valueTV.setMinLines(2);
+                            valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_70dp), LinearLayout.LayoutParams.WRAP_CONTENT));
+                        }
+                        if(i==1)
+                        {
+                            valueTV.setText(list.get(position-1).getStudentName());
+                            valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_80dp), LinearLayout.LayoutParams.WRAP_CONTENT));
+                            valueTV.setSingleLine(true);
+                            valueTV.setMinLines(2);
+                        }
+                    }
+
+                    valueTV.setPadding(10,10,10,10);
+                    valueTV.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                    valueTV.setBackground(mContext.getResources().getDrawable(R.drawable.primary_border_rec_btn_bg));
+                    valueTV.setGravity(Gravity.CENTER);
+                    holder.llLinear.addView(valueTV);
+                }
+            }
 
 
 
         }
 
-        @Override
+       /* @Override
         public int getItemCount() {
             if(list!=null)
             {
@@ -355,30 +656,46 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
                 return ColumnCount * 5;
             }
 
+        }*/
+
+
+        @Override
+        public int getItemCount() {
+
+            if(list!=null)
+            {
+                if(list.size()==0)
+                {
+                    txtEmpty.setText("No Data found.");
+                }else {
+                    txtEmpty.setText("");
+                }
+
+                return list.size();
+            }
+            else
+            {
+                txtEmpty.setText("No Data found.");
+                return 0;
+            }
         }
-
-
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            *//*@Bind(R.id.tvStudentData)
-            TextView tvStudentData;*//*
+        /*    @Bind(R.id.tvTitle)
+            TextView tvTitle;*/
 
-
+            @Bind(R.id.llLinear)
+            LinearLayout llLinear;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this,itemView);
 
-               *//* itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        editStudent(list.get(getAdapterPosition()));
-                    }
-                });*//*
+
             }
         }
-    }*/
+    }
 
     private void editStudent(AttendanceReportRes.AttendanceReportData studentData) {
         Intent intent = new Intent(getActivity(), AttendanceDetailActivity.class);
@@ -505,7 +822,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-            Log.e(TAG,"onBindViewHolder"+getItemCount());
+
             /*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*/
 
             //if(position ==0)
@@ -559,7 +876,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
     }
 
 
-    public class ReportStudentAdapterV2 extends RecyclerView.Adapter<ReportStudentAdapterV2.ViewHolder>
+    /*public class ReportStudentAdapterV2 extends RecyclerView.Adapter<ReportStudentAdapterV2.ViewHolder>
     {
 
 
@@ -574,7 +891,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             Log.e(TAG,"onBindViewHolder"+getItemCount());
-            /*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*/
+            *//*    final AttendanceReportResv2.AttendanceReportData item = list.get(position);*//*
 
 
 
@@ -598,13 +915,13 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
                 super(itemView);
                 ButterKnife.bind(this,itemView);
 
-               /* itemView.setOnClickListener(new View.OnClickListener() {
+               *//* itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         editStudent(list.get(getAdapterPosition()));
                     }
-                });*/
+                });*//*
             }
         }
-    }
+    }*/
 }

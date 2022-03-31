@@ -17,4 +17,12 @@ public class ProfileItemUpdate {
     public String bloodGroup;
     public String voterId;
     public String aadharNumber;
+
+
+    public String caste;
+    public String subcaste;
+    public String religion;
+    public String designation;
+
+
 }

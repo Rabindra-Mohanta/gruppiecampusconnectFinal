@@ -2,7 +2,7 @@ package school.campusconnect.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.icu.text.Transliterator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -35,10 +36,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.booths.MemberTeamTBL;
+import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -62,6 +66,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     String team_id;
     String name;
+    String screen;
 
     ClassesAdapter adapter;
 
@@ -78,23 +83,85 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
         _init();
 
-        team_id = getArguments().getString("team_id");
-        name = getArguments().getString("name");
-        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new ClassesAdapter();
-        rvClass.setAdapter(adapter);
+        getDataLocally();
+
+        return view;
+    }
+
+    private void getDataLocally() {
+
+        List<MemberTeamTBL> boothListTBl = MemberTeamTBL.getMemeberBoothList(GroupDashboardActivityNew.groupId,team_id);
+
+        myTeamDataList.clear();
+
+        if (boothListTBl != null && boothListTBl.size() > 0)
+        {
+            ArrayList<MyTeamData> resultData = new ArrayList<>();
+
+            for (int i=0;i<boothListTBl.size();i++)
+            {
+                MemberTeamTBL boothList = boothListTBl.get(i);
+
+                MyTeamData myTeamData = new MyTeamData();
+                myTeamData.teamId = boothList.teamId;
+                myTeamData.postUnseenCount = boothList.postUnseenCount;
+                myTeamData.phone = boothList.phone;
+                myTeamData.name = boothList.name;
+                myTeamData.members = boothList.members;
+                myTeamData.boothNumber = boothList.boothNumber;
+                myTeamData.groupId = boothList.groupId;
+                myTeamData.canAddUser = boothList.canAddUser;
+                myTeamData.userId = boothList.userID;
+                myTeamData.allowTeamPostCommentAll = boothList.allowTeamPostCommentAll;
+                myTeamData.allowTeamPostAll = boothList.allowTeamPostAll;
+                myTeamData.isTeamAdmin = boothList.isTeamAdmin;
+                myTeamData.isClass = boothList.isClass;
+                myTeamData.teamType = boothList.teamType;
+                myTeamData.enableGps = boothList.enableGps;
+                myTeamData.enableAttendance = boothList.enableAttendance;
+                myTeamData.type = boothList.type;
+
+                myTeamData.userName = boothList.userName;
+                myTeamData.adminName = boothList.adminName;
+                myTeamData.userImage = boothList.userImage;
+                myTeamData.boothId = boothList.boothId;
+
+                myTeamData.category = boothList.category;
+                myTeamData.role = boothList.role;
+                myTeamData.count = boothList.count;
+                myTeamData.allowedToAddTeamPost = boothList.allowedToAddTeamPost;
+                myTeamData.leaveRequest = boothList.leaveRequest;
+                myTeamData.details = new Gson().fromJson(boothList.TeamDetails, new TypeToken<MyTeamData.TeamDetails>() {}.getType());
+
+                resultData.add(myTeamData);
+
+            }
+            myTeamDataList.addAll(resultData);
+            adapter.add(myTeamDataList);
+        }
+        else
+        {
+            boothListApiCall();
+        }
+    }
+
+    private void boothListApiCall() {
 
         progressBar.setVisibility(View.VISIBLE);
 
         LeafManager leafManager = new LeafManager();
         leafManager.getBoothTeams(this,GroupDashboardActivityNew.groupId,team_id);
 
-        return view;
     }
 
     private void _init() {
 
-        edtSearch.setVisibility(View.VISIBLE);
+        team_id = getArguments().getString("team_id");
+        name = getArguments().getString("name");
+        screen = getArguments().getString("screen");
+        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new ClassesAdapter();
+        rvClass.setAdapter(adapter);
 
         edtSearch.setHint("Search Booth Team");
 
@@ -146,12 +213,30 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.action_notification_list).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+
+
+            case R.id.menu_search:
+                showHideSearch();
+                return true;
+            default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showHideSearch() {
+
+        if (edtSearch.getVisibility() == View.VISIBLE) {
+            edtSearch.setVisibility(View.GONE);
+        } else {
+            edtSearch.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -170,9 +255,57 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         List<MyTeamData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
 
-        myTeamDataList = result;
+        saveToLocally(res.getData());
+
+        /*myTeamDataList = result;
         adapter.add(myTeamDataList);
-        rvClass.setAdapter(adapter);
+        rvClass.setAdapter(adapter);*/
+    }
+
+    private void saveToLocally(ArrayList<MyTeamData> boothList) {
+
+        MemberTeamTBL.deleteMemberBooth(GroupDashboardActivityNew.groupId,team_id);
+
+        for (int i = 0;i<boothList.size();i++)
+        {
+            MemberTeamTBL boothsTBL = new MemberTeamTBL();
+
+            boothsTBL.teamId = team_id;
+            boothsTBL.postUnseenCount = boothList.get(i).postUnseenCount;
+            boothsTBL.phone = boothList.get(i).phone;
+            boothsTBL.name = boothList.get(i).name;
+            boothsTBL.members = boothList.get(i).members;
+            boothsTBL.boothNumber = boothList.get(i).boothNumber;
+            boothsTBL.groupId = boothList.get(i).groupId;
+            boothsTBL.canAddUser = boothList.get(i).canAddUser;
+
+            boothsTBL.allowTeamPostCommentAll = boothList.get(i).allowTeamPostCommentAll;
+            boothsTBL.allowTeamPostAll = boothList.get(i).allowTeamPostAll;
+            boothsTBL.isTeamAdmin = boothList.get(i).isTeamAdmin;
+            boothsTBL.isClass = boothList.get(i).isClass;
+            boothsTBL.teamType = boothList.get(i).teamType;
+            boothsTBL.enableGps = boothList.get(i).enableGps;
+            boothsTBL.enableAttendance = boothList.get(i).enableAttendance;
+            boothsTBL.type = boothList.get(i).type;
+            boothsTBL.userID = boothList.get(i).userId;
+            boothsTBL.userName = boothList.get(i).userName;
+            boothsTBL.adminName = boothList.get(i).adminName;
+            boothsTBL.userImage = boothList.get(i).userImage;
+            boothsTBL.boothId = boothList.get(i).boothId;
+
+            boothsTBL.category = boothList.get(i).category;
+            boothsTBL.role = boothList.get(i).role;
+            boothsTBL.count = boothList.get(i).count;
+            boothsTBL.allowedToAddTeamPost = boothList.get(i).allowedToAddTeamPost;
+            boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
+            boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
+            boothsTBL._now = System.currentTimeMillis();
+            boothsTBL.save();
+        }
+
+        myTeamDataList.addAll(boothList);
+        adapter.add(myTeamDataList);
+
     }
 
     @Override
@@ -236,6 +369,24 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
+            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
+            holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
 
             holder.txt_name.setText(transliterator.transliterate(item.name));
             holder.txt_count.setText("Members: "+item.members);
@@ -297,6 +448,15 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     }
 
     private void onTreeClick(MyTeamData classData) {
-        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData);
+
+        if (screen.equalsIgnoreCase("myTeam"))
+        {
+            ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(classData.name,classData.members,classData.boothId);
+        }
+        else
+        {
+            ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData);
+        }
+
     }
 }

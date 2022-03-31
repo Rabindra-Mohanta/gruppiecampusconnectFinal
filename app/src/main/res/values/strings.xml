@@ -46,10 +46,14 @@
     <string name="lbl_no_account">Don\'t have a group?</string>
     <string name="lbl_search_issue">Search Issue</string>
 
+    <string name="lbl_search_caste">Search Caste</string>
+    <string name="lbl_search_sub_caste">Search Sub Caste</string>
+
     <string name="hint_group">Enter Group Name</string>
     <string name="hint_name">Enter Name</string>
     <string name="hint_imp_name">Enter Name</string>
     <string name="hint_email">Enter Your Email Id</string>
+    <string name="search_contact">Search Contact</string>
     <string name="hint_contact_no">Enter Your Contact Number</string>
 
     <string name="hint_isAdmin">Admin</string>
@@ -115,6 +119,7 @@
     <string name="msg_no_noti">No notifications.</string>
     <string name="msg_no_groups">No Groups found.</string>
     <string name="crop__pick_error">No image sources available</string>
+    <string name="crop">Crop</string>
     <string name="lbl_lead_count">Friends Count</string>
     <string name="lbl_phone">Phone Number*</string>
     <string name="lbl_booth_president_phone">PRESIDENT PHONE NUMBER*</string>
@@ -122,12 +127,14 @@
     <string name="lbl_father_name">Father Name</string>
     <string name="lbl_husband_name">Husband Name</string>
     <string name="lbl_email">Email</string>
+    <string name="lbl_email_v2">Email*</string>
     <string name="lbl_other_leads">Other Friends</string>
     <string name="lbl_gender">Gender</string>
     <string name="lbl_dob">Date of Birth</string>
     <string name="lbl_age">Age</string>
     <string name="lbl_roll">Roll</string>
     <string name="lbl_address">Address</string>
+    <string name="lbl_address_v2">Address*</string>
     <string name="lbl_landmark">Landmark</string>
     <string name="lbl_lead_city">City</string>
     <string name="lbl_state">State</string>
@@ -230,6 +237,8 @@
     <string name="hint_search_booth">Search Booth</string>
     <string name="hint_view_more">View More...</string>
     <string name="hint_issue_not_found">Issue Not Found.......</string>
+    <string name="hint_caste_not_found">Caste Not Found.......</string>
+    <string name="hint_sub_caste_not_found">Sub Caste Not Found.......</string>
 
     <string name="hint_search_address">Search Address</string>
     <string name="action_register">New User ? Sign Up</string>
@@ -629,6 +638,12 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_update_committee">Update Committee</string>
     <string name="relationship">Relationship*</string>
     <string name="lbl_voterId">Voter Id</string>
+    <string name="lbl_category">Category</string>
+    <string name="lbl_voterId_v2">Voter Id*</string>
+    <string name="lbl_education">Education</string>
+    <string name="lbl_profession">Profession</string>
+    <string name="lbl_caste">Caste</string>
+    <string name="lbl_sub_caste">Sub Caste</string>
     <string name="lbl_voterId2">Voter Id*</string>
     <string name="lbl_adharNumber">Aadhar Number</string>
     <string name="lbl_role">Role</string>

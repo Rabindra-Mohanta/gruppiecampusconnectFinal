@@ -36,6 +36,7 @@
                 android:layout_gravity="center"
                 android:paddingStart="@dimen/padding_10dp"
                 android:paddingEnd="@dimen/padding_10dp"
+                android:visibility="gone"
                 android:background="@color/colorPrimary"
                 android:layout_height="40dp"/>
             <androidx.recyclerview.widget.RecyclerView

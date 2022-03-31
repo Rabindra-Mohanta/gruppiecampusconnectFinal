@@ -28,12 +28,14 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -83,6 +85,7 @@ import school.campusconnect.activities.NotificationListActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ProfileConstituencyActivity;
 import school.campusconnect.activities.ReadMoreActivity;
+import school.campusconnect.activities.RemoveBannerActivity;
 import school.campusconnect.adapters.FeedAdapter;
 import school.campusconnect.adapters.TeamListAdapterNewV2;
 import school.campusconnect.database.DatabaseHandler;
@@ -143,8 +146,10 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     ArrayList<AdminFeederResponse.FeedData> adminNotificationList = new ArrayList<>();
     ArrayList<String> imageSliderList = new ArrayList<>();
     ArrayList<String> listAmazonS3Url = new ArrayList<>();
-    private SliderAdapter sliderAdapter;
+    private SliderBannerAdapter sliderAdapter;
     boolean isVisible;
+
+    BannerRes.BannerData bannerData = new BannerRes.BannerData();
 
     private MenuItem menuItem;
 
@@ -163,6 +168,18 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     FragmentBaseTeamFragmentv3Binding binding;
 
+
+   /* final int duration = 5;
+    final int pixelsToMove = 100;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable SCROLLING_RUNNABLE = new Runnable() {
+
+        @Override
+        public void run() {
+            mHandler.postDelayed(this, duration);
+        }
+    };
+*/
     Transliterator transliterator;
 
     public static BaseTeamFragmentv3 newInstance() {
@@ -332,6 +349,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         pref = LeafPreference.getInstance(getActivity());
 
+       // Log.e(TAG,"profile Image"+pref.getString(LeafPreference.PROFILE_IMAGE));
+
         databaseHandler = new DatabaseHandler(getActivity());
         transferUtility = AmazoneHelper.getTransferUtility(getActivity());
 
@@ -356,10 +375,10 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         binding.tvViewMoreFeed.setOnClickListener(this);
         binding.imgEditBanner.setOnClickListener(this);
 
-        binding.imgEditVoter.setOnClickListener(this);
+      /*  binding.imgEditVoter.setOnClickListener(this);
 
         binding.llMyFamily.setOnClickListener(this);
-        binding.llMyIssue.setOnClickListener(this);
+        binding.llMyIssue.setOnClickListener(this);*/
 
         binding.llAdTicket.setOnClickListener(this);
 
@@ -369,17 +388,6 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         enableOption();
 
 
-
-       /* *//*Slider.init(new PicassoImageLoadingService(getContext()));*//*
-        imageSlider.add(Uri.parse("https://i.picsum.photos/id/0/5616/3744.jpg?hmac=3GAAioiQziMGEtLbfrdbcoenXoWAW-zlyEAMkfEdBzQ"));
-     //   binding.llSlider.setAdapter(new SliderBannerAdapter(imageSlider,getActivity()));
-        SnapHelper snapHelper = new PagerSnapHelper();
-
-        snapHelper.attachToRecyclerView(binding.rvSlider);
-        sliderAdapter = new SliderAdapter(getContext(),this,mGroupItem.isAdmin);
-        binding.rvSlider.setAdapter(sliderAdapter);
-        sliderAdapter.add(imageSlider);*/
-        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     private void enableOption() {
@@ -390,6 +398,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         else
         {
             binding.llAdTicket.setVisibility(View.GONE);
+        }
+
+        if (mGroupItem.isAdmin)
+        {
+            binding.imgEditBanner.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            binding.imgEditBanner.setVisibility(View.GONE);
         }
     }
 
@@ -406,8 +423,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public void onStart() {
         super.onStart();
         if (getActivity() != null) {
-            ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(transliterator.transliterate(GroupDashboardActivityNew.group_name));
-            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
+         /*   ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
+            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);*/
             ((GroupDashboardActivityNew) getActivity()).callEventApi();
         }
 
@@ -425,6 +442,28 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         isVisible = true;
         if (getActivity() == null)
             return;
+
+        String name = pref.getString(LeafPreference.PROFILE_NAME);
+        String voterID = pref.getString(LeafPreference.PROFILE_VOTERID);
+        String image = pref.getString(LeafPreference.PROFILE_IMAGE_NEW);
+
+        if (getActivity() != null) {
+            ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(name);
+            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
+            ((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon.setVisibility(View.VISIBLE);
+            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(voterID);
+            Glide.with(getContext()).load(Constants.decodeUrlToBase64(image)).into(((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon);
+        }
+
+
+       /* AppLog.e(TAG,"name "+name);
+        AppLog.e(TAG,"voter Id"+voterID);
+        AppLog.e(TAG,"image "+image);
+
+        binding.tvVoterName.setText("Name : "+name);
+        binding.tvVoterId.setText("Voter ID : "+voterID);*/
+
+
 
         if (LeafPreference.getInstance(getActivity()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(mGroupItem.category)) {
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(true);
@@ -623,6 +662,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
             case LeafManager.API_BANNER_LIST:
 
+                binding.progressBarBanner.setVisibility(View.GONE);
+
                 BannerRes bannerRes = (BannerRes) response;
 
 
@@ -630,6 +671,17 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 {
                     binding.rvSliderBanner.setVisibility(View.VISIBLE);
                     binding.imgSlider.setVisibility(View.GONE);
+
+
+                    Slider.init(new PicassoImageLoadingService(getContext()));
+
+                    bannerData = bannerRes.getBannerData().get(0);
+
+                    sliderAdapter = new SliderBannerAdapter(bannerRes.getBannerData().get(0).fileName,getContext());
+                    binding.rvSliderBanner.setInterval(7000);
+                    binding.rvSliderBanner.setAdapter(sliderAdapter);
+
+                    //sliderAdapter.add(bannerRes.getBannerData().get(0).fileName);
                 }
                 else
                 {
@@ -637,7 +689,6 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     binding.imgSlider.setVisibility(View.VISIBLE);
                 }
                 break;
-
 
             case LeafManager.API_ADD_BANNER_LIST:
                 bannerListApiCall();
@@ -734,6 +785,12 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public void onFailure(int apiId, String msg) {
         binding.progressBar.setVisibility(View.GONE);
 
+        if (apiId == LeafManager.API_BANNER_LIST)
+        {
+            binding.progressBarBanner.setVisibility(View.GONE);
+            binding.rvSliderBanner.setVisibility(View.GONE);
+            binding.imgSlider.setVisibility(View.VISIBLE);
+        }
         if (getActivity() != null) {
 
             if (msg.contains("401:Unauthorized")) {
@@ -755,6 +812,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onException(int apiId, String msg) {
         binding.progressBar.setVisibility(View.GONE);
+
+        if (apiId == LeafManager.API_BANNER_LIST)
+        {
+            binding.progressBarBanner.setVisibility(View.GONE);
+            binding.rvSliderBanner.setVisibility(View.GONE);
+            binding.imgSlider.setVisibility(View.VISIBLE);
+        }
+
         if (getActivity() != null)
             Toast.makeText(getActivity(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
@@ -837,9 +902,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     notificationListData.setCreatedById(notificationTableList.get(i).createdById);
                     notificationListData.setTeamId(notificationTableList.get(i).teamId);
                     notificationListData.setIdPrimary(notificationTableList.get(i).getId());
-                    Log.e(TAG,"ID "+notificationTableList.get(i).readedComment);
+
                     notificationListData.setReadedComment(notificationTableList.get(i).readedComment);
-                    Log.e(TAG,"Readed Comment"+notificationTableList.get(i).readedComment);
+
 
                     notificationList.add(notificationListData);
                 }
@@ -881,7 +946,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (!isConnectionAvailable()) {
             return;
         }
-
+        binding.progressBarBanner.setVisibility(View.VISIBLE);
         manager.getBannerList(this,GroupDashboardActivityNew.groupId);
     }
 
@@ -948,7 +1013,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
             case R.id.imgEditBanner:
                 if (checkPermissionForWriteExternal()) {
-                    showPhotoDialog(R.array.array_image);
+
+                    if (bannerData.getFileName().size() > 0)
+                    {
+                        showPhotoDialog(R.array.array_image_banner);
+                    }
+                    else
+                    {
+                        showPhotoDialog(R.array.array_image);
+                    }
                 } else {
                     requestPermissionForWriteExternal(21);
                 }
@@ -962,7 +1035,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 }
                 break;
 
-            case R.id.imgEditVoter:
+          /*  case R.id.imgEditVoter:
                 AppLog.e(TAG,"imgEditVoter");
                 if (isConnectionAvailable()) {
                     Intent intent;
@@ -979,7 +1052,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
             case R.id.llMyIssue:
                 startActivity(new Intent(getActivity(), IssueActivity.class));
-                break;
+                break;*/
 
             case R.id.tvViewMoreFeed:
                 if (isConnectionAvailable()) {
@@ -1137,10 +1210,20 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                             case 1:
                                 startGallery(REQUEST_LOAD_GALLERY_IMAGE);
                                 break;
+                            case 2:
+                                startRemoveBanner();
+                                break;
 
                         }
                     }
                 });
+    }
+
+    private void startRemoveBanner() {
+
+        Intent i = new Intent(getActivity(), RemoveBannerActivity.class);
+        i.putExtra("data",bannerData);
+        startActivityForResult(i,13);
     }
 
     private void startCamera(int requestCode) {
@@ -1169,9 +1252,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.e(TAG,"result Code "+resultCode);
 
         if (resultCode == Activity.RESULT_CANCELED) {
             return;
+        }
+
+        if (requestCode == 13 && resultCode == RESULT_OK)
+        {
+            bannerListApiCall();
         }
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -1214,13 +1303,12 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 if (multiGalleryCount == imageSliderList.size())
                 {
                     multiGalleryCount = 0;
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                 //   binding.progressBar.setVisibility(View.VISIBLE);
                     progressDialog.setMessage("Uploading Image...");
                     progressDialog.show();
                     uploadToAmazon();
 
                 }
-
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -1245,6 +1333,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             } else {
 
                 multiGalleryCount = clipData.getItemCount();
+                isClear = true;
 
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
@@ -1375,7 +1464,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         upLoadImageOnCloud(pos + 1);
     }
 
-    public static class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {
+    public class FeedAdminAdapter extends RecyclerView.Adapter<FeedAdminAdapter.ViewHolder> {
 
         private ArrayList<AdminFeederResponse.FeedData> feedData;
         public boolean isExpand = false;
@@ -1407,8 +1496,53 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 holder.binding.llTotalDiscussionCount.setVisibility(View.VISIBLE);
                 holder.binding.llTotalPublicStreet.setVisibility(View.VISIBLE);
             }*/
-           
+
+            holder.binding.llOpenTickets.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).issueClick();
+                }
+            });
+
+            holder.binding.llAnnouncement.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).announcementClick();
+                }
+            });
+
+            holder.binding.llBoothCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  //  ((GroupDashboardActivityNew) getActivity()).updateTabIcons(1);
+                    ((GroupDashboardActivityNew) getActivity()).tabLayout.getTabAt(1).select();
+                }
+            });
+
+            holder.binding.llDiscuss.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).tabLayout.getTabAt(1).select();
+
+                }
+            });
+
+            holder.binding.llPublicStreet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).tabLayout.getTabAt(2).select();
+                }
+            });
+
+            holder.binding.llPublicDiscussion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((GroupDashboardActivityNew) getActivity()).tabLayout.getTabAt(2).select();
+
+                }
+            });
         }
+
 
         public void expand()
         {
@@ -1465,7 +1599,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         @Override
         public void onBindImageSlide(int position, ImageSlideViewHolder imageSlideViewHolder) {
-            imageSlideViewHolder.bindImageSlide(urls.get(position));
+            imageSlideViewHolder.bindImageSlide(Constants.decodeUrlToBase64(urls.get(position)));
         }
     }
 
@@ -1475,7 +1609,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         switch (requestCode) {
             case 21:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    showPhotoDialog(R.array.array_image);
+
+                    if (bannerData.getFileName().size() > 0)
+                    {
+                        showPhotoDialog(R.array.array_image_banner);
+                    }
+                    else
+                    {
+                        showPhotoDialog(R.array.array_image);
+                    }
                     Log.e("AddPost" + "permission", "granted camera");
                 } else {
                     Log.e("AddPost" + "permission", "denied camera");

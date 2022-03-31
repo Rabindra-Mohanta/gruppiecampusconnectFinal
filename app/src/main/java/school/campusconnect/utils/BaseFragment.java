@@ -39,6 +39,12 @@ import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
+import school.campusconnect.datamodel.booths.BoothPresidentTBL;
+import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.MemberTeamTBL;
+import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
+import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
+import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
@@ -227,7 +233,9 @@ public class BaseFragment extends Fragment {
             MasterBoothListTBL.deleteAll();
             WorkerListTBL.deleteAll();
             StreetListTBL.deleteAll();
-
+            BoothsTBL.deleteAll();
+            MemberTeamTBL.deleteAll();
+            PublicFormBoothTBL.deleteAll();
             TicketTBL.deleteAll();
             NotificationTable.deleteAll();
             AllNotificationTable.deleteAll();
@@ -254,6 +262,9 @@ public class BaseFragment extends Fragment {
             SubjectItem.deleteAll();
             EBookItem.deleteAll();
             EBookClassItem.deleteAll();
+            MyTeamVotersTBL.deleteAll();
+            BoothPresidentTBL.deleteAll();
+            MyTeamSubBoothTBL.deleteAll();
 
             Intent intent = new Intent(getActivity(), LoginActivity2.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

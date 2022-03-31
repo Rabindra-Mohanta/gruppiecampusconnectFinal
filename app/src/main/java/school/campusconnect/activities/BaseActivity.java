@@ -44,6 +44,12 @@ import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.TestExamTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
+import school.campusconnect.datamodel.booths.BoothPresidentTBL;
+import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.MemberTeamTBL;
+import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
+import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
+import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
 import school.campusconnect.datamodel.masterList.MasterBoothListTBL;
 import school.campusconnect.datamodel.masterList.StreetListTBL;
@@ -615,6 +621,9 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         BaseTeamTableV2.deleteAll();
         TicketTBL.deleteAll();
         MasterBoothListTBL.deleteAll();
+        BoothsTBL.deleteAll();
+        PublicFormBoothTBL.deleteAll();
+        MemberTeamTBL.deleteAll();
         WorkerListTBL.deleteAll();
         VoterListTBL.deleteAll();
         StreetListTBL.deleteAll();
@@ -638,6 +647,10 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         SubjectItem.deleteAll();
         EBookItem.deleteAll();
         EBookClassItem.deleteAll();
+
+        MyTeamVotersTBL.deleteAll();
+        MyTeamSubBoothTBL.deleteAll();
+        BoothPresidentTBL.deleteAll();
 
 //        GruppieContactAddressModel.deleteAll();
         GruppieContactGroupIdModel.deleteAll();
@@ -664,12 +677,17 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         TicketTBL.deleteAll();
         NotificationTable.deleteAll();
         VoterListTBL.deleteAll();
+        MemberTeamTBL.deleteAll();
         AllNotificationTable.deleteAll();
         AdminFeedTable.deleteAll();
-
+        BoothsTBL.deleteAll();
+        PublicFormBoothTBL.deleteAll();
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();
+        MyTeamVotersTBL.deleteAll();
+        BoothPresidentTBL.deleteAll();
+
 //        GruppieContactAddressModel.deleteAll();
         GruppieContactGroupIdModel.deleteAll();
         this.getSharedPreferences("pref_noti_count", MODE_PRIVATE).edit().clear().commit();
@@ -688,6 +706,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         SubjectItem.deleteAll();
         EBookItem.deleteAll();
         EBookClassItem.deleteAll();
+        MyTeamSubBoothTBL.deleteAll();
 
         Intent intent = new Intent(this, LoginActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

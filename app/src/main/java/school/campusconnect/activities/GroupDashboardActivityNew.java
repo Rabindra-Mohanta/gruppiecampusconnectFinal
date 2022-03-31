@@ -19,7 +19,6 @@ import com.activeandroid.ActiveAndroid;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -40,12 +39,15 @@ import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
+import school.campusconnect.fragments.BoothListMyTeamFragment;
+import school.campusconnect.fragments.BoothPresidentListMyTeamFragment;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.BoothListFragment;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.fragments.GeneralPostFragment;
 import school.campusconnect.fragments.MemberTeamListFragment;
-import school.campusconnect.fragments.NotificationListFragment;
+import school.campusconnect.fragments.MyTeamSubBoothFragment;
+import school.campusconnect.fragments.MyTeamVoterListFragment;
 import school.campusconnect.fragments.PublicForumListFragment;
 import school.campusconnect.fragments.TeamPostsFragmentNew;
 import school.campusconnect.utils.AppLog;
@@ -178,6 +180,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.llBothCoordinateRegister)
     LinearLayout llBothCoordinateRegister;
 
+    @Bind(R.id.llMyTeam)
+    LinearLayout llMyTeam;
+
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
 
@@ -201,7 +206,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     LeafManager manager;
 
-    public GroupItem mGroupItem;
+    public static GroupItem mGroupItem;
 
     public static String image;
     public static boolean mAllowPostAll;
@@ -217,6 +222,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     public static boolean mAllowAdminChange;
     public static boolean mAllowPostQuestion;
     public static boolean mAllowDuplicate;
+
+    public static boolean makeAdmin = false;
 
     public static String group_name = "";
 
@@ -305,28 +312,6 @@ public class GroupDashboardActivityNew extends BaseActivity
         // sendNotification("Message","Title");
 
        reqPermission();
-
-        /*while(Transliterator.getAvailableIDs().hasMoreElements())
-        {
-            String s = Transliterator.getAvailableIDs().nextElement();
-            AppLog.e(TAG , "transliterator id : "+s);
-        }*/
-
-
-
-
-      /*  for (Enumeration<String> e = Transliterator.getAvailableIDs(); Transliterator.getAvailableIDs().hasMoreElements();)
-        {
-            try {
-                AppLog.e(TAG, "transliterator id : " + e.nextElement());
-            }
-            catch(Exception ex)
-            {
-
-            }
-        }
-*/
-
     }
     public void reqPermission(){
         if (!hasPermission(permissions)) {
@@ -340,6 +325,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         new EventAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+
+
     class EventAsync extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -351,6 +338,9 @@ public class GroupDashboardActivityNew extends BaseActivity
                     UpdateDataEventRes res = (UpdateDataEventRes) response;
                     if (res.data == null || res.data.size() == 0)
                         return;
+
+                    LeafPreference.getInstance(GroupDashboardActivityNew.this).setString(LeafPreference.ACCESS_KEY,res.data.get(0).teamsListCount.accessKey);
+                    LeafPreference.getInstance(GroupDashboardActivityNew.this).setString(LeafPreference.SECRET_KEY,res.data.get(0).teamsListCount.secretKey);
 
                     LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("PREVIEW_URL",res.data.get(0).imagePreviewUrl);
                     ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
@@ -704,7 +694,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin,R.id.llMyTeam,R.id.iv_toolbar_icon})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -721,6 +711,18 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
+
+
+            case R.id.iv_toolbar_icon:
+                if (isConnectionAvailable()) {
+                    Intent intent;
+                    intent = new Intent(this, ProfileConstituencyActivity.class);
+                    startActivity(intent);
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+
             case R.id.llJoinGruppie:
                 joinGruppieEvent();
                 break;
@@ -745,12 +747,16 @@ public class GroupDashboardActivityNew extends BaseActivity
                 break;
 
             case R.id.llMakeAdmin:
-                if (isConnectionAvailable()) {
-                    Toast.makeText(getApplicationContext(),"Under Construction...",Toast.LENGTH_SHORT).show();
-                } else {
-                    showNoNetworkMsg();
-                }
-                break;
+                rlMore.setVisibility(View.GONE);
+                makeAdminClick();
+                return;
+
+
+            case R.id.llMyTeam:
+                rlMore.setVisibility(View.GONE);
+                myTeamClick();
+                return;
+
 
             case R.id.llFavourite:
                 if (isConnectionAvailable()) {
@@ -937,7 +943,10 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
 
-    private void updateTabIcons(int pos) {
+    public void updateTabIcons(int pos) {
+
+        Log.e(TAG,"position Tab"+pos);
+
         for (int i = 0; i < tabText.length; i++) {
             View v = tabLayout.getTabAt(i).getCustomView();
             TextView tv = (TextView) v.findViewById(R.id.tab_badge);
@@ -1018,7 +1027,12 @@ public class GroupDashboardActivityNew extends BaseActivity
             llAttendanceReport.setVisibility(View.GONE);
             tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
 
-            if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA"))
+         /*   if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA"))
+            {
+
+            }*/
+
+            if (mGroupItem.isAdmin)
             {
                 llMakeAdmin.setVisibility(View.VISIBLE);
             }
@@ -1026,6 +1040,25 @@ public class GroupDashboardActivityNew extends BaseActivity
             {
                 llMakeAdmin.setVisibility(View.GONE);
             }
+
+            if (mGroupItem.isAdmin || mGroupItem.isBoothPresident || mGroupItem.isBoothWorker) {
+
+                llMyTeam.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                llMyTeam.setVisibility(View.GONE);
+            }
+
+
+            if (mGroupItem.isAdmin || mGroupItem.isPartyTaskForce || mGroupItem.isDepartmentTaskForce || mGroupItem.isBoothPresident || mGroupItem.isBoothMember) {
+                llArchiveTeam.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                llArchiveTeam.setVisibility(View.GONE);
+            }
+
 
             llDiscuss.setVisibility(View.GONE);
             llPeople.setVisibility(View.GONE);
@@ -1201,32 +1234,115 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
 
-    private void boothClick() {
+    public void boothClick() {
 
         AppLog.e(TAG,"boothClick ");
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
+        tv_toolbar_icon.setVisibility(View.GONE);
+
         BoothListFragment classListFragment = new BoothListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
     }
 
-    private void publicForumClick() {
+    public void publicForumClick() {
 
-        AppLog.e(TAG,"publicForumClick ");
 
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
+        tv_toolbar_icon.setVisibility(View.GONE);
+
         if (mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)) {
+
             PublicForumListFragment classListFragment = new PublicForumListFragment();
             classListFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
         } else {
-            onBoothTeams(mGroupItem.boothName, mGroupItem.boothId, false);
+            onBoothTeams(mGroupItem.boothName, mGroupItem.boothId,"normal", false);
         }
 
     }
+
+    private void makeAdminClick()
+    {
+        tvToolbar.setText(GroupDashboardActivityNew.group_name);
+        tv_Desc.setVisibility(View.GONE);
+        tv_toolbar_icon.setVisibility(View.GONE);
+
+        makeAdmin = true;
+
+        tabLayout.setVisibility(View.GONE);
+
+        if (mGroupItem.isAdmin) {
+
+            setBackEnabled(true);
+
+            BoothListMyTeamFragment boothListMyTeamFragment = new BoothListMyTeamFragment();
+            boothListMyTeamFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, boothListMyTeamFragment).commit();
+
+        }
+    }
+
+    private void myTeamClick() {
+
+        tvToolbar.setText(GroupDashboardActivityNew.group_name);
+        tv_Desc.setVisibility(View.GONE);
+        tv_toolbar_icon.setVisibility(View.GONE);
+
+        tabLayout.setVisibility(View.GONE);
+
+        makeAdmin = false;
+
+        if (mGroupItem.isAdmin) {
+
+            setBackEnabled(true);
+
+            BoothListMyTeamFragment boothListMyTeamFragment = new BoothListMyTeamFragment();
+            boothListMyTeamFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, boothListMyTeamFragment).commit();
+
+        }
+        if (mGroupItem.isBoothPresident) {
+
+            if (mGroupItem.boothCount > 1)
+            {
+
+                setBackEnabled(true);
+
+                BoothPresidentListMyTeamFragment classListFragment = new BoothPresidentListMyTeamFragment();
+                classListFragment.setArguments(getIntent().getExtras());
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
+            }
+            else
+            {
+                onBoothTeams(mGroupItem.boothName, mGroupItem.boothId,"myTeam", false);
+            }
+        }
+
+        if (mGroupItem.isBoothWorker)
+        {
+                if (mGroupItem.subBoothCount > 1)
+                {
+
+                    setBackEnabled(true);
+
+                    MyTeamSubBoothFragment classListFragment = new MyTeamSubBoothFragment();
+                    classListFragment.setArguments(getIntent().getExtras());
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
+
+                }
+                else
+                {
+                    onTeamSelectedVoter(mGroupItem.subBoothName,mGroupItem.subBoothCount, mGroupItem.subBoothId);
+                }
+        }
+
+
+    }
+
 
     public void getContactsWithPermission() {
         AppLog.e(TAG, "getContactsWithPermission ");
@@ -1451,41 +1567,67 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         AppLog.e(TAG,"onTeamSelected "+team.name);
 
+        if (mGroupItem.isAdmin || mGroupItem.isBoothPresident)
+        {
+            if (team.subCategory != null && team.subCategory.equalsIgnoreCase("boothPresidents"))
+            {
+                Intent intent = new Intent(this, CommitteeActivity.class);
+                intent.putExtra("class_data",new Gson().toJson(team));
+                intent.putExtra("title",team.name);
+                startActivity(intent);
+            }
+            else
+            {
+                setBackEnabled(true);
+                tvToolbar.setText(team.name);
+                tv_toolbar_icon.setVisibility(View.GONE);
+                tv_Desc.setText("Members : "+String.valueOf(team.members));
+                tv_Desc.setVisibility(View.VISIBLE);
+
+                AppLog.e("getActivity", "team name is =>" + team.name);
+
+                TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
+                showTeamInfoWindow();
+
+                tabLayout.setVisibility(View.GONE);
+            }
+        }
+        else {
+            setBackEnabled(true);
+            tvToolbar.setText(team.name);
+            tv_toolbar_icon.setVisibility(View.GONE);
+            tv_Desc.setText("Members : "+String.valueOf(team.members));
+            tv_Desc.setVisibility(View.VISIBLE);
+
+            AppLog.e("getActivity", "team name is =>" + team.name);
+
+            TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
+            showTeamInfoWindow();
+
+            tabLayout.setVisibility(View.GONE);
+        }
+
+    }
+
+    public void onTeamSelectedVoter(String name, int members, String boothId) {
+
+        Log.e(TAG,"boothId"+boothId);
+
         setBackEnabled(true);
-       // tvToolbar.setText(team.name);
-        tvToolbar.setText(team.name);
-        tv_Desc.setText("Members : "+team.members);
+        tvToolbar.setText(name);
+        tv_Desc.setText("Members : "+String.valueOf(members));
         tv_Desc.setVisibility(View.VISIBLE);
-        AppLog.e("getActivity", "team name is =>" + team.name);
+        tv_toolbar_icon.setVisibility(View.GONE);
 
-        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
-        showTeamInfoWindow();
-
+        MyTeamVoterListFragment myTeamVoterListFragment = MyTeamVoterListFragment.newInstance(boothId);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myTeamVoterListFragment).addToBackStack("home").commit();
         tabLayout.setVisibility(View.GONE);
 
     }
 
-/*    public void onTeamSelectedv2(BaseTeamv2Response.featuredIconData team) {
-
-        AppLog.e(TAG,"onTeamSelected "+team.getName());
-
-        setBackEnabled(true);
-        tvToolbar.setText(team.getName());
-        tv_Desc.setText("Members : "+team.getMembers());
-        tv_Desc.setVisibility(View.VISIBLE);
-        AppLog.e("getActivity", "team name is =>" + team.getName());
-
-       *//* TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
-        showTeamInfoWindow();*//*
-
-        tabLayout.setVisibility(View.GONE);
-
-    }*/
-
-
-    public void onBoothTeams(String name, String team_id, boolean isBackStack) {
+    public void onBoothTeams(String name, String team_id,String screen, boolean isBackStack) {
 
         AppLog.e(TAG,"onBoothTeams "+name);
 
@@ -1496,6 +1638,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         Bundle bundle = new Bundle();
         bundle.putString("team_id", team_id);
         bundle.putString("name", name);
+        bundle.putString("screen",screen);
         fragTeamPost.setArguments(bundle);
         if (isBackStack) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost)
@@ -1860,9 +2003,10 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
         else {
 
-            Log.e(TAG,"GeneralPostFragment Start");
+            Log.e(TAG,"GeneralPostFragment Start"+group.name);
             setBackEnabled(true);
             tvToolbar.setText(group.name);
+            tv_toolbar_icon.setVisibility(View.GONE);
             tv_Desc.setText("Members : "+group.members);
 
             if (group.name.equalsIgnoreCase("Notice Board"))
@@ -1880,359 +2024,66 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     }
 
-/*    public void groupSelectedV2(BaseTeamv2Response.featuredIconData group) {
+    public void announcementClick()
+    {
+        setBackEnabled(true);
+        tv_toolbar_icon.setVisibility(View.GONE);
+        tvToolbar.setText("Announcement");
+        tv_Desc.setText("Members : "+"0");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(groupId)).addToBackStack("home").commitAllowingStateLoss();
+        tabLayout.setVisibility(View.GONE);
+    }
 
+    public void issueClick()
+    {
+        int Count = 0;
+        String Role = null;
 
-        if (group.getType().equals("Video Class")) {
-            Intent intent = new Intent(this, VideoClassActivity.class);
-            intent.putExtra("title", group.getName());
-            intent.putExtra("category", group.getCategory());
-            startActivity(intent);
-        }else if (group.getType().equals("My Family")) {
-            startActivity(new Intent(this, FamilyMemberActivity.class));
+        if (mGroupItem.isAdmin)
+        {
+            Count++;
+            Role = "isAdmin";
         }
-        *//*else if (group.type.equals("Recorded Class")) {
-            Intent intent;
-            if ("admin".equalsIgnoreCase(group.role)) {
-                intent = new Intent(this, RecordedClassActivity.class);
-                intent.putExtra("title", group.name);
-            } else {
-                if (group.count == 1) {
-                    intent = new Intent(this, RecClassSubjectActivity.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.details.teamId);
-                    intent.putExtra("title", group.details.studentName);
-                } else {
-                    intent = new Intent(this, RecordedClassActivity.class);
-                    intent.putExtra("title", group.name);
-                }
-            }
-            intent.putExtra("type", group.type);
-            intent.putExtra("role", group.role);
-            startActivity(intent);
-
-        }*//*
-        else if (group.getType().equals("Home Work") || group.getType().equals("Recorded Class")
-                || group.getType().equals("Time Table") || group.getType().equals("Marks Card")) {
-
-            if (group.getType().equalsIgnoreCase("Home Work")) {
-                LeafPreference.getInstance(this).remove(groupId + "_HOMEWORK_NOTI_COUNT");
-            } else if (group.getType().equalsIgnoreCase("Recorded Class")) {
-                LeafPreference.getInstance(this).remove(groupId + "_NOTES_VIDEO_NOTI_COUNT");
-            }
-
-            Intent intent;
-            if ("admin".equalsIgnoreCase(group.getRole())) {
-                intent = new Intent(this, HWClassActivity.class);
-                intent.putExtra("title", group.getName());
-            } else {
-                if (group.getCount() == 1) {
-                    if (group.getType().equals("Home Work") || group.getType().equals("Recorded Class")) {
-                        intent = new Intent(this, HWClassSubjectActivity.class);
-                    } else if (group.getType().equals("Marks Card")) {
-                        intent = new Intent(this, MarksCardActivity2.class);
-                    } else {
-                        intent = new Intent(this, TimeTabelActivity2.class);
-                    }
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.getDetails().getTeamId());
-                    intent.putExtra("title", group.getDetails().getStudentName());
-
-                } else {
-                    intent = new Intent(this, HWClassActivity.class);
-                    intent.putExtra("title", group.getName());
-                }
-            }
-
-            intent.putExtra("type", group.getType());
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-        } else if (group.getType().equals("Test")) {
-            LeafPreference.getInstance(this).remove(groupId + "_TEST_EXAM_NOTI_COUNT");
-            Intent intent;
-            if ("admin".equalsIgnoreCase(group.getRole())) {
-                intent = new Intent(this, TestClassActivity.class);
-                intent.putExtra("title", group.getName());
-            } else {
-                if (group.getCount() == 1) {
-                    intent = new Intent(this, TestClassSubjectActivity.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.getDetails().getTeamId());
-                    intent.putExtra("title", group.getDetails().getTeamId());
-
-                    // GETTING CLASSLIST TO SEND TO EXAM SCREEN...
-                    List<LiveClassListTBL> list = LiveClassListTBL.getAll(GroupDashboardActivityNew.groupId);
-                    ArrayList<VideoClassResponse.ClassData> result = new ArrayList<>();
-
-                    if (list.size() != 0) {
-
-                        for (int i = 0; i < list.size(); i++) {
-                            LiveClassListTBL currentItem = list.get(i);
-                            VideoClassResponse.ClassData item = new VideoClassResponse.ClassData();
-                            item.zoomPassword = currentItem.zoomPassword;
-                            item.zoomName = new Gson().fromJson(currentItem.zoomName, new TypeToken<ArrayList<String>>() {
-                            }.getType());
-                            item.zoomMail = currentItem.zoomMail;
-                            item.zoomSecret = currentItem.zoomSecret;
-                            item.zoomMeetingPassword = currentItem.zoomMeetingPassword;
-                            item.zoomKey = currentItem.zoomKey;
-                            item.id = currentItem.teamId;
-                            item.className = currentItem.name;
-                            item.jitsiToken = currentItem.jitsiToken;
-                            item.groupId = currentItem.groupId;
-                            item.canPost = currentItem.canPost;
-                            result.add(item);
-                        }
-
-                    }
-
-                    if (result != null && result.size() > 0)
-                        intent.putExtra("liveClass", new Gson().toJson(result.get(0)));
-
-
-                } else {
-                    intent = new Intent(this, TestClassActivity.class);
-                    intent.putExtra("title", group.getName());
-                }
-            }
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
+        if (mGroupItem.isPartyTaskForce)
+        {
+            Count++;
+            Role = "isPartyTaskForce";
+        }
+        if (mGroupItem.isDepartmentTaskForce)
+        {
+            Count++;
+            Role = "isDepartmentTaskForce";
+        }
+        if (mGroupItem.isBoothPresident)
+        {
+            Count++;
+            Role = "isBoothPresident";
+        }
+        if (mGroupItem.isBoothMember)
+        {
+            Count++;
+            Role = "isBoothMember";
         }
 
-        *//*else if (group.type.equals("Time Table")) {
-            Intent intent;
-            if ("admin".equalsIgnoreCase(group.role)) {
-                intent = new Intent(this, TimeTableClassActivity2.class);
-                intent.putExtra("title", group.name);
-            } else {
-                if (group.count == 1) {
-                    intent = new Intent(this, TimeTabelActivity2.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.details.teamId);
-                    intent.putExtra("team_name", group.details.studentName);
-                } else {
-                    intent = new Intent(this, TimeTableClassActivity2.class);
-                    intent.putExtra("title", group.name);
-                }
-            }
-            intent.putExtra("role", group.role);
+        if (Count > 1)
+        {
+            Intent intent = new Intent(this, SelectRoleActivity.class);
             startActivity(intent);
-
-        }*//*
-        else if (group.getType().equals("Gallery")) {
-            startActivity(new Intent(this, GalleryActivity.class));
-        } else if (group.getType().equalsIgnoreCase("Calendar")) {
-            startActivity(new Intent(this, CalendarActivity.class));
-        } else if (group.getType().equals("Fees")) {
-
-            if ("admin".equalsIgnoreCase(group.getRole())) {
-                Intent intent = new Intent(this, FeesClassActivity.class);
-                intent.putExtra("title", group.getName());
-                intent.putExtra("role", group.getRole());
-                startActivity(intent);
-            } else {
-                if (group.getCount() == 1) {
-                    Intent intent;
-                    if ("teacher".equalsIgnoreCase(group.getRole())) {
-                        intent = new Intent(this, FeesListActivity.class);
-                        intent.putExtra("group_id", groupId);
-                        intent.putExtra("team_id", group.getDetails().getTeamId());
-                        intent.putExtra("title", group.getDetails().getStudentName());
-                        intent.putExtra("role", group.getRole());
-                    } else {
-                        intent = new Intent(this, StudentFeesActivity.class);
-                        intent.putExtra("groupId", groupId);
-                        intent.putExtra("title",  group.getDetails().getStudentName());
-                        intent.putExtra("team_id", group.getDetails().getTeamId());
-                        intent.putExtra("user_id", group.getDetails().getUserId());
-                    }
-                    startActivity(intent);
-
-                } else {
-                    Intent intent = new Intent(this, FeesClassActivity.class);
-                    intent.putExtra("title", group.getName());
-                    intent.putExtra("role", group.getRole());
-                    startActivity(intent);
-                }
-            }
-
-        } else if (group.getType().equals("Chat")) {
-            Intent intent = new Intent(this, ChatActivity.class);
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-        } else if (group.getType().equals("Vendor Connect")) {
-            Intent intent = new Intent(this, VendorActivity.class);
-            intent.putExtra("group_id", groupId);
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-        } else if (group.getType().equals("E-Books")) {
-            if (group.getCount() == 0) {
-                Intent intent = new Intent(this, EBookClassActivity.class);
-                intent.putExtra("group_id", groupId);
-                intent.putExtra("title", group.getName());
-                intent.putExtra("role", group.getRole());
-                startActivity(intent);
-            } else if (group.getCount() == 1) {
-                Intent intent = new Intent(this, EBookPdfForTeamActivity.class);
-                intent.putExtra("group_id", groupId);
-                intent.putExtra("team_id", group.getDetails().getTeamId());
-                intent.putExtra("title", group.getDetails().getTeamName());
-                intent.putExtra("role", group.getRole());
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(this, ParentKidsForEBookActivity.class);
-                intent.putExtra("group_id", groupId);
-                intent.putExtra("title", group.getName());
-                intent.putExtra("role", group.getRole());
-                startActivity(intent);
-            }
-        } else if (group.getType().equals("Code Of Conduct")) {
-            Intent intent = new Intent(this, CodeConductActivity.class);
-            intent.putExtra("group_id", groupId);
-            intent.putExtra("role", group.getRole());
-            startActivity(intent);
-
-        } else if (group.getType().equals("Attendance")) {
-            if ("teacher".equalsIgnoreCase(group.getRole()) && group.getCount() == 1) {
-                if ("preschool".equalsIgnoreCase(group.getDetails().getCategory().category)) {
-                    Intent intent = new Intent(this, AttendancePareSchool.class);
-                    intent.putExtra("isTeamAdmin", true);
-                    intent.putExtra("team_id", group.getDetails().getTeamId());
-                    intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(this, AttendanceActivity.class);
-                    intent.putExtra("group_id", groupId);
-                    intent.putExtra("team_id", group.getDetails().getTeamId());
-                    intent.putExtra("className", group.getDetails().getTeamName());
-                    startActivity(intent);
-                }
-
-            }
-            if ("teacher".equalsIgnoreCase(group.getRole()) && group.getCount() > 1) {
-                Intent intent = new Intent(this, TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance", true);
-                startActivity(intent);
-            }
-            if ("admin".equalsIgnoreCase(group.getRole())) {
-                Intent intent = new Intent(this, TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance", true);
-                intent.putExtra("role", "admin");
-                startActivity(intent);
-            }
-
-
-            if ("parent".equalsIgnoreCase(group.getRole()) && group.getCount() == 1) {
-                Intent intent = new Intent(this, AttendanceDetailActivity.class);
-                intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
-                intent.putExtra("team_id", group.getDetails().getTeamId());
-                intent.putExtra("title",group.getDetails().getStudentName());
-                intent.putExtra("userId",group.getDetails().getUserId());
-                intent.putExtra("rollNo",group.getDetails().getRollNumber());
-                startActivity(intent);
-            }
-            if ("parent".equalsIgnoreCase(group.getRole()) && group.getCount() > 1) {
-                Intent intent = new Intent(this, ParentKidsActivity.class);
-                intent.putExtra("is_for_attendance", true);
-                startActivity(intent);
-            }
-
-        }*//* else if (group.type.equals("Marks Card")) {
-            if ("teacher".equalsIgnoreCase(group.role) && group.count == 1) {
-                Intent intent = new Intent(this, MarksheetActivity.class);
-                intent.putExtra("team_id", group.details.teamId);
-                intent.putExtra("className", group.details.teamName);
-                intent.putExtra("group_id", GroupDashboardActivityNew.groupId);
-                startActivity(intent);
-            }
-            if ("teacher".equalsIgnoreCase(group.role) && group.count > 1) {
-                Intent intent = new Intent(this, TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance", false);
-                startActivity(intent);
-            }
-
-            if ("admin".equalsIgnoreCase(group.role)) {
-                Intent intent = new Intent(this, TeacherClassActivity.class);
-                intent.putExtra("is_for_attendance", false);
-                intent.putExtra("role", "admin");
-                startActivity(intent);
-            }
-            if ("parent".equalsIgnoreCase(group.role) && group.count == 1) {
-                Intent intent = new Intent(this, MarkSheetListActivity.class);
-                intent.putExtra("group_id", groupId);
-                intent.putExtra("team_id", group.details.teamId);
-                intent.putExtra("className", group.details.teamName);
-                intent.putExtra("user_id", group.details.userId);
-                intent.putExtra("name", group.details.studentName);
-                intent.putExtra("roll_no", group.details.rollNumber);
-                intent.putExtra("role", "parent");
-                startActivity(intent);
-            }
-            if ("parent".equalsIgnoreCase(group.role) && group.count > 1) {
-                Intent intent = new Intent(this, ParentKidsActivity.class);
-                intent.putExtra("is_for_attendance", false);
-                startActivity(intent);
-            }
-        } *//*
-        else if (group.getType().equals("Issues")){
-
-            int Count = 0;
-            String Role = null;
-
-            if (mGroupItem.isAdmin)
-            {
-                Count++;
-                Role = "isAdmin";
-            }
-            if (mGroupItem.isPartyTaskForce)
-            {
-                Count++;
-                Role = "isPartyTaskForce";
-            }
-            if (mGroupItem.isDepartmentTaskForce)
-            {
-                Count++;
-                Role = "isDepartmentTaskForce";
-            }
-            if (mGroupItem.isBoothPresident)
-            {
-                Count++;
-                Role = "isBoothPresident";
-            }
-            if (mGroupItem.isBoothMember)
-            {
-                Count++;
-                Role = "isBoothMember";
-            }
-
-            if (Count > 1)
-            {
-                Intent intent = new Intent(this, SelectRoleActivity.class);
-                startActivity(intent);
-
-            }
-            else if (1 == Count)
-            {
-                Intent intent = new Intent(this, TicketsActivity.class);
-                intent.putExtra("Role", Role);
-                startActivity(intent);
-            }
-            else
-            {
-                Intent intent = new Intent(this, TicketsActivity.class);
-                intent.putExtra("Role", Role);
-                startActivity(intent);
-            }
 
         }
-        else {
-            setBackEnabled(true);
-            tvToolbar.setText(group.getName());
-            tv_Desc.setText("Members : "+group.getMembers());
-            tv_Desc.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(group.getGroupId())).addToBackStack("home").commitAllowingStateLoss();
-            tabLayout.setVisibility(View.GONE);
+        else if (1 == Count)
+        {
+            Intent intent = new Intent(this, TicketsActivity.class);
+            intent.putExtra("Role", Role);
+            startActivity(intent);
         }
+        else
+        {
+            Intent intent = new Intent(this, TicketsActivity.class);
+            intent.putExtra("Role", Role);
+            startActivity(intent);
+        }
+    }
 
     }*/
 

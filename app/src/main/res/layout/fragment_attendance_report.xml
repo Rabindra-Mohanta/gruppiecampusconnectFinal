@@ -60,8 +60,10 @@
                 android:layout_width="40dp"
                 android:src="@drawable/icon_right_arraw"
                 android:padding="@dimen/padding_5dp"
+                android:visibility="invisible"
                 android:layout_height="40dp" />
         </LinearLayout>
+
 
         <!--<LinearLayout
             android:layout_width="match_parent"
@@ -145,7 +147,7 @@
 
         </LinearLayout>-->
 
-        <HorizontalScrollView
+       <!-- <HorizontalScrollView
             android:scrollbars="none"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -160,27 +162,149 @@
                 tools:itemCount="3"
                 tools:listitem="@layout/item_atttendance_head"
                 />
-        </HorizontalScrollView>
+        </HorizontalScrollView>-->
 
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_centerVertical="true"
+                android:id="@+id/imgLeftDate"
+                android:layout_width="40dp"
+                android:src="@drawable/icon_left_arraw"
+                android:padding="@dimen/padding_5dp"
+                android:layout_height="40dp" />
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/imgRightDate"
+                android:layout_width="40dp"
+                android:visibility="invisible"
+                android:src="@drawable/icon_right_arraw"
+                android:padding="@dimen/padding_5dp"
+                android:layout_height="40dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/imgLeftDate"
+                android:layout_toLeftOf="@+id/imgRightDate"
+                android:orientation="vertical">
+
+              <!--  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:background="@drawable/ract_border"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Roll No"
+                        android:textSize="@dimen/text_size_14sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:background="@color/color_divider"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Name"
+                        android:gravity="center"
+                        android:textSize="@dimen/text_size_14sp"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content" />
+                    <View
+                        android:layout_width="1px"
+                        android:background="@color/color_divider"
+                        android:layout_height="match_parent"/>
+                    <LinearLayout
+                        android:layout_width="@dimen/padding_10dp"
+                        android:layout_weight="2"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:text="Attendance"
+                            android:gravity="center"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:layout_marginBottom="@dimen/padding_5dp"
+                            android:textSize="@dimen/text_size_14sp"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:background="@color/color_divider"
+                            android:layout_height="1px"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:text="Morning"
+                                android:gravity="center"
+                                android:layout_marginTop="@dimen/padding_5dp"
+                                android:layout_marginBottom="@dimen/padding_5dp"
+                                android:textSize="@dimen/text_size_14sp"
+                                android:textStyle="bold"
+                                android:layout_height="wrap_content" />
+                            <View
+                                android:layout_width="1px"
+                                android:background="@color/color_divider"
+                                android:layout_height="match_parent"/>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:text="Evening"
+                                android:gravity="center"
+                                android:layout_marginTop="@dimen/padding_5dp"
+                                android:layout_marginBottom="@dimen/padding_5dp"
+                                android:textSize="@dimen/text_size_14sp"
+                                android:textStyle="bold"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>-->
+
+                <HorizontalScrollView
+                    android:scrollbars="none"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvStudents"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="@dimen/padding_10dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="@dimen/padding_10dp"
+                        android:layout_height="match_parent"/>
+                </HorizontalScrollView>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
 
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
+   <!-- <androidx.core.widget.NestedScrollView
         android:layout_below="@+id/llTop"
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvStudents"
-            android:visibility="gone"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/padding_10dp"
-            android:nestedScrollingEnabled="false"
-            android:layout_height="match_parent"/>
-    </androidx.core.widget.NestedScrollView>
+
+    </androidx.core.widget.NestedScrollView>-->
 
     <ProgressBar
         android:id="@+id/progressBar"

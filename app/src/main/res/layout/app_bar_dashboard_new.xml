@@ -31,7 +31,6 @@
                 android:id="@+id/iv_toolbar_icon"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:layout_marginLeft="@dimen/padding_5dp"
                 android:layout_marginRight="@dimen/padding_5dp"
                 android:foregroundGravity="left"
                 android:scaleType="centerCrop"
@@ -46,6 +45,7 @@
                 android:foregroundGravity="left"
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
+
             <RelativeLayout
                 android:id="@+id/lin_toolbar"
                 android:layout_width="match_parent"
@@ -182,6 +182,25 @@
                             android:text="@string/lbl_make_app_admin"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
+
+                    <LinearLayout android:id="@+id/llMyTeam"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/icon_team"
+                            android:tint="@color/colorTextLight"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_my_teams"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
                     <LinearLayout android:id="@+id/llJoinGruppie"
                         android:layout_width="match_parent"
                         android:padding="@dimen/padding_10dp"

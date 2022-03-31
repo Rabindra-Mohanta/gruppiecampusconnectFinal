@@ -89,6 +89,7 @@ public class MasterListFragment extends BaseFragment implements LeafManager.OnCo
     private void getDataLocaly() {
 
         List<MasterBoothListTBL> list = MasterBoothListTBL.getMasterBoothList(GroupDashboardActivityNew.groupId);
+
         if (list.size() != 0) {
 
             ArrayList<BoothMasterListModelResponse.BoothMasterListData> result = new ArrayList<>();

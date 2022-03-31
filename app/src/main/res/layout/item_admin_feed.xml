@@ -276,6 +276,7 @@
                 android:orientation="horizontal"
                 android:weightSum="4">
                 <RelativeLayout
+                    android:id="@+id/llOpenTickets"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -286,7 +287,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/llOpenTickets"
                             android:layout_gravity="center"
                             app:cardCornerRadius="@dimen/padding_50dp"
                             android:layout_width="60dp"
@@ -333,6 +333,7 @@
 
                 </RelativeLayout>
                 <RelativeLayout
+                    android:id="@+id/llAnnouncement"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -389,64 +390,7 @@
 
                 </RelativeLayout>
                 <RelativeLayout
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_centerInParent="true"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <androidx.cardview.widget.CardView
-                            android:layout_gravity="center"
-                            app:cardCornerRadius="@dimen/padding_50dp"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            app:cardBackgroundColor="#FE6568"
-                            >
-                            <LinearLayout
-                                android:padding="@dimen/padding_10dp"
-                                android:layout_width="match_parent"
-                                android:orientation="vertical"
-                                android:layout_height="match_parent">
-                                <TextView
-                                    android:id="@+id/tvTotalBoothsDiscussionCount"
-                                    android:layout_width="match_parent"
-                                    android:gravity="center"
-                                    android:text="0"
-                                    android:textStyle="bold"
-                                    android:singleLine="true"
-                                    style="@style/LabelSmall"
-                                    android:textSize="@dimen/text_size_14sp"
-                                    android:textColor="@color/white"
-                                    android:layout_height="wrap_content" />
-
-                                <ImageView
-                                    android:layout_marginTop="@dimen/padding_5dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_discussion"
-                                    android:layout_width="@dimen/padding_20dp"
-                                    android:layout_height="@dimen/padding_20dp"/>
-
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:gravity="center"
-                            android:layout_marginTop="@dimen/padding_5dp"
-                            android:text="Discussions"
-
-                            style="@style/LabelSmall"
-                            android:textSize="@dimen/text_size_12sp"
-                            android:textColor="@color/colorPrimary"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-
-
-
-                </RelativeLayout>
-                <RelativeLayout
+                    android:id="@+id/llBoothCount"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -504,6 +448,64 @@
 
 
                 </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/llDiscuss"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <androidx.cardview.widget.CardView
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="@dimen/padding_50dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:cardBackgroundColor="#FE6568"
+                            >
+                            <LinearLayout
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:id="@+id/tvTotalBoothsDiscussionCount"
+                                    android:layout_width="match_parent"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:singleLine="true"
+                                    style="@style/LabelSmall"
+                                    android:textSize="@dimen/text_size_14sp"
+                                    android:textColor="@color/white"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_discussion"
+                                    android:layout_width="@dimen/padding_20dp"
+                                    android:layout_height="@dimen/padding_20dp"/>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:text="Booth Discussions"
+                            style="@style/LabelSmall"
+                            android:textSize="@dimen/text_size_12sp"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+
+                </RelativeLayout>
             </LinearLayout>
 
 
@@ -520,6 +522,7 @@
                     android:layout_height="wrap_content">
 
                     <LinearLayout
+                        android:id="@+id/llPublicStreet"
                         android:layout_centerInParent="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -573,6 +576,7 @@
 
                 </RelativeLayout>
                 <RelativeLayout
+                    android:id="@+id/llPublicDiscussion"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
