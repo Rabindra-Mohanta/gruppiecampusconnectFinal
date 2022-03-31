@@ -673,6 +673,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                     bannerData = bannerRes.getBannerData().get(0);
 
+                    Log.e(TAG,"banner Data"+new Gson().toJson(bannerData));
+
                     sliderAdapter = new SliderBannerAdapter(bannerRes.getBannerData().get(0).fileName,getContext());
                     binding.rvSliderBanner.setInterval(7000);
                     binding.rvSliderBanner.setAdapter(sliderAdapter);
@@ -826,7 +828,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onTeamClick(MyTeamData team) {
         Log.e(TAG,"Team Data :"+new Gson().toJson(team));
-        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team);
+        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team,"no");
     }
 
     @Override
@@ -1384,6 +1386,10 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             }
           ///  mainRequest.fileName = listAmazonS3Url;
 
+            if (bannerData.getFileName().size() > 0)
+            {
+                listAmazonS3Url.addAll(bannerData.getFileName());
+            }
 
             req.setBannerFile(listAmazonS3Url);
             req.setBannerFileType("image");

@@ -92,20 +92,14 @@ public class BoothStudentActivity extends BaseActivity {
 
             case R.id.menu_add_member: {
 
-                if (classData.subCategory != null && classData.subCategory.equalsIgnoreCase("boothPresidents"))
-                {
-                    show_Dialog(R.array.booth);
-                }
-                else
-                {
-                    Intent intent = new Intent(getApplicationContext(), AddBoothStudentActivity.class);
-                    intent.putExtra("group_id", mGroupId);
-                    intent.putExtra("team_id", teamId);
-                    intent.putExtra("category", classData.category);
-                    intent.putExtra("committee_data", new Gson().toJson(committeeData));
-                    intent.putExtra("mobileList", classListFragment.getMobileList());
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(getApplicationContext(), AddBoothStudentActivity.class);
+                intent.putExtra("group_id", mGroupId);
+                intent.putExtra("team_id", teamId);
+                intent.putExtra("category", classData.category);
+                intent.putExtra("committee_data", new Gson().toJson(committeeData));
+                intent.putExtra("mobileList", classListFragment.getMobileList());
+                startActivity(intent);
 
                 return true;
             }
@@ -130,31 +124,7 @@ public class BoothStudentActivity extends BaseActivity {
 
 
 
-    public void show_Dialog(int resId) {
-        SMBDialogUtils.showSMBSingleChoiceDialog(this ,resId, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ListView lw = ((AlertDialog) dialog).getListView();
 
-                        switch (lw.getCheckedItemPosition()) {
-
-                            case 0:
-                                startActivity(new Intent(getApplicationContext(), AddBoothActivity.class));
-                                break;
-                            case 1:
-                                Intent intent = new Intent(getApplicationContext(), AddBoothStudentActivity.class);
-                                intent.putExtra("group_id", mGroupId);
-                                intent.putExtra("team_id", teamId);
-                                intent.putExtra("category", classData.category);
-                                intent.putExtra("committee_data", new Gson().toJson(committeeData));
-                                intent.putExtra("mobileList", classListFragment.getMobileList());
-                                startActivity(intent);
-                                break;
-
-                        }
-                    }
-                });
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

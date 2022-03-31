@@ -890,6 +890,9 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<LeadResponse> getTeamMemberFromChat(@Path("group_id") String group_id);
 
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("committeeId") String committeeId);
 
     @GET("/api/v2/groups/{id}/team/{team_id}/members")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1735,9 +1738,6 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addBooths(@Path("group_id") String group_id, @Body BoothData boothData);
 
-    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("committeeId") String committeeId);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/coordinator/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

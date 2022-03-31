@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.BuildConfig;
+import school.campusconnect.activities.AddBoothActivity;
 import school.campusconnect.activities.AddBoothStudentActivity;
 import school.campusconnect.activities.AddTeamStaffActivity;
 import school.campusconnect.activities.AddTeamStudentActivity;
@@ -21,6 +22,7 @@ import school.campusconnect.activities.AddTimeTablePostActivity;
 import school.campusconnect.activities.AttendanceActivity;
 import school.campusconnect.activities.AttendancePareSchool;
 import school.campusconnect.activities.AttendanceReportActivity;
+import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.activities.GpsActivity;
 import school.campusconnect.activities.LeaveActivity;
@@ -48,6 +50,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,7 +123,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private ReportAdapter mAdapter3;
     private boolean liked;
     private boolean isFromMain;
-
+    private String isBoothClick;
     LeafPreference leafPreference;
 
     //private Query query;
@@ -133,6 +136,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        AppLog.e(TAG, "TeamPostsFragmentNew");
 
         leafPreference = LeafPreference.getInstance(TeamPostsFragmentNew.this.getActivity());
     }
@@ -221,43 +226,54 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 startMeeting();
                 break;
             case R.id.menu_add_friend:
-                if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
-                    Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
-                    intent.putExtra("group_id", mGroupId);
-                    intent.putExtra("team_id", team_id);
-                    intent.putExtra("category", teamData.category);
-                    startActivity(intent);
-                } else {
-                    final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                    CharSequence items[] = new CharSequence[]{"Add Staff", "Add Students"};
-                    adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 
-                        @Override
-                        public void onClick(DialogInterface d, int n) {
-                            AppLog.e(TAG, "ss : " + n);
-                            d.dismiss();
-                            if (n == 0) {
-                                Intent intent = new Intent(getActivity(), AddTeamStaffActivity.class);
-                                intent.putExtra("id", mGroupId);
-                                intent.putExtra("invite", true);
-                                intent.putExtra("from_team", true);
-                                intent.putExtra("team_id", team_id);
-                                startActivity(intent);
-                            } else {
-                                Intent intent = new Intent(getActivity(), AddTeamStudentActivity.class);
-                                intent.putExtra("id", mGroupId);
-                                intent.putExtra("invite", true);
-                                intent.putExtra("from_team", true);
-                                intent.putExtra("team_id", team_id);
-                                startActivity(intent);
+                if ( teamData.subCategory!= null && teamData.subCategory.equalsIgnoreCase("boothPresidents"))
+                {
+                    show_Dialog(R.array.booth);
+
+                }
+                else
+                {
+                    if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category))
+                    {
+                        Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
+                        intent.putExtra("group_id", mGroupId);
+                        intent.putExtra("team_id", team_id);
+                        intent.putExtra("category", teamData.category);
+                        startActivity(intent);
+                    }
+                    else {
+                        final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                        CharSequence items[] = new CharSequence[]{"Add Staff", "Add Students"};
+                        adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface d, int n) {
+                                AppLog.e(TAG, "ss : " + n);
+                                d.dismiss();
+                                if (n == 0) {
+                                    Intent intent = new Intent(getActivity(), AddTeamStaffActivity.class);
+                                    intent.putExtra("id", mGroupId);
+                                    intent.putExtra("invite", true);
+                                    intent.putExtra("from_team", true);
+                                    intent.putExtra("team_id", team_id);
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent(getActivity(), AddTeamStudentActivity.class);
+                                    intent.putExtra("id", mGroupId);
+                                    intent.putExtra("invite", true);
+                                    intent.putExtra("from_team", true);
+                                    intent.putExtra("team_id", team_id);
+                                    startActivity(intent);
+                                }
                             }
-                        }
 
-                    });
-                    adb.setNegativeButton("Cancel", null);
-                    AlertDialog dialog = adb.create();
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.show();
+                        });
+                        adb.setNegativeButton("Cancel", null);
+                        AlertDialog dialog = adb.create();
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.show();
+                    }
                 }
                 break;
             case R.id.action_settings:
@@ -327,11 +343,37 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         return super.onOptionsItemSelected(item);
     }
 
-    public static TeamPostsFragmentNew newInstance(MyTeamData myTeamData, boolean isFromMain) {
+    public void show_Dialog(int resId) {
+        SMBDialogUtils.showSMBSingleChoiceDialog(getActivity() ,resId, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListView lw = ((AlertDialog) dialog).getListView();
+
+                switch (lw.getCheckedItemPosition()) {
+
+                    case 0:
+                        startActivity(new Intent(getContext(), AddBoothActivity.class));
+                        break;
+                    case 1:
+
+                        Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
+                        intent.putExtra("group_id", mGroupId);
+                        intent.putExtra("team_id", team_id);
+                        intent.putExtra("category", teamData.category);
+                        startActivity(intent);
+                        break;
+
+                }
+            }
+        });
+    }
+
+    public static TeamPostsFragmentNew newInstance(MyTeamData myTeamData, boolean isFromMain,String boothClick) {
         TeamPostsFragmentNew fragment = new TeamPostsFragmentNew();
         Bundle b = new Bundle();
         b.putString("team_data", new Gson().toJson(myTeamData));
         b.putBoolean("isFromMain", isFromMain);
+        b.putString("boothClick", boothClick);
         AppLog.e(TAG, "newInstance: myTeamData is " + myTeamData);
         fragment.setArguments(b);
         return fragment;
@@ -605,6 +647,9 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         teamData = new Gson().fromJson(getArguments().getString("team_data"), MyTeamData.class);
         isFromMain = getArguments().getBoolean("isFromMain", false);
+        isBoothClick = getArguments().getString("boothClick");
+
+        AppLog.e(TAG, "isBoothClick : " + isBoothClick);
         AppLog.e(TAG, "isFromMain : " + isFromMain);
 
         mGroupId = !TextUtils.isEmpty(teamData.groupId) ? teamData.groupId : GroupDashboardActivityNew.groupId;
@@ -644,20 +689,33 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
-                        return;
 
-                    try {
-                        Intent intent = new Intent(getActivity(), LeadsListActivity.class);
-                        intent.putExtra("id", mGroupId);
-                        intent.putExtra("team_id", team_id);
-                        intent.putExtra("team_name", teamName);
-                        intent.putExtra("isAdmin", teamData.isTeamAdmin);
+                    if (isBoothClick != null && isBoothClick.equalsIgnoreCase("yes"))
+                    {
+                        Intent intent = new Intent(getActivity(), CommitteeActivity.class);
+                        intent.putExtra("class_data",new Gson().toJson(teamData));
+                        intent.putExtra("title",teamData.name);
+                        intent.putExtra("isBoothClick","yes");
                         startActivity(intent);
-                        AppLog.e("Team id : ", team_id + "");
-                    } catch (Exception e) {
-                        AppLog.e("floating", "error is " + e.toString());
                     }
+                    else
+                    {
+                        if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
+                            return;
+
+                        try {
+                            Intent intent = new Intent(getActivity(), LeadsListActivity.class);
+                            intent.putExtra("id", mGroupId);
+                            intent.putExtra("team_id", team_id);
+                            intent.putExtra("team_name", teamName);
+                            intent.putExtra("isAdmin", teamData.isTeamAdmin);
+                            startActivity(intent);
+                            AppLog.e("Team id : ", team_id + "");
+                        } catch (Exception e) {
+                            AppLog.e("floating", "error is " + e.toString());
+                        }
+                    }
+
                 }
             });
         }

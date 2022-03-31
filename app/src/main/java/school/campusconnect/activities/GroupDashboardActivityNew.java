@@ -1556,11 +1556,11 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-    public void onTeamSelected(MyTeamData team) {
+    public void onTeamSelected(MyTeamData team,String myBooth) {
 
         AppLog.e(TAG,"onTeamSelected "+team.name);
 
-        if (mGroupItem.isAdmin || mGroupItem.isBoothPresident)
+     /*   if (mGroupItem.isAdmin || mGroupItem.isBoothPresident)
         {
             if (team.subCategory != null && team.subCategory.equalsIgnoreCase("boothPresidents"))
             {
@@ -1600,8 +1600,21 @@ public class GroupDashboardActivityNew extends BaseActivity
             showTeamInfoWindow();
 
             tabLayout.setVisibility(View.GONE);
-        }
+        }*/
 
+        setBackEnabled(true);
+        tvToolbar.setText(team.name);
+        tv_toolbar_icon.setVisibility(View.GONE);
+        tv_Desc.setText("Members : "+String.valueOf(team.members));
+        tv_Desc.setVisibility(View.VISIBLE);
+
+        AppLog.e("getActivity", "team name is =>" + team.name);
+
+        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true,myBooth);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
+        showTeamInfoWindow();
+
+        tabLayout.setVisibility(View.GONE);
     }
 
     public void onTeamSelectedVoter(String name, int members, String boothId) {

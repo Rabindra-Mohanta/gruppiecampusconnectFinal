@@ -191,27 +191,37 @@
                     android:textColor="@color/colorPrimary" />
 
 
-                <FrameLayout
-                    android:layout_width="match_parent"
+
+                <TextView
+                    android:id="@+id/etCaste"
                     style="@style/RegEditText"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height"
-                    android:layout_marginTop="@dimen/padding_5dp">
-                    <Spinner
+                    android:paddingLeft="@dimen/padding_20dp"
+                    android:text=""
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:textColor="@color/white" />
+
+
+
+
+                  <!--  <Spinner
                         android:id="@+id/etCaste"
                         android:background="@null"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        />
+                        />-->
 
-                    <Button
+                   <!-- <Button
                         android:id="@+id/btnSearchCaste"
                         android:layout_width="wrap_content"
                         style="@style/LoginButton"
                         android:text="@string/strSelect"
                         android:layout_marginEnd="@dimen/padding_10dp"
                         android:layout_gravity="right|center"
-                        android:layout_height="@dimen/padding_30dp"/>
-                </FrameLayout>
+                        android:layout_height="@dimen/padding_30dp"/>-->
 
 
 
@@ -226,7 +236,20 @@
                     android:textColor="@color/colorPrimary" />
 
 
-                <FrameLayout
+                <TextView
+                    android:id="@+id/etSubCaste"
+                    style="@style/RegEditText"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:paddingLeft="@dimen/padding_20dp"
+                    android:text=""
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:textColor="@color/white" />
+
+               <!-- <FrameLayout
+                    android:id="@+id/btnSearchSubCaste"
                     android:layout_width="match_parent"
                     style="@style/RegEditText"
                     android:layout_height="@dimen/login_button_height"
@@ -238,15 +261,15 @@
                         android:layout_height="match_parent"
                         />
 
-                    <Button
+                    &lt;!&ndash;<Button
                         android:id="@+id/btnSearchSubCaste"
                         android:layout_width="wrap_content"
                         style="@style/LoginButton"
                         android:text="@string/strSelect"
                         android:layout_marginEnd="@dimen/padding_10dp"
                         android:layout_gravity="right|center"
-                        android:layout_height="@dimen/padding_30dp"/>
-                </FrameLayout>
+                        android:layout_height="@dimen/padding_30dp"/>&ndash;&gt;
+                </FrameLayout>-->
 
 
               <!--  <Spinner
@@ -271,7 +294,6 @@
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height"
-                    android:layout_marginBottom="@dimen/padding_10dp"
                     android:layout_marginTop="@dimen/padding_5dp"
                     android:inputType="text"
                     android:clickable="false"

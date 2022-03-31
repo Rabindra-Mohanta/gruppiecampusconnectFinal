@@ -130,6 +130,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         if(getArguments()!=null){
             selectedTeamId=getArguments().getString("team_id","");
             className=getArguments().getString("className","");
+            classNameExcel = className;
         }
 
         if(TextUtils.isEmpty(selectedTeamId)){

@@ -31,6 +31,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.BoothCoordinateActivity;
 import school.campusconnect.activities.BoothStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.LeadsListActivity;
 import school.campusconnect.databinding.FragmentCommitteeListBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
@@ -47,6 +48,7 @@ public static String TAG = "CommitteeListFragment";
 FragmentCommitteeListBinding binding;
 private String TeamID;
 private String TeamName;
+private String boothClick;
 private MyTeamData classData;
 private LeafManager leafManager;
     public static CommitteeListFragment newInstance() {
@@ -83,10 +85,33 @@ private LeafManager leafManager;
             classData = new Gson().fromJson(getArguments().getString("class_data"), MyTeamData.class);
             AppLog.e(TAG, "classData : " + classData);
             TeamID = classData.teamId;
+            boothClick = getArguments().getString("isBoothClick");
             TeamName = getArguments().getString("title");
         }
 
 
+        if (boothClick.equalsIgnoreCase("yes"))
+        {
+            binding.allCommittee.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            binding.allCommittee.setVisibility(View.GONE);
+        }
+
+
+        binding.allCommittee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LeadsListActivity.class);
+                intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                intent.putExtra("team_id", classData.teamId);
+                intent.putExtra("team_name", classData.name);
+                intent.putExtra("all",true);
+                intent.putExtra("isAdmin", classData.isTeamAdmin);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     public void onStart() {
@@ -223,28 +248,31 @@ private LeafManager leafManager;
     private void onTreeClick(committeeResponse.committeeData committeeData) {
 
 
-      /*  if (TeamName.equalsIgnoreCase("Booth Presidents"))
+    /*    if (boothClick != null && boothClick.equalsIgnoreCase("yes"))
         {
-
+            Intent intent = new Intent(getActivity(), LeadsListActivity.class);
+            intent.putExtra("id", GroupDashboardActivityNew.groupId);
+            intent.putExtra("team_id", classData.teamId);
+            intent.putExtra("team_name", classData.name);
+            intent.putExtra("boothClick", "yes");
+            intent.putExtra("committee_id",committeeData.getCommitteeId());
+            intent.putExtra("isAdmin", classData.isTeamAdmin);
+            startActivity(intent);
         }
         else
         {
-
+            Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
+            intent.putExtra("class_data",new Gson().toJson(classData));
+            intent.putExtra("committee_data",new Gson().toJson(committeeData));
+            intent.putExtra("title",committeeData.getCommitteeName());
+            startActivity(intent);
         }*/
+
         Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
         intent.putExtra("class_data",new Gson().toJson(classData));
         intent.putExtra("committee_data",new Gson().toJson(committeeData));
         intent.putExtra("title",committeeData.getCommitteeName());
         startActivity(intent);
-
-
-      /*  Intent intent = new Intent(getContext(), AddCommiteeActivity.class);
-        intent.putExtra("screen","update");
-        intent.putExtra("team_id",TeamID);
-        intent.putExtra("committee_id",committeeData.getCommitteeId());
-        intent.putExtra("committee_name",committeeData.getCommitteeName());
-        startActivity(intent);*/
-
     }
     private void onDeleteClick(committeeResponse.committeeData committeeData) {
         binding.progressBar.setVisibility(View.VISIBLE);

@@ -281,17 +281,17 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
             case R.id.switchAllowPost:
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                manager.allowTeamPost(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+                    manager.allowTeamPost(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
             case R.id.switchAllowAddUser:
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                manager.allowAddOtherMember(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+                    manager.allowAddOtherMember(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
             case R.id.switchAllowComment:
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                manager.allowTeamPostComment(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+                    manager.allowTeamPostComment(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
 
         }

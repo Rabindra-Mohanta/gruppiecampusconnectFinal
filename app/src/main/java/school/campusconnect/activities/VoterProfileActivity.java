@@ -42,13 +42,15 @@ import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.fragments.ProfileFragmentConst;
+import school.campusconnect.fragments.SearchCastFragmentDialog;
+import school.campusconnect.fragments.SearchSubCasteDialogFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.UploadCircleImageFragment;
 
-public class VoterProfileActivity extends BaseActivity implements LeafManager.OnCommunicationListener{
+public class VoterProfileActivity extends BaseActivity implements LeafManager.OnCommunicationListener,SearchCastFragmentDialog.SelectListener,SearchSubCasteDialogFragment.SelectListener{
 
     public static String TAG = "VoterProfileActivity";
     @Bind(R.id.toolbar)
@@ -65,8 +67,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
     ArrayAdapter<String> genderAdapter;
     ArrayAdapter<String> bloodGrpAdapter;
     ArrayAdapter<String> religionAdapter;
-    ArrayAdapter<String> casteAdapter;
-    ArrayAdapter<String> subCasteAdapter;
+
 
     ArrayList<String> religionList = new ArrayList<>();
     ArrayList<String> casteList = new ArrayList<>();
@@ -80,9 +81,14 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
     String casteId = null;
 
+    int apiCount = 0;
+
     String religion = null;
     String caste = null;
     String subcaste = null;
+
+    SearchCastFragmentDialog searchCastFragmentDialog;
+    SearchSubCasteDialogFragment searchSubCasteDialogFragment;
 
     LeafManager manager;
 
@@ -176,6 +182,11 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         manager = new LeafManager();
 
 
+        searchCastFragmentDialog = SearchCastFragmentDialog.newInstance();
+        searchCastFragmentDialog.setListener(this);
+
+        searchSubCasteDialogFragment = SearchSubCasteDialogFragment.newInstance();
+        searchSubCasteDialogFragment.setListener(this);
 
         bloodGrpArray = getResources().getStringArray(R.array.blood_group);
         genderArray = getResources().getStringArray(R.array.gender_array);
@@ -185,6 +196,21 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
 
+
+
+         binding.etCaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchCastFragmentDialog.show(getSupportFragmentManager(),"");
+            }
+        });
+
+        binding.etSubCaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchSubCasteDialogFragment.show(getSupportFragmentManager(),"");
+            }
+        });
 
 
         binding.etdob.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +233,17 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                manager.getCaste(VoterProfileActivity.this,binding.etReligion.getSelectedItem().toString());
+                if (position != 0)
+                {
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    manager.getCaste(VoterProfileActivity.this,binding.etReligion.getSelectedItem().toString());
+                }
+                else
+                {
+                    binding.etCaste.setText("");
+                    binding.etSubCaste.setText("");
+                    binding.etCategory.setText("");
+                }
             }
 
             @Override
@@ -216,31 +252,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             }
         });
 
-        binding.etCaste.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                for (int i=0;i<casteDataList.size();i++)
-                {
-                    if (binding.etCaste.getSelectedItem().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
-                    {
-                        casteId = casteDataList.get(i).getCasteId();
-                        binding.etCategory.setText(casteDataList.get(i).getCategoryName());
-                    }
-                }
-
-                if (casteId != null)
-                {
-                    manager.getSubCaste(VoterProfileActivity.this,casteId);
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         binding.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,7 +260,6 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
                 if (!isEdit) {
                     isEdit = true;
-
 
                     binding.etName.setEnabled(true);
                     binding.etName.setTextColor(getResources().getColor(R.color.white));
@@ -275,6 +286,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                     binding.etProfession.setTextColor(getResources().getColor(R.color.white));
 
                     binding.etCategory.setTextColor(getResources().getColor(R.color.white));
+                    binding.etCaste.setTextColor(getResources().getColor(R.color.white));
+                    binding.etSubCaste.setTextColor(getResources().getColor(R.color.white));
 
                     /*binding.etCaste.setEnabled(true);
                     binding.etCaste.setTextColor(getResources().getColor(R.color.white));
@@ -301,7 +314,9 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                     binding.etReligion.setEnabled(true);
                     binding.etReligion.setSelection(religionAdapter.getPosition(religion));
 
-                    casteAdapter = new ArrayAdapter<String>(VoterProfileActivity.this, R.layout.item_spinner, R.id.tvItem, casteList);
+
+
+                   /* casteAdapter = new ArrayAdapter<String>(VoterProfileActivity.this, R.layout.item_spinner, R.id.tvItem, casteList);
                     binding.etCaste.setAdapter(casteAdapter);
                     binding.etCaste.setEnabled(true);
                     binding.etCaste.setSelection(casteAdapter.getPosition(caste));
@@ -309,7 +324,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                     subCasteAdapter = new ArrayAdapter<String>(VoterProfileActivity.this, R.layout.item_spinner, R.id.tvItem, subCasteList);
                     binding.etSubCaste.setAdapter(subCasteAdapter);
                     binding.etSubCaste.setEnabled(true);
-                    binding.etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));
+                    binding.etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));*/
 
                     binding.btnAdd.setText("Save");
                     return;
@@ -342,8 +357,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         item.qualification = binding.etEducation.getText().toString();
         item.designation = binding.etProfession.getText().toString();
 
-        item.caste = binding.etCaste.getSelectedItem().toString();
-        item.subcaste = binding.etSubCaste.getSelectedItem().toString();
+        item.caste = binding.etCaste.getText().toString();
+        item.subcaste = binding.etSubCaste.getText().toString();
         item.religion = binding.etReligion.getSelectedItem().toString();
 
 
@@ -393,20 +408,30 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
             AppLog.e(TAG, "ReligionResponse" + res);
 
-
             religionList.clear();
+            religionList.add(0,"select religion");
             religionList.addAll(res.getReligionData().get(0).getReligionList());
+
 
             if (res.getReligionData().size() > 0)
             {
                 religionAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem, religionList);
                 binding.etReligion.setAdapter(religionAdapter);
-                binding.etReligion.setSelection(religionAdapter.getPosition(religion));
             }
             if (isFirstTimeReligion)
             {
                 isFirstTimeReligion = false;
                 binding.etReligion.setEnabled(false);
+
+                if (religion != null)
+                {
+                    binding.etReligion.setSelection(religionAdapter.getPosition(religion));
+                }
+                else
+                {
+                    binding.etReligion.setSelection(religionAdapter.getPosition("select religion"));
+                }
+
             }
 
         }
@@ -431,25 +456,54 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             {
                 if (isFirstTimeCaste)
                 {
-                    casteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem,casteList);
-                    binding.etCaste.setAdapter(casteAdapter);
-                    binding.etCaste.setSelection(casteAdapter.getPosition(caste));
+                    binding.etCaste.setTextColor(getResources().getColor(R.color.grey));
+
+                    if (caste != null)
+                    {
+                        binding.etCaste.setText(caste);
+                    }
+                    else
+                    {
+                        binding.etCaste.setText(res.getCasteData().get(0).getCasteName());
+                    }
+                    for (int i=0;i<casteDataList.size();i++)
+                    {
+                        if (binding.etCaste.getText().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
+                        {
+                            casteId = casteDataList.get(i).getCasteId();
+                            binding.etCategory.setText(casteDataList.get(i).getCategoryName());
+                        }
+                    }
+
+                    if (isEdit)
+                    {
+                        isFirstTimeCaste = false;
+                        binding.etCaste.setTextColor(getResources().getColor(R.color.white));
+                        binding.etCaste.setEnabled(true);
+                    }
+                    else {
+                        binding.etCaste.setTextColor(getResources().getColor(R.color.grey));
+                        binding.etCaste.setEnabled(false);
+                    }
                 }
                 else
                 {
-                    casteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, R.id.tvItem,casteList);
-                    binding.etCaste.setAdapter(casteAdapter);
-                    binding.etCaste.setSelection(casteAdapter.getPosition(caste));
-
+                    casteId = res.getCasteData().get(0).getCasteId();
+                    binding.etCaste.setText(res.getCasteData().get(0).getCasteName());
+                    binding.etCategory.setText(res.getCasteData().get(0).getCategoryName());
                 }
 
+                searchCastFragmentDialog.setData(res.getCasteData());
+
             }
 
-            if (isFirstTimeCaste)
+            if (casteId != null)
             {
-                isFirstTimeCaste = false;
-                binding.etCaste.setEnabled(false);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                manager.getSubCaste(VoterProfileActivity.this,casteId);
             }
+
+
 
         }
 
@@ -468,27 +522,40 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                 subCasteList.add(res.getSubCasteData().get(i).getSubCasteName());
             }
 
+
             if (subCasteList.size() > 0)
             {
-
                 if (isFirstTimeSubCaste)
                 {
-                    subCasteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem,subCasteList);
-                    binding.etSubCaste.setAdapter(subCasteAdapter);
-                    binding.etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));
+                    binding.etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+
+                    if (subcaste != null)
+                    {
+                        binding.etSubCaste.setText(subcaste);
+                    }
+                    else
+                    {
+                        binding.etSubCaste.setText(res.getSubCasteData().get(0).getSubCasteName());
+                    }
+
+
+                    if (isEdit)
+                    {
+                        isFirstTimeSubCaste = false;
+                        binding.etSubCaste.setTextColor(getResources().getColor(R.color.white));
+                        binding.etSubCaste.setEnabled(true);
+                    }
+                    else {
+                        binding.etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+                        binding.etSubCaste.setEnabled(false);
+                    }
                 }
                 else
                 {
-                    subCasteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, R.id.tvItem,subCasteList);
-                    binding.etSubCaste.setAdapter(subCasteAdapter);
-                    binding.etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));
+                    binding.etSubCaste.setText(res.getSubCasteData().get(0).getSubCasteName());
                 }
-            }
 
-            if (isFirstTimeSubCaste)
-            {
-                isFirstTimeSubCaste = false;
-                binding.etSubCaste.setEnabled(false);
+                searchSubCasteDialogFragment.setData(res.getSubCasteData());
             }
         }
 
@@ -608,27 +675,27 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             if (!isValueValid(binding.etName)) {
                 valid = false;
             }
-            if (!isValueValid(binding.etAddress)) {
+           /* if (!isValueValid(binding.etAddress)) {
                 valid = false;
             }
             if (!isValueValid(binding.etVoterId))
             {
                 valid = false;
-            }
+            }*/
 
-            if (isValueValid(binding.etEmail))
+          /*  if (isValueValid(binding.etEmail))
             {
                 if (!isValidEmail(binding.etEmail.getText().toString()))
                 {
                     binding.etEmail.setError("Invalid Email");
                     valid = false;
                 }
-            }
-            else
+            }*/
+           /* else
             {
                 binding.etEmail.setError("Required");
                 valid = false;
-            }
+            }*/
 
         } catch (NullPointerException e) {
             valid = false;
@@ -654,5 +721,27 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         super.onActivityResult(requestCode, resultCode, data);
         if (imageFragment != null)
             imageFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSelected(CasteResponse.CasteData casteData) {
+
+        binding.etCaste.setText(casteData.getCasteName());
+        binding.etCategory.setText(casteData.getCategoryName());
+
+        casteId = casteData.getCasteId();
+
+        if (casteId != null)
+        {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            manager.getSubCaste(this,casteId);
+        }
+    }
+
+    @Override
+    public void onSelected(SubCasteResponse.SubCasteData casteData) {
+
+        binding.etSubCaste.setText(casteData.getSubCasteName());
+
     }
 }

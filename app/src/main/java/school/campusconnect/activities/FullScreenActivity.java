@@ -1,6 +1,7 @@
 package school.campusconnect.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,11 +12,16 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AppLog;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
@@ -45,10 +51,26 @@ public class FullScreenActivity extends BaseActivity {
     ImageView ivDownload;
     @Bind(R.id.iconBack)
     ImageView iconBack;
- @Bind(R.id.iconRotate)
+    @Bind(R.id.iconRotate)
     ImageView iconRotate;
 
     String image;
+
+
+    @Bind(R.id.imgCancel)
+    ImageView imgCancel;
+
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
+
+    @Bind(R.id.progressBar1)
+    ProgressBar progressBar1;
+
+    @Bind(R.id.llProgress)
+    FrameLayout llProgress;
+
+    String imagePreviewUrl = "";
+    AmazoneImageDownload asyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +81,30 @@ public class FullScreenActivity extends BaseActivity {
         image = Constants.decodeUrlToBase64(getIntent().getStringExtra("image"));
 
         Log.e(TAG,"image path"+image);
-
+        imagePreviewUrl = LeafPreference.getInstance(this).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
       //  Picasso.with(this).load(image).into(ivImage);
 
-        Picasso.with(this).load(image).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage,
-                new Callback() {
+        if(AmazoneImageDownload.isImageDownloaded(image)){
+            llProgress.setVisibility(View.GONE);
+            ivDownload.setVisibility(View.GONE);
+            Picasso.with(this).load(AmazoneImageDownload.getDownloadPath(image)).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+                    Log.e("Picasso", "Error : ");
+                }
+            });
+        }
+        else
+        {
+            {
+                String path = Constants.decodeUrlToBase64(image);
+                String newStr = path.substring(path.indexOf("/images")+1);
+                Picasso.with(this).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -71,31 +112,35 @@ public class FullScreenActivity extends BaseActivity {
 
                     @Override
                     public void onError() {
-
-                        Picasso.with(getApplicationContext()).load(image).placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
-                            @Override
-                            public void onSuccess() {
-
-                            }
-
-                            @Override
-                            public void onError() {
-                                Log.e("Picasso", "Error : ");
-                            }
-                        });
+                        Log.e("Picasso", "Error : ");
                     }
                 });
+                ivDownload.setVisibility(View.VISIBLE);
+
+
+            }
+        }
+
+
+
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asyncTask.cancel(true);
+            }
+        });
+
         ivDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (checkPermissionForWriteExternal()) {
-                    new ImageDownloadAndSave().execute();
+
+                    downloadImage();
+
                 } else {
                     requestPermissionForWriteExternal(21);
                 }
-
-
             }
         });
         iconBack.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +158,58 @@ public class FullScreenActivity extends BaseActivity {
                     r=90;
                 }
                 ivImage.setRotation(r);
+            }
+        });
+    }
+
+    private void downloadImage() {
+
+        ivDownload.setVisibility(View.GONE);
+        llProgress.setVisibility(View.VISIBLE);
+        progressBar1.setVisibility(View.VISIBLE);
+        asyncTask = AmazoneImageDownload.download(getApplicationContext(), image, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+            @Override
+            public void onDownload(File file) {
+                llProgress.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                progressBar1.setVisibility(View.GONE);
+                Picasso.with(getApplicationContext()).load(file).placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.e("Picasso", "Error : ");
+                    }
+                });
+            }
+
+            @Override
+            public void error(String msg) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        llProgress.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        progressBar1.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), msg + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(progress>0){
+                            progressBar1.setVisibility(View.GONE);
+                        }
+                        progressBar.setProgress(progress);
+                    }
+                });
             }
         });
     }
@@ -135,7 +232,7 @@ public class FullScreenActivity extends BaseActivity {
             case 21:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                    if (img_thumbnail.getText().toString().equalsIgnoreCase(""))
-                    new ImageDownloadAndSave().execute();
+                    downloadImage();
                    AppLog.e("AddPost" + "permission", "granted camera");
                 } else {
                    AppLog.e("AddPost" + "permission", "denied camera");

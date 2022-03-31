@@ -73,7 +73,7 @@
                          android:layout_height="wrap_content"
                          android:layout_marginTop="@dimen/padding_20dp"
                          android:paddingLeft="@dimen/padding_10dp"
-                         android:text="@string/lbl_address_v2"
+                         android:text="@string/lbl_address"
                          android:textAllCaps="true"
                          android:textColor="@color/colorPrimary" />
 
@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding_20dp"
                         android:paddingLeft="@dimen/padding_10dp"
-                        android:text="@string/lbl_voterId_v2"
+                        android:text="@string/lbl_voterId"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary" />
 
@@ -112,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding_10dp"
                         android:paddingLeft="@dimen/padding_10dp"
-                        android:text="@string/lbl_email_v2"
+                        android:text="@string/lbl_email"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary" />
 
@@ -232,12 +232,38 @@
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary" />
 
-                    <Spinner
+                    <TextView
                         android:id="@+id/etCaste"
                         style="@style/RegEditText"
+                        android:layout_marginTop="@dimen/padding_5dp"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
-                        android:layout_marginTop="@dimen/padding_5dp" />
+                        android:paddingLeft="@dimen/padding_20dp"
+                        android:text=""
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:textColor="@color/white" />
+
+
+
+
+                    <!--  <Spinner
+                          android:id="@+id/etCaste"
+                          android:background="@null"
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          />-->
+
+                    <!-- <Button
+                         android:id="@+id/btnSearchCaste"
+                         android:layout_width="wrap_content"
+                         style="@style/LoginButton"
+                         android:text="@string/strSelect"
+                         android:layout_marginEnd="@dimen/padding_10dp"
+                         android:layout_gravity="right|center"
+                         android:layout_height="@dimen/padding_30dp"/>-->
+
+
 
                     <TextView
                         style="@style/LabelNormal"
@@ -250,13 +276,17 @@
                         android:textColor="@color/colorPrimary" />
 
 
-                    <Spinner
+                    <TextView
                         android:id="@+id/etSubCaste"
                         style="@style/RegEditText"
+                        android:layout_marginTop="@dimen/padding_5dp"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
-                        android:layout_marginTop="@dimen/padding_5dp" />
-
+                        android:paddingLeft="@dimen/padding_20dp"
+                        android:text=""
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:textColor="@color/white" />
 
 
                     <TextView

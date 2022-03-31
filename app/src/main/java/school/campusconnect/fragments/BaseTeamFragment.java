@@ -475,7 +475,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
     @Override
     public void onTeamClick(MyTeamData team) {
-        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team);
+        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team,"no");
     }
 
     @Override
