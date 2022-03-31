@@ -1,6 +1,7 @@
 package school.campusconnect.adapters;
 
 import android.content.Context;
+import android.icu.text.Transliterator;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,11 +41,13 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
     LeafPreference leafPreference;
     private Boolean isExpanded = false;
     private int itemCount;
+    Transliterator transliterator;
 
     public TeamItemV2Adapter(ArrayList<MyTeamData> featuredIconData, TeamListAdapterNewV2 listener,int itemCount) {
         this.featuredIconData = featuredIconData;
         this.listener = listener;
         this.itemCount = itemCount;
+        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     @NonNull
@@ -62,12 +65,11 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         final MyTeamData team = featuredIconData.get(position);
 
         AppLog.e("TeamListAdapterNew", "item ; " + new Gson().toJson(team));
-        holder.tvTeamName.setText(team.name);
+        holder.tvTeamName.setText(transliterator.transliterate(team.name));
 
         int postUnseenCount = 0;
 
         if(team.teamId != null && !team.teamId.equalsIgnoreCase(""))
-
             postUnseenCount = leafPreference.getInt(team.teamId+"_post");
         else if(team.name.equalsIgnoreCase("notice board"))
         {

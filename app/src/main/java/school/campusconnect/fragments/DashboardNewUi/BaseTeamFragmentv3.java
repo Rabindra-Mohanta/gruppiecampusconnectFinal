@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+timport android.icu.text.Transliterator;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -162,6 +163,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     FragmentBaseTeamFragmentv3Binding binding;
 
+    Transliterator transliterator;
+
     public static BaseTeamFragmentv3 newInstance() {
         BaseTeamFragmentv3 fragment = new BaseTeamFragmentv3();
         Bundle args = new Bundle();
@@ -183,6 +186,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         getNotification();
 
         getTeams();
+
 
 
         return binding.getRoot();
@@ -375,7 +379,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         sliderAdapter = new SliderAdapter(getContext(),this,mGroupItem.isAdmin);
         binding.rvSlider.setAdapter(sliderAdapter);
         sliderAdapter.add(imageSlider);*/
-
+        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     private void enableOption() {
@@ -402,7 +406,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public void onStart() {
         super.onStart();
         if (getActivity() != null) {
-            ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
+            ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(transliterator.transliterate(GroupDashboardActivityNew.group_name));
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
             ((GroupDashboardActivityNew) getActivity()).callEventApi();
         }

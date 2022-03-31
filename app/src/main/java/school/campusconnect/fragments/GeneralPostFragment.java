@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import androidx.databinding.DataBindingUtil;
 
+import android.icu.text.Transliterator;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -182,6 +183,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         getGroupPostLocaly();
 
         scrollListener();
+
 
         return mBinding.getRoot();
 

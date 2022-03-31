@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.icu.text.Transliterator;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -73,6 +74,7 @@ import net.frederico.showtipsview.ShowTipsViewInterface;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -262,6 +264,9 @@ public class GroupDashboardActivityNew extends BaseActivity
             Manifest.permission.WRITE_CALENDAR
     };
 
+
+    Transliterator transliterator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -300,6 +305,28 @@ public class GroupDashboardActivityNew extends BaseActivity
         // sendNotification("Message","Title");
 
        reqPermission();
+
+        /*while(Transliterator.getAvailableIDs().hasMoreElements())
+        {
+            String s = Transliterator.getAvailableIDs().nextElement();
+            AppLog.e(TAG , "transliterator id : "+s);
+        }*/
+
+
+
+
+      /*  for (Enumeration<String> e = Transliterator.getAvailableIDs(); Transliterator.getAvailableIDs().hasMoreElements();)
+        {
+            try {
+                AppLog.e(TAG, "transliterator id : " + e.nextElement());
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+*/
+
     }
     public void reqPermission(){
         if (!hasPermission(permissions)) {
@@ -652,6 +679,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         LeafPreference.getInstance(this).setBoolean("IS_GROUP_ICON_CHANGE", false);
 
         manager = new LeafManager();
+
+        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     //NOFIREBASEDATABASE
@@ -1423,6 +1452,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         AppLog.e(TAG,"onTeamSelected "+team.name);
 
         setBackEnabled(true);
+       // tvToolbar.setText(team.name);
         tvToolbar.setText(team.name);
         tv_Desc.setText("Members : "+team.members);
         tv_Desc.setVisibility(View.VISIBLE);

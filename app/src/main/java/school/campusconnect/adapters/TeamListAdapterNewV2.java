@@ -1,5 +1,6 @@
 package school.campusconnect.adapters;
 
+import android.icu.text.Transliterator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +25,13 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
     private OnTeamClickListener listener;
     private Boolean isExpanded = false;
     private String Category;
+    Transliterator transliterator;
 
     public TeamListAdapterNewV2(ArrayList<BaseTeamv2Response.TeamListData> teamList,OnTeamClickListener listener,String Category) {
         this.listener = listener;
         this.teamData = teamList;
         this.Category = Category;
+        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
 
@@ -44,7 +47,7 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
 
         BaseTeamv2Response.TeamListData data = teamData.get(position);
 
-        holder.binding.tvActivityName.setText(data.getActivity());
+        holder.binding.tvActivityName.setText(transliterator.transliterate(data.getActivity()));
 
         if (Category.equalsIgnoreCase("constituency"))
         {

@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.Transliterator;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -66,6 +67,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     public EditText etSearch;
     private ArrayList<MyTeamData> result;
 
+    Transliterator transliterator;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -108,6 +110,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
                 }
             }
         });
+
+        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     @Override
@@ -201,7 +205,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             final MyTeamData team = list.get(position);
 
-            holder.tvTeamName.setText(team.name);
+            holder.tvTeamName.setText(transliterator.transliterate(team.name));
             holder.tvPostCount.setText("");
             holder.tvPostCount.setVisibility(View.GONE);
 

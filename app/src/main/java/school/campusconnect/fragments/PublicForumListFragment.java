@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.Transliterator;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -70,6 +71,8 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
     private List<MyTeamData> filteredList = new ArrayList<>();
     private List<MyTeamData> myTeamDataList = new ArrayList<>();
 
+    Transliterator transliterator;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -123,6 +126,9 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
                 }
             }
         });
+
+
+        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     private void searchData(String text) {
@@ -242,7 +248,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
             }
 
 
-            holder.txt_name.setText(item.name);
+            holder.txt_name.setText(transliterator.transliterate(item.name));
             holder.txt_count.setText("");
             holder.txt_count.setVisibility(View.GONE);
         }

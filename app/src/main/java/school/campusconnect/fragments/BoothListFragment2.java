@@ -2,6 +2,7 @@ package school.campusconnect.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.Transliterator;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -67,6 +68,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
     String type;
 
     ClassesAdapter adapter;
+    Transliterator transliterator;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -110,6 +112,8 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
                 }
             }
         });
+
+        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     private void searchData(String text) {
@@ -213,7 +217,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
-            holder.txt_name.setText(item.name);
+            holder.txt_name.setText(transliterator.transliterate(item.name));
             holder.txt_count.setText("Member : "+item.members);
         }
 
