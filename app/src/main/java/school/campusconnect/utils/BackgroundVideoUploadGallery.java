@@ -296,9 +296,14 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
         }
         catch(Exception ex)
         {
+            AppLog.e(TAG,"Exception "+ex);
             compressedCounts++;
             compressVideo(compressedCounts);
         }
+
+        AppLog.e(TAG, "final path : "+listImages.get(finalI));
+        AppLog.e(TAG, "final path height: "+height);
+        AppLog.e(TAG, "final path width: "+width);
 
         VideoCompressor.start(
                 getApplicationContext(), // => This is required if srcUri is provided. If not, pass null.

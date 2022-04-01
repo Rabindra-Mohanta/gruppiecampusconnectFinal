@@ -2015,7 +2015,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             tv_toolbar_icon.setVisibility(View.GONE);
             tv_Desc.setText("Members : "+group.members);
 
-            if (group.name.equalsIgnoreCase("Notice Board"))
+            if (group.name.equalsIgnoreCase("Notice Board") || group.name.equalsIgnoreCase("Announcement"))
             {
                 tv_Desc.setVisibility(View.GONE);
             }
@@ -2035,7 +2035,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         setBackEnabled(true);
         tv_toolbar_icon.setVisibility(View.GONE);
         tvToolbar.setText("Announcement");
-        tv_Desc.setText("Members : "+"0");
+        tv_Desc.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(groupId)).addToBackStack("home").commitAllowingStateLoss();
         tabLayout.setVisibility(View.GONE);
     }

@@ -224,7 +224,7 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
         llYoutubeLink.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        btnShare.setEnabled(false);
+      //  btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -303,7 +303,7 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
     }
 
     private void shareButtonEnableDisable() {
-        btnShare.setEnabled(isValid(false));
+       // btnShare.setEnabled(isValid(false));
     }
 
     @Override
@@ -317,7 +317,7 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
             if (isValid(true)) {
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+                //btnShare.setEnabled(false);
 
                 mainRequest = new AddHwPostRequest();
 
@@ -789,7 +789,7 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+      //  btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
@@ -816,7 +816,7 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+    //    btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(SubmitAssignmentActivity.this, error, Toast.LENGTH_SHORT).show();

@@ -43,6 +43,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -162,10 +164,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public static final int REQUEST_LOAD_CAMERA_IMAGE = 101;
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
 
+    private int visibleCount;
 
     private ProgressDialog progressDialog;
 
     FragmentBaseTeamFragmentv3Binding binding;
+
+    LinearLayoutManager linearLayoutManager;
+
+
 
 
    /* final int duration = 5;
@@ -186,6 +193,27 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         return fragment;
     }
 
+    private Handler mHandler = new Handler();
+
+    Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            try{
+
+                visibleCount = linearLayoutManager.findLastVisibleItemPosition();
+                Log.e(TAG,"Count"+visibleCount);
+                binding.rvFeed.smoothScrollBy(0,50);
+               // binding.rvFeed.smoothScrollToPosition( visibleCount+1 >= 10 ? 0: visibleCount+1 );
+                mHandler.postDelayed(myRunnable, 3000);
+
+            }catch (Exception e)
+            {
+                Log.e(TAG,"exception"+ e.getMessage());
+            }
+
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -194,6 +222,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_base_team_fragmentv3, container, false);
 
         inits();
+
+
 
         bannerListApiCall();
 
@@ -357,6 +387,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         mAdapter = new TeamListAdapterNewV2(teamList,this,BuildConfig.AppCategory);
         binding.rvTeams.setAdapter(mAdapter);
 
+        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        binding.rvFeed.setLayoutManager(linearLayoutManager);
         feedAdapter = new FeedAdapter(this);
         binding.rvFeed.setAdapter(feedAdapter);
 
@@ -370,6 +402,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         binding.tvViewMoreFeed.setOnClickListener(this);
         binding.imgEditBanner.setOnClickListener(this);
+
 
       /*  binding.imgEditVoter.setOnClickListener(this);
 
@@ -869,6 +902,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                 }
                 feedAdminAdapter.add(adminNotificationList);
+
+
             }
             else
             {
@@ -906,14 +941,18 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                     notificationList.add(notificationListData);
                 }
-                if (notificationList.size()>1)
+           /*     if (notificationList.size()>1)
                 {
-                    feedAdapter.add(notificationList,1);
+                    feedAdapter.add(notificationList,4);
                 }
                 else
                 {
-                    feedAdapter.add(notificationList,notificationList.size());
-                }
+
+                }*/
+                feedAdapter.add(notificationList,notificationList.size());
+
+                mHandler.post(myRunnable);
+
             }
             else
             {
@@ -1072,7 +1111,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         if (feedAdapter != null)
         {
-            feedAdapter.removeCallBack();
+          // feedAdapter.removeCallBack();
+            mHandler.removeCallbacks(myRunnable);
+
         }
     }
     @Override

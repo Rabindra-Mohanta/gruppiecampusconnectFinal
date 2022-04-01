@@ -534,6 +534,29 @@ public class ImageUtil {
         return mediaFile;
     }
 
+    public static File getOutputVideoFile(Context context,int count) {
+
+        // External sdcard location
+        File mediaStorageDir = new File(
+                context.getCacheDir(),
+                "cache_image");
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("Merchant", "Oops! Failed create "
+                        + "cache_image" + " directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.US).format(new Date());
+        File mediaFile = null;
+
+        return mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "VID_" + timeStamp +"_"+count+ ".mp4");
+    }
+
     public String getRealPathFromURI(String contentURI) {
 
         Uri contentUri = Uri.parse(contentURI);

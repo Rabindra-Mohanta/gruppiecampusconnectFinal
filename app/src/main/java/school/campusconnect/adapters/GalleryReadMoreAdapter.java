@@ -146,7 +146,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
             Log.e("MULTI_BIND", "image " + position + "is " + Constants.decodeUrlToBase64(item.get(position).getImagePath()));
 
             if (GalleryReadMoreAdapter.this.item.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
-                if(thumbnailImages!=null && thumbnailImages.size()>=position){
+                if(thumbnailImages!=null && thumbnailImages.size()>position){
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(thumbnailImages.get(position))).placeholder(R.drawable.video_place_holder).into(mImageView);
                 }
                 if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.get(position).getImagePath())){

@@ -279,7 +279,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         btnCancel.setOnClickListener(this);
         imgAddChapter.setOnClickListener(this);
 
-        btnShare.setEnabled(false);
+        //btnShare.setEnabled(false);
 
 
         edtTitle.addTextChangedListener(new TextWatcher() {
@@ -357,7 +357,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     }
 
     private void shareButtonEnableDisable() {
-        btnShare.setEnabled(isValid(false));
+  //      btnShare.setEnabled(isValid(false));
     }
 
     @Override
@@ -372,7 +372,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             if (isValid(true)) {
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+              //  btnShare.setEnabled(false);
 
                 mainRequest = new AddGalleryPostRequest();
 
@@ -949,7 +949,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+    //    btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
@@ -974,7 +974,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+ //       btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(AddChapterPostActivity.this, error, Toast.LENGTH_SHORT).show();

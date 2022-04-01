@@ -318,10 +318,7 @@ public static String TAG = "MyTeamSubBoothFragment";
             holder.txt_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-                    i.putExtra("userID",item.userId);
-                    i.putExtra("name",item.name);
-                    startActivity(i);
+                    onTreeClick(item);
                 }
             });
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
@@ -382,12 +379,7 @@ public static String TAG = "MyTeamSubBoothFragment";
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this,itemView);
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
-                    }
-                });
+
 
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override

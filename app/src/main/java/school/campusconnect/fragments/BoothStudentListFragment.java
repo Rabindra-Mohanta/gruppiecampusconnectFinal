@@ -50,6 +50,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.UpdateMemberActivity;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
@@ -252,12 +253,10 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
     }
 
     private void editStudent(BoothMemberResponse.BoothMemberData studentData) {
-        Intent intent = new Intent(getActivity(), UpdateMemberActivity.class);
-        intent.putExtra("group_id", mGroupId);
-        intent.putExtra("team_id", teamId);
-        intent.putExtra("className", studentData.name);
-        intent.putExtra("student_data", new Gson().toJson(studentData));
-        startActivity(intent);
+        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+        i.putExtra("userID",studentData.id);
+        i.putExtra("name",studentData.name);
+        startActivity(i);
     }
 
     public ArrayList<String> getMobileList(){

@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.activities.LeadsListActivity;
 import school.campusconnect.activities.NestedTeamActivity;
 import school.campusconnect.activities.UpdateMemberActivity;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.utils.AppLog;
 
@@ -498,11 +499,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     }
 
     private void editStudent(BoothMemberResponse.BoothMemberData studentData) {
-        Intent intent = new Intent(getActivity(), UpdateMemberActivity.class);
-        intent.putExtra("group_id", "d");
-        intent.putExtra("team_id", teamId);
-        intent.putExtra("className", studentData.name);
-        intent.putExtra("student_data", new Gson().toJson(studentData));
-        startActivity(intent);
+        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+        i.putExtra("userID",studentData.id);
+        i.putExtra("name",studentData.name);
+        startActivity(i);
     }
 }

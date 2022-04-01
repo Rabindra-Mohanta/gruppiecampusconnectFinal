@@ -182,7 +182,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
         llVideo.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        btnShare.setEnabled(false);
+      //  btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -235,11 +235,11 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
     }
 
     private void shareButtonEnableDisable() {
-        if (isValid(false)) {
+     /*   if (isValid(false)) {
             btnShare.setEnabled(true);
         } else {
             btnShare.setEnabled(false);
-        }
+        }*/
     }
 
     @Override
@@ -253,7 +253,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
             if (isValid(true)) {
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+          //      btnShare.setEnabled(false);
 
                 AddTimeTableRequest request = new AddTimeTableRequest();
                 request.title = edtTitle.getText().toString();
@@ -530,7 +530,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+    //    btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
@@ -554,7 +554,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+      //  btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(AddTimeTablePostActivity.this, error, Toast.LENGTH_SHORT).show();

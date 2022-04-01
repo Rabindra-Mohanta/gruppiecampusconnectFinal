@@ -41,12 +41,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.views.TouchImageView;
 
 public class FullScreenActivity extends BaseActivity {
 
     public static String TAG = "FullScreenActivity";
     @Bind(R.id.ivImage)
-    ImageView ivImage;
+    TouchImageView ivImage;
+
     @Bind(R.id.ivDownload)
     ImageView ivDownload;
     @Bind(R.id.iconBack)

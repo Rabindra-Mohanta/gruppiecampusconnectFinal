@@ -368,10 +368,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             holder.txt_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-                    i.putExtra("userID",item.userId);
-                    i.putExtra("name",item.name);
-                    startActivity(i);
+                    onTreeClick(item);
                 }
             });
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {

@@ -176,7 +176,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
         llVideo.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        btnShare.setEnabled(false);
+        //btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -231,11 +231,11 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
     }
 
     private void shareButtonEnableDisable() {
-        if (isValid(false)) {
+      /*  if (isValid(false)) {
             btnShare.setEnabled(true);
         } else {
             btnShare.setEnabled(false);
-        }
+        }*/
     }
 
     @Override
@@ -249,7 +249,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
             if (isValid(true)) {
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+            //    btnShare.setEnabled(false);
 
                 AddCodeOfConductReq request = new AddCodeOfConductReq();
                 request.title = edtTitle.getText().toString();
@@ -556,7 +556,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+     //   btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
@@ -580,7 +580,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+     //   btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(AddCodeConductActivity.this, error, Toast.LENGTH_SHORT).show();
@@ -864,7 +864,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
 //                    String path = ImageUtil.getPath(this, uri1);
                     //    listImages.add(uri1.toString());
                     isGalleryMultiple = true;
-                    showCropDialog(selectedImage,false);
+                    showCropDialog(uri1,false);
                 }
             }
 

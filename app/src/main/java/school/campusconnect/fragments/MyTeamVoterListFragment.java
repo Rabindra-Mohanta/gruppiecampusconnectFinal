@@ -356,6 +356,22 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             holder.txt_name.setText(item.name);
 
             holder.txt_count.setVisibility(View.GONE);
+
+            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onTreeClick(item);
+                }
+            });
+            holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                    i.putExtra("userID",item.userId);
+                    i.putExtra("name",item.name);
+                    startActivity(i);
+                }
+            });
         }
 
         @Override
@@ -406,12 +422,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
                 super(itemView);
                 ButterKnife.bind(this,itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
-                    }
-                });
+
 
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override
