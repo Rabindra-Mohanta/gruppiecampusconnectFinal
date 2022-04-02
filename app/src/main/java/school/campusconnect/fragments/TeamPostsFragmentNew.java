@@ -516,6 +516,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     EventTBL eventTBL;
 
     private void getDataLocaly() {
+
         eventTBL = EventTBL.getTeamEvent(mGroupId, team_id);
         boolean apiEvent = false;
         if (eventTBL != null) {
@@ -527,6 +528,9 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             }
 
         }
+
+
+
 
         final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "");
         AppLog.e(TAG, "local list size is " + dataItemList.size());
@@ -965,6 +969,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             postItem.team_id = team_id + "";
             postItem.thumbnail = item.thumbnail;
             postItem.isFavourited = item.isFavourited;
+            postItem._now = System.currentTimeMillis();
             postItem.save();
         }
 

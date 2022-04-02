@@ -15,7 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.ProfileActivity2;
-import school.campusconnect.datamodel.ProfileItem;
+import school.campusconnect.datamodel.profile.ProfileItem;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.views.DrawableEditText;
 import school.campusconnect.views.SMBDialogUtils;

@@ -89,7 +89,7 @@ import school.campusconnect.views.SMBDialogUtils;
 
 public class AddGalleryPostActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener, UploadImageAdapter.UploadImageListener {
 
-    private static final String TAG = "AddPostActivity";
+    private static final String TAG = "AddGalleryPostActivity";
     @Bind(R.id.toolbar)
     Toolbar mToolBar;
 
@@ -785,7 +785,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     }
 
     private void selectVideoIntent() {
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         galleryIntent.setType("video/*");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);

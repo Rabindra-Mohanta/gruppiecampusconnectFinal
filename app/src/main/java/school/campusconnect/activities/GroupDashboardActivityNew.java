@@ -1,6 +1,7 @@
 package school.campusconnect.activities;
 
 import android.Manifest;
+import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,7 +36,11 @@ import school.campusconnect.datamodel.LiveClassListTBL;
 import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
+import school.campusconnect.datamodel.banner.BannerTBL;
+import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
+import school.campusconnect.datamodel.notificationList.NotificationTable;
+import school.campusconnect.datamodel.profile.ProfileTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.fragments.BoothListMyTeamFragment;
@@ -338,6 +343,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     LeafPreference.getInstance(GroupDashboardActivityNew.this).setString(LeafPreference.SECRET_KEY,res.data.get(0).teamsListCount.secretKey);
 
                     LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("PREVIEW_URL",res.data.get(0).imagePreviewUrl);
+
                     ArrayList<UpdateDataEventRes.EventResData> eventList = res.data.get(0).eventList;
 
                     boolean ifNeedToLogout = false;
@@ -381,6 +387,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                         eventTBL.save();
 
                     }
+
+
 
 
                     UpdateDataEventRes.TeamListCount teamCount = res.data.get(0).teamsListCount;
@@ -472,12 +480,22 @@ public class GroupDashboardActivityNew extends BaseActivity
                         notificationApiCall = apiCallNotification;
                         ((BaseTeamFragmentv2) currFrag).checkAndRefresh(apiCall);
                         ((BaseTeamFragmentv2) currFrag).checkAndRefreshNotification(apiCallNotification);
+
+                    }
+
+                    if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+                    {
+                        LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("BANNER_API",res.data.get(0).bannerPostEventAt);
+                        LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("FEED_API",res.data.get(0).notificationFeedEventAt);
+                        LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("PROFILE_API",res.data.get(0).myProfileUpdatedEventAt);
+                        LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("MY_TEAM_UPDATE",res.data.get(0).lastUpdatedTeamTime);
+                        LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("MY_TEAM_INSERT",res.data.get(0).lastInsertedTeamTime);
                     }
 
                     if (currFrag instanceof BaseTeamFragmentv3) {
                         boolean apiCall = false;
                         boolean apiCallNotification = false;
-                        if (dashboardCount.lastApiCalled != 0) {
+                        /*if (dashboardCount.lastApiCalled != 0) {
                             if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
                                 apiCall = true;
                             }
@@ -494,9 +512,76 @@ public class GroupDashboardActivityNew extends BaseActivity
                             dashboardCount.save();
                             apiCall = true;
                         }
-                        notificationApiCall = apiCallNotification;
-                        ((BaseTeamFragmentv3) currFrag).checkAndRefresh(apiCall);
-                        ((BaseTeamFragmentv3) currFrag).checkAndRefreshNotification(apiCallNotification);
+                        notificationApiCall = apiCallNotification;*/
+                      /*  ((BaseTeamFragmentv3) currFrag).checkAndRefresh(apiCall);
+                        ((BaseTeamFragmentv3) currFrag).checkAndRefreshNotification(apiCallNotification);*/
+
+
+
+                      /*  if (mGroupItem.isBoothWorker != res.data.get(0).roleData.isBoothWorker)
+                        {
+                           showLogoutPopup();
+                        }
+                        else if (mGroupItem.isAdmin != res.data.get(0).roleData.isAdmin)
+                        {
+                            showLogoutPopup();
+                        }
+                        else if (mGroupItem.isPublic != res.data.get(0).roleData.isPublic)
+                        {
+                            showLogoutPopup();
+                        }
+                        else if (mGroupItem.isPartyTaskForce != res.data.get(0).roleData.isPartyTaskForce)
+                        {
+                            showLogoutPopup();
+                        }
+                        else if (mGroupItem.isDepartmentTaskForce != res.data.get(0).roleData.isDepartmentTaskForce)
+                        {
+                            showLogoutPopup();
+                        }
+                        else if (mGroupItem.isBoothPresident != res.data.get(0).roleData.isBoothPresident)
+                        {
+                            showLogoutPopup();
+                        }
+                        else if (mGroupItem.isAuthorizedUser != res.data.get(0).roleData.isAuthorizedUser)
+                        {
+                            showLogoutPopup();
+                        }
+*/
+
+                        List<BaseTeamTableV2> teamList = BaseTeamTableV2.getTeamList(groupId);
+
+                        if (teamList.size() > 0)
+                        {
+                            if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("MY_TEAM_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", teamList.get(teamList.size()-1)._now)) {
+                                ((BaseTeamFragmentv3) currFrag).checkAndRefresh(true);
+                            }
+
+                            if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("MY_TEAM_INSERT"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", teamList.get(teamList.size()-1)._now)) {
+                                ((BaseTeamFragmentv3) currFrag).checkAndRefresh(true);
+                            }
+                        }
+
+
+                        List<BannerTBL> bannerTBL = BannerTBL.getBanner(groupId);
+
+                        if (bannerTBL.size() > 0)
+                        {
+                            if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("BANNER_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", bannerTBL.get(bannerTBL.size()-1)._now)) {
+                                ((BaseTeamFragmentv3) currFrag).bannerListApiCall();
+                            }
+                        }
+
+
+                        List<NotificationTable> notificationTableList = NotificationTable.getAllNotificationList(groupId,1);
+
+                        if (notificationTableList.size() > 0)
+                        {
+                            if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("FEED_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", notificationTableList.get(notificationTableList.size()-1)._now)) {
+                                ((BaseTeamFragmentv3) currFrag).checkAndRefreshNotification(true);
+                            }
+                        }
+
+
 
                     }
 

@@ -168,8 +168,8 @@ import school.campusconnect.datamodel.LoginResponse;
 import school.campusconnect.datamodel.NumberValidationError;
 import school.campusconnect.datamodel.PasswordValidationError;
 import school.campusconnect.datamodel.PostResponse;
-import school.campusconnect.datamodel.ProfileItemUpdate;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.ProfileValidationError;
 import school.campusconnect.datamodel.ReadGroupPostResponse;
 import school.campusconnect.datamodel.ReadTeamPostResponse;
@@ -1511,7 +1511,15 @@ public class LeafManager {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<UpdateDataEventRes> model = service.getUpdateEventList(group_id);
+        Call<UpdateDataEventRes> model = null;
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            model = service.getUpdateEventListConstituency(group_id);
+        }else
+        {
+            model = service.getUpdateEventList(group_id);
+        }
         ResponseWrapper<UpdateDataEventRes> wrapper = new ResponseWrapper<>(model);
 
 

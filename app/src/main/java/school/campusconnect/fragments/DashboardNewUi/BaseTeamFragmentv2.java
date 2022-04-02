@@ -52,6 +52,7 @@ import school.campusconnect.activities.PeopleActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ReadMoreActivity;
 import school.campusconnect.adapters.FeedAdapter;
+import school.campusconnect.adapters.SchoolFeedAdapater;
 import school.campusconnect.adapters.TeamListAdapterNewV2;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
@@ -69,13 +70,13 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 
-public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick {
+public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick, SchoolFeedAdapater.onClick {
     private static final String TAG = "BaseTeamFragmentv2";
 
 
     private LeafManager manager;
     private TeamListAdapterNewV2 mAdapter;
-    private FeedAdapter feedAdapter;
+    private SchoolFeedAdapater feedAdapter;
     private Boolean isExpand = false;
     // PullRefreshLayout swipeRefreshLayout;
     private DatabaseHandler databaseHandler;
@@ -260,7 +261,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         mAdapter = new TeamListAdapterNewV2(teamList,this,BuildConfig.AppCategory);
         binding.rvTeams.setAdapter(mAdapter);
 
-        feedAdapter = new FeedAdapter(this);
+        feedAdapter = new SchoolFeedAdapater(this);
         feedAdapter.add(notificationList,0);
         binding.rvFeed.setAdapter(feedAdapter);
 
@@ -466,6 +467,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                         notificationTable.createdByImage = notificationListData.getCreatedByImage();
                         notificationTable.createdById = notificationListData.getCreatedById();
                         notificationTable.readedComment = "true";
+                        notificationTable._now = System.currentTimeMillis();
 
                         notificationTable.save();
 

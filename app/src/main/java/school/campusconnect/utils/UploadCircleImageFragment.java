@@ -100,8 +100,13 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         getDefaultImageView().setImageDrawable(drawable);*/
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(1));
-        imgDefault.setImageDrawable(drawable);
-        imgDefault.setVisibility(View.VISIBLE);
+
+        if (imgDefault != null)
+        {
+            imgDefault.setImageDrawable(drawable);
+            imgDefault.setVisibility(View.VISIBLE);
+        }
+
 
         // imgPlus.setImageResource(R.drawable.img);
 

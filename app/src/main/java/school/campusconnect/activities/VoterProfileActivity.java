@@ -1,15 +1,12 @@
 package school.campusconnect.activities;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.google.api.client.json.Json;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -29,19 +25,15 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityVoterProfileBinding;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.ProfileItemUpdate;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
-import school.campusconnect.datamodel.masterList.VoterListModelResponse;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.fragments.DatePickerFragment;
-import school.campusconnect.fragments.ProfileFragmentConst;
 import school.campusconnect.fragments.SearchCastFragmentDialog;
 import school.campusconnect.fragments.SearchSubCasteDialogFragment;
 import school.campusconnect.network.LeafManager;

@@ -99,6 +99,7 @@ import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
+import school.campusconnect.datamodel.banner.BannerTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
@@ -128,6 +129,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     //SliderBannerAdapter SliderBannerAdapter;
     private LeafManager manager;
     private TeamListAdapterNewV2 mAdapter;
+
     private FeedAdapter feedAdapter;
     private FeedAdminAdapter feedAdminAdapter;
     private Boolean isExpand = false;
@@ -151,6 +153,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     boolean isVisible;
 
     BannerRes.BannerData bannerData = new BannerRes.BannerData();
+
+    ArrayList<BannerRes.BannerData> bannerDataList = new ArrayList<>();
 
     private MenuItem menuItem;
 
@@ -201,9 +205,20 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
             try{
 
-                visibleCount = linearLayoutManager.findLastVisibleItemPosition();
+                visibleCount = linearLayoutManager.findLastCompletelyVisibleItemPosition();
                 Log.e(TAG,"Count"+visibleCount);
-                binding.rvFeed.smoothScrollBy(0,50);
+                binding.rvFeed.smoothScrollBy(0,60);
+
+                Log.e(TAG,"last item"+feedAdapter.getItemCount());
+
+                if (visibleCount+1 == feedAdapter.getItemCount())
+                {
+                    binding.rvFeed.smoothScrollToPosition(0);
+                }
+                else
+                {
+                    binding.rvFeed.smoothScrollBy(0,0);
+                }
                // binding.rvFeed.smoothScrollToPosition( visibleCount+1 >= 10 ? 0: visibleCount+1 );
                 mHandler.postDelayed(myRunnable, 3000);
 
@@ -223,14 +238,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         inits();
 
-
-
-        bannerListApiCall();
+        getBannerList();
 
         getNotification();
 
         getTeams();
-
 
         return binding.getRoot();
     }
@@ -451,6 +463,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onStart() {
         super.onStart();
+
+        if (notificationList.size() > 0)
+        {
+            mHandler.post(myRunnable);
+        }
         if (getActivity() != null) {
          /*   ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);*/
@@ -571,6 +588,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     baseTeamTable.group_id = data.getFeaturedIconData().get(i).groupId;
                     baseTeamTable.activity = data.getActivity();
                     baseTeamTable.featureIcons = new Gson().toJson(data.getFeaturedIconData());
+                    baseTeamTable._now = System.currentTimeMillis();
 
                     try {
                         if (!data.getFeaturedIconData().get(i).name.equalsIgnoreCase("My Team")) {
@@ -615,35 +633,65 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                 AppLog.e(TAG, "notificationRes " + new Gson().toJson(results));
 
-                //NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
+                NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
 
                 if(results.size()>0)
                 {
                     notificationList.clear();
 
-                    for (int i = 0; i < results.size(); i++) {
+                    if (results.size()>10)
+                    {
+                        for (int i = 0; i < 10; i++) {
 
-                        NotificationTable notificationTable = new NotificationTable();
+                            NotificationTable notificationTable = new NotificationTable();
 
-                        NotificationListRes.NotificationListData notificationListData= results.get(i);
+                            NotificationListRes.NotificationListData notificationListData= results.get(i);
 
-                        notificationTable.teamId = notificationListData.getTeamId();
-                        notificationTable.groupId = notificationListData.getGroupId();
-                        notificationTable.userId = notificationListData.getUserId();
-                        notificationTable.type = notificationListData.getType();
-                        notificationTable.showComment = notificationListData.getShowComment();
-                        notificationTable.postId = notificationListData.getPostId();
-                        notificationTable.message = notificationListData.getMessage();
-                        notificationTable.insertedAt = notificationListData.getInsertedAt();
-                        notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
-                        notificationTable.createdByName = notificationListData.getCreatedByName();
-                        notificationTable.createdByImage = notificationListData.getCreatedByImage();
-                        notificationTable.createdById = notificationListData.getCreatedById();
-                        notificationTable.readedComment = "true";
-
-                        notificationTable.save();
-
+                            notificationTable.teamId = notificationListData.getTeamId();
+                            notificationTable.groupId = notificationListData.getGroupId();
+                            notificationTable.userId = notificationListData.getUserId();
+                            notificationTable.type = notificationListData.getType();
+                            notificationTable.showComment = notificationListData.getShowComment();
+                            notificationTable.postId = notificationListData.getPostId();
+                            notificationTable.message = notificationListData.getMessage();
+                            notificationTable.insertedAt = notificationListData.getInsertedAt();
+                            notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+                            notificationTable.createdByName = notificationListData.getCreatedByName();
+                            notificationTable.createdByImage = notificationListData.getCreatedByImage();
+                            notificationTable.createdById = notificationListData.getCreatedById();
+                            notificationTable.readedComment = "true";
+                            notificationTable._now = System.currentTimeMillis();
+                            notificationTable.save();
+                        }
                     }
+                    else
+                    {
+                        for (int i = 0; i < results.size(); i++) {
+
+                            NotificationTable notificationTable = new NotificationTable();
+
+                            NotificationListRes.NotificationListData notificationListData= results.get(i);
+
+                            notificationTable.teamId = notificationListData.getTeamId();
+                            notificationTable.groupId = notificationListData.getGroupId();
+                            notificationTable.userId = notificationListData.getUserId();
+                            notificationTable.type = notificationListData.getType();
+                            notificationTable.showComment = notificationListData.getShowComment();
+                            notificationTable.postId = notificationListData.getPostId();
+                            notificationTable.message = notificationListData.getMessage();
+                            notificationTable.insertedAt = notificationListData.getInsertedAt();
+                            notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+                            notificationTable.createdByName = notificationListData.getCreatedByName();
+                            notificationTable.createdByImage = notificationListData.getCreatedByImage();
+                            notificationTable.createdById = notificationListData.getCreatedById();
+                            notificationTable.readedComment = "true";
+                            notificationTable._now = System.currentTimeMillis();
+
+                            notificationTable.save();
+
+                        }
+                    }
+
                     getNotification();
 
                     TeamCountTBL dashboardCountv2 = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);
@@ -695,24 +743,37 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                 BannerRes bannerRes = (BannerRes) response;
 
-
                 if (bannerRes.getBannerData().get(0).getFileName() != null && bannerRes.getBannerData().get(0).getFileName().size()>0)
                 {
-                    binding.rvSliderBanner.setVisibility(View.VISIBLE);
+                  /*  binding.rvSliderBanner.setVisibility(View.VISIBLE);
                     binding.imgSlider.setVisibility(View.GONE);
-
-
                     Slider.init(new PicassoImageLoadingService(getContext()));
-
                     bannerData = bannerRes.getBannerData().get(0);
 
-                    Log.e(TAG,"banner Data"+new Gson().toJson(bannerData));
+                    Log.e(TAG,"banner Data"+new Gson().toJson(bannerData));*/
 
-                    sliderAdapter = new SliderBannerAdapter(bannerRes.getBannerData().get(0).fileName,getContext());
-                    binding.rvSliderBanner.setInterval(7000);
-                    binding.rvSliderBanner.setAdapter(sliderAdapter);
+                    BannerTBL.deleteBanner(GroupDashboardActivityNew.groupId);
 
+                    bannerDataList.clear();
+
+                    for (int i = 0; i < bannerRes.getBannerData().size(); i++) {
+
+                        BannerTBL bannerTBL = new BannerTBL();
+
+                        BannerRes.BannerData bannerData=  bannerRes.getBannerData().get(0);
+
+                        bannerTBL.groupId = GroupDashboardActivityNew.groupId;
+                        bannerTBL.updatedAt = bannerData.updatedAt;
+                        bannerTBL._now = System.currentTimeMillis();
+                        bannerTBL.fileType = bannerData.fileType;
+                        bannerTBL.fileName = new Gson().toJson(bannerData.fileName);
+
+                        bannerTBL.save();
+                    }
+                    getBannerList();
                     //sliderAdapter.add(bannerRes.getBannerData().get(0).fileName);
+
+
                 }
                 else
                 {
@@ -722,7 +783,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 break;
 
             case LeafManager.API_ADD_BANNER_LIST:
-                bannerListApiCall();
+                //bannerListApiCall();
                 break;
 
         }
@@ -914,7 +975,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         {
             binding.llNormalFeed.setVisibility(View.VISIBLE);
 
-            List<NotificationTable> notificationTableList = NotificationTable.getNotificationList(GroupDashboardActivityNew.groupId);
+            List<NotificationTable> notificationTableList = NotificationTable.getAllNotificationList(GroupDashboardActivityNew.groupId,1);
 
             if (notificationTableList != null && notificationTableList.size() > 0)
             {
@@ -978,7 +1039,55 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     }
 
-    private void bannerListApiCall() {
+    private void getBannerList() {
+
+        List<BannerTBL> bannerTBLList = BannerTBL.getBanner(GroupDashboardActivityNew.groupId);
+
+        if (bannerTBLList != null && bannerTBLList.size() > 0)
+        {
+            bannerDataList.clear();
+
+            for (int i = 0;i<bannerTBLList.size();i++)
+            {
+                BannerRes.BannerData bannerData = new BannerRes.BannerData();
+                bannerData.updatedAt = bannerTBLList.get(i).updatedAt;
+                bannerData.fileType = bannerTBLList.get(i).fileType;
+                bannerData.fileName = new Gson().fromJson(bannerTBLList.get(i).fileName,new TypeToken<ArrayList<String>>() {}.getType());
+                bannerDataList.add(bannerData);
+            }
+            Slider.init(new PicassoImageLoadingService(getContext()));
+            sliderAdapter = new SliderBannerAdapter(bannerDataList.get(0).fileName,getContext());
+            binding.rvSliderBanner.setAdapter(sliderAdapter);
+            binding.rvSliderBanner.setInterval(7000);
+
+        }
+        else
+        {
+            bannerListApiCall();
+        }
+
+        if (bannerDataList != null && bannerDataList.size() >0)
+        {
+            binding.rvSliderBanner.setVisibility(View.VISIBLE);
+            binding.imgSlider.setVisibility(View.GONE);
+
+            bannerData = new BannerRes.BannerData();
+            bannerData = bannerDataList.get(0);
+
+            Log.e(TAG,"banner Data"+new Gson().toJson(bannerData));
+
+            //sliderAdapter.add(bannerRes.getBannerData().get(0).fileName);
+        }
+        else
+        {
+            binding.rvSliderBanner.setVisibility(View.GONE);
+            binding.imgSlider.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+
+    public void bannerListApiCall() {
 
         if (!isConnectionAvailable()) {
             return;
@@ -1013,8 +1122,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     }
     public void checkAndRefreshNotification(boolean apiCall) {
         if (apiCall) {
-            AppLog.e(TAG, "---- Refresh Team -----");
-            apiCall();
+            AppLog.e(TAG, "---- Refresh Notification -----");
+            notificationApiCall();
         }
     }
 
@@ -1026,6 +1135,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 binding.imgExpandFeedAfter.setVisibility(View.VISIBLE);
                 binding.imgExpandFeedBefore.setVisibility(View.GONE);
                 binding.tvViewMoreFeed.setVisibility(View.VISIBLE);
+                if (notificationList.size()>0)
+                {
+                    mHandler.removeCallbacks(myRunnable);
+                    ViewGroup.LayoutParams layoutParams = binding.rvFeed.getLayoutParams();
+                    layoutParams.width= ViewGroup.LayoutParams.MATCH_PARENT;
+                    layoutParams.height= ViewGroup.LayoutParams.WRAP_CONTENT;
+                    binding.rvFeed.setLayoutParams(layoutParams);
+                }
                 feedAdapter.expand();
                 break;
 
@@ -1033,12 +1150,24 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 binding.imgExpandFeedBefore.setVisibility(View.VISIBLE);
                 binding.imgExpandFeedAfter.setVisibility(View.GONE);
                 binding.tvViewMoreFeed.setVisibility(View.GONE);
+
+                if (notificationList.size() > 0)
+                {
+                    mHandler.post(myRunnable);
+                    ViewGroup.LayoutParams layoutParam = binding.rvFeed.getLayoutParams();
+                    layoutParam.width= ViewGroup.LayoutParams.MATCH_PARENT;
+                    layoutParam.height= (int) getResources().getDimension(R.dimen.nav_header_height);
+                    binding.rvFeed.setLayoutParams(layoutParam);
+                }
+
                 feedAdapter.expand();
                 break;
 
             case R.id.imgExpandAdminFeedBefore:
                 binding.imgExpandAdminFeedAfter.setVisibility(View.VISIBLE);
                 binding.imgExpandAdminFeedBefore.setVisibility(View.GONE);
+
+
                 feedAdminAdapter.expand();
                 break;
 
@@ -1299,7 +1428,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         if (requestCode == 13 && resultCode == RESULT_OK)
         {
-            bannerListApiCall();
+            getBannerList();
         }
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -1630,7 +1759,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         ArrayList<String> urls;
         Context context;
 
-        public SliderBannerAdapter(ArrayList<String> urls, Context context) {
+        public SliderBannerAdapter(ArrayList<String> urls, Context context)
+        {
             this.urls = urls;
             this.context = context;
         }

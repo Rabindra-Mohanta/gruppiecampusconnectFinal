@@ -98,21 +98,27 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
     }
 
     public void updatePhotoFromUrl(String url) {
+
         if (!TextUtils.isEmpty(url)) {
             _finalUrl = url;
-            Picasso.with(getContext()).load(Constants.decodeUrlToBase64(url)).memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE).into(getImageView(), new Callback() {
-                @Override
-                public void onSuccess() {
-                    BitmapDrawable drawable = (BitmapDrawable) getImageView().getDrawable();
-                    setImageString(drawable);
-                }
 
-                @Override
-                public void onError() {
+            if (getImageView() != null)
+            {
+                Picasso.with(getContext()).load(Constants.decodeUrlToBase64(url)).memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .networkPolicy(NetworkPolicy.NO_CACHE).into(getImageView(), new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        BitmapDrawable drawable = (BitmapDrawable) getImageView().getDrawable();
+                        setImageString(drawable);
+                    }
 
-                }
-            });
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+            }
+
         }
     }
 

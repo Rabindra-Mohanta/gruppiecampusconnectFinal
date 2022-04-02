@@ -50,7 +50,7 @@ import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.PhoneContactsItems;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.versioncheck.VersionCheckResponse;
 import school.campusconnect.fragments.GroupListFragment;
 import school.campusconnect.fragments.PublicGroupListFragment;

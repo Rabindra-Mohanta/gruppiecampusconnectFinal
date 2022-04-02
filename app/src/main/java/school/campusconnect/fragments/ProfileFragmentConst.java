@@ -1,37 +1,26 @@
 package school.campusconnect.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
+import com.activeandroid.query.From;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,32 +31,27 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.activities.GroupDashboardActivityNew;
-import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ProfileConstituencyActivity;
-import school.campusconnect.activities.SubjectActivity2;
-import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
-import school.campusconnect.datamodel.AddressItem;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
-import school.campusconnect.datamodel.ProfileItem;
-import school.campusconnect.datamodel.ProfileItemUpdate;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.banner.BannerRes;
+import school.campusconnect.datamodel.profile.ProfileItem;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.ProfileValidationError;
-import school.campusconnect.datamodel.classs.ClassResponse;
-import school.campusconnect.datamodel.family.FamilyMemberResponse;
+import school.campusconnect.datamodel.profile.ProfileTBL;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
-import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.utils.UploadCircleImageFragment;
-import school.campusconnect.views.SearchIssueFragmentDialog;
 
 public class ProfileFragmentConst extends BaseFragment implements LeafManager.OnCommunicationListener, LeafManager.OnAddUpdateListener<ProfileValidationError> ,SearchCastFragmentDialog.SelectListener,SearchSubCasteDialogFragment.SelectListener{
     private static final String TAG = "ProfileFragmentConst";
@@ -161,7 +145,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     SearchCastFragmentDialog searchCastFragmentDialog;
     SearchSubCasteDialogFragment searchSubCasteDialogFragment;
 
-    public ProfileItem item;
+    public ProfileItem item = new ProfileItem();
 
     public static String profileImage;
 
@@ -171,11 +155,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         View view = inflater.inflate(R.layout.fragment_profile_const, container, false);
         ButterKnife.bind(this, view);
         init();
-
-        progressBar.setVisibility(View.VISIBLE);
-        LeafManager leafManager = new LeafManager();
-        leafManager.getProfileDetails(this);
-
         return view;
     }
 
@@ -265,9 +244,17 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             }
         });
 
+        List<ProfileTBL> profileTBLList = ProfileTBL.getProfile();
 
-
-
+        if (profileTBLList.size() > 0) {
+            if (MixOperations.isNewEvent(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now)) {
+                profileApiCall();
+            }
+            else
+            {
+                getDataLocally();
+            }
+        }
     }
 
     public void callUpdateProfileApi() {
@@ -366,22 +353,23 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             ProfileResponse res = (ProfileResponse) response;
             AppLog.e(TAG, "ProfileResponse" + res);
 
-            item = res.data;
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.NAME, res.data.name);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
+            if (res.data != null)
+            {
+                ProfileTBL.deleteAll();
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, item.name);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, item.voterId);
+                ProfileTBL profileTBL = new ProfileTBL();
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.EMAIL, res.data.email);
-            AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
-            AppLog.e("PROFILE IMAGE", "image is " + res.data.image);
-            imageFragment.isImageChanged = false;
+                profileTBL.profileData = new Gson().toJson(res.data);
+                profileTBL._now = System.currentTimeMillis();
+                profileTBL.save();
+            }
 
-            fillDetails(item);
+            getDataLocally();
+
+
+
+        //    fillDetails(item);
 
         } else if (LeafManager.API_ID_DELETE_PROPIC == apiId) {
             imageFragment.isImageChanged = false;
@@ -530,6 +518,45 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         }
     }
 
+    private void getDataLocally() {
+
+
+        List<ProfileTBL> profileTBLList = ProfileTBL.getProfile();
+
+        if (profileTBLList != null && profileTBLList.size()>0)
+        {
+            ProfileResponse profileResponse = new ProfileResponse();
+            profileResponse.data = new Gson().fromJson(profileTBLList.get(0).profileData,new TypeToken<ProfileItem>() {}.getType());
+
+
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.NAME, profileResponse.data.name);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_COMPLETE, profileResponse.data.profileCompletion);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, profileResponse.data.image);
+
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, profileResponse.data.image);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, profileResponse.data.name);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, profileResponse.data.voterId);
+
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.EMAIL, profileResponse.data.email);
+            imageFragment.isImageChanged = false;
+
+            item = profileResponse.data;
+            fillDetails(profileResponse.data);
+        }
+        else
+        {
+            profileApiCall();
+        }
+
+    }
+
+    public void profileApiCall()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getProfileDetails(this);
+    }
+
     @Override
     public void onFailure(int apiId, ErrorResponseModel<ProfileValidationError> error) {
 
@@ -582,7 +609,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         if (item.image != null && !item.image.isEmpty() && Constants.decodeUrlToBase64(item.image).contains("http")) {
             imageFragment.updatePhotoFromUrl(item.image);
         } else if (item.image == null) {
-            Log.e("ProfileActivity", "image is Null From API ");
+            Log.e("ProfileActivity", "image is Null From API "+item.name);
             imageFragment.setInitialLatterImage(item.name);
         }
 

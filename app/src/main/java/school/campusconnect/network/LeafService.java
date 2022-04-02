@@ -127,8 +127,8 @@ import school.campusconnect.datamodel.LoginRequest;
 import school.campusconnect.datamodel.LoginResponse;
 import school.campusconnect.datamodel.PersonalSettingRes;
 import school.campusconnect.datamodel.PostResponse;
-import school.campusconnect.datamodel.ProfileItemUpdate;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.ReadGroupPostResponse;
 import school.campusconnect.datamodel.ReadTeamPostResponse;
 import school.campusconnect.datamodel.SettingRes;
@@ -1548,6 +1548,10 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/events")
     @Headers({"Content-Type: application/json"})
     Call<UpdateDataEventRes> getUpdateEventList(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/events/constituency")
+    @Headers({"Content-Type: application/json"})
+    Call<UpdateDataEventRes> getUpdateEventListConstituency(@Path("group_id") String group_id);
 
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/get")

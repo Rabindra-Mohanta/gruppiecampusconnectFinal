@@ -69,6 +69,9 @@ public class PostTeamDataItem extends Model {
     @Column(name = "isFavourited")
     public boolean isFavourited;
 
+    @Column(name = "_now")
+    public long _now;
+
 
 
     public PostTeamDataItem() {

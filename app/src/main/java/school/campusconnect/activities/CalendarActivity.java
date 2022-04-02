@@ -225,6 +225,7 @@ public class CalendarActivity extends BaseActivity {
     }
 
     private void showEventInDay(ArrayList<EventInDayRes.EventInDayData> data) {
+
         if(data!=null && data.size()>0){
             eventAdapter.addEvetns(data);
             tvData.setVisibility(View.GONE);

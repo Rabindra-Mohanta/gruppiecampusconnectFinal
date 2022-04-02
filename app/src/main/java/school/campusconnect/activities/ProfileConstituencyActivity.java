@@ -2,6 +2,7 @@ package school.campusconnect.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,17 +10,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.profile.ProfileTBL;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.fragments.FamilyListFragment;
 import school.campusconnect.fragments.ProfileFragmentConst;
 import school.campusconnect.fragments.TestOfflineListFragment;
 import school.campusconnect.fragments.TestSubjectListFragment;
+import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.MixOperations;
 
 public class ProfileConstituencyActivity extends BaseActivity {
 
@@ -33,6 +43,8 @@ public class ProfileConstituencyActivity extends BaseActivity {
     FamilyListFragment familyListFragment;
     ProfileFragmentConst profileFragmentConst;
 
+    public static final String TAG = "ProfileConstituencyActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +56,12 @@ public class ProfileConstituencyActivity extends BaseActivity {
         setTitle("");
 
         tabLayout.setVisibility(View.VISIBLE);
+
         profileFragmentConst = new ProfileFragmentConst();
         profileFragmentConst.setArguments(getIntent().getExtras());
 
         familyListFragment = new FamilyListFragment();
         familyListFragment.setArguments(getIntent().getExtras());
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragmentConst).commit();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -79,8 +91,19 @@ public class ProfileConstituencyActivity extends BaseActivity {
 
             }
         });
-    }
 
+        Fragment currFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        AppLog.e(TAG,"currFrag"+currFrag);
+
+        if (currFrag instanceof ProfileFragmentConst)
+        {
+
+        }
+
+
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_family_member, menu);
