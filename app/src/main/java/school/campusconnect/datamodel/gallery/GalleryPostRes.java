@@ -1,4 +1,4 @@
-package school.campusconnect.datamodel;
+package school.campusconnect.datamodel.gallery;
 
 import androidx.annotation.NonNull;
 
@@ -6,16 +6,19 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryPostRes extends BaseResponse{
+import school.campusconnect.datamodel.BaseResponse;
+
+public class GalleryPostRes extends BaseResponse {
 
     public  int totalNumberOfPages;
 
     public ArrayList<GalleryData> data;
 
-    public class GalleryData {
+    public class GalleryData implements Serializable {
         @SerializedName("updatedAt")
         @Expose
         public String updatedAt;

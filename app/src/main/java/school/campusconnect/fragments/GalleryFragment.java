@@ -30,7 +30,7 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.adapters.GalleryAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
@@ -252,6 +252,9 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 totalPages = res.totalNumberOfPages;
                 mIsLoading = false;
+
+                saveToLocallay(res.data);
+
                 break;
             case LeafManager.API_GALLERY_DELETE:
                 Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
@@ -260,6 +263,9 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 getData();
                 break;
         }
+    }
+
+    private void saveToLocallay(ArrayList<GalleryPostRes.GalleryData> data) {
     }
 
     @Override

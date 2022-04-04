@@ -1,17 +1,22 @@
 package school.campusconnect.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +24,9 @@ import school.campusconnect.Assymetric.AGVRecyclerViewAdapter;
 import school.campusconnect.Assymetric.AsymmetricItem;
 import school.campusconnect.Assymetric.multiimages.ItemImage;
 import school.campusconnect.R;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.Constants;
 
@@ -34,7 +41,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
     private Context context;
     GalleryPostRes.GalleryData item;
     GalleryImageListener listener;
-
+    String imagePreviewUrl = "";
     public GalleryImageListener getListener() {
         return listener;
     }
@@ -87,6 +94,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                 items.add(tempData.get(j));
             }*/
         }
+        imagePreviewUrl = LeafPreference.getInstance(context).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
     }
 
 
@@ -125,19 +133,33 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
         private final ArrayList<String> allImageList;
         private final ImageView imgDownloadVideo;
         private final ImageView img_play;
+
+        private final ImageView imgDownload;
+        private final ImageView imgCancel;
+        private final ProgressBar progressBar;
+        private final FrameLayout llProgress;
+        private final ProgressBar progressBar1;
+        AmazoneImageDownload asyncTask;
+
         public ViewHolder(ViewGroup parent, int viewType, List<ItemImage> items, ArrayList<String> allImageList) {
-            super(LayoutInflater.from(parent.getContext()).inflate(
-                    item.fileType.equals(Constants.FILE_TYPE_VIDEO)?R.layout.adapter_video_item:R.layout.adapter_item, parent, false));
+            super(LayoutInflater.from(parent.getContext()).inflate(item.fileType.equals(Constants.FILE_TYPE_VIDEO)?R.layout.adapter_video_item:R.layout.adapter_item, parent, false));
 
             this.allImageList = allImageList;
             for (String s : allImageList) {
                 Log.e("ViewHolder Images", s);
             }
+
+
             mImageView = (ImageView) itemView.findViewById(R.id.mImageView);
             textView = (TextView) itemView.findViewById(R.id.tvCount);
             imgDownloadVideo = (ImageView) itemView.findViewById(R.id.imgDownloadVideo);
             img_play = (ImageView) itemView.findViewById(R.id.img_play);
 
+            imgDownload = (ImageView) itemView.findViewById(R.id.imgDownload);
+            imgCancel = (ImageView) itemView.findViewById(R.id.imgCancel);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+            progressBar1 = (ProgressBar) itemView.findViewById(R.id.progressBar1);
+            llProgress = (FrameLayout) itemView.findViewById(R.id.llProgress);
         }
 
 
@@ -157,7 +179,101 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                     imgDownloadVideo.setVisibility(View.VISIBLE);
                 }
             }else {
-                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+
+
+                if(AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())){
+                    llProgress.setVisibility(View.GONE);
+                    imgDownload.setVisibility(View.GONE);
+                    Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath())).fit().placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.e("Picasso", "Error : ");
+                        }
+                    });
+                }
+                else {
+                    String path = Constants.decodeUrlToBase64(item.get(position).getImagePath());
+                    String newStr = path.substring(path.indexOf("/images")+1);
+                    Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.e("Picasso", "Error : ");
+                        }
+                    });
+                    imgDownload.setVisibility(View.VISIBLE);
+                    imgDownload.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            imgDownload.setVisibility(View.GONE);
+                            llProgress.setVisibility(View.VISIBLE);
+                            progressBar1.setVisibility(View.VISIBLE);
+                            asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                                @Override
+                                public void onDownload(File file) {
+                                    llProgress.setVisibility(View.GONE);
+                                    progressBar.setVisibility(View.GONE);
+                                    progressBar1.setVisibility(View.GONE);
+                                    Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                            Log.e("Picasso", "Error : ");
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void error(String msg) {
+                                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            llProgress.setVisibility(View.GONE);
+                                            progressBar.setVisibility(View.GONE);
+                                            progressBar1.setVisibility(View.GONE);
+                                            Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void progressUpdate(int progress, int max) {
+                                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(progress>0){
+                                                progressBar1.setVisibility(View.GONE);
+                                            }
+                                            progressBar.setProgress(progress);
+                                        }
+                                    });
+                                }
+                            });
+
+
+                        }
+                    });
+                    imgCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            asyncTask.cancel(true);
+                        }
+                    });
+                }
+              /*  Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -167,7 +283,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                     public void onError() {
                         Log.e("Picasso", "Error : ");
                     }
-                });
+                });*/
             }
 
 

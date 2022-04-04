@@ -34,6 +34,8 @@ import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.event.BoothPostEventTBL;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
@@ -125,9 +127,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private boolean isFromMain;
     private String isBoothClick;
     LeafPreference leafPreference;
-
-    //private Query query;
-
+    private String type;
     public TeamPostsFragmentNew() {
 
     }
@@ -136,9 +136,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
         AppLog.e(TAG, "TeamPostsFragmentNew");
-
         leafPreference = LeafPreference.getInstance(TeamPostsFragmentNew.this.getActivity());
     }
 
@@ -529,10 +527,71 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         }
 
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            if (getArguments().getBoolean("isFromMain"))
+            {
+                if (type.equalsIgnoreCase("booth"))
+                {
+                    if (BoothPostEventTBL.getAll().size()>0)
+                    {
+                        List<BoothPostEventTBL> postEventTBLList= BoothPostEventTBL.getAll();
+
+                        List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type);
+                        for (int i = 0;i<postEventTBLList.size();i++)
+                        {
+                            if (teamData.boothId.equalsIgnoreCase(postEventTBLList.get(i).boothId))
+                            {
+                                for (int j = 0;j<dataItemList.size();j++)
+                                {
+                                    if (MixOperations.isNewEvent(postEventTBLList.get(i).lastBoothPostAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dataItemList.get(j)._now))
+                                    {
+                                        PostTeamDataItem.deleteTeamPosts(team_id,type);
+                                        AppLog.e(TAG,"isNewEvent");
+                                        callApi(true);
+                                        break;
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    if (HomeTeamDataTBL.getAll().size()>0)
+                    {
+                        List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getAll();
+                        List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type);
+                        for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                        {
+                            if (teamData.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                            {
+                                for (int j = 0;j<dataItemList.size();j++)
+                                {
+                                    if (MixOperations.isNewEvent(homeTeamDataTBLList.get(i).lastTeamPostAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dataItemList.get(j)._now))
+                                    {
+                                        PostTeamDataItem.deleteTeamPosts(team_id,type);
+                                        AppLog.e(TAG,"isNewEvent");
+                                        callApi(true);
+                                        break;
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+
+
+            }
+        }
 
 
 
-        final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "");
+        final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type);
         AppLog.e(TAG, "local list size is " + dataItemList.size());
         showLoadingBar(mBinding.progressBar2);
         String lastId = null;
@@ -643,6 +702,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     }
 
     private void init() {
+
         DatabaseHandler databaseHandler = new DatabaseHandler(getActivity());
         count = databaseHandler.getCount();
 
@@ -653,7 +713,17 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         isFromMain = getArguments().getBoolean("isFromMain", false);
         isBoothClick = getArguments().getString("boothClick");
 
+        if (isBoothClick != null && isBoothClick.equalsIgnoreCase("yes"))
+        {
+            type = "booth";
+        }
+        else
+        {
+            type = "team";
+        }
+
         AppLog.e(TAG, "isBoothClick : " + isBoothClick);
+        AppLog.e(TAG, "type : " + type);
         AppLog.e(TAG, "isFromMain : " + isFromMain);
 
         mGroupId = !TextUtils.isEmpty(teamData.groupId) ? teamData.groupId : GroupDashboardActivityNew.groupId;
@@ -787,7 +857,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 mIsLoading = false;
 
                 if (currentPage2 == 1) {
-                    PostTeamDataItem.deleteTeamPosts(team_id);
+                    PostTeamDataItem.deleteTeamPosts(team_id,type);
                     teamPostList.clear();
                 }
                 teamPostList.addAll(res2.getResults());
@@ -885,8 +955,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         break;
                     }
                 }
-                if (!isFind)
-                    getActivity().onBackPressed();
+                /*if (!isFind)
+                    getActivity().onBackPressed();*/
             }
             break;
             case LeafManager.API_GET_BOOTHS:
@@ -903,8 +973,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         break;
                     }
                 }
-                if (!isFind)
-                    getActivity().onBackPressed();
+               /* if (!isFind)
+                    getActivity().onBackPressed();*/
                 break;
 
 
@@ -969,11 +1039,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             postItem.team_id = team_id + "";
             postItem.thumbnail = item.thumbnail;
             postItem.isFavourited = item.isFavourited;
+            postItem.type = type;
             postItem._now = System.currentTimeMillis();
             postItem.save();
         }
-
-
     }
 
     @Override

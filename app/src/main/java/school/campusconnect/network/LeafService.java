@@ -117,7 +117,7 @@ import school.campusconnect.datamodel.CreateGroupReguest;
 import school.campusconnect.datamodel.CreateTeamRequest;
 import school.campusconnect.datamodel.EditAttendanceReq;
 import school.campusconnect.datamodel.ForgotPasswordRequest;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.datamodel.GetLocationRes;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupResponse;
@@ -1725,9 +1725,9 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothVotersListResponse> getBoothVoters(@Path("group_id") String group_id, @Path("booth_id") String booth_id);
 
-    @GET("/api/v1/groups/{group_id}/all/booths/get")
+   /* @GET("/api/v1/groups/{group_id}/all/booths/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BoothResponse> getBoothsCoordinator(@Path("group_id") String group_id,@Query("boothCoordinator") String option);
+    Call<BoothResponse> getBoothsCoordinator(@Path("group_id") String group_id,@Query("boothCoordinator") String option);*/
 
     @GET("/api/v1/groups/{group_id}/my/booth/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

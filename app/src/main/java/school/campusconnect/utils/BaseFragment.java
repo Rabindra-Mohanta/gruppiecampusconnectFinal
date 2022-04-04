@@ -46,7 +46,10 @@ import school.campusconnect.datamodel.booths.MemberTeamTBL;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.event.BoothPostEventTBL;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
+import school.campusconnect.datamodel.gallery.GalleryTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
 import school.campusconnect.datamodel.masterList.MasterBoothListTBL;
@@ -249,7 +252,9 @@ public class BaseFragment extends Fragment {
             PersonalContactsModel.deleteAll();
             GruppieContactsModel.deleteAll();
 //        GruppieContactAddressModel.deleteAll();
+            BoothPostEventTBL.deleteAll();
             GruppieContactGroupIdModel.deleteAll();
+            GalleryTable.deleteGallery();
             getActivity().getSharedPreferences("pref_noti_count", Context.MODE_PRIVATE).edit().clear().commit();
             new DatabaseHandler(getActivity()).deleteAll();
 
@@ -261,6 +266,7 @@ public class BaseFragment extends Fragment {
             LiveClassListTBL.deleteAll();
             TeamCountTBL.deleteAll();
             SubjectCountTBL.deleteAll();
+            HomeTeamDataTBL.deleteAll();
             StudAssignementItem.deleteAll();
             StudTestPaperItem.deleteAll();
             SubjectItem.deleteAll();

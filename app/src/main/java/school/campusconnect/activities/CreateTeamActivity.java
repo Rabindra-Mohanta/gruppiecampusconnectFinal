@@ -120,6 +120,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
         setTitle(getResources().getString(R.string.lbl_create_team));
         leafManager = new LeafManager();
         Bundle bundle = getIntent().getExtras();
+
         if(bundle!=null)
         {
             isEdit=bundle.getBoolean("is_edit");
@@ -196,9 +197,15 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
 
                 Toast.makeText(this, getString(R.string.msg_creted_team), Toast.LENGTH_LONG).show();
 
-                if ("subBooth".equalsIgnoreCase(myTeamData.category) || "booth".equalsIgnoreCase(myTeamData.category) || "constituency".equalsIgnoreCase(myTeamData.category)) {
-                    finish();
-                }else {
+                if (myTeamData != null)
+                {
+                    if ("subBooth".equalsIgnoreCase(myTeamData.category) || "booth".equalsIgnoreCase(myTeamData.category) || "constituency".equalsIgnoreCase(myTeamData.category)) {
+                        finish();
+
+                    }
+                }
+                else
+                    {
                     final AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     CharSequence items[] = new CharSequence[] {"Add Staff", "Add Students"};
                     adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {

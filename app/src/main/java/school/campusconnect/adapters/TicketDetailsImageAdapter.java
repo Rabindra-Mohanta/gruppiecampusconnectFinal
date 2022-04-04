@@ -1,7 +1,6 @@
 package school.campusconnect.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -24,12 +22,6 @@ import school.campusconnect.Assymetric.AGVRecyclerViewAdapter;
 import school.campusconnect.Assymetric.AsymmetricItem;
 import school.campusconnect.Assymetric.multiimages.ItemImage;
 import school.campusconnect.R;
-import school.campusconnect.activities.FullScreenActivity;
-import school.campusconnect.activities.FullScreenMultiActivity;
-import school.campusconnect.activities.FullScreenVideoMultiActivity;
-import school.campusconnect.activities.GalleryDetailActivity;
-import school.campusconnect.activities.VideoPlayActivity;
-import school.campusconnect.datamodel.GalleryPostRes;
 import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.utils.Constants;
 

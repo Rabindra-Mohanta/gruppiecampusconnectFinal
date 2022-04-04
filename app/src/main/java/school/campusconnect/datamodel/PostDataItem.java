@@ -61,6 +61,7 @@ public class PostDataItem extends Model {
     @Column(name = "friend_id")
     public String friend_id;
 
+
     @Column(name = "imageWidth")
     public int imageWidth;
     @Column(name = "imageHeight")

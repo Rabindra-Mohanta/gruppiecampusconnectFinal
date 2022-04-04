@@ -120,7 +120,7 @@ import school.campusconnect.datamodel.AttendanceListRes;
 import school.campusconnect.datamodel.CodeConductResponse;
 import school.campusconnect.datamodel.CreateTeamRequest;
 import school.campusconnect.datamodel.EditAttendanceReq;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.datamodel.GetLocationRes;
 import school.campusconnect.datamodel.PersonalSettingRes;
 import school.campusconnect.datamodel.SettingRes;
@@ -10562,7 +10562,13 @@ public class LeafManager {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BoothResponse> model = !TextUtils.isEmpty(option)?service.getBoothsCoordinator(group_id,option):service.getBooths(group_id);
+
+
+    //    final Call<BoothResponse> model = !TextUtils.isEmpty(option)?service.getBoothsCoordinator(group_id,option):service.getBooths(group_id); //remove booth cordinator in boothListfragmentV2
+
+
+        final Call<BoothResponse> model = service.getBooths(group_id);
+
         ResponseWrapper<BoothResponse> wrapper = new ResponseWrapper<>(model);
 
         final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {

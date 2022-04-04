@@ -21,7 +21,7 @@ import school.campusconnect.Assymetric.AsymmetricItem;
 import school.campusconnect.Assymetric.multiimages.ItemImage;
 import school.campusconnect.R;
 import school.campusconnect.activities.GalleryDetailActivity;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.Constants;
 

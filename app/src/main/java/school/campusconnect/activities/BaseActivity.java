@@ -51,7 +51,10 @@ import school.campusconnect.datamodel.booths.MemberTeamTBL;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.event.BoothPostEventTBL;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
+import school.campusconnect.datamodel.gallery.GalleryTable;
 import school.campusconnect.datamodel.masterList.MasterBoothListTBL;
 import school.campusconnect.datamodel.masterList.StreetListTBL;
 import school.campusconnect.datamodel.masterList.VoterListTBL;
@@ -625,6 +628,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         MasterBoothListTBL.deleteAll();
         BoothsTBL.deleteAll();
         PublicFormBoothTBL.deleteAll();
+        GalleryTable.deleteGallery();
         MemberTeamTBL.deleteAll();
         WorkerListTBL.deleteAll();
         VoterListTBL.deleteAll();
@@ -639,6 +643,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         HwItem.deleteAll();
         TestExamTBL.deleteAll();
         ChapterTBL.deleteAll();
+        HomeTeamDataTBL.deleteAll();
         EventTBL.deleteAll();
         ClassListTBL.deleteAll();
         LiveClassListTBL.deleteAll();
@@ -649,6 +654,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         SubjectItem.deleteAll();
         EBookItem.deleteAll();
         EBookClassItem.deleteAll();
+        BoothPostEventTBL.deleteAll();
         BannerTBL.deleteAll();
         MyTeamVotersTBL.deleteAll();
         MyTeamSubBoothTBL.deleteAll();
@@ -676,8 +682,10 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         BaseTeamTableV2.deleteAll();
         MasterBoothListTBL.deleteAll();
         WorkerListTBL.deleteAll();
+        HomeTeamDataTBL.deleteAll();
         StreetListTBL.deleteAll();
         TicketTBL.deleteAll();
+        BoothPostEventTBL.deleteAll();
         NotificationTable.deleteAll();
         VoterListTBL.deleteAll();
         ProfileTBL.deleteAll();
@@ -690,6 +698,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();
         MyTeamVotersTBL.deleteAll();
+        GalleryTable.deleteGallery();
         BoothPresidentTBL.deleteAll();
 
 //        GruppieContactAddressModel.deleteAll();

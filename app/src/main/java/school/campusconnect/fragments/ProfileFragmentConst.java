@@ -155,6 +155,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         View view = inflater.inflate(R.layout.fragment_profile_const, container, false);
         ButterKnife.bind(this, view);
         init();
+
+
         return view;
     }
 
@@ -244,17 +246,9 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             }
         });
 
-        List<ProfileTBL> profileTBLList = ProfileTBL.getProfile();
 
-        if (profileTBLList.size() > 0) {
-            if (MixOperations.isNewEvent(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now)) {
-                profileApiCall();
-            }
-            else
-            {
-                getDataLocally();
-            }
-        }
+
+
     }
 
     public void callUpdateProfileApi() {
@@ -341,6 +335,24 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Override
     public void onStart() {
         super.onStart();
+
+        List<ProfileTBL> profileTBLList = ProfileTBL.getProfile();
+
+        if (profileTBLList.size() > 0) {
+            if (MixOperations.isNewEvent(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now)) {
+                profileApiCall();
+            }
+            else
+            {
+                getDataLocally();
+            }
+
+        }
+        else
+        {
+            getDataLocally();
+        }
+
     }
 
     @Override
