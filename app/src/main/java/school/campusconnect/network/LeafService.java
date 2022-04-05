@@ -19,6 +19,7 @@ import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
+import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
@@ -1911,6 +1912,10 @@ public interface LeafService {
     @PUT("/api/v1/admin/groups/{group_id}/users/{user_id}/allow/post")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> makeAppAdmin(@Path("group_id") String group_id,@Path("user_id") String user_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/events/subbooth")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubBoothEventRes> getSubBoothEvent(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
 
 

@@ -267,6 +267,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         adapter.add(myTeamDataList);
         rvClass.setAdapter(adapter);*/
         saveToLocally(res.getData());
+
     }
     private void saveToLocally(ArrayList<MyTeamData> boothList) {
 

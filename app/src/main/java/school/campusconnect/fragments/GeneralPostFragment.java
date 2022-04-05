@@ -180,6 +180,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         ActiveAndroid.initialize(getActivity());
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_button, container, false);
         mBinding.setSize(1);
+
         init();
 
         getGroupPostLocaly();

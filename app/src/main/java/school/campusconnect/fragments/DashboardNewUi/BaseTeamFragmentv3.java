@@ -922,7 +922,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onTeamClick(MyTeamData team) {
         Log.e(TAG,"Team Data :"+new Gson().toJson(team));
-        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team,"no");
+        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team,"no","no");
     }
 
     @Override

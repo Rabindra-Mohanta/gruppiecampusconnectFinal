@@ -62,7 +62,7 @@ public class NestedTeamActivity extends BaseActivity {
     {
         myTeamData.groupId=groupId;
         setTitle(myTeamData.name);
-        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(myTeamData,false,"no");
+        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(myTeamData,false,"no","no");
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragTeamPost).addToBackStack("nested_team").commit();
     }
 

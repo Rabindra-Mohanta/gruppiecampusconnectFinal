@@ -34,6 +34,7 @@ import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.booths.EventSubBoothTBL;
 import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
@@ -126,6 +127,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private boolean liked;
     private boolean isFromMain;
     private String isBoothClick;
+    private String isMemberClick;
     LeafPreference leafPreference;
     private String type;
     public TeamPostsFragmentNew() {
@@ -366,12 +368,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         });
     }
 
-    public static TeamPostsFragmentNew newInstance(MyTeamData myTeamData, boolean isFromMain,String boothClick) {
+    public static TeamPostsFragmentNew newInstance(MyTeamData myTeamData, boolean isFromMain,String boothClick,String memberClick) {
         TeamPostsFragmentNew fragment = new TeamPostsFragmentNew();
         Bundle b = new Bundle();
         b.putString("team_data", new Gson().toJson(myTeamData));
         b.putBoolean("isFromMain", isFromMain);
         b.putString("boothClick", boothClick);
+        b.putString("memberClick", memberClick);
         AppLog.e(TAG, "newInstance: myTeamData is " + myTeamData);
         fragment.setArguments(b);
         return fragment;
@@ -558,6 +561,33 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                     }
                 }
+                if (type.equalsIgnoreCase("member"))
+                {
+                    if (EventSubBoothTBL.getAll().size()>0)
+                    {
+                        List<EventSubBoothTBL> eventSubBoothTBLS= EventSubBoothTBL.getAll();
+
+                        List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type);
+                        for (int i = 0;i<eventSubBoothTBLS.size();i++)
+                        {
+                            if (teamData.teamId.equalsIgnoreCase(eventSubBoothTBLS.get(i).teamId))
+                            {
+                                for (int j = 0;j<dataItemList.size();j++)
+                                {
+                                    if (MixOperations.isNewEvent(eventSubBoothTBLS.get(i).lastTeamPostAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dataItemList.get(j)._now))
+                                    {
+                                        PostTeamDataItem.deleteTeamPosts(team_id,type);
+                                        AppLog.e(TAG,"isNewEvent");
+                                        callApi(true);
+                                        break;
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+                }
                 else
                 {
                     if (HomeTeamDataTBL.getAll().size()>0)
@@ -712,10 +742,15 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         teamData = new Gson().fromJson(getArguments().getString("team_data"), MyTeamData.class);
         isFromMain = getArguments().getBoolean("isFromMain", false);
         isBoothClick = getArguments().getString("boothClick");
+        isMemberClick = getArguments().getString("memberClick");
 
         if (isBoothClick != null && isBoothClick.equalsIgnoreCase("yes"))
         {
             type = "booth";
+        }
+        if (isMemberClick != null && isMemberClick.equalsIgnoreCase("yes"))
+        {
+            type = "member";
         }
         else
         {

@@ -42,6 +42,7 @@ import school.campusconnect.datamodel.banner.BannerTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.booths.BoothPresidentTBL;
 import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.EventSubBoothTBL;
 import school.campusconnect.datamodel.booths.MemberTeamTBL;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
@@ -246,6 +247,7 @@ public class BaseFragment extends Fragment {
             NotificationTable.deleteAll();
             AllNotificationTable.deleteAll();
             AdminFeedTable.deleteAll();
+            EventSubBoothTBL.deleteAll();
             VoterListTBL.deleteAll();
             BannerTBL.deleteAll();
             PostTeamDataItem.deleteAllPosts();

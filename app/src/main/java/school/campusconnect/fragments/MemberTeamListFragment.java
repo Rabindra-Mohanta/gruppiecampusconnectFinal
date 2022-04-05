@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,14 +42,18 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.booths.EventSubBoothTBL;
 import school.campusconnect.datamodel.booths.MemberTeamTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 
 public class MemberTeamListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "TeamDiscussFragment";
@@ -60,6 +65,9 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
+
+    @Bind(R.id.progressBarZoom)
+    public ProgressBar progressBarEvent;
 
     @Bind(R.id.edtSearch)
     public EditText edtSearch;
@@ -81,9 +89,17 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
         _init();
 
-        getDataLocally();
+        getEvent();
 
         return view;
+    }
+
+    private void getEvent() {
+
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getSubBoothEvent(this,GroupDashboardActivityNew.groupId,team_id);
+
     }
 
     private void getDataLocally() {
@@ -247,15 +263,60 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
-        BoothResponse res = (BoothResponse) response;
-        List<MyTeamData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
 
-        saveToLocally(res.getData());
+        if (LeafManager.API_EVENT_SUB_BOOTH_GET == apiId)
+        {
+            SubBoothEventRes res1 = (SubBoothEventRes) response;
+
+
+            saveEvent(res1);
+        }
+        else
+        {
+            BoothResponse res = (BoothResponse) response;
+            List<MyTeamData> result = res.getData();
+            AppLog.e(TAG, "ClassResponse " + result);
+
+            saveToLocally(res.getData());
+
+        }
 
         /*myTeamDataList = result;
         adapter.add(myTeamDataList);
         rvClass.setAdapter(adapter);*/
+    }
+
+    private void saveEvent(SubBoothEventRes res1) {
+
+        Log.e(TAG,"lastUpdatedSubBoothTeamTime  "+res1.data.get(0).lastUpdatedSubBoothTeamTime);
+
+        LeafPreference.getInstance(getContext()).setString("SUB_BOOTH_EVENT_UPDATE",res1.data.get(0).lastUpdatedSubBoothTeamTime);
+
+        if (MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).size() > 0)
+        {
+
+            if (MixOperations.isNewEvent(LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).get(0)._now)) {
+                MemberTeamTBL.deleteMemberBooth(GroupDashboardActivityNew.groupId,team_id);
+            }
+        }
+
+        if (res1.data.size() > 0)
+        {
+            EventSubBoothTBL.deleteAll();
+
+            for (int i=0;i<res1.data.size();i++)
+            {
+                EventSubBoothTBL eventSubBoothTBL = new EventSubBoothTBL();
+
+                eventSubBoothTBL.teamId = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getTeamId();
+                eventSubBoothTBL.members = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getMembers();
+                eventSubBoothTBL.lastTeamPostAt = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getLastTeamPostAt();
+
+                eventSubBoothTBL.save();
+            }
+        }
+
+        getDataLocally();
     }
 
     private void saveToLocally(ArrayList<MyTeamData> boothList) {
@@ -448,7 +509,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         }
         else
         {
-            ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData,"no");
+            ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData,"no","yes");
         }
 
     }

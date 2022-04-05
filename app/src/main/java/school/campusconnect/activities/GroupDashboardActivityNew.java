@@ -39,6 +39,7 @@ import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.banner.BannerTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.EventSubBoothTBL;
 import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
@@ -352,7 +353,6 @@ public class GroupDashboardActivityNew extends BaseActivity
             }
         }, groupId);
     }
-
 
 
     class EventAsync extends AsyncTask<Void, Void, Void> {
@@ -1728,7 +1728,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     public void publicForumClick() {
 
-
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         tv_toolbar_icon.setVisibility(View.GONE);
@@ -2042,7 +2041,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-    public void onTeamSelected(MyTeamData team,String myBooth) {
+    public void onTeamSelected(MyTeamData team,String myBooth,String member) {
 
         AppLog.e(TAG,"onTeamSelected "+team.name);
 
@@ -2088,6 +2087,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             tabLayout.setVisibility(View.GONE);
         }*/
 
+
         if (myBooth.equalsIgnoreCase("yes"))
         {
             if (BoothPostEventTBL.getAll().size() > 0)
@@ -2111,7 +2111,31 @@ public class GroupDashboardActivityNew extends BaseActivity
             {
                 tv_Desc.setText("Members : "+String.valueOf(team.members));
             }
-        }else{
+        }
+        if (member.equalsIgnoreCase("yes"))
+        {
+            if (EventSubBoothTBL.getAll().size() > 0)
+            {
+                List<EventSubBoothTBL> eventSubBoothTBLS = EventSubBoothTBL.getAll();
+
+                for (int i = 0;i<eventSubBoothTBLS.size();i++)
+                {
+                    if (team.teamId.equalsIgnoreCase(eventSubBoothTBLS.get(i).teamId))
+                    {
+                        tv_Desc.setText("Members : "+String.valueOf(eventSubBoothTBLS.get(i).members));
+                        break;
+                    }
+                    else {
+                        tv_Desc.setText("Members : "+String.valueOf(team.members));
+                    }
+                }
+            }
+            else
+            {
+                tv_Desc.setText("Members : "+String.valueOf(team.members));
+            }
+        }
+        else{
             if (HomeTeamDataTBL.getAll().size() > 0)
             {
                 List<HomeTeamDataTBL> homeTeamDataTBLList = HomeTeamDataTBL.getAll();
@@ -2143,7 +2167,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         AppLog.e("getActivity", "team name is =>" + team.name);
 
-        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true,myBooth);
+        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(team, true,myBooth,member);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("home").commit();
         showTeamInfoWindow();
 
@@ -2541,12 +2565,11 @@ public class GroupDashboardActivityNew extends BaseActivity
             startActivity(intent);
         }
         else {
-
             Log.e(TAG,"GeneralPostFragment Start"+group.name);
             setBackEnabled(true);
             tvToolbar.setText(group.name);
             tv_toolbar_icon.setVisibility(View.GONE);
-            tv_Desc.setText("Members : "+group.members);
+            tv_Desc.setText("Members : "+String.valueOf(group.members));
 
             if (group.name.equalsIgnoreCase("Notice Board") || group.name.equalsIgnoreCase("Announcement"))
             {

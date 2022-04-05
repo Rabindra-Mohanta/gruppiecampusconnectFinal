@@ -133,6 +133,9 @@ public class CalendarActivity extends BaseActivity {
         leafManager.getEventList(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
     }
     private void getEventInDay(){
+
+
+
         eventAdapter.clear();
         tvData.setText("");
         progressBar.setVisibility(View.VISIBLE);
@@ -213,7 +216,11 @@ public class CalendarActivity extends BaseActivity {
             case LeafManager.API_GET_EVENTS_IN_DAY:
                 EventInDayRes eventInDayRes= (EventInDayRes) response;
                 AppLog.e(TAG,"eventInDayRes : "+eventInDayRes);
+
+                saveToLocally(eventInDayRes.getData());
+
                 showEventInDay(eventInDayRes.getData());
+
                 break;
             case LeafManager.API_DELETE_EVENT:
                  Toast.makeText(this, "Delete Success", Toast.LENGTH_LONG).show();
@@ -222,6 +229,11 @@ public class CalendarActivity extends BaseActivity {
                 break;
 
         }
+    }
+
+    private void saveToLocally(ArrayList<EventInDayRes.EventInDayData> data) {
+
+
     }
 
     private void showEventInDay(ArrayList<EventInDayRes.EventInDayData> data) {

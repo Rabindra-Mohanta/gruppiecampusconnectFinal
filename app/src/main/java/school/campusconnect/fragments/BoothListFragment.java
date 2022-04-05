@@ -438,7 +438,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
 
 
-        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData,"yes");
+        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData,"yes","no");
 //
 //        Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
 //        intent.putExtra("class_data",new Gson().toJson(classData));
