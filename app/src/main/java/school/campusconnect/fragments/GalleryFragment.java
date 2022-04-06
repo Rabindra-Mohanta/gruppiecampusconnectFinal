@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,11 +34,13 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.datamodel.PostDataItem;
+import school.campusconnect.datamodel.gallery.GalleryTable;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class GalleryFragment extends BaseFragment implements LeafManager.OnCommunicationListener, GalleryAdapter.GalleryListener, DialogInterface.OnClickListener {
@@ -54,8 +58,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
-    @Bind(R.id.swipeRefreshLayout)
-    PullRefreshLayout swipeRefreshLayout;
+   /* @Bind(R.id.swipeRefreshLayout)
+    PullRefreshLayout swipeRefreshLayout;*/
 
 
 
@@ -84,12 +88,13 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
         layoutManager=new LinearLayoutManager(getActivity());
         rvGallery.setLayoutManager(layoutManager);
-        galleryAdapter=new GalleryAdapter(listData,this);
+        galleryAdapter=new GalleryAdapter(this);
         rvGallery.setAdapter(galleryAdapter);
 
         scrollListener();
 
-        getData();
+        getLocally();
+
 
         return view;
     }
@@ -97,7 +102,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     @Override
     public void onStart() {
         super.onStart();
-        galleryAdapter.notifyDataSetChanged();
+     //   galleryAdapter.notifyDataSetChanged();
     }
 
     private void scrollListener() {
@@ -141,25 +146,24 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                             ) {
                         currentPage = currentPage + 1;
                         AppLog.e(TAG, "onScrollCalled " + currentPage);
-                        getData();
+                        getLocally();
                     }
                 }
             }
         });
 
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        /*swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
                     currentPage = 1;
-                    getData();
                     swipeRefreshLayout.setRefreshing(false);
                 } else {
                     showNoNetworkMsg();
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
-        });
+        });*/
 
 
     }
@@ -187,6 +191,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+
         if (GroupDashboardActivityNew.isPost)
             menu.findItem(R.id.menu_add_post).setVisible(true);
         else
@@ -204,6 +209,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
         {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, false);
             currentPage=1;
+            GalleryTable.deleteGallery();
             getData();
         }
     }
@@ -231,7 +237,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 GalleryPostRes res = (GalleryPostRes) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
-                if (currentPage == 1) {
+           /*     if (currentPage == 1) {
                     PostDataItem.deleteGeneralPosts(mGroupId+"");
                     listData.clear();
 
@@ -241,14 +247,14 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 } else {
                     listData.addAll(res.data);
                     AppLog.e(TAG, "current page " + currentPage);
-                }
+                }*/
 
-                if(listData.size()==0)
+                if(res.data.size()==0)
                     txtEmpty.setVisibility(View.VISIBLE);
                 else
                     txtEmpty.setVisibility(View.GONE);
 
-                galleryAdapter.notifyDataSetChanged();
+                //galleryAdapter.notifyDataSetChanged();
 
                 totalPages = res.totalNumberOfPages;
                 mIsLoading = false;
@@ -256,16 +262,89 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 saveToLocallay(res.data);
 
                 break;
+
             case LeafManager.API_GALLERY_DELETE:
                 Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
                 currentPage=1;
                 AmazoneRemove.remove(currentItem.fileName);
+                GalleryTable.deleteGallery();
                 getData();
                 break;
         }
     }
 
     private void saveToLocallay(ArrayList<GalleryPostRes.GalleryData> data) {
+
+        GalleryTable.deleteGallery(GroupDashboardActivityNew.groupId,currentPage);
+
+        if (data.size()>0)
+        {
+            for (int i = 0;i<data.size();i++)
+            {
+                GalleryTable galleryTable = new GalleryTable();
+
+                galleryTable.albumId = data.get(i).getAlbumId();
+                galleryTable.albumName = data.get(i).albumName;
+                galleryTable.updatedAt = data.get(i).updatedAt;
+                galleryTable.groupId = data.get(i).getGroupId();
+                galleryTable.fileType = data.get(i).fileType;
+                galleryTable.video = data.get(i).video;
+                galleryTable.thumbnail = data.get(i).thumbnail;
+                galleryTable.fileName = new Gson().toJson(data.get(i).fileName);
+                galleryTable.thumbnailImage = new Gson().toJson(data.get(i).thumbnailImage);
+                galleryTable.createdAt = data.get(i).createdAt;
+                galleryTable.canEdit = data.get(i).canEdit;
+
+                if (!LeafPreference.getInstance(getContext()).getString("GALLERY_POST").isEmpty())
+                {
+                    galleryTable._now = LeafPreference.getInstance(getContext()).getString("GALLERY_POST");
+                }
+                else
+                {
+                    galleryTable._now = DateTimeHelper.getCurrentTime();
+                }
+
+                galleryTable.page = currentPage;
+
+                galleryTable.save();
+            }
+        }
+
+        getLocally();
+
+    }
+
+    private void getLocally()
+    {
+        List<GalleryTable> galleryTableList = GalleryTable.getGallery(GroupDashboardActivityNew.groupId,currentPage);
+
+        listData.clear();
+
+        if (galleryTableList != null && galleryTableList.size() > 0)
+        {
+            for (int i = 0;i<galleryTableList.size();i++)
+            {
+                GalleryPostRes.GalleryData galleryData = new GalleryPostRes.GalleryData();
+                galleryData.albumName = galleryTableList.get(i).albumName;
+                galleryData.setAlbumId(galleryTableList.get(i).albumId);
+                galleryData.setGroupId(galleryTableList.get(i).groupId);
+                galleryData.canEdit = galleryTableList.get(i).canEdit;
+                galleryData.updatedAt = galleryTableList.get(i).updatedAt;
+                galleryData.fileType = galleryTableList.get(i).fileType;
+                galleryData.video = galleryTableList.get(i).video;
+                galleryData.thumbnail = galleryTableList.get(i).thumbnail;
+                galleryData.fileName = new Gson().fromJson(galleryTableList.get(i).fileName,new TypeToken<ArrayList<String>>(){}.getType());
+                galleryData.thumbnailImage = new Gson().fromJson(galleryTableList.get(i).thumbnailImage, new TypeToken<ArrayList<String>>(){}.getType());
+                galleryData.createdAt = galleryTableList.get(i).createdAt;
+                listData.add(galleryData);
+            }
+
+            galleryAdapter.add(listData);
+        }
+        else
+        {
+            getData();
+        }
     }
 
     @Override

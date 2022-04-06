@@ -37,12 +37,19 @@ public class DayEventTBL extends Model {
     @Column(name = "year")
     public int year;
 
+    @Column(name = "_now")
+    public String _now;
+
 
     public static List<DayEventTBL> getEvent(String group_id,int day,int month,int year)
     {
         return new Select().from(DayEventTBL.class).where("group_id = ?",group_id).where("day = ?",day).where("month = ?",month).where("year = ?",year).execute();
     }
 
+    public static List<MonthEventTBL> getLastEvent()
+    {
+        return new Select().from(MonthEventTBL.class).orderBy("(group_id) DESC").limit(1).execute();
+    }
     public static List<DayEventTBL> deleteEvent(String group_id,int day,int month,int year)
     {
         return new Select().from(DayEventTBL.class).where("group_id = ?",group_id).where("day = ?",day).where("month = ?",month).where("year = ?",year).execute();

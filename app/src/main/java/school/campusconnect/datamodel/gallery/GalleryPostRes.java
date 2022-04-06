@@ -18,7 +18,7 @@ public class GalleryPostRes extends BaseResponse {
 
     public ArrayList<GalleryData> data;
 
-    public class GalleryData implements Serializable {
+    public static class GalleryData implements Serializable {
         @SerializedName("updatedAt")
         @Expose
         public String updatedAt;
@@ -34,23 +34,15 @@ public class GalleryPostRes extends BaseResponse {
         @SerializedName("video")
         @Expose
         public String video;
-
         @SerializedName("thumbnail")
         @Expose
         public String thumbnail;
-
-
-
         @SerializedName("fileName")
         @Expose
         public ArrayList<String> fileName;
-
         @SerializedName("thumbnailImage")
         @Expose
         public ArrayList<String> thumbnailImage; // Url Encoded in base 64
-
-
-
         @SerializedName("createdAt")
         @Expose
         public String createdAt;

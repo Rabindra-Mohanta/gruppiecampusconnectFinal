@@ -23,7 +23,7 @@ public class BannerTBL extends Model {
     public String fileName;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
 
     @Column(name = "groupId")
     public String groupId;

@@ -52,6 +52,8 @@ import school.campusconnect.datamodel.booths.MemberTeamTBL;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.calendar.DayEventTBL;
+import school.campusconnect.datamodel.calendar.MonthEventTBL;
 import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
@@ -636,6 +638,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         StreetListTBL.deleteAll();
         NotificationTable.deleteAll();
         AllNotificationTable.deleteAll();
+        DayEventTBL.deleteAllEvent();
+        MonthEventTBL.deleteAllEvent();
         AdminFeedTable.deleteAll();
         ProfileTBL.deleteAll();
         PostTeamDataItem.deleteAllPosts();
@@ -690,6 +694,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         BoothPostEventTBL.deleteAll();
         EventSubBoothTBL.deleteAll();
         NotificationTable.deleteAll();
+        DayEventTBL.deleteAllEvent();
+        MonthEventTBL.deleteAllEvent();
         VoterListTBL.deleteAll();
         ProfileTBL.deleteAll();
         MemberTeamTBL.deleteAll();

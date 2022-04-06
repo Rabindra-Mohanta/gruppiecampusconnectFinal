@@ -47,6 +47,8 @@ import school.campusconnect.datamodel.booths.MemberTeamTBL;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.calendar.DayEventTBL;
+import school.campusconnect.datamodel.calendar.MonthEventTBL;
 import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
@@ -244,6 +246,8 @@ public class BaseFragment extends Fragment {
             ProfileTBL.deleteAll();
             PublicFormBoothTBL.deleteAll();
             TicketTBL.deleteAll();
+            DayEventTBL.deleteAllEvent();
+            MonthEventTBL.deleteAllEvent();
             NotificationTable.deleteAll();
             AllNotificationTable.deleteAll();
             AdminFeedTable.deleteAll();

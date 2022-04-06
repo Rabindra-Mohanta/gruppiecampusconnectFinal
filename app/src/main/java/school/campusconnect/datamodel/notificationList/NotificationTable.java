@@ -55,7 +55,7 @@ public class NotificationTable extends Model {
     public String readedComment;
 
     @Column(name  = "_now")
-    public long _now;
+    public String _now;
 
     public static List<NotificationTable> getAll() {
         return new Select().from(NotificationTable.class).execute();

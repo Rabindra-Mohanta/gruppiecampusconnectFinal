@@ -112,6 +112,7 @@ import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.PicassoImageLoadingService;
 import school.campusconnect.utils.SliderAdapter;
@@ -588,7 +589,24 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     baseTeamTable.group_id = data.getFeaturedIconData().get(i).groupId;
                     baseTeamTable.activity = data.getActivity();
                     baseTeamTable.featureIcons = new Gson().toJson(data.getFeaturedIconData());
-                    baseTeamTable._now = System.currentTimeMillis();
+
+                    if (!LeafPreference.getInstance(getContext()).getString("MY_TEAM_INSERT").isEmpty())
+                    {
+                        baseTeamTable._now = LeafPreference.getInstance(getContext()).getString("MY_TEAM_INSERT");
+                    }
+                    else
+                    {
+                        baseTeamTable._now = DateTimeHelper.getCurrentTime();
+                    }
+
+                    if (!LeafPreference.getInstance(getContext()).getString("MY_TEAM_UPDATE").isEmpty())
+                    {
+                        baseTeamTable.update_team = LeafPreference.getInstance(getContext()).getString("MY_TEAM_UPDATE");
+                    }
+                    else
+                    {
+                        baseTeamTable.update_team = DateTimeHelper.getCurrentTime();
+                    }
 
                     try {
                         if (!data.getFeaturedIconData().get(i).name.equalsIgnoreCase("My Team")) {
@@ -660,7 +678,17 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                             notificationTable.createdByImage = notificationListData.getCreatedByImage();
                             notificationTable.createdById = notificationListData.getCreatedById();
                             notificationTable.readedComment = "true";
-                            notificationTable._now = System.currentTimeMillis();
+
+                            if (!LeafPreference.getInstance(getContext()).getString("FEED_API").isEmpty())
+                            {
+                                notificationTable._now = LeafPreference.getInstance(getContext()).getString("FEED_API");
+                            }
+                            else
+                            {
+                                notificationTable._now = DateTimeHelper.getCurrentTime();
+                            }
+
+
                             notificationTable.save();
                         }
                     }
@@ -685,7 +713,16 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                             notificationTable.createdByImage = notificationListData.getCreatedByImage();
                             notificationTable.createdById = notificationListData.getCreatedById();
                             notificationTable.readedComment = "true";
-                            notificationTable._now = System.currentTimeMillis();
+
+                            if (!LeafPreference.getInstance(getContext()).getString("FEED_API").isEmpty())
+                            {
+                                notificationTable._now = LeafPreference.getInstance(getContext()).getString("FEED_API");
+                            }
+                            else
+                            {
+                                notificationTable._now = DateTimeHelper.getCurrentTime();
+                            }
+
 
                             notificationTable.save();
 
@@ -764,7 +801,17 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                         bannerTBL.groupId = GroupDashboardActivityNew.groupId;
                         bannerTBL.updatedAt = bannerData.updatedAt;
-                        bannerTBL._now = System.currentTimeMillis();
+
+                        if (!LeafPreference.getInstance(getContext()).getString("BANNER_API").isEmpty())
+                        {
+                            bannerTBL._now = LeafPreference.getInstance(getContext()).getString("BANNER_API");
+                        }
+                        else
+                        {
+                            bannerTBL._now = DateTimeHelper.getCurrentTime();
+                        }
+
+                      //  bannerTBL._now = System.currentTimeMillis();
                         bannerTBL.fileType = bannerData.fileType;
                         bannerTBL.fileName = new Gson().toJson(bannerData.fileName);
 
@@ -915,8 +962,6 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (getActivity() != null)
             Toast.makeText(getActivity(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
-
-
 
 
     @Override
@@ -1088,6 +1133,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
 
     public void bannerListApiCall() {
+
+        Log.e(TAG,"refresh bannerListApiCall");
 
         if (!isConnectionAvailable()) {
             return;

@@ -50,17 +50,23 @@ public class GalleryTable extends Model {
     @Column( name = "albumName")
     public String albumName;
 
+    @Column( name = "page")
+    public int page;
+
+    @Column( name = "_now")
+    public String _now;
+
     public  static List<GalleryTable> getAll()
     {
         return new Select().from(GalleryTable.class).execute();
     }
-    public  static List<GalleryTable> getGallery(String group_id)
+    public  static List<GalleryTable> getGallery(String group_id,int page)
     {
-        return new Select().from(GalleryTable.class).where("groupId = ?", group_id).execute();
+        return new Select().from(GalleryTable.class).where("groupId = ?", group_id).where("page = ?", page).execute();
     }
-    public  static List<GalleryTable> deleteGallery(String group_id)
+    public  static List<GalleryTable> deleteGallery(String group_id,int page)
     {
-        return new Delete().from(GalleryTable.class).where("groupId = ?", group_id).execute();
+        return new Delete().from(GalleryTable.class).where("groupId = ?", group_id).where("page = ?", page).execute();
     }
     public  static List<GalleryTable> deleteGallery()
     {

@@ -42,6 +42,7 @@ import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 
 import school.campusconnect.activities.VoterProfileActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.booths.BoothsTBL;
@@ -51,6 +52,7 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
 
 public class BoothListMyTeamFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
@@ -288,7 +290,14 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
             boothsTBL.userId =  boothList.get(i).userId;
-            boothsTBL._now = System.currentTimeMillis();
+            if (!LeafPreference.getInstance(getContext()).getString("BOOTH_INSERT").isEmpty())
+            {
+                boothsTBL._now = LeafPreference.getInstance(getContext()).getString("BOOTH_INSERT");
+            }
+            else
+            {
+                boothsTBL._now = DateTimeHelper.getCurrentTime();
+            }
             boothsTBL.save();
         }
 

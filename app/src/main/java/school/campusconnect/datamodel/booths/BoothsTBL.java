@@ -99,7 +99,7 @@ public class BoothsTBL extends Model {
     public String TeamDetails;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
 
     public static List<BoothsTBL> getAll() {
         return new Select().from(BoothsTBL.class).execute();

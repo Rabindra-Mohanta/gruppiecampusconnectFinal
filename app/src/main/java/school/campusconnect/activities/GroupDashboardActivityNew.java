@@ -388,7 +388,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                     eventTBL = EventTBL.getAssignmentEvent(curr.groupId, curr.teamId, curr.subjectId);
                 } else if (curr.eventType.equalsIgnoreCase("6")) {
                     eventTBL = EventTBL.getTestEvent(curr.groupId, curr.teamId, curr.subjectId);
-                } else if (curr.eventType.equalsIgnoreCase("5")) {
+                } else if (curr.eventType.equalsIgnoreCase("5"))
+                {
                     eventTBL = EventTBL.getAdminEvents(curr.groupId);
 
                     if (eventTBL == null)
@@ -487,6 +488,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("MY_TEAM_UPDATE",res.data.get(0).lastUpdatedTeamTime);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("MY_TEAM_INSERT",res.data.get(0).lastInsertedTeamTime);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("BOOTH_INSERT",res.data.get(0).lastInsertedBoothTeamTime);
+                LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("GALLERY_POST",res.data.get(0).galleryPostEventAt);
+                LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("CALENDAR_POST",res.data.get(0).calendarEventAt);
 
                 if (HomeTeamDataTBL.getAll().size() > 0)
                 {
@@ -973,11 +976,12 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                 if (teamList.size() > 0)
                 {
-                    if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("MY_TEAM_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", teamList.get(teamList.size()-1)._now)) {
+
+                    if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getApplicationContext()).getString("MY_TEAM_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", teamList.get(teamList.size()-1).update_team)) {
                         ((BaseTeamFragmentv3) currFrag).checkAndRefresh(true);
                     }
 
-                    if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("MY_TEAM_INSERT"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", teamList.get(teamList.size()-1)._now)) {
+                    if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getApplicationContext()).getString("MY_TEAM_INSERT"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", teamList.get(teamList.size()-1)._now)) {
                         ((BaseTeamFragmentv3) currFrag).checkAndRefresh(true);
                     }
                 }
@@ -987,7 +991,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                 if (bannerTBL.size() > 0)
                 {
-                    if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("BANNER_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", bannerTBL.get(bannerTBL.size()-1)._now)) {
+                    if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getApplicationContext()).getString("BANNER_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", bannerTBL.get(bannerTBL.size()-1)._now)) {
                         ((BaseTeamFragmentv3) currFrag).bannerListApiCall();
                     }
                 }
@@ -997,7 +1001,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                 if (notificationTableList.size() > 0)
                 {
-                    if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("FEED_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", notificationTableList.get(notificationTableList.size()-1)._now)) {
+                    if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getApplicationContext()).getString("FEED_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", notificationTableList.get(notificationTableList.size()-1)._now)) {
                         ((BaseTeamFragmentv3) currFrag).checkAndRefreshNotification(true);
                         notificationApiCall = true;
                     }
@@ -1007,7 +1011,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     if (BoothsTBL.getBoothList(groupId).size() > 0) {
                         List<BoothsTBL> boothsTBLList = BoothsTBL.getLastBoothList(groupId);
 
-                        if (MixOperations.isNewEvent(LeafPreference.getInstance(getApplicationContext()).getString("BOOTH_INSERT"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", boothsTBLList.get(boothsTBLList.size() - 1)._now)) {
+                        if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getApplicationContext()).getString("BOOTH_INSERT"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", boothsTBLList.get(boothsTBLList.size() - 1)._now)) {
                             AppLog.e(TAG,"new Booth Add");
                             BoothsTBL.deleteBooth(groupId);
                         }
@@ -2214,7 +2218,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     public void groupSelected(MyTeamData group) {
 
-        Log.e(TAG,"Group Type "+group.type);
+        Log.e(TAG,"groupSelected "+new Gson().toJson(group));
 
         if (group.type.equals("Video Class")) {
             Intent intent = new Intent(this, VideoClassActivity.class);

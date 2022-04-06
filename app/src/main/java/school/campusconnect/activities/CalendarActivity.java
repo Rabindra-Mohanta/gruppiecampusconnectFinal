@@ -31,13 +31,18 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.calendar.AddEventReq;
+import school.campusconnect.datamodel.calendar.DayEventTBL;
 import school.campusconnect.datamodel.calendar.EventInDayRes;
 import school.campusconnect.datamodel.calendar.EventListRes;
+import school.campusconnect.datamodel.calendar.MonthEventTBL;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -57,8 +62,12 @@ public class CalendarActivity extends BaseActivity {
     public RecyclerView rvEvents;
 
 
-    Calendar today=Calendar.getInstance();
-    Calendar selected=Calendar.getInstance();
+    ArrayList<EventInDayRes.EventInDayData> dataDay = new ArrayList<>();
+    ArrayList<EventListRes.EventData> dataMonth = new ArrayList<>();
+
+
+    Calendar today = Calendar.getInstance();
+    Calendar selected = Calendar.getInstance();
     LeafManager leafManager;
     EventAdapter eventAdapter;
     private MenuItem menuAdd;
@@ -72,10 +81,31 @@ public class CalendarActivity extends BaseActivity {
 
         initCalendar();
 
-        getEventInMonth();
+        checkEvent();
 
-        getEventInDay();
+        getLocalyMonthEvent();
 
+        getLocalyDayEvent();
+
+    }
+
+    private void checkEvent() {
+
+        if (MonthEventTBL.getLastEvent().size() > 0)
+        {
+            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getApplicationContext()).getString("CALENDAR_POST"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", MonthEventTBL.getLastEvent().get(0)._now)) {
+                MonthEventTBL.deleteAllEvent();
+                DayEventTBL.deleteAllEvent();
+            }
+        }
+
+        if (DayEventTBL.getLastEvent().size() > 0)
+        {
+            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getApplicationContext()).getString("CALENDAR_POST"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", DayEventTBL.getLastEvent().get(0)._now)) {
+                MonthEventTBL.deleteAllEvent();
+                DayEventTBL.deleteAllEvent();
+            }
+        }
     }
 
     private void initCalendar() {
@@ -85,15 +115,15 @@ public class CalendarActivity extends BaseActivity {
                 List<Event> events = calendarView.getEvents(dateClicked);
                 selected.setTime(dateClicked);
                 AppLog.e(TAG, "Day was clicked: " + dateClicked + " with events " + events);
-                getEventInDay();
+                getLocalyDayEvent();
             }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 selected.setTime(firstDayOfNewMonth);
                 AppLog.e(TAG, "Month was scrolled to: " + firstDayOfNewMonth);
-                getEventInMonth();
-                getEventInDay();
+                getLocalyMonthEvent();
+                getLocalyDayEvent();
             }
         });
         selected.set(Calendar.DAY_OF_MONTH,1);
@@ -126,22 +156,6 @@ public class CalendarActivity extends BaseActivity {
 
     }
 
-    private void getEventInMonth(){
-        tvMonthYear.setText(MixOperations.convertDate(selected.getTime(),"MMMM yyyy"));
-        calendarView.removeAllEvents();
-        progressBar.setVisibility(View.VISIBLE);
-        leafManager.getEventList(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
-    }
-    private void getEventInDay(){
-
-
-
-        eventAdapter.clear();
-        tvData.setText("");
-        progressBar.setVisibility(View.VISIBLE);
-        leafManager.getEventInDay(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
-       showIfEventAddVisible();
-    }
 
     private void showIfEventAddVisible() {
         if(GroupDashboardActivityNew.isAdmin || GroupDashboardActivityNew.isPost){
@@ -205,13 +219,14 @@ public class CalendarActivity extends BaseActivity {
         switch (apiId) {
             case LeafManager.API_ADD_EVENT:
                 Toast.makeText(this, "Success", Toast.LENGTH_LONG).show();
-                getEventInMonth();
-                getEventInDay();
                 break;
+
             case LeafManager.API_GET_EVENTS:
                 EventListRes eventListRes= (EventListRes) response;
                 AppLog.e(TAG,"eventListRes : "+eventListRes);
-                setEvents(eventListRes.getData());
+
+                saveToLocallyMonthData(eventListRes.data);
+
                 break;
             case LeafManager.API_GET_EVENTS_IN_DAY:
                 EventInDayRes eventInDayRes= (EventInDayRes) response;
@@ -219,22 +234,157 @@ public class CalendarActivity extends BaseActivity {
 
                 saveToLocally(eventInDayRes.getData());
 
-                showEventInDay(eventInDayRes.getData());
-
                 break;
             case LeafManager.API_DELETE_EVENT:
                  Toast.makeText(this, "Delete Success", Toast.LENGTH_LONG).show();
-                getEventInMonth();
-                getEventInDay();
                 break;
 
         }
     }
 
-    private void saveToLocally(ArrayList<EventInDayRes.EventInDayData> data) {
+    private void saveToLocallyMonthData(ArrayList<EventListRes.EventData> data) {
 
+        MonthEventTBL.deleteEvent(GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
+
+        if (data.size() > 0)
+        {
+            for (int i = 0;i<data.size();i++)
+            {
+                MonthEventTBL dayEventTBL = new MonthEventTBL();
+
+                dayEventTBL.yearRes = data.get(i).getYear();
+                dayEventTBL.monthRes = data.get(i).getMonth();
+
+                dayEventTBL.year = selected.get(Calendar.YEAR);
+                dayEventTBL.month = selected.get(Calendar.MONTH)+1;
+
+                dayEventTBL.type = data.get(i).getType();
+                dayEventTBL.dayRes = data.get(i).getDay();
+                dayEventTBL.group_id = GroupDashboardActivityNew.groupId;
+
+                if (!LeafPreference.getInstance(getApplicationContext()).getString("CALENDAR_POST").isEmpty())
+                {
+                    dayEventTBL._now = LeafPreference.getInstance(getApplicationContext()).getString("CALENDAR_POST");
+                }
+                else
+                {
+                    dayEventTBL._now = DateTimeHelper.getCurrentTime();
+                }
+                dayEventTBL.save();
+            }
+
+            setEvents(data);
+
+        }
 
     }
+
+    private void saveToLocally(ArrayList<EventInDayRes.EventInDayData> data) {
+
+        DayEventTBL.deleteEvent(GroupDashboardActivityNew.groupId,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
+
+        if (data.size() > 0)
+        {
+            for (int i = 0;i<data.size();i++)
+            {
+                DayEventTBL dayEventTBL = new DayEventTBL();
+                dayEventTBL.eventId = data.get(i).getEventId();
+                dayEventTBL.year = selected.get(Calendar.YEAR);
+                dayEventTBL.month = selected.get(Calendar.MONTH)+1;
+                dayEventTBL.type = data.get(i).getType();
+                dayEventTBL.day = selected.get(Calendar.DAY_OF_MONTH);
+                dayEventTBL.text = data.get(i).getText();
+                dayEventTBL.canEdit = data.get(i).isCanEdit();
+                dayEventTBL.group_id = GroupDashboardActivityNew.groupId;
+
+                if (!LeafPreference.getInstance(getApplicationContext()).getString("CALENDAR_POST").isEmpty())
+                {
+                    dayEventTBL._now = LeafPreference.getInstance(getApplicationContext()).getString("CALENDAR_POST");
+                }
+                else
+                {
+                    dayEventTBL._now = DateTimeHelper.getCurrentTime();
+                }
+                dayEventTBL.save();
+            }
+
+            showEventInDay(data);
+
+        }
+
+    }
+
+
+    private void getLocalyDayEvent() {
+
+
+        List<DayEventTBL> eventTBLList = DayEventTBL.getEvent(GroupDashboardActivityNew.groupId,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
+
+        dataDay.clear();
+
+        if (eventTBLList.size() > 0)
+        {
+            for (int i = 0;i<eventTBLList.size();i++)
+            {
+                EventInDayRes.EventInDayData eventInDayData = new EventInDayRes.EventInDayData();
+
+                eventInDayData.setType(eventTBLList.get(i).type);
+                eventInDayData.setCanEdit(eventTBLList.get(i).canEdit);
+                eventInDayData.setEventId(eventTBLList.get(i).eventId);
+                eventInDayData.setText(eventTBLList.get(i).text);
+                dataDay.add(eventInDayData);
+            }
+            showEventInDay(dataDay);
+        }
+        else
+        {
+            getEventInDay();
+        }
+
+    }
+
+    private void getLocalyMonthEvent() {
+
+        List<MonthEventTBL> eventTBLList = MonthEventTBL.getEvent(GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
+
+        dataMonth.clear();
+
+        if (eventTBLList.size() > 0)
+        {
+            for (int i = 0;i<eventTBLList.size();i++)
+            {
+                EventListRes.EventData eventInDayData = new EventListRes.EventData();
+
+                eventInDayData.setType(eventTBLList.get(i).type);
+                eventInDayData.setDay(eventTBLList.get(i).dayRes);
+                eventInDayData.setYear(eventTBLList.get(i).yearRes);
+                eventInDayData.setMonth(eventTBLList.get(i).monthRes);
+                dataMonth.add(eventInDayData);
+            }
+            setEvents(dataMonth);
+        }
+        else
+        {
+            getEventInMonth();
+        }
+
+    }
+
+    private void getEventInMonth(){
+        tvMonthYear.setText(MixOperations.convertDate(selected.getTime(),"MMMM yyyy"));
+        calendarView.removeAllEvents();
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getEventList(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
+    }
+    private void getEventInDay(){
+
+        eventAdapter.clear();
+        tvData.setText("");
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getEventInDay(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
+        showIfEventAddVisible();
+    }
+
 
     private void showEventInDay(ArrayList<EventInDayRes.EventInDayData> data) {
 

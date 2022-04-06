@@ -52,6 +52,7 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 
@@ -294,8 +295,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
         if (MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).size() > 0)
         {
-
-            if (MixOperations.isNewEvent(LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).get(0)._now)) {
+            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).get(0)._now)) {
                 MemberTeamTBL.deleteMemberBooth(GroupDashboardActivityNew.groupId,team_id);
             }
         }
@@ -356,7 +356,16 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             boothsTBL.allowedToAddTeamPost = boothList.get(i).allowedToAddTeamPost;
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
-            boothsTBL._now = System.currentTimeMillis();
+
+            if (!LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE").isEmpty())
+            {
+                boothsTBL._now = LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE");
+            }
+            else
+            {
+                boothsTBL._now = DateTimeHelper.getCurrentTime();
+            }
+
             boothsTBL.save();
         }
 

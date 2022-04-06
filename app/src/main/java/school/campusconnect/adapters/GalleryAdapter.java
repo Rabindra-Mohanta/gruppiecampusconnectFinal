@@ -29,11 +29,11 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.MixOperations;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
-    private final ArrayList<GalleryPostRes.GalleryData> listData;
+    private  ArrayList<GalleryPostRes.GalleryData> listData;
     private Context mContext;
     GalleryListener listener;
-    public GalleryAdapter(ArrayList<GalleryPostRes.GalleryData> listData,GalleryListener listener) {
-        this.listData=listData;
+
+    public GalleryAdapter(GalleryListener listener) {
         this.listener=listener;
     }
 
@@ -43,6 +43,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_item,parent,false);
         return new ViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -159,9 +161,15 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     }
 
+    public void add(ArrayList<GalleryPostRes.GalleryData> listData)
+    {
+        this.listData=listData;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
-        return listData.size();
+
+        return listData != null ? listData.size() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

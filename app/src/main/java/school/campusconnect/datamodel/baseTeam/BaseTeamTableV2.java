@@ -24,7 +24,10 @@ public class BaseTeamTableV2 extends Model {
     public String group_id;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
+
+    @Column(name = "update_team")
+    public String update_team;
 
 
     public static List<BaseTeamTableV2> getAll() {

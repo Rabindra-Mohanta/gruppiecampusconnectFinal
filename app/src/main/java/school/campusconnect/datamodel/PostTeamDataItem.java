@@ -70,10 +70,13 @@ public class PostTeamDataItem extends Model {
     public boolean isFavourited;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
 
     @Column(name = "type")
     public String type;
+
+    @Column(name = "page")
+    public int page;
 
 
 
@@ -96,9 +99,9 @@ public class PostTeamDataItem extends Model {
         return false;
     }
 
-    public static List<PostTeamDataItem> getTeamPosts(String group_id, String team_id,String type) {
+    public static List<PostTeamDataItem> getTeamPosts(String group_id, String team_id,String type,int page) {
        AppLog.e("CHECKK", "query is " + new Select().from(PostTeamDataItem.class).where("group_id = ?", group_id).where("team_id = ?", team_id).toSql() + " " + group_id + " " + team_id);
-        return new Select().from(PostTeamDataItem.class).where("type = ?", type).where("group_id = ?", group_id).where("team_id = ?", team_id).execute();
+        return new Select().from(PostTeamDataItem.class).where("type = ?", type).where("group_id = ?", group_id).where("team_id = ?", team_id).where("page = ?", page).execute();
     }
 
     public static List<PostTeamDataItem> getLastTeamPost(String group_id, String team_id) {

@@ -69,6 +69,7 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 
 public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick, SchoolFeedAdapater.onClick {
     private static final String TAG = "BaseTeamFragmentv2";
@@ -467,7 +468,17 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                         notificationTable.createdByImage = notificationListData.getCreatedByImage();
                         notificationTable.createdById = notificationListData.getCreatedById();
                         notificationTable.readedComment = "true";
-                        notificationTable._now = System.currentTimeMillis();
+
+                        if (!LeafPreference.getInstance(getContext()).getString("FEED_API").isEmpty())
+                        {
+                            notificationTable._now = LeafPreference.getInstance(getContext()).getString("FEED_API");
+                        }
+                        else
+                        {
+                            notificationTable._now = DateTimeHelper.getCurrentTime();
+                        }
+
+
 
                         notificationTable.save();
 
@@ -604,6 +615,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onTeamClick(MyTeamData team) {
         Log.e(TAG,"Team Data :"+new Gson().toJson(team));
+
         ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team,"no","no");
     }
 

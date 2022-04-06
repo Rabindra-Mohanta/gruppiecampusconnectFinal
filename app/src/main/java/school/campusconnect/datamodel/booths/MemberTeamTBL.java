@@ -85,7 +85,7 @@ public class MemberTeamTBL extends Model {
     public String TeamDetails;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
 
     @Column(name = "userName")
     public String userName;
