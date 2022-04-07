@@ -48,7 +48,7 @@ public class MyTeamSubBoothTBL extends Model {
     public boolean allowTeamPostAll;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
 
     public static List<MyTeamSubBoothTBL> getAll() {
         return new Select().from(MyTeamSubBoothTBL.class).execute();
@@ -60,6 +60,10 @@ public class MyTeamSubBoothTBL extends Model {
 
     public static void deleteSubBooth(String group_id) {
         new Delete().from(MyTeamSubBoothTBL.class).where("groupId = ?", group_id).execute();
+    }
+
+    public static List<MyTeamSubBoothTBL> getLastSubBooth() {
+        return new Select().from(MyTeamSubBoothTBL.class).orderBy("(groupId) DESC").limit(1).execute();
     }
 
     public static void deleteAll() {

@@ -3,6 +3,7 @@ package school.campusconnect.datamodel.calendar;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
 import java.util.List;
@@ -47,12 +48,12 @@ public class MonthEventTBL extends Model {
 
     public static List<MonthEventTBL> deleteEvent(String group_id,int month,int year)
     {
-        return new Select().from(MonthEventTBL.class).where("group_id = ?",group_id).where("month = ?",month).where("year = ?",year).execute();
+        return new Delete().from(MonthEventTBL.class).where("group_id = ?",group_id).where("month = ?",month).where("year = ?",year).execute();
     }
 
     public static List<MonthEventTBL> deleteAllEvent()
     {
-        return new Select().from(MonthEventTBL.class).execute();
+        return new Delete().from(MonthEventTBL.class).execute();
     }
 
 }

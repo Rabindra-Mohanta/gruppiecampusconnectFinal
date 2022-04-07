@@ -91,6 +91,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
     boolean isEdit = false;
 
+    boolean isCasteClickable = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,14 +194,26 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
          binding.etCaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchCastFragmentDialog.show(getSupportFragmentManager(),"");
+
+                if (isCasteClickable)
+                {
+                    searchCastFragmentDialog.show(getSupportFragmentManager(),"");
+                }
+
+
             }
         });
 
         binding.etSubCaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchSubCasteDialogFragment.show(getSupportFragmentManager(),"");
+
+                if (isCasteClickable)
+                {
+                    searchSubCasteDialogFragment.show(getSupportFragmentManager(),"");
+                }
+
+
             }
         });
 
@@ -227,11 +240,13 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
                 if (position != 0)
                 {
+                    isCasteClickable = true;
                     binding.progressBar.setVisibility(View.VISIBLE);
                     manager.getCaste(VoterProfileActivity.this,binding.etReligion.getSelectedItem().toString());
                 }
                 else
                 {
+                    isCasteClickable = false;
                     binding.etCaste.setText("");
                     binding.etSubCaste.setText("");
                     binding.etCategory.setText("");
@@ -663,9 +678,26 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
     }
     private boolean isValid() {
         boolean valid = true;
+
         try {
             if (!isValueValid(binding.etName)) {
                 valid = false;
+            }
+            else if (!binding.etPhone.getText().toString().isEmpty()) {
+
+                if (binding.etPhone.getText().toString().length() < 10) {
+                    binding.etPhone.setError(getString(R.string.msg_valid_phone));
+                    binding.etPhone.requestFocus();
+                    valid = false;
+                }
+            }
+            else if (!binding.etEmail.getText().toString().isEmpty())
+            {
+                if (!isValidEmail(binding.etEmail.getText().toString()))
+                {
+                    binding.etEmail.setError("Invalid Email");
+                    valid = false;
+                }
             }
            /* if (!isValueValid(binding.etAddress)) {
                 valid = false;
@@ -675,14 +707,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                 valid = false;
             }*/
 
-          /*  if (isValueValid(binding.etEmail))
-            {
-                if (!isValidEmail(binding.etEmail.getText().toString()))
-                {
-                    binding.etEmail.setError("Invalid Email");
-                    valid = false;
-                }
-            }*/
+
            /* else
             {
                 binding.etEmail.setError("Required");

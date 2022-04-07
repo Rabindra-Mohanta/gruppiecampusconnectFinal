@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -32,6 +33,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -44,13 +46,20 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.EventSubBoothTBL;
+import school.campusconnect.datamodel.booths.MemberTeamTBL;
+import school.campusconnect.datamodel.booths.MyBoothEventRes;
+import school.campusconnect.datamodel.booths.MyBoothEventTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 
 public class PublicForumListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
     private static final String TAG = "PublicForumListFragment";
@@ -82,10 +91,43 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
         _init();
 
-        getDataLocally();
-
+        checkBoothType();
 
         return view;
+    }
+
+    private void checkBoothType() {
+
+        if(mGroupItem.canPost){
+            getDataBoothLocally();
+        }else {
+            getDataMyBoothLocally();
+            callEventApi();
+        }
+
+    }
+
+    private void callEventApi() {
+
+        LeafManager leafManager = new LeafManager();
+        leafManager.getMyBoothEvent(new LeafManager.OnCommunicationListener() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+
+                MyBoothEventRes res1 = (MyBoothEventRes) response;
+                new EventAsync(res1).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onFailure(int apiId, String msg) {
+
+            }
+
+            @Override
+            public void onException(int apiId, String msg) {
+
+            }
+        },GroupDashboardActivityNew.groupId);
     }
 
     @Override
@@ -94,15 +136,68 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         Log.e(TAG,"onDestroyView");
     }
 
-    private void getDataLocally() {
+    private void getDataBoothLocally() {
 
-        List<PublicFormBoothTBL> boothListTBl;
-        if(mGroupItem.canPost){
-            boothListTBl = PublicFormBoothTBL.getBoothList(GroupDashboardActivityNew.groupId,"Booth");
-        }else {
+        List<BoothsTBL> boothListTBl = BoothsTBL.getBoothList(GroupDashboardActivityNew.groupId);
 
-            boothListTBl = PublicFormBoothTBL.getBoothList(GroupDashboardActivityNew.groupId,"MyBooth");
+        myTeamDataList.clear();
+
+        if (boothListTBl != null && boothListTBl.size() > 0)
+        {
+            ArrayList<MyTeamData> resultData = new ArrayList<>();
+
+            for (int i=0;i<boothListTBl.size();i++)
+            {
+                BoothsTBL boothList = boothListTBl.get(i);
+
+                MyTeamData myTeamData = new MyTeamData();
+                myTeamData.teamId = boothList.teamId;
+                myTeamData.postUnseenCount = boothList.postUnseenCount;
+                myTeamData.phone = boothList.phone;
+                myTeamData.name = boothList.name;
+                myTeamData.boothId = boothList.boothId;
+                myTeamData.members = boothList.members;
+                myTeamData.boothNumber = boothList.boothNumber;
+                myTeamData.groupId = boothList.groupId;
+                myTeamData.canAddUser = boothList.canAddUser;
+
+                myTeamData.allowTeamPostCommentAll = boothList.allowTeamPostCommentAll;
+                myTeamData.allowTeamPostAll = boothList.allowTeamPostAll;
+                myTeamData.isTeamAdmin = boothList.isTeamAdmin;
+                myTeamData.isClass = boothList.isClass;
+                myTeamData.teamType = boothList.teamType;
+                myTeamData.enableGps = boothList.enableGps;
+                myTeamData.enableAttendance = boothList.enableAttendance;
+                myTeamData.type = boothList.type;
+                myTeamData.userId = boothList.userId;
+
+                myTeamData.userName = boothList.userName;
+                myTeamData.adminName = boothList.adminName;
+                myTeamData.userImage = boothList.userImage;
+
+                myTeamData.category = boothList.category;
+                myTeamData.role = boothList.role;
+                myTeamData.count = boothList.count;
+                myTeamData.allowedToAddTeamPost = boothList.allowedToAddTeamPost;
+                myTeamData.leaveRequest = boothList.leaveRequest;
+                myTeamData.details = new Gson().fromJson(boothList.TeamDetails, new TypeToken<MyTeamData.TeamDetails>() {}.getType());
+
+                resultData.add(myTeamData);
+
+            }
+            myTeamDataList.addAll(resultData);
+            adapter.add(myTeamDataList);
         }
+        else
+        {
+            boothListApiCall();
+        }
+
+    }
+
+    private void getDataMyBoothLocally() {
+
+        List<PublicFormBoothTBL> boothListTBl =  PublicFormBoothTBL.getBoothList(GroupDashboardActivityNew.groupId);
 
         myTeamDataList.clear();
 
@@ -263,19 +358,77 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         BoothResponse res = (BoothResponse) response;
         List<MyTeamData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
-      /*  myTeamDataList = result;
-        adapter.add(myTeamDataList);
-        rvClass.setAdapter(adapter);*/
-        saveToLocally(res.getData());
 
-    }
-    private void saveToLocally(ArrayList<MyTeamData> boothList) {
 
         if(mGroupItem.canPost){
-            PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId,"Booth");
+            saveToBoothLocally(res.getData());
         }else {
-            PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId,"MyBooth");
+            saveToMyBoothLocally(res.getData());
         }
+
+
+
+    }
+
+    private void saveToBoothLocally(ArrayList<MyTeamData> boothList) {
+
+        BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+
+        for (int i = 0;i<boothList.size();i++)
+        {
+            BoothsTBL boothsTBL = new BoothsTBL();
+
+            boothsTBL.teamId = boothList.get(i).teamId;
+            boothsTBL.postUnseenCount = boothList.get(i).postUnseenCount;
+            boothsTBL.phone = boothList.get(i).phone;
+            boothsTBL.name = boothList.get(i).name;
+            boothsTBL.members = boothList.get(i).members;
+            boothsTBL.boothNumber = boothList.get(i).boothNumber;
+            boothsTBL.groupId = boothList.get(i).groupId;
+            boothsTBL.canAddUser = boothList.get(i).canAddUser;
+
+            boothsTBL.allowTeamPostCommentAll = boothList.get(i).allowTeamPostCommentAll;
+            boothsTBL.allowTeamPostAll = boothList.get(i).allowTeamPostAll;
+            boothsTBL.isTeamAdmin = boothList.get(i).isTeamAdmin;
+            boothsTBL.isClass = boothList.get(i).isClass;
+            boothsTBL.teamType = boothList.get(i).teamType;
+            boothsTBL.enableGps = boothList.get(i).enableGps;
+            boothsTBL.enableAttendance = boothList.get(i).enableAttendance;
+            boothsTBL.type = boothList.get(i).type;
+            boothsTBL.userId = boothList.get(i).userId;
+            boothsTBL.userName = boothList.get(i).userName;
+            boothsTBL.adminName = boothList.get(i).adminName;
+            boothsTBL.userImage = boothList.get(i).userImage;
+            boothsTBL.boothId = boothList.get(i).boothId;
+
+            boothsTBL.category = boothList.get(i).category;
+            boothsTBL.role = boothList.get(i).role;
+            boothsTBL.count = boothList.get(i).count;
+            boothsTBL.allowedToAddTeamPost = boothList.get(i).allowedToAddTeamPost;
+            boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
+            boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
+
+            if (!LeafPreference.getInstance(getContext()).getString("BOOTH_INSERT").isEmpty())
+            {
+                boothsTBL._now = LeafPreference.getInstance(getContext()).getString("BOOTH_INSERT");
+            }
+            else
+            {
+                boothsTBL._now = DateTimeHelper.getCurrentTime();
+            }
+
+            boothsTBL.save();
+        }
+
+        myTeamDataList.addAll(boothList);
+        adapter.add(myTeamDataList);
+
+    }
+
+
+    private void saveToMyBoothLocally(ArrayList<MyTeamData> boothList) {
+
+        PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId);
 
         for (int i = 0;i<boothList.size();i++)
         {
@@ -306,13 +459,15 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
 
-            if(mGroupItem.canPost){
-                boothsTBL.boothType = "Booth";
-            }else {
-                boothsTBL.boothType = "MyBooth";
+            if (!LeafPreference.getInstance(getContext()).getString("MY_BOOTH_EVENT_UPDATE").isEmpty())
+            {
+                boothsTBL._now =  LeafPreference.getInstance(getContext()).getString("MY_BOOTH_EVENT_UPDATE");
+            }
+            else
+            {
+                boothsTBL._now = DateTimeHelper.getCurrentTime();
             }
 
-            boothsTBL._now = System.currentTimeMillis();
             boothsTBL.save();
         }
 
@@ -451,5 +606,65 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
     private void onTreeClick(MyTeamData classData) {
 
         ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.teamId,"normal",true);
+    }
+
+
+    class EventAsync extends AsyncTask<Void, Void, Void> {
+        MyBoothEventRes res1;
+        private boolean needRefresh = false;
+
+        public EventAsync(MyBoothEventRes res1) {
+            this.res1 =res1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            Log.e(TAG,"lastUpdatedSubBoothTeamTime  "+res1.data.get(0).lastUpdatedMyBoothTeamTime);
+
+            LeafPreference.getInstance(getContext()).setString("MY_BOOTH_EVENT_UPDATE",res1.data.get(0).lastUpdatedMyBoothTeamTime);
+
+            if (PublicFormBoothTBL.getLastBooth(GroupDashboardActivityNew.groupId).size() > 0)
+            {
+                if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("MY_BOOTH_EVENT_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", PublicFormBoothTBL.getLastBooth(GroupDashboardActivityNew.groupId).get(0)._now)) {
+                    PublicFormBoothTBL.deleteAll();
+                    needRefresh = true;
+                }
+                else
+                {
+                    needRefresh = false;
+                }
+            }
+
+            if (res1.data.get(0).myBoothTeamsLastPostEventAt.size() > 0)
+            {
+                MyBoothEventTBL.deleteAll();
+
+                for (int i=0;i<res1.data.get(0).myBoothTeamsLastPostEventAt.size();i++)
+                {
+                    MyBoothEventTBL myBoothEventTBL = new MyBoothEventTBL();
+
+                    myBoothEventTBL.teamId = res1.data.get(0).myBoothTeamsLastPostEventAt.get(i).teamId;
+                    myBoothEventTBL.members = res1.data.get(0).myBoothTeamsLastPostEventAt.get(i).members;
+                    myBoothEventTBL.lastTeamPostAt = res1.data.get(0).myBoothTeamsLastPostEventAt.get(i).lastTeamPostAt;
+
+                    myBoothEventTBL.save();
+                }
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (needRefresh)
+            {
+                adapter.notifyDataSetChanged();
+                checkBoothType();
+            }
+        }
     }
 }

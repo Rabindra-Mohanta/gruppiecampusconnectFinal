@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.utils.UploadCircleImageFragment;
 
@@ -64,8 +66,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
    /* @Bind(R.id.etRelationShip)
     public EditText etRelationShip;*/
-    @Bind(R.id.etAddress)
-    public EditText etAddress;
+    @Bind(R.id.etEmail)
+    public EditText etEmail;
 
 
     @Bind(R.id.etdob)
@@ -149,6 +151,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
     public static String profileImage;
 
+    public boolean isCasteClickable = false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -194,17 +197,25 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         etCaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchCastFragmentDialog.show(getFragmentManager(),"");
+
+                if (isCasteClickable)
+                {
+                    searchCastFragmentDialog.show(getFragmentManager(),"");
+                }
             }
         });
 
         etSubCaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchSubCasteDialogFragment.show(getFragmentManager(),"");
+
+                if (isCasteClickable)
+                {
+                    searchSubCasteDialogFragment.show(getFragmentManager(),"");
+                }
+
             }
         });
-
 
 
         etdob.setOnClickListener(new View.OnClickListener() {
@@ -228,11 +239,13 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
                 if (position != 0)
                 {
+                    isCasteClickable = true;
                     progressBar.setVisibility(View.VISIBLE);
                     leafManager.getCaste(ProfileFragmentConst.this,etReligion.getSelectedItem().toString());
                 }
                 else
                 {
+                    isCasteClickable = false;
                     etCaste.setText("");
                     etSubCaste.setText("");
                     etCategory.setText("");
@@ -260,7 +273,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             ProfileItemUpdate item = new ProfileItemUpdate();
             item.name = etName.getText().toString();
             item.dob = etdob.getText().toString();
-            item.email = etAddress.getText().toString();
+            item.email = etEmail.getText().toString();
             item.address = this.item.address;
             item.occupation = this.item.occupation;
 
@@ -289,7 +302,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             Log.e(TAG,"profile name "+ etName.getText().toString());
             Log.e(TAG,"profile voterID "+etVoterId.getText().toString());
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, imageFragment.getmProfileImage());
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, item.name);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, item.voterId);
 
@@ -297,33 +310,44 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             if (imageFragment.isImageChanged && TextUtils.isEmpty(imageFragment.getmProfileImage())) {
                 manager.deleteProPic(this);
                 manager.updateProfileDetails(this, item);
-                AppLog.e("Profile Activity", "image deleted " + new Gson().toJson(item));
-            } else {
+                AppLog.e(TAG, "image deleted " + new Gson().toJson(item));
+            }
+            else {
                 if (imageFragment.isImageChanged && !TextUtils.isEmpty(imageFragment.getmProfileImage())) {
-                    AppLog.e("Profile Activity", "Image Changed.." + new Gson().toJson(item));
+                    AppLog.e(TAG, "Image Changed.." + new Gson().toJson(item));
                     item.image = imageFragment.getmProfileImage();
                 }
-                AppLog.e("Profile Activity", "Image Not Changed.." + new Gson().toJson(item));
-                LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
+                AppLog.e(TAG, "Image Not Changed.." + new Gson().toJson(item));
                 manager.updateProfileDetails(this, item);
             }
-
         }
     }
 
     private boolean isValid() {
         boolean valid = true;
         try {
-            if (!isValueValid(etName)) {
+            if (!isValueValid(etName))
+            {
                 valid = false;
             }
-            if (!isValueValid(etPhone)) {
-                valid = false;
-            } else if (etPhone.getText().toString().length() > 15) {
-                etPhone.setError(getString(R.string.msg_valid_phone));
-                etPhone.requestFocus();
-                valid = false;
+            else if (!etPhone.getText().toString().isEmpty()) {
+
+                if (etPhone.getText().toString().length() < 10) {
+                    etPhone.setError(getString(R.string.msg_valid_phone));
+                    etPhone.requestFocus();
+                    valid = false;
+                }
             }
+            else if (!etEmail.getText().toString().isEmpty())
+            {
+                if (!isValidEmail(etEmail.getText().toString()))
+                {
+                    etEmail.setError(getString(R.string.msg_valid_email));
+                    etPhone.requestFocus();
+                    valid = false;
+                }
+            }
+
         } catch (NullPointerException e) {
             valid = false;
         }
@@ -339,7 +363,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         List<ProfileTBL> profileTBLList = ProfileTBL.getProfile();
 
         if (profileTBLList.size() > 0) {
-            if (MixOperations.isNewEvent(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now)) {
+            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now)) {
                 profileApiCall();
             }
             else
@@ -368,12 +392,22 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             if (res.data != null)
             {
+
                 ProfileTBL.deleteAll();
 
                 ProfileTBL profileTBL = new ProfileTBL();
 
                 profileTBL.profileData = new Gson().toJson(res.data);
-                profileTBL._now = System.currentTimeMillis();
+
+                if (!LeafPreference.getInstance(getContext()).getString("PROFILE_API").isEmpty())
+                {
+                    profileTBL._now = LeafPreference.getInstance(getContext()).getString("PROFILE_API");
+                }
+                else
+                {
+                    profileTBL._now = DateTimeHelper.getCurrentTime();
+                }
+
                 profileTBL.save();
             }
 
@@ -477,7 +511,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                 leafManager.getSubCaste(this,casteId);
             }
 
-
         }
 
         else if (LeafManager.API_SUB_CASTE_GET == apiId)
@@ -540,7 +573,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             ProfileResponse profileResponse = new ProfileResponse();
             profileResponse.data = new Gson().fromJson(profileTBLList.get(0).profileData,new TypeToken<ProfileItem>() {}.getType());
 
-
             LeafPreference.getInstance(getContext()).setString(LeafPreference.NAME, profileResponse.data.name);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_COMPLETE, profileResponse.data.profileCompletion);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, profileResponse.data.image);
@@ -578,7 +610,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     private void fillDetails(ProfileItem item) {
         etName.setText(item.name);
   //      etRelationShip.setText(item.relationship);
-        etAddress.setText(item.email);
+        etEmail.setText(item.email);
         etPhone.setText(item.phone);
 
         religion = item.religion;

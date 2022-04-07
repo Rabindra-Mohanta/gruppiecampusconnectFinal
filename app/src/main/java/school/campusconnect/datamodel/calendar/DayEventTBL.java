@@ -52,11 +52,11 @@ public class DayEventTBL extends Model {
     }
     public static List<DayEventTBL> deleteEvent(String group_id,int day,int month,int year)
     {
-        return new Select().from(DayEventTBL.class).where("group_id = ?",group_id).where("day = ?",day).where("month = ?",month).where("year = ?",year).execute();
+        return new Delete().from(DayEventTBL.class).where("group_id = ?",group_id).where("day = ?",day).where("month = ?",month).where("year = ?",year).execute();
     }
 
     public static List<DayEventTBL> deleteAllEvent()
     {
-        return new Select().from(DayEventTBL.class).execute();
+        return new Delete().from(DayEventTBL.class).execute();
     }
 }

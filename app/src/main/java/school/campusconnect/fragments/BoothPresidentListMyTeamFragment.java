@@ -2,6 +2,7 @@ package school.campusconnect.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -42,13 +43,17 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.booths.BoothPresidentTBL;
 import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.booths.MyBoothEventRes;
+import school.campusconnect.datamodel.booths.MyBoothEventTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 
 public class BoothPresidentListMyTeamFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
 
@@ -81,24 +86,48 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
         Log.e(TAG,"onViewCreated");
         inits();
 
-        getDataLocally();
+        getDataMyBoothLocally();
+        callEventApi();
 
         return view;
     }
 
-    private void getDataLocally() {
+    private void callEventApi() {
 
-        List<BoothPresidentTBL> presidentTBLList = BoothPresidentTBL.getBoothList(GroupDashboardActivityNew.groupId,"myBooth");
+        LeafManager leafManager = new LeafManager();
+        leafManager.getMyBoothEvent(new LeafManager.OnCommunicationListener() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+
+                MyBoothEventRes res1 = (MyBoothEventRes) response;
+                new EventAsync(res1).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onFailure(int apiId, String msg) {
+
+            }
+
+            @Override
+            public void onException(int apiId, String msg) {
+
+            }
+        },GroupDashboardActivityNew.groupId);
+    }
+
+    private void getDataMyBoothLocally() {
+
+        List<PublicFormBoothTBL> boothListTBl =  PublicFormBoothTBL.getBoothList(GroupDashboardActivityNew.groupId);
 
         myTeamDataList.clear();
 
-        if (presidentTBLList != null && presidentTBLList.size()>0)
+        if (boothListTBl != null && boothListTBl.size() > 0)
         {
             ArrayList<MyTeamData> resultData = new ArrayList<>();
 
-            for (int i = 0; i<presidentTBLList.size();i++)
+            for (int i=0;i<boothListTBl.size();i++)
             {
-                BoothPresidentTBL boothList = presidentTBLList.get(i);
+                PublicFormBoothTBL boothList = boothListTBl.get(i);
 
                 MyTeamData myTeamData = new MyTeamData();
                 myTeamData.teamId = boothList.teamId;
@@ -118,7 +147,7 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
                 myTeamData.enableGps = boothList.enableGps;
                 myTeamData.enableAttendance = boothList.enableAttendance;
                 myTeamData.type = boothList.type;
-                myTeamData.userId = boothList.userId;
+
                 myTeamData.category = boothList.category;
                 myTeamData.role = boothList.role;
                 myTeamData.count = boothList.count;
@@ -136,7 +165,6 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
         {
             boothListApiCall();
         }
-
     }
 
     private void boothListApiCall() {
@@ -244,13 +272,14 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
         rvClass.setAdapter(adapter);*/
         saveToLocally(res.getData());
     }
+
     private void saveToLocally(ArrayList<MyTeamData> boothList) {
 
-        BoothPresidentTBL.deleteBooth(GroupDashboardActivityNew.groupId,"myBooth");
+        PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId);
 
         for (int i = 0;i<boothList.size();i++)
         {
-            BoothPresidentTBL boothsTBL = new BoothPresidentTBL();
+            PublicFormBoothTBL boothsTBL = new PublicFormBoothTBL();
 
             boothsTBL.teamId = boothList.get(i).teamId;
             boothsTBL.postUnseenCount = boothList.get(i).postUnseenCount;
@@ -276,9 +305,16 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
             boothsTBL.allowedToAddTeamPost = boothList.get(i).allowedToAddTeamPost;
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
-            boothsTBL.userId = boothList.get(i).userId;
-            boothsTBL.boothType = "myBooth";
-            boothsTBL._now = System.currentTimeMillis();
+
+            if (!LeafPreference.getInstance(getContext()).getString("MY_BOOTH_EVENT_UPDATE").isEmpty())
+            {
+                boothsTBL._now =  LeafPreference.getInstance(getContext()).getString("MY_BOOTH_EVENT_UPDATE");
+            }
+            else
+            {
+                boothsTBL._now = DateTimeHelper.getCurrentTime();
+            }
+
             boothsTBL.save();
         }
 
@@ -432,5 +468,63 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
     private void onTreeClick(MyTeamData classData) {
 
         ((GroupDashboardActivityNew) getActivity()).onBoothTeams(classData.name,classData.teamId,"myTeam",true);
+    }
+    class EventAsync extends AsyncTask<Void, Void, Void> {
+        MyBoothEventRes res1;
+        private boolean needRefresh = false;
+
+        public EventAsync(MyBoothEventRes res1) {
+            this.res1 =res1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            Log.e(TAG,"lastUpdatedSubBoothTeamTime  "+res1.data.get(0).lastUpdatedMyBoothTeamTime);
+
+            LeafPreference.getInstance(getContext()).setString("MY_BOOTH_EVENT_UPDATE",res1.data.get(0).lastUpdatedMyBoothTeamTime);
+
+            if (PublicFormBoothTBL.getLastBooth(GroupDashboardActivityNew.groupId).size() > 0)
+            {
+                if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("MY_BOOTH_EVENT_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", PublicFormBoothTBL.getLastBooth(GroupDashboardActivityNew.groupId).get(0)._now)) {
+                    PublicFormBoothTBL.deleteAll();
+                    needRefresh = true;
+                }
+                else
+                {
+                    needRefresh = false;
+                }
+            }
+
+            if (res1.data.get(0).myBoothTeamsLastPostEventAt.size() > 0)
+            {
+                MyBoothEventTBL.deleteAll();
+
+                for (int i=0;i<res1.data.get(0).myBoothTeamsLastPostEventAt.size();i++)
+                {
+                    MyBoothEventTBL myBoothEventTBL = new MyBoothEventTBL();
+
+                    myBoothEventTBL.teamId = res1.data.get(0).myBoothTeamsLastPostEventAt.get(i).teamId;
+                    myBoothEventTBL.members = res1.data.get(0).myBoothTeamsLastPostEventAt.get(i).members;
+                    myBoothEventTBL.lastTeamPostAt = res1.data.get(0).myBoothTeamsLastPostEventAt.get(i).lastTeamPostAt;
+
+                    myBoothEventTBL.save();
+                }
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (needRefresh)
+            {
+                adapter.notifyDataSetChanged();
+                getDataMyBoothLocally();
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ public class SubBoothEventRes extends BaseResponse {
 
         @SerializedName("members")
         @Expose
-        private String members;
+        private int members;
 
         @SerializedName("lastTeamPostAt")
         @Expose
@@ -42,11 +42,11 @@ public class SubBoothEventRes extends BaseResponse {
             this.teamId = teamId;
         }
 
-        public String getMembers() {
+        public int getMembers() {
             return members;
         }
 
-        public void setMembers(String members) {
+        public void setMembers(int members) {
             this.members = members;
         }
 

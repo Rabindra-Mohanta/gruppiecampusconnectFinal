@@ -91,10 +91,15 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
         galleryAdapter=new GalleryAdapter(this);
         rvGallery.setAdapter(galleryAdapter);
 
+
+        if (!LeafPreference.getInstance(getContext()).getString("GalleryTotalPage").isEmpty())
+        {
+            totalPages = Integer.parseInt(LeafPreference.getInstance(getContext()).getString("GalleryTotalPage"));
+        }
+
         scrollListener();
 
         getLocally();
-
 
         return view;
     }
@@ -248,6 +253,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                     listData.addAll(res.data);
                     AppLog.e(TAG, "current page " + currentPage);
                 }*/
+                listData.clear();
 
                 if(res.data.size()==0)
                     txtEmpty.setVisibility(View.VISIBLE);
@@ -257,6 +263,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 //galleryAdapter.notifyDataSetChanged();
 
                 totalPages = res.totalNumberOfPages;
+
+                LeafPreference.getInstance(getContext()).setString("GalleryTotalPage",String.valueOf(totalPages));
                 mIsLoading = false;
 
                 saveToLocallay(res.data);
@@ -274,6 +282,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     }
 
     private void saveToLocallay(ArrayList<GalleryPostRes.GalleryData> data) {
+
+
 
         GalleryTable.deleteGallery(GroupDashboardActivityNew.groupId,currentPage);
 
@@ -318,7 +328,6 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     {
         List<GalleryTable> galleryTableList = GalleryTable.getGallery(GroupDashboardActivityNew.groupId,currentPage);
 
-        listData.clear();
 
         if (galleryTableList != null && galleryTableList.size() > 0)
         {

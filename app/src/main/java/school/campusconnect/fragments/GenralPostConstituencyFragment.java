@@ -1,27 +1,10 @@
-
 package school.campusconnect.fragments;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-
-import androidx.databinding.DataBindingUtil;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import school.campusconnect.BuildConfig;
-import school.campusconnect.datamodel.EventTBL;
-import school.campusconnect.firebase.SendNotificationGlobal;
-import school.campusconnect.firebase.SendNotificationModel;
-import school.campusconnect.utils.AmazoneDownload;
-import school.campusconnect.utils.AmazoneRemove;
-import school.campusconnect.utils.AppLog;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +16,11 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.activeandroid.ActiveAndroid;
 import com.clevertap.android.sdk.CleverTapAPI;
@@ -55,8 +43,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
-import school.campusconnect.activities.TestActivity;
 import school.campusconnect.activities.AddFriendActivity;
 import school.campusconnect.activities.AddPostActivity;
 import school.campusconnect.activities.AddQuestionActivity;
@@ -64,9 +52,10 @@ import school.campusconnect.activities.FullScreenActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.LikesListActivity;
 import school.campusconnect.activities.ProfileActivity2;
-import school.campusconnect.activities.SelectShareTypeActivity;
-import school.campusconnect.activities.ViewPDFActivity;
 import school.campusconnect.activities.PushActivity;
+import school.campusconnect.activities.SelectShareTypeActivity;
+import school.campusconnect.activities.TestActivity;
+import school.campusconnect.activities.ViewPDFActivity;
 import school.campusconnect.adapters.PostAdapter;
 import school.campusconnect.adapters.ReportAdapter;
 import school.campusconnect.database.DatabaseHandler;
@@ -75,22 +64,26 @@ import school.campusconnect.databinding.LayoutListButtonBinding;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
+import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.PostResponse;
 import school.campusconnect.datamodel.reportlist.ReportItemList;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneRemove;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
-//import com.google.api.services.samples.youtube.cmdline.Auth;
-
-
-public class GeneralPostFragment extends BaseFragment implements LeafManager.OnCommunicationListener,
+public class GenralPostConstituencyFragment extends BaseFragment implements LeafManager.OnCommunicationListener,
         PostAdapter.OnItemClickListener, DialogInterface.OnClickListener, LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener {
 
     private static final String TAG = "GeneralPostFragment";
@@ -122,12 +115,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     //private Query query;
 
-    public GeneralPostFragment() {
+    public GenralPostConstituencyFragment() {
 
     }
 
-    public static GeneralPostFragment newInstance(String groupId,String type) {
-        GeneralPostFragment fragment = new GeneralPostFragment();
+    public static GenralPostConstituencyFragment newInstance(String groupId,String type) {
+        GenralPostConstituencyFragment fragment = new GenralPostConstituencyFragment();
         Bundle b = new Bundle();
         b.putString("id", groupId);
         b.putString("type", type);
@@ -139,7 +132,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        leafPreference = LeafPreference.getInstance(GeneralPostFragment.this.getActivity());
+        leafPreference = LeafPreference.getInstance(GenralPostConstituencyFragment.this.getActivity());
     }
 
     @Override
@@ -148,7 +141,6 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         menu.findItem(R.id.action_notification).setVisible(false);
         menu.findItem(R.id.action_notification_list).setVisible(false);
         menu.findItem(R.id.action_notification1).setVisible(false);
-
         if (GroupDashboardActivityNew.isPost)
             menu.findItem(R.id.menu_add_post).setVisible(true);
         else
@@ -182,6 +174,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         ActiveAndroid.initialize(getActivity());
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_button, container, false);
         mBinding.setSize(1);
+
         init();
 
         getGroupPostLocaly();
@@ -229,11 +222,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 */
                 if (!mIsLoading && totalPages > currentPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0
-                    ) {
+                            && firstVisibleItemPosition >= 0)
+                    {
                         currentPage = currentPage + 1;
                         AppLog.e(TAG, "onScrollCalled " + currentPage);
-                        getData(false);
+                      //  getData(false);
+
+                        getGroupPostLocaly();
                     }
                 }
 
@@ -278,19 +273,21 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     private void getGroupPostLocaly() {
 
 
-        eventTBL = EventTBL.getGroupEvent(mGroupId);
+
         boolean apiEvent = false;
-        if(eventTBL!=null){
-            if(eventTBL._now ==0){
+
+
+        if (PostDataItem.getLastGeneralPost().size() > 0)
+        {
+            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("ANNOUNCEMENT_POST"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", PostDataItem.getLastGeneralPost().get(0)._now)) {
                 apiEvent = true;
-            }
-            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
-                apiEvent = true;
+                PostDataItem.deleteGeneralPosts(mGroupId);
             }
 
         }
 
-        List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId + "");
+        List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId,currentPage);
+
         String lastId = null;
         if (dataItemList.size() != 0) {
             showLoadingBar(mBinding.progressBar);
@@ -379,6 +376,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
         Log.e(TAG,"type"+type);
 
+        if (!LeafPreference.getInstance(getContext()).getString("totalPageGeneralPostConstituency").isEmpty())
+        {
+            totalPages = Integer.parseInt(LeafPreference.getInstance(getContext()).getString("totalPageGeneralPostConstituency"));
+        }
+
         mBinding.setSize(1);
         mBinding.setMessage(R.string.msg_no_post);
         mGroupId = getArguments().getString("id");
@@ -405,6 +407,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED)) {
             mAdapter.clear();
             currentPage = 1;
+            PostDataItem.deleteGeneralPosts(mGroupId);
             getData(false);
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, false);
         }
@@ -444,14 +447,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 mAdapter.notifyDataSetChanged();
 
                 totalPages = res.totalNumberOfPages;
+                LeafPreference.getInstance(getContext()).setString("totalPageGeneralPostConstituency",String.valueOf(totalPages));
                 mIsLoading = false;
 
                 savePostData(res.getResults());
 
-                if(eventTBL!=null){
-                    eventTBL._now = System.currentTimeMillis();
-                    eventTBL.save();
-                }
                 break;
 
             case LeafManager.API_ID_FAV:
@@ -485,6 +485,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
                 PostList.clear();
                 currentPage = 1;
+                PostDataItem.deleteGeneralPosts(mGroupId);
                 getData(false);
                 AmazoneRemove.remove(currentItem.fileName);
                 sendNotification(currentItem);
@@ -533,7 +534,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     private void savePostData(List<PostItem> results) {
 
+
         for (int i = 0; i < results.size(); i++) {
+
 
             PostItem item = results.get(i);
             PostDataItem postItem = new PostDataItem();
@@ -563,7 +566,17 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             postItem.phone = item.phone;
             postItem.type = "group";
             postItem.group_id = mGroupId + "";
+            postItem.page = currentPage;
             postItem.thumbnail = item.thumbnail;
+
+            if (!LeafPreference.getInstance(getContext()).getString("ANNOUNCEMENT_POST").isEmpty())
+            {
+                postItem._now = LeafPreference.getInstance(getContext()).getString("ANNOUNCEMENT_POST");
+            }
+            else
+            {
+                postItem._now = DateTimeHelper.getCurrentTime();
+            }
 
             postItem.save();
         }
@@ -1024,7 +1037,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     String topic;
                     String title = getResources().getString(R.string.app_name);
                     String message = "";
-                    String userName = LeafPreference.getInstance(GeneralPostFragment.this.getActivity()).getString(LeafPreference.NAME);
+                    String userName = LeafPreference.getInstance(GenralPostConstituencyFragment.this.getActivity()).getString(LeafPreference.NAME);
 
 
                     message = userName + " has deleted a post.";
@@ -1037,7 +1050,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                     JSONObject dataObj = new JSONObject();
                     dataObj.put("groupId", mGroupId);
-                    dataObj.put("createdById", LeafPreference.getInstance(GeneralPostFragment.this.getActivity()).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("createdById", LeafPreference.getInstance(GenralPostConstituencyFragment.this.getActivity()).getString(LeafPreference.LOGIN_ID));
                     dataObj.put("postId", "");
                     dataObj.put("teamId", mGroupId);
                     dataObj.put("title", title);

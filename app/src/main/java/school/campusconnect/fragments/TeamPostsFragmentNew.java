@@ -109,6 +109,9 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     int position = -1;
     public boolean mIsLoading = false;
     public int totalPages2 = 1;
+    public int totalPagesBooth = 1;
+    public int totalPagesMember = 1;
+    public int totalPagesTeam = 1;
     public int currentPage2 = 1;
     public static String team_id;// = 1;
     int count;// = 1;
@@ -519,17 +522,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     private void getDataLocaly() {
 
-        eventTBL = EventTBL.getTeamEvent(mGroupId, team_id);
         boolean apiEvent = false;
-        if (eventTBL != null) {
-            if (eventTBL._now == 0) {
-                apiEvent = true;
-            }
-            if (MixOperations.isNewEvent(eventTBL.eventAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", eventTBL._now)) {
-                apiEvent = true;
-            }
-
-        }
 
         AppLog.e(TAG,"type"+type);
 
@@ -628,13 +621,26 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
             }
         }
+        else
+        {
+            eventTBL = EventTBL.getTeamEvent(mGroupId, team_id);
 
+            if (eventTBL != null) {
+                if (eventTBL._now == 0) {
+                    apiEvent = true;
+                }
+                if (MixOperations.isNewEvent(eventTBL.eventAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", eventTBL._now)) {
+                    apiEvent = true;
+                }
 
+            }
+
+        }
 
         final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type,currentPage2);
         AppLog.e(TAG, "local list size is " + dataItemList.size());
-        showLoadingBar(mBinding.progressBar2);
         String lastId = null;
+        showLoadingBar(mBinding.progressBar2);
         if (dataItemList.size() != 0) {
 
             for (int i = 0; i < dataItemList.size(); i++) {
@@ -677,9 +683,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             mAdapter2.notifyDataSetChanged();
             mBinding.setSize(mAdapter2.getItemCount());
 
+
             firebaseListen(lastId, apiEvent);
 
+
         } else {
+
+
             firebaseListen("", apiEvent);
         }
 
@@ -708,6 +718,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 }
             }
         });
+        mBinding.swipeRefreshLayout2.setEnabled(false);
 
     //    mBinding.swipeRefreshLayout2.setEnabled(false);
        /* mBinding.swipeRefreshLayout2.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
@@ -739,6 +750,15 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
      /*   if(query !=null)
             query.removeEventListener(firebaseNewPostListener);*/
 
+    }
+
+    private void saveTotalPage(int totalPages2) {
+
+
+        if (totalPages2 != 0)
+        {
+            LeafPreference.getInstance(getContext()).setString(mGroupId+"_"+team_id+"_"+type,String.valueOf(totalPages2));
+        }
     }
 
     private void init() {
@@ -780,6 +800,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
         else {
             team_id = teamData.teamId;
+        }
+
+        if (!LeafPreference.getInstance(getContext()).getString(mGroupId+"_"+team_id+"_"+type).isEmpty())
+        {
+            totalPages2 = Integer.parseInt(LeafPreference.getInstance(getContext()).getString(mGroupId+"_"+team_id+"_"+type));
         }
 
         teamName = teamData.name;
@@ -908,6 +933,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 TeamPostGetResponse res2 = (TeamPostGetResponse) response;
 
                 totalPages2 = res2.totalNumberOfPages;
+
+                saveTotalPage(totalPages2);
+
+
+
                 mIsLoading = false;
 
                 if (currentPage2 == 1) {
@@ -1035,6 +1065,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
     }
+
+
 
     private void refreshData() {
         setFloatingButton();

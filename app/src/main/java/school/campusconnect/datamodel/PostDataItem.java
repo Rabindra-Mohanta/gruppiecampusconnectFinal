@@ -67,6 +67,11 @@ public class PostDataItem extends Model {
     @Column(name = "imageHeight")
     public int imageHeight;
 
+    @Column(name = "_now")
+    public String _now;
+
+    @Column(name = "page")
+    public int page;
 
     public PostDataItem() {
         super();
@@ -91,8 +96,14 @@ public class PostDataItem extends Model {
         return new Select().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).execute();
     }
 
-    public static List<PostDataItem> getLastGeneralPost(String group_id) {
-        return new Select().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).limit(1).execute();
+
+    //Constituency  app (needed to pagination all genral post)
+    public static List<PostDataItem> getGeneralPosts(String group_id,int page) {
+        return new Select().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).where("page = ?", page).execute();
+    }
+
+    public static List<PostDataItem> getLastGeneralPost() {
+        return new Select().from(PostDataItem.class).where("type = ?", "group").orderBy("(group_id) DESC").limit(1).execute();
     }
 
     public static List<PostDataItem> getTeamPosts(String group_id) {

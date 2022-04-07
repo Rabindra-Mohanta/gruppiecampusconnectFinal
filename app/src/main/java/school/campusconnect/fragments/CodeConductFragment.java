@@ -193,7 +193,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
             if (currentPage == 1) {
-                PostDataItem.deleteGeneralPosts(mGroupId + "");
+            //    PostDataItem.deleteGeneralPosts(mGroupId + "");
                 listData.clear();
 
                 listData.addAll(res.data);
@@ -310,7 +310,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                 LeafPreference.getInstance(getActivity()).setString(GroupDashboardActivityNew.groupId + "_coc", new Gson().toJson(res));
 
                 if (currentPage == 1) {
-                    PostDataItem.deleteGeneralPosts(mGroupId + "");
+                    //PostDataItem.deleteGeneralPosts(mGroupId + "");
                     listData.clear();
 
                     listData.addAll(res.data);

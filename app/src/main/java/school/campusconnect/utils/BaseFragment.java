@@ -44,9 +44,11 @@ import school.campusconnect.datamodel.booths.BoothPresidentTBL;
 import school.campusconnect.datamodel.booths.BoothsTBL;
 import school.campusconnect.datamodel.booths.EventSubBoothTBL;
 import school.campusconnect.datamodel.booths.MemberTeamTBL;
+import school.campusconnect.datamodel.booths.MyBoothEventTBL;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.booths.SubBoothWorkerEventTBL;
 import school.campusconnect.datamodel.calendar.DayEventTBL;
 import school.campusconnect.datamodel.calendar.MonthEventTBL;
 import school.campusconnect.datamodel.event.BoothPostEventTBL;
@@ -212,6 +214,10 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    public boolean isValidEmail(CharSequence target) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
     protected boolean isValueValid(EditText editView) {
         boolean isValid = true;
 
@@ -266,6 +272,8 @@ public class BaseFragment extends Fragment {
 
             HwItem.deleteAll();
             TestExamTBL.deleteAll();
+            SubBoothWorkerEventTBL.deleteAll();
+            MyBoothEventTBL.deleteAll();
             ChapterTBL.deleteAll();
             EventTBL.deleteAll();
             ClassListTBL.deleteAll();

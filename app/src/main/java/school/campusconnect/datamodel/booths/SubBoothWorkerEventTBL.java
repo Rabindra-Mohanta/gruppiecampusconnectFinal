@@ -8,8 +8,8 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
-@Table(name = "EventSubBoothTBL")
-public class EventSubBoothTBL extends Model {
+@Table(name = "SubBoothWorkerEventTBL")
+public class SubBoothWorkerEventTBL extends Model {
 
     @Column(name = "teamId")
     public String teamId;
@@ -20,13 +20,12 @@ public class EventSubBoothTBL extends Model {
     @Column(name = "lastTeamPostAt")
     public String lastTeamPostAt;
 
-    public static List<EventSubBoothTBL> getAll()
+    public static List<SubBoothWorkerEventTBL> getAll()
     {
-        return new Select().from(EventSubBoothTBL.class).execute();
+        return new Select().from(SubBoothWorkerEventTBL.class).execute();
     }
-    public static List<EventSubBoothTBL> deleteAll()
+    public static List<SubBoothWorkerEventTBL> deleteAll()
     {
-        return new Delete().from(EventSubBoothTBL.class).execute();
+        return new Delete().from(SubBoothWorkerEventTBL.class).execute();
     }
-
 }

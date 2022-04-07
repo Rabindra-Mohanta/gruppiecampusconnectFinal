@@ -53,6 +53,7 @@ import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.BoothListFragment;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.fragments.GeneralPostFragment;
+import school.campusconnect.fragments.GenralPostConstituencyFragment;
 import school.campusconnect.fragments.MemberTeamListFragment;
 import school.campusconnect.fragments.MyTeamSubBoothFragment;
 import school.campusconnect.fragments.MyTeamVoterListFragment;
@@ -489,6 +490,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("MY_TEAM_INSERT",res.data.get(0).lastInsertedTeamTime);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("BOOTH_INSERT",res.data.get(0).lastInsertedBoothTeamTime);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("GALLERY_POST",res.data.get(0).galleryPostEventAt);
+                LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("ANNOUNCEMENT_POST",res.data.get(0).announcementPostEventAt);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("CALENDAR_POST",res.data.get(0).calendarEventAt);
 
                 if (HomeTeamDataTBL.getAll().size() > 0)
@@ -2091,77 +2093,85 @@ public class GroupDashboardActivityNew extends BaseActivity
             tabLayout.setVisibility(View.GONE);
         }*/
 
-
-        if (myBooth.equalsIgnoreCase("yes"))
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
         {
-            if (BoothPostEventTBL.getAll().size() > 0)
+            if (myBooth.equalsIgnoreCase("yes"))
             {
-                List<BoothPostEventTBL> homeTeamDataTBLList = BoothPostEventTBL.getAll();
-
-                for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                if (BoothPostEventTBL.getAll().size() > 0)
                 {
+                    List<BoothPostEventTBL> homeTeamDataTBLList = BoothPostEventTBL.getAll();
 
-                    if (team.boothId.equalsIgnoreCase(homeTeamDataTBLList.get(i).boothId))
+                    for (int i = 0;i<homeTeamDataTBLList.size();i++)
                     {
-                        tv_Desc.setText("Members : "+String.valueOf(homeTeamDataTBLList.get(i).members));
-                        break;
-                    }
-                    else {
-                        tv_Desc.setText("Members : "+String.valueOf(team.members));
+
+                        if (team.boothId.equalsIgnoreCase(homeTeamDataTBLList.get(i).boothId))
+                        {
+                            tv_Desc.setText("Members : "+String.valueOf(homeTeamDataTBLList.get(i).members));
+                            break;
+                        }
+                        else {
+                            tv_Desc.setText("Members : "+String.valueOf(team.members));
+                        }
                     }
                 }
+                else
+                {
+                    tv_Desc.setText("Members : "+String.valueOf(team.members));
+                }
             }
-            else
+            if (member.equalsIgnoreCase("yes"))
             {
-                tv_Desc.setText("Members : "+String.valueOf(team.members));
+                if (EventSubBoothTBL.getAll().size() > 0)
+                {
+                    List<EventSubBoothTBL> eventSubBoothTBLS = EventSubBoothTBL.getAll();
+
+                    for (int i = 0;i<eventSubBoothTBLS.size();i++)
+                    {
+                        if (team.teamId.equalsIgnoreCase(eventSubBoothTBLS.get(i).teamId))
+                        {
+                            tv_Desc.setText("Members : "+String.valueOf(eventSubBoothTBLS.get(i).members));
+                            break;
+                        }
+                        else {
+                            tv_Desc.setText("Members : "+String.valueOf(team.members));
+                        }
+                    }
+                }
+                else
+                {
+                    tv_Desc.setText("Members : "+String.valueOf(team.members));
+                }
+            }
+            else{
+                if (HomeTeamDataTBL.getAll().size() > 0)
+                {
+                    List<HomeTeamDataTBL> homeTeamDataTBLList = HomeTeamDataTBL.getAll();
+
+                    for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                    {
+
+                        if (team.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                        {
+                            tv_Desc.setText("Members : "+String.valueOf(homeTeamDataTBLList.get(i).members));
+                            break;
+                        }
+                        else {
+                            tv_Desc.setText("Members : "+String.valueOf(team.members));
+                        }
+                    }
+                }
+                else
+                {
+                    tv_Desc.setText("Members : "+String.valueOf(team.members));
+                }
             }
         }
-        if (member.equalsIgnoreCase("yes"))
+        else
         {
-            if (EventSubBoothTBL.getAll().size() > 0)
-            {
-                List<EventSubBoothTBL> eventSubBoothTBLS = EventSubBoothTBL.getAll();
-
-                for (int i = 0;i<eventSubBoothTBLS.size();i++)
-                {
-                    if (team.teamId.equalsIgnoreCase(eventSubBoothTBLS.get(i).teamId))
-                    {
-                        tv_Desc.setText("Members : "+String.valueOf(eventSubBoothTBLS.get(i).members));
-                        break;
-                    }
-                    else {
-                        tv_Desc.setText("Members : "+String.valueOf(team.members));
-                    }
-                }
-            }
-            else
-            {
-                tv_Desc.setText("Members : "+String.valueOf(team.members));
-            }
+            tv_Desc.setText("Members : "+String.valueOf(team.members));
         }
-        else{
-            if (HomeTeamDataTBL.getAll().size() > 0)
-            {
-                List<HomeTeamDataTBL> homeTeamDataTBLList = HomeTeamDataTBL.getAll();
 
-                for (int i = 0;i<homeTeamDataTBLList.size();i++)
-                {
 
-                    if (team.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
-                    {
-                        tv_Desc.setText("Members : "+String.valueOf(homeTeamDataTBLList.get(i).members));
-                        break;
-                    }
-                    else {
-                        tv_Desc.setText("Members : "+String.valueOf(team.members));
-                    }
-                }
-            }
-            else
-            {
-                tv_Desc.setText("Members : "+String.valueOf(team.members));
-            }
-        }
 
         setBackEnabled(true);
 
@@ -2395,9 +2405,11 @@ public class GroupDashboardActivityNew extends BaseActivity
             }
 
         } else if (group.type.equals("Chat")) {
+
             Intent intent = new Intent(this, ChatActivity.class);
             intent.putExtra("role", group.role);
             startActivity(intent);
+
         } else if (group.type.equals("Vendor Connect")) {
             Intent intent = new Intent(this, VendorActivity.class);
             intent.putExtra("group_id", groupId);
@@ -2584,7 +2596,15 @@ public class GroupDashboardActivityNew extends BaseActivity
                 tv_Desc.setVisibility(View.VISIBLE);
             }
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(group.groupId,group.name)).addToBackStack("home").commitAllowingStateLoss();
+            if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+            {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GenralPostConstituencyFragment.newInstance(group.groupId,group.name)).addToBackStack("home").commitAllowingStateLoss();
+            }
+            else
+            {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(group.groupId,group.name)).addToBackStack("home").commitAllowingStateLoss();
+            }
+
             tabLayout.setVisibility(View.GONE);
         }
 
@@ -2596,7 +2616,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_toolbar_icon.setVisibility(View.GONE);
         tvToolbar.setText("Announcement");
         tv_Desc.setVisibility(View.GONE);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GeneralPostFragment.newInstance(groupId,"Announcement")).addToBackStack("home").commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GenralPostConstituencyFragment.newInstance(groupId,"Announcement")).addToBackStack("home").commitAllowingStateLoss();
         tabLayout.setVisibility(View.GONE);
     }
 

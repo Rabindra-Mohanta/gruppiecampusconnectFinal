@@ -55,6 +55,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -494,12 +495,23 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         String voterID = pref.getString(LeafPreference.PROFILE_VOTERID);
         String image = pref.getString(LeafPreference.PROFILE_IMAGE_NEW);
 
+
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(name);
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
             ((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon.setVisibility(View.VISIBLE);
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(voterID);
-            Glide.with(getContext()).load(Constants.decodeUrlToBase64(image)).into(((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon);
+
+            if (image.isEmpty())
+            {
+                TextDrawable drawable = TextDrawable.builder()
+                        .buildRound(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(1));
+                ((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon.setImageDrawable(drawable);
+            }
+            else {
+                Glide.with(getContext()).load(Constants.decodeUrlToBase64(image)).into(((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon);
+            }
+
         }
 
 

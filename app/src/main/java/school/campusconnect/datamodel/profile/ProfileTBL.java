@@ -18,7 +18,7 @@ public class ProfileTBL extends Model {
     public String profileData;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
 
     public static List<ProfileTBL> getProfile() {
         return new Select().from(ProfileTBL.class).execute();

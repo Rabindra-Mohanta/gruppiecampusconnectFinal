@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,18 +37,30 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.GroupItem;
+import school.campusconnect.datamodel.SubjectCountTBL;
+import school.campusconnect.datamodel.TeamCountTBL;
+import school.campusconnect.datamodel.banner.BannerTBL;
+import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.booths.BoothsTBL;
 import school.campusconnect.datamodel.booths.EventSubBoothTBL;
 import school.campusconnect.datamodel.booths.MemberTeamTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
 import school.campusconnect.datamodel.booths.SubBoothEventRes;
+import school.campusconnect.datamodel.event.BoothPostEventTBL;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
+import school.campusconnect.datamodel.event.UpdateDataEventRes;
+import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -90,6 +104,8 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
         _init();
 
+        getDataLocally();
+
         getEvent();
 
         return view;
@@ -97,9 +113,26 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     private void getEvent() {
 
-        progressBar.setVisibility(View.VISIBLE);
+
         LeafManager leafManager = new LeafManager();
-        leafManager.getSubBoothEvent(this,GroupDashboardActivityNew.groupId,team_id);
+        leafManager.getSubBoothEvent(new LeafManager.OnCommunicationListener() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+
+                SubBoothEventRes res1 = (SubBoothEventRes) response;
+                new EventAsync(res1).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onFailure(int apiId, String msg) {
+
+            }
+
+            @Override
+            public void onException(int apiId, String msg) {
+
+            }
+        }, GroupDashboardActivityNew.groupId, team_id);
 
     }
 
@@ -259,65 +292,27 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(name+"");
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
         }
+
+
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
 
-        if (LeafManager.API_EVENT_SUB_BOOTH_GET == apiId)
-        {
-            SubBoothEventRes res1 = (SubBoothEventRes) response;
 
 
-            saveEvent(res1);
-        }
-        else
-        {
-            BoothResponse res = (BoothResponse) response;
-            List<MyTeamData> result = res.getData();
-            AppLog.e(TAG, "ClassResponse " + result);
+        BoothResponse res = (BoothResponse) response;
+        List<MyTeamData> result = res.getData();
+        AppLog.e(TAG, "ClassResponse " + result);
 
-            saveToLocally(res.getData());
-
-        }
-
+        saveToLocally(res.getData());
         /*myTeamDataList = result;
         adapter.add(myTeamDataList);
         rvClass.setAdapter(adapter);*/
     }
 
-    private void saveEvent(SubBoothEventRes res1) {
 
-        Log.e(TAG,"lastUpdatedSubBoothTeamTime  "+res1.data.get(0).lastUpdatedSubBoothTeamTime);
-
-        LeafPreference.getInstance(getContext()).setString("SUB_BOOTH_EVENT_UPDATE",res1.data.get(0).lastUpdatedSubBoothTeamTime);
-
-        if (MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).size() > 0)
-        {
-            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).get(0)._now)) {
-                MemberTeamTBL.deleteMemberBooth(GroupDashboardActivityNew.groupId,team_id);
-            }
-        }
-
-        if (res1.data.size() > 0)
-        {
-            EventSubBoothTBL.deleteAll();
-
-            for (int i=0;i<res1.data.size();i++)
-            {
-                EventSubBoothTBL eventSubBoothTBL = new EventSubBoothTBL();
-
-                eventSubBoothTBL.teamId = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getTeamId();
-                eventSubBoothTBL.members = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getMembers();
-                eventSubBoothTBL.lastTeamPostAt = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getLastTeamPostAt();
-
-                eventSubBoothTBL.save();
-            }
-        }
-
-        getDataLocally();
-    }
 
     private void saveToLocally(ArrayList<MyTeamData> boothList) {
 
@@ -522,4 +517,64 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         }
 
     }
+
+
+    class EventAsync extends AsyncTask<Void, Void, Void> {
+        SubBoothEventRes res1;
+        private boolean needRefresh = false;
+
+        public EventAsync(SubBoothEventRes res1) {
+            this.res1 =res1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            Log.e(TAG,"lastUpdatedSubBoothTeamTime  "+res1.data.get(0).lastUpdatedSubBoothTeamTime);
+
+            LeafPreference.getInstance(getContext()).setString("SUB_BOOTH_EVENT_UPDATE",res1.data.get(0).lastUpdatedSubBoothTeamTime);
+
+            if (MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).size() > 0)
+            {
+                if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).get(0)._now)) {
+                    MemberTeamTBL.deleteMemberBooth(GroupDashboardActivityNew.groupId,team_id);
+                    needRefresh = true;
+                }
+                else
+                {
+                    needRefresh = false;
+                }
+            }
+
+            if (res1.data.get(0).subBoothTeamsLastPostEventAt.size() > 0)
+            {
+                EventSubBoothTBL.deleteAll();
+
+                for (int i=0;i<res1.data.get(0).subBoothTeamsLastPostEventAt.size();i++)
+                {
+                    EventSubBoothTBL eventSubBoothTBL = new EventSubBoothTBL();
+
+                    eventSubBoothTBL.teamId = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getTeamId();
+                    eventSubBoothTBL.members = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getMembers();
+                    eventSubBoothTBL.lastTeamPostAt = res1.data.get(0).subBoothTeamsLastPostEventAt.get(i).getLastTeamPostAt();
+
+                    eventSubBoothTBL.save();
+                }
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+                    if (needRefresh)
+                    {
+                        adapter.notifyDataSetChanged();
+                        getDataLocally();
+                    }
+                }
+            }
 }

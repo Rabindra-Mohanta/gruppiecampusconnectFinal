@@ -334,7 +334,10 @@ public class CalendarActivity extends BaseActivity {
                 eventInDayData.setText(eventTBLList.get(i).text);
                 dataDay.add(eventInDayData);
             }
+
+
             showEventInDay(dataDay);
+            showIfEventAddVisible();
         }
         else
         {
@@ -344,6 +347,8 @@ public class CalendarActivity extends BaseActivity {
     }
 
     private void getLocalyMonthEvent() {
+
+        tvMonthYear.setText(MixOperations.convertDate(selected.getTime(),"MMMM yyyy"));
 
         List<MonthEventTBL> eventTBLList = MonthEventTBL.getEvent(GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
 
@@ -361,6 +366,7 @@ public class CalendarActivity extends BaseActivity {
                 eventInDayData.setMonth(eventTBLList.get(i).monthRes);
                 dataMonth.add(eventInDayData);
             }
+
             setEvents(dataMonth);
         }
         else
@@ -371,18 +377,16 @@ public class CalendarActivity extends BaseActivity {
     }
 
     private void getEventInMonth(){
-        tvMonthYear.setText(MixOperations.convertDate(selected.getTime(),"MMMM yyyy"));
-        calendarView.removeAllEvents();
+
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getEventList(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
     }
     private void getEventInDay(){
 
-        eventAdapter.clear();
-        tvData.setText("");
+
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getEventInDay(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
-        showIfEventAddVisible();
+
     }
 
 
@@ -399,6 +403,7 @@ public class CalendarActivity extends BaseActivity {
     }
 
     private void setEvents(ArrayList<EventListRes.EventData> data){
+        calendarView.removeAllEvents();
         if(data!=null && data.size()>0){
             for (int i=0;i<data.size();i++){
                 Calendar eventTime=Calendar.getInstance();

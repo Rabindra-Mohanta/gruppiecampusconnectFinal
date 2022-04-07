@@ -111,6 +111,8 @@ public class MemberTeamTBL extends Model {
         return new Select().from(MemberTeamTBL.class).where("groupId = ?", group_id).where("teamId = ?", teamId).orderBy("(teamId) DESC").limit(1).execute();
     }
 
+
+
     public static void deleteMemberBooth(String group_id,String teamId) {
         new Delete().from(MemberTeamTBL.class).where("groupId = ?", group_id).where("teamId = ?", teamId).execute();
     }
