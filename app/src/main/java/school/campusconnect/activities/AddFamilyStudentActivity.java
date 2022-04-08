@@ -17,15 +17,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,13 +49,22 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothMemberReq;
 import school.campusconnect.datamodel.family.FamilyMemberResponse;
+import school.campusconnect.datamodel.profile.ProfileItem;
+import school.campusconnect.datamodel.profileCaste.CasteResponse;
+import school.campusconnect.datamodel.profileCaste.ReligionResponse;
+import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.fragments.DatePickerFragment;
+import school.campusconnect.fragments.ProfileFragmentConst;
+import school.campusconnect.fragments.SearchCastFragmentDialog;
+import school.campusconnect.fragments.SearchSubCasteDialogFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.UploadCircleImageFragment;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class AddFamilyStudentActivity extends BaseActivity {
+public class AddFamilyStudentActivity extends BaseActivity implements SearchCastFragmentDialog.SelectListener,SearchSubCasteDialogFragment.SelectListener {
     private static final String TAG = "AddStudentActivity";
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -65,8 +77,8 @@ public class AddFamilyStudentActivity extends BaseActivity {
 
     @Bind(R.id.etRelationShip)
     public EditText etRelationShip;
-    @Bind(R.id.etAddress)
-    public EditText etAddress;
+/*    @Bind(R.id.etAddress)
+    public EditText etAddress;*/
 
 
     @Bind(R.id.etdob)
@@ -87,10 +99,69 @@ public class AddFamilyStudentActivity extends BaseActivity {
     @Bind(R.id.btnAdd)
     public Button btnAdd;
 
+    @Bind(R.id.etEmail)
+    public EditText etEmail;
+
+    boolean isEdit = false;
+
+    int indexGender,indexBlood;
+    @Bind(R.id.etProfession)
+    public EditText etProfession;
+
+    @Bind(R.id.etEducation)
+    public EditText etEducation;
+
+    @Bind(R.id.etCategory)
+    public EditText etCategory;
+
+
+    @Bind(R.id.etCaste)
+    public TextView etCaste;
+
+    @Bind(R.id.etSubCaste)
+    public TextView etSubCaste;
+
+    @Bind(R.id.etReligion)
+    public Spinner etReligion;
+
+
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
     LeafManager leafManager;
+
+    String[] bloodGrpArray;
+    String[] genderArray;
+
+    ArrayAdapter<String> genderAdapter;
+    ArrayAdapter<String> bloodGrpAdapter;
+    ArrayAdapter<String> religionAdapter;
+
+    ArrayList<String> religionList = new ArrayList<>();
+    ArrayList<String> casteList = new ArrayList<>();
+    ArrayList<String> subCasteList = new ArrayList<>();
+    ArrayList<CasteResponse.CasteData> casteDataList = new ArrayList<>();
+
+    boolean isFirstTimeReligion = true;
+    boolean isReligionUpdate = false;
+    boolean isFirstTimeCaste = true;
+    boolean isFirstTimeSubCaste = true;
+
+    String casteId = null;
+
+    String religion = null;
+    String caste = null;
+    String subcaste = null;
+
+
+    SearchCastFragmentDialog searchCastFragmentDialog;
+    SearchSubCasteDialogFragment searchSubCasteDialogFragment;
+
+    public static String profileImage;
+
+    public boolean isCasteClickable = false;
+
+    UploadCircleImageFragment imageFragment;
 
     int pos = -1;
     ArrayList<FamilyMemberResponse.FamilyMemberData> list;
@@ -106,32 +177,81 @@ public class AddFamilyStudentActivity extends BaseActivity {
 
         init();
     }
-    String[] bloodGrpArray;
-    String[] genderArray;
-    ArrayAdapter<String> genderAdapter;
-    ArrayAdapter<String> bloodGrpAdapter;
+
     private void init() {
         leafManager = new LeafManager();
         pos = getIntent().getIntExtra("pos",-1);
         list = new Gson().fromJson(getIntent().getStringExtra("data"), new TypeToken<ArrayList<FamilyMemberResponse.FamilyMemberData>>() {
         }.getType());
 
+
+        profileImage = "";
+
+        searchCastFragmentDialog = SearchCastFragmentDialog.newInstance();
+        searchCastFragmentDialog.setListener(this);
+
+        searchSubCasteDialogFragment = SearchSubCasteDialogFragment.newInstance();
+        searchSubCasteDialogFragment.setListener(this);
+
         bloodGrpArray = getResources().getStringArray(R.array.blood_group);
         genderArray = getResources().getStringArray(R.array.gender_array);
 
-        genderAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, genderArray);
-        etGender.setAdapter(genderAdapter);
+        imageFragment = UploadCircleImageFragment.newInstance(null, true, false);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
+        getSupportFragmentManager().executePendingTransactions();
 
-        bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
-        etBlood.setAdapter(bloodGrpAdapter);
 
-        if(pos!=-1){
-            setTitle("Update Family Member");
-            btnAdd.setText("Update");
-            setData(list.get(pos));
-        }else {
-            setTitle("Add Family Member");
-        }
+        etCaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isCasteClickable)
+                {
+                    searchCastFragmentDialog.show(getSupportFragmentManager(),"");
+                }
+            }
+        });
+
+        etSubCaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isCasteClickable)
+                {
+                    searchSubCasteDialogFragment.show(getSupportFragmentManager(),"");
+                }
+
+            }
+        });
+
+
+
+
+        etReligion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position != 0)
+                {
+                    isCasteClickable = true;
+                    progressBar.setVisibility(View.VISIBLE);
+                    leafManager.getCaste(AddFamilyStudentActivity.this,etReligion.getSelectedItem().toString());
+                }
+                else
+                {
+                    isCasteClickable = false;
+                    etCaste.setText("");
+                    etSubCaste.setText("");
+                    etCategory.setText("");
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -167,51 +287,112 @@ public class AddFamilyStudentActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(pos!=-1){
+            isReligionUpdate = true;
+            setTitle("Update Family Member");
+            setData(list.get(pos));
+        }else {
+
+            isEdit = true;
+            isFirstTimeReligion = false;
+            isFirstTimeCaste = false;
+            isFirstTimeSubCaste = false;
+            isCasteClickable = true;
+            progressBar.setVisibility(View.VISIBLE);
+            leafManager.getReligion(this);
+
+            genderAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, genderArray);
+            etGender.setAdapter(genderAdapter);
+
+            bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
+            etBlood.setAdapter(bloodGrpAdapter);
+            setTitle("Add Family Member");
+        }
+    }
+
     private void setData(FamilyMemberResponse.FamilyMemberData item) {
+
+        AppLog.e(TAG,"FamilyMemberData "+new Gson().toJson(item));
+
+        genderAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem, genderArray);
+        etGender.setAdapter(genderAdapter);
+        etGender.setEnabled(false);
+
+        bloodGrpAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem, bloodGrpArray);
+        etBlood.setAdapter(bloodGrpAdapter);
+        etBlood.setEnabled(false);
+
+        etName.setEnabled(false);
+        etRelationShip.setTextColor(getResources().getColor(R.color.grey));
+
+        etRelationShip.setEnabled(false);
+        etName.setTextColor(getResources().getColor(R.color.grey));
+
+        etPhone.setEnabled(false);
+        etPhone.setTextColor(getResources().getColor(R.color.grey));
+
+        etVoterId.setEnabled(false);
+        etVoterId.setTextColor(getResources().getColor(R.color.grey));
+
+        etEmail.setEnabled(false);
+        etEmail.setTextColor(getResources().getColor(R.color.grey));
+
+        etdob.setEnabled(false);
+        etdob.setTextColor(getResources().getColor(R.color.grey));
+
+        etEducation.setEnabled(false);
+        etEducation.setTextColor(getResources().getColor(R.color.grey));
+
+        etProfession.setEnabled(false);
+        etProfession.setTextColor(getResources().getColor(R.color.grey));
+
+        etCategory.setTextColor(getResources().getColor(R.color.grey));
+
+        religion = item.religion;
+        caste = item.caste;
+        subcaste = item.subcaste;
+        profileImage = item.image;
 
         etName.setText(item.name);
         etRelationShip.setText(item.relationship);
-        etAddress.setText(item.address);
+        etEmail.setText(item.email);
         etPhone.setText(item.phone);
-
-        if("self".equalsIgnoreCase(item.relationship)){
-            etRelationShip.setEnabled(false);
-        }else {
-            etRelationShip.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if("self".equalsIgnoreCase(etRelationShip.getText().toString())){
-                        etRelationShip.setText("");
-                    }
-                }
-            });
-        }
+        etEducation.setText(item.qualification);
+        etProfession.setText(item.designation);
+        etVoterId.setText(item.voterId);
+        etdob.setText(item.dob);
 
         int index = 0;
-        for (int i=0;i<genderArray.length;i++){
-            if((item.gender+"").equals(genderArray[i])){
+        for (int i = 0; i < genderArray.length; i++) {
+            if ((item.gender + "").equals(genderArray[i])) {
                 index = i;
             }
         }
+        indexGender = index;
         etGender.setSelection(index);
 
-        index = 0;
-        for (int i=0;i<bloodGrpArray.length;i++){
-            if((item.bloodGroup+"").equals(bloodGrpArray[i])){
-                index = i;
+        int index1 = 0;
+        for (int i = 0; i < bloodGrpArray.length; i++) {
+            if ((item.bloodGroup + "").equals(bloodGrpArray[i])) {
+                index1 = i;
             }
         }
-        etBlood.setSelection(index);
+        indexBlood = index1;
+        etBlood.setSelection(index1);
+
+        if (item.image != null && !item.image.isEmpty() && Constants.decodeUrlToBase64(item.image).contains("http")) {
+            imageFragment.updatePhotoFromUrl(item.image);
+        } else if (item.image == null) {
+            Log.e("ProfileActivity", "image is Null From API "+item.name);
+            imageFragment.setInitialLatterImage(item.name);
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        leafManager.getReligion(this);
     }
 
     private long lastClickTime = 0;
@@ -227,6 +408,89 @@ public class AddFamilyStudentActivity extends BaseActivity {
         Log.e(TAG, "Tap : ");
         switch (view.getId()) {
             case R.id.btnAdd:
+
+                if (!isEdit)
+                {
+                    isEdit = true;
+
+                    etName.setEnabled(true);
+                    etName.setTextColor(getResources().getColor(R.color.white));
+
+                    etRelationShip.setEnabled(true);
+                    etRelationShip.setTextColor(getResources().getColor(R.color.white));
+
+                    etPhone.setEnabled(true);
+                    etPhone.setTextColor(getResources().getColor(R.color.white));
+
+                    etVoterId.setEnabled(true);
+                    etVoterId.setTextColor(getResources().getColor(R.color.white));
+
+                    etEmail.setEnabled(true);
+                    etEmail.setTextColor(getResources().getColor(R.color.white));
+
+                    etdob.setEnabled(true);
+                    etdob.setTextColor(getResources().getColor(R.color.white));
+
+                    etEducation.setEnabled(true);
+                    etEducation.setTextColor(getResources().getColor(R.color.white));
+
+                    etProfession.setEnabled(true);
+                    etProfession.setTextColor(getResources().getColor(R.color.white));
+
+                    etCategory.setTextColor(getResources().getColor(R.color.white));
+                    etCaste.setTextColor(getResources().getColor(R.color.white));
+                    etSubCaste.setTextColor(getResources().getColor(R.color.white));
+
+                    genderAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, R.id.tvItem, genderArray);
+                    etGender.setAdapter(genderAdapter);
+                    etGender.setEnabled(true);
+
+                    bloodGrpAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
+                    etBlood.setAdapter(bloodGrpAdapter);
+                    etBlood.setEnabled(true);
+
+                    etGender.setSelection(indexGender);
+                    etBlood.setSelection(indexBlood);
+
+                    religionAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, R.id.tvItem, religionList);
+                    etReligion.setAdapter(religionAdapter);
+                    etReligion.setEnabled(true);
+                    etReligion.setSelection(religionAdapter.getPosition(religion));
+
+
+                    if("self".equalsIgnoreCase(etRelationShip.getText().toString())){
+                        etRelationShip.setEnabled(false);
+                    }else {
+                        etRelationShip.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                                if("self".equalsIgnoreCase(etRelationShip.getText().toString())){
+                                    etRelationShip.setText("");
+                                }
+                            }
+                        });
+                    }
+
+                    if(pos!=-1){
+                        btnAdd.setText("Update");
+                    }else {
+                        btnAdd.setText("Save");
+                    }
+
+                    return;
+                }
+
+
                 hide_keyboard(view);
 
                 if (TextUtils.isEmpty(etName.getText().toString().trim())) {
@@ -244,7 +508,7 @@ public class AddFamilyStudentActivity extends BaseActivity {
                     item.name = etName.getText().toString();
                     item.countryCode = "IN";
                     item.relationship = etRelationShip.getText().toString();
-                    item.address = etAddress.getText().toString();
+                 //   item.address = etAddress.getText().toString();
                     item.phone = etPhone.getText().toString();
                     item.dob = etdob.getText().toString();
                     if (etGender.getSelectedItemPosition() > 0) {
@@ -260,10 +524,20 @@ public class AddFamilyStudentActivity extends BaseActivity {
                     item.voterId = etVoterId.getText().toString();
                     item.aadharNumber = etAadhar.getText().toString();
 
+                    item.email = etEmail.getText().toString();
+
+                    item.qualification = etEducation.getText().toString();
+                    item.caste = etCaste.getText().toString();
+                    item.subcaste = etSubCaste.getText().toString();
+                    item.religion = etReligion.getSelectedItem().toString();
+                    item.designation = etProfession.getText().toString();
+
+                    item.image = imageFragment.getmProfileImage();
+
                     progressBar.setVisibility(View.VISIBLE);
                     FamilyMemberResponse req = new FamilyMemberResponse();
                     req.setData(list);
-                    AppLog.e(TAG,"req : "+req);
+                    AppLog.e(TAG,"req : "+new Gson().toJson(req));
                     leafManager.addFamilyMember(this, GroupDashboardActivityNew.groupId, LeafPreference.getInstance(this).getUserId(),req);
                 }
                 break;
@@ -299,6 +573,168 @@ public class AddFamilyStudentActivity extends BaseActivity {
 
                 finish();
                 break;
+
+            case LeafManager.API_RELIGION_GET:
+                ReligionResponse res = (ReligionResponse) response;
+
+                AppLog.e(TAG, "ReligionResponse" + res);
+
+                religionList.clear();
+                religionList.add(0,"select religion");
+                religionList.addAll(res.getReligionData().get(0).getReligionList());
+
+                if (res.getReligionData().size() > 0)
+                {
+                    religionAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner_disable, R.id.tvItem, religionList);
+                    etReligion.setAdapter(religionAdapter);
+                }
+                if (isFirstTimeReligion)
+                {
+                    isFirstTimeReligion = false;
+                    etReligion.setEnabled(false);
+
+                    if (religion != null)
+                    {
+                        etReligion.setSelection(religionAdapter.getPosition(religion));
+                    }
+                    else
+                    {
+                        etReligion.setSelection(religionAdapter.getPosition("select religion"));
+                    }
+
+                }
+
+                if (!isReligionUpdate)
+                {
+                    isReligionUpdate = true;
+                    religionAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, R.id.tvItem, religionList);
+                    etReligion.setAdapter(religionAdapter);
+                }
+
+
+                break;
+
+            case LeafManager.API_CASTE_GET:
+                CasteResponse response1 = (CasteResponse) response;
+
+                AppLog.e(TAG, "CasteResponse" + response1);
+
+
+
+                casteDataList.clear();
+                casteDataList.addAll(response1.getCasteData());
+                casteList.clear();
+
+                for (int i=0;i<response1.getCasteData().size();i++)
+                {
+                    casteList.add(response1.getCasteData().get(i).getCasteName());
+                }
+
+                if (casteList.size() > 0)
+                {
+                    if (isFirstTimeCaste)
+                    {
+                        etCaste.setTextColor(getResources().getColor(R.color.grey));
+
+                        if (caste != null)
+                        {
+                            etCaste.setText(caste);
+                        }
+                        else
+                        {
+                            etCaste.setText(response1.getCasteData().get(0).getCasteName());
+                        }
+                        for (int i=0;i<casteDataList.size();i++)
+                        {
+                            if (etCaste.getText().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
+                            {
+                                casteId = casteDataList.get(i).getCasteId();
+                                etCategory.setText(casteDataList.get(i).getCategoryName());
+                            }
+                        }
+
+                        if (isEdit)
+                        {
+                            isFirstTimeCaste = false;
+                            etCaste.setTextColor(getResources().getColor(R.color.white));
+                            etCaste.setEnabled(true);
+                        }
+                        else {
+                            etCaste.setTextColor(getResources().getColor(R.color.grey));
+                            etCaste.setEnabled(false);
+                        }
+                    }
+                    else
+                    {
+                        casteId = response1.getCasteData().get(0).getCasteId();
+                        etCaste.setText(response1.getCasteData().get(0).getCasteName());
+                        etCategory.setText(response1.getCasteData().get(0).getCategoryName());
+                    }
+
+                    searchCastFragmentDialog.setData(response1.getCasteData());
+
+                }
+
+                if (casteId != null)
+                {
+                    progressBar.setVisibility(View.VISIBLE);
+                    leafManager.getSubCaste(this,casteId);
+                }
+
+                break;
+
+            case LeafManager.API_SUB_CASTE_GET:
+                SubCasteResponse response2 = (SubCasteResponse) response;
+
+                AppLog.e(TAG, "SubCasteResponse" + response2);
+
+                casteId = null;
+
+                subCasteList.clear();
+
+                for (int i=0;i<response2.getSubCasteData().size();i++)
+                {
+                    subCasteList.add(response2.getSubCasteData().get(i).getSubCasteName());
+                }
+
+
+                if (subCasteList.size() > 0)
+                {
+
+                    if (isFirstTimeSubCaste)
+                    {
+                        etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+
+                        if (subcaste != null)
+                        {
+                            etSubCaste.setText(subcaste);
+                        }
+                        else
+                        {
+                            etSubCaste.setText(response2.getSubCasteData().get(0).getSubCasteName());
+                        }
+
+
+                        if (isEdit)
+                        {
+                            isFirstTimeSubCaste = false;
+                            etSubCaste.setTextColor(getResources().getColor(R.color.white));
+                            etSubCaste.setEnabled(true);
+                        }
+                        else {
+                            etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+                            etSubCaste.setEnabled(false);
+                        }
+                    }
+                    else
+                    {
+                        etSubCaste.setText(response2.getSubCasteData().get(0).getSubCasteName());
+                    }
+
+                    searchSubCasteDialogFragment.setData(response2.getSubCasteData());
+                }
+                break;
+
         }
     }
 
@@ -323,5 +759,28 @@ public class AddFamilyStudentActivity extends BaseActivity {
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onSelected(CasteResponse.CasteData casteData) {
+
+        etCaste.setText(casteData.getCasteName());
+        etCategory.setText(casteData.getCategoryName());
+
+        casteId = casteData.getCasteId();
+
+        if (casteId != null)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            leafManager.getSubCaste(this,casteId);
+        }
+    }
+
+    @Override
+    public void onSelected(SubCasteResponse.SubCasteData casteData) {
+
+        etSubCaste.setText(casteData.getSubCasteName());
+
     }
 }

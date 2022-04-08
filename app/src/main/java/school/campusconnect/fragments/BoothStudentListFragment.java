@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -78,6 +79,8 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
     @Bind(R.id.etSearch)
     public EditText etSearch;
+
+    private int REQUEST_UPDATE_PROFILE = 9;
 
     MyTeamData classData;
     committeeResponse.committeeData committeeData;
@@ -256,7 +259,9 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
         i.putExtra("userID",studentData.id);
         i.putExtra("name",studentData.name);
-        startActivity(i);
+        i.putExtra("committee",true);
+
+        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
     }
 
     public ArrayList<String> getMobileList(){
@@ -267,5 +272,20 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
             }
         }
         return mobList;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        }
     }
 }

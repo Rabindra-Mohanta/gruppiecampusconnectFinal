@@ -39,6 +39,10 @@ public class VoterProfileResponse extends BaseResponse {
         @Expose
         public String phone;
 
+        @SerializedName("roleOnConstituency")
+        @Expose
+        public String roleOnConstituency;
+
         @SerializedName("name")
         @Expose
         public String name;
@@ -217,6 +221,14 @@ public class VoterProfileResponse extends BaseResponse {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getRoleOnConstituency() {
+            return roleOnConstituency;
+        }
+
+        public void setRoleOnConstituency(String roleOnConstituency) {
+            this.roleOnConstituency = roleOnConstituency;
         }
 
         public String getInsertedAt() {

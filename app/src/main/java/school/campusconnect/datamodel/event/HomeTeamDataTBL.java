@@ -22,6 +22,12 @@ public class HomeTeamDataTBL extends Model {
     @Column(name = "lastTeamPostAt")
     public String lastTeamPostAt;
 
+    @Column(name = "canPost")
+    public boolean canPost;
+
+    @Column(name = "canComment")
+    public boolean canComment;
+
     public static List<HomeTeamDataTBL> getAll() {
         return new Select().from(HomeTeamDataTBL.class).execute();
     }

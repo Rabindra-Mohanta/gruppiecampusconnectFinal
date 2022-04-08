@@ -197,6 +197,8 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
 
                 Toast.makeText(this, getString(R.string.msg_creted_team), Toast.LENGTH_LONG).show();
 
+
+
                 if (myTeamData != null)
                 {
                     if ("subBooth".equalsIgnoreCase(myTeamData.category) || "booth".equalsIgnoreCase(myTeamData.category) || "constituency".equalsIgnoreCase(myTeamData.category)) {
@@ -206,52 +208,65 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
                 }
                 else
                     {
-                    final AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                    CharSequence items[] = new CharSequence[] {"Add Staff", "Add Students"};
-                    adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 
-                        @Override
-                        public void onClick(DialogInterface d, int n) {
-                            AppLog.e(TAG,"ss : "+n);
-                            d.dismiss();
-                            if(n==0){
-                                Intent intent = new Intent(CreateTeamActivity.this, AddTeamStaffActivity.class);
-                                intent.putExtra("id", GroupDashboardActivityNew.groupId);
-                                intent.putExtra("invite", true);
-                                intent.putExtra("from_team", true);
-                                intent.putExtra("team_id", addTeamResponse.data.teamId);
-                                startActivity(intent);
-                            }else {
-                                Intent intent = new Intent(CreateTeamActivity.this, AddTeamStudentActivity.class);
-                                intent.putExtra("id", GroupDashboardActivityNew.groupId);
-                                intent.putExtra("invite", true);
-                                intent.putExtra("from_team", true);
-                                intent.putExtra("team_id", addTeamResponse.data.teamId);
-                                startActivity(intent);
-                            }
+                        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+                        {
                             finish();
                         }
+                        else
+                        {
+                            final AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                            CharSequence items[] = new CharSequence[] {"Add Staff", "Add Students"};
+                            adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 
-                    });
-                    adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finish();
+                                @Override
+                                public void onClick(DialogInterface d, int n) {
+                                    AppLog.e(TAG,"ss : "+n);
+                                    d.dismiss();
+                                    if(n==0){
+                                        Intent intent = new Intent(CreateTeamActivity.this, AddTeamStaffActivity.class);
+                                        intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                                        intent.putExtra("invite", true);
+                                        intent.putExtra("from_team", true);
+                                        intent.putExtra("team_id", addTeamResponse.data.teamId);
+                                        startActivity(intent);
+                                    }else {
+                                        Intent intent = new Intent(CreateTeamActivity.this, AddTeamStudentActivity.class);
+                                        intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                                        intent.putExtra("invite", true);
+                                        intent.putExtra("from_team", true);
+                                        intent.putExtra("team_id", addTeamResponse.data.teamId);
+                                        startActivity(intent);
+                                    }
+                                    finish();
+                                }
+
+                            });
+                            adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                            AlertDialog dialog = adb.create();
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog.setCancelable(false);
+                            dialog.show();
                         }
-                    });
-                    AlertDialog dialog = adb.create();
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setCancelable(false);
-                    dialog.show();
+
                 }
                 break;
             case LeafManager.API_ID_EDIT_TEAM:
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMUPDATED, true);
+                Intent i = new Intent();
+                setResult(RESULT_OK,i);
                 finish();
                 break;
             case LeafManager.API_ID_DELETE_TEAM:
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMUPDATED, true);
+                Intent intent= new Intent();
+                setResult(RESULT_OK,intent);
                 finish();
                 break;
         }

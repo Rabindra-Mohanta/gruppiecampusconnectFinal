@@ -5,4 +5,8 @@
         android:id="@+id/menu_make_admin"
         android:title="Make App Admin" />
 
+    <item
+        android:id="@+id/menu_delete"
+        android:title="Delete" />
+
 </menu>

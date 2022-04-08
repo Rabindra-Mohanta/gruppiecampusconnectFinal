@@ -405,7 +405,7 @@
         style="@style/AddPostButton"
         android:layout_width="@dimen/login_button_width"
         android:layout_height="@dimen/login_button_height"
-        android:text="@string/lbl_save" />
+        android:text="@string/lbl_edit" />
 
 
     <ProgressBar

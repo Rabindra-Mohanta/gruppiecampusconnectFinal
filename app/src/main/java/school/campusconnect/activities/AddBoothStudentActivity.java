@@ -155,7 +155,10 @@ public class AddBoothStudentActivity extends BaseActivity {
                     Toast.makeText(AddBoothStudentActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etPhone.getText().toString().trim())) {
                     Toast.makeText(AddBoothStudentActivity.this, "Please Enter Phone", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else if (etPhone.getText().toString().length() < 10) {
+                    Toast.makeText(AddBoothStudentActivity.this, "Please Enter Valid Phone Number", Toast.LENGTH_SHORT).show();
+                }else {
                     hide_keyboard(view);
                     String str = etName.getText().toString() + ",IN," + etPhone.getText().toString();
                     adapter.add(str);
@@ -229,7 +232,8 @@ public class AddBoothStudentActivity extends BaseActivity {
                 }
                 else if (TextUtils.isEmpty(etName.getText().toString().trim()) && TextUtils.isEmpty(etPhone.getText().toString().trim())) {
 
-                } else {
+                }
+                else {
                     if (TextUtils.isEmpty(etName.getText().toString().trim())) {
                         Toast.makeText(AddBoothStudentActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
                         return;
@@ -237,9 +241,17 @@ public class AddBoothStudentActivity extends BaseActivity {
                         Toast.makeText(AddBoothStudentActivity.this, "Please Enter Phone", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                 }
 
                 if(!TextUtils.isEmpty(str) || adapter.getList().size()>0){
+
+                    if (etPhone.getText().toString().length() < 10) {
+                        Toast.makeText(AddBoothStudentActivity.this, "Please Enter Valid Phone Number", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+
                     BoothMemberReq req = new BoothMemberReq();
                     req.user = adapter.getList();
 

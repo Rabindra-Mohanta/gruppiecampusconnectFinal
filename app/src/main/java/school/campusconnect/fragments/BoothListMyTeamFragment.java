@@ -1,5 +1,6 @@
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.j256.ormlite.stmt.query.In;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -62,6 +64,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
     private List<MyTeamData> filteredList = new ArrayList<>();
     private List<MyTeamData> myTeamDataList = new ArrayList<>();
 
+    private int REQUEST_UPDATE_PROFILE = 8;
     ClassesAdapter adapter;
 
     @Bind(R.id.rvTeams)
@@ -384,7 +387,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
                     Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                     i.putExtra("userID",item.userId);
                     i.putExtra("name",item.name);
-                    startActivity(i);
+                    startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                 }
             });
         }
@@ -446,6 +449,21 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
                     }
                 });
 
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
             }
         }
     }

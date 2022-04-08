@@ -107,6 +107,14 @@ public class UpdateDataEventRes extends BaseResponse {
         @Expose
         public String lastTeamPostAt;
 
+        @SerializedName("canPost")
+        @Expose
+        public boolean canPost;
+
+        @SerializedName("canComment")
+        @Expose
+        public boolean canComment;
+
     }
     public static class RoleData implements Serializable {
 

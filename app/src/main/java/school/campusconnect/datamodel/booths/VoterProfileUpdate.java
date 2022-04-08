@@ -26,4 +26,5 @@ public class VoterProfileUpdate {
     public String subcaste;
     public String religion;
     public String designation;
+    public String roleOnConstituency;
 }

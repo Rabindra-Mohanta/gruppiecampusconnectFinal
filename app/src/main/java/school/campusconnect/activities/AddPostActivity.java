@@ -315,7 +315,15 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             tvLabelTitle.setVisibility(View.GONE);
 
             if (!isFromChat) {
-                llPersonalSetting.setVisibility(View.VISIBLE);
+                if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+                {
+                    llPersonalSetting.setVisibility(View.GONE);
+                }
+                else
+                {
+                    llPersonalSetting.setVisibility(View.VISIBLE);
+                }
+
             } else {
                 llPersonalSetting.setVisibility(View.GONE);
             }

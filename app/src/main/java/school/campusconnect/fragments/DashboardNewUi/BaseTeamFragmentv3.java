@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -269,7 +270,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (mGroupItem.canPost) {
             menu.findItem(R.id.menu_profile).setVisible(false);
         } else {
-            menu.findItem(R.id.menu_profile).setVisible(true);
+            menu.findItem(R.id.menu_profile).setVisible(false);
         }
 
 
@@ -488,6 +489,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public void onResume() {
         super.onResume();
         isVisible = true;
+
+        callNotificationAdminApi();
+
         if (getActivity() == null)
             return;
 
@@ -1076,6 +1080,112 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             {
                 notificationApiCall();
             }
+        }
+    }
+
+    private void callNotificationAdminApi()
+    {
+        if (mGroupItem.isAdmin) {
+            new AdminDashboard().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
+    }
+    class AdminDashboard extends AsyncTask<Void, Void, Void>{
+        private boolean isDataChange = false;
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            LeafManager leafManager = new LeafManager();
+            leafManager.getAdminFeederList(new LeafManager.OnCommunicationListener() {
+                @Override
+                public void onSuccess(int apiId, BaseResponse response) {
+
+                    AdminFeederResponse adminFeederResponse = (AdminFeederResponse) response;
+                    Log.e(TAG,"adminFeederResponse "+new Gson().toJson(adminFeederResponse));
+
+                    List<AdminFeedTable> adminFeedTableList = AdminFeedTable.getAdminNotificationList(GroupDashboardActivityNew.groupId);
+
+                    if (adminFeedTableList != null && adminFeedTableList.size() > 0) {
+
+
+                        for (int i = 0; i < adminFeedTableList.size(); i++) {
+
+                            if (adminFeedTableList.get(i).totalSubBoothsCount != adminFeederResponse.feedData.get(0).getTotalSubBoothsCount())
+                            {
+                                isDataChange = true;
+                            }
+                            if (adminFeedTableList.get(i).totalAnnouncementCount != adminFeederResponse.feedData.get(0).getTotalAnnouncementCount())
+                            {
+                                isDataChange = true;
+                            }
+                            if (adminFeedTableList.get(i).totalBoothsCount != adminFeederResponse.feedData.get(0).getTotalBoothsCount())
+                            {
+                                isDataChange = true;
+                            }
+                            if (adminFeedTableList.get(i).totalBoothsDiscussion != adminFeederResponse.feedData.get(0).getTotalBoothsDiscussion())
+                            {
+                                isDataChange = true;
+                            }
+                            if (adminFeedTableList.get(i).totalSubBoothDiscussion != adminFeederResponse.feedData.get(0).getTotalSubBoothDiscussion())
+                            {
+                                isDataChange = true;
+                            }
+                            if (adminFeedTableList.get(i).totalOpenIssuesCount != adminFeederResponse.feedData.get(0).getTotalOpenIssuesCount())
+                            {
+                                isDataChange = true;
+                            }
+
+                        }
+                    }
+
+                    if (isDataChange)
+                    {
+                        AdminFeedTable.deleteAdminNotification(GroupDashboardActivityNew.groupId);
+
+                        adminNotificationList.clear();
+
+                        for (int i = 0; i < adminFeederResponse.feedData.size(); i++) {
+
+                            AdminFeedTable adminFeedTable = new AdminFeedTable();
+
+                            AdminFeederResponse.FeedData feedData= adminFeederResponse.feedData.get(i);
+
+                            adminFeedTable.groupID = GroupDashboardActivityNew.groupId;
+                            adminFeedTable.totalSubBoothsCount = feedData.getTotalSubBoothsCount();
+                            adminFeedTable.totalSubBoothDiscussion = feedData.getTotalSubBoothDiscussion();
+                            adminFeedTable.totalOpenIssuesCount = feedData.getTotalOpenIssuesCount();
+                            adminFeedTable.totalBoothsDiscussion = feedData.getTotalBoothsDiscussion();
+                            adminFeedTable.totalBoothsCount = feedData.getTotalBoothsCount();
+                            adminFeedTable.totalAnnouncementCount = feedData.getTotalAnnouncementCount();
+                            adminFeedTable.save();
+
+                        }
+                        adminNotificationList.addAll(adminFeederResponse.getFeedData());
+                        feedAdminAdapter.add(adminNotificationList);
+
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int apiId, String msg) {
+
+                }
+
+                @Override
+                public void onException(int apiId, String msg) {
+
+                }
+            },GroupDashboardActivityNew.groupId,"isAdmin");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+
         }
     }
 

@@ -14,6 +14,10 @@ public class ProfileItem {
     public String qualification;
     public String occupation;
 
+    public String caste;
+    public String subcaste;
+    public String religion;
+    public String designation;
 
     public String roleOnConstituency;
     public AddressItem address;
@@ -28,8 +32,4 @@ public class ProfileItem {
     public String relationship;
     public String bloodGroup;
 
-    public String caste;
-    public String subcaste;
-    public String religion;
-    public String designation;
 }

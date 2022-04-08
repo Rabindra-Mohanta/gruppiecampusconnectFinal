@@ -1,5 +1,6 @@
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -68,6 +69,8 @@ public static String TAG = "MyTeamSubBoothFragment";
 
     @Bind(R.id.edtSearch)
     public EditText edtSearch;
+
+    private int REQUEST_UPDATE_PROFILE = 9;
 
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
@@ -369,7 +372,7 @@ public static String TAG = "MyTeamSubBoothFragment";
                     Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                     i.putExtra("userID",item.userId);
                     i.putExtra("name",item.name);
-                    startActivity(i);
+                    startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                 }
             });
         }
@@ -494,6 +497,20 @@ public static String TAG = "MyTeamSubBoothFragment";
             {
                 adapter.notifyDataSetChanged();
                 getLocally();
+            }
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(), GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
             }
         }
     }

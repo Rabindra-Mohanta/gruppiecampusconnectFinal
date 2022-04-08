@@ -194,7 +194,6 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.llAttendanceReport)
     LinearLayout llAttendanceReport;
 
-
     @Bind(R.id.tapView1)
     public View tapView1;
 
@@ -506,6 +505,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                         homeTeamDataTBL.teamId = res.data.get(0).homeTeamData.get(i).teamId;
                         homeTeamDataTBL.members = res.data.get(0).homeTeamData.get(i).members;
                         homeTeamDataTBL.lastTeamPostAt = res.data.get(0).homeTeamData.get(i).lastTeamPostAt;
+                        homeTeamDataTBL.canPost = res.data.get(0).homeTeamData.get(i).canPost;
+                        homeTeamDataTBL.canComment = res.data.get(0).homeTeamData.get(i).canComment;
 
                         homeTeamDataTBL.save();
                     }
@@ -1820,7 +1821,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 }
                 else
                 {
-                    onTeamSelectedVoter(mGroupItem.subBoothName,mGroupItem.subBoothCount, mGroupItem.subBoothId);
+                    onTeamSelectedVoter(mGroupItem.subBoothName,mGroupItem.subBoothMembers, mGroupItem.subBoothId);
                 }
         }
 

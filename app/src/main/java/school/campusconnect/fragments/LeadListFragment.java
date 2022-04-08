@@ -1,6 +1,7 @@
 
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.LeadsListActivity;
 import school.campusconnect.activities.NestedTeamActivity;
 import school.campusconnect.activities.UpdateMemberActivity;
@@ -63,6 +65,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     Intent intent;
     String boothClick;
     String groupId = "";
+    private int REQUEST_UPDATE_PROFILE = 9;
     String teamId = "";
     LeafManager mManager = new LeafManager();
     public boolean mIsLoading = false;
@@ -295,10 +298,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
@@ -502,6 +502,21 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
         i.putExtra("userID",studentData.id);
         i.putExtra("name",studentData.name);
-        startActivity(i);
+        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(), GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        }
     }
 }

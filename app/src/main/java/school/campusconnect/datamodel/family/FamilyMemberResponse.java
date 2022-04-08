@@ -25,6 +25,7 @@ public class FamilyMemberResponse extends BaseResponse {
         @SerializedName("voterId")
         @Expose
         public String voterId;
+
         @SerializedName("relationship")
         @Expose
         public String relationship;
@@ -58,6 +59,15 @@ public class FamilyMemberResponse extends BaseResponse {
         @SerializedName("aadharNumber")
         @Expose
         public String aadharNumber;
+
+        public String occupation;
+
+        public String caste;
+        public String subcaste;
+        public String religion;
+        public String email;
+        public String qualification;
+        public String designation;
 
         @Override
         public String toString() {

@@ -57,12 +57,14 @@ public class ProfileConstituencyActivity extends BaseActivity {
 
         tabLayout.setVisibility(View.VISIBLE);
 
-        profileFragmentConst = new ProfileFragmentConst();
+/*        profileFragmentConst = new ProfileFragmentConst();
         profileFragmentConst.setArguments(getIntent().getExtras());
 
         familyListFragment = new FamilyListFragment();
         familyListFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragmentConst).commit();
+
+        */
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragmentConst()).commit();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -71,13 +73,13 @@ public class ProfileConstituencyActivity extends BaseActivity {
                     if (menu != null) {
                         menu.findItem(R.id.menu_add_class_student).setVisible(false);
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragmentConst).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragmentConst()).commit();
                 } else {
 
                     if (menu != null) {
                         menu.findItem(R.id.menu_add_class_student).setVisible(true);
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, familyListFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new FamilyListFragment()).commit();
                 }
             }
 
@@ -96,10 +98,6 @@ public class ProfileConstituencyActivity extends BaseActivity {
 
         AppLog.e(TAG,"currFrag"+currFrag);
 
-        if (currFrag instanceof ProfileFragmentConst)
-        {
-
-        }
 
 
 

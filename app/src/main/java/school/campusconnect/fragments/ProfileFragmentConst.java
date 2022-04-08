@@ -33,6 +33,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.ProfileConstituencyActivity;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
@@ -68,6 +69,10 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     public EditText etRelationShip;*/
     @Bind(R.id.etEmail)
     public EditText etEmail;
+
+    boolean isEdit = false;
+
+    int indexGender,indexBlood;
 
 
     @Bind(R.id.etdob)
@@ -133,6 +138,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     ArrayList<String> subCasteList = new ArrayList<>();
     ArrayList<CasteResponse.CasteData> casteDataList = new ArrayList<>();
 
+    boolean isFirstTimeReligion = true;
     boolean isFirstTimeCaste = true;
     boolean isFirstTimeSubCaste = true;
 
@@ -177,12 +183,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         bloodGrpArray = getResources().getStringArray(R.array.blood_group);
         genderArray = getResources().getStringArray(R.array.gender_array);
 
-        genderAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, genderArray);
-        etGender.setAdapter(genderAdapter);
-
-        bloodGrpAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
-        etBlood.setAdapter(bloodGrpAdapter);
-
         imageFragment = UploadCircleImageFragment.newInstance(null, true, false);
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getChildFragmentManager().executePendingTransactions();
@@ -190,7 +190,68 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callUpdateProfileApi();
+
+                if (!isEdit) {
+                    isEdit = true;
+
+                    etName.setEnabled(true);
+                    etName.setTextColor(getResources().getColor(R.color.white));
+
+                    etPhone.setEnabled(true);
+                    etPhone.setTextColor(getResources().getColor(R.color.white));
+
+                    etVoterId.setEnabled(true);
+                    etVoterId.setTextColor(getResources().getColor(R.color.white));
+
+                    etEmail.setEnabled(true);
+                    etEmail.setTextColor(getResources().getColor(R.color.white));
+
+                    etdob.setEnabled(true);
+                    etdob.setTextColor(getResources().getColor(R.color.white));
+
+                    etEducation.setEnabled(true);
+                    etEducation.setTextColor(getResources().getColor(R.color.white));
+
+                    etProfession.setEnabled(true);
+                    etProfession.setTextColor(getResources().getColor(R.color.white));
+
+                    etCategory.setTextColor(getResources().getColor(R.color.white));
+                    etCaste.setTextColor(getResources().getColor(R.color.white));
+                    etSubCaste.setTextColor(getResources().getColor(R.color.white));
+
+                    /*binding.etCaste.setEnabled(true);
+                    binding.etCaste.setTextColor(getResources().getColor(R.color.white));
+
+                    binding.etSubCaste.setEnabled(true);
+                    binding.etSubCaste.setTextColor(getResources().getColor(R.color.white));
+
+                    binding.etReligion.setEnabled(true);
+                    binding.etReligion.setTextColor(getResources().getColor(R.color.white));*/
+
+                    genderAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, genderArray);
+                    etGender.setAdapter(genderAdapter);
+                    etGender.setEnabled(true);
+
+                    bloodGrpAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
+                    etBlood.setAdapter(bloodGrpAdapter);
+                    etBlood.setEnabled(true);
+
+                    etGender.setSelection(indexGender);
+                    etBlood.setSelection(indexBlood);
+
+                    religionAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, religionList);
+                    etReligion.setAdapter(religionAdapter);
+                    etReligion.setEnabled(true);
+                    etReligion.setSelection(religionAdapter.getPosition(religion));
+
+
+                    btnAdd.setText("Save");
+                    return;
+                }
+                else {
+                    callUpdateProfileApi();
+                }
+
             }
         });
 
@@ -326,19 +387,22 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     private boolean isValid() {
         boolean valid = true;
         try {
+
             if (!isValueValid(etName))
             {
                 valid = false;
             }
-            else if (!etPhone.getText().toString().isEmpty()) {
 
+            if (!etPhone.getText().toString().isEmpty()) {
+
+                AppLog.e(TAG,"length "+etPhone.getText().toString().length());
                 if (etPhone.getText().toString().length() < 10) {
                     etPhone.setError(getString(R.string.msg_valid_phone));
-                    etPhone.requestFocus();
                     valid = false;
                 }
             }
-            else if (!etEmail.getText().toString().isEmpty())
+
+            if (!etEmail.getText().toString().isEmpty())
             {
                 if (!isValidEmail(etEmail.getText().toString()))
                 {
@@ -364,6 +428,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
         if (profileTBLList.size() > 0) {
             if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now)) {
+                AppLog.e(TAG,"Event Api Call");
                 profileApiCall();
             }
             else
@@ -435,18 +500,23 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             if (res.getReligionData().size() > 0)
             {
-                religionAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, religionList);
+                religionAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner_disable, R.id.tvItem, religionList);
                 etReligion.setAdapter(religionAdapter);
-
             }
-            if (religion != null)
+            if (isFirstTimeReligion)
             {
+                isFirstTimeReligion = false;
+                etReligion.setEnabled(false);
 
-                etReligion.setSelection(religionAdapter.getPosition(religion));
-            }
-            else
-            {
-                etReligion.setSelection(religionAdapter.getPosition("select religion"));
+                if (religion != null)
+                {
+                    etReligion.setSelection(religionAdapter.getPosition(religion));
+                }
+                else
+                {
+                    etReligion.setSelection(religionAdapter.getPosition("select religion"));
+                }
+
             }
 
         }
@@ -462,7 +532,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             casteDataList.clear();
             casteDataList.addAll(res.getCasteData());
-
             casteList.clear();
 
             for (int i=0;i<res.getCasteData().size();i++)
@@ -474,7 +543,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             {
                 if (isFirstTimeCaste)
                 {
-                    isFirstTimeCaste = false;
+                    etCaste.setTextColor(getResources().getColor(R.color.grey));
 
                     if (caste != null)
                     {
@@ -484,7 +553,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     {
                         etCaste.setText(res.getCasteData().get(0).getCasteName());
                     }
-
                     for (int i=0;i<casteDataList.size();i++)
                     {
                         if (etCaste.getText().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
@@ -492,6 +560,17 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                             casteId = casteDataList.get(i).getCasteId();
                             etCategory.setText(casteDataList.get(i).getCategoryName());
                         }
+                    }
+
+                    if (isEdit)
+                    {
+                        isFirstTimeCaste = false;
+                        etCaste.setTextColor(getResources().getColor(R.color.white));
+                        etCaste.setEnabled(true);
+                    }
+                    else {
+                        etCaste.setTextColor(getResources().getColor(R.color.grey));
+                        etCaste.setEnabled(false);
                     }
                 }
                 else
@@ -534,17 +613,28 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
                 if (isFirstTimeSubCaste)
                 {
-                    isFirstTimeSubCaste = false;
+                    etSubCaste.setTextColor(getResources().getColor(R.color.grey));
 
                     if (subcaste != null)
                     {
-                        etSubCaste.setText(subcaste);
+                       etSubCaste.setText(subcaste);
                     }
                     else
                     {
                         etSubCaste.setText(res.getSubCasteData().get(0).getSubCasteName());
                     }
 
+
+                    if (isEdit)
+                    {
+                        isFirstTimeSubCaste = false;
+                        etSubCaste.setTextColor(getResources().getColor(R.color.white));
+                        etSubCaste.setEnabled(true);
+                    }
+                    else {
+                        etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+                        etSubCaste.setEnabled(false);
+                    }
                 }
                 else
                 {
@@ -608,26 +698,59 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
 
     private void fillDetails(ProfileItem item) {
-        etName.setText(item.name);
-  //      etRelationShip.setText(item.relationship);
-        etEmail.setText(item.email);
-        etPhone.setText(item.phone);
+
+        //      etRelationShip.setText(item.relationship);
+
+        //    etRelationShip.setEnabled(false);
+
+        //etSubCaste.setText(item.subcaste);
+        genderAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner_disable, R.id.tvItem, genderArray);
+        etGender.setAdapter(genderAdapter);
+        etGender.setEnabled(false);
+
+        bloodGrpAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner_disable, R.id.tvItem, bloodGrpArray);
+        etBlood.setAdapter(bloodGrpAdapter);
+        etBlood.setEnabled(false);
+
+        etName.setEnabled(false);
+        etName.setTextColor(getResources().getColor(R.color.grey));
+
+        etPhone.setEnabled(false);
+        etPhone.setTextColor(getResources().getColor(R.color.grey));
+
+        etVoterId.setEnabled(false);
+        etVoterId.setTextColor(getResources().getColor(R.color.grey));
+
+        etEmail.setEnabled(false);
+        etEmail.setTextColor(getResources().getColor(R.color.grey));
+
+        etdob.setEnabled(false);
+        etdob.setTextColor(getResources().getColor(R.color.grey));
+
+        etEducation.setEnabled(false);
+        etEducation.setTextColor(getResources().getColor(R.color.grey));
+
+        etProfession.setEnabled(false);
+        etProfession.setTextColor(getResources().getColor(R.color.grey));
+
+        etCategory.setTextColor(getResources().getColor(R.color.grey));
 
         religion = item.religion;
         caste = item.caste;
         subcaste = item.subcaste;
+        profileImage = item.image;
 
+        etName.setText(item.name);
+        etEmail.setText(item.email);
+        etPhone.setText(item.phone);
         etEducation.setText(item.qualification);
-
         etProfession.setText(item.designation);
         etVoterId.setText(item.voterId);
-        
         etPhone.setEnabled(false);
-
         etdob.setText(item.dob);
-    //    etRelationShip.setEnabled(false);
 
-        //etSubCaste.setText(item.subcaste);
+
+
 
         int index = 0;
         for (int i = 0; i < genderArray.length; i++) {
@@ -635,17 +758,19 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                 index = i;
             }
         }
+        indexGender = index;
         etGender.setSelection(index);
 
-        index = 0;
+        int index1 = 0;
         for (int i = 0; i < bloodGrpArray.length; i++) {
             if ((item.bloodGroup + "").equals(bloodGrpArray[i])) {
-                index = i;
+                index1 = i;
             }
         }
-        etBlood.setSelection(index);
+        indexBlood = index1;
+        etBlood.setSelection(index1);
 
-        profileImage = item.image;
+
 
         if (getActivity() != null)
             ((ProfileConstituencyActivity) getActivity()).setTitle(item.name);
@@ -656,10 +781,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             Log.e("ProfileActivity", "image is Null From API "+item.name);
             imageFragment.setInitialLatterImage(item.name);
         }
-
-        Log.e(TAG,"profile image "+imageFragment.getmProfileImage());
-        Log.e(TAG,"profile name "+ etName.getText().toString());
-        Log.e(TAG,"profile voterID "+etVoterId.getText().toString());
 
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getReligion(this);

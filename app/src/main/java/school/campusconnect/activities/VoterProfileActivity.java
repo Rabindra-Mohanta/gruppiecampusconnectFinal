@@ -73,6 +73,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
     String casteId = null;
 
+    private boolean isCommittee = false;
     int apiCount = 0;
 
     String religion = null;
@@ -129,6 +130,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             menu.findItem(R.id.menu_make_admin).setVisible(false);
         }
 
+        menu.findItem(R.id.menu_delete).setVisible(true);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -149,6 +152,21 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             });
             return true;
         }
+
+        if (item.getItemId() == R.id.menu_delete) {
+            AppDialog.showConfirmDialog(VoterProfileActivity.this, "Are you sure you want to Delete This User ?", new AppDialog.AppDialogListener() {
+                @Override
+                public void okPositiveClick(DialogInterface dialog) {
+                    deleteUser();
+                }
+
+                @Override
+                public void okCancelClick(DialogInterface dialog) {
+
+                }
+            });
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -157,6 +175,12 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         binding.progressBar.setVisibility(View.VISIBLE);
         manager.makeAppAdmin(this,GroupDashboardActivityNew.groupId,userID);
 
+    }
+
+    private void deleteUser() {
+
+      /*  LeafManager manager = new LeafManager();
+        manager.removeTeamUser(this, GroupDashboardActivityNew.groupId + "", teamId, userID);*/
     }
 
     private void inits() {
@@ -170,10 +194,15 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         if (getIntent() != null)
         {
             userID = getIntent().getStringExtra("userID");
+            isCommittee = getIntent().getBooleanExtra("committee",false);
         }
 
+        if (isCommittee)
+        {
+            binding.etRole.setVisibility(View.VISIBLE);
+            binding.lblRole.setVisibility(View.VISIBLE);
+        }
         manager = new LeafManager();
-
 
         searchCastFragmentDialog = SearchCastFragmentDialog.newInstance();
         searchCastFragmentDialog.setListener(this);
@@ -189,9 +218,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
 
-
-
-         binding.etCaste.setOnClickListener(new View.OnClickListener() {
+        binding.etCaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -217,7 +244,6 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             }
         });
 
-
         binding.etdob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,7 +258,6 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                 fragment.show(getSupportFragmentManager(), "datepicker");
             }
         });
-
 
          binding.etReligion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -259,8 +284,6 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             }
         });
 
-
-
         binding.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,6 +296,9 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
                     binding.etPhone.setEnabled(true);
                     binding.etPhone.setTextColor(getResources().getColor(R.color.white));
+
+                    binding.etRole.setEnabled(true);
+                    binding.etRole.setTextColor(getResources().getColor(R.color.white));
 
                     binding.etAddress.setEnabled(true);
                     binding.etAddress.setTextColor(getResources().getColor(R.color.white));
@@ -361,6 +387,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         item.phone = binding.etPhone.getText().toString();
         item.email = binding.etEmail.getText().toString();
         item.dob = binding.etdob.getText().toString();
+        item.roleOnConstituency = binding.etRole.getText().toString();
         item.qualification = binding.etEducation.getText().toString();
         item.designation = binding.etProfession.getText().toString();
 
@@ -403,10 +430,10 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
         if (apiId == LeafManager.API_MAKE_ADMIN)
         {
-
             Toast.makeText(getApplicationContext(), getString(R.string.msg_profile_update), Toast.LENGTH_LONG).show();
+            Intent i = new Intent();
+            setResult(RESULT_OK,i);
             finish();
-
         }
 
         else if (LeafManager.API_RELIGION_GET == apiId)
@@ -569,6 +596,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         if (apiId == LeafManager.API_VOTER_PROFILE_UPDATE)
         {
             Toast.makeText(getApplicationContext(), getString(R.string.msg_profile_update), Toast.LENGTH_LONG).show();
+            Intent i = new Intent();
+            setResult(RESULT_OK,i);
             finish();
         }
     }
@@ -586,6 +615,9 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
         binding.etName.setEnabled(false);
         binding.etName.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etRole.setEnabled(false);
+        binding.etRole.setTextColor(getResources().getColor(R.color.grey));
 
         binding.etPhone.setEnabled(false);
         binding.etPhone.setTextColor(getResources().getColor(R.color.grey));
@@ -625,6 +657,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
 
         binding.etName.setText(data.name);
+        binding.etRole.setText(data.roleOnConstituency);
         binding.etPhone.setText(data.phone);
         binding.etAddress.setText(data.address);
         binding.etVoterId.setText(data.voterId);
@@ -683,15 +716,16 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             if (!isValueValid(binding.etName)) {
                 valid = false;
             }
-            else if (!binding.etPhone.getText().toString().isEmpty()) {
+
+            if (!binding.etPhone.getText().toString().isEmpty()) {
 
                 if (binding.etPhone.getText().toString().length() < 10) {
                     binding.etPhone.setError(getString(R.string.msg_valid_phone));
-                    binding.etPhone.requestFocus();
                     valid = false;
                 }
             }
-            else if (!binding.etEmail.getText().toString().isEmpty())
+
+           if (!binding.etEmail.getText().toString().isEmpty())
             {
                 if (!isValidEmail(binding.etEmail.getText().toString()))
                 {

@@ -1,5 +1,6 @@
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -61,6 +62,8 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
 
     private List<MyTeamData> filteredList = new ArrayList<>();
     private List<MyTeamData> myTeamDataList = new ArrayList<>();
+
+    private int REQUEST_UPDATE_PROFILE = 9;
 
     ClassesAdapter adapter;
 
@@ -397,7 +400,7 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
                     Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                     i.putExtra("userID",item.userId);
                     i.putExtra("name",item.name);
-                    startActivity(i);
+                    startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                 }
             });
             holder.txt_name.setText(item.name);
@@ -524,6 +527,21 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
             {
                 adapter.notifyDataSetChanged();
                 getDataMyBoothLocally();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
             }
         }
     }

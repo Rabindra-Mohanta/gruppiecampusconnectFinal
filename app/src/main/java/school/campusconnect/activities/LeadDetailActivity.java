@@ -9,6 +9,7 @@ import butterknife.OnClick;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -42,6 +44,7 @@ import school.campusconnect.views.SMBDialogUtils;
 
 public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAddUpdateListener, DialogInterface.OnClickListener, LeafManager.OnCommunicationListener {
 
+    public static final String TAG = "LeadDetailActivity";
     public static final String EXTRA_LEAD_ITEM = "extra_lead_item";
     private LeadItem mLeadItem;
     @Bind(R.id.txt_name)
@@ -151,6 +154,8 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         setContentView(R.layout.item_other_lead);
         ButterKnife.bind(this);
         mLeadItem = getIntent().getParcelableExtra(EXTRA_LEAD_ITEM);
+
+        AppLog.e(TAG,"mLeadItem Data" +new Gson().toJson(mLeadItem));
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle("Details");

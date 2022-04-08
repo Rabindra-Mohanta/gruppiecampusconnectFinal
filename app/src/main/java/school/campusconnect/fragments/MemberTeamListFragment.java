@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -89,6 +90,9 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     String team_id;
     String name;
+
+    private int REQUEST_UPDATE_PROFILE = 9;
+
     String screen;
 
     ClassesAdapter adapter;
@@ -442,7 +446,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                     Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                     i.putExtra("userID",item.userId);
                     i.putExtra("name",item.name);
-                    startActivity(i);
+                    startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                 }
             });
 
@@ -577,4 +581,20 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                     }
                 }
             }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(), GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        }
+    }
+
 }

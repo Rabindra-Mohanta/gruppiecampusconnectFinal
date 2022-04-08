@@ -33,6 +33,7 @@ public class GroupItem implements Parcelable {
     public String category="";
     public boolean canPost;
     public boolean allowPostAll;
+    public int subBoothMembers;
     public boolean isPublic;
     public String adminPhone;
     public String adminName;
@@ -60,6 +61,7 @@ public class GroupItem implements Parcelable {
         subBoothName = in.readString();
         subBoothId = in.readString();
         totalUsers = in.readInt();
+        subBoothMembers = in.readInt();
         totalPostsCount = in.readInt();
         subBoothCount = in.readInt();
         totalCommentsCount = in.readInt();
@@ -175,6 +177,7 @@ public class GroupItem implements Parcelable {
         dest.writeString(subBoothName);
         dest.writeString(subBoothId);
         dest.writeInt(totalUsers);
+        dest.writeInt(subBoothMembers);
         dest.writeInt(totalPostsCount);
         dest.writeInt(subBoothCount);
         dest.writeInt(totalCommentsCount);
