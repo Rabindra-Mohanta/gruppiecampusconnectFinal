@@ -368,10 +368,15 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-                    i.putExtra("userID",item.userId);
-                    i.putExtra("name",item.name);
-                    startActivityForResult(i,REQUEST_UPDATE_PROFILE);
+
+                    if (GroupDashboardActivityNew.isAdmin)
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("name",item.name);
+                        startActivity(i);
+                    }
+
                 }
             });
         }
@@ -437,11 +442,15 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         }
     }
 
-    private void onTreeClick(BoothVotersListResponse.VoterData myTeamData) {
-        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-        i.putExtra("userID",myTeamData.userId);
-        i.putExtra("name",myTeamData.name);
-        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
+    private void onTreeClick(BoothVotersListResponse.VoterData item) {
+
+        if (GroupDashboardActivityNew.isAdmin)
+        {
+            Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+            i.putExtra("userID",item.userId);
+            i.putExtra("name",item.name);
+            startActivity(i);
+        }
     }
 
     @Override

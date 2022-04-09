@@ -23,11 +23,20 @@
         android:textSize="@dimen/text_size_14sp"
         app:layout_scrollFlags="scroll|enterAlways" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTeams"
-        android:layout_below="@+id/etSearch"
+
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        app:refreshColor="@color/colorPrimary">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTeams"
+            android:layout_below="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.baoyz.widget.PullRefreshLayout>
+
+
 
 
     <ProgressBar

@@ -25,8 +25,11 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityVoterProfileBinding;
+import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
@@ -86,6 +89,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
     LeafManager manager;
 
     String userID;
+    String teamID;
 
     int indexGender,indexBlood;
     public static String profileImage;
@@ -130,7 +134,14 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             menu.findItem(R.id.menu_make_admin).setVisible(false);
         }
 
-        menu.findItem(R.id.menu_delete).setVisible(true);
+        /*if(GroupDashboardActivityNew.isPost)
+        {
+            menu.findItem(R.id.menu_delete).setVisible(true);
+        }
+        else
+        {
+            menu.findItem(R.id.menu_delete).setVisible(false);
+        }*/
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -153,6 +164,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             return true;
         }
 
+/*
         if (item.getItemId() == R.id.menu_delete) {
             AppDialog.showConfirmDialog(VoterProfileActivity.this, "Are you sure you want to Delete This User ?", new AppDialog.AppDialogListener() {
                 @Override
@@ -166,7 +178,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                 }
             });
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -179,8 +191,30 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
     private void deleteUser() {
 
-      /*  LeafManager manager = new LeafManager();
-        manager.removeTeamUser(this, GroupDashboardActivityNew.groupId + "", teamId, userID);*/
+        LeafManager manager = new LeafManager();
+        manager.removeTeamUser(new LeafManager.OnAddUpdateListener<AddPostValidationError>() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+                binding.progressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), "User Deleted", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent();
+                setResult(RESULT_OK,i);
+                finish();
+            }
+
+            @Override
+            public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
+                binding.progressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),error.message,Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onException(int apiId, String error) {
+                binding.progressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
+                Log.e(TAG,"onException"+error);
+            }
+        }, GroupDashboardActivityNew.groupId,teamID,userID);
     }
 
     private void inits() {
@@ -195,6 +229,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         {
             userID = getIntent().getStringExtra("userID");
             isCommittee = getIntent().getBooleanExtra("committee",false);
+            teamID = getIntent().getStringExtra("teamID");
         }
 
         if (isCommittee)

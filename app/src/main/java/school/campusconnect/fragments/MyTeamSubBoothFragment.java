@@ -369,10 +369,16 @@ public static String TAG = "MyTeamSubBoothFragment";
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-                    i.putExtra("userID",item.userId);
-                    i.putExtra("name",item.name);
-                    startActivityForResult(i,REQUEST_UPDATE_PROFILE);
+
+                    if (GroupDashboardActivityNew.isAdmin)
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("name",item.name);
+                        i.putExtra("teamID",item.teamId);
+                        startActivity(i);
+                    }
+
                 }
             });
         }

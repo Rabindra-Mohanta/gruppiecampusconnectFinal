@@ -20,6 +20,7 @@ import school.campusconnect.activities.NestedTeamActivity;
 import school.campusconnect.activities.UpdateMemberActivity;
 import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
+import school.campusconnect.datamodel.lead.LeadDataTBL;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -63,7 +65,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     private LeadAdapter mAdapter;
     final int REQUEST_CALL = 234;
     Intent intent;
-    String boothClick;
+
     String groupId = "";
     private int REQUEST_UPDATE_PROFILE = 9;
     String teamId = "";
@@ -93,12 +95,12 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_without_refresh, container, false);
         mBinding.setSize(1);
-        mBinding.setMessage(R.string.msg_no_leads);
+        mBinding.setMessage(R.string.msg_leads);
         ActiveAndroid.initialize(getActivity());
 
         initObjects();
 
-        getData();
+        getToLocally();
 
         setListener();
 
@@ -123,7 +125,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0) {
                         currentPage = currentPage + 1;
-                        getData();
+                        getToLocally();
                     }
                 }
             }
@@ -138,7 +140,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         groupId = getArguments().getString("id");
         teamId = getArguments().getString("team_id");
-        boothClick = getArguments().getString("boothClick");
+
         itemClick = getArguments().getBoolean("item_click", false);
         isAdmin = getArguments().getBoolean("isAdmin", false);
         allMember = getArguments().getBoolean("all",false);
@@ -147,21 +149,33 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         AppLog.e(TAG, "item_click is " + itemClick);
 
 
-        if (boothClick != null && boothClick.equalsIgnoreCase("yes"))
+        if (!LeafPreference.getInstance(getContext()).getString("leadTotalPage_"+groupId+"_"+teamId).isEmpty())
         {
-
-        }
-        else
-        {
-            mBinding.recyclerView.setVisibility(View.VISIBLE);
-            layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-            mBinding.recyclerView.setLayoutManager(layoutManager);
-
-            mAdapter = new LeadAdapter(new ArrayList<LeadItem>(), this, 0, databaseHandler, count, itemClick,isNest);
-
-            LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISUSERDELETED, false);
+            totalPages = Integer.parseInt(LeafPreference.getInstance(getContext()).getString("leadTotalPage_"+groupId+"_"+teamId));
         }
 
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        mBinding.recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new LeadAdapter(new ArrayList<LeadItem>(), this, 0, databaseHandler, count, itemClick,isNest);
+        mBinding.recyclerView.setAdapter(mAdapter);
+
+        LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISUSERDELETED, false);
+
+        mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    currentPage = 1;
+                    LeadDataTBL.deleteLead(groupId,teamId);
+                    mAdapter.clear();
+                    getToLocally();
+                    mBinding.swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    showNoNetworkMsg();
+                    mBinding.swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
 
@@ -169,29 +183,22 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     public void onResume() {
         super.onResume();
 
-        if (boothClick != null && boothClick.equalsIgnoreCase("yes"))
-        {
-
-        }
-        else
-        {
-            AppLog.e(TAG, "OnResume Called : " + LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISUSERDELETED));
-            if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISUSERDELETED)) {
-                LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISUSERDELETED, false);
-                currentPage = 1;
-                mAdapter.clear();
-                getData();
-            }
-
-            if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ADD_FRIEND)) {
-                LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ADD_FRIEND, false);
-                currentPage = 1;
-                mAdapter.clear();
-                getData();
-            }
+        AppLog.e(TAG, "OnResume Called : " + LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISUSERDELETED));
+        if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISUSERDELETED)) {
+            LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISUSERDELETED, false);
+            currentPage = 1;
+            mAdapter.clear();
+            LeadDataTBL.deleteLead(groupId,teamId);
+            getToLocally();
         }
 
-
+        if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ADD_FRIEND)) {
+            LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ADD_FRIEND, false);
+            currentPage = 1;
+            mAdapter.clear();
+            LeadDataTBL.deleteLead(groupId,teamId);
+            getToLocally();
+        }
     }
 
 
@@ -200,14 +207,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             showLoadingBar(mBinding.progressBar);
             mIsLoading = true;
 
-            if (boothClick != null && boothClick.equalsIgnoreCase("yes"))
-            {
-                mManager.getBoothMember(this, groupId, teamId ,getArguments().getString("committee_id"));
-            }
-            else
-            {
-                mManager.getTeamMember(this, groupId + "", teamId + "",itemClick);
-            }
+            mManager.getTeamMember(this, groupId + "", teamId + "",itemClick);
 
         } else {
             showNoNetworkMsg();
@@ -308,22 +308,95 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             {
                 LeadResponse res = (LeadResponse) response;
 
-                list = res.getResults();
-                mAdapter.addItems(list);
-                mAdapter.notifyDataSetChanged();
-                if (currentPage == 1) {
-                    mBinding.recyclerView.setAdapter(mAdapter);
-                }
+
                 mBinding.setSize(mAdapter.getItemCount());
                 totalPages = res.totalNumberOfPages;
+
+                LeafPreference.getInstance(getContext()).setString("leadTotalPage_"+groupId+"_"+teamId,String.valueOf(totalPages));
                 mIsLoading = false;
+
+                saveToLocally(res.getResults());
             }
-            else
+
+
+
+    }
+
+    private void saveToLocally(List<LeadItem> results) {
+
+        LeadDataTBL.deleteLead(groupId,teamId,currentPage);
+
+        if (results.size() > 0)
+        {
+            for (int i = 0 ;i <results.size();i++)
             {
+                LeadDataTBL leadDataTBL = new LeadDataTBL();
+
+                leadDataTBL.groupID = groupId;
+                leadDataTBL.teamID = teamId;
+                leadDataTBL.page = currentPage;
+                leadDataTBL.voterId = results.get(i).voterId;
+                leadDataTBL.id = results.get(i).id;
+                leadDataTBL.roleOnConstituency = results.get(i).roleOnConstituency;
+                leadDataTBL.phone = results.get(i).phone;
+                leadDataTBL.name = results.get(i).name;
+                leadDataTBL.image = results.get(i).image;
+                leadDataTBL.gender = results.get(i).gender;
+                leadDataTBL.dob = results.get(i).dob;
+                leadDataTBL.bloodGroup = results.get(i).bloodGroup;
+                leadDataTBL.allowedToAddUser = results.get(i).allowedToAddUser;
+                leadDataTBL.allowedToAddTeamPostComment = results.get(i).allowedToAddTeamPostComment;
+                leadDataTBL.allowedToAddTeamPost = results.get(i).allowedToAddTeamPost;
+                leadDataTBL.aadharNumber = results.get(i).aadharNumber;
+
+                leadDataTBL.save();
 
             }
+        }
+
+        mAdapter.addItems(results);
+        mAdapter.notifyDataSetChanged();
+    }
 
 
+    private void getToLocally() {
+
+        List<LeadDataTBL> leadDataTBL = LeadDataTBL.getLead(groupId,teamId,currentPage);
+
+        mAdapter.clear();
+
+        if (leadDataTBL.size() > 0)
+        {
+            ArrayList<LeadItem> items = new ArrayList<>();
+
+            for (int i = 0;i<leadDataTBL.size();i++)
+            {
+                LeadItem leadItem = new LeadItem();
+                leadItem.id = leadDataTBL.get(i).id;
+                leadItem.voterId = leadDataTBL.get(i).voterId;
+                leadItem.roleOnConstituency = leadDataTBL.get(i).roleOnConstituency;
+                leadItem.phone = leadDataTBL.get(i).phone;
+                leadItem.name = leadDataTBL.get(i).name;
+                leadItem.image = leadDataTBL.get(i).image;
+                leadItem.gender = leadDataTBL.get(i).gender;
+                leadItem.dob = leadDataTBL.get(i).dob;
+                leadItem.bloodGroup = leadDataTBL.get(i).bloodGroup;
+                leadItem.allowedToAddUser = leadDataTBL.get(i).allowedToAddUser;
+                leadItem.allowedToAddTeamPostComment = leadDataTBL.get(i).allowedToAddTeamPostComment;
+                leadItem.allowedToAddTeamPost = leadDataTBL.get(i).allowedToAddTeamPost;
+                leadItem.aadharNumber = leadDataTBL.get(i).aadharNumber;
+
+                items.add(leadItem);
+
+            }
+            mAdapter.addItems(items);
+            mBinding.setSize(mAdapter.getItemCount());
+            mAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+            getData();
+        }
     }
 
     @Override
@@ -396,113 +469,6 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 mAdapter.notifyDataSetChanged();
             }
         }
-    }
-
-    public class ClassesStudentAdapter extends RecyclerView.Adapter<ClassesStudentAdapter.ViewHolder> {
-        List<BoothMemberResponse.BoothMemberData> list;
-        private Context mContext;
-
-        public ClassesStudentAdapter(List<BoothMemberResponse.BoothMemberData> list) {
-            this.list = list;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class_student, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
-            final BoothMemberResponse.BoothMemberData item = list.get(position);
-
-            if (!TextUtils.isEmpty(item.image)) {
-                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
-                        new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                holder.img_lead_default.setVisibility(View.INVISIBLE);
-                            }
-
-                            @Override
-                            public void onError() {
-                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).into(holder.imgTeam, new Callback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        holder.img_lead_default.setVisibility(View.INVISIBLE);
-                                    }
-
-                                    @Override
-                                    public void onError() {
-                                        holder.img_lead_default.setVisibility(View.VISIBLE);
-                                        TextDrawable drawable = TextDrawable.builder()
-                                                .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
-                                        holder.img_lead_default.setImageDrawable(drawable);
-                                        AppLog.e("Picasso", "Error : ");
-                                    }
-                                });
-                            }
-                        });
-            } else {
-                holder.img_lead_default.setVisibility(View.VISIBLE);
-                TextDrawable drawable = TextDrawable.builder()
-                        .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
-                holder.img_lead_default.setImageDrawable(drawable);
-            }
-
-
-            holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Role: "+item.roleOnConstituency);
-        }
-
-        @Override
-        public int getItemCount() {
-            if (list != null) {
-                if (list.size() == 0) {
-                    mBinding.setMessage(R.string.msg_no_leads);
-                }
-                return list.size();
-            } else {
-                mBinding.setMessage(R.string.msg_no_leads);
-                return 0;
-            }
-
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            @Bind(R.id.img_lead)
-            ImageView imgTeam;
-
-            @Bind(R.id.img_lead_default)
-            ImageView img_lead_default;
-
-            @Bind(R.id.txt_name)
-            TextView txt_name;
-
-            @Bind(R.id.txt_count)
-            TextView txt_count;
-
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                ButterKnife.bind(this, itemView);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        editStudent(list.get(getAdapterPosition()));
-                    }
-                });
-            }
-        }
-    }
-
-    private void editStudent(BoothMemberResponse.BoothMemberData studentData) {
-        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-        i.putExtra("userID",studentData.id);
-        i.putExtra("name",studentData.name);
-        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
     }
 
     @Override

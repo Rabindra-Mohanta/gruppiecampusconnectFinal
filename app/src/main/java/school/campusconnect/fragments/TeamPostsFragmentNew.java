@@ -266,6 +266,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 menu.findItem(R.id.menu_add_friend).setVisible(false);
             }
 
+            if (teamData.category.equalsIgnoreCase("booth"))
+            {
+                menu.findItem(R.id.menu_add_friend).setVisible(false);
+            }
+
 
 
         }
@@ -917,17 +922,30 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
                             return;
 
-                        try {
-                            Intent intent = new Intent(getActivity(), LeadsListActivity.class);
-                            intent.putExtra("id", mGroupId);
-                            intent.putExtra("team_id", team_id);
-                            intent.putExtra("team_name", teamName);
-                            intent.putExtra("isAdmin", teamData.isTeamAdmin);
+
+                        if (teamData.category.equalsIgnoreCase("booth"))
+                        {
+                            Intent intent = new Intent(getActivity(), CommitteeActivity.class);
+                            intent.putExtra("class_data",new Gson().toJson(teamData));
+                            intent.putExtra("title",teamData.name);
+                            intent.putExtra("isBoothClick","yes");
                             startActivity(intent);
-                            AppLog.e("Team id : ", team_id + "");
-                        } catch (Exception e) {
-                            AppLog.e("floating", "error is " + e.toString());
                         }
+                        else {
+                            try {
+                                Intent intent = new Intent(getActivity(), LeadsListActivity.class);
+                                intent.putExtra("id", mGroupId);
+                                intent.putExtra("team_id", team_id);
+                                intent.putExtra("team_name", teamName);
+                                intent.putExtra("isAdmin", teamData.isTeamAdmin);
+                                startActivity(intent);
+                                AppLog.e("Team id : ", team_id + "");
+                            } catch (Exception e) {
+                                AppLog.e("floating", "error is " + e.toString());
+                            }
+                        }
+
+
                     }
 
                 }

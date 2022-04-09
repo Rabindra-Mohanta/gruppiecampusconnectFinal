@@ -1727,6 +1727,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         tv_toolbar_icon.setVisibility(View.GONE);
+        tv_toolbar_default.setVisibility(View.GONE);
 
         BoothListFragment classListFragment = new BoothListFragment();
         classListFragment.setArguments(getIntent().getExtras());
@@ -1738,6 +1739,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         tv_toolbar_icon.setVisibility(View.GONE);
+        tv_toolbar_default.setVisibility(View.GONE);
 
         if (mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)) {
 
@@ -1755,7 +1757,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         tv_toolbar_icon.setVisibility(View.GONE);
-
+        tv_toolbar_default.setVisibility(View.GONE);
         makeAdmin = true;
 
         tabLayout.setVisibility(View.GONE);
@@ -1776,7 +1778,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         tv_toolbar_icon.setVisibility(View.GONE);
-
+        tv_toolbar_default.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
 
         makeAdmin = false;
@@ -2178,6 +2180,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         tvToolbar.setText(team.name);
         tv_toolbar_icon.setVisibility(View.GONE);
+        tv_toolbar_default.setVisibility(View.GONE);
         tv_Desc.setVisibility(View.VISIBLE);
 
         AppLog.e("getActivity", "team name is =>" + team.name);
@@ -2198,6 +2201,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_Desc.setText("Members : "+String.valueOf(members));
         tv_Desc.setVisibility(View.VISIBLE);
         tv_toolbar_icon.setVisibility(View.GONE);
+        tv_toolbar_default.setVisibility(View.GONE);
 
         MyTeamVoterListFragment myTeamVoterListFragment = MyTeamVoterListFragment.newInstance(boothId);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myTeamVoterListFragment).addToBackStack("home").commit();
@@ -2586,6 +2590,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             setBackEnabled(true);
             tvToolbar.setText(group.name);
             tv_toolbar_icon.setVisibility(View.GONE);
+            tv_toolbar_default.setVisibility(View.GONE);
             tv_Desc.setText("Members : "+String.valueOf(group.members));
 
             if (group.name.equalsIgnoreCase("Notice Board") || group.name.equalsIgnoreCase("Announcement"))
@@ -2615,6 +2620,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     {
         setBackEnabled(true);
         tv_toolbar_icon.setVisibility(View.GONE);
+        tv_toolbar_default.setVisibility(View.GONE);
+
         tvToolbar.setText("Announcement");
         tv_Desc.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GenralPostConstituencyFragment.newInstance(groupId,"Announcement")).addToBackStack("home").commitAllowingStateLoss();

@@ -242,18 +242,18 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 GalleryPostRes res = (GalleryPostRes) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
-           /*     if (currentPage == 1) {
-                    PostDataItem.deleteGeneralPosts(mGroupId+"");
+                if (currentPage == 1) {
+              //      PostDataItem.deleteGeneralPosts(mGroupId+"");
                     listData.clear();
 
-                    listData.addAll(res.data);
-                    AppLog.e(TAG, "current page 1");
+                   /* listData.addAll(res.data);
+                    AppLog.e(TAG, "current page 1");*/
 
-                } else {
+                } /*else {
                     listData.addAll(res.data);
                     AppLog.e(TAG, "current page " + currentPage);
-                }*/
-                listData.clear();
+                }
+                listData.clear();*/
 
                 if(res.data.size()==0)
                     txtEmpty.setVisibility(View.VISIBLE);

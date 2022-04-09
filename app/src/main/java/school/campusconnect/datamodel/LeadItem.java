@@ -42,6 +42,44 @@ public class LeadItem implements Parcelable {
 
     public boolean isSelected;
 
+    public boolean roleOnConstituency;
+    public String voterId;
+    public String bloodGroup;
+    public String aadharNumber;
+
+
+    public boolean isRoleOnConstituency() {
+        return roleOnConstituency;
+    }
+
+    public void setRoleOnConstituency(boolean roleOnConstituency) {
+        this.roleOnConstituency = roleOnConstituency;
+    }
+
+    public String isVoterId() {
+        return voterId;
+    }
+
+    public void setVoterId(String voterId) {
+        this.voterId = voterId;
+    }
+
+    public String getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(String bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
+    public String getAadharNumber() {
+        return aadharNumber;
+    }
+
+    public void setAadharNumber(String aadharNumber) {
+        this.aadharNumber = aadharNumber;
+    }
+
     public boolean isPost() {
         return isPost;
     }

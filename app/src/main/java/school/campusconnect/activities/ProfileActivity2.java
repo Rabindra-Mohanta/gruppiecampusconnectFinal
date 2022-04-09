@@ -274,11 +274,12 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         fragment1.edtEmail.editText.setText(item.email);
         fragment1.edtQualification.editText.setText(item.qualification);
         fragment1.edtOccupation.editText.setText(item.occupation);
+
         if (item.address != null) {
-            fragment2.edtState.editText.setText(item.address.state);
+         /*   fragment2.edtState.editText.setText(item.address.state);
             fragment2.edtPincode.editText.setText(item.address.pin);
             fragment2.edtCountry.editText.setText(item.address.country);
-            fragment2.edtCity.editText.setText(item.address.city);
+            fragment2.edtCity.editText.setText(item.address.city);*/
         }
 
         txtProgress.setVisibility(View.GONE);

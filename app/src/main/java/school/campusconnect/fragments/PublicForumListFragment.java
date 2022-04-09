@@ -41,6 +41,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.AddBoothActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.GroupItem;
@@ -545,6 +546,21 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
             holder.txt_name.setText(item.name);
             holder.txt_count.setText("");
             holder.txt_count.setVisibility(View.GONE);
+
+            holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (GroupDashboardActivityNew.isAdmin)
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("name",item.name);
+                        startActivity(i);
+                    }
+
+                }
+            });
         }
 
         public void add(List<MyTeamData> list) {

@@ -534,9 +534,21 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
     private void savePostData(List<PostItem> results) {
 
+     /*   String highestUpdateTime = "";
+        long time = 0;
+        for (int i = 0;i<results.size();i++)
+        {
+            if ( time < DateTimeHelper.updatedTime(results.get(i).updatedAt))
+            {
+                time = DateTimeHelper.updatedTime(results.get(i).updatedAt);
+
+                highestUpdateTime = results.get(i).updatedAt;
+            }
+        }
+
+        Log.e(TAG,"highestUpdateTime" + highestUpdateTime);*/
 
         for (int i = 0; i < results.size(); i++) {
-
 
             PostItem item = results.get(i);
             PostDataItem postItem = new PostDataItem();

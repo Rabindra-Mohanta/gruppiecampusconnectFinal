@@ -500,6 +500,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         String image = pref.getString(LeafPreference.PROFILE_IMAGE_NEW);
 
 
+
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(name);
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.VISIBLE);
@@ -508,11 +509,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
             if (image.isEmpty())
             {
+                ((GroupDashboardActivityNew) getActivity()).tv_toolbar_default.setVisibility(View.VISIBLE);
+                ((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon.setVisibility(View.GONE);
                 TextDrawable drawable = TextDrawable.builder()
                         .buildRound(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(1));
-                ((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon.setImageDrawable(drawable);
+                ((GroupDashboardActivityNew) getActivity()).tv_toolbar_default.setImageDrawable(drawable);
             }
             else {
+                ((GroupDashboardActivityNew) getActivity()).tv_toolbar_default.setVisibility(View.GONE);
                 Glide.with(getContext()).load(Constants.decodeUrlToBase64(image)).into(((GroupDashboardActivityNew) getActivity()).tv_toolbar_icon);
             }
 

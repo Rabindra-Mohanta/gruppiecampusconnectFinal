@@ -138,6 +138,19 @@ public class DateTimeHelper {
 
     }
 
+    public static long updatedTime(String updateTime)
+    {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            long eventAtMillisec = inputFormat.parse(updateTime).getTime();
+            return eventAtMillisec;
+        } catch (Exception e) {
+
+            return 0;
+        }
+    }
+
     public static String getCurrentTime() {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");

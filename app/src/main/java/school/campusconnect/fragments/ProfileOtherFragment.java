@@ -147,7 +147,7 @@ public class ProfileOtherFragment extends BaseFragment implements View.OnClickLi
 
     public void fillDetails(ProfileItem item) {
 
-        if(item.address==null)
+    /*    if(item.address==null)
             return;
 
         if (item.address.line1 != null)
@@ -160,7 +160,7 @@ public class ProfileOtherFragment extends BaseFragment implements View.OnClickLi
         edtCity.editText.setText(item.address.district);
         edtState.editText.setText(item.address.state);
         edtPincode.editText.setText(item.address.pin);
-        edtCountry.editText.setText(item.address.country);
+        edtCountry.editText.setText(item.address.country);*/
     }
 
 }

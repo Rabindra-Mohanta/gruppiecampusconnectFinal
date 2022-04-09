@@ -335,7 +335,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             item.name = etName.getText().toString();
             item.dob = etdob.getText().toString();
             item.email = etEmail.getText().toString();
-            item.address = this.item.address;
+           // item.address = this.item.address;
             item.occupation = this.item.occupation;
 
             item.qualification = etEducation.getText().toString();
@@ -693,9 +693,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<ProfileValidationError> error) {
-
+        Log.e(TAG,"onFailure"+ error.message);
     }
-
 
     private void fillDetails(ProfileItem item) {
 
@@ -789,11 +788,13 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Override
     public void onFailure(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+        Log.e(TAG,"onException"+ msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+        Log.e(TAG,"onException"+ msg);
     }
 
     @Override

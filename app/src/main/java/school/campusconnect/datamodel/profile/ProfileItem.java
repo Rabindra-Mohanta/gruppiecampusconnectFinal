@@ -20,7 +20,7 @@ public class ProfileItem {
     public String designation;
 
     public String roleOnConstituency;
-    public AddressItem address;
+    public String address;
     public String profileCompletion;
     public String email;
     public String updatedAt;
