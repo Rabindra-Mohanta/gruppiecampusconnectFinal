@@ -389,6 +389,7 @@
                             android:background="@drawable/light_primary_border_bg"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
+
                             <ss.com.bannerslider.Slider
                                 android:id="@+id/rvSliderBanner"
                                 android:layout_width="match_parent"

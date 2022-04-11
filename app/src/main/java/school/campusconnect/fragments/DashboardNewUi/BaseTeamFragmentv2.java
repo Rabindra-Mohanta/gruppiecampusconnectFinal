@@ -266,6 +266,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         feedAdapter.add(notificationList,0);
         binding.rvFeed.setAdapter(feedAdapter);
 
+
         binding.imgExpandFeedBefore.setOnClickListener(this);
         binding.imgExpandFeedAfter.setOnClickListener(this);
         binding.tvViewMoreFeed.setOnClickListener(this);
@@ -673,6 +674,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         {
             notificationApiCall();
         }
+
     }
 
 

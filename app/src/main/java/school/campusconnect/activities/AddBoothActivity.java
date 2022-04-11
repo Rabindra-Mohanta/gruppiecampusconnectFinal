@@ -330,6 +330,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
 
         switch (apiId) {
             case LeafManager.API_ADD_BOOTH:
+                LeafPreference.getInstance(AddBoothActivity.this).setBoolean("booth_add", true);
                 finish();
                 break;
         }

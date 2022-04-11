@@ -945,6 +945,17 @@ public class GroupDashboardActivityNew extends BaseActivity
                         ((BaseTeamFragmentv3) currFrag).checkAndRefreshNotification(apiCallNotification);*/
 
 
+                if(mGroupItem==null){
+                    return;
+                }
+                if(res.data==null){
+                    return;
+                }
+                if(res.data.size()>0){
+                    if(res.data.get(0).roleData==null){
+                        return;
+                    }
+                }
 
                 if (mGroupItem.isBoothWorker != res.data.get(0).roleData.isBoothWorker)
                 {

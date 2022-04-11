@@ -850,7 +850,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 break;
 
             case LeafManager.API_ADD_BANNER_LIST:
-                //bannerListApiCall();
+                bannerListApiCall();
                 break;
 
         }
@@ -1028,7 +1028,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                 }
                 feedAdminAdapter.add(adminNotificationList);
-
+                if(adminNotificationList.size()>8){
+                    binding.imgExpandFeedBefore.setVisibility(View.VISIBLE);
+                }else {
+                    binding.imgExpandFeedBefore.setVisibility(View.GONE);
+                }
 
             }
             else
@@ -1079,6 +1083,12 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                 mHandler.post(myRunnable);
 
+
+                if(notificationList.size()>8){
+                    binding.imgExpandFeedBefore.setVisibility(View.VISIBLE);
+                }else {
+                    binding.imgExpandFeedBefore.setVisibility(View.GONE);
+                }
             }
             else
             {
