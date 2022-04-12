@@ -112,6 +112,7 @@
                 android:layout_marginLeft="@dimen/padding_8dp"
                 android:layout_marginRight="@dimen/padding_8dp"
                 app:cardElevation="4dp"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/padding_15dp">
 
                 <LinearLayout
@@ -182,8 +183,6 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

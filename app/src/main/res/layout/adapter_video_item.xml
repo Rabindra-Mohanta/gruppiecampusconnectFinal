@@ -27,6 +27,8 @@
         android:src="@drawable/video_download_icon"
         android:layout_centerInParent="true"
         android:layout_height="@dimen/pdf_download_icon_size"/>
+
+
     <TextView
         android:id="@+id/tvCount"
         android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.j256.ormlite.stmt.query.In;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -42,6 +44,7 @@ import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 
 import school.campusconnect.activities.VoterProfileActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.booths.BoothsTBL;
@@ -51,6 +54,7 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
 
 public class BoothListMyTeamFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
@@ -60,6 +64,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
     private List<MyTeamData> filteredList = new ArrayList<>();
     private List<MyTeamData> myTeamDataList = new ArrayList<>();
 
+    private int REQUEST_UPDATE_PROFILE = 8;
     ClassesAdapter adapter;
 
     @Bind(R.id.rvTeams)
@@ -288,7 +293,14 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
             boothsTBL.userId =  boothList.get(i).userId;
-            boothsTBL._now = System.currentTimeMillis();
+            if (!LeafPreference.getInstance(getContext()).getString("BOOTH_INSERT").isEmpty())
+            {
+                boothsTBL._now = LeafPreference.getInstance(getContext()).getString("BOOTH_INSERT");
+            }
+            else
+            {
+                boothsTBL._now = DateTimeHelper.getCurrentTime();
+            }
             boothsTBL.save();
         }
 
@@ -366,19 +378,21 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             holder.txt_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-                    i.putExtra("userID",item.userId);
-                    i.putExtra("name",item.name);
-                    startActivity(i);
+                    onTreeClick(list.get(position));
                 }
             });
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-                    i.putExtra("userID",item.userId);
-                    i.putExtra("name",item.name);
-                    startActivity(i);
+
+                    if (GroupDashboardActivityNew.isAdmin)
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("name",item.name);
+                        startActivity(i);
+                    }
+
                 }
             });
         }
@@ -440,6 +454,21 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
                     }
                 });
 
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
             }
         }
     }

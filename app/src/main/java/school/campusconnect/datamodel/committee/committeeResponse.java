@@ -26,15 +26,15 @@ public class committeeResponse extends BaseResponse implements Serializable {
     {
         @SerializedName("defaultCommittee")
         @Expose
-        private Boolean defaultCommittee;
+        public Boolean defaultCommittee;
 
         @SerializedName("committeeName")
         @Expose
-        private String committeeName;
+        public String committeeName;
 
         @SerializedName("committeeId")
         @Expose
-        private String committeeId;
+        public String committeeId;
 
         public Boolean getDefaultCommittee() {
             return defaultCommittee;

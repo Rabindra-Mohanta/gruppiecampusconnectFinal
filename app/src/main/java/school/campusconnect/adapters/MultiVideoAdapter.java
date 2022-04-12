@@ -51,7 +51,7 @@ public class MultiVideoAdapter extends RecyclerView.Adapter<MultiVideoAdapter.Im
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
         final String item = list.get(position);
 
-        if(thumbnailImages!=null && thumbnailImages.size()>=position){
+        if(thumbnailImages!=null && thumbnailImages.size()>position){
             Picasso.with(mContext).load(Constants.decodeUrlToBase64(thumbnailImages.get(position))).placeholder(R.drawable.video_place_holder).into(holder.ivImage);
         }
         if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item)){

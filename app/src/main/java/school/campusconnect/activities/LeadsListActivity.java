@@ -8,17 +8,23 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.LeadResponse;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.HomeFragment;
 import school.campusconnect.utils.AppLog;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +51,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
     ProgressBar progressBar;
 
     Intent intent;
+    MyTeamData classData;
     LeadListFragment fragment;
     String groupId = "";
     String teamId = "";
@@ -71,14 +78,44 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         if (getIntent() != null) {
             groupId = getIntent().getExtras().getString("id");
             teamId = getIntent().getExtras().getString("team_id");
+            classData = new Gson().fromJson(getIntent().getStringExtra("class_data"), MyTeamData.class);
             AppLog.e(TAG, "groupId is " + groupId);
             AppLog.e(TAG, "teamId is " + teamId);
+            AppLog.e(TAG, "teamId is " + classData);
             if (getIntent().hasExtra("team_name")) {
                 setTitle(getIntent().getExtras().getString("team_name", "")+" Members");
             }else {
                 setTitle(getResources().getString(R.string.lbl_my_people));
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            getMenuInflater().inflate(R.menu.menu_add_staff_team,menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.menu_invite:
+                Intent intent = new Intent(getApplicationContext(), AddBoothStudentActivity.class);
+                intent.putExtra("group_id",groupId);
+                intent.putExtra("team_id", teamId);
+                intent.putExtra("category", classData.category);
+                startActivity(intent);
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     public void onAddFrendSelected()

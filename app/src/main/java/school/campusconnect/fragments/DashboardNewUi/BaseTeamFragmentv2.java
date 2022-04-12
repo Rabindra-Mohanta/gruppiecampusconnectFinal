@@ -52,6 +52,7 @@ import school.campusconnect.activities.PeopleActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ReadMoreActivity;
 import school.campusconnect.adapters.FeedAdapter;
+import school.campusconnect.adapters.SchoolFeedAdapater;
 import school.campusconnect.adapters.TeamListAdapterNewV2;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
@@ -68,14 +69,15 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 
-public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick {
+public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick, SchoolFeedAdapater.onClick {
     private static final String TAG = "BaseTeamFragmentv2";
 
 
     private LeafManager manager;
     private TeamListAdapterNewV2 mAdapter;
-    private FeedAdapter feedAdapter;
+    private SchoolFeedAdapater feedAdapter;
     private Boolean isExpand = false;
     // PullRefreshLayout swipeRefreshLayout;
     private DatabaseHandler databaseHandler;
@@ -260,7 +262,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         mAdapter = new TeamListAdapterNewV2(teamList,this,BuildConfig.AppCategory);
         binding.rvTeams.setAdapter(mAdapter);
 
-        feedAdapter = new FeedAdapter(this);
+        feedAdapter = new SchoolFeedAdapater(this);
         feedAdapter.add(notificationList,0);
         binding.rvFeed.setAdapter(feedAdapter);
 
@@ -467,6 +469,17 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                         notificationTable.createdById = notificationListData.getCreatedById();
                         notificationTable.readedComment = "true";
 
+                        if (!LeafPreference.getInstance(getContext()).getString("FEED_API").isEmpty())
+                        {
+                            notificationTable._now = LeafPreference.getInstance(getContext()).getString("FEED_API");
+                        }
+                        else
+                        {
+                            notificationTable._now = DateTimeHelper.getCurrentTime();
+                        }
+
+
+
                         notificationTable.save();
 
                     }
@@ -602,7 +615,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onTeamClick(MyTeamData team) {
         Log.e(TAG,"Team Data :"+new Gson().toJson(team));
-        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team);
+
+        ((GroupDashboardActivityNew) getActivity()).onTeamSelected(team,"no","no");
     }
 
     @Override

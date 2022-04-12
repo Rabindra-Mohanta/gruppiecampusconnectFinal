@@ -84,6 +84,7 @@ import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -118,16 +119,19 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     EventTBL eventTBL;
 
+    String type;
+
     //private Query query;
 
     public GeneralPostFragment() {
 
     }
 
-    public static GeneralPostFragment newInstance(String groupId) {
+    public static GeneralPostFragment newInstance(String groupId,String type) {
         GeneralPostFragment fragment = new GeneralPostFragment();
         Bundle b = new Bundle();
         b.putString("id", groupId);
+        b.putString("type", type);
         fragment.setArguments(b);
         return fragment;
     }
@@ -145,6 +149,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         menu.findItem(R.id.action_notification).setVisible(false);
         menu.findItem(R.id.action_notification_list).setVisible(false);
         menu.findItem(R.id.action_notification1).setVisible(false);
+
         if (GroupDashboardActivityNew.isPost)
             menu.findItem(R.id.menu_add_post).setVisible(true);
         else
@@ -273,6 +278,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getGroupPostLocaly() {
+
+
         eventTBL = EventTBL.getGroupEvent(mGroupId);
         boolean apiEvent = false;
         if(eventTBL!=null){
@@ -284,6 +291,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             }
 
         }
+
         List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId + "");
         String lastId = null;
         if (dataItemList.size() != 0) {
@@ -369,6 +377,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
         databaseHandler = new DatabaseHandler(getActivity());
         count = databaseHandler.getCount();
+        type = getArguments().getString("type");
+
+        Log.e(TAG,"type"+type);
 
         mBinding.setSize(1);
         mBinding.setMessage(R.string.msg_no_post);

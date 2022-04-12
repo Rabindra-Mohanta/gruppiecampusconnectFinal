@@ -39,6 +39,7 @@ import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.notificationList.AllNotificationTable;
 import school.campusconnect.datamodel.notificationList.NotificationListRes;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
@@ -116,6 +117,8 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
 
     private void getDataLocally(int currentPage) {
 
+
+
         List<AllNotificationTable> notificationTableList = AllNotificationTable.getAllNotificationList(GroupDashboardActivityNew.groupId,currentPage);
 
         if (notificationTableList != null && notificationTableList.size() > 0)
@@ -159,13 +162,14 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
         {
             if(isConnectionAvailable())
             {
-                progressBar.setVisibility(View.VISIBLE);
-                mIsLoading = true;
-                leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId,String.valueOf(currentPage));
+                AllNotificationTable.deleteAllNotification(GroupDashboardActivityNew.groupId);
+                getNotificationListApi();
             }
             else {
                 showNoNetworkMsg();
             }
+
+            GroupDashboardActivityNew.notificationApiCall = false;
         }
 
     }

@@ -110,6 +110,7 @@
     <string name="msg_no_reply">No reply found.</string>
     <string name="msg_no_comments">No comments found.</string>
     <string name="msg_no_leads">No friends found.</string>
+    <string name="msg_leads"></string>
     <string name="msg_no_likes">No likes found.</string>
     <string name="msg_no_users">No users found.</string>
     <string name="msg_no_contaacts">No contacts found.</string>

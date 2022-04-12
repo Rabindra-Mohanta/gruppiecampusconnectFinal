@@ -1,5 +1,6 @@
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     private List<BoothVotersListResponse.VoterData> filteredList = new ArrayList<>();
     private List<BoothVotersListResponse.VoterData> myTeamDataList = new ArrayList<>();
 
+    private int REQUEST_UPDATE_PROFILE = 9;
     ClassesAdapter adapter;
 
     private String boothID;
@@ -356,6 +358,27 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             holder.txt_name.setText(item.name);
 
             holder.txt_count.setVisibility(View.GONE);
+
+            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onTreeClick(item);
+                }
+            });
+            holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (GroupDashboardActivityNew.isAdmin)
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("name",item.name);
+                        startActivity(i);
+                    }
+
+                }
+            });
         }
 
         @Override
@@ -406,12 +429,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
                 super(itemView);
                 ButterKnife.bind(this,itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
-                    }
-                });
+
 
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -424,10 +442,29 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         }
     }
 
-    private void onTreeClick(BoothVotersListResponse.VoterData myTeamData) {
-        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-        i.putExtra("userID",myTeamData.userId);
-        i.putExtra("name",myTeamData.name);
-        startActivity(i);
+    private void onTreeClick(BoothVotersListResponse.VoterData item) {
+
+        if (GroupDashboardActivityNew.isAdmin)
+        {
+            Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+            i.putExtra("userID",item.userId);
+            i.putExtra("name",item.name);
+            startActivity(i);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        }
     }
 }

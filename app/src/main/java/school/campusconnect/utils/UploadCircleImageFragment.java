@@ -102,6 +102,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
                 .buildRound(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(1));
         imgDefault.setImageDrawable(drawable);
         imgDefault.setVisibility(View.VISIBLE);
+        
 
         // imgPlus.setImageResource(R.drawable.img);
 
@@ -131,6 +132,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_upload_circle_image, container, false);
+        Log.e(TAG,"onCreateView");
         imgService = (CircleImageView) rootView.findViewById(R.id.img_service);
         //imgPlusLayout = (RelativeLayout) rootView.findViewById(R.id.upload_img);
         imgPlus = (CircleImageView) rootView.findViewById(R.id.img_plus);

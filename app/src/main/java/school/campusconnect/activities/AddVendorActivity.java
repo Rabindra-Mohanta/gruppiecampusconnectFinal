@@ -200,7 +200,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
         llVideo.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        btnShare.setEnabled(false);
+   //     btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -253,11 +253,11 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
     }
 
     private void shareButtonEnableDisable() {
-        if (isValid(false)) {
+       /* if (isValid(false)) {
             btnShare.setEnabled(true);
         } else {
-            btnShare.setEnabled(false);
-        }
+            btnShare.setEnabled(true);
+        }*/
     }
 
     @Override
@@ -271,7 +271,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
             if (isValid(true)) {
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+              //  btnShare.setEnabled(false);
 
                 AddVendorPostRequest request = new AddVendorPostRequest();
                 request.vendor = edtTitle.getText().toString();
@@ -575,7 +575,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+     //   btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
@@ -599,7 +599,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+  //      btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(AddVendorActivity.this, error, Toast.LENGTH_SHORT).show();
@@ -884,7 +884,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 //                    String path = ImageUtil.getPath(this, uri1);
                     //    listImages.add(uri1.toString());
                     isGalleryMultiple = true;
-                    showCropDialog(selectedImage,false);
+                    showCropDialog(uri1,false);
                 }
             }
 

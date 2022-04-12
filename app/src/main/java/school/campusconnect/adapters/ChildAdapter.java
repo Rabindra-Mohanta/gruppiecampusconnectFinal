@@ -176,7 +176,8 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                         Log.e("Picasso", "Error : ");
                     }
                 });
-            }else {
+            }
+            else {
                 String path = Constants.decodeUrlToBase64(item.get(position).getImagePath());
                 String newStr = path.substring(path.indexOf("/images")+1);
                 Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {

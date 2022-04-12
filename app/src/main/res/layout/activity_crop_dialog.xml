@@ -15,10 +15,22 @@
             android:background="@color/colorPrimary">
             <TextView
                 android:id="@+id/btnCrop"
-                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@id/btnNext"
                 android:layout_width="wrap_content"
                 android:layout_height="?actionBarSize"
                 android:text="@string/crop"
+                android:textColor="@color/white"
+                android:gravity="center"
+                style="@style/LabelHeader1"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:layout_marginRight="@dimen/padding_10dp"/>
+            <TextView
+                android:id="@+id/btnNext"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="?actionBarSize"
+                android:text="@string/next"
                 android:textColor="@color/white"
                 android:gravity="center"
                 style="@style/LabelHeader1"

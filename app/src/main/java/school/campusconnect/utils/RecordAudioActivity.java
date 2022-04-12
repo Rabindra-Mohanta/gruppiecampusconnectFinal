@@ -33,6 +33,7 @@ import school.campusconnect.databinding.ActivityRecordAudioBinding;
 public class RecordAudioActivity extends BaseActivity {
 
     public static String TAG = "RecordAudioActivity";
+
 ActivityRecordAudioBinding binding;
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;

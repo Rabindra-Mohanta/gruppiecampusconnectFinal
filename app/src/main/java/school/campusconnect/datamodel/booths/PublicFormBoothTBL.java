@@ -20,9 +20,6 @@ public class PublicFormBoothTBL extends Model {
     @Column(name = "phone")
     public String phone;
 
-    @Column(name = "boothType")
-    public String boothType;
-
     @Column(name = "name")
     public String name;
 
@@ -84,18 +81,22 @@ public class PublicFormBoothTBL extends Model {
     public String TeamDetails;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
 
     public static List<PublicFormBoothTBL> getAll() {
         return new Select().from(PublicFormBoothTBL.class).execute();
     }
 
-    public static List<PublicFormBoothTBL> getBoothList(String group_id,String boothType) {
-        return new Select().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).where("boothType = ?",boothType).execute();
+    public static List<PublicFormBoothTBL> getBoothList(String group_id) {
+        return new Select().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).execute();
     }
 
-    public static void deleteBooth(String group_id,String boothType) {
-        new Delete().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).where("boothType = ?",boothType).execute();
+    public static void deleteBooth(String group_id) {
+        new Delete().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).execute();
+    }
+
+    public static List<PublicFormBoothTBL> getLastBooth(String group_id) {
+        return new Select().from(PublicFormBoothTBL.class).where("groupId = ?", group_id).orderBy("(groupId) DESC").limit(1).execute();
     }
 
     public static void deleteAll() {

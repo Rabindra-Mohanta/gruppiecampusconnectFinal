@@ -17,6 +17,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.ReadUnreadPostUsers;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
@@ -314,7 +315,16 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         if (item.canEdit) {
             holder.txt_drop_delete.setVisibility(View.VISIBLE);
             holder.txt_drop_report.setVisibility(View.GONE);
-            holder.txt_readUnreadUuser.setVisibility(View.VISIBLE);
+
+            if(BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+            {
+                holder.txt_readUnreadUuser.setVisibility(View.GONE);
+            }
+            else
+            {
+                holder.txt_readUnreadUuser.setVisibility(View.VISIBLE);
+            }
+
             holder.view1.setVisibility(View.VISIBLE);
         } else {
             holder.txt_drop_delete.setVisibility(View.GONE);
@@ -342,7 +352,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
         holder.txtLike.setVisibility(View.VISIBLE);
         holder.linLikes.setVisibility(View.VISIBLE);
-        holder.txt_fav.setVisibility(View.VISIBLE);
+
 
         if (myTeamData.allowTeamPostCommentAll)
             holder.linComments.setVisibility(View.VISIBLE);
@@ -461,6 +471,17 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                         lin_drop.setVisibility(View.GONE);
                 }
             });
+
+            if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+            {
+                linPush.setVisibility(View.GONE);
+                txt_fav.setVisibility(View.GONE);
+            }
+            else
+            {
+                linPush.setVisibility(View.VISIBLE);
+                txt_fav.setVisibility(View.VISIBLE);
+            }
 
             recyclerView.setRequestedHorizontalSpacing(Utils.dpToPx(mContext, 3));
             recyclerView.addItemDecoration(

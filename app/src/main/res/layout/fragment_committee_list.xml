@@ -7,7 +7,57 @@
         android:layout_height="match_parent"
         tools:context=".fragments.CommitteeListFragment">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/allCommittee"
+            app:cardElevation="3dp"
+            android:visibility="gone"
+            app:cardUseCompatPadding="true"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_marginHorizontal="@dimen/padding_15dp"
+            app:cardCornerRadius="@dimen/padding_5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/relative"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_15dp">
+
+
+
+                    <TextView
+                        android:id="@+id/txtCommitteeName"
+                        style="@style/LabelHeader1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:text="All Booth Members..."
+                        android:textColor="@color/colorPrimary" />
+
+
+                    <ImageView
+                        android:id="@+id/img_tree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/icon_right_arraw"
+                        app:tint="@color/colorPrimary"
+                         />
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@id/allCommittee"
             android:id="@+id/rvCommitte"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

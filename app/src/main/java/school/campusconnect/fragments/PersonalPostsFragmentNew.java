@@ -184,7 +184,10 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         mAdapter2.notifyDataSetChanged();
     }
 
+
     private void getGroupPostLocaly() {
+
+
         List<PostDataItem> dataItemList = PostDataItem.getPersonalChatPosts(mGroupId + "", selectedFriend + "");
         AppLog.e(TAG, "posts are " + mGroupId + " frnd id " + selectedFriend);
         AppLog.e(TAG,"ListSize "+ String.valueOf(dataItemList.size()));

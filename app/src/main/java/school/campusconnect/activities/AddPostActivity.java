@@ -240,7 +240,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         btnShare.setOnClickListener(this);
         switch_reply.setOnClickListener(this);
         switch_comment.setOnClickListener(this);
-        btnShare.setEnabled(false);
+      //  btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -315,7 +315,15 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             tvLabelTitle.setVisibility(View.GONE);
 
             if (!isFromChat) {
-                llPersonalSetting.setVisibility(View.VISIBLE);
+                if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+                {
+                    llPersonalSetting.setVisibility(View.GONE);
+                }
+                else
+                {
+                    llPersonalSetting.setVisibility(View.VISIBLE);
+                }
+
             } else {
                 llPersonalSetting.setVisibility(View.GONE);
             }
@@ -345,11 +353,11 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     }
 
     private void shareButtonEnableDisable() {
-        if (isValid(false)) {
+        /*if (isValid(false)) {
             btnShare.setEnabled(true);
         } else {
-            btnShare.setEnabled(false);
-        }
+            btnShare.setEnabled(true);
+        }*/
     }
 
     @Override
@@ -363,7 +371,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             if (isValid(true)) {
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+           //     btnShare.setEnabled(false);
 
                 AddPostRequest request = new AddPostRequest();
                 request.text = edtDesc.getText().toString();
@@ -1030,7 +1038,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+   //     btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
@@ -1071,7 +1079,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+       // btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(AddPostActivity.this, error, Toast.LENGTH_SHORT).show();
@@ -1287,7 +1295,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 //                    String path = ImageUtil.getPath(this, uri1);
                     //    listImages.add(uri1.toString());
                     isGalleryMultiple = true;
-                    showCropDialog(selectedImage,false);
+                    showCropDialog(uri1,false);
                 }
             }
 

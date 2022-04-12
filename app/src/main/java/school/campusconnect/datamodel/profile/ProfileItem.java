@@ -1,5 +1,7 @@
-package school.campusconnect.datamodel;
+package school.campusconnect.datamodel.profile;
 
+
+import school.campusconnect.datamodel.AddressItem;
 
 public class ProfileItem {
 
@@ -12,9 +14,13 @@ public class ProfileItem {
     public String qualification;
     public String occupation;
 
+    public String caste;
+    public String subcaste;
+    public String religion;
+    public String designation;
 
     public String roleOnConstituency;
-    public AddressItem address;
+    public String address;
     public String profileCompletion;
     public String email;
     public String updatedAt;
@@ -26,8 +32,4 @@ public class ProfileItem {
     public String relationship;
     public String bloodGroup;
 
-    public String caste;
-    public String subcaste;
-    public String religion;
-    public String designation;
 }

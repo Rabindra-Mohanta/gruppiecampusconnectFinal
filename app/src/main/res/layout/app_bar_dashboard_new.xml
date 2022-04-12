@@ -36,6 +36,7 @@
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
 
+
             <ImageView
                 android:id="@+id/iv_toolbar_default"
                 android:layout_width="46dp"

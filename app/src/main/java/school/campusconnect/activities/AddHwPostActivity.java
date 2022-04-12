@@ -263,7 +263,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         llYoutubeLink.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        btnShare.setEnabled(false);
+        //btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -388,7 +388,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
 
     private void shareButtonEnableDisable() {
-        btnShare.setEnabled(isValid(false));
+       // btnShare.setEnabled(isValid(false));
     }
 
     @Override
@@ -402,7 +402,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
             if (isValid(true)) {
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+              //  btnShare.setEnabled(false);
 
                 mainRequest = new AddHwPostRequest();
 
@@ -880,7 +880,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+      //  btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
@@ -907,7 +907,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+     //   btnShare.setEnabled(true);
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
         Toast.makeText(AddHwPostActivity.this, error, Toast.LENGTH_SHORT).show();
@@ -1079,7 +1079,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 //                    String path = ImageUtil.getPath(this, uri1);
                     //    listImages.add(uri1.toString());
                     isGalleryMultiple = true;
-                    showCropDialog(selectedImage,false);
+                    showCropDialog(uri1,false);
                 }
             }
 

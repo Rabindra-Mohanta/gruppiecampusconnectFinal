@@ -1,7 +1,9 @@
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -35,16 +37,24 @@ import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VoterProfileActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
+import school.campusconnect.datamodel.booths.MyBoothEventRes;
+import school.campusconnect.datamodel.booths.MyBoothEventTBL;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
+import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.booths.SubBoothWorkerEventRes;
+import school.campusconnect.datamodel.booths.SubBoothWorkerEventTBL;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 
 public class MyTeamSubBoothFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
 public static String TAG = "MyTeamSubBoothFragment";
@@ -59,6 +69,8 @@ public static String TAG = "MyTeamSubBoothFragment";
 
     @Bind(R.id.edtSearch)
     public EditText edtSearch;
+
+    private int REQUEST_UPDATE_PROFILE = 9;
 
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
@@ -75,7 +87,31 @@ public static String TAG = "MyTeamSubBoothFragment";
         Log.e(TAG,"onViewCreated");
         inits();
         getLocally();
+        callEvent();
         return view;
+    }
+
+    private void callEvent() {
+
+        LeafManager leafManager = new LeafManager();
+        leafManager.getSubBoothWorkerEvent(new LeafManager.OnCommunicationListener() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+                SubBoothWorkerEventRes res = (SubBoothWorkerEventRes) response;
+
+                new EventAsync(res).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onFailure(int apiId, String msg) {
+
+            }
+
+            @Override
+            public void onException(int apiId, String msg) {
+
+            }
+        },GroupDashboardActivityNew.groupId);
     }
 
     private void getLocally() {
@@ -233,7 +269,16 @@ public static String TAG = "MyTeamSubBoothFragment";
             teamSubBoothTBL.canAddUser = teamData.canAddUser;
             teamSubBoothTBL.allowTeamPostCommentAll = teamData.allowTeamPostCommentAll;
             teamSubBoothTBL.allowTeamPostAll = teamData.allowTeamPostAll;
-            teamSubBoothTBL._now = System.currentTimeMillis();
+
+            if (LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_WORKER_EVENT_UPDATE").isEmpty())
+            {
+                teamSubBoothTBL._now = LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_WORKER_EVENT_UPDATE");
+            }
+            else
+            {
+                teamSubBoothTBL._now = DateTimeHelper.getCurrentTime();
+            }
+
             teamSubBoothTBL.save();
 
         }
@@ -318,19 +363,22 @@ public static String TAG = "MyTeamSubBoothFragment";
             holder.txt_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-                    i.putExtra("userID",item.userId);
-                    i.putExtra("name",item.name);
-                    startActivity(i);
+                    onTreeClick(item);
                 }
             });
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), VoterProfileActivity.class);
-                    i.putExtra("userID",item.userId);
-                    i.putExtra("name",item.name);
-                    startActivity(i);
+
+                    if (GroupDashboardActivityNew.isAdmin)
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("name",item.name);
+                        i.putExtra("teamID",item.teamId);
+                        startActivity(i);
+                    }
+
                 }
             });
         }
@@ -382,12 +430,7 @@ public static String TAG = "MyTeamSubBoothFragment";
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this,itemView);
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
-                    }
-                });
+
 
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -403,5 +446,78 @@ public static String TAG = "MyTeamSubBoothFragment";
     private void onTreeClick(MyTeamSubBoothResponse.TeamData myTeamData) {
 
         ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(myTeamData.name,myTeamData.members,myTeamData.subBoothId);
+    }
+
+    class EventAsync extends AsyncTask<Void, Void, Void> {
+        SubBoothWorkerEventRes res1;
+        private boolean needRefresh = false;
+
+        public EventAsync(SubBoothWorkerEventRes res1) {
+            this.res1 =res1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            Log.e(TAG,"lastUpdatedMySubBoothTeamTime  "+res1.data.get(0).lastUpdatedMySubBoothTeamTime);
+
+            LeafPreference.getInstance(getContext()).setString("SUB_BOOTH_WORKER_EVENT_UPDATE",res1.data.get(0).lastUpdatedMySubBoothTeamTime);
+
+            if (MyTeamSubBoothTBL.getLastSubBooth().size() > 0)
+            {
+                if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_WORKER_EVENT_UPDATE"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", MyTeamSubBoothTBL.getLastSubBooth().get(0)._now)) {
+                    MyTeamSubBoothTBL.deleteAll();
+                    needRefresh = true;
+                }
+                else
+                {
+                    needRefresh = false;
+                }
+            }
+
+            if (res1.data.get(0).mySubBoothTeamsLastPostEventAt.size() > 0)
+            {
+                SubBoothWorkerEventTBL.deleteAll();
+
+                for (int i=0;i<res1.data.get(0).mySubBoothTeamsLastPostEventAt.size();i++)
+                {
+                    SubBoothWorkerEventTBL workerEventTBL = new SubBoothWorkerEventTBL();
+
+                    workerEventTBL.teamId = res1.data.get(0).mySubBoothTeamsLastPostEventAt.get(i).teamId;
+                    workerEventTBL.members = res1.data.get(0).mySubBoothTeamsLastPostEventAt.get(i).members;
+                    workerEventTBL.lastTeamPostAt = res1.data.get(0).mySubBoothTeamsLastPostEventAt.get(i).lastTeamPostAt;
+
+                    workerEventTBL.save();
+                }
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (needRefresh)
+            {
+                adapter.notifyDataSetChanged();
+                getLocally();
+            }
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(), GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        }
     }
 }

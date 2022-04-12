@@ -33,7 +33,7 @@ import school.campusconnect.R;
 import school.campusconnect.adapters.GalleryReadMoreAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;

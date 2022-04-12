@@ -99,6 +99,46 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
         {
             taskIntents.add(intent);
             AppLog.e(TAG, "onStartCommand currentTask is not null and taskIntent size is : "+taskIntents.size());
+          /*  createNotificationChannel();
+            Intent notificationIntent = new Intent(context, GroupDashboardActivityNew.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                    0, notificationIntent, 0);
+            notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setContentTitle("Video Uploading...")
+                        .setContentText("0%")
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setContentIntent(pendingIntent)
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setProgress(100, 0, false)
+
+                        .setAutoCancel(false);
+                Notification notification = notificationBuilder.build();
+
+                AppLog.e(TAG , "start foregournd called 1");
+                this.startForeground(notifyId, notification);
+            }
+            else
+            {
+
+                notificationBuilder = new NotificationCompat.Builder(context)
+                        .setContentTitle("Video Upload")
+                        .setContentText("0%")
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setContentIntent(pendingIntent)
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setProgress(100, 0, false)
+                        .setAutoCancel(false);
+                Notification notification = notificationBuilder.build();
+
+                AppLog.e(TAG , "start foregournd  2");
+                this.startForeground(notifyId, notification);
+            }
+*/
             return START_NOT_STICKY;
         }
         else
@@ -131,6 +171,7 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
     @Override
     public void onDestroy() {
         super.onDestroy();
+        currentTask = null;
     }
 
     private void createNotificationChannel() {
@@ -159,6 +200,7 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
             getDataFromCurrentTask();
             uploadVideos();
         }else {
+            currentTask = null;
             Intent intent = new Intent("gallery_refresh");
             sendBroadcast(intent);
             stopForeground(false);
@@ -280,11 +322,17 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
         long fileSizeInMB = fileSizeInKB / 1024;
 
 
-        File videoCompresed  = ImageUtil.getOutputMediaVideo(finalI);
+        File videoCompresed  = ImageUtil.getOutputVideoFile(context,finalI);
+
+        if(true)
+        {
+            compressedCounts++;
+            compressVideo(compressedCounts);
+            return;
+        }
 
 
-
-        AppLog.e(TAG, "compression Started id : "+finalI+", output path : "+videoCompresed.getPath());
+        AppLog.e(TAG, "compression Started id : "+listImages.get(finalI)+", output path : "+videoCompresed.getPath());
 
         String width = "";
         String height = "";
@@ -296,9 +344,15 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
         }
         catch(Exception ex)
         {
+            AppLog.e(TAG,"Exception "+ex);
             compressedCounts++;
             compressVideo(compressedCounts);
+            return;
         }
+
+        AppLog.e(TAG, "final path : "+listImages.get(finalI));
+        AppLog.e(TAG, "final path height: "+height);
+        AppLog.e(TAG, "final path width: "+width);
 
         VideoCompressor.start(
                 getApplicationContext(), // => This is required if srcUri is provided. If not, pass null.
@@ -549,6 +603,8 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
                     builder().bucket(AmazoneHelper.BUCKET_NAME).
                     cannedAcl(CannedAccessControlList.PublicRead).build();
             try {
+
+                AppLog.e(TAG, "listImages Path: " + Uri.parse(listImages.get(pos)));
                 observer = transferUtility.upload(key,
                         getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
                 observer.setTransferListener(new TransferListener() {

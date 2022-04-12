@@ -4,17 +4,18 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.baoyz.widget.PullRefreshLayout
+<!--    <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:refreshColor="@color/colorPrimary">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvGallery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.baoyz.widget.PullRefreshLayout>
 
+    </com.baoyz.widget.PullRefreshLayout>-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 <ProgressBar
     android:id="@+id/progressBar"

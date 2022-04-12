@@ -18,7 +18,10 @@ import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.booths.BoothVotersListResponse;
+import school.campusconnect.datamodel.booths.MyBoothEventRes;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
+import school.campusconnect.datamodel.booths.SubBoothEventRes;
+import school.campusconnect.datamodel.booths.SubBoothWorkerEventRes;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
@@ -117,7 +120,7 @@ import school.campusconnect.datamodel.CreateGroupReguest;
 import school.campusconnect.datamodel.CreateTeamRequest;
 import school.campusconnect.datamodel.EditAttendanceReq;
 import school.campusconnect.datamodel.ForgotPasswordRequest;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.datamodel.GetLocationRes;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupResponse;
@@ -127,8 +130,8 @@ import school.campusconnect.datamodel.LoginRequest;
 import school.campusconnect.datamodel.LoginResponse;
 import school.campusconnect.datamodel.PersonalSettingRes;
 import school.campusconnect.datamodel.PostResponse;
-import school.campusconnect.datamodel.ProfileItemUpdate;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.ReadGroupPostResponse;
 import school.campusconnect.datamodel.ReadTeamPostResponse;
 import school.campusconnect.datamodel.SettingRes;
@@ -890,6 +893,9 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<LeadResponse> getTeamMemberFromChat(@Path("group_id") String group_id);
 
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("committeeId") String committeeId);
 
     @GET("/api/v2/groups/{id}/team/{team_id}/members")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1546,6 +1552,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json"})
     Call<UpdateDataEventRes> getUpdateEventList(@Path("group_id") String group_id);
 
+    @GET("/api/v1/groups/{group_id}/events/constituency")
+    @Headers({"Content-Type: application/json"})
+    Call<UpdateDataEventRes> getUpdateEventListConstituency(@Path("group_id") String group_id);
+
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1718,9 +1728,9 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BoothVotersListResponse> getBoothVoters(@Path("group_id") String group_id, @Path("booth_id") String booth_id);
 
-    @GET("/api/v1/groups/{group_id}/all/booths/get")
+   /* @GET("/api/v1/groups/{group_id}/all/booths/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BoothResponse> getBoothsCoordinator(@Path("group_id") String group_id,@Query("boothCoordinator") String option);
+    Call<BoothResponse> getBoothsCoordinator(@Path("group_id") String group_id,@Query("boothCoordinator") String option);*/
 
     @GET("/api/v1/groups/{group_id}/my/booth/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1735,9 +1745,6 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addBooths(@Path("group_id") String group_id, @Body BoothData boothData);
 
-    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("committeeId") String committeeId);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/coordinator/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1908,8 +1915,16 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> makeAppAdmin(@Path("group_id") String group_id,@Path("user_id") String user_id);
 
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/events/subbooth")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubBoothEventRes> getSubBoothEvent(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
+    @GET("api/v1/groups/{group_id}/events/my/booths")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<MyBoothEventRes> getMyBoothEvent(@Path("group_id") String group_id);
 
-
+    @GET("api/v1/groups/{group_id}/events/my/subbooths")  //if user is worker
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubBoothWorkerEventRes> getSubBoothWorkerEvent(@Path("group_id") String group_id);
 
 }

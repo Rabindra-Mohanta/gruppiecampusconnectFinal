@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <school.campusconnect.views.TouchImageView
         android:id="@+id/ivImage"
@@ -15,8 +16,40 @@
         android:src="@drawable/download"
         android:layout_margin="@dimen/padding_10dp"
         android:visibility="gone"
+        android:layout_centerInParent="true"
         android:background="@drawable/date_circle_background"
         android:layout_gravity="bottom|center"/>
+
+    <FrameLayout
+        android:id="@+id/llProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/circular_progress_bar" />
+
+        <ImageView
+            android:id="@+id/imgCancel"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/colorPrimary" />
+
+
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/iconBack"
@@ -24,12 +57,22 @@
         android:padding="@dimen/padding_15dp"
         android:src="@drawable/icon_back_arrow"
         android:layout_height="50dp" />
+
     <ImageView
         android:id="@+id/iconRotate"
         android:layout_gravity="end"
         android:layout_width="50dp"
         android:padding="@dimen/padding_10dp"
+        android:layout_alignParentRight="true"
         android:src="@drawable/icon_rorate_right"
         android:layout_height="50dp" />
 
-</FrameLayout>
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:visibility="gone" />
+</RelativeLayout>

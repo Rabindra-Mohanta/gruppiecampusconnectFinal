@@ -38,7 +38,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     int totalItem = 0;
     ViewHolder viewHolder;
 
-    private Handler mHandler = new Handler();
+  /*  private Handler mHandler = new Handler();
 
     Runnable myRunnable = new Runnable() {
         @Override
@@ -105,7 +105,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             }
 
         }
-    };
+    };*/
 
 
     public FeedAdapter(FeedAdapter.onClick onClick) {
@@ -127,11 +127,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         if (!isAssigned)
         {
-            ((AppCompatActivity) context).runOnUiThread(myRunnable);
+           // ((AppCompatActivity) context).runOnUiThread(myRunnable);
             isAssigned = true;
         }
 
-
+        Log.e(TAG,"position "+position);
         NotificationListRes.NotificationListData data = results.get(position);
 
 
@@ -139,7 +139,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         {
             holder.binding.llBottomLine.setVisibility(View.GONE);
         }
-
+        else
+        {
+            holder.binding.llBottomLine.setVisibility(View.VISIBLE);
+        }
 
         holder.binding.tvTime.setText(MixOperations.getFormattedDate(data.getInsertedAt(), Constants.DATE_FORMAT));
         holder.binding.tvdesc.setText(data.getMessage());
@@ -245,12 +248,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     {
         if (isExpand)
         {
-            ((AppCompatActivity) context).runOnUiThread(myRunnable);
+           // ((AppCompatActivity) context).runOnUiThread(myRunnable);
             isExpand = false;
         }
         else
         {
-            mHandler.removeCallbacks(myRunnable);
+        //    mHandler.removeCallbacks(myRunnable);
             isExpand = true;
             CountScroll = 0;
         }
@@ -260,7 +263,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public void removeCallBack()
     {
         isAssigned = false;
-        mHandler.removeCallbacks(myRunnable);
+     //   mHandler.removeCallbacks(myRunnable);
     }
     @Override
     public int getItemCount() {

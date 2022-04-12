@@ -224,7 +224,7 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
                 if (currentPage == 1) {
-                    PostDataItem.deleteGeneralPosts(mGroupId+"");
+                //    PostDataItem.deleteGeneralPosts(mGroupId+"");
                     listData.clear();
                     listData.addAll(res.data);
                     AppLog.e(TAG, "current page 1");

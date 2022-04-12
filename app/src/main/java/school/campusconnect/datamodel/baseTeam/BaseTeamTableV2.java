@@ -23,6 +23,13 @@ public class BaseTeamTableV2 extends Model {
     @Column(name = "group_id")
     public String group_id;
 
+    @Column(name = "_now")
+    public String _now;
+
+    @Column(name = "update_team")
+    public String update_team;
+
+
     public static List<BaseTeamTableV2> getAll() {
         return new Select().from(BaseTeamTableV2.class).execute();
     }

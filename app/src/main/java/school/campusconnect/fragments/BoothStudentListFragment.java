@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -50,11 +52,14 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.UpdateMemberActivity;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.committee.CommitteeMemberTBL;
 import school.campusconnect.datamodel.committee.committeeResponse;
+import school.campusconnect.datamodel.lead.LeadDataTBL;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
@@ -78,12 +83,19 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
     @Bind(R.id.etSearch)
     public EditText etSearch;
 
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;
+
+    private int REQUEST_UPDATE_PROFILE = 9;
+
     MyTeamData classData;
     committeeResponse.committeeData committeeData;
     private String mGroupId;
     private String teamId;
 
-    private ArrayList<BoothMemberResponse.BoothMemberData> list;
+    private ArrayList<BoothMemberResponse.BoothMemberData> list = new ArrayList<>();
+
+    ClassesStudentAdapter adapter;
 
     @Nullable
     @Override
@@ -93,12 +105,12 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
         init();
 
-        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        progressBar.setVisibility(View.VISIBLE);
+        getDataLocally();
 
         return view;
     }
+
+
     public void showHideSearch(){
         if(etSearch.getVisibility()==View.VISIBLE){
             etSearch.setVisibility(View.GONE);
@@ -117,14 +129,75 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
             mGroupId = GroupDashboardActivityNew.groupId;
             teamId = classData.teamId;
         }
+
+        adapter = new ClassesStudentAdapter();
+        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvClass.setAdapter(adapter);
+
+        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isConnectionAvailable()) {
+                    CommitteeMemberTBL.deleteCommitteeMember(GroupDashboardActivityNew.groupId, classData.teamId,committeeData.getCommitteeId());
+                    getDataLocally();
+                    swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    showNoNetworkMsg();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
         etSearch.setText("");
+
+    }
+
+
+    private void getDataLocally() {
+        List<CommitteeMemberTBL> memberTBLList = CommitteeMemberTBL.getCommitteeMember(GroupDashboardActivityNew.groupId,classData.teamId,committeeData.getCommitteeId());
+
+        list.clear();
+        
+        if (memberTBLList.size()>0)
+        {
+            for (int i = 0; i < memberTBLList.size();i++)
+            {
+                BoothMemberResponse.BoothMemberData data = new BoothMemberResponse.BoothMemberData();
+                data.phone = memberTBLList.get(i).phone;
+                data.countryCode = memberTBLList.get(i).countryCode;
+                data.name = memberTBLList.get(i).name;
+                data.image = memberTBLList.get(i).image;
+                data.voterId = memberTBLList.get(i).voterId;
+                data.id = memberTBLList.get(i).id;
+                data.gender = memberTBLList.get(i).gender;
+                data.dob = memberTBLList.get(i).dob;
+                data.bloodGroup = memberTBLList.get(i).bloodGroup;
+                data.aadharNumber = memberTBLList.get(i).aadharNumber;
+                data.allowedToAddUser = memberTBLList.get(i).allowedToAddUser;
+                data.allowedToAddTeamPost = memberTBLList.get(i).allowedToAddTeamPost;
+                data.allowedToAddTeamPostComment = memberTBLList.get(i).allowedToAddTeamPostComment;
+                data.salary = memberTBLList.get(i).salary;
+                data.roleOnConstituency = memberTBLList.get(i).roleOnConstituency;
+                list.add(data);
+
+            }
+          adapter.add(list);
+        }
+        else
+        {
+            getData();
+        }
+    }
+
+
+    private void getData()
+    {
+        progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        AppLog.e(TAG, "getStudents : ");
         leafManager.getBoothMember(this, GroupDashboardActivityNew.groupId, classData.teamId,committeeData.getCommitteeId());
     }
 
@@ -132,10 +205,42 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
     public void onSuccess(int apiId, BaseResponse response) {
         progressBar.setVisibility(View.GONE);
         BoothMemberResponse res = (BoothMemberResponse) response;
-        list = res.getData();
-        AppLog.e(TAG, "StudentRes " + list);
+        saveToLocal(res.getData());
 
-        rvClass.setAdapter(new ClassesStudentAdapter(list));
+    }
+
+    private void saveToLocal(ArrayList<BoothMemberResponse.BoothMemberData> data) {
+
+        CommitteeMemberTBL.deleteCommitteeMember(GroupDashboardActivityNew.groupId, classData.teamId,committeeData.getCommitteeId());
+
+        if (data.size() >  0)
+        {
+            for (int i = 0;i<data.size();i++)
+            {
+                CommitteeMemberTBL memberTBL = new CommitteeMemberTBL();
+                memberTBL.teamId = classData.teamId;
+                memberTBL.groupId = GroupDashboardActivityNew.groupId;
+                memberTBL.committeeId = committeeData.getCommitteeId();
+                memberTBL.phone = data.get(i).phone;
+                memberTBL.countryCode = data.get(i).countryCode;
+                memberTBL.name = data.get(i).name;
+                memberTBL.image = data.get(i).image;
+                memberTBL.id = data.get(i).id;
+                memberTBL.voterId = data.get(i).voterId;
+                memberTBL.gender = data.get(i).gender;
+                memberTBL.dob = data.get(i).dob;
+                memberTBL.bloodGroup = data.get(i).bloodGroup;
+                memberTBL.aadharNumber = data.get(i).aadharNumber;
+                memberTBL.allowedToAddUser = data.get(i).allowedToAddUser;
+                memberTBL.allowedToAddTeamPostComment = data.get(i).allowedToAddTeamPostComment;
+                memberTBL.allowedToAddTeamPost = data.get(i).allowedToAddTeamPost;
+                memberTBL.roleOnConstituency = data.get(i).roleOnConstituency;
+                memberTBL.salary = data.get(i).salary;
+                memberTBL.save();
+
+            }
+            adapter.add(data);
+        }
     }
 
     @Override
@@ -152,8 +257,9 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         List<BoothMemberResponse.BoothMemberData> list;
         private Context mContext;
 
-        public ClassesStudentAdapter(List<BoothMemberResponse.BoothMemberData> list) {
+        public void add(List<BoothMemberResponse.BoothMemberData> list) {
             this.list = list;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -252,12 +358,17 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
     }
 
     private void editStudent(BoothMemberResponse.BoothMemberData studentData) {
-        Intent intent = new Intent(getActivity(), UpdateMemberActivity.class);
-        intent.putExtra("group_id", mGroupId);
-        intent.putExtra("team_id", teamId);
-        intent.putExtra("className", studentData.name);
-        intent.putExtra("student_data", new Gson().toJson(studentData));
-        startActivity(intent);
+
+        if (GroupDashboardActivityNew.isAdmin)
+        {
+            Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+            i.putExtra("userID",studentData.id);
+            i.putExtra("name",studentData.name);
+            i.putExtra("committee",true);
+
+            startActivity(i);
+        }
+
     }
 
     public ArrayList<String> getMobileList(){
@@ -268,5 +379,20 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
             }
         }
         return mobList;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        }
     }
 }

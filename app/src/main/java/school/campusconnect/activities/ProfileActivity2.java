@@ -33,9 +33,9 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddressItem;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
-import school.campusconnect.datamodel.ProfileItem;
-import school.campusconnect.datamodel.ProfileItemUpdate;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.profile.ProfileItem;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.ProfileValidationError;
 import school.campusconnect.fragments.ProfileBasicFragment;
 import school.campusconnect.fragments.ProfileOtherFragment;
@@ -274,11 +274,12 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         fragment1.edtEmail.editText.setText(item.email);
         fragment1.edtQualification.editText.setText(item.qualification);
         fragment1.edtOccupation.editText.setText(item.occupation);
+
         if (item.address != null) {
-            fragment2.edtState.editText.setText(item.address.state);
+         /*   fragment2.edtState.editText.setText(item.address.state);
             fragment2.edtPincode.editText.setText(item.address.pin);
             fragment2.edtCountry.editText.setText(item.address.country);
-            fragment2.edtCity.editText.setText(item.address.city);
+            fragment2.edtCity.editText.setText(item.address.city);*/
         }
 
         txtProgress.setVisibility(View.GONE);

@@ -23,17 +23,17 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.MixOperations;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
-    private final ArrayList<GalleryPostRes.GalleryData> listData;
+    private  ArrayList<GalleryPostRes.GalleryData> listData;
     private Context mContext;
     GalleryListener listener;
-    public GalleryAdapter(ArrayList<GalleryPostRes.GalleryData> listData,GalleryListener listener) {
-        this.listData=listData;
+
+    public GalleryAdapter(GalleryListener listener) {
         this.listener=listener;
     }
 
@@ -43,6 +43,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_item,parent,false);
         return new ViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -59,14 +61,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 if (item.imageHeight != 0 && item.imageWidth != 0)
                     height = (Constants.screen_width * item.imageHeight) / item.imageWidth;*/
 
-                    GalleryChildAdapter adapter;
+                    ChildAdapter adapter;
                     if(item.fileName.size()==3)
                     {
-                        adapter = new GalleryChildAdapter(2, item.fileName.size(), mContext, item);
+                        adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
                     }
                     else
                     {
-                        adapter = new GalleryChildAdapter( Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item);
+                        adapter = new ChildAdapter( Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
                     }
                     holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                     holder.recyclerView.setVisibility(View.VISIBLE);
@@ -80,11 +82,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 if (item.imageHeight != 0 && item.imageWidth != 0)
                     height = (Constants.screen_width * item.imageHeight) / item.imageWidth;*/
 
-                    GalleryVideoAdapter adapter;
+                    ChildVideoAdapter adapter;
                     if (item.fileName.size() == 3) {
-                        adapter = new GalleryVideoAdapter(2, item.fileName.size(), mContext, item);
+                        adapter = new ChildVideoAdapter(2, mContext, item.fileName, item.thumbnailImage);
                     } else {
-                        adapter = new GalleryVideoAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item);
+                        adapter = new ChildVideoAdapter(Constants.MAX_IMAGE_NUM, mContext, item.fileName, item.thumbnailImage);
                     }
                     holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                     holder.recyclerView.setVisibility(View.VISIBLE);
@@ -159,9 +161,15 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     }
 
+    public void add(ArrayList<GalleryPostRes.GalleryData> listData)
+    {
+        this.listData=listData;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
-        return listData.size();
+
+        return listData != null ? listData.size() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

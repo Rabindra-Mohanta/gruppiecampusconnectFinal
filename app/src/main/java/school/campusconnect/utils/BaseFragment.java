@@ -38,24 +38,35 @@ import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.TestExamTBL;
+import school.campusconnect.datamodel.banner.BannerTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.booths.BoothPresidentTBL;
 import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.EventSubBoothTBL;
 import school.campusconnect.datamodel.booths.MemberTeamTBL;
+import school.campusconnect.datamodel.booths.MyBoothEventTBL;
 import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
 import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
 import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.booths.SubBoothWorkerEventTBL;
+import school.campusconnect.datamodel.calendar.DayEventTBL;
+import school.campusconnect.datamodel.calendar.MonthEventTBL;
+import school.campusconnect.datamodel.committee.CommitteeTBL;
+import school.campusconnect.datamodel.event.BoothPostEventTBL;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
+import school.campusconnect.datamodel.gallery.GalleryTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
+import school.campusconnect.datamodel.lead.LeadDataTBL;
 import school.campusconnect.datamodel.masterList.MasterBoothListTBL;
 import school.campusconnect.datamodel.masterList.StreetListTBL;
 import school.campusconnect.datamodel.masterList.VoterListTBL;
 import school.campusconnect.datamodel.masterList.WorkerListTBL;
 import school.campusconnect.datamodel.notificationList.AllNotificationTable;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
-import school.campusconnect.datamodel.notifications.NotificationModel;
 import school.campusconnect.datamodel.personalchat.PersonalContactsModel;
+import school.campusconnect.datamodel.profile.ProfileTBL;
 import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -204,6 +215,10 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    public boolean isValidEmail(CharSequence target) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
     protected boolean isValueValid(EditText editView) {
         boolean isValid = true;
 
@@ -235,28 +250,40 @@ public class BaseFragment extends Fragment {
             StreetListTBL.deleteAll();
             BoothsTBL.deleteAll();
             MemberTeamTBL.deleteAll();
+            ProfileTBL.deleteAll();
             PublicFormBoothTBL.deleteAll();
             TicketTBL.deleteAll();
+            DayEventTBL.deleteAllEvent();
+            MonthEventTBL.deleteAllEvent();
             NotificationTable.deleteAll();
             AllNotificationTable.deleteAll();
             AdminFeedTable.deleteAll();
+            EventSubBoothTBL.deleteAll();
             VoterListTBL.deleteAll();
+            BannerTBL.deleteAll();
             PostTeamDataItem.deleteAllPosts();
             PersonalContactsModel.deleteAll();
             GruppieContactsModel.deleteAll();
+            CommitteeTBL.deleteMember();
+            LeadDataTBL.deleteAll();
 //        GruppieContactAddressModel.deleteAll();
+            BoothPostEventTBL.deleteAll();
             GruppieContactGroupIdModel.deleteAll();
+            GalleryTable.deleteGallery();
             getActivity().getSharedPreferences("pref_noti_count", Context.MODE_PRIVATE).edit().clear().commit();
             new DatabaseHandler(getActivity()).deleteAll();
 
             HwItem.deleteAll();
             TestExamTBL.deleteAll();
+            SubBoothWorkerEventTBL.deleteAll();
+            MyBoothEventTBL.deleteAll();
             ChapterTBL.deleteAll();
             EventTBL.deleteAll();
             ClassListTBL.deleteAll();
             LiveClassListTBL.deleteAll();
             TeamCountTBL.deleteAll();
             SubjectCountTBL.deleteAll();
+            HomeTeamDataTBL.deleteAll();
             StudAssignementItem.deleteAll();
             StudTestPaperItem.deleteAll();
             SubjectItem.deleteAll();

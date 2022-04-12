@@ -98,8 +98,12 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
     }
 
     public void updatePhotoFromUrl(String url) {
+
+        Log.e(TAG,"updatePhotoFromUrl");
+
         if (!TextUtils.isEmpty(url)) {
             _finalUrl = url;
+
             Picasso.with(getContext()).load(Constants.decodeUrlToBase64(url)).memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE).into(getImageView(), new Callback() {
                 @Override
@@ -113,6 +117,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
 
                 }
             });
+
         }
     }
 

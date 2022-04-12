@@ -109,14 +109,14 @@ public class MixOperations {
     }
     public static boolean isNewEvent(String eventAt, String inputPattern,long now)
     {
+
+
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
             inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             long eventAtMillisec = inputFormat.parse(eventAt).getTime();
 
-            Log.e(TAG,"now "+now);
 
-            Log.e(TAG,"eventAtMillisec "+eventAtMillisec);
             if(now<eventAtMillisec){
                 return true;
             }
@@ -126,6 +126,8 @@ public class MixOperations {
         }
         return false;
     }
+
+
     public static boolean isNewEvent(String eventAt, String inputPattern,String now)
     {
         Log.e(TAG,"eventAt"+eventAt);
@@ -145,6 +147,36 @@ public class MixOperations {
         }
         return false;
     }
+
+
+    //change time compare format
+
+    public static boolean isNewEventUpdate(String eventAt, String inputPattern,String now)
+    {
+
+        Log.e(TAG,"eventAt "+eventAt);
+        Log.e(TAG,"now "+now);
+
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            long eventAtMillisec = inputFormat.parse(eventAt).getTime()/100;
+            long nowMillis = inputFormat.parse(now).getTime()/100;
+
+            Log.e(TAG,"eventAtMillisec "+eventAtMillisec);
+            Log.e(TAG,"nowMillis "+nowMillis);
+
+            if(nowMillis != eventAtMillisec)
+            {
+                return true;
+            }
+        } catch (Exception e) {
+            AppLog.e(TAG,e.toString());
+            return false;
+        }
+        return false;
+    }
+
     public static String convertBase64(Bitmap bitmap)
     {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

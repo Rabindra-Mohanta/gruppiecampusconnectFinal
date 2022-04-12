@@ -47,14 +47,12 @@ public class TeamListActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-
     }
 
     public void teamPost(MyTeamData myTeamData) {
         myTeamData.groupId = GroupDashboardActivityNew.groupId;
         setTitle(myTeamData.name);
-        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(myTeamData, false);
+        TeamPostsFragmentNew fragTeamPost = TeamPostsFragmentNew.newInstance(myTeamData, false,"no","no");
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragTeamPost).addToBackStack("nested_team").commit();
     }
 

@@ -25,6 +25,7 @@ public class GroupItem implements Parcelable {
     public boolean isAdmin;
     public boolean isPartyTaskForce;
     public boolean isDepartmentTaskForce;
+    public boolean isAuthorizedUser;
     public boolean isBoothMember;
     public String image;
     public boolean isBoothWorker;
@@ -32,6 +33,8 @@ public class GroupItem implements Parcelable {
     public String category="";
     public boolean canPost;
     public boolean allowPostAll;
+    public int subBoothMembers;
+    public boolean isPublic;
     public String adminPhone;
     public String adminName;
     public String adminId;
@@ -58,6 +61,7 @@ public class GroupItem implements Parcelable {
         subBoothName = in.readString();
         subBoothId = in.readString();
         totalUsers = in.readInt();
+        subBoothMembers = in.readInt();
         totalPostsCount = in.readInt();
         subBoothCount = in.readInt();
         totalCommentsCount = in.readInt();
@@ -65,6 +69,7 @@ public class GroupItem implements Parcelable {
         name = in.readString();
         isPostShareAllowed = in.readByte() != 0;
         isAdminChangeAllowed = in.readByte() != 0;
+        isAuthorizedUser= in.readByte() != 0;
         isAdmin = in.readByte() != 0;
         isPartyTaskForce = in.readByte() != 0;
         isBoothMember = in.readByte() != 0;
@@ -77,6 +82,7 @@ public class GroupItem implements Parcelable {
         adminPhone = in.readString();
         adminName = in.readString();
         adminId = in.readString();
+        isPublic = in.readByte() != 0;
         allowedToAddUser = in.readByte() != 0;
         allowPostQuestion = in.readByte() != 0;
         createdBy = in.readString();
@@ -171,12 +177,15 @@ public class GroupItem implements Parcelable {
         dest.writeString(subBoothName);
         dest.writeString(subBoothId);
         dest.writeInt(totalUsers);
+        dest.writeInt(subBoothMembers);
         dest.writeInt(totalPostsCount);
         dest.writeInt(subBoothCount);
         dest.writeInt(totalCommentsCount);
         dest.writeString(subCategory);
         dest.writeString(name);
         dest.writeByte((byte) (isPostShareAllowed ? 1 : 0));
+        dest.writeByte((byte) (isAuthorizedUser ? 1 : 0));
+        dest.writeByte((byte) (isPublic ? 1 : 0));
         dest.writeByte((byte) (isAdminChangeAllowed ? 1 : 0));
         dest.writeByte((byte) (isAdmin ? 1 : 0));
         dest.writeByte((byte) (isPartyTaskForce ? 1 : 0));

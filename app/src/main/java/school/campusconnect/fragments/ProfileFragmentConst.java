@@ -1,12 +1,10 @@
 package school.campusconnect.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +12,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
+import com.activeandroid.query.From;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,31 +32,29 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.activities.GroupDashboardActivityNew;
-import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ProfileConstituencyActivity;
-import school.campusconnect.activities.SubjectActivity2;
+import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
-import school.campusconnect.datamodel.AddressItem;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
-import school.campusconnect.datamodel.ProfileItem;
-import school.campusconnect.datamodel.ProfileItemUpdate;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.banner.BannerRes;
+import school.campusconnect.datamodel.profile.ProfileItem;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.ProfileValidationError;
-import school.campusconnect.datamodel.classs.ClassResponse;
-import school.campusconnect.datamodel.family.FamilyMemberResponse;
+import school.campusconnect.datamodel.profile.ProfileTBL;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
-import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.DateTimeHelper;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.utils.UploadCircleImageFragment;
-import school.campusconnect.views.SearchIssueFragmentDialog;
 
 public class ProfileFragmentConst extends BaseFragment implements LeafManager.OnCommunicationListener, LeafManager.OnAddUpdateListener<ProfileValidationError> ,SearchCastFragmentDialog.SelectListener,SearchSubCasteDialogFragment.SelectListener{
     private static final String TAG = "ProfileFragmentConst";
@@ -77,8 +67,12 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
    /* @Bind(R.id.etRelationShip)
     public EditText etRelationShip;*/
-    @Bind(R.id.etAddress)
-    public EditText etAddress;
+    @Bind(R.id.etEmail)
+    public EditText etEmail;
+
+    boolean isEdit = false;
+
+    int indexGender,indexBlood;
 
 
     @Bind(R.id.etdob)
@@ -104,10 +98,10 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
 
     @Bind(R.id.etCaste)
-    public Spinner etCaste;
+    public TextView etCaste;
 
     @Bind(R.id.etSubCaste)
-    public Spinner etSubCaste;
+    public TextView etSubCaste;
 
     @Bind(R.id.etReligion)
     public Spinner etReligion;
@@ -118,12 +112,12 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Bind(R.id.btnAdd)
     public Button btnAdd;
 
-    @Bind(R.id.btnSearchCaste)
-    public Button btnSearchCaste;
+   /* @Bind(R.id.btnSearchCaste)
+    public FrameLayout btnSearchCaste;*/
 
 
-    @Bind(R.id.btnSearchSubCaste)
-    public Button btnSearchSubCaste;
+  /*  @Bind(R.id.btnSearchSubCaste)
+    public FrameLayout btnSearchSubCaste;*/
 
 
     @Bind(R.id.progressBar)
@@ -138,13 +132,15 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     ArrayAdapter<String> genderAdapter;
     ArrayAdapter<String> bloodGrpAdapter;
     ArrayAdapter<String> religionAdapter;
-    ArrayAdapter<String> casteAdapter;
-    ArrayAdapter<String> subCasteAdapter;
 
+    ArrayList<String> religionList = new ArrayList<>();
     ArrayList<String> casteList = new ArrayList<>();
     ArrayList<String> subCasteList = new ArrayList<>();
     ArrayList<CasteResponse.CasteData> casteDataList = new ArrayList<>();
 
+    boolean isFirstTimeReligion = true;
+    boolean isFirstTimeCaste = true;
+    boolean isFirstTimeSubCaste = true;
 
     String casteId = null;
 
@@ -157,10 +153,11 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     SearchCastFragmentDialog searchCastFragmentDialog;
     SearchSubCasteDialogFragment searchSubCasteDialogFragment;
 
-    public ProfileItem item;
+    public ProfileItem item = new ProfileItem();
 
     public static String profileImage;
 
+    public boolean isCasteClickable = false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -168,9 +165,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         ButterKnife.bind(this, view);
         init();
 
-        progressBar.setVisibility(View.VISIBLE);
-        LeafManager leafManager = new LeafManager();
-        leafManager.getProfileDetails(this);
 
         return view;
     }
@@ -189,12 +183,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         bloodGrpArray = getResources().getStringArray(R.array.blood_group);
         genderArray = getResources().getStringArray(R.array.gender_array);
 
-        genderAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, genderArray);
-        etGender.setAdapter(genderAdapter);
-
-        bloodGrpAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
-        etBlood.setAdapter(bloodGrpAdapter);
-
         imageFragment = UploadCircleImageFragment.newInstance(null, true, false);
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getChildFragmentManager().executePendingTransactions();
@@ -202,23 +190,94 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callUpdateProfileApi();
+
+                if (!isEdit) {
+                    isEdit = true;
+
+                    etName.setEnabled(true);
+                    etName.setTextColor(getResources().getColor(R.color.white));
+
+                    etPhone.setEnabled(true);
+                    etPhone.setTextColor(getResources().getColor(R.color.white));
+
+                    etVoterId.setEnabled(true);
+                    etVoterId.setTextColor(getResources().getColor(R.color.white));
+
+                    etEmail.setEnabled(true);
+                    etEmail.setTextColor(getResources().getColor(R.color.white));
+
+                    etdob.setEnabled(true);
+                    etdob.setTextColor(getResources().getColor(R.color.white));
+
+                    etEducation.setEnabled(true);
+                    etEducation.setTextColor(getResources().getColor(R.color.white));
+
+                    etProfession.setEnabled(true);
+                    etProfession.setTextColor(getResources().getColor(R.color.white));
+
+                    etCategory.setTextColor(getResources().getColor(R.color.white));
+                    etCaste.setTextColor(getResources().getColor(R.color.white));
+                    etSubCaste.setTextColor(getResources().getColor(R.color.white));
+
+                    /*binding.etCaste.setEnabled(true);
+                    binding.etCaste.setTextColor(getResources().getColor(R.color.white));
+
+                    binding.etSubCaste.setEnabled(true);
+                    binding.etSubCaste.setTextColor(getResources().getColor(R.color.white));
+
+                    binding.etReligion.setEnabled(true);
+                    binding.etReligion.setTextColor(getResources().getColor(R.color.white));*/
+
+                    genderAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, genderArray);
+                    etGender.setAdapter(genderAdapter);
+                    etGender.setEnabled(true);
+
+                    bloodGrpAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
+                    etBlood.setAdapter(bloodGrpAdapter);
+                    etBlood.setEnabled(true);
+
+                    etGender.setSelection(indexGender);
+                    etBlood.setSelection(indexBlood);
+
+                    religionAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, religionList);
+                    etReligion.setAdapter(religionAdapter);
+                    etReligion.setEnabled(true);
+                    etReligion.setSelection(religionAdapter.getPosition(religion));
+
+
+                    btnAdd.setText("Save");
+                    return;
+                }
+                else {
+                    callUpdateProfileApi();
+                }
+
             }
         });
 
-        btnSearchCaste.setOnClickListener(new View.OnClickListener() {
+        etCaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchCastFragmentDialog.show(getFragmentManager(),"");
+
+                if (isCasteClickable)
+                {
+                    searchCastFragmentDialog.show(getFragmentManager(),"");
+                }
             }
         });
 
-        btnSearchSubCaste.setOnClickListener(new View.OnClickListener() {
+        etSubCaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchSubCasteDialogFragment.show(getFragmentManager(),"");
+
+                if (isCasteClickable)
+                {
+                    searchSubCasteDialogFragment.show(getFragmentManager(),"");
+                }
+
             }
         });
+
 
         etdob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,31 +298,18 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                leafManager.getCaste(ProfileFragmentConst.this,etReligion.getSelectedItem().toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        etCaste.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                for (int i=0;i<casteDataList.size();i++)
+                if (position != 0)
                 {
-                    if (etCaste.getSelectedItem().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
-                    {
-                        casteId = casteDataList.get(i).getCasteId();
-                        etCategory.setText(casteDataList.get(i).getCategoryName());
-                    }
+                    isCasteClickable = true;
+                    progressBar.setVisibility(View.VISIBLE);
+                    leafManager.getCaste(ProfileFragmentConst.this,etReligion.getSelectedItem().toString());
                 }
-
-                if (casteId != null)
+                else
                 {
-                    leafManager.getSubCaste(ProfileFragmentConst.this,casteId);
+                    isCasteClickable = false;
+                    etCaste.setText("");
+                    etSubCaste.setText("");
+                    etCategory.setText("");
                 }
 
             }
@@ -273,6 +319,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             }
         });
+
+
 
 
     }
@@ -286,13 +334,13 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             ProfileItemUpdate item = new ProfileItemUpdate();
             item.name = etName.getText().toString();
             item.dob = etdob.getText().toString();
-            item.email = etAddress.getText().toString();
-            item.address = this.item.address;
+            item.email = etEmail.getText().toString();
+           // item.address = this.item.address;
             item.occupation = this.item.occupation;
 
             item.qualification = etEducation.getText().toString();
-            item.caste = etCaste.getSelectedItem().toString();
-            item.subcaste = etSubCaste.getSelectedItem().toString();
+            item.caste = etCaste.getText().toString();
+            item.subcaste = etSubCaste.getText().toString();
             item.religion = etReligion.getSelectedItem().toString();
             item.designation = etProfession.getText().toString();
 
@@ -315,7 +363,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             Log.e(TAG,"profile name "+ etName.getText().toString());
             Log.e(TAG,"profile voterID "+etVoterId.getText().toString());
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, imageFragment.getmProfileImage());
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, item.name);
             LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, item.voterId);
 
@@ -323,33 +371,47 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             if (imageFragment.isImageChanged && TextUtils.isEmpty(imageFragment.getmProfileImage())) {
                 manager.deleteProPic(this);
                 manager.updateProfileDetails(this, item);
-                AppLog.e("Profile Activity", "image deleted " + new Gson().toJson(item));
-            } else {
+                AppLog.e(TAG, "image deleted " + new Gson().toJson(item));
+            }
+            else {
                 if (imageFragment.isImageChanged && !TextUtils.isEmpty(imageFragment.getmProfileImage())) {
-                    AppLog.e("Profile Activity", "Image Changed.." + new Gson().toJson(item));
+                    AppLog.e(TAG, "Image Changed.." + new Gson().toJson(item));
                     item.image = imageFragment.getmProfileImage();
                 }
-                AppLog.e("Profile Activity", "Image Not Changed.." + new Gson().toJson(item));
-                LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
+                AppLog.e(TAG, "Image Not Changed.." + new Gson().toJson(item));
                 manager.updateProfileDetails(this, item);
             }
-
         }
     }
 
     private boolean isValid() {
         boolean valid = true;
         try {
-            if (!isValueValid(etName)) {
+
+            if (!isValueValid(etName))
+            {
                 valid = false;
             }
-            if (!isValueValid(etPhone)) {
-                valid = false;
-            } else if (etPhone.getText().toString().length() > 15) {
-                etPhone.setError(getString(R.string.msg_valid_phone));
-                etPhone.requestFocus();
-                valid = false;
+
+            if (!etPhone.getText().toString().isEmpty()) {
+
+                AppLog.e(TAG,"length "+etPhone.getText().toString().length());
+                if (etPhone.getText().toString().length() < 10) {
+                    etPhone.setError(getString(R.string.msg_valid_phone));
+                    valid = false;
+                }
             }
+
+            if (!etEmail.getText().toString().isEmpty())
+            {
+                if (!isValidEmail(etEmail.getText().toString()))
+                {
+                    etEmail.setError(getString(R.string.msg_valid_email));
+                    etPhone.requestFocus();
+                    valid = false;
+                }
+            }
+
         } catch (NullPointerException e) {
             valid = false;
         }
@@ -361,6 +423,25 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Override
     public void onStart() {
         super.onStart();
+
+        List<ProfileTBL> profileTBLList = ProfileTBL.getProfile();
+
+        if (profileTBLList.size() > 0) {
+            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now)) {
+                AppLog.e(TAG,"Event Api Call");
+                profileApiCall();
+            }
+            else
+            {
+                getDataLocally();
+            }
+
+        }
+        else
+        {
+            getDataLocally();
+        }
+
     }
 
     @Override
@@ -373,22 +454,33 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             ProfileResponse res = (ProfileResponse) response;
             AppLog.e(TAG, "ProfileResponse" + res);
 
-            item = res.data;
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.NAME, res.data.name);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
+            if (res.data != null)
+            {
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, item.image);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, item.name);
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, item.voterId);
+                ProfileTBL.deleteAll();
 
-            LeafPreference.getInstance(getContext()).setString(LeafPreference.EMAIL, res.data.email);
-            AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
-            AppLog.e("PROFILE IMAGE", "image is " + res.data.image);
-            imageFragment.isImageChanged = false;
+                ProfileTBL profileTBL = new ProfileTBL();
 
-            fillDetails(item);
+                profileTBL.profileData = new Gson().toJson(res.data);
+
+                if (!LeafPreference.getInstance(getContext()).getString("PROFILE_API").isEmpty())
+                {
+                    profileTBL._now = LeafPreference.getInstance(getContext()).getString("PROFILE_API");
+                }
+                else
+                {
+                    profileTBL._now = DateTimeHelper.getCurrentTime();
+                }
+
+                profileTBL.save();
+            }
+
+            getDataLocally();
+
+
+
+        //    fillDetails(item);
 
         } else if (LeafManager.API_ID_DELETE_PROPIC == apiId) {
             imageFragment.isImageChanged = false;
@@ -401,12 +493,30 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             AppLog.e(TAG, "ReligionResponse" + res);
 
+            religionList.clear();
+            religionList.add(0,"select religion");
+            religionList.addAll(res.getReligionData().get(0).getReligionList());
+
 
             if (res.getReligionData().size() > 0)
             {
-                religionAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem, res.getReligionData().get(0).getReligionList());
+                religionAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner_disable, R.id.tvItem, religionList);
                 etReligion.setAdapter(religionAdapter);
-                etReligion.setSelection(religionAdapter.getPosition(religion));
+            }
+            if (isFirstTimeReligion)
+            {
+                isFirstTimeReligion = false;
+                etReligion.setEnabled(false);
+
+                if (religion != null)
+                {
+                    etReligion.setSelection(religionAdapter.getPosition(religion));
+                }
+                else
+                {
+                    etReligion.setSelection(religionAdapter.getPosition("select religion"));
+                }
+
             }
 
         }
@@ -417,11 +527,11 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             AppLog.e(TAG, "CasteResponse" + res);
 
+           /* casteDataList.clear();
+            casteDataList.addAll(res.getCasteData());*/
+
             casteDataList.clear();
             casteDataList.addAll(res.getCasteData());
-
-            searchCastFragmentDialog.setData(res.getCasteData());
-
             casteList.clear();
 
             for (int i=0;i<res.getCasteData().size();i++)
@@ -431,12 +541,55 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             if (casteList.size() > 0)
             {
-                casteAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem,casteList);
-                etCaste.setAdapter(casteAdapter);
-                etCaste.setSelection(casteAdapter.getPosition(caste));
+                if (isFirstTimeCaste)
+                {
+                    etCaste.setTextColor(getResources().getColor(R.color.grey));
+
+                    if (caste != null)
+                    {
+                        etCaste.setText(caste);
+                    }
+                    else
+                    {
+                        etCaste.setText(res.getCasteData().get(0).getCasteName());
+                    }
+                    for (int i=0;i<casteDataList.size();i++)
+                    {
+                        if (etCaste.getText().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
+                        {
+                            casteId = casteDataList.get(i).getCasteId();
+                            etCategory.setText(casteDataList.get(i).getCategoryName());
+                        }
+                    }
+
+                    if (isEdit)
+                    {
+                        isFirstTimeCaste = false;
+                        etCaste.setTextColor(getResources().getColor(R.color.white));
+                        etCaste.setEnabled(true);
+                    }
+                    else {
+                        etCaste.setTextColor(getResources().getColor(R.color.grey));
+                        etCaste.setEnabled(false);
+                    }
+                }
+                else
+                {
+                    casteId = res.getCasteData().get(0).getCasteId();
+                    etCaste.setText(res.getCasteData().get(0).getCasteName());
+                    etCategory.setText(res.getCasteData().get(0).getCategoryName());
+                }
+
+                searchCastFragmentDialog.setData(res.getCasteData());
 
             }
-            etCaste.setEnabled(false);
+
+            if (casteId != null)
+            {
+                progressBar.setVisibility(View.VISIBLE);
+                leafManager.getSubCaste(this,casteId);
+            }
+
         }
 
         else if (LeafManager.API_SUB_CASTE_GET == apiId)
@@ -449,22 +602,47 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             subCasteList.clear();
 
-            searchSubCasteDialogFragment.setData(res.getSubCasteData());
-
             for (int i=0;i<res.getSubCasteData().size();i++)
             {
                 subCasteList.add(res.getSubCasteData().get(i).getSubCasteName());
             }
 
+
             if (subCasteList.size() > 0)
             {
-                subCasteAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, R.id.tvItem,subCasteList);
-                etSubCaste.setAdapter(subCasteAdapter);
-                etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));
+
+                if (isFirstTimeSubCaste)
+                {
+                    etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+
+                    if (subcaste != null)
+                    {
+                       etSubCaste.setText(subcaste);
+                    }
+                    else
+                    {
+                        etSubCaste.setText(res.getSubCasteData().get(0).getSubCasteName());
+                    }
+
+
+                    if (isEdit)
+                    {
+                        isFirstTimeSubCaste = false;
+                        etSubCaste.setTextColor(getResources().getColor(R.color.white));
+                        etSubCaste.setEnabled(true);
+                    }
+                    else {
+                        etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+                        etSubCaste.setEnabled(false);
+                    }
+                }
+                else
+                {
+                    etSubCaste.setText(res.getSubCasteData().get(0).getSubCasteName());
+                }
+
+                searchSubCasteDialogFragment.setData(res.getSubCasteData());
             }
-
-            etSubCaste.setEnabled(false);
-
         }
         else
             {
@@ -475,33 +653,103 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         }
     }
 
-    @Override
-    public void onFailure(int apiId, ErrorResponseModel<ProfileValidationError> error) {
+    private void getDataLocally() {
+
+
+        List<ProfileTBL> profileTBLList = ProfileTBL.getProfile();
+
+        if (profileTBLList != null && profileTBLList.size()>0)
+        {
+            ProfileResponse profileResponse = new ProfileResponse();
+            profileResponse.data = new Gson().fromJson(profileTBLList.get(0).profileData,new TypeToken<ProfileItem>() {}.getType());
+
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.NAME, profileResponse.data.name);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_COMPLETE, profileResponse.data.profileCompletion);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE, profileResponse.data.image);
+
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, profileResponse.data.image);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_NAME, profileResponse.data.name);
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.PROFILE_VOTERID, profileResponse.data.voterId);
+
+            LeafPreference.getInstance(getContext()).setString(LeafPreference.EMAIL, profileResponse.data.email);
+            imageFragment.isImageChanged = false;
+
+            item = profileResponse.data;
+            fillDetails(profileResponse.data);
+        }
+        else
+        {
+            profileApiCall();
+        }
 
     }
 
+    public void profileApiCall()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getProfileDetails(this);
+    }
+
+    @Override
+    public void onFailure(int apiId, ErrorResponseModel<ProfileValidationError> error) {
+        Log.e(TAG,"onFailure"+ error.message);
+    }
 
     private void fillDetails(ProfileItem item) {
-        etName.setText(item.name);
-  //      etRelationShip.setText(item.relationship);
-        etAddress.setText(item.email);
-        etPhone.setText(item.phone);
+
+        //      etRelationShip.setText(item.relationship);
+
+        //    etRelationShip.setEnabled(false);
+
+        //etSubCaste.setText(item.subcaste);
+        genderAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner_disable, R.id.tvItem, genderArray);
+        etGender.setAdapter(genderAdapter);
+        etGender.setEnabled(false);
+
+        bloodGrpAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner_disable, R.id.tvItem, bloodGrpArray);
+        etBlood.setAdapter(bloodGrpAdapter);
+        etBlood.setEnabled(false);
+
+        etName.setEnabled(false);
+        etName.setTextColor(getResources().getColor(R.color.grey));
+
+        etPhone.setEnabled(false);
+        etPhone.setTextColor(getResources().getColor(R.color.grey));
+
+        etVoterId.setEnabled(false);
+        etVoterId.setTextColor(getResources().getColor(R.color.grey));
+
+        etEmail.setEnabled(false);
+        etEmail.setTextColor(getResources().getColor(R.color.grey));
+
+        etdob.setEnabled(false);
+        etdob.setTextColor(getResources().getColor(R.color.grey));
+
+        etEducation.setEnabled(false);
+        etEducation.setTextColor(getResources().getColor(R.color.grey));
+
+        etProfession.setEnabled(false);
+        etProfession.setTextColor(getResources().getColor(R.color.grey));
+
+        etCategory.setTextColor(getResources().getColor(R.color.grey));
 
         religion = item.religion;
         caste = item.caste;
         subcaste = item.subcaste;
+        profileImage = item.image;
 
+        etName.setText(item.name);
+        etEmail.setText(item.email);
+        etPhone.setText(item.phone);
         etEducation.setText(item.qualification);
-
         etProfession.setText(item.designation);
         etVoterId.setText(item.voterId);
-        
         etPhone.setEnabled(false);
-
         etdob.setText(item.dob);
-    //    etRelationShip.setEnabled(false);
 
-        //etSubCaste.setText(item.subcaste);
+
+
 
         int index = 0;
         for (int i = 0; i < genderArray.length; i++) {
@@ -509,17 +757,19 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                 index = i;
             }
         }
+        indexGender = index;
         etGender.setSelection(index);
 
-        index = 0;
+        int index1 = 0;
         for (int i = 0; i < bloodGrpArray.length; i++) {
             if ((item.bloodGroup + "").equals(bloodGrpArray[i])) {
-                index = i;
+                index1 = i;
             }
         }
-        etBlood.setSelection(index);
+        indexBlood = index1;
+        etBlood.setSelection(index1);
 
-        profileImage = item.image;
+
 
         if (getActivity() != null)
             ((ProfileConstituencyActivity) getActivity()).setTitle(item.name);
@@ -527,27 +777,24 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         if (item.image != null && !item.image.isEmpty() && Constants.decodeUrlToBase64(item.image).contains("http")) {
             imageFragment.updatePhotoFromUrl(item.image);
         } else if (item.image == null) {
-            Log.e("ProfileActivity", "image is Null From API ");
+            Log.e("ProfileActivity", "image is Null From API "+item.name);
             imageFragment.setInitialLatterImage(item.name);
         }
 
-        Log.e(TAG,"profile image "+imageFragment.getmProfileImage());
-        Log.e(TAG,"profile name "+ etName.getText().toString());
-        Log.e(TAG,"profile voterID "+etVoterId.getText().toString());
-
         progressBar.setVisibility(View.VISIBLE);
-
         leafManager.getReligion(this);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+        Log.e(TAG,"onException"+ msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+        Log.e(TAG,"onException"+ msg);
     }
 
     @Override
@@ -560,14 +807,22 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Override
     public void onSelected(CasteResponse.CasteData casteData) {
 
-        etCaste.setSelection(casteAdapter.getPosition(casteData.getCasteName()));
+        etCaste.setText(casteData.getCasteName());
         etCategory.setText(casteData.getCategoryName());
+
+        casteId = casteData.getCasteId();
+
+        if (casteId != null)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            leafManager.getSubCaste(ProfileFragmentConst.this,casteId);
+        }
     }
 
     @Override
     public void onSelected(SubCasteResponse.SubCasteData casteData) {
 
-        etSubCaste.setSelection(subCasteAdapter.getPosition(casteData.getSubCasteName()));
+        etSubCaste.setText(casteData.getSubCasteName());
 
     }
 }

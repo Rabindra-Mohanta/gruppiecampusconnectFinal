@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,26 +18,23 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.gson.Gson;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.activities.BoothCoordinateActivity;
 import school.campusconnect.activities.BoothStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.LeadsListActivity;
 import school.campusconnect.databinding.FragmentCommitteeListBinding;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.committee.CommitteeTBL;
 import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
-import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
 
@@ -47,8 +43,12 @@ public static String TAG = "CommitteeListFragment";
 FragmentCommitteeListBinding binding;
 private String TeamID;
 private String TeamName;
+private String boothClick;
 private MyTeamData classData;
 private LeafManager leafManager;
+CommitteeAdapter adapter;
+ArrayList<committeeResponse.committeeData> committeeDataList = new ArrayList<>();
+
     public static CommitteeListFragment newInstance() {
         CommitteeListFragment fragment = new CommitteeListFragment();
         Bundle args = new Bundle();
@@ -73,26 +73,86 @@ private LeafManager leafManager;
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         inits();
+
+        getdataLocally();
+
     }
+
+
 
     private void inits() {
 
         leafManager = new LeafManager();
 
+        adapter = new CommitteeAdapter();
+        binding.rvCommitte.setAdapter(adapter);
+
         if (getArguments() != null) {
             classData = new Gson().fromJson(getArguments().getString("class_data"), MyTeamData.class);
             AppLog.e(TAG, "classData : " + classData);
             TeamID = classData.teamId;
+            boothClick = getArguments().getString("isBoothClick");
             TeamName = getArguments().getString("title");
         }
 
+        if (boothClick.equalsIgnoreCase("yes"))
+        {
+            binding.allCommittee.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            binding.allCommittee.setVisibility(View.GONE);
+        }
+
+
+        binding.allCommittee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LeadsListActivity.class);
+                intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                intent.putExtra("team_id", classData.teamId);
+                intent.putExtra("team_name", classData.name);
+                intent.putExtra("class_data",new Gson().toJson(classData));
+                intent.putExtra("all",true);
+                intent.putExtra("isAdmin", classData.isTeamAdmin);
+                startActivity(intent);
+            }
+        });
 
     }
     @Override
     public void onStart() {
         super.onStart();
-        getCommittee();
+
     }
+
+    private void getdataLocally() {
+
+        List<CommitteeTBL> memberTBLS = CommitteeTBL.getMember(GroupDashboardActivityNew.groupId,TeamID);
+
+        committeeDataList.clear();
+
+        if (memberTBLS.size() > 0)
+        {
+            for (int i= 0;i<memberTBLS.size();i++)
+            {
+                committeeResponse.committeeData data = new committeeResponse.committeeData();
+
+                data.committeeId = memberTBLS.get(i).committeeId;
+                data.committeeName = memberTBLS.get(i).committeeName;
+                data.defaultCommittee = memberTBLS.get(i).defaultCommittee;
+
+                committeeDataList.add(data);
+            }
+            adapter.add(committeeDataList);
+        }
+        else
+        {
+            getCommittee();
+        }
+    }
+
+
 
     private void getCommittee() {
         binding.progressBar.setVisibility(View.VISIBLE);
@@ -105,17 +165,37 @@ private LeafManager leafManager;
 
         switch (apiId)
         {
-
             case LeafManager.LIST_COMMITTEE:
                 committeeResponse res = (committeeResponse) response;
                 AppLog.e(TAG, "ClassResponse " + new Gson().toJson(res));
-                binding.rvCommitte.setAdapter(new CommitteeAdapter(res.getCommitteeData()));
+                saveToLocal(res.getCommitteeData());
                 break;
 
             case LeafManager.REMOVE_COMMITTEE:
-                getCommittee();
+                CommitteeTBL.deleteMember(GroupDashboardActivityNew.groupId,TeamID);
+                getdataLocally();
                 break;
         }
+    }
+
+    private void saveToLocal(ArrayList<committeeResponse.committeeData> committeeData) {
+
+        CommitteeTBL.deleteMember(GroupDashboardActivityNew.groupId,TeamID);
+
+        if (committeeData.size() > 0)
+        {
+            for (int i = 0; i< committeeData.size();i++)
+            {
+                CommitteeTBL committeeTBL = new CommitteeTBL();
+                committeeTBL.committeeId = committeeData.get(i).getCommitteeId();
+                committeeTBL.committeeName = committeeData.get(i).getCommitteeName();
+                committeeTBL.defaultCommittee = committeeData.get(i).getDefaultCommittee();
+                committeeTBL.groupId = GroupDashboardActivityNew.groupId;
+                committeeTBL.teamId = TeamID;
+                committeeTBL.save();
+            }
+        }
+        adapter.add(committeeData);
     }
 
     @Override
@@ -133,8 +213,9 @@ private LeafManager leafManager;
         List<committeeResponse.committeeData> list;
         private Context mContext;
 
-        public CommitteeAdapter(List<committeeResponse.committeeData> list) {
+        public void add(List<committeeResponse.committeeData> list) {
             this.list = list;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -223,28 +304,31 @@ private LeafManager leafManager;
     private void onTreeClick(committeeResponse.committeeData committeeData) {
 
 
-      /*  if (TeamName.equalsIgnoreCase("Booth Presidents"))
+    /*    if (boothClick != null && boothClick.equalsIgnoreCase("yes"))
         {
-
+            Intent intent = new Intent(getActivity(), LeadsListActivity.class);
+            intent.putExtra("id", GroupDashboardActivityNew.groupId);
+            intent.putExtra("team_id", classData.teamId);
+            intent.putExtra("team_name", classData.name);
+            intent.putExtra("boothClick", "yes");
+            intent.putExtra("committee_id",committeeData.getCommitteeId());
+            intent.putExtra("isAdmin", classData.isTeamAdmin);
+            startActivity(intent);
         }
         else
         {
-
+            Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
+            intent.putExtra("class_data",new Gson().toJson(classData));
+            intent.putExtra("committee_data",new Gson().toJson(committeeData));
+            intent.putExtra("title",committeeData.getCommitteeName());
+            startActivity(intent);
         }*/
+
         Intent intent = new Intent(getActivity(), BoothStudentActivity.class);
         intent.putExtra("class_data",new Gson().toJson(classData));
         intent.putExtra("committee_data",new Gson().toJson(committeeData));
         intent.putExtra("title",committeeData.getCommitteeName());
         startActivity(intent);
-
-
-      /*  Intent intent = new Intent(getContext(), AddCommiteeActivity.class);
-        intent.putExtra("screen","update");
-        intent.putExtra("team_id",TeamID);
-        intent.putExtra("committee_id",committeeData.getCommitteeId());
-        intent.putExtra("committee_name",committeeData.getCommitteeName());
-        startActivity(intent);*/
-
     }
     private void onDeleteClick(committeeResponse.committeeData committeeData) {
         binding.progressBar.setVisibility(View.VISIBLE);

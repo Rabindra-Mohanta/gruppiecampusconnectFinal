@@ -55,8 +55,6 @@ public class CropDialogActivity extends AppCompatActivity {
 
         }
 
-
-
         Glide.with(this).load(uri).into(binding.img);
 
         binding.btnCrop.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +74,17 @@ public class CropDialogActivity extends AppCompatActivity {
                             .start(CropDialogActivity.this);
                 }
 
+            }
+        });
+
+        binding.btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent();
+                i.putExtra("Data",String.valueOf(uri));
+                setResult(RESULT_OK,i);
+                finish();
             }
         });
 

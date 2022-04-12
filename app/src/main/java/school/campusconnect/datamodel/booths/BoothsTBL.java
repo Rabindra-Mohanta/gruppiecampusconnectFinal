@@ -99,7 +99,7 @@ public class BoothsTBL extends Model {
     public String TeamDetails;
 
     @Column(name = "_now")
-    public long _now;
+    public String _now;
 
     public static List<BoothsTBL> getAll() {
         return new Select().from(BoothsTBL.class).execute();
@@ -108,7 +108,9 @@ public class BoothsTBL extends Model {
     public static List<BoothsTBL> getBoothList(String group_id) {
         return new Select().from(BoothsTBL.class).where("groupId = ?", group_id).execute();
     }
-
+    public static List<BoothsTBL> getLastBoothList(String group_id) {
+        return new Select().from(BoothsTBL.class).orderBy("(groupId) DESC").limit(1).execute();
+    }
     public static void deleteBooth(String group_id) {
         new Delete().from(BoothsTBL.class).where("groupId = ?", group_id).execute();
     }
