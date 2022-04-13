@@ -59,6 +59,12 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
             holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this,8));
         }
 
+        if(data.getFeaturedIconData()!=null && data.getFeaturedIconData().size()>8){
+            holder.binding.imgExpandFeedBefore.setVisibility(View.VISIBLE);
+        }else {
+            holder.binding.imgExpandFeedBefore.setVisibility(View.GONE);
+        }
+
 
         holder.binding.imgExpandFeedBefore.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
@@ -75,6 +76,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     public ProgressBar progressBar;
     @Bind(R.id.etSearch)
     public EditText etSearch;
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout swipeRefreshLayout;
     private ArrayList<MyTeamData> result = new ArrayList<>();
 
     private ClassesAdapter adapter;
@@ -156,6 +159,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
     private void init() {
 
+        swipeRefreshLayout.setEnabled(false);
         adapter = new ClassesAdapter();
         rvClass.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         rvClass.setAdapter(adapter);
@@ -229,7 +233,10 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
         }
         etSearch.setText("");
-
+        if(LeafPreference.getInstance(getActivity()).getBoolean("booth_add")){
+            LeafPreference.getInstance(getActivity()).setBoolean("booth_add", false);
+            boothListApiCall();
+        }
     }
 
 
