@@ -708,6 +708,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
         <item>Select Gender</item>
         <item>Male</item>
         <item>Female</item>
+        <item>Other</item>
     </string-array>
 
     <string-array name="lastSubTime">

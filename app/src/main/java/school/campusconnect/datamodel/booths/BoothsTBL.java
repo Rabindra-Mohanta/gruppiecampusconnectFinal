@@ -8,6 +8,8 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
+import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
 
 @Table(name = "BoothsTBL")
@@ -113,6 +115,14 @@ public class BoothsTBL extends Model {
     }
     public static void deleteBooth(String group_id) {
         new Delete().from(BoothsTBL.class).where("groupId = ?", group_id).execute();
+    }
+
+    public static BoothsTBL getBoothSingle(String boothId) {
+        List<BoothsTBL> list = new Select().from(BoothsTBL.class).where("boothId = ?", boothId).execute();
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 
     public static void deleteAll() {

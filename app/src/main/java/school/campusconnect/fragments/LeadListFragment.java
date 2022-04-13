@@ -80,6 +80,10 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     private LinearLayoutManager layoutManager;
     private List<LeadItem> list;
 
+    private int teamMemberCount = 0;
+
+
+
     public LeadListFragment() {
 
     }
@@ -140,6 +144,10 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         groupId = getArguments().getString("id");
         teamId = getArguments().getString("team_id");
+        if(getArguments().containsKey("team_count"))
+        teamMemberCount = getArguments().getInt("team_count");
+        else
+            teamMemberCount = -1;
 
         itemClick = getArguments().getBoolean("item_click", false);
         isAdmin = getArguments().getBoolean("isAdmin", false);
@@ -147,6 +155,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         boolean isNest = getArguments().getBoolean("isNest", false);
         AppLog.e(TAG, "isAdmin is " + isAdmin);
         AppLog.e(TAG, "item_click is " + itemClick);
+        AppLog.e(TAG, "teamMemberCount is " + teamMemberCount);
 
 
         if (!LeafPreference.getInstance(getContext()).getString("leadTotalPage_"+groupId+"_"+teamId).isEmpty())
@@ -328,6 +337,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         if (results.size() > 0)
         {
+            list = new ArrayList<>();
             for (int i = 0 ;i <results.size();i++)
             {
                 LeadDataTBL leadDataTBL = new LeadDataTBL();
@@ -352,6 +362,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 leadDataTBL.save();
 
             }
+            list.addAll(results);
         }
 
         mAdapter.addItems(results);
@@ -365,9 +376,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         mAdapter.clear();
 
-        if (leadDataTBL.size() > 0)
+        if (leadDataTBL.size() > 0 &&  ( leadDataTBL.size() == teamMemberCount  || teamMemberCount == -1))
         {
-            ArrayList<LeadItem> items = new ArrayList<>();
+            list = new ArrayList<>();
 
             for (int i = 0;i<leadDataTBL.size();i++)
             {
@@ -386,10 +397,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 leadItem.allowedToAddTeamPost = leadDataTBL.get(i).allowedToAddTeamPost;
                 leadItem.aadharNumber = leadDataTBL.get(i).aadharNumber;
 
-                items.add(leadItem);
-
+                list.add(leadItem);
             }
-            mAdapter.addItems(items);
+            mAdapter.addItems(list);
             mBinding.setSize(mAdapter.getItemCount());
             mAdapter.notifyDataSetChanged();
         }

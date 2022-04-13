@@ -27,6 +27,7 @@ public class LeafPreference {
     public static final String SCHOOL_LIST = "SCHOOL_LIST";
     public static final String GROUP_ID_LIST = "GROUP_ID_LIST";
     public static final String ROLE = "ROLE";
+    public static final String ADD_COMMITTEE = "ADD_COMMITTEE";
 
     public static final String SECRET_KEY = "SECRET_KEY";
     public static final String ACCESS_KEY = "ACCESS_KEY";

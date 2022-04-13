@@ -18,6 +18,7 @@ import school.campusconnect.R;
 import school.campusconnect.databinding.ItemTeamListV2Binding;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
+import school.campusconnect.utils.AppLog;
 
 public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNewV2.ViewHolder> implements TeamItemV2Adapter.OnTeamClickListener {
     public static String TAG = "TeamListAdapterNewV2";
@@ -58,6 +59,8 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
         {
             holder.binding.rvActivityName.setAdapter(new TeamItemV2Adapter(data.getFeaturedIconData(),this,8));
         }
+
+        AppLog.e(TAG , "onBind , title :"+data.getActivity()+" featuredicon size : "+data.getFeaturedIconData().size());
 
         if(data.getFeaturedIconData()!=null && data.getFeaturedIconData().size()>8){
             holder.binding.imgExpandFeedBefore.setVisibility(View.VISIBLE);

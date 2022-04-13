@@ -453,7 +453,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
         Intent intent = new Intent(getActivity(), CommitteeActivity.class);
         intent.putExtra("class_data",new Gson().toJson(classData));
         intent.putExtra("title",classData.name);
-        intent.putExtra("isBoothClick","no");
+        intent.putExtra("isBoothClick","yes");
         startActivity(intent);
       /*  if("MEMBER".equalsIgnoreCase(type)){
 

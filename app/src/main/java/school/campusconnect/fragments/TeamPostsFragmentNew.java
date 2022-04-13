@@ -914,6 +914,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         Intent intent = new Intent(getActivity(), CommitteeActivity.class);
                         intent.putExtra("class_data",new Gson().toJson(teamData));
                         intent.putExtra("title",teamData.name);
+                        intent.putExtra("team_count", teamData.members);
                         intent.putExtra("isBoothClick","yes");
                         startActivity(intent);
                     }
@@ -928,6 +929,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                             Intent intent = new Intent(getActivity(), CommitteeActivity.class);
                             intent.putExtra("class_data",new Gson().toJson(teamData));
                             intent.putExtra("title",teamData.name);
+                            intent.putExtra("team_count", teamData.members);
                             intent.putExtra("isBoothClick","yes");
                             startActivity(intent);
                         }
@@ -937,6 +939,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                                 intent.putExtra("id", mGroupId);
                                 intent.putExtra("team_id", team_id);
                                 intent.putExtra("team_name", teamName);
+                                intent.putExtra("team_count", teamData.members);
                                 intent.putExtra("isAdmin", teamData.isTeamAdmin);
                                 startActivity(intent);
                                 AppLog.e("Team id : ", team_id + "");

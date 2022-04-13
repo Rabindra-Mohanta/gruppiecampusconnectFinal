@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import school.campusconnect.BuildConfig;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -53,6 +55,9 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
 
     @Bind(R.id.group_name)
     public EditText edtName;
+
+    @Bind(R.id.tv_aboutgroup)
+    public TextView aboutGroup;
 
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
@@ -121,6 +126,17 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
 
             }
         });
+
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            aboutGroup.setText(getResources().getString(R.string.lbl_about_constituency));
+        }
+        else
+        {
+
+            aboutGroup.setText(getResources().getString(R.string.lbl_about_group));
+        }
     }
 
     @Override

@@ -179,20 +179,6 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     LinearLayoutManager linearLayoutManager;
 
-
-
-
-   /* final int duration = 5;
-    final int pixelsToMove = 100;
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private final Runnable SCROLLING_RUNNABLE = new Runnable() {
-
-        @Override
-        public void run() {
-            mHandler.postDelayed(this, duration);
-        }
-    };
-*/
     public static BaseTeamFragmentv3 newInstance() {
         BaseTeamFragmentv3 fragment = new BaseTeamFragmentv3();
         Bundle args = new Bundle();
@@ -628,31 +614,41 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                         baseTeamTable.update_team = DateTimeHelper.getCurrentTime();
                     }
 
-                    try {
-                        if (!data.getFeaturedIconData().get(i).name.equalsIgnoreCase("My Team")) {
-                            if (databaseHandler.getCount() != 0) {
-                                try {
-                                    String name = databaseHandler.getNameFromNum(data.getFeaturedIconData().get(i).phone.replaceAll(" ", ""));
-                                    if (!TextUtils.isEmpty(name)) {
-                                        data.getFeaturedIconData().get(i).name = name + " Team";
+                    for(int j = 0 ; j < data.getFeaturedIconData().size(); j++)
+                    {
+                        try {
+                            if (!data.getFeaturedIconData().get(j).name.equalsIgnoreCase("My Team")) {
+                                if (databaseHandler.getCount() != 0) {
+                                    try {
+                                        String name = databaseHandler.getNameFromNum(data.getFeaturedIconData().get(j).phone.replaceAll(" ", ""));
+                                        if (!TextUtils.isEmpty(name)) {
+                                            data.getFeaturedIconData().get(j).name = name + " Team";
+                                        }
+                                    } catch (NullPointerException e) {
                                     }
-                                } catch (NullPointerException e) {
                                 }
                             }
+                        } catch (NullPointerException e) {
+                            AppLog.e("CONTACTS", "error is " + e.toString());
                         }
-                    } catch (NullPointerException e) {
-                        AppLog.e("CONTACTS", "error is " + e.toString());
+
                     }
 
                     baseTeamTable.save();
 
-                    if (!TextUtils.isEmpty(data.getFeaturedIconData().get(i).groupId)) {
-                        String topics = data.getFeaturedIconData().get(i).groupId + "_" + data.getFeaturedIconData().get(i).teamId;
-                        currentTopics.add(topics);
+                    for(int j =0; j < data.getFeaturedIconData().size();j++)
+                    {
+                        if (!TextUtils.isEmpty(data.getFeaturedIconData().get(j).groupId) && !TextUtils.isEmpty(data.getFeaturedIconData().get(j).teamId))
+                        {
+                            String topics = data.getFeaturedIconData().get(j).groupId + "_" + data.getFeaturedIconData().get(j).teamId;
+                            currentTopics.add(topics);
+                        }
                     }
 
 
                 }
+
+
                 teamList.addAll(result);
                 mAdapter.notifyDataSetChanged();
 
@@ -790,6 +786,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 }
                 adminNotificationList.addAll(res1Data);
                 feedAdminAdapter.add(adminNotificationList);
+
+
+                binding.imgExpandAdminFeedBefore.setVisibility(View.GONE);
+
+
 
 
                 break;
@@ -1029,9 +1030,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 }
                 feedAdminAdapter.add(adminNotificationList);
                 if(adminNotificationList.size()>8){
-                    binding.imgExpandFeedBefore.setVisibility(View.VISIBLE);
+                    binding.imgExpandAdminFeedBefore.setVisibility(View.VISIBLE);
                 }else {
-                    binding.imgExpandFeedBefore.setVisibility(View.GONE);
+                    binding.imgExpandAdminFeedBefore.setVisibility(View.GONE);
                 }
 
             }

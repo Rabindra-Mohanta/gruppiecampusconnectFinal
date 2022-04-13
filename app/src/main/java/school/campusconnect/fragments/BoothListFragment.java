@@ -86,6 +86,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        AppLog.e(TAG ,"FLOW_onCreateView");
         View view = inflater.inflate(R.layout.fragment_team_discuss_search,container,false);
         ButterKnife.bind(this,view);
 
@@ -97,7 +99,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     }
 
     private void getDataLocally() {
-
+        AppLog.e(TAG ,"FLOW_getDataLocally");
         List<BoothsTBL> boothListTBl = BoothsTBL.getBoothList(GroupDashboardActivityNew.groupId);
 
         result.clear();
@@ -158,7 +160,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
 
     private void init() {
-
+        AppLog.e(TAG ,"FLOW_init");
         swipeRefreshLayout.setEnabled(false);
         adapter = new ClassesAdapter();
         rvClass.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -228,6 +230,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     @Override
     public void onStart() {
         super.onStart();
+
+        AppLog.e(TAG ,"FLOW_onStart");
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
@@ -241,7 +245,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
 
     private void boothListApiCall() {
-
+        AppLog.e(TAG ,"FLOW_boothListApiCall");
         if (!isConnectionAvailable()) {
             return;
         }

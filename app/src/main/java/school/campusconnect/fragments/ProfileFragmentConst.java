@@ -96,7 +96,6 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Bind(R.id.etCategory)
     public EditText etCategory;
 
-
     @Bind(R.id.etCaste)
     public TextView etCaste;
 
@@ -187,6 +186,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getChildFragmentManager().executePendingTransactions();
 
+        imageFragment.setEditEnabled(false);
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,8 +198,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     etName.setEnabled(true);
                     etName.setTextColor(getResources().getColor(R.color.white));
 
-                    etPhone.setEnabled(true);
-                    etPhone.setTextColor(getResources().getColor(R.color.white));
+                   /* etPhone.setEnabled(true);
+                    etPhone.setTextColor(getResources().getColor(R.color.white));*/
 
                     etVoterId.setEnabled(true);
                     etVoterId.setTextColor(getResources().getColor(R.color.white));
@@ -243,6 +244,12 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     etReligion.setAdapter(religionAdapter);
                     etReligion.setEnabled(true);
                     etReligion.setSelection(religionAdapter.getPosition(religion));
+
+
+                    if(imageFragment !=null)
+                    {
+                        imageFragment.setEditEnabled(true);
+                    }
 
 
                     btnAdd.setText("Save");
@@ -424,10 +431,14 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     public void onStart() {
         super.onStart();
 
+        AppLog.e(TAG , "FLOW_onStart");
+
         List<ProfileTBL> profileTBLList = ProfileTBL.getProfile();
 
-        if (profileTBLList.size() > 0) {
-            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now)) {
+        if (profileTBLList.size() > 0)
+        {
+            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("PROFILE_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", profileTBLList.get(0)._now))
+            {
                 AppLog.e(TAG,"Event Api Call");
                 profileApiCall();
             }
@@ -774,25 +785,32 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         if (getActivity() != null)
             ((ProfileConstituencyActivity) getActivity()).setTitle(item.name);
 
-        if (item.image != null && !item.image.isEmpty() && Constants.decodeUrlToBase64(item.image).contains("http")) {
+        if (item.image != null && !item.image.isEmpty() && Constants.decodeUrlToBase64(item.image).contains("http"))
+        {
             imageFragment.updatePhotoFromUrl(item.image);
-        } else if (item.image == null) {
+        }
+        else if (item.image == null)
+        {
             Log.e("ProfileActivity", "image is Null From API "+item.name);
             imageFragment.setInitialLatterImage(item.name);
         }
+
+        imageFragment.setEditEnabled(isEdit);
 
         progressBar.setVisibility(View.VISIBLE);
         leafManager.getReligion(this);
     }
 
     @Override
-    public void onFailure(int apiId, String msg) {
+    public void onFailure(int apiId, String msg)
+    {
         progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onException"+ msg);
     }
 
     @Override
-    public void onException(int apiId, String msg) {
+    public void onException(int apiId, String msg)
+    {
         progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onException"+ msg);
     }

@@ -53,6 +53,7 @@ import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.UpdateMemberActivity;
 import school.campusconnect.activities.VoterProfileActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
@@ -69,7 +70,7 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
 public class BoothStudentListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "BoothStudentListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -153,6 +154,11 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
     public void onStart() {
         super.onStart();
         etSearch.setText("");
+
+        if(LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ADD_FRIEND)){
+            LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ADD_FRIEND, false);
+            getData();
+        }
 
     }
 

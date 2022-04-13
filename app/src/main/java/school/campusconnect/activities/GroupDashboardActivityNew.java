@@ -533,6 +533,15 @@ public class GroupDashboardActivityNew extends BaseActivity
                         boothPostEventTBL.lastBoothPostAt = res.data.get(0).allBoothsPostEventAt.get(i).lastBoothPostAt;
 
                         boothPostEventTBL.save();
+
+                        BoothsTBL boothsTBL = BoothsTBL.getBoothSingle(res.data.get(0).allBoothsPostEventAt.get(i).boothId);
+                        if(boothsTBL !=null)
+                        {
+                            boothsTBL.members = res.data.get(0).allBoothsPostEventAt.get(i).members;
+                            boothsTBL.save();
+                        }
+
+
                     }
                 }
 
@@ -1198,7 +1207,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin,R.id.llMyTeam,R.id.iv_toolbar_icon})
+    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin,R.id.llMyTeam,R.id.iv_toolbar_icon,R.id.iv_toolbar_default})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -1218,6 +1227,16 @@ public class GroupDashboardActivityNew extends BaseActivity
 
 
             case R.id.iv_toolbar_icon:
+                if (isConnectionAvailable()) {
+                    Intent intent;
+                    intent = new Intent(this, ProfileConstituencyActivity.class);
+                    startActivity(intent);
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+
+            case R.id.iv_toolbar_default:
                 if (isConnectionAvailable()) {
                     Intent intent;
                     intent = new Intent(this, ProfileConstituencyActivity.class);

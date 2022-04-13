@@ -70,7 +70,6 @@ public class BoothStudentActivity extends BaseActivity {
             Log.e(TAG,"committee Data: "+new Gson().toJson(committeeData));
             mGroupId = GroupDashboardActivityNew.groupId;
             teamId = classData.teamId;
-
         }
 
     }

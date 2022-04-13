@@ -55,6 +55,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
     LeadListFragment fragment;
     String groupId = "";
     String teamId = "";
+    int teamMemberCount=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         if (getIntent() != null) {
             groupId = getIntent().getExtras().getString("id");
             teamId = getIntent().getExtras().getString("team_id");
+            teamMemberCount = getIntent().getExtras().getInt("team_count");
             classData = new Gson().fromJson(getIntent().getStringExtra("class_data"), MyTeamData.class);
             AppLog.e(TAG, "groupId is " + groupId);
             AppLog.e(TAG, "teamId is " + teamId);

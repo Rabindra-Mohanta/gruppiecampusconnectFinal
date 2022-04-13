@@ -13,6 +13,7 @@ import android.view.View;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityAddCommiteeBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -110,6 +111,7 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
         switch (apiId)
         {
             case LeafManager.ADD_COMMITTEE:
+                LeafPreference.getInstance(AddCommiteeActivity.this).setBoolean(LeafPreference.ADD_COMMITTEE, true);
                 finish();
                 break;
 

@@ -48,6 +48,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.booths.BoothMemberReq;
 import school.campusconnect.datamodel.committee.committeeResponse;
@@ -283,6 +284,8 @@ public class AddBoothStudentActivity extends BaseActivity {
 
         switch (apiId) {
             case LeafManager.API_ADD_BOOTH_MEMEBER:
+
+                LeafPreference.getInstance(AddBoothStudentActivity.this).setBoolean(LeafPreference.ADD_FRIEND, true);
                 Toast.makeText(this, "Add Member successfully", Toast.LENGTH_SHORT).show();
                 finish();
                 break;

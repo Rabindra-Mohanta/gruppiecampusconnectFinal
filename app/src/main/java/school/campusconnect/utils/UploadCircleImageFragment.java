@@ -52,6 +52,16 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     public boolean isGroupOrProfile = false;
     ImageView imgDefault;
 
+    public boolean isEditEnabled() {
+        return isEditEnabled;
+    }
+
+    public void setEditEnabled(boolean editEnabled) {
+        isEditEnabled = editEnabled;
+    }
+
+    boolean isEditEnabled  = true;
+
     public UploadCircleImageFragment() {
 
     }
@@ -172,7 +182,15 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
 
 
     public void onClick(View v) {
+
+
+                if(!isEditEnabled)
+                {
+                    return;
+                }
+
         switch (v.getId()) {
+
             case R.id.img_service:
                 final Dialog settingsDialog = new Dialog(getActivity());
                 LayoutInflater inflater = ((Activity) getActivity()).getLayoutInflater();

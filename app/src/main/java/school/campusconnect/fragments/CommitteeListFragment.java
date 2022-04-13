@@ -28,6 +28,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.BoothStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.LeadsListActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.FragmentCommitteeListBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.committee.CommitteeTBL;
@@ -48,6 +49,7 @@ private MyTeamData classData;
 private LeafManager leafManager;
 CommitteeAdapter adapter;
 ArrayList<committeeResponse.committeeData> committeeDataList = new ArrayList<>();
+int teamMemberCount = -1;
 
     public static CommitteeListFragment newInstance() {
         CommitteeListFragment fragment = new CommitteeListFragment();
@@ -91,6 +93,10 @@ ArrayList<committeeResponse.committeeData> committeeDataList = new ArrayList<>()
             classData = new Gson().fromJson(getArguments().getString("class_data"), MyTeamData.class);
             AppLog.e(TAG, "classData : " + classData);
             TeamID = classData.teamId;
+            if(getArguments().containsKey("team_count"))
+            teamMemberCount = getArguments().getInt("team_count");
+
+            AppLog.e(TAG , "teammembercount : "+teamMemberCount);
             boothClick = getArguments().getString("isBoothClick");
             TeamName = getArguments().getString("title");
         }
@@ -114,6 +120,8 @@ ArrayList<committeeResponse.committeeData> committeeDataList = new ArrayList<>()
                 intent.putExtra("team_name", classData.name);
                 intent.putExtra("class_data",new Gson().toJson(classData));
                 intent.putExtra("all",true);
+                if(teamMemberCount != -1)
+                intent.putExtra("team_count", teamMemberCount);
                 intent.putExtra("isAdmin", classData.isTeamAdmin);
                 startActivity(intent);
             }
@@ -123,6 +131,12 @@ ArrayList<committeeResponse.committeeData> committeeDataList = new ArrayList<>()
     @Override
     public void onStart() {
         super.onStart();
+
+        if(LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ADD_COMMITTEE)){
+            LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ADD_COMMITTEE, false);
+             getCommittee();
+        }
+
 
     }
 
