@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AddStudentActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_15dp">
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_course_name"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/etCourseName"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:inputType="textCapSentences" />
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/strDescription"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/etDesc"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                android:inputType="textCapSentences" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSubjects"
+                android:layout_marginTop="@dimen/padding_10dp"
+                tools:listitem="@layout/item_course_subject"
+                android:layout_width="match_parent"
+                tools:itemCount="1"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_10dp"
+                app:cardCornerRadius="@dimen/padding_10dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_5dp"
+                    android:layout_marginEnd="@dimen/padding_5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/LabelNormal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_20dp"
+                        android:paddingLeft="@dimen/padding_10dp"
+                        android:text="@string/lbl_name"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary" />
+
+                    <EditText
+                        android:id="@+id/etName"
+                        style="@style/RegEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/login_button_height"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:inputType="textPersonName|textCapWords" />
+
+<!--
+                    <TextView
+                        android:id="@+id/labelPhone"
+                        style="@style/LabelNormal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:paddingLeft="@dimen/padding_10dp"
+                        android:text="@string/lbl_phone"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorPrimary" />
+
+                    <EditText
+                        android:id="@+id/etPhone"
+                        style="@style/RegEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/login_button_height"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:inputType="phone" />-->
+
+                    <ImageView
+                        android:id="@+id/imgAdd"
+                        android:layout_width="@dimen/padding_40dp"
+                        android:layout_height="@dimen/padding_40dp"
+                        android:layout_gravity="right|bottom"
+                        android:layout_marginTop="@dimen/padding_10dp"
+                        android:layout_marginRight="@dimen/padding_5dp"
+                        android:layout_marginBottom="@dimen/padding_5dp"
+                        android:padding="@dimen/padding_5dp"
+                        app:srcCompat="@drawable/add_round" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btnAdd"
+                style="@style/AddPostButton"
+                android:layout_width="@dimen/login_button_width"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:text="@string/lbl_update" />
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

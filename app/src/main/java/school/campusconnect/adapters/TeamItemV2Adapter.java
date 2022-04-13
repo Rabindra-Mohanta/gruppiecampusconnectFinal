@@ -65,7 +65,8 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         final MyTeamData team = featuredIconData.get(position);
 
         AppLog.e("TeamListAdapterNew", "item ; " + new Gson().toJson(team));
-        holder.tvTeamName.setText(transliterator.transliterate(team.name));
+       // holder.tvTeamName.setText(transliterator.transliterate(team.name));
+        holder.tvTeamName.setText(team.name);
 
         int postUnseenCount = 0;
 

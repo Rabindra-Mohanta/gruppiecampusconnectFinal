@@ -394,35 +394,46 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
                     BaseTeamv2Response.TeamListData data = result.get(i);
 
-                    baseTeamTable.group_id = data.getFeaturedIconData().get(i).groupId;
+                    baseTeamTable.group_id = data.getFeaturedIconData().get(0).groupId;
                     baseTeamTable.activity = data.getActivity();
                     baseTeamTable.featureIcons = new Gson().toJson(data.getFeaturedIconData());
 
-                    try {
-                        if (!data.getFeaturedIconData().get(i).name.equalsIgnoreCase("My Team")) {
-                            if (databaseHandler.getCount() != 0) {
-                                try {
-                                    String name = databaseHandler.getNameFromNum(data.getFeaturedIconData().get(i).phone.replaceAll(" ", ""));
-                                    if (!TextUtils.isEmpty(name)) {
-                                        data.getFeaturedIconData().get(i).name = name + " Team";
+
+                    for(int j = 0 ; j < data.getFeaturedIconData().size(); j++)
+                    {
+                        try {
+                            if (!data.getFeaturedIconData().get(j).name.equalsIgnoreCase("My Team")) {
+                                if (databaseHandler.getCount() != 0) {
+                                    try {
+                                        String name = databaseHandler.getNameFromNum(data.getFeaturedIconData().get(j).phone.replaceAll(" ", ""));
+                                        if (!TextUtils.isEmpty(name)) {
+                                            data.getFeaturedIconData().get(j).name = name + " Team";
+                                        }
+                                    } catch (NullPointerException e) {
                                     }
-                                } catch (NullPointerException e) {
                                 }
                             }
+                        } catch (NullPointerException e) {
+                            AppLog.e("CONTACTS", "error is " + e.toString());
                         }
-                    } catch (NullPointerException e) {
-                        AppLog.e("CONTACTS", "error is " + e.toString());
+
                     }
 
                     baseTeamTable.save();
 
-                    if (!TextUtils.isEmpty(data.getFeaturedIconData().get(i).groupId)) {
-                        String topics = data.getFeaturedIconData().get(i).groupId + "_" + data.getFeaturedIconData().get(i).teamId;
-                        currentTopics.add(topics);
-                    }
+
+                       for(int j =0; j < data.getFeaturedIconData().size();j++)
+                       {
+                           if (!TextUtils.isEmpty(data.getFeaturedIconData().get(j).groupId) && !TextUtils.isEmpty(data.getFeaturedIconData().get(j).teamId))
+                           {
+                               String topics = data.getFeaturedIconData().get(j).groupId + "_" + data.getFeaturedIconData().get(j).teamId;
+                               currentTopics.add(topics);
+                           }
+                       }
 
 
-                }
+
+                   }
                 teamList.addAll(result);
                 mAdapter.notifyDataSetChanged();
 

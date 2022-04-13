@@ -377,7 +377,8 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
-            holder.txt_name.setText(transliterator.transliterate(item.name));
+            //holder.txt_name.setText(transliterator.transliterate(item.name));
+            holder.txt_name.setText(item.name);
             holder.txt_count.setText("Member : "+item.members);
         }
 

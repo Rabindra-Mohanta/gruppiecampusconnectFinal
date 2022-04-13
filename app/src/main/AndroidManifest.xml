@@ -850,6 +850,17 @@
             android:name=".activities.SelectContactActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".activities.CourseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddCourseActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.EditCourseActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".service.FloatingWidgetService"
             android:enabled="true"

@@ -100,7 +100,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     private List<MyTeamData> filteredList = new ArrayList<>();
     private List<MyTeamData> myTeamDataList = new ArrayList<>();
 
-    Transliterator transliterator;
+    //Transliterator transliterator;
 
     @Nullable
     @Override
@@ -241,7 +241,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             }
         });
 
-        transliterator = Transliterator.getInstance("Latin-Kannada");
+       // transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     private void searchData(String text) {
@@ -458,7 +458,8 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 }
             });
 
-            holder.txt_name.setText(transliterator.transliterate(item.name));
+          //  holder.txt_name.setText(transliterator.transliterate(item.name));
+            holder.txt_name.setText(item.name);
             holder.txt_count.setText("Members: "+item.members);
         }
 

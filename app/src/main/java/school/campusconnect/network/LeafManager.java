@@ -7,6 +7,7 @@ import android.util.Log;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.ConstituencyRes;
+import school.campusconnect.datamodel.CoursePostResponse;
 import school.campusconnect.datamodel.LeaveErrorResponse;
 import school.campusconnect.datamodel.LeaveReq;
 import school.campusconnect.datamodel.MarkSheetListResponse;
@@ -351,6 +352,11 @@ public class LeafManager {
     public static final int API_EDIT_STUDENTS = 157;
     public static final int API_DELETE_STUDENTS = 158;
     public static final int API_ATTENDANCE_REPORT = 159;
+
+    public static final int API_ADD_COURSE = 310;
+    public static final int API_GET_COURSES = 311;
+    public static final int API_EDIT_COURSE = 312;
+    public static final int API_DELETE_COURSE = 313;
 
     public static final int API_ATTENDANCE_DETAIL = 160;
     public static final int API_ADD_EVENT = 161;
@@ -8014,6 +8020,140 @@ public class LeafManager {
             }
         }, ErrorResponse.class);
     }
+
+
+    public void getCourses(OnCommunicationListener listener, String groupId) {
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<CoursePostResponse> model = service.getCourses(groupId);
+        ResponseWrapper<CoursePostResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_GET_COURSES, new ResponseWrapper.ResponseHandler<CoursePostResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, CoursePostResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+
+
+
+    public void deleteCourse(OnCommunicationListener listener, String groupId, String course_id) {
+
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.deleteCourse(groupId, course_id);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_DELETE_COURSE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+
+    public void addCourse(OnCommunicationListener listener, String groupId, CoursePostResponse.CoursePostData coursePostData) {
+
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addCourse(groupId, coursePostData);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ADD_COURSE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+
+
+    public void editCourse(OnCommunicationListener listener, String groupId, String courseId,CoursePostResponse.CoursePostData coursePostData) {
+
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.editCourse(groupId, courseId, coursePostData);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_EDIT_COURSE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+
+
+
 
     public void MarkSheetListResponse(OnCommunicationListener listener, String groupId, String teamId, String mark_card_id, String userId, String rollNo, int page) {
         mOnCommunicationListener = listener;

@@ -2536,6 +2536,12 @@ public class GroupDashboardActivityNew extends BaseActivity
                 startActivity(intent);
             }
         } */
+        else if (group.type.equals("Course")) {
+            Intent intent = new Intent(this, CourseActivity.class);
+            intent.putExtra("group_id", groupId);
+            intent.putExtra("role", group.role);
+            startActivity(intent);
+        }
         else if (group.type.equals("Issues")){
 
             int Count = 0;
@@ -2686,7 +2692,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-    }*/
+    //}
 
 
     public void showTeamInfoWindow() {

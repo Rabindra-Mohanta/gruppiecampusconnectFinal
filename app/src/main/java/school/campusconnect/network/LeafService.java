@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import okhttp3.ResponseBody;
 import retrofit2.http.Url;
 import school.campusconnect.datamodel.ConstituencyRes;
+import school.campusconnect.datamodel.CoursePostResponse;
 import school.campusconnect.datamodel.LeaveReq;
 import school.campusconnect.datamodel.MarkSheetListResponse;
 import school.campusconnect.datamodel.NewPassReq;
@@ -1278,6 +1279,24 @@ public interface LeafService {
     @POST("/api/v1/groups/{group_id}/vendors/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addVendorPost(@Path("group_id") String groupId, @Body AddVendorPostRequest addVendorPostRequest);
+
+
+    @GET("/api/v1/groups/{group_id}/get/courses/school")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<CoursePostResponse> getCourses(@Path("group_id") String group_id);
+
+    @PUT("/api/v1/groups/{group_id}/school/course/{course_id}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteCourse(@Path("group_id") String groupId, @Path("course_id") String course_id);
+
+    @POST("/api/v1/groups/{group_id}/add/courses/school")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addCourse(@Path("group_id") String groupId, @Body CoursePostResponse.CoursePostData addCourseRequest);
+
+    @PUT("/api/v1/groups/{group_id}/school/course/{course_id}/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editCourse(@Path("group_id") String groupId,@Path("course_id") String courseId, @Body CoursePostResponse.CoursePostData  addCourseRequest);
+
 
     @GET("/api/v1/groups/{group_id}/coc/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

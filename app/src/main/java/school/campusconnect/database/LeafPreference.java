@@ -17,6 +17,7 @@ public class LeafPreference {
     public static final String IS_STUDENT_ADDED = "IS_STUDENT_ADDED";
     public static final String ISGALLERY_POST_UPDATED = "ISGALLERY_POST_UPDATED";
     public static final String IS_VENDOR_POST_UPDATED = "IS_VENDOR_POST_UPDATED";
+    public static final String IS_COURSE_UPDATED = "IS_COURSE_UPDATED";
     public static final String IS_CODE_CONDUCT_UPDATED = "IS_CODE_CONDUCT_UPDATED";
     public static final String ISTIME_TABLE_UPDATED = "ISTIME_TABLE_UPDATED";
     public static final String GROUP_COUNT = "GROUP_COUNT";

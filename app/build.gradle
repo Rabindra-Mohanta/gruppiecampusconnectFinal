@@ -26,23 +26,21 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-             /*   applicationId "school.campusconnect"
+                applicationId "school.campusconnect"
                 versionCode 12
                 versionName "1.3"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
-
+                buildConfigField("String", "APP_ID",  '"school"')
                 // [1. Gruppie Campus constituency]
-                applicationId "gcm.gruppie"
+        /*        applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
-                buildConfigField("String", "APP_ID",  '"constituency"')
-
+                buildConfigField("String", "APP_ID",  '"constituency"')*/
                 /*applicationId "kreis.gruppie"
                 versionCode 3
                 versionName "1.2"
@@ -407,7 +405,7 @@ dependencies {
 
     implementation 'com.ss.bannerslider:bannerslider:2.0.0'
 
-    implementation 'com.google.mlkit:translate:17.0.0'
+  //  implementation 'com.google.mlkit:translate:17.0.0'
 
 
 }

@@ -47,7 +47,8 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
 
         BaseTeamv2Response.TeamListData data = teamData.get(position);
 
-        holder.binding.tvActivityName.setText(transliterator.transliterate(data.getActivity()));
+        //holder.binding.tvActivityName.setText(transliterator.transliterate(data.getActivity()));
+        holder.binding.tvActivityName.setText(data.getActivity());
 
         if (Category.equalsIgnoreCase("constituency"))
         {

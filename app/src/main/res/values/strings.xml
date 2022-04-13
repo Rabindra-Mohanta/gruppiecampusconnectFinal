@@ -581,6 +581,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="reassigned"><u>Reassigned</u></string>
     <string name="verified"><u>Verified</u></string>
     <string name="lbl_subject_name">Enter Subject Name</string>
+    <string name="lbl_course_name">Enter Course Name</string>
     <string name="student_attendance_report">Student Attendance Report</string>
     <string name="download">Download</string>
     <string name="share_">Share</string>
@@ -684,6 +685,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_booth_about">Booth About*</string>
     <string name="lbl_about_booth">About Booth</string>
     <string name="lbl_print_attendance_report">Print Attendance Report</string>
+    <string name="lbl_course">Course</string>
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>

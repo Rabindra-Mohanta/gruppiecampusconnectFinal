@@ -346,7 +346,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             final MyTeamData team = list.get(position);
 
-            holder.tvTeamName.setText(transliterator.transliterate(team.name));
+            //holder.tvTeamName.setText(transliterator.transliterate(team.name));
+            holder.tvTeamName.setText(team.name);
             holder.tvPostCount.setText("");
             holder.tvPostCount.setVisibility(View.GONE);
 
