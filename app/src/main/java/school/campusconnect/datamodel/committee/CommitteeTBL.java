@@ -26,6 +26,9 @@ public class CommitteeTBL extends Model {
     @Column(name = "teamId")
     public String teamId;
 
+    @Column(name = "_now")
+    public String _now;
+
     public static List<CommitteeTBL> getMember(String groupId, String teamId)
     {
         return new Select().from(CommitteeTBL.class).where("groupId = ?",groupId).where("teamId = ?",teamId).execute();

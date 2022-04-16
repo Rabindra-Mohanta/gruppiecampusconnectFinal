@@ -63,6 +63,10 @@ public class MyTeamData extends BaseResponse {
     @Expose
     public String countryCode;
 
+    @SerializedName("lastCommitteeForBoothUpdatedEventAt")
+    @Expose
+    public String lastCommitteeForBoothUpdatedEventAt;
+
 
     @Override
     public String toString() {

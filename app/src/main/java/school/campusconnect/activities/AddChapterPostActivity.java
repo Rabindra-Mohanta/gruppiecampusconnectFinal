@@ -98,6 +98,8 @@ import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 
 public class AddChapterPostActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener, UploadImageAdapter.UploadImageListener {
 
@@ -1241,12 +1243,16 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             if (clipData == null) {
 //                String path = ImageUtil.getPath(this, selectedImage);
                 listImages.add(selectedImage.toString());
+                AddChapterPostActivity.this.getContentResolver().takePersistableUriPermission(
+                        selectedImage, FLAG_GRANT_READ_URI_PERMISSION);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
 //                    String path = ImageUtil.getPath(this, uri1);
                     listImages.add(uri1.toString());
+                    AddChapterPostActivity.this.getContentResolver().takePersistableUriPermission(
+                            uri1, FLAG_GRANT_READ_URI_PERMISSION);
                 }
             }
 

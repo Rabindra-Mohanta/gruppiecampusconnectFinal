@@ -65,6 +65,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     ClassesAdapter adapter;
 
     private String boothID;
+    private String isTeamAdmin;
+
     @Bind(R.id.rvTeams)
     public RecyclerView rvTeams;
 
@@ -132,10 +134,11 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     }
 
 
-    public static MyTeamVoterListFragment newInstance(String boothID) {
+    public static MyTeamVoterListFragment newInstance(String boothID , String isTeamAdmin) {
         MyTeamVoterListFragment fragment = new MyTeamVoterListFragment();
         Bundle b = new Bundle();
         b.putString("boothID", boothID);
+        b.putString("isTeamAdmin", isTeamAdmin);
         fragment.setArguments(b);
         return fragment;
     }
@@ -189,6 +192,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     private void inits() {
 
         boothID = getArguments().getString("boothID");
+        isTeamAdmin = getArguments().getString("isTeamAdmin");
 
         rvTeams.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new ClassesAdapter();
@@ -355,21 +359,39 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
+            holder.img_tree.setVisibility(View.GONE);
+
             holder.txt_name.setText(item.name);
 
             holder.txt_count.setVisibility(View.GONE);
 
-            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+          /*  holder.txt_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onTreeClick(item);
                 }
-            });
+            });*/
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    if (GroupDashboardActivityNew.isAdmin)
+                    if (GroupDashboardActivityNew.isAdmin || isTeamAdmin.equalsIgnoreCase("true"))
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("name",item.name);
+                        startActivity(i);
+                    }
+
+                }
+            });
+
+
+            holder.imgTeam.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (GroupDashboardActivityNew.isAdmin || isTeamAdmin.equalsIgnoreCase("true"))
                     {
                         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                         i.putExtra("userID",item.userId);
@@ -444,7 +466,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
     private void onTreeClick(BoothVotersListResponse.VoterData item) {
 
-        if (GroupDashboardActivityNew.isAdmin)
+        if (GroupDashboardActivityNew.isAdmin || isTeamAdmin.equalsIgnoreCase("true"))
         {
             Intent i = new Intent(getActivity(), VoterProfileActivity.class);
             i.putExtra("userID",item.userId);

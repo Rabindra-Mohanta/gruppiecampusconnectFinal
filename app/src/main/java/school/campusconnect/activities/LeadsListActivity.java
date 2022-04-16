@@ -83,7 +83,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
             classData = new Gson().fromJson(getIntent().getStringExtra("class_data"), MyTeamData.class);
             AppLog.e(TAG, "groupId is " + groupId);
             AppLog.e(TAG, "teamId is " + teamId);
-            AppLog.e(TAG, "teamId is " + classData);
+            AppLog.e(TAG, "classData is " + classData);
             if (getIntent().hasExtra("team_name")) {
                 setTitle(getIntent().getExtras().getString("team_name", "")+" Members");
             }else {

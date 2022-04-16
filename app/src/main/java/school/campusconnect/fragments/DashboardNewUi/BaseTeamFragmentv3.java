@@ -77,6 +77,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.AddTicketActivity;
 import school.campusconnect.activities.CalendarActivity;
+import school.campusconnect.activities.ChangeNumberActivity;
 import school.campusconnect.activities.ChangePasswordActivity;
 import school.campusconnect.activities.ChangePinActivity;
 import school.campusconnect.activities.CreateTeamActivity;
@@ -262,18 +263,21 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
         if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1 && "constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
+            menu.findItem(R.id.menu_change_mobile).setVisible(false);
             menu.findItem(R.id.menu_change_pin).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
 
         } else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pin).setVisible(false);
+            menu.findItem(R.id.menu_change_mobile).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
 
         } else {
             menu.findItem(R.id.menu_change_pin).setVisible(true);
             menu.findItem(R.id.menu_logout).setVisible(true);
             menu.findItem(R.id.menu_change_pass).setVisible(true);
+            menu.findItem(R.id.menu_change_mobile).setVisible(true);
         }
 
         menuItem = menu.findItem(R.id.action_notification_list);
@@ -323,6 +327,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             case R.id.menu_change_pin:
                 Intent intentpin= new Intent(getActivity(), ChangePinActivity.class);
                 startActivity(intentpin);
+                return true;
+
+            case R.id.menu_change_mobile:
+                Intent intentNumber= new Intent(getActivity(), ChangeNumberActivity.class);
+                startActivity(intentNumber);
                 return true;
 
             case R.id.menu_logout:
@@ -453,7 +462,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     public void onStart() {
         super.onStart();
 
-        if (notificationList.size() > 0)
+        if (notificationList!=null && notificationList.size() > 0)
         {
             mHandler.post(myRunnable);
         }
@@ -1319,7 +1328,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 binding.imgExpandFeedAfter.setVisibility(View.VISIBLE);
                 binding.imgExpandFeedBefore.setVisibility(View.GONE);
                 binding.tvViewMoreFeed.setVisibility(View.VISIBLE);
-                if (notificationList.size()>0)
+                if (notificationList !=null && notificationList.size()>0)
                 {
                     mHandler.removeCallbacks(myRunnable);
                     ViewGroup.LayoutParams layoutParams = binding.rvFeed.getLayoutParams();
@@ -1335,7 +1344,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 binding.imgExpandFeedAfter.setVisibility(View.GONE);
                 binding.tvViewMoreFeed.setVisibility(View.GONE);
 
-                if (notificationList.size() > 0)
+                if (notificationList !=null && notificationList.size() > 0)
                 {
                     mHandler.post(myRunnable);
                     ViewGroup.LayoutParams layoutParam = binding.rvFeed.getLayoutParams();
@@ -1364,7 +1373,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             case R.id.imgEditBanner:
                 if (checkPermissionForWriteExternal()) {
 
-                    if (bannerData.getFileName().size() > 0)
+                    if (bannerData.getFileName()!=null && bannerData.getFileName().size() > 0)
                     {
                         showPhotoDialog(R.array.array_image_banner);
                     }
@@ -1740,7 +1749,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             }
           ///  mainRequest.fileName = listAmazonS3Url;
 
-            if (bannerData.getFileName().size() > 0)
+            if (bannerData.getFileName()!=null && bannerData.getFileName().size() > 0)
             {
                 listAmazonS3Url.addAll(bannerData.getFileName());
             }
@@ -1967,7 +1976,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             case 21:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    if (bannerData.getFileName().size() > 0)
+                    if (bannerData.getFileName()!=null && bannerData.getFileName().size() > 0)
                     {
                         showPhotoDialog(R.array.array_image_banner);
                     }

@@ -22,6 +22,9 @@ public class HomeTeamDataTBL extends Model {
     @Column(name = "lastTeamPostAt")
     public String lastTeamPostAt;
 
+    @Column(name = "lastCommitteeForBoothUpdatedEventAt")
+    public String lastCommitteeForBoothUpdatedEventAt;
+
     @Column(name = "canPost")
     public boolean canPost;
 

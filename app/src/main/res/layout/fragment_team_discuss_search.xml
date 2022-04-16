@@ -24,11 +24,74 @@
         app:layout_scrollFlags="scroll|enterAlways" />
 
 
+    <androidx.cardview.widget.CardView
+        app:cardElevation="3dp"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/ll_admindetail"
+        app:cardUseCompatPadding="true"
+        android:layout_marginHorizontal="@dimen/padding_15dp"
+        app:cardCornerRadius="@dimen/padding_5dp"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/padding_3dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|end"
+            android:layout_margin="@dimen/padding_10dp"
+            android:layout_below="@+id/txt_level"
+            >
+
+            <TextView
+                android:id="@+id/txtAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_15sp"
+                android:text="Admin : "
+                android:textStyle="bold"
+                android:textColor="@color/colorTextLight"
+                android:layout_marginStart="@dimen/padding_10dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_adminname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_5dp"
+                android:gravity="start"
+                android:text="Admin Name"
+                android:layout_weight="1.0"
+                android:textSize="@dimen/text_size_15sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTextDark"
+                />
+
+
+            <ImageView
+                android:id="@+id/img_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:layout_marginStart="@dimen/padding_10dp"
+                android:src="@drawable/ic_call_svg"
+                android:visibility="visible"
+                android:layout_weight="0.0"
+                android:paddingRight="@dimen/padding_10dp" />
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/etSearch"
+        android:layout_below="@+id/ll_admindetail"
         app:refreshColor="@color/colorPrimary">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTeams"

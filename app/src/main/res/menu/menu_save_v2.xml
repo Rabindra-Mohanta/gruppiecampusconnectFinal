@@ -179,6 +179,10 @@
         android:visible="false"
         android:title="Change Password"/>
 
+    <item android:id="@+id/menu_change_mobile"
+        android:visible="false"
+        android:title="Change Number"/>
+
 
     <item android:id="@+id/menu_logout"
         android:visible="false"

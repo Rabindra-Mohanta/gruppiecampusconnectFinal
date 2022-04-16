@@ -86,6 +86,9 @@ import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
 
+import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 
 public class AddGalleryPostActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener, UploadImageAdapter.UploadImageListener {
 
@@ -375,16 +378,18 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     public void startService() {
 
         Intent serviceIntent = new Intent(this, BackgroundVideoUploadGallery.class);
+
         serviceIntent.putExtra("videoUrl", videoUrl);
         serviceIntent.putExtra("mainRequest", mainRequest);
         serviceIntent.putExtra("listImages", listImages);
         serviceIntent.putExtra("group_id", group_id);
         serviceIntent.putExtra("album_id", album_id);
         serviceIntent.putExtra("isEdit", isEdit);
+
         ContextCompat.startForegroundService(this, serviceIntent);
 
         Toast.makeText(this, "Video Uploading in background", Toast.LENGTH_SHORT).show();
-        finish();
+       finish();
 
     }
 
@@ -787,6 +792,8 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     private void selectVideoIntent() {
         Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         galleryIntent.setType("video/*");
+        galleryIntent.setFlags(FLAG_GRANT_READ_URI_PERMISSION|FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -1037,7 +1044,6 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             removeAudio();*/
             listImages.clear();
             showCropDialog(imageCaptureFile,true);
-
         }
 
         else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
@@ -1049,10 +1055,15 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             if (clipData == null) {
 //                String path = ImageUtil.getPath(this, selectedImage);
                 listImages.add(selectedImage.toString());
+                AddGalleryPostActivity.this.getContentResolver().takePersistableUriPermission(
+                        selectedImage, FLAG_GRANT_READ_URI_PERMISSION);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
+
+                    AddGalleryPostActivity.this.getContentResolver().takePersistableUriPermission(
+                            uri1, FLAG_GRANT_READ_URI_PERMISSION);
 //                    String path = ImageUtil.getPath(this, uri1);
                     listImages.add(uri1.toString());
                 }

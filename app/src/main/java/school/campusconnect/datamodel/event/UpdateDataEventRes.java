@@ -92,6 +92,12 @@ public class UpdateDataEventRes extends BaseResponse {
         @Expose
         public String boothId;
 
+
+        @SerializedName("lastCommitteeForBoothUpdatedEventAt")
+        @Expose
+        public String lastCommitteeForBoothUpdatedEventAt;
+
+
     }
     public static class HomeTeamData implements Serializable
     {
@@ -106,6 +112,10 @@ public class UpdateDataEventRes extends BaseResponse {
         @SerializedName("lastTeamPostAt")
         @Expose
         public String lastTeamPostAt;
+
+        @SerializedName("lastCommitteeForBoothUpdatedEventAt")
+        @Expose
+        public String lastCommitteeForBoothUpdatedEventAt;
 
         @SerializedName("canPost")
         @Expose

@@ -21,6 +21,7 @@ import school.campusconnect.activities.UpdateMemberActivity;
 import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.lead.LeadDataTBL;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -82,7 +83,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
     private int teamMemberCount = 0;
 
-
+    MyTeamData classData;
 
     public LeadListFragment() {
 
@@ -149,6 +150,8 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         else
             teamMemberCount = -1;
 
+        classData = new Gson().fromJson(getArguments().getString("class_data"), MyTeamData.class);
+
         itemClick = getArguments().getBoolean("item_click", false);
         isAdmin = getArguments().getBoolean("isAdmin", false);
         allMember = getArguments().getBoolean("all",false);
@@ -170,7 +173,30 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISUSERDELETED, false);
 
-        mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        if(classData !=null && classData.adminName !=null && !classData.adminName.equalsIgnoreCase(""))
+        {
+            mBinding.llAdmindetail.setVisibility(View.VISIBLE);
+            mBinding.tvAdminname.setText(classData.adminName);
+
+            if(classData.phone!=null && !classData.phone.equalsIgnoreCase(""))
+            mBinding.imgCall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    AppLog.e(TAG ,"ONCLICK called for call : "+classData.phone);
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + classData.phone));
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+
+                }
+            });
+        }
+
+
+
+      /*  mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -184,7 +210,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                     mBinding.swipeRefreshLayout.setRefreshing(false);
                 }
             }
-        });
+        });*/
     }
 
 

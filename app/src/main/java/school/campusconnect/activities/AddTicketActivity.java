@@ -92,6 +92,8 @@ import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.views.SMBDialogUtils;
 import school.campusconnect.views.SearchIssueFragmentDialog;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 public class AddTicketActivity extends BaseActivity implements View.OnClickListener, UploadImageAdapter.UploadImageListener, LocationListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, FindAddress.FindAddressListener, SearchIssueFragmentDialog.SelectListener {
     ActivityAddTicketBinding binding;
     public static String TAG = "AddTicketActivity";
@@ -926,12 +928,16 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             if (clipData == null) {
 //                String path = ImageUtil.getPath(this, selectedImage);
                 listImages.add(selectedImage.toString());
+                AddTicketActivity.this.getContentResolver().takePersistableUriPermission(
+                        selectedImage, FLAG_GRANT_READ_URI_PERMISSION);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
 //                    String path = ImageUtil.getPath(this, uri1);
                     listImages.add(uri1.toString());
+                    AddTicketActivity.this.getContentResolver().takePersistableUriPermission(
+                            uri1, FLAG_GRANT_READ_URI_PERMISSION);
                 }
             }
             showLastImage();

@@ -16,11 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -80,6 +82,14 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    @Bind(R.id.ll_admindetail)
+    public CardView ll_admindetail;
+
+    @Bind(R.id.tv_adminname)
+    public TextView tv_adminname;
+
+    @Bind(R.id.img_call)
+    public ImageView img_call;
 
     @Bind(R.id.etSearch)
     public EditText etSearch;
@@ -97,6 +107,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
     private ArrayList<BoothMemberResponse.BoothMemberData> list = new ArrayList<>();
 
     ClassesStudentAdapter adapter;
+
 
     @Nullable
     @Override
@@ -148,6 +159,31 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
                 }
             }
         });
+
+        if(classData !=null && classData.adminName !=null && !classData.adminName.equalsIgnoreCase(""))
+        {
+            ll_admindetail.setVisibility(View.VISIBLE);
+            tv_adminname.setText(classData.adminName);
+
+            if(classData.phone!=null && !classData.phone.equalsIgnoreCase(""))
+                img_call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        AppLog.e(TAG ,"ONCLICK called for call : "+classData.phone);
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + classData.phone));
+                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                        else
+                        {
+                            AppLog.e(TAG ,"Activity Not Found");
+                        }
+
+                    }
+                });
+        }
     }
 
     @Override
@@ -365,7 +401,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
     private void editStudent(BoothMemberResponse.BoothMemberData studentData) {
 
-        if (GroupDashboardActivityNew.isAdmin)
+        if (GroupDashboardActivityNew.isAdmin || classData.isTeamAdmin)
         {
             Intent i = new Intent(getActivity(), VoterProfileActivity.class);
             i.putExtra("userID",studentData.id);

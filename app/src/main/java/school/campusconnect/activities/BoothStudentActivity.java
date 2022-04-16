@@ -81,6 +81,8 @@ public class BoothStudentActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        if(classData.isTeamAdmin)
         getMenuInflater().inflate(R.menu.menu_member, menu);
         return super.onCreateOptionsMenu(menu);
     }

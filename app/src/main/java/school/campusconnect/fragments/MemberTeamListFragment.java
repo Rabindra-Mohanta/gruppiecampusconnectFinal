@@ -72,7 +72,7 @@ import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 
 public class MemberTeamListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "MemberTeamListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -448,7 +448,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 @Override
                 public void onClick(View view) {
 
-                    if (GroupDashboardActivityNew.isAdmin)
+                    if (GroupDashboardActivityNew.isAdmin || item.isTeamAdmin)
                     {
                         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                         i.putExtra("userID",item.userId);
@@ -522,7 +522,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
         if (screen.equalsIgnoreCase("myTeam"))
         {
-            ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(classData.name,classData.members,classData.boothId);
+            ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(classData.name,classData.members,classData.boothId , String.valueOf(classData.isTeamAdmin));
         }
         else
         {

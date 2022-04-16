@@ -36,7 +36,9 @@ import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 
 
 public class CommitteeListFragment extends Fragment implements LeafManager.OnCommunicationListener {
@@ -155,9 +157,16 @@ int teamMemberCount = -1;
                 data.committeeId = memberTBLS.get(i).committeeId;
                 data.committeeName = memberTBLS.get(i).committeeName;
                 data.defaultCommittee = memberTBLS.get(i).defaultCommittee;
+                data._now = memberTBLS.get(i)._now;
 
                 committeeDataList.add(data);
             }
+
+            if(MixOperations.isNewEvent(classData.lastCommitteeForBoothUpdatedEventAt , "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" ,committeeDataList.get(0)._now ))
+            {
+                getCommittee();
+            }
+            else
             adapter.add(committeeDataList);
         }
         else
@@ -206,6 +215,7 @@ int teamMemberCount = -1;
                 committeeTBL.defaultCommittee = committeeData.get(i).getDefaultCommittee();
                 committeeTBL.groupId = GroupDashboardActivityNew.groupId;
                 committeeTBL.teamId = TeamID;
+                committeeTBL._now = DateTimeHelper.getCurrentTime();
                 committeeTBL.save();
             }
         }

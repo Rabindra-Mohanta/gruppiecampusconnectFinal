@@ -10,6 +10,10 @@
         android:visible="false"
         android:title="Change Pin"/>
 
+    <item android:id="@+id/menu_change_mobile"
+        android:visible="false"
+        android:title="Change Number"/>
+
     <item android:id="@+id/menu_set_wallpaper"
         android:visible="false"
         android:title="Set Wallpaper"/>

@@ -267,6 +267,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 LeafPreference.getInstance(getContext()).setString("GalleryTotalPage",String.valueOf(totalPages));
                 mIsLoading = false;
 
+                if(res.data.size()>0)
                 saveToLocallay(res.data);
 
                 break;

@@ -143,6 +143,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
                 myTeamData.allowedToAddTeamPost = boothList.allowedToAddTeamPost;
                 myTeamData.leaveRequest = boothList.leaveRequest;
                 myTeamData.details = new Gson().fromJson(boothList.TeamDetails, new TypeToken<MyTeamData.TeamDetails>() {}.getType());
+                myTeamData.lastCommitteeForBoothUpdatedEventAt = boothList.lastCommitteeForBoothUpdatedEventAt;
 
                 resultData.add(myTeamData);
 
@@ -260,6 +261,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         BoothResponse res = (BoothResponse) response;
         //result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
+
+        if(res.getData()!=null && res.getData().size()>0)
         saveToLocally(res.getData());
        // rvClass.setAdapter(new ClassesAdapter(result));
     }
@@ -311,11 +314,12 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
                 boothsTBL._now = DateTimeHelper.getCurrentTime();
             }
 
+
             boothsTBL.save();
         }
 
-        result.addAll(boothList);
-        adapter.add(result);
+
+       getDataLocally();
 
     }
 
@@ -462,7 +466,6 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     }
 
     private void onTreeClick(MyTeamData classData) {
-
 
 
         ((GroupDashboardActivityNew) getActivity()).onTeamSelected(classData,"yes","no");

@@ -510,6 +510,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                         homeTeamDataTBL.teamId = res.data.get(0).homeTeamData.get(i).teamId;
                         homeTeamDataTBL.members = res.data.get(0).homeTeamData.get(i).members;
                         homeTeamDataTBL.lastTeamPostAt = res.data.get(0).homeTeamData.get(i).lastTeamPostAt;
+
+                        homeTeamDataTBL.lastCommitteeForBoothUpdatedEventAt = res.data.get(0).homeTeamData.get(i).lastCommitteeForBoothUpdatedEventAt;
                         homeTeamDataTBL.canPost = res.data.get(0).homeTeamData.get(i).canPost;
                         homeTeamDataTBL.canComment = res.data.get(0).homeTeamData.get(i).canComment;
 
@@ -538,6 +540,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                         if(boothsTBL !=null)
                         {
                             boothsTBL.members = res.data.get(0).allBoothsPostEventAt.get(i).members;
+                            boothsTBL.lastCommitteeForBoothUpdatedEventAt = res.data.get(0).allBoothsPostEventAt.get(i).lastCommitteeForBoothUpdatedEventAt;
                             boothsTBL.save();
                         }
 
@@ -1812,6 +1815,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     private void myTeamClick() {
 
+        AppLog.e(TAG, "myTeamClick");
+
         tvToolbar.setText(GroupDashboardActivityNew.group_name);
         tv_Desc.setVisibility(View.GONE);
         tv_toolbar_icon.setVisibility(View.GONE);
@@ -1833,7 +1838,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
             if (mGroupItem.boothCount > 1)
             {
-
                 setBackEnabled(true);
 
                 BoothPresidentListMyTeamFragment classListFragment = new BoothPresidentListMyTeamFragment();
@@ -1860,7 +1864,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 }
                 else
                 {
-                    onTeamSelectedVoter(mGroupItem.subBoothName,mGroupItem.subBoothMembers, mGroupItem.subBoothId);
+                    onTeamSelectedVoter(mGroupItem.subBoothName,mGroupItem.subBoothMembers, mGroupItem.subBoothId  , "true");
                 }
         }
 
@@ -2211,8 +2215,6 @@ public class GroupDashboardActivityNew extends BaseActivity
             tv_Desc.setText("Members : "+String.valueOf(team.members));
         }
 
-
-
         setBackEnabled(true);
 
         tvToolbar.setText(team.name);
@@ -2229,7 +2231,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tabLayout.setVisibility(View.GONE);
     }
 
-    public void onTeamSelectedVoter(String name, int members, String boothId) {
+    public void onTeamSelectedVoter(String name, int members, String boothId , String isTeamAdmin) {
 
         Log.e(TAG,"boothId"+boothId);
 
@@ -2240,7 +2242,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_toolbar_icon.setVisibility(View.GONE);
         tv_toolbar_default.setVisibility(View.GONE);
 
-        MyTeamVoterListFragment myTeamVoterListFragment = MyTeamVoterListFragment.newInstance(boothId);
+        MyTeamVoterListFragment myTeamVoterListFragment = MyTeamVoterListFragment.newInstance(boothId, isTeamAdmin);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myTeamVoterListFragment).addToBackStack("home").commit();
         tabLayout.setVisibility(View.GONE);
 

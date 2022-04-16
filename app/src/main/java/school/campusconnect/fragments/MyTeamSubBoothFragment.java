@@ -445,7 +445,7 @@ public static String TAG = "MyTeamSubBoothFragment";
 
     private void onTreeClick(MyTeamSubBoothResponse.TeamData myTeamData) {
 
-        ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(myTeamData.name,myTeamData.members,myTeamData.subBoothId);
+        ((GroupDashboardActivityNew) getActivity()).onTeamSelectedVoter(myTeamData.name,myTeamData.members,myTeamData.subBoothId , String.valueOf(myTeamData.isTeamAdmin));
     }
 
     class EventAsync extends AsyncTask<Void, Void, Void> {

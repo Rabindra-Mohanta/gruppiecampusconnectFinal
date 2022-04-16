@@ -103,6 +103,9 @@ public class BoothsTBL extends Model {
     @Column(name = "_now")
     public String _now;
 
+    @Column(name = "lastCommitteeForBoothUpdatedEventAt")
+    public String lastCommitteeForBoothUpdatedEventAt;  //// LAST
+
     public static List<BoothsTBL> getAll() {
         return new Select().from(BoothsTBL.class).execute();
     }

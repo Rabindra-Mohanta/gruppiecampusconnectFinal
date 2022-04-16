@@ -39,6 +39,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import id.zelory.compressor.Compressor;
+import school.campusconnect.LeafApplication;
 
 
 public class ImageUtil {
@@ -426,10 +427,14 @@ public class ImageUtil {
     public static File getOutputMediaFile() {
 
         // External sdcard location
-        File mediaStorageDir = new File(
+       /* File mediaStorageDir = new File(
                 Environment
                         .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                IMAGE_DIRECTORY_NAME);
+                IMAGE_DIRECTORY_NAME);*/
+        File mediaStorageDir = new File(
+                LeafApplication.getInstance().getCacheDir(),"cache_image");
+
+
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {

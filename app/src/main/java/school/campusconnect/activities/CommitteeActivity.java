@@ -55,6 +55,7 @@ public class CommitteeActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if(classData.isTeamAdmin)
         getMenuInflater().inflate(R.menu.menu_committee,menu);
         return super.onCreateOptionsMenu(menu);
     }
