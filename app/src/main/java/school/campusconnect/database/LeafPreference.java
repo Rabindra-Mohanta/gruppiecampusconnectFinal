@@ -7,6 +7,7 @@ public class LeafPreference {
 
     public static final String ADD_FRIEND = "ADD_FRIEND";
     public static final String ISTEAMUPDATED = "ISTEAMUPDATED";
+    public static final String ISBOOTHUPDATED = "ISBOOTHUPDATED";
     public static final String Replay_List_Changes = "Replay_List_Changes";
     public static final String PERSONAL_POST_ADDED_1 = "PERSONAL_POST_ADDED_1";
     public static final String PERSONAL_POST_ADDED_2 = "PERSONAL_POST_ADDED_2";

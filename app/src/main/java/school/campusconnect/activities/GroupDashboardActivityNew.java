@@ -537,6 +537,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                         boothPostEventTBL.save();
 
                         BoothsTBL boothsTBL = BoothsTBL.getBoothSingle(res.data.get(0).allBoothsPostEventAt.get(i).boothId);
+
                         if(boothsTBL !=null)
                         {
                             boothsTBL.members = res.data.get(0).allBoothsPostEventAt.get(i).members;

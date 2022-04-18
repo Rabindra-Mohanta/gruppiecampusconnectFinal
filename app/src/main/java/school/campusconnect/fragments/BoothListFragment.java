@@ -318,8 +318,8 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             boothsTBL.save();
         }
 
-
-       getDataLocally();
+        result.addAll(boothList);
+        adapter.add(result);
 
     }
 

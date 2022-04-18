@@ -1901,7 +1901,6 @@ public class LeafManager {
         final Call<BaseResponse> model = service.deleteTeam(group_id, team_id);
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
-
         final Type serviceErrorType = new TypeToken<GroupValidationError>() {
         }.getType();
         wrapper.execute(API_ID_DELETE_TEAM, new ResponseWrapper.ResponseHandler<BaseResponse, GroupValidationError>() {

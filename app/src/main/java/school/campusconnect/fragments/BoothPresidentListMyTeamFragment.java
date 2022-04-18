@@ -403,7 +403,8 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
                         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                         i.putExtra("userID",item.userId);
                         i.putExtra("name",item.name);
-                        startActivity(i);
+                        i.putExtra("teamID",item.teamId);
+                        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                     }
 
                 }
@@ -544,9 +545,8 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
         {
             if (resultCode == Activity.RESULT_OK)
             {
-                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                getDataMyBoothLocally();
             }
         }
     }

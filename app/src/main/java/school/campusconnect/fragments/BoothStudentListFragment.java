@@ -146,7 +146,10 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvClass.setAdapter(adapter);
 
-        swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+
+        swipeRefreshLayout.setEnabled(false);
+
+        /*swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -158,7 +161,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
-        });
+        });*/
 
         if(classData !=null && classData.adminName !=null && !classData.adminName.equalsIgnoreCase(""))
         {
@@ -352,6 +355,8 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
             holder.txt_name.setText(item.name);
             holder.txt_count.setText("Role: "+item.roleOnConstituency);
+
+            holder.img_tree.setVisibility(View.GONE);
         }
 
         @Override
@@ -384,6 +389,8 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
             @Bind(R.id.txt_count)
             TextView txt_count;
 
+            @Bind(R.id.img_tree)
+            ImageView img_tree;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -406,9 +413,9 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
             Intent i = new Intent(getActivity(), VoterProfileActivity.class);
             i.putExtra("userID",studentData.id);
             i.putExtra("name",studentData.name);
+            i.putExtra("teamID",classData.teamId);
             i.putExtra("committee",true);
-
-            startActivity(i);
+            startActivityForResult(i,REQUEST_UPDATE_PROFILE);
         }
 
     }
@@ -431,9 +438,11 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         {
             if (resultCode == Activity.RESULT_OK)
             {
-                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
+            /*    Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                startActivity(i);*/
+                CommitteeMemberTBL.deleteCommitteeMember(GroupDashboardActivityNew.groupId, classData.teamId,committeeData.getCommitteeId());
+                getDataLocally();
             }
         }
     }

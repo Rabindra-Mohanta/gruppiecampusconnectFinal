@@ -33,9 +33,9 @@
         <intent>
             <action android:name="com.google.android.youtube.api.service.START" />
         </intent>
-            <intent>
-                <action android:name="android.intent.action.DIAL" />
-            </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+        </intent>
     </queries>
 
     <application
@@ -50,6 +50,12 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
+
+        <activity
+            android:name=".activities.AboutBoothActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.RemoveBannerActivity"
             android:exported="false"
@@ -852,14 +858,12 @@
         <activity
             android:name=".activities.SelectContactActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.CourseActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddCourseActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.EditCourseActivity"
             android:screenOrientation="portrait" />

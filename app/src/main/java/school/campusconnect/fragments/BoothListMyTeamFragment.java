@@ -154,9 +154,6 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
 
     private void inits() {
 
-
-
-
         rvTeams.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new ClassesAdapter();
         rvTeams.setAdapter(adapter);
@@ -390,7 +387,8 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
                         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                         i.putExtra("userID",item.userId);
                         i.putExtra("name",item.name);
-                        startActivity(i);
+                        i.putExtra("teamID",item.teamId);
+                        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                     }
 
                 }
@@ -466,9 +464,8 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
         {
             if (resultCode == Activity.RESULT_OK)
             {
-                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                getDataLocally();
             }
         }
     }

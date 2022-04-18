@@ -380,7 +380,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
                         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                         i.putExtra("userID",item.userId);
                         i.putExtra("name",item.name);
-                        startActivity(i);
+                        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                     }
 
                 }
@@ -396,7 +396,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
                         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                         i.putExtra("userID",item.userId);
                         i.putExtra("name",item.name);
-                        startActivity(i);
+                        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                     }
 
                 }
@@ -471,7 +471,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             Intent i = new Intent(getActivity(), VoterProfileActivity.class);
             i.putExtra("userID",item.userId);
             i.putExtra("name",item.name);
-            startActivity(i);
+            startActivityForResult(i,REQUEST_UPDATE_PROFILE);
         }
     }
 
@@ -483,9 +483,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         {
             if (resultCode == Activity.RESULT_OK)
             {
-                Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                MyTeamVotersTBL.deleteBooth(GroupDashboardActivityNew.groupId,boothID);
+                getLocally();
             }
         }
     }

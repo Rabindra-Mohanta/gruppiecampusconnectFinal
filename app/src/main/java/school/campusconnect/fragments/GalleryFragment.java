@@ -32,6 +32,8 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.adapters.GalleryAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.calendar.DayEventTBL;
+import school.campusconnect.datamodel.calendar.MonthEventTBL;
 import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.gallery.GalleryTable;
@@ -41,6 +43,7 @@ import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.DateTimeHelper;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class GalleryFragment extends BaseFragment implements LeafManager.OnCommunicationListener, GalleryAdapter.GalleryListener, DialogInterface.OnClickListener {
@@ -99,9 +102,23 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
         scrollListener();
 
+        checkEvent();
+
         getLocally();
 
         return view;
+    }
+
+    private void checkEvent() {
+
+        if (GalleryTable.getLastPost().size() > 0)
+        {
+            if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("GALLERY_POST"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",GalleryTable.getLastPost().get(0)._now)) {
+                GalleryTable.deleteGallery();
+                getData();
+            }
+        }
+
     }
 
     @Override
@@ -285,7 +302,6 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     private void saveToLocallay(ArrayList<GalleryPostRes.GalleryData> data) {
 
 
-
         GalleryTable.deleteGallery(GroupDashboardActivityNew.groupId,currentPage);
 
         if (data.size()>0)
@@ -321,7 +337,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
             }
         }
 
-        getLocally();
+        galleryAdapter.add(data);
 
     }
 

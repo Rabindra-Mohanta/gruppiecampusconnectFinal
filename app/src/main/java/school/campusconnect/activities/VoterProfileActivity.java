@@ -134,14 +134,14 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             menu.findItem(R.id.menu_make_admin).setVisible(false);
         }
 
-        /*if(GroupDashboardActivityNew.isPost)
+        if(GroupDashboardActivityNew.isPost)
         {
             menu.findItem(R.id.menu_delete).setVisible(true);
         }
         else
         {
             menu.findItem(R.id.menu_delete).setVisible(false);
-        }*/
+        }
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -164,7 +164,6 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             return true;
         }
 
-/*
         if (item.getItemId() == R.id.menu_delete) {
             AppDialog.showConfirmDialog(VoterProfileActivity.this, "Are you sure you want to Delete This User ?", new AppDialog.AppDialogListener() {
                 @Override
@@ -178,7 +177,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                 }
             });
             return true;
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 

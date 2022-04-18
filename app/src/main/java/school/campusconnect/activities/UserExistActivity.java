@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.Settings;
+import android.provider.Settings.Secure;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -299,6 +301,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             request.userName.countryCode = countryCode;
             request.userName.phone = phoneNumber;
             request.deviceType = "Android";
+            request.udid = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+
             try {
                 PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 request.appVersion = pInfo.versionCode + "";

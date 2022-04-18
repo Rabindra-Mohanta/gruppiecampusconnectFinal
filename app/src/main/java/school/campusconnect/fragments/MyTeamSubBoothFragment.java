@@ -376,7 +376,7 @@ public static String TAG = "MyTeamSubBoothFragment";
                         i.putExtra("userID",item.userId);
                         i.putExtra("name",item.name);
                         i.putExtra("teamID",item.teamId);
-                        startActivity(i);
+                        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                     }
 
                 }
@@ -514,9 +514,11 @@ public static String TAG = "MyTeamSubBoothFragment";
         {
             if (resultCode == Activity.RESULT_OK)
             {
-                Intent i = new Intent(getContext(), GroupDashboardActivityNew.class);
+               /* Intent i = new Intent(getContext(), GroupDashboardActivityNew.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                startActivity(i);*/
+                MyTeamSubBoothTBL.deleteSubBooth(GroupDashboardActivityNew.groupId);
+                getLocally();
             }
         }
     }

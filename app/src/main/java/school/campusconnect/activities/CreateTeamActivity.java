@@ -197,6 +197,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
 
                 Toast.makeText(this, getString(R.string.msg_creted_team), Toast.LENGTH_LONG).show();
 
+                hide_keyboard();
 
 
                 if (myTeamData != null)
@@ -258,12 +259,24 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
                 }
                 break;
             case LeafManager.API_ID_EDIT_TEAM:
+
+                hide_keyboard();
+
+                if ("subBooth".equalsIgnoreCase(myTeamData.category) || "booth".equalsIgnoreCase(myTeamData.category)) {
+                    LeafPreference.getInstance(this).setBoolean(LeafPreference.ISBOOTHUPDATED, true);
+                }
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMUPDATED, true);
                 Intent i = new Intent();
                 setResult(RESULT_OK,i);
                 finish();
                 break;
             case LeafManager.API_ID_DELETE_TEAM:
+
+                hide_keyboard();
+
+                if ("subBooth".equalsIgnoreCase(myTeamData.category) || "booth".equalsIgnoreCase(myTeamData.category)) {
+                    LeafPreference.getInstance(this).setBoolean(LeafPreference.ISBOOTHUPDATED, true);
+                }
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMUPDATED, true);
                 Intent intent= new Intent();
                 setResult(RESULT_OK,intent);

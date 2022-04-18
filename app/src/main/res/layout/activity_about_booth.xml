@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.AboutBoothActivity">
+
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include layout="@layout/layout_toolbar" />
+
+            </FrameLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            android:layout_below="@id/appBar"
+            android:id="@+id/fragment_container"
+            android:layout_width="120dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/padding_15dp"
+            android:layout_height="120dp" />
+
+        <TextView
+            android:layout_below="@id/fragment_container"
+            style="@style/LabelNormal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_20dp"
+            android:paddingLeft="@dimen/padding_10dp"
+            android:id="@+id/tvBoothName"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary" />
+
+    </RelativeLayout>
+</layout>

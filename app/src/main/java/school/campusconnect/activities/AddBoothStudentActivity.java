@@ -285,6 +285,8 @@ public class AddBoothStudentActivity extends BaseActivity {
         switch (apiId) {
             case LeafManager.API_ADD_BOOTH_MEMEBER:
 
+                hide_keyboard();
+
                 LeafPreference.getInstance(AddBoothStudentActivity.this).setBoolean(LeafPreference.ADD_FRIEND, true);
                 Toast.makeText(this, "Add Member successfully", Toast.LENGTH_SHORT).show();
                 finish();

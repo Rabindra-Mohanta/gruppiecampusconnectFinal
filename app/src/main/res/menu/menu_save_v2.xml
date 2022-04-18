@@ -143,6 +143,13 @@
                 android:icon="@drawable/icon_menu_archive"
                 app:showAsAction="ifRoom"
                 android:title="Archive Team"/>
+
+            <item android:id="@+id/menu_about_booth"
+                android:visible="false"
+                android:icon="@drawable/icon_menu_archive"
+                app:showAsAction="ifRoom"
+                android:title="About Booth"/>
+
             <item android:id="@+id/menu_add_time_table"
                 android:visible="false"
                 android:icon="@drawable/icon_time_table"

@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
 
 @Table(name = "GalleryTable")
@@ -68,6 +69,10 @@ public class GalleryTable extends Model {
     {
         return new Delete().from(GalleryTable.class).where("groupId = ?", group_id).where("page = ?", page).execute();
     }
+    public static List<GalleryTable> getLastPost() {
+        return new Select().from(GalleryTable.class).orderBy("(groupId) DESC").limit(1).execute();
+    }
+
     public  static List<GalleryTable> deleteGallery()
     {
         return new Delete().from(GalleryTable.class).execute();

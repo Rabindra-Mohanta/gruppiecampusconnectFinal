@@ -329,7 +329,10 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
             progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
+
             case LeafManager.API_ADD_BOOTH:
+
+                hide_keyboard();
                 LeafPreference.getInstance(AddBoothActivity.this).setBoolean("booth_add", true);
                 finish();
                 break;

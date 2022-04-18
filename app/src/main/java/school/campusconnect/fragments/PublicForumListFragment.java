@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -76,6 +77,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+    private int REQUEST_UPDATE_PROFILE = 9;
 
     ClassesAdapter adapter;
 
@@ -371,6 +373,30 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_UPDATE_PROFILE)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+            /*    Intent i = new Intent(getContext(),GroupDashboardActivityNew.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);*/
+
+                if(mGroupItem.canPost){
+                    BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                    getDataBoothLocally();
+                }else {
+                    PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                    getDataMyBoothLocally();
+                }
+                
+            }
+        }
+    }
+
     private void saveToBoothLocally(ArrayList<MyTeamData> boothList) {
 
         BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
@@ -556,7 +582,8 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
                         Intent i = new Intent(getActivity(), VoterProfileActivity.class);
                         i.putExtra("userID",item.userId);
                         i.putExtra("name",item.name);
-                        startActivity(i);
+                        i.putExtra("teamID",item.teamId);
+                        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
                     }
 
                 }

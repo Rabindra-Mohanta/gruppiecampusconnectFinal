@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import school.campusconnect.utils.AppLog;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +20,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.squareup.picasso.Callback;
@@ -98,6 +104,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
             }
         }
         holder.txtName.setText(item.name+(item.staff?" (S)":""));
+
         if(isNest)
         {
             holder.txtCount.setText("Teams : " + item.getTeamCount());
@@ -139,6 +146,13 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                     .buildRound(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(position) );
             holder.imgLead_default.setImageDrawable(drawable);
         }
+
+        holder.call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         holder.imgLead.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,8 +217,13 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
         @Bind(R.id.img_chat)
         ImageView chat;
         @Bind(R.id.img_tree)
+
+        ImageView call;
+        @Bind(R.id.imgCall)
+
         ImageView tree;
         @Bind(R.id.line)
+
         View line;
         @Bind(R.id.relative)
         RelativeLayout relative;
@@ -217,7 +236,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
 
             if(itemClick)
             {
-                chat.setVisibility(View.INVISIBLE);
+              //  chat.setVisibility(View.INVISIBLE);
                 relative.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -231,12 +250,12 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                     }
                 });
 
-                tree.setVisibility(View.GONE);
-                line.setVisibility(View.GONE);
+              //  tree.setVisibility(View.GONE);
+              //  line.setVisibility(View.GONE);
             }
             else
             {
-                chat.setVisibility(View.VISIBLE);
+                /*chat.setVisibility(View.VISIBLE);
                 tree.setVisibility(View.GONE);
                 line.setVisibility(View.GONE);
 
@@ -244,7 +263,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                 {
                     tree.setVisibility(View.VISIBLE);
                     line.setVisibility(View.VISIBLE);
-                }
+                }*/
                 relative_name.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -257,18 +276,36 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
         }
 
 
-        @OnClick({ R.id.img_chat, R.id.img_tree})
+        @OnClick({ R.id.img_chat, R.id.img_tree, R.id.imgCall} )
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.img_chat:
-                    listener.onSMSClick(list.get(getLayoutPosition()));
+
+                  //  listener.onSMSClick(list.get(getLayoutPosition()));
+
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.setPackage("com.whatsapp");
+                    if (sendIntent.resolveActivity(mContext.getPackageManager()) != null) {
+                        mContext.startActivity(sendIntent);
+                    } else {
+                        Toast.makeText(mContext, "APP Not Installed", Toast.LENGTH_SHORT).show();
+                    }
                     break;
+
 
                 case R.id.img_tree:
                     listener.onMailClick(list.get(getLayoutPosition()));
                     break;
                 case R.id.relative_name:
                     listener.onNameClick(list.get(getLayoutPosition()));
+                    break;
+
+                case R.id.imgCall:
+                    Log.e(TAG,"click "+list.get(getLayoutPosition()).phone);
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + list.get(getLayoutPosition()).phone));
+                    mContext.startActivity(intent);
                     break;
             }
         }

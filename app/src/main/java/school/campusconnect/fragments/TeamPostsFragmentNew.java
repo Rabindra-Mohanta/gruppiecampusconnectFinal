@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.BuildConfig;
+import school.campusconnect.activities.AboutBoothActivity;
 import school.campusconnect.activities.AddBoothActivity;
 import school.campusconnect.activities.AddBoothStudentActivity;
 import school.campusconnect.activities.AddTeamStaffActivity;
@@ -264,11 +265,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             if (type.equalsIgnoreCase("booth"))
             {
                 menu.findItem(R.id.menu_add_friend).setVisible(false);
+                menu.findItem(R.id.menu_about_booth).setVisible(true);
             }
 
             if (teamData.category.equalsIgnoreCase("booth"))
             {
                 menu.findItem(R.id.menu_add_friend).setVisible(false);
+                menu.findItem(R.id.menu_about_booth).setVisible(true);
             }
 
 
@@ -295,6 +298,14 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             case R.id.menu_zoom:
                 startMeeting();
                 break;
+
+
+            case R.id.menu_about_booth:
+                Intent i = new Intent(getActivity(), AboutBoothActivity.class);
+                i.putExtra("class_data",new Gson().toJson(teamData));
+                startActivity(i);
+                break;
+
             case R.id.menu_add_friend:
 
                 if ( teamData.subCategory!= null && teamData.subCategory.equalsIgnoreCase("boothPresidents"))
@@ -490,7 +501,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     intent.putExtra("team_id", teamData.teamId);
                     intent.putExtra("group_id", teamData.groupId);
                     startActivity(intent);
-                } else {
+                }
+                else {
                     Intent intent = new Intent(getActivity(), AttendanceActivity.class);
                     intent.putExtra("isTeamAdmin", teamData.isTeamAdmin);
                     intent.putExtra("team_id", teamData.teamId);

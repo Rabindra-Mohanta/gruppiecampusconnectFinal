@@ -363,6 +363,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         MenuItem item = menu.findItem(R.id.nav_edit);
         item.setVisible(false);
         AppLog.e("LeadDetail", "OnCreateOption : " + type);
+
         if (type.equalsIgnoreCase("lead") || type.equalsIgnoreCase("nestedfriend")) {
             MenuItem item2 = menu.findItem(R.id.nav_delete);
             item2.setVisible(false);

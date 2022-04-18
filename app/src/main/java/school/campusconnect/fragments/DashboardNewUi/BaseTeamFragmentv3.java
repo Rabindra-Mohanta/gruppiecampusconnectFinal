@@ -105,6 +105,7 @@ import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.banner.BannerTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.booths.BoothsTBL;
 import school.campusconnect.datamodel.feed.AdminFeedTable;
 import school.campusconnect.datamodel.feed.AdminFeederResponse;
 import school.campusconnect.datamodel.notificationList.NotificationListRes;
@@ -535,9 +536,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             ((GroupDashboardActivityNew) getActivity()).setBackEnabled(false);
         }
 
+        if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISBOOTHUPDATED)) {
+            BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+            LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISBOOTHUPDATED, false);
+        }
+
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISTEAMUPDATED)) {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED, false);
         }
+
         if (getActivity() != null) {
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter("NOTIFICATION_COUNT_UPDATE"));
         }

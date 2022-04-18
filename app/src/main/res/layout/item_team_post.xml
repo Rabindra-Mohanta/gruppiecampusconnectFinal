@@ -45,10 +45,11 @@
 
         <RelativeLayout
             android:id="@+id/relative_name"
+            android:layout_toLeftOf="@id/img_tree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/img_call">
+            >
 
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -66,10 +67,11 @@
                 />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/img_lead"
+
                 android:orientation="vertical"
                 android:paddingEnd="4dp"
                 android:paddingStart="16dp">

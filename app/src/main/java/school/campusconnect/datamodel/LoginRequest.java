@@ -10,6 +10,7 @@ public class LoginRequest {
     public String appVersion;
     public String osVersion;
     public String deviceModel;
+    public String udid;
 
     public static class UserName{
         public String countryCode;
@@ -26,6 +27,7 @@ public class LoginRequest {
         return "LoginRequest{" +
                 "userName=" + userName +
                 ", password='" + password + '\'' +
+                ", udid='" + udid + '\'' +
                 ", deviceToken='" + deviceToken + '\'' +
                 ", deviceType='" + deviceType + '\'' +
                 ", appVersion='" + appVersion + '\'' +
