@@ -17,7 +17,7 @@
         <EditText
             android:id="@+id/tvSubject"
             android:layout_width="0dp"
-            android:hint="Add Subject"
+            android:hint="@string/lbl_add_subject"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 

@@ -55,7 +55,6 @@
                         android:id="@+id/txt_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ssd"
                         android:textColor="@color/color_grey_icon"
                         android:textAppearance="@style/TextAppearance.Regular"
                         app:caps_mode="words"

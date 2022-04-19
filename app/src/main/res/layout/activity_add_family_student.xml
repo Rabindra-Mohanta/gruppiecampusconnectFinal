@@ -217,7 +217,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height"
                     android:paddingLeft="@dimen/padding_20dp"
-                    android:text=""
+
                     android:focusable="false"
                     android:clickable="true"
                     android:textColor="@color/white" />
@@ -261,7 +261,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height"
                     android:paddingLeft="@dimen/padding_20dp"
-                    android:text=""
+
                     android:focusable="false"
                     android:clickable="true"
                     android:textColor="@color/white" />

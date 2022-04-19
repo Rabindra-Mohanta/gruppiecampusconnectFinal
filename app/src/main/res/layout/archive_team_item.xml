@@ -20,7 +20,7 @@
             android:layout_height="match_parent" >
             <TextView
                 android:layout_width="wrap_content"
-                android:text="RESTORE"
+                android:text="@string/lbl_restore"
                 android:paddingLeft="@dimen/padding_10dp"
                 android:paddingRight="@dimen/padding_10dp"
                 android:layout_gravity="center"
@@ -53,7 +53,7 @@
                 android:layout_marginLeft="@dimen/padding_10dp"
                 android:textColor="@color/colorTextDark"
                 android:textSize="@dimen/text_size_14sp"
-                android:text="Team Name"
+                android:text="@string/lbl_team_name"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
 

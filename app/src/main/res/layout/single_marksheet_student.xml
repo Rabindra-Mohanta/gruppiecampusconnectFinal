@@ -72,7 +72,7 @@
                     android:id="@+id/tvName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Name" />
+                    android:text="@string/name" />
 
                 <TextView
                     android:id="@+id/tvNumber"

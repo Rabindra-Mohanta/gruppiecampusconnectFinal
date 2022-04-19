@@ -5,12 +5,12 @@
     <item android:id="@+id/menu_search"
         app:showAsAction="always"
         android:icon="@drawable/icon_search"
-        android:title="Search"/>
+        android:title="@string/hint_search_group"/>
 
     <item android:id="@+id/menu_add_class"
         android:icon="@drawable/posticon"
         app:showAsAction="always"
-        android:title="Add Booth"/>
+        android:title="@string/lbl_add_booth"/>
 
 
 </menu>

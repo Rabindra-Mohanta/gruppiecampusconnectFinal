@@ -40,7 +40,7 @@
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:textColor="@color/colorPrimary"
-                android:text="29/01/2022"/>
+                />
 
             <View
                 android:id="@+id/view"
@@ -62,7 +62,7 @@
                 android:textColor="@color/colorTextLight"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry."/>
+             />
 
         </RelativeLayout>
 

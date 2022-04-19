@@ -22,7 +22,7 @@
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="textCapSentences|textNoSuggestions"
             app:leftDrawable="@drawable/ic_location_city"
-            app:textHint="Address line 1" />
+            app:textHint="@string/hint_address_line_1" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/address_two"
@@ -31,7 +31,7 @@
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="textCapSentences|textNoSuggestions"
             app:leftDrawable="@drawable/ic_location_city"
-            app:textHint="Address line 2" />
+            app:textHint="@string/hint_address_line_2" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/city"
@@ -40,7 +40,7 @@
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="textCapSentences|textNoSuggestions"
             app:leftDrawable="@drawable/ic_location_city"
-            app:textHint="City" />
+            app:textHint="@string/lbl_lead_city" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/state"
@@ -49,7 +49,7 @@
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="textCapSentences|textNoSuggestions"
             app:leftDrawable="@drawable/ic_location_city"
-            app:textHint="State" />
+            app:textHint="@string/lbl_state" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/pincode"
@@ -58,7 +58,7 @@
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="number"
             app:leftDrawable="@drawable/ic_location_city"
-            app:textHint="Pincode" />
+            app:textHint="@string/lbl_pincode" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/country"
@@ -67,7 +67,7 @@
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="textCapSentences|textNoSuggestions"
             app:leftDrawable="@drawable/ic_countr"
-            app:textHint="Country" />
+            app:textHint="@string/lbl_country_" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/id_number"

@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/grid_background">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -72,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:text="Name"
+                        android:text="@string/lbl_name_"
                         android:textAppearance="@style/TextAppearance.Regular"
                         android:textColor="@color/color_grey_icon"
                         android:textSize="18sp" />
@@ -102,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="Profile"
+                        android:text="@string/lbl_profile"
                         android:textAppearance="@style/TextAppearance.Regular"
                         android:textColor="@color/background_color"
                         android:textSize="@dimen/text_size_16sp" />
@@ -185,7 +186,7 @@
                                 android:layout_below="@+id/tv_members"
                                 android:layout_centerHorizontal="true"
                                 android:gravity="center_vertical"
-                                android:text="Members"
+                                android:text="@string/lbl_members"
                                 android:textAppearance="@style/TextAppearance.Light"
                                 android:textColor="@color/color_grey_icon"
                                 android:textSize="@dimen/text_size_12sp" />
@@ -217,7 +218,7 @@
                                 android:layout_below="@+id/tv_posts"
                                 android:layout_centerHorizontal="true"
                                 android:gravity="center_vertical"
-                                android:text="Posts"
+                                android:text="@string/lbl_posts"
                                 android:textAppearance="@style/TextAppearance.Light"
                                 android:textColor="@color/color_grey_icon"
                                 android:textSize="@dimen/text_size_12sp" />
@@ -250,7 +251,7 @@
                                 android:layout_below="@+id/tv_comments"
                                 android:layout_centerHorizontal="true"
                                 android:gravity="center_vertical"
-                                android:text="Comments"
+                                android:text="@string/lbl_comments"
                                 android:textAppearance="@style/TextAppearance.Light"
                                 android:textColor="@color/color_grey_icon"
                                 android:textSize="@dimen/text_size_12sp" />
@@ -284,7 +285,7 @@
                                 android:layout_below="@+id/tv_likes"
                                 android:layout_centerHorizontal="true"
                                 android:gravity="center_vertical"
-                                android:text="Likes"
+                                android:text="@string/lbl_likes"
                                 android:textAppearance="@style/TextAppearance.Light"
                                 android:textColor="@color/color_grey_icon"
                                 android:textSize="@dimen/text_size_12sp" />
@@ -376,7 +377,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
 
-                                android:text="Description"
+                                android:text="@string/lbl_description"
                                 android:textAppearance="@style/TextAppearance.Light"
                                 android:textColor="@color/color_grey_icon"
                                 android:textSize="@dimen/text_size_12sp"
@@ -415,7 +416,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimary"
-        android:text="Join"
+        android:text="@string/lbl_join"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="14sp" />

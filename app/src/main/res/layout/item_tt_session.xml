@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:singleLine="true"
-            android:text="p1"
+
             android:paddingStart="@dimen/dimen_16"
             android:paddingEnd="@dimen/dimen_16"
             android:textSize="@dimen/text_size_16sp"
@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="left|center"
-            android:text="09:00 AM to 09:40 AM"
+
             android:singleLine="true"
             android:textSize="@dimen/text_size_16sp"
             android:textColor="@color/colorTextDark"
@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Eng"
+
             android:singleLine="true"
             android:textSize="@dimen/text_size_16sp"
             android:textColor="@color/colorTextDark"

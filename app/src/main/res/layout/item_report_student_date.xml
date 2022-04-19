@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_10dp"
         android:gravity="center"
-        android:text="Date One"
+        android:text=""
         android:background="@drawable/primary_border_rec_btn_bg"
         android:textSize="@dimen/text_size_14sp"
         android:textStyle="bold" />

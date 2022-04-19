@@ -3,9 +3,9 @@
     <item
         android:id="@+id/menu_add"
         android:icon="@drawable/posticon"
-        android:title="Add Topic"/>
+        android:title="@string/menu_add_topic"/>
     <item
         android:id="@+id/menu_delete"
         android:icon="@drawable/posticon"
-        android:title="Delete Chapter"/>
+        android:title="@string/menu_delete_chapter"/>
 </menu>

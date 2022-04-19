@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_make_admin"
-        android:title="Make App Admin" />
+        android:title="@string/lbl_make_app_admin" />
     <item
         android:id="@+id/menu_delete"
-        android:title="Delete" />
+        android:title="@string/action_delete" />
 
 </menu>

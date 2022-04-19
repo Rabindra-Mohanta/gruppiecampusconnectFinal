@@ -732,7 +732,7 @@
                 android:gravity="center"
                 android:paddingBottom="5dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Add\nTicket"
+                android:text="@string/lbl_add_ticket"
                 android:textColor="@color/white" />
 
         </FrameLayout>

@@ -4,11 +4,11 @@
 
     <item
         android:id="@+id/menu_attendance"
-        android:title="Import Students" />
+        android:title="@string/menu_import_students" />
 
     <item
         android:id="@+id/menu_add_student"
-        android:title="Add Student" />
+        android:title="@string/lbl_add_students" />
 
 
 </menu>

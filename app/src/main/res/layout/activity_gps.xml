@@ -29,7 +29,7 @@
         android:background="@drawable/add_post_button_bg"
         android:layout_margin="@dimen/padding_10dp"
         android:layout_alignParentBottom="true"
-        android:text="Start"
+        android:text="@string/lbl_start"
         android:textColor="@color/white"
         android:layout_height="40dp" />
 
@@ -40,7 +40,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/padding_10dp"
         android:background="@drawable/add_post_button_bg"
-        android:text="Stop"
+        android:text="@string/lbl_stop"
         android:textColor="@color/white"
         android:layout_height="40dp" />
 

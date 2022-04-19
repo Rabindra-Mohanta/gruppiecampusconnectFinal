@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 <item android:id="@+id/menu_schedule_exam_edit"
-    android:title="Edit Test/Exam"/>
+    android:title="@string/menu_edit_test_exam"/>
     <item android:id="@+id/menu_schedule_exam"
-    android:title="Remove Test/Exam"/>
+    android:title="@string/menu_remove_test_exam"/>
 </menu>

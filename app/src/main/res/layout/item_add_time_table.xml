@@ -83,7 +83,7 @@
                         android:focusable="false"
                         android:textStyle="bold"
                         android:background="@null"
-                        android:hint="Select Start &amp; End Time "
+                        android:hint="@string/select_start_end_time"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_size_16sp"
                         />

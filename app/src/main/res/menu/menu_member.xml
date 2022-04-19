@@ -4,7 +4,7 @@
     <item android:id="@+id/menu_add_member"
         android:icon="@drawable/addfriends"
         app:showAsAction="always"
-        android:title="Add Booth"/>
+        android:title="@string/lbl_add_booth"/>
 
     <item android:id="@+id/edit_committee"
         android:icon="@drawable/ic_edit_black"

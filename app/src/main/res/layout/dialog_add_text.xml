@@ -13,23 +13,23 @@
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rbt1"
-            android:text="Write Properly"
+            android:text="@string/rb_write_properly"
             android:checked="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rbt2"
-            android:text="Spelling Mistakes"
+            android:text="@string/rb_spelling_mistakes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rbt3"
-            android:text="Improve Handwriting"
+            android:text="@string/rb_improve_handwriting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rbt4"
-            android:text="Write your own"
+            android:text="@string/rb_write_your_own"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RadioGroup>
@@ -57,7 +57,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Sticker"
+        android:text="@string/lbl_select_sticker"
         android:layout_marginTop="@dimen/padding_30dp"
         />
 

@@ -102,14 +102,14 @@
                                     android:id="@+id/tvSubject"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="Subject"
+                                    android:hint="@string/lbl_subject"
                                     android:singleLine="true"
                                     android:textSize="@dimen/text_size_13sp" />
                                 <EditText
                                     android:id="@+id/etDesc"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="Description"
+                                    android:hint="@string/lbl_description"
                                     android:singleLine="true"
                                     android:textSize="@dimen/text_size_13sp" />
 

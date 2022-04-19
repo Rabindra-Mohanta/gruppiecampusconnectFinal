@@ -56,7 +56,7 @@
                 style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name : "
+                android:text="@string/lbl_name__"
                 android:textColor="@color/black" />
 
             <TextView
@@ -78,7 +78,7 @@
                 style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Roll Number : "
+                android:text="@string/lbl_roll_no"
                 android:textColor="@color/black" />
 
             <TextView
@@ -100,7 +100,7 @@
                 style="@style/LabelHeader1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Exam Duration : "
+                android:text="@string/lbl_exam_duration"
                 android:textColor="@color/black" />
 
             <TextView
@@ -210,7 +210,7 @@
                 style="@style/LabelHeader2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Marks : "
+                android:text="@string/lbl_total_marks"
                 android:textColor="@color/black" />
 
             <TextView

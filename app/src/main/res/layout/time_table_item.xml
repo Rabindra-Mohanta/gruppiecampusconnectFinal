@@ -65,7 +65,7 @@
                         android:id="@+id/txt_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="dd/MM/yyyy"
+                        android:text="@string/hint_date_format"
                         android:textColor="@color/colorTextLight"
                         style="@style/LabelSmall"
                         />
@@ -85,7 +85,7 @@
                 android:ellipsize="end"
                 android:paddingLeft="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_5dp"
-                android:text="Title Text"
+                android:text="@string/hint_title_text"
                 android:textColor="@color/colorTextDark"
                 android:textColorLink="@color/colorPrimary"
                 android:textStyle="bold" />
@@ -220,7 +220,7 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Delete"
+                android:text="@string/action_delete"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"

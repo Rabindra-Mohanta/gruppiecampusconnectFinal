@@ -31,7 +31,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_10dp"
                 android:gravity="center"
-                android:text="Allow Post All" />
+                android:text="@string/lbl_allow_post_all" />
 
             <Switch
                 android:id="@+id/switch_post_all"
@@ -56,7 +56,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_10dp"
                 android:gravity="center"
-                android:text="Allow Comment All" />
+                android:text="@string/lbl_allow_comment_all" />
 
             <Switch
                 android:id="@+id/switch_comment_all"
@@ -85,7 +85,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_10dp"
                 android:gravity="center"
-                android:text="Enable GPS" />
+                android:text="@string/lbl_enable_gps" />
 
             <Switch
                 android:id="@+id/switch_enable_gps"
@@ -110,7 +110,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_10dp"
                 android:gravity="center"
-                android:text="Allow Add Members" />
+                android:text="@string/lbl_allow_add_member" />
 
             <Switch
                 android:id="@+id/switch_allow_addMember"
@@ -139,7 +139,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_10dp"
                 android:gravity="center"
-                android:text="Enable Attendance" />
+                android:text="@string/lbl_enable_attendance" />
 
             <Switch
                 android:id="@+id/switch_attendance"

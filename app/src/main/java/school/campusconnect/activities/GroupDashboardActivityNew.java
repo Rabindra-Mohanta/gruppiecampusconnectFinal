@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+
 import android.icu.text.Transliterator;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -117,6 +118,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     @Bind(R.id.toolbar_dashboard)
     public Toolbar mToolBar;
+
 
     @Bind(R.id.appBar)
     AppBarLayout appBar;
@@ -1018,7 +1020,6 @@ public class GroupDashboardActivityNew extends BaseActivity
                     }
                 }
 
-
                 List<BannerTBL> bannerTBL = BannerTBL.getBanner(groupId);
 
                 if (bannerTBL.size() > 0)
@@ -1027,7 +1028,6 @@ public class GroupDashboardActivityNew extends BaseActivity
                         ((BaseTeamFragmentv3) currFrag).bannerListApiCall();
                     }
                 }
-
 
                 List<NotificationTable> notificationTableList = NotificationTable.getAllNotificationList(groupId,1);
 

@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:gravity="center|right"
             android:paddingRight="@dimen/padding_10dp"
-            android:text="Mark Card >"
+            android:text="@string/lbl_mark_card"
             android:textSize="@dimen/text_size_16sp" />
 
         <FrameLayout

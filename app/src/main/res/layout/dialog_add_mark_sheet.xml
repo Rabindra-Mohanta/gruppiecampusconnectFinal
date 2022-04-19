@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:gravity="center"
-                android:text="Subjects"
+                android:text="@string/lbl_subjects"
                 android:textSize="@dimen/text_size_13sp"
                 android:textColor="@color/colorTextDark"
                 style="@style/LabelNormal" />
@@ -30,7 +30,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Obtained Marks"
+                android:text="@string/lbl_obtained_mark"
                 android:textSize="@dimen/text_size_13sp"
                 android:textColor="@color/colorTextDark"
                 style="@style/LabelNormal" />
@@ -39,7 +39,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Max marks"
+                android:text="@string/hint_max_marks"
                 android:textSize="@dimen/text_size_13sp"
                 android:textColor="@color/colorTextDark"
                 style="@style/LabelNormal" />
@@ -48,7 +48,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Min marks"
+                android:text="@string/lbl_Min_Marks"
                 android:textSize="@dimen/text_size_13sp"
                 android:textColor="@color/colorTextDark"
                 style="@style/LabelNormal" />

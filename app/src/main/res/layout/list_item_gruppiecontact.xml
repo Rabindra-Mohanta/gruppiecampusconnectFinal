@@ -13,6 +13,8 @@
         app:cardCornerRadius="@dimen/padding_5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        android:layout_height="wrap_content">
+
         <RelativeLayout
             android:id="@+id/relMain"
             android:layout_width="match_parent"
@@ -73,7 +75,7 @@
                         android:paddingEnd="@dimen/padding_16dp"
                         android:paddingStart="16dp"
                         android:singleLine="true"
-                        android:text="Name"
+                        android:text="@string/name"
                         android:textColor="@color/colorPrimary"
                         style="@style/LabelNormal"
                         android:paddingRight="@dimen/padding_16dp"
@@ -105,7 +107,6 @@
                         android:paddingEnd="@dimen/padding_16dp"
                         android:paddingStart="16dp"
                         android:singleLine="true"
-                        android:text="ssd"
                         style="@style/LabelNormal"
                         android:textColor="@color/colorTextLight"
                         android:paddingRight="@dimen/padding_16dp"

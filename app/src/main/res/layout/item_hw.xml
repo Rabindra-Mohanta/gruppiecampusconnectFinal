@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:singleLine="true"
-                        android:text="name"
+
                         android:textColor="@color/colorTextDark"
                         style="@style/LabelNormal" />
 
@@ -87,7 +87,7 @@
                         android:gravity="end"
                         android:paddingEnd="@dimen/padding_10dp"
                         android:singleLine="true"
-                        android:text="hh MMM yyyy\nhh:mm a"
+
                         android:textColor="@color/colorTextDark"
                         style="@style/LabelNormal" />
                 </LinearLayout>

@@ -82,7 +82,7 @@
                             android:id="@+id/txt_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Gruppie Contacts"
+                            android:text="@string/lbl_gruppie_contact"
                             android:visibility="gone"
                             android:textAppearance="@style/TextAppearance.Light"
                             android:textColor="@color/color_grey_icon"

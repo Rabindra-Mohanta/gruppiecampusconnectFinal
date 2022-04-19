@@ -27,7 +27,7 @@
                 android:id="@+id/done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Banners"
+                android:text="@string/lbl_banners"
                 android:textSize="@dimen/text_size_20sp"
                 android:textColor="@color/white"
                 android:layout_marginLeft="@dimen/padding_10dp"

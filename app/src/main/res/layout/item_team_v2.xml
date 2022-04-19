@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="Team Name"/>
+            android:text="@string/lbl_team_name"/>
     </RelativeLayout>
 
 </layout>

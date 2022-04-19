@@ -4,5 +4,5 @@
     <item android:id="@+id/menuAdd"
         android:icon="@drawable/ic_post_new"
         app:showAsAction="ifRoom"
-        android:title="Add"/>
+        android:title="@string/add"/>
 </menu>

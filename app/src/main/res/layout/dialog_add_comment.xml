@@ -9,13 +9,13 @@
 
         <CheckBox
             android:id="@+id/chkVerify"
-            android:text="Move to verified"
+            android:text="@string/move_to_verified"
             android:checked="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <CheckBox
             android:id="@+id/chkReAssign"
-            android:text="Re-assign"
+            android:text="@string/reassign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

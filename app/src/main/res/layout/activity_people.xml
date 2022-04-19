@@ -30,7 +30,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
-                android:text="Select All"
+                android:text="@string/lbl_select_all"
                 android:textColor="@color/white"
                 android:layout_height="wrap_content"/>
             <CheckBox

@@ -176,7 +176,7 @@
                             android:layout_marginStart="@dimen/padding_10dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:hint="G-Pay / Paytm"
+                            android:hint="@string/hint_gpay_paytm"
                             android:singleLine="true"
                             android:textSize="@dimen/text_size_13sp" />
                     </LinearLayout>

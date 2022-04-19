@@ -114,7 +114,7 @@
                                 <EditText
                                     android:id="@+id/etFeesType"
                                     android:layout_width="0dp"
-                                    android:hint="Fees Type"
+                                    android:hint="@string/hint_fees_type"
                                     android:textSize="@dimen/text_size_13sp"
                                     android:singleLine="true"
                                     android:layout_height="wrap_content"

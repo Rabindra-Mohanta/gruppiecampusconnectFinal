@@ -69,7 +69,7 @@
                     <Button
                         android:id="@+id/btnStart"
                         android:layout_width="120dp"
-                        android:text="Start"
+                        android:text="@string/lbl_start"
                         android:visibility="gone"
                         android:layout_marginStart="@dimen/padding_5dp"
                         android:layout_gravity="center"
@@ -183,7 +183,7 @@
                         <TextView
                             android:clickable="true"
                             android:layout_width="0dp"
-                            android:text="Question paper will be \navailable after exam start"
+                            android:text="@string/lbl_ques_p_"
                             android:textColor="@color/colorPrimary"
                             android:background="@color/white"
                             android:gravity="center"
@@ -223,7 +223,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:gravity="center_vertical|end"
-                    android:text="Read More..."
+                    android:text="@string/lbl_Read_more"
                     android:textColor="@color/colorTextLight"
                     android:visibility="gone" />
 
@@ -235,7 +235,7 @@
                     android:layout_gravity="right"
                     android:gravity="center_vertical|end"
                     android:padding="@dimen/padding_5dp"
-                    android:text="Read More..."
+                    android:text="@string/lbl_Read_more"
                     android:textColor="@color/colorTextLight"
                     android:visibility="gone" />
 
@@ -279,7 +279,7 @@
                     <Button
                         android:id="@+id/btnSubmit"
                         android:layout_width="200dp"
-                        android:text="Submit"
+                        android:text="@string/lbl_submit"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:layout_marginBottom="@dimen/padding_5dp"
                         android:layout_marginStart="@dimen/padding_5dp"

@@ -16,7 +16,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_toLeftOf="@id/imgClose"
                     android:text="@string/lbl_search_sub_caste"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="@dimen/padding_20dp"
@@ -68,7 +69,6 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvSearch"
                     android:layout_width="match_parent"
-                    android:text="@string/hint_issue_not_found"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="vertical"
                     android:layout_height="wrap_content" />

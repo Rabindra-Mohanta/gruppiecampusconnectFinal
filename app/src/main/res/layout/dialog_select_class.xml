@@ -23,7 +23,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:gravity="center"
-                    android:text="Select Class"
+                    android:text="@string/lbl_select_class"
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:layout_height="wrap_content" />
@@ -52,7 +52,7 @@
         <Button
             android:id="@+id/btnCancel"
             android:layout_width="100dp"
-            android:text="Clear"
+            android:text="@string/lbl_clear"
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:layout_marginEnd="@dimen/padding_5dp"
@@ -61,7 +61,7 @@
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="100dp"
-            android:text="Filter"
+            android:text="@string/lbl_filter"
             android:layout_marginStart="@dimen/padding_5dp"
             android:layout_gravity="center"
             android:textColor="@color/white"

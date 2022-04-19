@@ -30,7 +30,7 @@
             <Button
                 android:id="@+id/importFromContact"
                 android:layout_width="wrap_content"
-                android:text="Add From Contact"
+                android:text="@string/lbl_add_contact"
                 android:textColor="@color/white"
                 android:textAllCaps="false"
                 android:layout_gravity="center"

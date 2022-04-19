@@ -46,7 +46,7 @@
             android:id="@+id/tvTeamName"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:text="Team Name"
+            android:text="@string/lbl_team_name"
             android:layout_marginTop="@dimen/padding_5dp"
             style="@style/LabelSmall"
             android:textSize="@dimen/text_size_14sp"

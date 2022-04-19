@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:textColor="@color/black"
         android:gravity="center"
-        android:text="English" />
+        android:text="@string/lbl_english" />
     <View
         android:layout_width="1px"
         android:layout_height="match_parent"
@@ -27,7 +27,7 @@
         android:layout_weight="1"
         android:textColor="@color/black"
         android:gravity="center"
-        android:text="100" />
+        android:text="" />
     <View
         android:layout_width="1px"
         android:layout_height="match_parent"
@@ -42,7 +42,7 @@
         android:layout_weight="1"
         android:textColor="@color/black"
         android:gravity="center"
-        android:text="35" />
+        android:text="" />
     <View
         android:layout_width="1px"
         android:layout_height="match_parent"
@@ -59,6 +59,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="89" />
+        android:text="" />
 
 </LinearLayout>

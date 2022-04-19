@@ -43,7 +43,7 @@
                     style="@style/LabelSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="dd/MM/yyyy"
+
                     android:layout_marginLeft="@dimen/padding_10dp"
                     android:layout_marginTop="@dimen/padding_10dp"
                     android:textColor="@color/colorTextLight" />
@@ -59,7 +59,7 @@
                     android:ellipsize="end"
                     android:paddingLeft="@dimen/padding_5dp"
                     android:paddingRight="@dimen/padding_5dp"
-                    android:text="Title Text"
+
                     android:textColor="@color/colorTextDark"
                     android:textColorLink="@color/colorPrimary"
                     android:textStyle="bold" />
@@ -153,7 +153,7 @@
                     android:paddingTop="@dimen/padding_5dp"
                     android:paddingRight="@dimen/padding_20dp"
                     android:paddingBottom="@dimen/padding_5dp"
-                    android:text="Delete Album"
+                    android:text="@string/lbl_delete_album"
                     android:textAppearance="@style/TextAppearance.Regular"
                     android:textColor="@color/black_semi_transparent"
                     android:textSize="@dimen/text_size_14sp"

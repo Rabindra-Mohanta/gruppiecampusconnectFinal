@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menuDelete"
-        android:title="Delete Staff"/>
+        android:title="@string/menu_delete_staff"/>
     <item android:id="@+id/menuMakeAdmin"
         android:visible="false"
-        android:title="Make admin"/>
+        android:title="@string/menu_make_admin"/>
 
 </menu>

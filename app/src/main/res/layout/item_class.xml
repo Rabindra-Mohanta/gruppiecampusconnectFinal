@@ -118,7 +118,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:text="name"
+
                             android:textColor="@color/black" />
 
                         <TextView
@@ -127,7 +127,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="Students : "
+
                             android:textColor="@color/colorTextNormal"
                             android:visibility="visible" />
                     </LinearLayout>

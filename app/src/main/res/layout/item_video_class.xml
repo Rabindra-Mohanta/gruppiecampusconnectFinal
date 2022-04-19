@@ -65,7 +65,7 @@
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginEnd="@dimen/padding_5dp"
                         android:layout_gravity="center"
-                        android:text="INFO"
+                        android:text="@string/lbl_info"
                         android:singleLine="true"
                         android:maxLength="10"
                         app:srcCompat="@drawable/ic_close"
@@ -82,7 +82,7 @@
                         android:layout_marginEnd="@dimen/padding_5dp"
                         android:layout_gravity="center"
                         android:textColor="@color/white"
-                        android:text="END"
+                        android:text="@string/lbl_end"
                         app:srcCompat="@drawable/ic_close"
                         android:background="@drawable/rounded_red"
                         />
@@ -160,7 +160,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:text="name"
+                            android:text="@string/name"
                             android:textColor="@color/colorTextDark"
                             style="@style/LabelNormal" />
 
@@ -169,7 +169,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="Students : "
+                            android:text="@string/lbl_students"
                             android:visibility="visible"
                             android:textColor="@color/colorTextNormal"
                             style="@style/LabelSmall" />

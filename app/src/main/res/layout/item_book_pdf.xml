@@ -105,7 +105,7 @@
                     android:ellipsize="end"
                     android:paddingLeft="@dimen/padding_5dp"
                     android:paddingRight="@dimen/padding_5dp"
-                    android:text="Title Text"
+
                     android:textSize="@dimen/text_size_18sp"
                     android:textColor="@color/colorTextDark"
                     android:textColorLink="@color/colorPrimary"
@@ -122,7 +122,7 @@
                     android:paddingRight="@dimen/padding_10dp"
                     android:autoLink="web"
                     android:maxLength="100"
-                    android:text="Description"
+
                     android:visibility="visible"
                     android:textColorLink="@color/colorPrimary"
                     android:textColor="@color/colorTextDark"
@@ -165,7 +165,7 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Delete"
+                android:text="@string/action_delete"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"

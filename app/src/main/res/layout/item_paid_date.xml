@@ -22,7 +22,7 @@
         <EditText
             android:id="@+id/etDate"
             android:layout_width="0dp"
-            android:hint="Paid Date"
+            android:hint="@string/paid_date"
             android:textSize="@dimen/text_size_13sp"
             android:singleLine="true"
             android:focusable="false"

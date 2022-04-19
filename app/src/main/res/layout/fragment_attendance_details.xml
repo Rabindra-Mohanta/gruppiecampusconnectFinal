@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Day"
+                android:text="@string/lbl_day"
                 android:gravity="center"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold"
@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Morning"
+                android:text="@string/lbl_morning"
                 android:gravity="center"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:layout_marginBottom="@dimen/padding_5dp"
@@ -69,7 +69,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Evening"
+                android:text="@string/lbl_evening"
                 android:gravity="center"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:layout_marginBottom="@dimen/padding_5dp"

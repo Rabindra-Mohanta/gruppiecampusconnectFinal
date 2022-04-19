@@ -34,17 +34,18 @@ android {
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')*/
                 // [1. Gruppie Campus constituency]
-            /*    applicationId "gcm.gruppie"
+               /* applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
                 buildConfigField("String", "APP_ID",  '"constituency"')*/
+
                 /// KITTUR MLA App...
                 applicationId "kittur.gruppie"
-                versionCode 4
-                versionName "4.0"
+                versionCode 5
+                versionName "5.0"
                 resValue "string", "app_name", '"Kittur MLA"'
                 buildConfigField("String", "AppName", '"Kittur"')
                 buildConfigField("String", "AppCategory", '"constituency"')
@@ -197,11 +198,11 @@ android {
                 buildConfigField("String", "AppName", '"MGV School"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')*/
-                   ndk {
+                 /*  ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
                        abiFilters 'armeabi-v7a','armeabi-v8a'//
-                   }
+                   }*/
             }
     buildTypes {
         release {
@@ -226,7 +227,7 @@ android {
         debug
          {
             buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
-    //       buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
+      //     buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
         //     buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'
        //   buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'
 //           buildConfigField "String", "BASE_URL", '"https://lite.gruppie.in"'
@@ -412,7 +413,7 @@ dependencies {
 
     implementation 'com.ss.bannerslider:bannerslider:2.0.0'
 
-  //  implementation 'com.google.mlkit:translate:17.0.0'
+    implementation 'com.google.mlkit:translate:17.0.0'
 
 
 }

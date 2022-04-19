@@ -80,7 +80,7 @@
                 style="@style/LabelHeader2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Constituency Issue Jurisdiction"
+
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
@@ -148,7 +148,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/padding_10dp"
                                     android:layout_centerVertical="true"
-                                    android:text="Burhan Copper"
+
                                     android:textColor="@color/colorTextLight" />
 
                                 <ImageView
@@ -197,7 +197,7 @@
                                     android:layout_marginLeft="@dimen/padding_10dp"
                                     android:layout_gravity="center"
                                     android:lineSpacingExtra="2dp"
-                                    android:text="Lorem Ipsum is simply Dummy Text of the println ipsum is simply."
+
                                     android:textColor="@color/colorTextLight" />
                             </LinearLayout>
 
@@ -231,7 +231,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/padding_10dp"
                                         android:layout_centerVertical="true"
-                                        android:text="Burhan Copper"
+
                                         android:textColor="@color/colorTextLight" />
 
                                     <ImageView
@@ -269,7 +269,7 @@
                                         android:layout_marginLeft="@dimen/padding_10dp"
                                         android:layout_gravity="center"
                                         android:lineSpacingExtra="2dp"
-                                        android:text="Lorem Ipsum is simply Dummy Text of the println ipsum is simply."
+
                                         android:textColor="@color/colorTextLight" />
                                 </LinearLayout>
 
@@ -448,7 +448,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_15dp"
-                android:text="Issue Attachment"
+                android:text="@string/lbl_issue_attachment"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
@@ -623,7 +623,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/padding_10dp"
                                 android:lineSpacingExtra="2dp"
-                                android:text="Lorem Ipsum is simply Dummy Text of the println ipsum is simply."
+
                                 android:textColor="@color/colorTextLight" />
                         </LinearLayout>
 
@@ -646,7 +646,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/padding_10dp"
-                                android:text="Ahmedabad"
+
                                 android:textColor="@color/colorTextLight" />
                         </LinearLayout>
 
@@ -671,7 +671,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/padding_10dp"
-                                android:text="Lorem Ipsum is simply Dummy Text."
+
                                 android:textColor="@color/colorTextLight" />
 
                         </LinearLayout>

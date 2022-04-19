@@ -201,7 +201,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:text="name"
+
                             android:textColor="@color/colorPrimary" />
 
                         <!--  <TextView

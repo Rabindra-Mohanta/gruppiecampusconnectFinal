@@ -69,7 +69,7 @@
                         android:layout_weight="1"
                         android:gravity="right"
                         android:layout_height="wrap_content"
-                        android:text="dd/MM/yyyy\nhh:mm"
+                        android:text="@string/hint_date_format_"
                         android:textColor="@color/colorTextLight" />
 
                 </LinearLayout>
@@ -221,7 +221,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
                 android:gravity="center_vertical|end"
-                android:text="Read More..."
+                android:text="@string/lbl_Read_more"
                 android:textColor="@color/colorTextLight"
                 android:visibility="gone" />
 
@@ -233,7 +233,7 @@
                 android:layout_gravity="right"
                 android:gravity="center_vertical|end"
                 android:padding="@dimen/padding_5dp"
-                android:text="Read More..."
+                android:text="@string/lbl_Read_more"
                 android:textColor="@color/colorTextLight"
                 android:visibility="gone" />
 
@@ -317,7 +317,7 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Delete Test Paper"
+                android:text="@string/lbl_delete_test_paper"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"

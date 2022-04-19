@@ -19,7 +19,7 @@
             android:gravity="center_vertical"
             android:paddingEnd="@dimen/padding_16dp"
             android:paddingStart="16dp"
-            android:text="ssd"
+            android:text=""
             android:textColor="@color/color_orange_hover"
             android:textSize="16sp" />
 

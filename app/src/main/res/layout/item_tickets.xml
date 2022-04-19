@@ -40,7 +40,7 @@
                         style="@style/LabelHeader1"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:text="Burthan Cooper"/>
+                       />
 
                     <TextView
                         android:layout_marginTop="2dp"
@@ -49,7 +49,7 @@
                         android:layout_height="wrap_content"
                         style="@style/LabelNormal"
                         android:textColor="@color/colorTextLight"
-                        android:text="Issue - Jurison"/>
+                        />
 
                    <!-- <TextView
                         android:layout_marginTop="2dp"

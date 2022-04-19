@@ -64,7 +64,7 @@
                         android:layout_height="match_parent"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Group Name"
+                        android:text="@string/lbl_group_name"
                         style="@style/LabelHeader2"
                         android:textColor="@color/colorTextWhite"
                         android:visibility="visible" />
@@ -74,7 +74,7 @@
                         android:layout_height="match_parent"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Members"
+                        android:text="@string/lbl_members"
                         style="@style/LabelSmall"
                         android:textColor="@color/colorTextWhiteLight"
                         android:visibility="gone" />

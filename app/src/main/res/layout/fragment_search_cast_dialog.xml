@@ -16,10 +16,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:text="@string/lbl_search_caste"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="@dimen/padding_20dp"
+                    android:layout_toLeftOf="@id/imgClose"
                     android:layout_centerVertical="true"
                     style="@style/TextAppearance.Bold"
                     android:textSize="@dimen/text_size_18sp"

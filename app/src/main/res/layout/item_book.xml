@@ -27,7 +27,6 @@
                 android:singleLine="true"
                 android:layout_marginLeft="@dimen/padding_10dp"
                 android:layout_gravity="center"
-                android:text="name"
                 android:textColor="@color/colorTextDark"
                 style="@style/LabelNormal" />
 

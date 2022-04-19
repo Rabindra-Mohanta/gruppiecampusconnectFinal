@@ -2,5 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menuEdit"
-        android:title="Edit Fees"/>
+        android:title="@string/menu_edit_fees"/>
 </menu>

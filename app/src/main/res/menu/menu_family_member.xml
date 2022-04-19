@@ -5,7 +5,7 @@
         android:id="@+id/menu_add_class_student"
         app:showAsAction="always"
         android:icon="@drawable/posticon"
-        android:title="Add Family Member" />
+        android:title="@string/menu_add_family_member" />
 
 
 </menu>

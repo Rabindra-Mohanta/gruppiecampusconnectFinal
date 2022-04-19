@@ -32,7 +32,7 @@
             android:id="@+id/done"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/padding_30dp"
-            android:text="Crop"
+            android:text="@string/crop"
             android:textSize="@dimen/text_size_20sp"
             android:textColor="@color/white"
             android:textStyle="bold"

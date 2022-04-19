@@ -94,7 +94,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:text="name"
+                            android:text="@string/name"
                             android:paddingTop="@dimen/padding_5dp"
                             android:paddingBottom="@dimen/padding_5dp"
                             android:textColor="@color/colorTextDark"
@@ -105,7 +105,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="Subjects : "
                             android:visibility="gone"
                             android:textColor="@color/colorTextNormal"
                             style="@style/LabelSmall" />

@@ -37,7 +37,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:singleLine="true"
-                        android:text="All Booth Members..."
+                        android:text="@string/lbl_all_booth_member"
                         android:textColor="@color/colorPrimary" />
 
 

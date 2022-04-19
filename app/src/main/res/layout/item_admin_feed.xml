@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/padding_10dp"
         android:layout_height="wrap_content">
@@ -321,14 +321,14 @@
                         </androidx.cardview.widget.CardView>
 
                         <TextView
-                            android:layout_width="match_parent"
-                            android:gravity="center"
-                            android:layout_marginTop="@dimen/padding_5dp"
-                            android:text="Open Tickets"
                             style="@style/LabelSmall"
-                            android:textSize="@dimen/text_size_12sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:gravity="center"
+                            android:text="@string/lbl_open_tickets"
                             android:textColor="@color/colorPrimary"
-                            android:layout_height="wrap_content" />
+                            android:textSize="@dimen/text_size_12sp" />
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -380,7 +380,7 @@
                             android:layout_width="match_parent"
                             android:gravity="center"
                             android:layout_marginTop="@dimen/padding_5dp"
-                            android:text="Announcements"
+                            android:text="@string/lbl_announcements"
                             style="@style/LabelSmall"
                             android:textSize="@dimen/text_size_12sp"
                             android:textColor="@color/colorPrimary"
@@ -437,8 +437,7 @@
                             android:layout_width="match_parent"
                             android:gravity="center"
                             android:layout_marginTop="@dimen/padding_5dp"
-                            android:text="Booths Count"
-
+                            android:text="@string/lbl_booth_count"
                             style="@style/LabelSmall"
                             android:textSize="@dimen/text_size_12sp"
                             android:textColor="@color/colorPrimary"
@@ -496,7 +495,7 @@
                             android:layout_width="match_parent"
                             android:gravity="center"
                             android:layout_marginTop="@dimen/padding_5dp"
-                            android:text="Booth Discussions"
+                            android:text="@string/lbl_booth_discussion"
                             style="@style/LabelSmall"
                             android:textSize="@dimen/text_size_12sp"
                             android:textColor="@color/colorPrimary"
@@ -565,7 +564,7 @@
                             android:layout_width="match_parent"
                             android:gravity="center"
                             android:layout_marginTop="@dimen/padding_5dp"
-                            android:text="Public Streets"
+                            android:text="@string/lbl_public_street"
                             style="@style/LabelSmall"
                             android:textSize="@dimen/text_size_12sp"
                             android:textColor="@color/colorPrimary"
@@ -624,7 +623,7 @@
                             android:layout_width="match_parent"
                             android:gravity="center"
                             android:layout_marginTop="@dimen/padding_5dp"
-                            android:text="Public Discussions"
+                            android:text="@string/lbl_public_discussion"
                             style="@style/LabelSmall"
                             android:textSize="@dimen/text_size_12sp"
                             android:textColor="@color/colorPrimary"

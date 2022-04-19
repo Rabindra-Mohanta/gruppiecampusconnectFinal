@@ -94,7 +94,7 @@
                                 <EditText
                                     android:id="@+id/tvSubject"
                                     android:layout_width="0dp"
-                                    android:hint="Add Subject"
+                                    android:hint="@string/lbl_add_subject"
                                     android:textSize="@dimen/text_size_13sp"
                                     android:singleLine="true"
                                     android:layout_height="wrap_content"

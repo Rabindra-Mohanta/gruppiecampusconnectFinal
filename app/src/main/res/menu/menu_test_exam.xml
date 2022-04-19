@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_add_post"
         android:icon="@drawable/ic_post_new"
-        android:title="Add Test/Exam"
+        android:title="@string/menu_text_exam"
         app:showAsAction="always" />
 
 </menu>

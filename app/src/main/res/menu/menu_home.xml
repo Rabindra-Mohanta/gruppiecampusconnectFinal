@@ -4,28 +4,28 @@
 
     <item android:id="@+id/menu_change_pass"
         android:visible="false"
-        android:title="Change Password"/>
+        android:title="@string/action_change_pwd"/>
 
     <item android:id="@+id/menu_change_pin"
         android:visible="false"
-        android:title="Change Pin"/>
+        android:title="@string/action_change_pin"/>
 
     <item android:id="@+id/menu_change_mobile"
         android:visible="false"
-        android:title="Change Number"/>
+        android:title="@string/action_change_nu"/>
 
     <item android:id="@+id/menu_set_wallpaper"
         android:visible="false"
-        android:title="Set Wallpaper"/>
+        android:title="@string/action_set_wallpaper"/>
     <item android:id="@+id/menu_remove_wallpaper"
         android:visible="false"
-        android:title="Remove Wallpaper"/>
+        android:title="@string/action_remove_wallpaper"/>
 
     <item android:id="@+id/menu_logout"
-        android:title="Logout"/>
+        android:title="@string/action_logout"/>
 
     <item android:id="@+id/menu_search"
         app:showAsAction="always"
         android:icon="@drawable/icon_search"
-        android:title="Search"/>
+        android:title="@string/hint_search_group"/>
 </menu>

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <item android:id="@+id/menu_filter"
-    android:title="Filter"
+    android:title="@string/lbl_filter"
     android:icon="@drawable/icon_filter"
     app:showAsAction="always"/>
 </menu>

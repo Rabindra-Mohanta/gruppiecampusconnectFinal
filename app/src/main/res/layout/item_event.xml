@@ -32,7 +32,7 @@
             <TextView
                 android:id="@+id/tvData"
                 android:layout_width="match_parent"
-                android:text="Maha shivaratri"
+
                 android:textColor="@color/colorTextDark"
                 android:textSize="@dimen/text_size_18sp"
                 android:layout_below="@id/compactcalendar_view"
@@ -40,7 +40,7 @@
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="match_parent"
-                android:text="March 4"
+
                 android:textColor="@color/colorTextDark"
                 android:layout_below="@id/compactcalendar_view"
                 android:layout_height="wrap_content" />

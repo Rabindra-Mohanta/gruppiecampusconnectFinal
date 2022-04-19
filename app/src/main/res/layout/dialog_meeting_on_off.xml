@@ -28,7 +28,7 @@
                     android:textSize="@dimen/text_size_18sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Do you want to Continue Class?"
+                    android:text="@string/lbl_do_you_want_to_continue_class"
                     android:textColor="@color/black" />
 
                 <RelativeLayout
@@ -80,7 +80,7 @@
                         android:background="@android:color/holo_green_dark"
                         android:gravity="center"
                         android:padding="@dimen/padding_10dp"
-                        android:text="Yes"
+                        android:text="@string/strYes"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_18sp" />
                 </RelativeLayout>

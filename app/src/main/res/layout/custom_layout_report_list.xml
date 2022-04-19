@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_10dp"
-        android:text="Report Post"
+        android:text="@string/action_report_post"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_20sp"
         android:textStyle="bold" />
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_5dp"
                 android:padding="@dimen/padding_5dp"
-                android:text="Cancel"
+                android:text="@string/lbl_cancel"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_18sp" />
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_5dp"
                 android:padding="@dimen/padding_5dp"
-                android:text="Report"
+                android:text="@string/lbl_report"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_18sp" />
 

@@ -35,7 +35,7 @@
                     android:textColor="@color/black"
                     android:layout_toLeftOf="@id/tvcommentTime"
                     android:id="@+id/tvName"
-                    android:text="Name"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -44,7 +44,7 @@
                     android:textColor="@color/colorTextLight"
                     android:layout_alignParentRight="true"
                     android:id="@+id/tvcommentTime"
-                    android:text="9:50 PM"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -54,7 +54,7 @@
                 style="@style/LabelHeader1"
                 android:textColor="@color/colorTextLight"
                 android:id="@+id/tvDesc"
-                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

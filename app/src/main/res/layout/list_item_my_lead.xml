@@ -77,7 +77,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="ssd"
                             android:singleLine="true"
                             android:textColor="@color/color_grey_icon"
                             android:textAppearance="@style/TextAppearance.Regular"
@@ -89,9 +88,7 @@
                             android:id="@+id/txt_phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
                             android:gravity="center_vertical"
-                            android:text=""
                             android:textColor="@color/color_grey_icon"
                             android:textAppearance="@style/TextAppearance.Light"
                             android:textSize="14sp" />

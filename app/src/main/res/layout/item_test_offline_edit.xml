@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_10dp"
                 android:paddingLeft="@dimen/padding_5dp"
-                android:text="11/12/21"
+
                 android:textColor="@color/colorPrimary" />
             <TextView
                 android:id="@+id/tvSubject"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_10dp"
                 android:paddingLeft="@dimen/padding_5dp"
-                android:text="English"
+
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>
         <LinearLayout
@@ -72,7 +72,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
                         android:focusable="false"
-                        android:hint="Select Date"
+                        android:hint="@string/hint_date"
                         android:singleLine="true"
                         android:textSize="@dimen/text_size_13sp" />
                 </LinearLayout>
@@ -98,7 +98,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
                         android:focusable="false"
-                        android:hint="Select Date"
+                        android:hint="@string/hint_date"
                         android:singleLine="true"
                         android:textSize="@dimen/text_size_13sp" />
                 </LinearLayout>
@@ -131,7 +131,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
                         android:focusable="false"
-                        android:hint="Select Time"
+                        android:hint="@string/hint_time"
                         android:singleLine="true"
                         android:textSize="@dimen/text_size_13sp" />
                 </LinearLayout>
@@ -156,7 +156,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
                         android:focusable="false"
-                        android:hint="Select Time"
+                        android:hint="@string/hint_time"
                         android:singleLine="true"
                         android:textSize="@dimen/text_size_13sp" />
                 </LinearLayout>
@@ -188,7 +188,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
                         android:inputType="numberDecimal"
-                        android:hint="Enter Marks"
+                        android:hint="@string/hint_enter_marks"
                         android:singleLine="true"
                         android:textSize="@dimen/text_size_13sp" />
                 </LinearLayout>
@@ -213,7 +213,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/login_button_height"
                         android:inputType="numberDecimal"
-                        android:hint="Enter Marks"
+                        android:hint="@string/hint_enter_marks"
                         android:singleLine="true"
                         android:textSize="@dimen/text_size_13sp" />
                 </LinearLayout>

@@ -58,7 +58,7 @@
                 <Button
                     android:id="@+id/btnStart"
                     android:layout_width="120dp"
-                    android:text="Start"
+                    android:text="@string/lbl_start"
                     android:visibility="gone"
                     android:layout_marginStart="@dimen/padding_5dp"
                     android:layout_gravity="center"
@@ -189,7 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:gravity="center_vertical|end"
-                android:text="Read More..."
+                android:text="@string/lbl_Read_more"
                 android:textColor="@color/colorTextLight"
                 android:visibility="gone" />
 
@@ -201,7 +201,7 @@
                 android:layout_gravity="right"
                 android:gravity="center_vertical|end"
                 android:padding="@dimen/padding_5dp"
-                android:text="Read More..."
+                android:text="@string/lbl_Read_more"
                 android:textColor="@color/colorTextLight"
                 android:visibility="gone" />
 
@@ -277,7 +277,7 @@
                     android:layout_marginEnd="@dimen/padding_15dp"
                     android:layout_height="wrap_content"
                     android:lines="2"
-                    android:hint="Enter message"
+                    android:hint="@string/hint_enter_message"
                     android:paddingStart="@dimen/padding_10dp"
                     android:paddingEnd="@dimen/padding_10dp"
                     android:paddingTop="@dimen/padding_5dp"

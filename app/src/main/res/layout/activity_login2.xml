@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:text="© 2016 Vivid Innovation Pvt Ltd"
+        android:text="@string/lbl_app_details"
         android:textColor="@color/black_semi_transparent"
         android:visibility="invisible" />
 

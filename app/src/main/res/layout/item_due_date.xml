@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:focusable="false"
-                android:hint="Due Date"
+                android:hint="@string/due_date"
                 android:singleLine="true"
                 android:textSize="@dimen/text_size_13sp" />
 

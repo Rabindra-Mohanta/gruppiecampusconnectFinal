@@ -42,7 +42,7 @@
                     android:layout_width="match_parent"
                     android:textColor="@color/colorTextDark"
                     android:textSize="@dimen/text_size_14sp"
-                    android:text="Team Name"
+                    android:text="@string/lbl_team_name"
                     android:maxLines="1"
                     android:layout_height="wrap_content" />
 
@@ -50,7 +50,7 @@
                     android:id="@+id/txt_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Members : "
+                    android:text="@string/lbl_members"
                     android:visibility="visible"
                     android:textColor="@color/colorTextNormal"
                     style="@style/LabelSmall" />

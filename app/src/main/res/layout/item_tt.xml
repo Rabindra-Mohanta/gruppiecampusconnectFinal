@@ -22,7 +22,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="Sunday"
+
                 android:paddingStart="@dimen/dimen_16"
                 android:paddingEnd="@dimen/dimen_16"
                 android:textSize="@dimen/text_size_20sp"

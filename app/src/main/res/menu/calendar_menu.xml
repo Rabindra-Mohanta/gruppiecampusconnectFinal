@@ -4,5 +4,5 @@
     <item android:id="@+id/menu_add_event"
         android:icon="@drawable/posticon"
         app:showAsAction="ifRoom"
-        android:title="Add Event"/>
+        android:title="@string/lbl_add_events"/>
 </menu>

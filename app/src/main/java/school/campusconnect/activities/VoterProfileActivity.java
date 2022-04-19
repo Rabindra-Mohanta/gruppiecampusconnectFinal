@@ -136,7 +136,14 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
         if(GroupDashboardActivityNew.isPost)
         {
-            menu.findItem(R.id.menu_delete).setVisible(true);
+            if (isCommittee)
+            {
+                menu.findItem(R.id.menu_delete).setVisible(true);
+            }
+            else
+            {
+                menu.findItem(R.id.menu_delete).setVisible(false);
+            }
         }
         else
         {
