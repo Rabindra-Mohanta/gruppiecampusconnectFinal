@@ -233,7 +233,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
 
             case LeafManager.API_ID_DELETE_POST:
                 try {
-                    Toast.makeText(getActivity(), "Post Deleted Succesfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                     getData();
                     AmazoneRemove.remove(currentItem.fileName);
                 }catch (Exception e){}
@@ -259,7 +259,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
             case LeafManager.API_REPORT:
                 hideLoadingBar();
                 try {
-                    Toast.makeText(getActivity(), "Post Reported Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_post_reported_sucessfully), Toast.LENGTH_SHORT).show();
                 }catch (Exception e){}
 
                 break;
@@ -285,7 +285,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
             logout();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {
@@ -362,7 +362,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     @Override
     public void onDeleteClick(PostItem item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", FavouritePostFragment.this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), FavouritePostFragment.this);
     }
 
     @Override

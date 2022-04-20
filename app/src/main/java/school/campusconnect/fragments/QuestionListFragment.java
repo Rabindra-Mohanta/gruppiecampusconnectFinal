@@ -95,7 +95,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
         mComment.setCommentEditTextId(new ObservableInt(R.id.edt_comment));
         mComment.setCommentString(new ObservableField<>(""));
         mBinding.setPost(mComment);
-        mBinding.setHint("Write a post...");
+        mBinding.setHint(getResources().getString(R.string.hint_write_post));
         mGroupId = getArguments().getString("id");
         post_id = getArguments().getString("post_id");
         fromNotifications = getArguments().getBoolean("fromNotifications");
@@ -383,7 +383,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
     @Override
     public void onDeleteClick(QuestionData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override

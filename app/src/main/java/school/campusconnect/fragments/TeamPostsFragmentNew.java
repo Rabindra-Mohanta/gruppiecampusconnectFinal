@@ -378,7 +378,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 startActivityForResult(addTeamIntent,REQUEST_CODE_UPDATE_TEAM);
                 break;
             case R.id.menu_leave_team:
-                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to leave?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_leave_team), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         showLoadingBar(mBinding.progressBar2);
@@ -388,7 +388,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 });
                 break;
             case R.id.menu_archive_team:
-                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to archive " + teamName + "?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_archive) + teamName + getResources().getString(R.string.smb_), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -1317,7 +1317,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
                 logout();
             } else if (error.status.equals("404")) {
-                Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), error.title, Toast.LENGTH_SHORT).show();
             }
@@ -1483,7 +1483,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     @Override
     public void onDeleteClick(TeamPostGetData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override

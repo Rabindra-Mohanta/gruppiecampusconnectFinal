@@ -75,7 +75,7 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
             rvClass.setAdapter(new ClassesAdapter(result));
         }else {
             if(getActivity()!=null){
-                Toast.makeText(getActivity(), "E-Book Successfully Added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_ebook_add_successfully), Toast.LENGTH_SHORT).show();
                 getActivity().setResult(Activity.RESULT_OK);
                 getActivity().finish();
             }
@@ -123,7 +123,7 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No E-Book found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -133,7 +133,7 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
             }
             else
             {
-                txtEmpty.setText("No E-Book found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 return 0;
             }
 

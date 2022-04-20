@@ -177,7 +177,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
             if(Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)){
                 return;
             }
-            SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -246,7 +246,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Vendor");
+        setTitle(getResources().getString(R.string.title_add_vendor));
 
         transferUtility = AmazoneHelper.getTransferUtility(this);
 

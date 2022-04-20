@@ -128,21 +128,21 @@ public class BoothCoordinateListFragment extends BaseFragment implements LeafMan
                     .buildRound(ImageUtil.getTextLetter(item.name), ImageUtil.getRandomColor(position));
             holder.img_lead_default.setImageDrawable(drawable);
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Phone: "+item.phone);
+            holder.txt_count.setText(getResources().getString(R.string.txt_phone)+item.phone);
         }
 
         @Override
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Coordinate found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_coordinate_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Coordinate found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_coordinate_found));
                 return 0;
             }
 

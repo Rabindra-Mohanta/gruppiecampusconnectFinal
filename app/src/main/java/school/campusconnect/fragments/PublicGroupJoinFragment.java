@@ -253,9 +253,9 @@ public class PublicGroupJoinFragment extends BaseFragment implements LeafManager
                     mBinding.progressBar.setVisibility(View.GONE);
                 } else {
                     try {
-                        Toast.makeText(getActivity(), "Added to Group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.toast_add_to_group), Toast.LENGTH_SHORT).show();
                         LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGROUPUPDATED, true);
-                        Toast.makeText(getActivity(), "Added to Group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.toast_add_to_group), Toast.LENGTH_SHORT).show();
                         getActivity().startActivity(new Intent(getActivity(), GroupListActivityNew.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         getActivity().finish();
@@ -270,7 +270,7 @@ public class PublicGroupJoinFragment extends BaseFragment implements LeafManager
                 hideLoadingBar();
                 try {
                     LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGROUPUPDATED, true);
-                    Toast.makeText(getActivity(), "Added to Group", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_add_to_group), Toast.LENGTH_SHORT).show();
                     getActivity().startActivity(new Intent(getActivity(), GroupListActivityNew.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     getActivity().finish();

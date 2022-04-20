@@ -224,7 +224,7 @@ public class AddCodeConductActivity extends BaseActivity implements LeafManager.
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Code Of Conduct");
+        setTitle(getResources().getString(R.string.title_add_code_of_conduct));
 
         transferUtility = AmazoneHelper.getTransferUtility(this);
 

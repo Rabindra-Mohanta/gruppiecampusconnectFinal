@@ -417,7 +417,7 @@ public class CourseFragment extends BaseFragment implements LeafManager.OnCommun
     @Override
     public void onDeleteClick(CoursePostResponse.CoursePostData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
     private void sendNotification() {
         SendNotificationModel notificationModel = new SendNotificationModel();

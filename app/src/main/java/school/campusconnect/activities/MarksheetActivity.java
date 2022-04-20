@@ -121,7 +121,7 @@ public class MarksheetActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Marks Card");
+        setTitle(getResources().getString(R.string.title_marks_card));
 
         init_();
 
@@ -164,7 +164,7 @@ public class MarksheetActivity extends BaseActivity {
 
                 if(list==null || list.size()==0){
                     tvEmpty.setVisibility(View.VISIBLE);
-                    tvEmpty.setText("No Student Found");
+                    tvEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 }else {
                     tvEmpty.setVisibility(View.GONE);
                 }
@@ -217,7 +217,7 @@ public class MarksheetActivity extends BaseActivity {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final StudentRes.StudentData item = listAttendance.get(position);
             holder.tvName.setText(item.name);
-            holder.tvNumber.setText("Roll No." + (TextUtils.isEmpty(item.rollNumber) ? "" : item.rollNumber));
+            holder.tvNumber.setText(getResources().getString(R.string.lbl_roll_No)+" "+ (TextUtils.isEmpty(item.rollNumber) ? "" : item.rollNumber));
 
             if (!TextUtils.isEmpty(item.image)) {
                 holder.imgLead_default.setVisibility(View.INVISIBLE);

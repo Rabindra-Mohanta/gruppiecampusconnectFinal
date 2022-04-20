@@ -235,7 +235,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -603,10 +603,10 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
                 logout();
             } else if (msg.contains("404")) {
-                Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
             } else if (msg.contains("418")) {
                 if (apiId == LeafManager.API_REPORT)
-                    Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
             } else {
@@ -754,7 +754,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 }
                 else
                 {
-                    Toast.makeText(getContext(),"Notification Not Found...",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),getResources().getString(R.string.toast_notification_not_found),Toast.LENGTH_SHORT).show();
                 }
 
                 break;

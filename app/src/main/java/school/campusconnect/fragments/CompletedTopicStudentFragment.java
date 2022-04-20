@@ -145,10 +145,10 @@ public class CompletedTopicStudentFragment extends BaseFragment implements LeafM
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {

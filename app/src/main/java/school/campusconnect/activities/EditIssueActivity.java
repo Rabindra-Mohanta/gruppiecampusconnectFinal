@@ -247,7 +247,7 @@ public class EditIssueActivity extends BaseActivity implements LeafManager.OnAdd
     }
 
     private void delete() {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);

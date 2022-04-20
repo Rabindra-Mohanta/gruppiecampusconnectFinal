@@ -237,7 +237,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
             AppLog.e(TAG, "appVersion : " + appVersion);
             AppLog.e(TAG, "BuildConfig.VERSION_CODE : " + BuildConfig.VERSION_CODE);
             if (BuildConfig.VERSION_CODE < appVersion) {
-                AppDialog.showUpdateDialog(getActivity(), "New version is available. download new version from play store", new AppDialog.AppUpdateDialogListener() {
+                AppDialog.showUpdateDialog(getActivity(), getResources().getString(R.string.dialog_new_version_available), new AppDialog.AppUpdateDialogListener() {
                     @Override
                     public void onUpdateClick(DialogInterface dialog) {
                         final String appPackageName = BuildConfig.APPLICATION_ID; // getPackageName() from Context or Activity object

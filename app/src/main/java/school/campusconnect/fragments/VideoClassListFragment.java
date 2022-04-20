@@ -1807,7 +1807,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         } else {
             AppLog.e("External" + "permission", "checkpermission , denied");
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
             } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
             }
@@ -1897,7 +1897,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 }
             }
             if (isDownload) {
-                Toast.makeText(getActivity(), "Attendance Report Save successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_attendance_report_save_successfully), Toast.LENGTH_SHORT).show();
             } else {
                 shareFile(file);
             }
@@ -1942,7 +1942,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                     leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), stopMeetingReq);
                 } else {
-                    Toast.makeText(getActivity(), "Select Subject", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.lbl_select_subject), Toast.LENGTH_SHORT).show();
                 }
             }
         });

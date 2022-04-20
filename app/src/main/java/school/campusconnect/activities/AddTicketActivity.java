@@ -189,7 +189,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
         ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
         if(shareList!=null && shareList.size()>0){
-            SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -305,7 +305,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             case LeafManager.API_ADD_TICKET:
                 BaseResponse res2 = (BaseResponse) response;
                 AppLog.e(TAG, "ClassResponse " + res2);
-                Toast.makeText(getApplicationContext(), "Ticket Added Successfully...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_ticket_add_successfully), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }
@@ -645,14 +645,14 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
         if (Team == null) {
             if (showToast)
-                Toast.makeText(this, "Please Select Team", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_select_team), Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (binding.etIssue.getText().toString().isEmpty())
         {
             if (showToast)
-                Toast.makeText(this, "Please Add Issue", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_issue), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -672,13 +672,13 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
         if (Issue == null)
         {
-            Toast.makeText(this, "Please Enter Valid Issue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_valid_issue), Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(audioPath)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Image or video or Audio", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_image_or_video_or_audio), Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -697,7 +697,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         }*/
         if (binding.etLocation.getText().toString().isEmpty()) {
             if (showToast)
-                Toast.makeText(this, "Please Select Location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_select_location), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -780,14 +780,14 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
     public void requestPermissionForRecordAudio(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-            Toast.makeText(this, "Audio permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_audio_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
         }
     }
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -987,7 +987,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 }
 */
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1126,14 +1126,14 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddTicketActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTicketActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -1160,7 +1160,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddTicketActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddTicketActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();
@@ -1207,7 +1207,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddTicketActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddTicketActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -1221,7 +1221,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddTicketActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddTicketActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -1285,7 +1285,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
-                            Toast.makeText(AddTicketActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTicketActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -1351,7 +1351,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                             updateList(pos, key);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(AddTicketActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTicketActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             if(progressDialog!=null)
                                 progressDialog.dismiss();
                         }

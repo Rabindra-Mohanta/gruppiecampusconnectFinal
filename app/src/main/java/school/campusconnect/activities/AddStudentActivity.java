@@ -57,7 +57,7 @@ public class AddStudentActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Student");
+        setTitle(getResources().getString(R.string.title_add_student));
 
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");

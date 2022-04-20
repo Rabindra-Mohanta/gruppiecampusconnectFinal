@@ -91,7 +91,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
             btn_create_acc.setText(getResources().getString(R.string.lbl_create_group));
         } else {
             groupItem=new Gson().fromJson(jsonGroup, GroupItem.class);
-            setTitle("Edit Group");
+            setTitle(getResources().getString(R.string.action_edit_group));
             imageFragment = UploadImageFragment.newInstance(groupItem.getImage(), true, true);
             edtName.setText(groupItem.getName());
             edtAbout.setText(groupItem.aboutGroup);
@@ -149,7 +149,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
                         Toast.makeText(CreateAccountActivity.this, getString(R.string.msg_group_delete), Toast.LENGTH_SHORT).show();
                         break;
                     }
-                    SMBDialogUtils.showSMBDialogOKCancel(CreateAccountActivity.this, "Are you sure about deleting this group?", new DialogInterface.OnClickListener() {
+                    SMBDialogUtils.showSMBDialogOKCancel(CreateAccountActivity.this, getResources().getString(R.string.smb_delete_group), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // showLoadingDialog();

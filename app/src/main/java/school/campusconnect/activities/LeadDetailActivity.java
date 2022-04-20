@@ -168,7 +168,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         AppLog.e(TAG,"mLeadItem Data" +new Gson().toJson(mLeadItem));
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Details");
+        setTitle(getResources().getString(R.string.title_details));
         ActiveAndroid.initialize(this);
 
         binding.llPhone.setVisibility(View.GONE);
@@ -375,7 +375,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.nav_edit) {
         } else if (item.getItemId() == R.id.nav_delete) {
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete "+mLeadItem.getName()+" from team ?", this);
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete)+mLeadItem.getName()+getResources().getString(R.string.smb_from_team), this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -437,7 +437,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
 
         switch (apiId) {
             case LeafManager.API_DELETE_MY_FRIEND:
-                Toast.makeText(getApplicationContext(), "User Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMUPDATED,true);
                 onBackPressed();
                 break;

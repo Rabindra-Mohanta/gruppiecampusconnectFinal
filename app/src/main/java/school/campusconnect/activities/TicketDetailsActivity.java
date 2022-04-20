@@ -236,7 +236,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
         if (isConnectionAvailable()) {
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     ProgressBar.setVisibility(View.VISIBLE);
@@ -674,7 +674,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 {
                     Status = "open";
                 }
-                AppDialog.showConfirmDialog(this, "Are You Sure You Want to "+Status+" Ticket ?", new AppDialog.AppDialogListener() {
+                AppDialog.showConfirmDialog(this, getResources().getString(R.string.dialog_are_you_sure)+Status+getResources().getString(R.string.dialog_ticket), new AppDialog.AppDialogListener() {
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
@@ -719,7 +719,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 }
 
 
-                AppDialog.showConfirmDialog(this, "Are You Sure You Want to "+Status+" Ticket ?", new AppDialog.AppDialogListener() {
+                AppDialog.showConfirmDialog(this, getResources().getString(R.string.dialog_are_you_sure)+Status+getResources().getString(R.string.dialog_ticket), new AppDialog.AppDialogListener() {
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
@@ -779,7 +779,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
                 @Override
                 public void error(String msg) {
-                    Toast.makeText(getApplicationContext(),"error in Download :"+msg,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_error_in_download)+msg,Toast.LENGTH_SHORT).show();
                     imgDownloadAudio.setVisibility(View.VISIBLE);
                     llProgress.setVisibility(View.GONE);
                 }
@@ -846,7 +846,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     {
         if (etComment.getText().toString().isEmpty())
         {
-            Toast.makeText(getApplicationContext(),"Add Comment",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_add_comment),Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

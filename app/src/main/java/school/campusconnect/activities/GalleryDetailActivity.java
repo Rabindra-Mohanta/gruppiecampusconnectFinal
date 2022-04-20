@@ -250,7 +250,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     }
 
     public void onDeleteClick(GalleryPostRes.GalleryData item) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override
@@ -349,7 +349,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onItemLongClick(final ItemImage itemImage) {
         this.itemFile = itemImage.getImagePath();
         if(item.canEdit){
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {

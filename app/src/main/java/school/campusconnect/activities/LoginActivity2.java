@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -23,6 +24,7 @@ import android.text.style.ClickableSpan;
 
 import school.campusconnect.utils.AppLog;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -31,6 +33,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +65,9 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
 
     @Bind(R.id.layout_number)
     EditText edtNumber;
+
+    @Bind(R.id.rgLanguage)
+    RadioGroup rgLanguage;
 
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
@@ -147,6 +153,46 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
                 return handled;
             }
         });
+
+
+        rgLanguage.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i)
+                {
+                    case R.id.rbEnglish:
+                        updateViews("en");
+                        break;
+
+                    case R.id.rbKannada:
+                        updateViews("kn");
+                        break;
+                }
+            }
+        });
+    }
+
+    private void updateViews(String languageCode) {
+        Log.e(TAG,"language Code"+languageCode);
+        SharedPreferences preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Locale.Helper.Selected.Language", languageCode);
+        Log.e("LocaleHelper","language "+languageCode);
+        editor.apply();
+        gotoActivity(LoginActivity2.class,null,true);
+    }
+
+    public void gotoActivity(Class className, Bundle bundle, boolean isClearStack) {
+        Intent intent = new Intent(this, className);
+
+        if (bundle != null)
+            intent.putExtras(bundle);
+
+        if (isClearStack) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+
+        startActivity(intent);
     }
 
     private void setlinks() {

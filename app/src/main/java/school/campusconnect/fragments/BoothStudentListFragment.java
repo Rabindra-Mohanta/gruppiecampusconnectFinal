@@ -354,7 +354,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
 
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Role: "+item.roleOnConstituency);
+            holder.txt_count.setText(getResources().getString(R.string.lbl_role)+" : "+item.roleOnConstituency);
 
             holder.img_tree.setVisibility(View.GONE);
         }
@@ -363,14 +363,14 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Booth Member found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_booth_member_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Booth Member found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_booth_member_found));
                 return 0;
             }
 

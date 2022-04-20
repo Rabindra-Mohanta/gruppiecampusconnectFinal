@@ -134,7 +134,7 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
             if (studentData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this member.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_member), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -220,7 +220,7 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
 
         imageFragment = UploadImageFragment.newInstance(studentData.image, true, true);
         btnAdd.setText("Update");
-        setTitle("Member Detail - (" + getIntent().getStringExtra("className") + ")");
+        setTitle(getResources().getString(R.string.title_member_details)+" - (" + getIntent().getStringExtra("className") + ")");
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getSupportFragmentManager().executePendingTransactions();

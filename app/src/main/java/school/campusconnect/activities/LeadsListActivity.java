@@ -85,7 +85,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
             AppLog.e(TAG, "teamId is " + teamId);
             AppLog.e(TAG, "classData is " + classData);
             if (getIntent().hasExtra("team_name")) {
-                setTitle(getIntent().getExtras().getString("team_name", "")+" Members");
+                setTitle(getIntent().getExtras().getString("team_name", "")+" "+getResources().getString(R.string.lbl_members));
             }else {
                 setTitle(getResources().getString(R.string.lbl_my_people));
             }
@@ -216,7 +216,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
             if(apiId==LeafManager.API_ID_LEAVE_TEAM)
             {
                 if (msg.contains("404")) {
-                    Toast.makeText(this, "You can't leave team", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_you_can_not_leave_team), Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

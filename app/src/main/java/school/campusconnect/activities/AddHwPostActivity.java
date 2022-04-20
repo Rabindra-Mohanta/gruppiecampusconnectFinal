@@ -239,7 +239,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType) || Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
             ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
             if(shareList!=null && shareList.size()>0){
-                SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

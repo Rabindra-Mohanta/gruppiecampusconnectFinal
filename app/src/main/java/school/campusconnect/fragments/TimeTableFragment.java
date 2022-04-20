@@ -329,6 +329,6 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
     @Override
     public void onDeleteClick(TimeTableRes.TimeTableData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 }

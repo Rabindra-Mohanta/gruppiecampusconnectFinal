@@ -289,7 +289,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                     if (sendIntent.resolveActivity(mContext.getPackageManager()) != null) {
                         mContext.startActivity(sendIntent);
                     } else {
-                        Toast.makeText(mContext, "APP Not Installed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_app_not_install), Toast.LENGTH_SHORT).show();
                     }
                     break;
 

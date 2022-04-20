@@ -101,7 +101,7 @@ public class AddBusActivity extends BaseActivity implements LeafManager.OnAddUpd
             if (classData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this Bus.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_dialog_delete_bus), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //progressBar.setVisibility(View.VISIBLE);

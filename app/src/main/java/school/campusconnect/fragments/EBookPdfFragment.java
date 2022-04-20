@@ -112,7 +112,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
                 if (data == null)
                     return true;
 
-                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this Books.?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_book), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         progressBar.setVisibility(View.VISIBLE);

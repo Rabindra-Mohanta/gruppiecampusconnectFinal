@@ -85,7 +85,7 @@ public class AttendanceActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Attendance - ("+getIntent().getStringExtra("className")+")");
+        setTitle(getResources().getString(R.string.title_attendance)+" - ("+getIntent().getStringExtra("className")+")");
 
         init_();
 

@@ -159,7 +159,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
             if(Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)){
                 return;
             }
-            SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -228,7 +228,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Time Table");
+        setTitle(getResources().getString(R.string.lbl_add_time_table));
 
         transferUtility = AmazoneHelper.getTransferUtility(this);
 
@@ -778,7 +778,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override

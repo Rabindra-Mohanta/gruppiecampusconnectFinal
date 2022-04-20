@@ -138,7 +138,7 @@ public class AddCourseActivity extends BaseActivity implements LeafManager.OnAdd
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Course");
+        setTitle(getResources().getString(R.string.title_add_course));
 
     }
 

@@ -115,7 +115,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
         mComment.setCommentEditTextId(new ObservableInt(R.id.edt_comment));
         mComment.setCommentString(new ObservableField<>(""));
         mBinding.setComment(mComment);
-        mBinding.setHint("Write a reply...");
+        mBinding.setHint(getResources().getString(R.string.hint_write_reply));
         final LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mBinding.recyclerView.setLayoutManager(manager);
 
@@ -460,7 +460,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
 
     @Override
     public void onDeleteClick(final GroupCommentItem item) {
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteComment(item.id);

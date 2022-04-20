@@ -201,7 +201,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
         if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)){
             ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
             if(shareList!=null && shareList.size()>0){
-                SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -473,7 +473,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(SubmitTestPaperActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -486,7 +486,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(SubmitTestPaperActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -543,7 +543,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
-                            Toast.makeText(SubmitTestPaperActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -612,7 +612,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
                             updateList(pos, key);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(SubmitTestPaperActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             if(progressDialog!=null)
                                 progressDialog.dismiss();
                         }

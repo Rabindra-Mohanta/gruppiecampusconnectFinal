@@ -109,7 +109,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
             if (subjectData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this Subjects.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_subject), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);

@@ -138,7 +138,7 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
             progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {
-            Toast.makeText(getActivity(), "Select Any Student", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
         }
     }
 

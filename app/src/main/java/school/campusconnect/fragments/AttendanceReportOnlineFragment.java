@@ -135,7 +135,7 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
         if (res.data != null && res.data.size() > 0) {
             exportDataToCSV(res.data);
         } else {
-            Toast.makeText(getActivity(), "No Data Found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.msg_no_data_found), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -232,7 +232,7 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
         } else {
             AppLog.e("External" + "permission", "checkpermission , denied");
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
             } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
             }

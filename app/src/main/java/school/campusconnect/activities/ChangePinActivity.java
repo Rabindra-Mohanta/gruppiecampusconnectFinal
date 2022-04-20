@@ -84,7 +84,7 @@ ActivityChangePinBinding binding;
                 if (isValid())
                 {
                     hide_keyboard();
-                    Toast.makeText(getApplicationContext(),"Change Pin SuccessFully...",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_change_pin),Toast.LENGTH_SHORT).show();
                     LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PIN,binding.etConfirmPin.getOTP());
                     finish();
                 }
@@ -96,27 +96,27 @@ ActivityChangePinBinding binding;
 
         if (binding.etOldPin.getOTP().isEmpty())
         {
-            binding.lblError.setText("Enter Old Pin...");
+            binding.lblError.setText(getResources().getString(R.string.txt_enter_old_pin));
             return false;
         }
         else if (!binding.etOldPin.getOTP().equalsIgnoreCase(LeafPreference.getInstance(this).getString(LeafPreference.PIN)))
         {
-            binding.lblError.setText("Old Pin Wrong...");
+            binding.lblError.setText(getResources().getString(R.string.txt_old_pin_wrong));
             return false;
         }
         else if (binding.etNewPin.getOTP().isEmpty() || binding.etNewPin.getOTP().length()<4)
         {
-            binding.lblError.setText("Enter New Pin...");
+            binding.lblError.setText(getResources().getString(R.string.txt_enter_new_pin));
             return false;
         }
         else if (binding.etConfirmPin.getOTP().isEmpty() || binding.etConfirmPin.getOTP().length()<4)
         {
-            binding.lblError.setText("Enter Confirm Pin...");
+            binding.lblError.setText(getResources().getString(R.string.txt_enter_confirm_pin));
             return false;
         }
         else if (!binding.etConfirmPin.getOTP().equalsIgnoreCase(binding.etNewPin.getOTP()))
         {
-            binding.lblError.setText("Confirm Pin Not Match...");
+            binding.lblError.setText(getResources().getString(R.string.txt_confirm_pin_not_match));
             return false;
         }
 

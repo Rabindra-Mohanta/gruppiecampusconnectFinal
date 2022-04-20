@@ -217,7 +217,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         adapter = new ClassesAdapter();
         rvClass.setAdapter(adapter);
 
-        edtSearch.setHint("Search Booth Team");
+        edtSearch.setHint(getResources().getString(R.string.hint_search_booth_team));
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 
@@ -461,7 +461,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
           //  holder.txt_name.setText(transliterator.transliterate(item.name));
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Members: "+item.members);
+            holder.txt_count.setText(getResources().getString(R.string.lbl_members)+" : "+item.members);
         }
 
         @Override
@@ -470,7 +470,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Booth Teams found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_booth_team_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -480,7 +480,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No Booth Teams found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_booth_team_found));
                 return 0;
             }
 

@@ -90,10 +90,10 @@ public class AttendancePreSchoolListFragment extends BaseFragment implements Lea
         }
         progressBar.setVisibility(View.GONE);
         if(apiId== LeafManager.API_ATTENDANCE_PRESCHOOL_IN){
-            Toast.makeText(getActivity(), "Attendance Submitted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_attendance_submit), Toast.LENGTH_SHORT).show();
         }
         else if(apiId== LeafManager.API_ATTENDANCE_PRESCHOOL_OUT){
-            Toast.makeText(getActivity(), "Attendance Submitted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_attendance_submit), Toast.LENGTH_SHORT).show();
         }else {
 
             PreSchoolStudentRes res = (PreSchoolStudentRes) response;
@@ -169,7 +169,7 @@ public class AttendancePreSchoolListFragment extends BaseFragment implements Lea
             }
 
             holder.txt_name.setText(item.getStudentName());
-            holder.txt_count.setText("Roll No."+item.getRollNumber());
+            holder.txt_count.setText(getResources().getString(R.string.lbl_roll_No)+" "+item.getRollNumber());
 
             if(type.equalsIgnoreCase("IN")){
                 if(item.isAttendanceIn()){
@@ -205,7 +205,7 @@ public class AttendancePreSchoolListFragment extends BaseFragment implements Lea
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Students found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 }else {
                     txtEmpty.setText("");
                 }
@@ -214,7 +214,7 @@ public class AttendancePreSchoolListFragment extends BaseFragment implements Lea
             }
             else
             {
-                txtEmpty.setText("No Students found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 return 0;
             }
 
@@ -256,7 +256,7 @@ public class AttendancePreSchoolListFragment extends BaseFragment implements Lea
                             }
                             callInOutApi(list.get(getAdapterPosition()));
                         }else {
-                            Toast.makeText(getActivity(), "Please Select Student", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

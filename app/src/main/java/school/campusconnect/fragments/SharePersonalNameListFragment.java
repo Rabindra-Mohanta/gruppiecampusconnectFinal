@@ -260,7 +260,7 @@ public class SharePersonalNameListFragment extends BaseFragment implements LeafM
             case LeafManager.API_SHARE:
                 Constants.requestCode = Constants.finishCode;
                 hideLoadingBar();
-                Toast.makeText(getActivity(), "Shared successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_shared_successfully), Toast.LENGTH_SHORT).show();
 
                 if (SelectShareTypeActivity.selectShareTypeActivity != null) {
                     SelectShareTypeActivity.selectShareTypeActivity.finish();
@@ -289,7 +289,7 @@ public class SharePersonalNameListFragment extends BaseFragment implements LeafM
 
     public void onClickAddComment() {
         if (mAdapter.getSelectedgroups().equals(""))
-            Toast.makeText(getActivity(), "Select any group first...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_select_any_group_first), Toast.LENGTH_SHORT).show();
         else {
             if (GroupDashboardActivityNew.is_share_edit) {
                 Constants.requestCode = Constants.notFinishCode;

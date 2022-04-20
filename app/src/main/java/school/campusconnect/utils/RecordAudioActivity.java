@@ -104,7 +104,7 @@ ActivityRecordAudioBinding binding;
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Stop Audio Recording...",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_stop_audio),Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -121,7 +121,7 @@ ActivityRecordAudioBinding binding;
     }
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -233,7 +233,7 @@ ActivityRecordAudioBinding binding;
         }
         else
         {
-            Toast.makeText(getApplicationContext(),"Stop Audio Recording...",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_stop_audio),Toast.LENGTH_SHORT).show();
         }
 
     }

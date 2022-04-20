@@ -123,7 +123,7 @@ public class AddClassStudentActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Student");
+        setTitle(getResources().getString(R.string.title_add_student));
 
         init();
 
@@ -154,7 +154,7 @@ public class AddClassStudentActivity extends BaseActivity {
             if (studentData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this student.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_student), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -215,7 +215,7 @@ public class AddClassStudentActivity extends BaseActivity {
         if (isEdit) {
             imageFragment = UploadImageFragment.newInstance(studentData.getImage(), true, true);
             btnAdd.setText("Update");
-            setTitle("Student Detail - ("+getIntent().getStringExtra("className")+")");
+            setTitle(getResources().getString(R.string.title_student_details)+" - ("+getIntent().getStringExtra("className")+")");
         } else {
             imageFragment = UploadImageFragment.newInstance(null, true, true);
         }
@@ -370,7 +370,7 @@ public class AddClassStudentActivity extends BaseActivity {
 
         switch (apiId) {
             case LeafManager.API_ADD_ClASS_STUDENTS:
-                Toast.makeText(this, "Add Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_EDIT_STUDENTS:
@@ -385,12 +385,12 @@ public class AddClassStudentActivity extends BaseActivity {
                 break;
 
             case LeafManager.API_UPDATE_PHONE_STUDENT:
-                Toast.makeText(this, "Edit Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_edit_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
 
             case LeafManager.API_DELETE_STUDENTS:
-                Toast.makeText(this, "Delete Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_delete_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
 

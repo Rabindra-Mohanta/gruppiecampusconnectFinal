@@ -207,17 +207,17 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etDate.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Select Date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_select_date), Toast.LENGTH_SHORT).show();
                 } else if (spSubject.getSelectedItemPosition() == -1) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Select Subject", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_subject), Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etStartTime.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Select Start Time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_start_time), Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etEndTime.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Select End Time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_end_time), Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etMaxMarks.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Enter Max Marks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_enter_max_mark), Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etMinMarks.getText().toString().trim())) {
-                    Toast.makeText(AddOfflineTestActivity.this, "Please Enter Min Marks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_enter_min_mark), Toast.LENGTH_SHORT).show();
                 } else {
                     TestOfflineSubjectMark t1 = new TestOfflineSubjectMark();
                     t1.date = etDate.getText().toString();
@@ -254,23 +254,23 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                 if (isValid()) {
                     if (!TextUtils.isEmpty(etDate.getText().toString().trim())) {
                         if (TextUtils.isEmpty(etStartTime.getText().toString().trim())) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Select Start Time", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_start_time), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         if (spSubject.getSelectedItemPosition() == -1) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Select Subject", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_subject), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         if (TextUtils.isEmpty(etEndTime.getText().toString().trim())) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Select End Time", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_end_time), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         if (TextUtils.isEmpty(etMaxMarks.getText().toString().trim())) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Enter Max Marks", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_enter_max_mark), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         if (TextUtils.isEmpty(etMinMarks.getText().toString().trim())) {
-                            Toast.makeText(AddOfflineTestActivity.this, "Please Enter Min Marks", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_enter_min_mark), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -304,7 +304,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
 
                     }
                     if (request.subjectMarksDetails.size() == 0 && t1 == null) {
-                        Toast.makeText(this, "Please add at least one subject/marks", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getResources().getString(R.string.toast_please_select_one_subject_mark), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (t1 != null) {
@@ -313,7 +313,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                     AppLog.e(TAG, "request :" + new Gson().toJson(request));
                     LeafManager leafManager = new LeafManager();
                     if (isEdit) {
-                        SMBDialogUtils.showSMBDialogOK(this, "This will schedule new test/exam, kindly remove old test/exam if you are not required", new DialogInterface.OnClickListener() {
+                        SMBDialogUtils.showSMBDialogOK(this, getResources().getString(R.string.smb_dialog_this_will_schedule_new_test), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 LeafManager leafManager = new LeafManager();
@@ -398,7 +398,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
     public boolean isValid() {
         boolean valid = true;
         if (!isValueValidOnly(etTitle)) {
-            Toast.makeText(this, "Please Enter Title", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_please_enter_title), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;

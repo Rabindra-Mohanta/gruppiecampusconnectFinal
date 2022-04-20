@@ -54,7 +54,7 @@ public class BoothStudentActivity extends BaseActivity {
         setBackEnabled(true);
 
         if (getIntent().getExtras() != null) {
-            setTitle(getIntent().getStringExtra("title")+" Members");
+            setTitle(getIntent().getStringExtra("title")+" "+getResources().getString(R.string.lbl_members));
         }
 
         classListFragment = new BoothStudentListFragment();
@@ -142,7 +142,7 @@ public class BoothStudentActivity extends BaseActivity {
                 }
                 else if (returnString.equalsIgnoreCase("No"))
                 {
-                    setTitle(data.getStringExtra("Title")+" Members");
+                    setTitle(data.getStringExtra("Title")+" "+getResources().getString(R.string.lbl_members));
                 }
 
             }

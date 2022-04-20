@@ -511,7 +511,7 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
             // sendAddress(address);
         } else {
             Log.e(TAG, "Address Null");
-            Toast.makeText(getContext(),"Address Not found",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),getResources().getString(R.string.toast_address_not_found),Toast.LENGTH_SHORT).show();
         }
     }
 

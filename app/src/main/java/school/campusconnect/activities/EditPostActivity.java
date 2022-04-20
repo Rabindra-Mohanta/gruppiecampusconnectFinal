@@ -143,7 +143,7 @@ public class EditPostActivity extends BaseActivity implements View.OnClickListen
 
         }
 
-        setTitle("Edit Post");
+        setTitle(getResources().getString(R.string.action_edit_post));
         btn_Post.setOnClickListener(this);
         btn_delete_Post.setOnClickListener(this);
         btnUpdate.setOnClickListener(this);

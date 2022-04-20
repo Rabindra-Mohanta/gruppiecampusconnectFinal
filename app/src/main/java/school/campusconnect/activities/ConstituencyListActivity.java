@@ -372,6 +372,8 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
         menu.findItem(R.id.menu_change_pin).setVisible(true);
         menu.findItem(R.id.menu_change_mobile).setVisible(true);
+        menu.findItem(R.id.menu_change_language).setVisible(true);
+
         removeWallMenu = menu.findItem(R.id.menu_remove_wallpaper);
         if (wallPref.contains(Constants.BACKGROUND_IMAGE)) {
             removeWallMenu.setVisible(true);
@@ -395,7 +397,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             final Uri selectedImage = data.getData();
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Do you like to set this as a wallpaper?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_do_you_like_set_wallpaper), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     selectedImage(selectedImage);
@@ -437,6 +439,12 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
             case R.id.menu_change_pin:
                 Intent intentpin= new Intent(this, ChangePinActivity.class);
                 startActivity(intentpin);
+                return true;
+
+
+            case R.id.menu_change_language:
+                Intent intent1= new Intent(this, ChangeLanguageActivity.class);
+                startActivity(intent1);
                 return true;
 
 

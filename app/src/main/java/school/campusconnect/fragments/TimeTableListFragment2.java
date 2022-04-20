@@ -272,7 +272,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Time Table found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_time_table_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -282,7 +282,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No Time Table found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_time_table_found));
                 return 0;
             }
 
@@ -315,7 +315,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     private void deleteTimeTableDay(TimeTableList2Response.TimeTableData2 item) {
 
         Log.e(TAG,"Which day delete :"+item.day);
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete time-table day?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_time_table), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 LeafManager leafManager=new LeafManager();
@@ -332,7 +332,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
 
     public void deleteTT() {
         if(result!=null && result.size()>0){
-            SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete time-table?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_time_table_), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     LeafManager leafManager=new LeafManager();
@@ -376,7 +376,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No TimeTable found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_time_table_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -386,7 +386,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No TimeTable found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_time_table_found));
                 return 0;
             }
 

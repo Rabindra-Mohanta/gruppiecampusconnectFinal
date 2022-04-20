@@ -406,7 +406,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     }
 
     private void deleteHwPost() {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete This Homework?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_home_work), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -973,7 +973,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     }
 
     private void reAssignment(AssignmentRes.AssignmentData item) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To move " + item.studentName + " assignment to not verified?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_want_to_move) + item.studentName + getResources().getString(R.string.smb_assignment_not_verified), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);

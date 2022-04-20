@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.app.ActivityCompat;
@@ -72,6 +73,8 @@ import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.utils.AppLog;
+
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -107,6 +110,7 @@ import school.campusconnect.datamodel.personalchat.PersonalContactsModel;
 import school.campusconnect.fragments.Fragment_GruppieContacts;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.LocaleHelper;
 import school.campusconnect.views.SMBDialogUtils;
 
 /**
@@ -187,7 +191,9 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+        //super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+        String f = PreferenceManager.getDefaultSharedPreferences(newBase).getString("Locale.Helper.Selected.Language","en");
+        super.attachBaseContext(LocaleHelper.onAttach(newBase,f));
     }
 
 
@@ -1391,7 +1397,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
                 if(Fragment_GruppieContacts.synchFromAddFrend)
                 {
                     Fragment_GruppieContacts.synchFromAddFrend=false;
-                    Toast.makeText(BaseActivity.this, "Some Problem Occurred Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseActivity.this, getResources().getString(R.string.toast_some_problem_occure), Toast.LENGTH_SHORT).show();
                 }
 
             } else if (BaseActivity.this instanceof AllContactListActivity) {

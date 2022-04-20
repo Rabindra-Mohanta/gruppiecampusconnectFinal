@@ -410,7 +410,7 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
                 }
             });
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Member : "+String.valueOf(item.members));
+            holder.txt_count.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(item.members));
         }
 
         @Override
@@ -419,7 +419,7 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Booths Teams found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_booth_team_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -429,7 +429,7 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
             }
             else
             {
-                txtEmpty.setText("No Booths Teams found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_booth_team_found));
                 return 0;
             }
 

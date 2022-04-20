@@ -55,7 +55,7 @@ public class AddVoterActivity extends BaseActivity implements View.OnClickListen
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Voter");
+        setTitle(getResources().getString(R.string.title_add_voter));
 
 
         inits();

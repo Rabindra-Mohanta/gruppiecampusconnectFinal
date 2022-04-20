@@ -116,7 +116,7 @@ public class AddStaffActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Staff");
+        setTitle(getResources().getString(R.string.lbl_add_staff));
 
         init();
 
@@ -159,7 +159,7 @@ public class AddStaffActivity extends BaseActivity {
             if (studentData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this staff.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_staff), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -170,7 +170,7 @@ public class AddStaffActivity extends BaseActivity {
         }
         if (item.getItemId() == R.id.menuMakeAdmin) {
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, isPost ? "Are you sure you want to remove this users from admin?" : "Are you sure you want to make this user as admin?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, isPost ? getResources().getString(R.string.smb_remove_from_admin) : getResources().getString(R.string.dialog_are_you_want_to_make_admin), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -247,8 +247,8 @@ public class AddStaffActivity extends BaseActivity {
     private void setImageFragment() {
         if (isEdit) {
             imageFragment = UploadImageFragment.newInstance(studentData.getImage(), true, true);
-            btnAdd.setText("Update");
-            setTitle("Staff Detail");
+            btnAdd.setText(getResources().getString(R.string.lbl_update));
+            setTitle(getResources().getString(R.string.title_staff_details));
         } else {
             imageFragment = UploadImageFragment.newInstance(null, true, true);
         }

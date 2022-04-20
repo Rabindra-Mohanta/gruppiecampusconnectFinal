@@ -84,7 +84,7 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
             if (subjectData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this Subjects.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_subject), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -160,7 +160,7 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
         if (!isValueValid(etName)) {
             valid = false;
         } else if (adapter.getList().size()==0) {
-            Toast.makeText(this, "Please add at least one subject", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_add_one_subject), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;

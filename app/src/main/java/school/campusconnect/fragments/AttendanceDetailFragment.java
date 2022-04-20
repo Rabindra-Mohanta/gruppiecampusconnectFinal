@@ -159,14 +159,14 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
         public int getItemCount() {
             if (listMorning != null) {
                 if (listMorning.size() == 0) {
-                    txtEmpty.setText("No Data found.");
+                    txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return listMorning.size();
             } else {
-                txtEmpty.setText("No Data found.");
+                txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
                 return 0;
             }
 

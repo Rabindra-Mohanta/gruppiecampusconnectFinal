@@ -305,7 +305,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
                     @Override
                     public void onCompressedImage(ProfileImage profileImage) {
                         if (profileImage.imageString.isEmpty()) {
-                            Toast.makeText(getActivity(), "Not able to compress selected image. Please verify", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_not_able_to_compress), Toast.LENGTH_SHORT).show();
                         } else {
                             setImageToView(profileImage);
                         }
@@ -329,7 +329,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
                         @Override
                         public void onCompressedImage(ProfileImage profileImage) {
                             if (profileImage.imageString.isEmpty()) {
-                                Toast.makeText(getActivity(), "Not able to compress selected image. Please verify", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getResources().getString(R.string.toast_not_able_to_compress), Toast.LENGTH_SHORT).show();
                             } else {
                                 setImageToView(profileImage);
                             }
@@ -404,7 +404,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }

@@ -21,6 +21,11 @@
         android:visible="false"
         android:title="@string/action_remove_wallpaper"/>
 
+
+    <item android:id="@+id/menu_change_language"
+        android:visible="false"
+        android:title="Change Language"/>
+
     <item android:id="@+id/menu_logout"
         android:title="@string/action_logout"/>
 

@@ -205,7 +205,7 @@ public class AuthorizedUserFragment extends BaseFragment implements LeafManager.
 
             case LeafManager.API_REPORT:
                 hideLoadingBar();
-                Toast.makeText(getContext(), "Post Reported Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_reported_sucessfully), Toast.LENGTH_SHORT).show();
                 break;
 
             case LeafManager.API_NOT_ALLOW_POST:
@@ -232,7 +232,7 @@ public class AuthorizedUserFragment extends BaseFragment implements LeafManager.
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (error.status.equals("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), error.title, Toast.LENGTH_SHORT).show();
         }
@@ -251,11 +251,11 @@ public class AuthorizedUserFragment extends BaseFragment implements LeafManager.
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {

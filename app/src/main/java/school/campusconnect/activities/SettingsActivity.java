@@ -56,7 +56,7 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Settings");
+        setTitle(getResources().getString(R.string.action_setting));
         groupId = getIntent().getExtras().getString("id");
 
         if (getIntent().getExtras().getBoolean("created", false)) {

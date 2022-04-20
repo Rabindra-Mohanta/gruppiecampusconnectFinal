@@ -272,7 +272,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -304,7 +304,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             final Uri selectedImage = data.getData();
 
-            SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Do you like to set this as a wallpaper?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_do_you_like_set_wallpaper), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     selectedImage(selectedImage);
@@ -322,7 +322,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             setBackgroundImage();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), "Error in set wallpaper", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_error_set_wallpaper), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -593,7 +593,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             AppLog.e(TAG, "appVersion : " + appVersion);
             AppLog.e(TAG, "BuildConfig.VERSION_CODE : " + BuildConfig.VERSION_CODE);
             if (BuildConfig.VERSION_CODE < appVersion) {
-                AppDialog.showUpdateDialog(getActivity(), "New version is available. download new version from play store", new AppDialog.AppUpdateDialogListener() {
+                AppDialog.showUpdateDialog(getActivity(), getResources().getString(R.string.dialog_new_version_available), new AppDialog.AppUpdateDialogListener() {
                     @Override
                     public void onUpdateClick(DialogInterface dialog) {
                         final String appPackageName = BuildConfig.APPLICATION_ID; // getPackageName() from Context or Activity object
@@ -705,10 +705,10 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
                 logout();
             } else if (msg.contains("404")) {
-                Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
             } else if (msg.contains("418")) {
                 if (apiId == LeafManager.API_REPORT)
-                    Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
             } else {

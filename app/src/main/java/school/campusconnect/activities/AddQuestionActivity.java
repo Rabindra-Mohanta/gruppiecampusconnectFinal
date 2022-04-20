@@ -158,11 +158,11 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
         isQue = postType.equals("que");
 
         if (isQue)
-            setTitle("Add Doubt");
+            setTitle(getResources().getString(R.string.title_add_doubt));
         else {
-            setTitle("Add Answer");
+            setTitle(getResources().getString(R.string.title_add_answer));
             edtTitle.setHint(getString(R.string.hint_postans));
-            btn_Post.setText("Add Answer");
+            btn_Post.setText(getResources().getString(R.string.title_add_answer));
         }
 
         ifImageOrVideo = false;
@@ -1027,7 +1027,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -144,14 +144,14 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(tvSubject.getText().toString().trim())) {
-                    Toast.makeText(AddMarkCardActivity.this, "Please Add Subject", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddMarkCardActivity.this, getResources().getString(R.string.toast_please_add_subject), Toast.LENGTH_SHORT).show();
                     tvSubject.requestFocus();
                 } else if (TextUtils.isEmpty(etMarks.getText().toString().trim())) {
                     etMarks.requestFocus();
-                    Toast.makeText(AddMarkCardActivity.this, "Please Add Max Marks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddMarkCardActivity.this, getResources().getString(R.string.toast_please_add_max_marks), Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etMinMarks.getText().toString().trim())) {
                     etMinMarks.requestFocus();
-                    Toast.makeText(AddMarkCardActivity.this, "Please Add Min Marks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddMarkCardActivity.this, getResources().getString(R.string.toast_please_add_min_marks), Toast.LENGTH_SHORT).show();
                 } else {
                     adapter.add(new TeamSubjectAdapter.AddSubjectData(tvSubject.getText().toString(), etMarks.getText().toString(), etMinMarks.getText().toString()));
                     hide_keyboard(view);
@@ -190,16 +190,16 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
 
                     } else {
                         if (TextUtils.isEmpty(tvSubject.getText().toString().trim())) {
-                            Toast.makeText(AddMarkCardActivity.this, "Please Add Subject", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddMarkCardActivity.this, getResources().getString(R.string.toast_please_add_subject), Toast.LENGTH_SHORT).show();
                             tvSubject.requestFocus();
                             return;
                         } else if (TextUtils.isEmpty(etMarks.getText().toString().trim())) {
                             etMarks.requestFocus();
-                            Toast.makeText(AddMarkCardActivity.this, "Please Add Max Marks", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddMarkCardActivity.this, getResources().getString(R.string.toast_please_add_max_marks), Toast.LENGTH_SHORT).show();
                             return;
                         } else if (TextUtils.isEmpty(etMinMarks.getText().toString().trim())) {
                             etMinMarks.requestFocus();
-                            Toast.makeText(AddMarkCardActivity.this, "Please Add Min Marks", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddMarkCardActivity.this, getResources().getString(R.string.toast_please_add_min_marks), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -216,10 +216,10 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
                     HashMap<String, HashMap<String, Object>> hashMap = new HashMap<>();
                     for (int i = 0; i < list.size(); i++) {
                         if (TextUtils.isEmpty(list.get(i).maxMarks)) {
-                            Toast.makeText(this, "Please Add Max Marks", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getResources().getString(R.string.toast_please_add_max_marks), Toast.LENGTH_SHORT).show();
                             return;
                         }else if (TextUtils.isEmpty(list.get(i).minMarks)) {
-                            Toast.makeText(this, "Please Add min Marks", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getResources().getString(R.string.toast_please_add_min_marks), Toast.LENGTH_SHORT).show();
                             return;
                         } else {
                             HashMap<String, Object> values = new HashMap<>();
@@ -279,19 +279,21 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
         }
     }
 
+
+
     public boolean isValid() {
         boolean valid = true;
         if (!isValueValidOnly(etName)) {
-            Toast.makeText(this, "Please add Title", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_please_enter_title), Toast.LENGTH_SHORT).show();
             valid = false;
         } else if (adapter.getList().size() == 0) {
-            Toast.makeText(this, "Please add at least one subject", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_add_one_subject), Toast.LENGTH_SHORT).show();
             valid = false;
         } else if (!isValueValidOnly(etFrom)) {
-            Toast.makeText(this, "Please Select From Date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_please_select_from_date), Toast.LENGTH_SHORT).show();
             valid = false;
         } else if (!isValueValidOnly(etTo)) {
-            Toast.makeText(this, "Please Select To Date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_please_select_to_date), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;

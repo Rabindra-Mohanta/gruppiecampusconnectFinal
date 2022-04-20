@@ -277,7 +277,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                     LeafManager leafManager = new LeafManager();
                     leafManager.sendMsgToNotSubmittedStudents(TestParentActivity.this, group_id, getStudentIds(), new SendMsgToStudentReq(et_msg.getText().toString()));
                 } else {
-                    Toast.makeText(TestParentActivity.this, "Please enter msg", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TestParentActivity.this, getResources().getString(R.string.toast_enter_msg), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -488,7 +488,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 if (!Settings.canDrawOverlays(this)) {
                     //Permission is not available. Display error text.
 
-                    Toast.makeText(TestParentActivity.this, "Draw over permission not available.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TestParentActivity.this, getResources().getString(R.string.toast_draw_over_permission), Toast.LENGTH_SHORT).show();
 
                     startMeeting();
                 } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(TestParentActivity.this)) {
@@ -566,7 +566,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     }
 
     private void deletePost() {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete this Test/Exam?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_test_exam), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isConnectionAvailable()) {
@@ -626,7 +626,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 break;
             case LeafManager.API_SEND_MSG_TO_NOTSUBMITTED_STUDENT:
                 et_msg.setText("");
-                Toast.makeText(this, "Message send successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_message_send_success), Toast.LENGTH_SHORT).show();
                 break;
         }
     }

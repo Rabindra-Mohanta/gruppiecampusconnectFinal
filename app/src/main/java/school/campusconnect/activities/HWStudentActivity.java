@@ -829,7 +829,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     }
 
     private void onDeleteClick(AssignmentRes.AssignmentData item) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete This Assignment?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_assignment), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);

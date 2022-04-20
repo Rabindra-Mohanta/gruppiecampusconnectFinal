@@ -119,7 +119,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
         mComment.setCommentEditTextId(new ObservableInt(R.id.edt_comment));
         mComment.setCommentString(new ObservableField<>(""));
         mBinding.setComment(mComment);
-        mBinding.setHint("Write a comment...");
+        mBinding.setHint(getResources().getString(R.string.hint_write_comment));
 
         init();
 
@@ -592,7 +592,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
 
     @Override
     public void onEditClick(final GroupCommentItem item, int pos) {
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteComment(item.id);

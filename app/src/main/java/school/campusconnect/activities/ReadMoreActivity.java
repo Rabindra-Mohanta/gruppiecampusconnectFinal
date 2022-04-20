@@ -427,7 +427,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         databaseHandler = new DatabaseHandler(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Post");
+        setTitle(getResources().getString(R.string.post));
         String data = getIntent().getStringExtra("data");
 
         if (data == null) {
@@ -1121,7 +1121,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
 
 
     public void onDeleteClick(PostItem item) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
 

@@ -210,7 +210,7 @@ public class MarkSheetListFragment extends BaseFragment implements LeafManager.O
 
                 if(listData.size()==0){
                     txtEmpty.setVisibility(View.VISIBLE);
-                    txtEmpty.setText("No MarkCard Found!");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_mark_card_found));
                 }
                 else
                     txtEmpty.setVisibility(View.GONE);
@@ -281,7 +281,7 @@ public class MarkSheetListFragment extends BaseFragment implements LeafManager.O
     @Override
     public void onDeleteClick(MarkSheetListResponse.MarkSheetData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override

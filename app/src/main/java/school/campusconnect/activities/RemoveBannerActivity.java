@@ -160,7 +160,7 @@ public class RemoveBannerActivity extends BaseActivity implements LeafManager.On
                 @Override
                 public void onClick(View v) {
 
-                    AppDialog.showConfirmDialog(RemoveBannerActivity.this, "Are You Sure You Want to Remove This Banner ?", new AppDialog.AppDialogListener() {
+                    AppDialog.showConfirmDialog(RemoveBannerActivity.this, getResources().getString(R.string.dialog_remove_banner), new AppDialog.AppDialogListener() {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             onClickRemove(position);

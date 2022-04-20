@@ -502,7 +502,7 @@ public class CalendarActivity extends BaseActivity {
     }
 
     private void showConfirmDeleteDialog(final EventInDayRes.EventInDayData eventInDayData) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(this,  getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                   progressBar.setVisibility(View.VISIBLE);

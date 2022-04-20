@@ -99,7 +99,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Gps Track");
+        setTitle(getResources().getString(R.string.title_gps_track));
 
         init();
     }
@@ -195,7 +195,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
                 }
 
                 if (leafPreference.getBoolean("is_start")) {
-                    SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to stop GPS Tracking.?", new DialogInterface.OnClickListener() {
+                    SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_stop_gps_track), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();

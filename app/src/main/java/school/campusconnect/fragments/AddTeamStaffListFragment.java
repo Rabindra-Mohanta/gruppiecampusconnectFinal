@@ -129,7 +129,7 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
             progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {
-            Toast.makeText(getActivity(), "Select Any Staff Member", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_select_staff), Toast.LENGTH_SHORT).show();
         }
     }
 

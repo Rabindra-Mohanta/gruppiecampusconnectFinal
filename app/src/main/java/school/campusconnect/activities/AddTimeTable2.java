@@ -138,7 +138,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         switch (item.getItemId()){
 
             case R.id.menu_delete:
-                SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete time-table day?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_time_table), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         LeafManager leafManager=new LeafManager();

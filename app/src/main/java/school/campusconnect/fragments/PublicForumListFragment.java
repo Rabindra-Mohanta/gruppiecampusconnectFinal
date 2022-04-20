@@ -258,7 +258,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(getContext()).getString(Constants.GROUP_DATA), GroupItem.class);
 
-        edtSearch.setHint("Search Booth");
+        edtSearch.setHint(getResources().getString(R.string.hint_search_booth));
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 

@@ -158,7 +158,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
         adapter = new ClassesAdapter();
         rvTeams.setAdapter(adapter);
 
-        edtSearch.setHint("Search Booths");
+        edtSearch.setHint(getResources().getString(R.string.hint_search_booth));
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 

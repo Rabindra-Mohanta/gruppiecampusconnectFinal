@@ -334,7 +334,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                 mIsLoading = false;
                 break;
             case LeafManager.API_CODE_CONDUCT_DELETE:
-                Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 currentPage = 1;
                 getData();
                 AmazoneRemove.remove(currentItem.fileName);
@@ -355,10 +355,10 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {
@@ -418,7 +418,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onDeleteClick(CodeConductResponse.CodeConductData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     private void sendNotification() {

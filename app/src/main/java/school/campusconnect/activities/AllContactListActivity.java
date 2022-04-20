@@ -66,7 +66,7 @@ public class AllContactListActivity extends BaseActivity implements LeafManager.
                 edtSearch.setCursorVisible(false);
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     if (edtSearch.getText().toString().isEmpty()) {
-                        Toast.makeText(AllContactListActivity.this, "Input some query first", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AllContactListActivity.this, getResources().getString(R.string.toast_input_some_query), Toast.LENGTH_LONG).show();
                     } else {
                         fragment.lastSent = 0;
                         fragment.limit = 9;

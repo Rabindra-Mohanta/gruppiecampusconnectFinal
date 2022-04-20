@@ -368,7 +368,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);

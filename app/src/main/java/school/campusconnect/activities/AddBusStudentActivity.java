@@ -68,7 +68,7 @@ public class AddBusStudentActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Bus Student");
+        setTitle(getResources().getString(R.string.title_add_bus_student));
 
         init();
 
@@ -98,7 +98,7 @@ public class AddBusStudentActivity extends BaseActivity {
             if (studentData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this student.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_student), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -129,7 +129,7 @@ public class AddBusStudentActivity extends BaseActivity {
         if (isEdit) {
             imageFragment = UploadImageFragment.newInstance(studentData.getImage(), true, true);
             btnAdd.setText("Update");
-            setTitle("Student Detail");
+            setTitle(getResources().getString(R.string.title_student_details));
         } else {
             imageFragment = UploadImageFragment.newInstance(null, true, true);
         }

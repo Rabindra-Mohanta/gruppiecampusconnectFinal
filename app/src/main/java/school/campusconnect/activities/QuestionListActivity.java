@@ -162,7 +162,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                 edt_post.setText("");
                 removeImage();
                 fragment.refreshList();
-                Toast.makeText(getApplicationContext(), "Posted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_posted_successfully), Toast.LENGTH_SHORT).show();
                 break;
 
         }
@@ -236,14 +236,14 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
 
         if (!isValueValidOnly(edt_post)) {
             valid = false;
-            Toast.makeText(this, "Please Add Description", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_add_description), Toast.LENGTH_SHORT).show();
             return valid;
         }
 
 //        if (!isValueValidOnly(edt_post) && !isValueValidOnly(edtVideo.editText) && !isValueValidOnly(img_thumbnail)) {
         if (!isValueValidOnly(edt_post) && !isValueValidOnlyString(videoUrl) && !isValueValidOnlyString(imgUrl)) {
             valid = false;
-            Toast.makeText(this, "Please Add Description Or Select Image Or Video", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_add_description_image_or_video), Toast.LENGTH_SHORT).show();
 //        } else if (isValueValidOnly(img_thumbnail) && isValueValidOnly(edtVideo.editText)) {
         } else if (isValueValidOnlyString(imgUrl) && isValueValidOnlyString(videoUrl)) {
             valid = false;
@@ -449,7 +449,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }
@@ -468,7 +468,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                     public void onCompressedImage(ProfileImage profileImage) {
                         proImage = profileImage;
                         if (profileImage.imageString.isEmpty()) {
-                            Toast.makeText(QuestionListActivity.this, "Not able to compress selected image. Please verify", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(QuestionListActivity.this, getResources().getString(R.string.toast_not_able_to_compress), Toast.LENGTH_SHORT).show();
                         } else {
                            AppLog.e("AddPOstActivity", "imageUrl : " + profileImage.imageUrl);
                             imgUrl = profileImage.imageUrl;
@@ -483,7 +483,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                 });
                 imageCompressionAsyncTask.execute(uri.toString());
             } else {
-                Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
             }
 
 
@@ -500,7 +500,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                             proImage = profileImage;
                            AppLog.e("AddPost", "onCOmpressedImage : " + profileImage.imageUrl);
                             if (profileImage.imageString.isEmpty()) {
-                                Toast.makeText(QuestionListActivity.this, "Not able to compress selected image. Please verify", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(QuestionListActivity.this,  getResources().getString(R.string.toast_not_able_to_compress), Toast.LENGTH_SHORT).show();
                             } else {
                                 imgUrl = profileImage.imageUrl;
                                 allUrl = profileImage.imageUrl;
@@ -517,7 +517,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                     Toast.makeText(QuestionListActivity.this, getString(R.string.msg_unable_get_camera_image), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
             }
         } else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
@@ -603,7 +603,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
            AppLog.e("PDF", "selection1 is " + cursor.getString(column_index));
             return cursor.getString(column_index);
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
 //            return getPDF(uri);
             return "";
         }
@@ -832,7 +832,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                 videoUrl = edt_link.getText().toString();
                 allUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(QuestionListActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QuestionListActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
 //                    try {
@@ -861,7 +861,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                                 @Override
                                 public void onError() {
                                    AppLog.e("onError is->", "onError");
-                                    Toast.makeText(QuestionListActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(QuestionListActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                     removeImage();
                                 }
                             });

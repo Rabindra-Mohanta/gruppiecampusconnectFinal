@@ -199,7 +199,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             if (Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)) {
                 return;
             }
-            SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -300,9 +300,9 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         rvImages.setAdapter(imageAdapter);
 
         if (isEdit) {
-            setTitle("Add File to album");
+            setTitle(getResources().getString(R.string.title_add_file_to_album));
         } else {
-            setTitle("Add to Gallery");
+            setTitle(getResources().getString(R.string.title_add_to_gallery));
         }
 
 
@@ -388,7 +388,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
         ContextCompat.startForegroundService(this, serviceIntent);
 
-        Toast.makeText(this, "Video Uploading in background", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_video_upload_background), Toast.LENGTH_SHORT).show();
        finish();
 
     }
@@ -480,7 +480,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
                 }
             } catch (Exception e) {
-                Toast.makeText(AddGalleryPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
@@ -515,7 +515,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddGalleryPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -528,7 +528,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddGalleryPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -586,7 +586,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                             if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
                                 progressDialog.dismiss();
                             }
-                            Toast.makeText(AddGalleryPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -650,7 +650,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                             updateList(pos, key);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(AddGalleryPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                         }
                     }
@@ -712,7 +712,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         if (isEdit) {
             if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Add Image or video", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_add_image_video_pdf), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
             if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -922,7 +922,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);

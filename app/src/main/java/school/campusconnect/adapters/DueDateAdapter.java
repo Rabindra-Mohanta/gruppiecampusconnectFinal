@@ -131,7 +131,7 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
                     if(isFromUpdate){
-                        AppDialog.showConfirmDialog(mContext, "Are you sure you want to delete?", new AppDialog.AppDialogListener() {
+                        AppDialog.showConfirmDialog(mContext, mContext.getResources().getString(R.string.dialog_are_you_want_to_delete), new AppDialog.AppDialogListener() {
                             @Override
                             public void okPositiveClick(DialogInterface dialog) {
                                 list.remove(getAdapterPosition());

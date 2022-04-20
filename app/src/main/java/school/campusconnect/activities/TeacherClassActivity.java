@@ -27,7 +27,7 @@ public class TeacherClassActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Select Class");
+        setTitle(getResources().getString(R.string.lbl_select_class));
 
 
         TeacherClassListFragment classListFragment=new TeacherClassListFragment();

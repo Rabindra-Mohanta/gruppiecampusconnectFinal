@@ -179,7 +179,7 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -201,10 +201,10 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
     public boolean isValid() {
         boolean valid = true;
         if (!isValueValidOnly(etName)) {
-            Toast.makeText(this, "Please Enter Subject", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_enter_subject), Toast.LENGTH_SHORT).show();
             valid = false;
         } else if (TextUtils.isEmpty(selectedPDF)) {
-            Toast.makeText(this, "Please Select PDF", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -396,7 +396,7 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
                 }
             }
             if (selectedPDF == null) {
-                Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
             } else {
                 etPdf.setText(selectedPDF);
             }
@@ -419,7 +419,7 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
                     selectedPDFThumbnail = listThumbnails.get(0);
                     upLoadThumbnailOnCloud();
                 } else {
-                    Toast.makeText(AddEBookActivity2.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddEBookActivity2.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -448,7 +448,7 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
                         updateList(key);
                     }
                     if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddEBookActivity2.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddEBookActivity2.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                         progressBar.setVisibility(View.GONE);
                     }
@@ -522,7 +522,7 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
                         updateThumbnailList(key);
                     }
                     if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddEBookActivity2.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddEBookActivity2.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         progressDialog.dismiss();
                     }

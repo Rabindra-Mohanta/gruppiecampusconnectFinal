@@ -338,7 +338,7 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         if (!isConnectionAvailable()) {
             showNoNetworkMsg();
         }
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this E-Books.?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_ebook), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);

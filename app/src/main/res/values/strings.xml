@@ -57,7 +57,7 @@
     <string name="lbl_welcome">Welcome!</string>
     <string name="lbl_walk_des">"Making friends is easy as waving your hand back and forth with ease.</string>
 
-    <string name="hint_group">Enter Group Name</string>
+
     <string name="hint_name">Enter Name</string>
     <string name="name">name</string>
     <string name="hint_imp_name">Enter Name</string>
@@ -289,7 +289,6 @@
     <string name="hint_sub_caste_not_found">Sub Caste Not Found.......</string>
 
 
-
     <string name="hint_search_address">Search Address</string>
     <string name="action_register">New User ? Sign Up</string>
     <string name="action_login_new">Registered? Sign In</string>
@@ -341,6 +340,8 @@
 
     // YOUTUBE STRINGS
 
+
+    <string name="hint_group">Enter Group Name</string>
 
     <string name="button_authorize">Authorize</string>
     <string name="button_record">RECORD</string>
@@ -818,6 +819,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
 
     <string name="lbl_do_you_want_to_continue_class">Do you want to Continue Class?</string>
 
+
     <string name="rb_write_properly">Write Properly</string>
     <string name="rb_spelling_mistakes">Spelling Mistakes</string>
     <string name="rb_improve_handwriting">Improve Handwriting</string>
@@ -859,6 +861,207 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="menu_remove_test_exam">Remove Test/Exam</string>
     <string name="menu_add_update_time_table">Add/Update Time Table</string>
     <string name="menu_add_topic">Add Topic</string>
+
+    <string name="lbl_submit_assignment">Submit Assignment</string>
+
+    <string name="title_add_bus_student">Add Bus Student</string>
+    <string name="title_add_">Add </string>
+    <string name="title_booth_member">Booth Member</string>
+    <string name="title_add_cordinate">Add Coordinator</string>
+    <string name="title_cordinate_details">Coordinator Detail</string>
+    <string name="title_student_details">Student Detail</string>
+    <string name="title_add_file_to_album">Add File to album</string>
+    <string name="title_add_to_gallery">Add to Gallery</string>
+    <string name="title_add_code_of_conduct">Add Code Of Conduct</string>
+    <string name="title_add_student">Add Student</string>
+    <string name="title_update_family_member">Update Family Member</string>
+    <string name="title_add_family_member">Add Family Member</string>
+    <string name="title_add_post_to_team">Add Post To Team</string>
+    <string name="title_post_a_new_notice">Post a new notice</string>
+    <string name="title_post_to">Post to </string>
+    <string name="title_add_course">Add Course</string>
+    <string name="title_staff_details">Staff Detail</string>
+    <string name="title_add_doubt">Add Doubt</string>
+    <string name="title_add_answer">Add Answer</string>
+    <string name="title_add_vendor">Add Vendor</string>
+    <string name="title_attendance">Attendance</string>
+    <string name="title_coordinator">Coordinators</string>
+    <string name="title_edit_attendance">Edit Attendance</string>
+    <string name="title_add_voter">Add Voter</string>
+    <string name="title_gps_track">Gps Track</string>
+    <string name="title_marks_card">Marks Card</string>
+    <string name="post">Post</string>
+    <string name="title_details">Details</string>
+    <string name="title_member_details">Member Detail</string>
+
+
+    <string name="toast_enter_name">Please Enter Name</string>
+    <string name="toast_enter_phone">Please Enter Phone</string>
+    <string name="toast_valid_phone">Please Enter Valid Phone Number</string>
+    <string name="toast_no_post">No posts available</string>
+    <string name="toast_already_reported">You have already reported this post</string>
+    <string name="toast_add_one_contact">Please Add at least one contact</string>
+    <string name="toast_add_member_successfully">Add Member successfully</string>
+    <string name="toast_storage_permission_needed">Storage permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="toast_enter_subject">Please Enter Subject</string>
+    <string name="toast_select_pdf">Please Select PDF</string>
+    <string name="toast_upload_failed">Upload Failed</string>
+    <string name="toast_some_problem_occure">Some Problem Occurred Please try again</string>
+    <string name="toast_post_delete_successfully">Post Deleted Succesfully</string>
+    <string name="toast_attendance_submit">Attendance Submitted</string>
+    <string name="toast_number_change_successfully">Number changed successfully , Please Login Again With New Number</string>
+    <string name="toast_edit_coordinate">Edit Coordinate successfully</string>
+    <string name="toast_add_coordinate">Add Coordinate successfully</string>
+    <string name="toast_delete_coordinate">Delete Coordinate successfully</string>
+    <string name="toast_mark_card_delete_successfully">Mark Card Deleted Successfully</string>
+    <string name="toast_input_some_query">Input some query first</string>
+    <string name="toast_ticket_add_successfully">Ticket Added Successfully...</string>
+    <string name="toast_select_team">Please Select Team</string>
+    <string name="toast_add_issue">Please Add Issue</string>
+    <string name="toast_valid_issue">Please Enter Valid Issue</string>
+    <string name="toast_add_image_or_video_or_audio">Please Add Image or video or Audio</string>
+    <string name="toast_select_location">Please Select Location</string>
+    <string name="toast_audio_permission_needed">Audio permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="toast_valid_youtube_link">Not a valid youtube link</string>
+    <string name="toast_change_pin">Change Pin SuccessFully...</string>
+    <string name="toast_select_friend_first">Please select any friend first</string>
+    <string name="toast_error_comression">Error In Compression : </string>
+    <string name="toast_select_staff">Select Any Staff Member</string>
+    <string name="toast_add_success">Added Successfully!</string>
+    <string name="toast_not_able_to_compress">Not able to compress selected image. Please verify</string>
+    <string name="toast_address_not_found">Address Not found</string>
+    <string name="toast_add_student_sucess">Add Student successfully</string>
+    <string name="toast_edit_student_sucess">Edit Student successfully</string>
+    <string name="toast_delete_student_sucess">Delete Student successfully</string>
+    <string name="toast_stop_audio">Stop Audio Recording...</string>
+    <string name="toast_enable_gps">Please Enable Gps</string>
+    <string name="toast_add_to_group">Added to Group</string>
+    <string name="toast_could_not_find_file">Could not find the filepath of the selected file</string>
+    <string name="toast_app_not_install">APP Not Installed</string>
+    <string name="toast_video_upload_background">Video Uploading in background</string>
+    <string name="toast_enter_chapter_name">Please Enter Chapter Name</string>
+    <string name="toast_enter_topic_name">Please Enter Topic Name</string>
+    <string name="toast_posted_successfully">Posted Successfully</string>
+    <string name="toast_add_description">Please Add Description</string>
+    <string name="toast_add_description_image_or_video">Please Add Description Or Select Image Or Video</string>
+    <string name="toast_enter_msg">Please enter msg</string>
+    <string name="toast_draw_over_permission">Draw over permission not available.</string>
+    <string name="toast_message_send_success">Message send successfully</string>
+    <string name="toast_error_in_download">error in Download :</string>
+    <string name="toast_add_comment">Add Comment</string>
+    <string name="toast_post_reported_sucessfully">Post Reported Successfully</string>
+    <string name="toast_user_deleted">User Deleted</string>
+    <string name="toast_admin_changed">Admin Changed</string>
+    <string name="toast_attendance_report_save_successfully">Attendance Report Save successfully</string>
+    <string name="toast_notification_not_found">Notification Not Found...</string>
+    <string name="toast_please_select_student">Please Select Student</string>
+    <string name="toast_shared_successfully">Shared successfully</string>
+    <string name="toast_select_any_group_first">Select any group first...</string>
+    <string name="toast_you_can_not_leave_team">You can\'t leave team</string>
+    <string name="toast_error_set_wallpaper">Error in set wallpaper</string>
+    <string name="toast_update_successfully">Updated Successfully</string>
+    <string name="toast_ebook_add_successfully">E-Book Successfully Added</string>
+    <string name="toast_add_one_subject">Please add at least one subject</string>
+    <string name="toast_add_image_video_pdf">Please Add Image or video or pdf</string>
+    <string name="toast_successfully_submit">Successfully Submitted</string>
+    <string name="toast_select_date">Please Select Date</string>
+    <string name="toast_please_select_subject">Please Select Subject</string>
+    <string name="toast_please_select_start_time">Please Select Start Time</string>
+    <string name="toast_please_select_end_time">Please Select End Time</string>
+    <string name="toast_please_enter_max_mark">Please Enter Max Marks</string>
+    <string name="toast_please_enter_min_mark">Please Enter Min Marks</string>
+    <string name="toast_please_select_one_subject_mark">Please add at least one subject/marks</string>
+    <string name="toast_please_enter_title">Please Enter Title</string>
+    <string name="toast_please_add_subject">Please Add Subject</string>
+    <string name="toast_please_add_max_marks">Please Add Max Marks</string>
+    <string name="toast_please_add_min_marks">Please Add Min Marks</string>
+    <string name="toast_please_select_from_date">Please Select From Date</string>
+    <string name="toast_please_select_to_date">Please Select To Date</string>
+    <string name="toast_status_sucessfully_update">Status successfully updated</string>
+
+
+    <string name="txt_enter_old_pin">Enter Old Pin...</string>
+    <string name="txt_old_pin_wrong">Old Pin Wrong...</string>
+    <string name="txt_enter_new_pin">Enter New Pin...</string>
+    <string name="txt_confirm_pin_not_match">Confirm Pin Not Match...</string>
+    <string name="txt_enter_confirm_pin">Enter Confirm Pin...</string>
+    <string name="txt_my_groups">My Groups</string>
+    <string name="txt_public_groups">Public Groups</string>
+    <string name="txt_no_ebook_found">No E-Book found.</string>
+    <string name="txt_no_time_table_found">No Time Table found.</string>
+    <string name="txt_no_mark_card_found">No MarkCard Found!</string>
+    <string name="txt_no_student_found">No Students found.</string>
+    <string name="txt_no_booth_team_found">No Booths Teams found.</string>
+    <string name="txt_roll_no_student">Roll No\n( Student )</string>
+    <string name="txt_name_student">Name\n( Student )</string>
+    <string name="txt_no_street_found">No Streets found.</string>
+    <string name="txt_no_class_found">No Class found.</string>
+    <string name="txt_no_bus_found">No Bus found.</string>
+    <string name="txt_no_coordinate_found">No Coordinate found.</string>
+    <string name="txt_phone">Phone: </string>
+    <string name="txt_no_booth_member_found">No Booth Member found</string>
+
+    <string name="hint_search_voter">Search Voter</string>
+    <string name="hint_search_booths">Search Booths</string>
+    <string name="hint_write_comment">Write a comment...</string>
+    <string name="hint_write_post">Write a post...</string>
+    <string name="hint_write_reply">Write a reply...</string>
+    <string name="hint_search_booth_team">Search Booth Team</string>
+    <string name="hint_search_sub_booth">Search Sub Booth</string>
+
+
+    <string name="dialog_new_version_available">New version is available. download new version from play store</string>
+    <string name="dialog_update_available">Update available!</string>
+    <string name="dialog_are_you_sure_you_want_to_approve">Are you sure you want to approve?</string>
+    <string name="dialog_are_you_sure_you_want_to_not_approve">Are you sure you want to Not approve?</string>
+    <string name="dialog_are_you_sure_you_want_to_hold">Are you sure you want to hold?</string>
+    <string name="dialog_are_you_want_to_delete">Are you sure you want to delete?</string>
+    <string name="dialog_are_you_sure_want_to_delete_user">Are you sure you want to Delete This User ?</string>
+    <string name="dialog_are_you_want_to_make_admin">Are you sure you want to Make this user as Admin ?</string>
+    <string name="dialog_share_live_class">Do you want to share this live class?</string>
+    <string name="dialog_remove_banner">Are You Sure You Want to Remove This Banner ?</string>
+    <string name="dialog_are_you_sure">Are You Sure You Want to </string>
+    <string name="dialog_ticket"> Ticket ?</string>
+
+
+    <string name="smb_dialog_this_will_schedule_new_test">This will schedule new test/exam, kindly remove old test/exam if you are not required</string>
+    <string name="smb_dialog_permission_change">Your Account permissions have been changed , Please logout and login again.</string>
+    <string name="smb_dialog_delete_class">Are you sure you want to permanently delete this class.?</string>
+    <string name="smb_dialog_delete_bus">Are you sure you want to permanently delete this Bus.?</string>
+    <string name="smb_delete_student">Are you sure you want to permanently delete this student.?</string>
+    <string name="smb_Delete_commitee">Are you sure you want to delete this Committee ?</string>
+    <string name="smb_delete_cordinate">Are you sure you want to permanently delete this coordinate.?</string>
+    <string name="smb_delete_staff">Are you sure you want to permanently delete this staff.?</string>
+    <string name="smb_remove_from_admin">Are you sure you want to remove this users from admin?</string>
+    <string name="smb_delete_subject">Are you sure you want to permanently delete this Subjects.?</string>
+    <string name="smb_delete_time_table">Are you sure you want to delete time-table day?</string>
+    <string name="smb_do_you_like_set_wallpaper">Do you like to set this as a wallpaper?</string>
+    <string name="smb_delete_group">Are you sure about deleting this group?</string>
+    <string name="smb_delete_topic">Are you sure you want to delete this topic?</string>
+    <string name="smb_delete_team">Are you sure you want to permanently delete this team.?</string>
+    <string name="smb_delete_test">Are you sure you want to permanently delete this Test.?</string>
+    <string name="smb_stop_gps_track">Are you sure you want to stop GPS Tracking.?</string>
+    <string name="smb_delete_home_work">Are You Sure Want To Delete This Homework?</string>
+    <string name="smb_delete_assignment">Are You Sure Want To Delete This Assignment?</string>
+    <string name="smb_want_to_move">Are You Sure Want To move </string>
+    <string name="smb_assignment_not_verified"> assignment to not verified?</string>
+    <string name="smb_delete">Are you sure you want to delete </string>
+    <string name="smb_from_team"> from team ?</string>
+    <string name="smb_share_in">Are you sure you want to share in </string>
+    <string name="smb_">.?</string>
+    <string name="smb_delete_test_exam">Are you sure you want to delete this Test/Exam?</string>
+    <string name="smb_delete_member">Are you sure you want to permanently delete this member.?</string>
+    <string name="smb_group">  group ?</string>
+    <string name="smb_complete_note">Have you completed your notes?</string>
+    <string name="smb_delete_chapter">Are you sure you want to delete this chapter?</string>
+    <string name="smb_delete_book">Are you sure you want to delete this Books.?</string>
+    <string name="smb_delete_ebook">Are you sure you want to delete this E-Books.?</string>
+    <string name="smb_leave_team">Are you sure you want to leave?</string>
+    <string name="smb_archive">Are you sure you want to archive </string>
+    <string name="smb_delete_time_table_">Are you sure you want to delete time-table?</string>
+    <string name="smb_add_jitsi_token">Are you sure you want to add jitsiToken.?</string>
+    <string name="smb_attach_file">Attach Selected file?</string>
+    <string name="smb_change_team_admin">Are you sure you want to change team admin</string>
 
 
     <string-array name="publc_private_array">

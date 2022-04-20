@@ -173,7 +173,7 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
         switch (item.getItemId()){
 
             case R.id.menu_delete_committee:
-                SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete this Committee ?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_Delete_commitee), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (isConnectionAvailable()) {

@@ -255,7 +255,7 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
     public void onDeleteClick(VendorPostResponse.VendorPostData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override

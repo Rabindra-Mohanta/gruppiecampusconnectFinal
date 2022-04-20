@@ -40,7 +40,7 @@ public class PersonalSettingsActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Settings");
+        setTitle(getResources().getString(R.string.action_settings));
 
         groupId = getIntent().getExtras().getString("group_id");
         userId = getIntent().getExtras().getString("user_id");

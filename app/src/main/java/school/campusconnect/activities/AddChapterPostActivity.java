@@ -246,7 +246,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
         if(shareList!=null && shareList.size()>0){
-            SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -328,7 +328,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         transferUtility = AmazoneHelper.getTransferUtility(this);
 
         setBackEnabled(false);
-        tvTitle.setText("Add Chapter");
+        tvTitle.setText(getResources().getString(R.string.menu_add_chapter));
         setTitle("");
         iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -444,7 +444,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         serviceIntent.putExtra("isEdit", isEdit);
         ContextCompat.startForegroundService(this, serviceIntent);
 
-        Toast.makeText(this, "Video Uploading in background", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_video_upload_background), Toast.LENGTH_SHORT).show();
         finish();
 
     }
@@ -511,7 +511,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     }
                 }
             } catch (Exception e) {
-                Toast.makeText(AddChapterPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
@@ -546,7 +546,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddChapterPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -560,7 +560,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddChapterPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddChapterPostActivity.this,getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -624,7 +624,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
-                            Toast.makeText(AddChapterPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -693,7 +693,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                             updateList(pos, key);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(AddChapterPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             if(progressDialog!=null)
                                 progressDialog.dismiss();
                         }
@@ -766,20 +766,20 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         {
             if (!isValueValidOnly(edtTitle)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Enter Chapter Name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_enter_chapter_name), Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
 
         if (!isValueValidOnly(edtDesc)) {
             if (showToast)
-                Toast.makeText(this, "Please Enter Topic Name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_enter_topic_name), Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath) && TextUtils.isEmpty(audioPath)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Image or video or pdf or audio", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_image_or_video_or_audio), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -881,7 +881,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         switch (apiId) {
 
             case LeafManager.API_CHAPTER_ADD:
-                Toast.makeText(AddChapterPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.toast_posted_successfully), Toast.LENGTH_SHORT).show();
                 if (isEdit) {
                     LeafPreference.getInstance(AddChapterPostActivity.this).setBoolean("is_topic_added", true);
                     new SendNotification(edtTitle.getText().toString(), false).execute();
@@ -1096,7 +1096,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -1105,7 +1105,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     public void requestPermissionForRecordAudio(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-            Toast.makeText(this, "Audio permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_audio_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
         }
@@ -1304,7 +1304,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 }
 */
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1472,14 +1472,14 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddChapterPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -1507,7 +1507,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddChapterPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

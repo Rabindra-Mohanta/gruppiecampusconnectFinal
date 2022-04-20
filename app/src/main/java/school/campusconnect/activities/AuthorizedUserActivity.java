@@ -90,7 +90,7 @@ public class AuthorizedUserActivity extends BaseActivity implements LeafManager.
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     if (isConnectionAvailable()) {
                         if (edtSearch.getText().toString().isEmpty()) {
-                            Toast.makeText(AuthorizedUserActivity.this, "Input some query first", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AuthorizedUserActivity.this, getResources().getString(R.string.toast_input_some_query), Toast.LENGTH_LONG).show();
                         } else {
                             getSearchData(edtSearch.getText().toString());
                         }

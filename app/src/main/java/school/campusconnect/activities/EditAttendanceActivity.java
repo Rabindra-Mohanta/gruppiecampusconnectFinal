@@ -55,8 +55,7 @@ public class EditAttendanceActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Edit Attendance");
-
+        setTitle(getResources().getString(R.string.title_edit_attendance));
         init_();
 
         edtRollNo.setText(attendanceData.rollNumber);

@@ -296,7 +296,7 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
 
         } catch (Exception e)
         {
-            Toast.makeText(context, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -464,7 +464,7 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(context, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -531,7 +531,7 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
                                 if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
                                     //progressDialog.dismiss();
                                 }
-                                Toast.makeText(context, "Failed to upload", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             }
                         }
 

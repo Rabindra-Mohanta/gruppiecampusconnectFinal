@@ -214,7 +214,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
         ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
         if (shareList != null && shareList.size() > 0) {
-            SMBDialogUtils.showSMBDialogYesNoCancel(this, "Attach Selected file?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -308,11 +308,11 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         }
 
         if (postType.equals("team"))
-            setTitle("Add Post To Team");
+            setTitle(getResources().getString(R.string.title_add_post_to_team));
         else if (postType.equals("group"))
-            setTitle("Post a new notice");
+            setTitle(getResources().getString(R.string.title_post_a_new_notice));
         else {
-            setTitle("Post to " + friendName);
+            setTitle(getResources().getString(R.string.title_post_to) + friendName);
             edtTitle.setVisibility(View.GONE);
             tvLabelTitle.setVisibility(View.GONE);
 
@@ -1469,7 +1469,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override

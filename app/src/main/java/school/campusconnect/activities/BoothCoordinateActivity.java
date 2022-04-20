@@ -42,7 +42,7 @@ public class BoothCoordinateActivity extends BaseActivity {
         setBackEnabled(true);
 
         if (getIntent().getExtras() != null) {
-            setTitle(getIntent().getStringExtra("title")+" Coordinators");
+            setTitle(getIntent().getStringExtra("title")+" "+getResources().getString(R.string.title_coordinator));
         }
 
         classListFragment = new BoothCoordinateListFragment();

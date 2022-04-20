@@ -207,7 +207,7 @@ public static String TAG = "MyTeamSubBoothFragment";
         adapter = new ClassesAdapter();
         rvTeams.setAdapter(adapter);
 
-        edtSearch.setHint("Search Sub Booth");
+        edtSearch.setHint(getResources().getString(R.string.hint_search_sub_booth));
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 

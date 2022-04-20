@@ -116,7 +116,7 @@ public class MarkCardListFragment extends BaseFragment implements LeafManager.On
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Mark Card found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_mark_card_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -126,7 +126,7 @@ public class MarkCardListFragment extends BaseFragment implements LeafManager.On
             }
             else
             {
-                txtEmpty.setText("No Mark Card found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_mark_card_found));
                 return 0;
             }
 

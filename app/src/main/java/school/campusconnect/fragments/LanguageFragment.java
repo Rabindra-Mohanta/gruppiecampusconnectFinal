@@ -44,7 +44,7 @@ public class LanguageFragment extends Fragment {
 
     @OnClick(R.id.btn_update)
     public void onClick(View v){
-        Toast.makeText(getActivity(),"Updated Successfully",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),getResources().getString(R.string.toast_update_successfully),Toast.LENGTH_SHORT).show();
         getActivity().finish();
     }
 

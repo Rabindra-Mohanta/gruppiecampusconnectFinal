@@ -50,12 +50,11 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-
+        <activity android:name=".activities.ChangeLanguageActivity"></activity>
         <activity
             android:name=".activities.AboutBoothActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.RemoveBannerActivity"
             android:exported="false"

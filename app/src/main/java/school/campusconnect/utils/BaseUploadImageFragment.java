@@ -337,7 +337,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
         Log.e("KEYY", "key is " + key);
         if (filePath == null) {
             Log.e("UPLOADTEST", "filepath null");
-            Toast.makeText(getActivity(), "Could not find the filepath of the selected file",
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_could_not_find_file),
                     Toast.LENGTH_LONG).show();
             return;
         }

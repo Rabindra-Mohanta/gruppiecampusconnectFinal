@@ -85,7 +85,7 @@ public class AddressActivity extends BaseActivity {
                     if(resultCode==RESULT_OK)
                         ((SelectAddressFragment)frag).getGPS();
                     else
-                        Toast.makeText(getApplicationContext(), "Please Enable Gps", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_enable_gps), Toast.LENGTH_SHORT).show();
                 }
             }
 

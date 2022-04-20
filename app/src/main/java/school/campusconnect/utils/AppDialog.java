@@ -7,6 +7,8 @@ import android.view.Window;
 
 import org.jetbrains.annotations.NotNull;
 
+import school.campusconnect.R;
+
 
 public class AppDialog {
     static AlertDialog dialog;
@@ -37,7 +39,7 @@ public class AppDialog {
         AlertDialog.Builder builder=new AlertDialog.Builder(context);
         builder.setMessage(msg);
         builder.setCancelable(false);
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(context.getResources().getString(R.string.strYes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(listener!=null){
@@ -45,7 +47,7 @@ public class AppDialog {
                 }
             }
         });
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(context.getResources().getString(R.string.strNo), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(listener!=null){
@@ -69,14 +71,14 @@ public class AppDialog {
         AlertDialog.Builder builder=new AlertDialog.Builder(context);
         builder.setMessage(msg);
         builder.setCancelable(false);
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(context.getResources().getString(R.string.lbl_update), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 appUpdateDialogListener.onUpdateClick(dialog);
             }
         });
         dialog = builder.create();
-        dialog.setTitle("Update available!");
+        dialog.setTitle(context.getResources().getString(R.string.dialog_update_available));
         dialog.show();
         return dialog;
     }

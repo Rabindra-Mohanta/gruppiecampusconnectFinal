@@ -103,7 +103,7 @@ public class AdminStudentFeesActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (resData != null) {
-                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, "Are you sure you want to approve?", new AppDialog.AppDialogListener() {
+                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, getResources().getString(R.string.dialog_are_you_sure_you_want_to_approve), new AppDialog.AppDialogListener() {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
@@ -125,7 +125,7 @@ public class AdminStudentFeesActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (resData != null) {
-                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, "Are you sure you want to Not approve?", new AppDialog.AppDialogListener() {
+                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, getResources().getString(R.string.dialog_are_you_sure_you_want_to_not_approve), new AppDialog.AppDialogListener() {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
@@ -147,7 +147,7 @@ public class AdminStudentFeesActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (resData != null) {
-                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, "Are you sure you want to hold?", new AppDialog.AppDialogListener() {
+                    AppDialog.showConfirmDialog(AdminStudentFeesActivity.this, getResources().getString(R.string.dialog_are_you_sure_you_want_to_hold), new AppDialog.AppDialogListener() {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
@@ -219,7 +219,7 @@ public class AdminStudentFeesActivity extends BaseActivity {
         if(apiId==LeafManager.API_DUE_DATE_STATUS){
 
         }else {
-            Toast.makeText(this, "Status successfully updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_status_sucessfully_update), Toast.LENGTH_SHORT).show();
             finish();
         }
     }

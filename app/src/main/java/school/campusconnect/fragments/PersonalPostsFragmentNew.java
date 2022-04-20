@@ -359,7 +359,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
                 break;
 
             case LeafManager.API_ID_DELETE_PERSONAL_POST:
-                Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 reloadData();
                 AmazoneRemove.remove(currentItem.fileName);
                 break;
@@ -548,7 +548,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
     @Override
     public void onDeleteClick(PostItem item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override

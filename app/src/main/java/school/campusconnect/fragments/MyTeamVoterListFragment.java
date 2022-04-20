@@ -198,7 +198,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         adapter = new ClassesAdapter();
         rvTeams.setAdapter(adapter);
 
-        edtSearch.setHint("Search Voter");
+        edtSearch.setHint(getResources().getString(R.string.hint_search_voter));
 
         edtSearch.addTextChangedListener(new TextWatcher() {
 

@@ -218,7 +218,7 @@ public class TeamUsersActivity extends BaseActivity {
     }
 
     private void onUserClick(final LeadItem leadItem) {
-        SMBDialogUtils.showSMBDialogOKCancel_(this, "Are you sure you want to change team admin", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel_(this, getResources().getString(R.string.smb_change_team_admin), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);

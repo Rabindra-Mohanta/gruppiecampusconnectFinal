@@ -152,7 +152,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
             }
 
             holder.txt_name.setText(item.getName());
-            holder.txt_count.setText("Students : "+item.members);
+            holder.txt_count.setText(getResources().getString(R.string.lbl_students)+" : "+item.members);
 
             if("false".equals(item.jitsiToken)){
                 holder.img_tree.setVisibility(View.VISIBLE);
@@ -167,7 +167,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -177,7 +177,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 
@@ -215,7 +215,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
 
     private void onTreeClick(ClassResponse.ClassData classData) {
 
-        SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), "Are you sure you want to add jitsiToken.?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), getResources().getString(R.string.smb_add_jitsi_token), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);

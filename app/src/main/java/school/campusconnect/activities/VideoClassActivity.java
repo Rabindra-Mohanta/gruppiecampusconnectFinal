@@ -126,7 +126,7 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
         if (selectedClassData == null || !isRecordingStarted) {
             return;
         }
-        AppDialog.showConfirmDialog(this, "Do you want to share this live class?", new AppDialog.AppDialogListener() {
+        AppDialog.showConfirmDialog(this, getResources().getString(R.string.dialog_share_live_class), new AppDialog.AppDialogListener() {
             @Override
             public void okPositiveClick(DialogInterface dialog) {
                 dialog.dismiss();

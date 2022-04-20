@@ -44,7 +44,7 @@ public class Home extends BaseActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
-        setTitle("Groups");
+        setTitle(getResources().getString(R.string.action_groups));
 
         if(getIntent().hasExtra("from")){
             from = getIntent().getStringExtra("from");

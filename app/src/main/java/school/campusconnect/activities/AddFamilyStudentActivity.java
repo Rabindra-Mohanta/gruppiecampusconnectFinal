@@ -268,7 +268,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
             if (list == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -293,7 +293,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
 
         if(pos!=-1){
             isReligionUpdate = true;
-            setTitle("Update Family Member");
+            setTitle(getResources().getString(R.string.title_update_family_member));
             setData(list.get(pos));
         }else {
 
@@ -310,7 +310,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
 
             bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
             etBlood.setAdapter(bloodGrpAdapter);
-            setTitle("Add Family Member");
+            setTitle(getResources().getString(R.string.title_add_family_member));
         }
     }
 

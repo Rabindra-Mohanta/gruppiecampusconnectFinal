@@ -300,7 +300,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
 
 
     public void addPost(ShareGroupItemList team) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to share in " + team.getName() + ".?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_share_in) + team.getName() + getResources().getString(R.string.smb_), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressBar.setVisibility(View.VISIBLE);

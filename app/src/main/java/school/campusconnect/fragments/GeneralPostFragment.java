@@ -484,7 +484,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 break;
 
             case LeafManager.API_ID_DELETE_POST:
-                Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 PostList.clear();
                 currentPage = 1;
                 getData(false);
@@ -511,7 +511,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
             case LeafManager.API_REPORT:
                 hideLoadingBar();
-                Toast.makeText(getContext(), "Post Reported Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_reported_sucessfully), Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -586,7 +586,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (error.status.equals("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), error.title, Toast.LENGTH_SHORT).show();
         }
@@ -608,10 +608,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {
@@ -769,7 +769,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onDeleteClick(PostItem item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override

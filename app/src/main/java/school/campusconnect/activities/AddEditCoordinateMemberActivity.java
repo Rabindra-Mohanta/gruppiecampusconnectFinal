@@ -133,7 +133,7 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
             if (studentData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this coordinate.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_cordinate), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -225,7 +225,8 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
 
         imageFragment = UploadImageFragment.newInstance(isEdit?studentData.image:null, true, true);
         btnAdd.setText(isEdit?"Update":"Add");
-        setTitle(isEdit?"Coordinator Detail - (" + getIntent().getStringExtra("className") + ")":"Add Coordinator");
+
+        setTitle(isEdit? getResources().getString(R.string.title_cordinate_details)+" - (" + getIntent().getStringExtra("className") + ")":getResources().getString(R.string.title_add_cordinate));
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
@@ -352,15 +353,15 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
 
         switch (apiId) {
             case LeafManager.API_UPDATE_BOOTH_MEMEBER:
-                Toast.makeText(this, "Edit Coordinate successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_edit_coordinate), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_ADD_COORDINATE:
-                Toast.makeText(this, "Add Coordinate successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,  getResources().getString(R.string.toast_add_coordinate), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_DELETE_USER:
-                Toast.makeText(this, "Delete Coordinate successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_delete_coordinate), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }

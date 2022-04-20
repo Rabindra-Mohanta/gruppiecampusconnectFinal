@@ -434,7 +434,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     @Override
     public void onDeleteClick(GalleryPostRes.GalleryData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override

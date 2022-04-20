@@ -296,13 +296,13 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     public void onDeleteClick(ChapterRes.TopicData item, int adapterPosition) {
         currentItem = item;
         this.adapterPosition = adapterPosition;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this topic?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_topic), this);
     }
 
     @Override
     public void onCompleteClick(ChapterRes.TopicData item, int adapterPosition) {
         if (item.topicCompleted) {
-            SMBDialogUtils.showSMBDialogYesNoCancel(getActivity(), "Have you completed your notes?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogYesNoCancel(getActivity(),  getResources().getString(R.string.smb_complete_note), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {
@@ -348,7 +348,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     public void onDeleteChapterClick() {
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this chapter?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_chapter), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isConnectionAvailable()) {

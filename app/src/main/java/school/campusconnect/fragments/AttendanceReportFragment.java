@@ -498,7 +498,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Data found.");
+                    txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
                 }else {
                     txtEmpty.setText("");
                 }
@@ -507,7 +507,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             }
             else
             {
-                txtEmpty.setText("No Data found.");
+                txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
                 return 0;
             }
 
@@ -575,12 +575,12 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
                     {
                         if (i==0)
                         {
-                            valueTV.setText("Roll No\n( Student )");
+                            valueTV.setText(mContext.getResources().getString(R.string.txt_roll_no_student));
                             valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_70dp), mContext.getResources().getDimensionPixelSize(R.dimen.padding_50dp)));
                         }
                          if(i==1)
                          {
-                             valueTV.setText("Name \n( Student )");
+                             valueTV.setText(mContext.getResources().getString(R.string.txt_name_student));
                              valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_80dp), mContext.getResources().getDimensionPixelSize(R.dimen.padding_50dp)));
                          }
                     }
@@ -667,7 +667,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Data found.");
+                    txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
                 }else {
                     txtEmpty.setText("");
                 }
@@ -676,7 +676,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             }
             else
             {
-                txtEmpty.setText("No Data found.");
+                txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
                 return 0;
             }
         }
@@ -718,7 +718,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         } else {
             AppLog.e("External" + "permission", "checkpermission , denied");
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
             } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
             }

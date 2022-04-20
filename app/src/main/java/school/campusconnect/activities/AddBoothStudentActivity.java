@@ -100,8 +100,7 @@ public class AddBoothStudentActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add " +
-                "Booth Member");
+        setTitle(getResources().getString(R.string.title_add_) + getResources().getString(R.string.title_booth_member));
         init();
     }
    /* @Override
@@ -153,12 +152,12 @@ public class AddBoothStudentActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etName.getText().toString().trim())) {
-                    Toast.makeText(AddBoothStudentActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddBoothStudentActivity.this, getResources().getString(R.string.toast_enter_name), Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etPhone.getText().toString().trim())) {
-                    Toast.makeText(AddBoothStudentActivity.this, "Please Enter Phone", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddBoothStudentActivity.this, getResources().getString(R.string.toast_enter_phone), Toast.LENGTH_SHORT).show();
                 }
                 else if (etPhone.getText().toString().length() < 10) {
-                    Toast.makeText(AddBoothStudentActivity.this, "Please Enter Valid Phone Number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddBoothStudentActivity.this, getResources().getString(R.string.toast_valid_phone), Toast.LENGTH_SHORT).show();
                 }else {
                     hide_keyboard(view);
                     String str = etName.getText().toString() + ",IN," + etPhone.getText().toString();
@@ -236,10 +235,10 @@ public class AddBoothStudentActivity extends BaseActivity {
                 }
                 else {
                     if (TextUtils.isEmpty(etName.getText().toString().trim())) {
-                        Toast.makeText(AddBoothStudentActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddBoothStudentActivity.this, getResources().getString(R.string.toast_enter_name), Toast.LENGTH_SHORT).show();
                         return;
                     } else if (TextUtils.isEmpty(etPhone.getText().toString().trim())) {
-                        Toast.makeText(AddBoothStudentActivity.this, "Please Enter Phone", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddBoothStudentActivity.this, getResources().getString(R.string.toast_enter_phone), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -248,7 +247,7 @@ public class AddBoothStudentActivity extends BaseActivity {
                 if(!TextUtils.isEmpty(str) || adapter.getList().size()>0){
 
                     if (etPhone.getText().toString().length() < 10) {
-                        Toast.makeText(AddBoothStudentActivity.this, "Please Enter Valid Phone Number", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddBoothStudentActivity.this, getResources().getString(R.string.toast_valid_phone), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -270,7 +269,7 @@ public class AddBoothStudentActivity extends BaseActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     leafManager.addBoothsMember(this, group_id, team_id, category, req);
                 }else {
-                    Toast.makeText(AddBoothStudentActivity.this, "Please Add at least one contact", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddBoothStudentActivity.this, getResources().getString(R.string.toast_add_one_contact), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -288,7 +287,7 @@ public class AddBoothStudentActivity extends BaseActivity {
                 hide_keyboard();
 
                 LeafPreference.getInstance(AddBoothStudentActivity.this).setBoolean(LeafPreference.ADD_FRIEND, true);
-                Toast.makeText(this, "Add Member successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_member_successfully), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }

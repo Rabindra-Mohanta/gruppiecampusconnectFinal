@@ -157,7 +157,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.menu_make_admin) {
-            AppDialog.showConfirmDialog(VoterProfileActivity.this, "Are you sure you want to Make Admin ?", new AppDialog.AppDialogListener() {
+            AppDialog.showConfirmDialog(VoterProfileActivity.this, getResources().getString(R.string.dialog_are_you_want_to_make_admin), new AppDialog.AppDialogListener() {
                 @Override
                 public void okPositiveClick(DialogInterface dialog) {
                     makeAppAdmin();
@@ -172,7 +172,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         }
 
         if (item.getItemId() == R.id.menu_delete) {
-            AppDialog.showConfirmDialog(VoterProfileActivity.this, "Are you sure you want to Delete This User ?", new AppDialog.AppDialogListener() {
+            AppDialog.showConfirmDialog(VoterProfileActivity.this, getResources().getString(R.string.dialog_are_you_sure_want_to_delete_user), new AppDialog.AppDialogListener() {
                 @Override
                 public void okPositiveClick(DialogInterface dialog) {
                     deleteUser();
@@ -400,7 +400,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                     binding.etSubCaste.setEnabled(true);
                     binding.etSubCaste.setSelection(subCasteAdapter.getPosition(subcaste));*/
 
-                    binding.btnAdd.setText("Save");
+                    binding.btnAdd.setText(getResources().getString(R.string.lbl_save));
                     return;
                 }
 

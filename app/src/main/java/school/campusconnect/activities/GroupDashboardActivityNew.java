@@ -1055,7 +1055,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     private void showLogoutPopup() {
 
-        SMBDialogUtils.showSMBDialogOK(GroupDashboardActivityNew.this, "Your Account permissions have been changed , Please logout and login again.", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOK(GroupDashboardActivityNew.this, getResources().getString(R.string.smb_dialog_permission_change), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 logoutWithoutEvents();
@@ -1187,7 +1187,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         manager = new LeafManager();
 
-        transliterator = Transliterator.getInstance("Latin-Kannada");
+        //transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     //NOFIREBASEDATABASE

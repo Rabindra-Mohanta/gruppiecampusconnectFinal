@@ -141,7 +141,7 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
             }
 
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Members : "+item.members);
+            holder.txt_count.setText(getResources().getString(R.string.lbl_members)+" : "+item.members);
         }
 
         @Override

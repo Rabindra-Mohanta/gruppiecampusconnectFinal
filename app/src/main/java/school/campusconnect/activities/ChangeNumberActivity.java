@@ -126,7 +126,7 @@ public class ChangeNumberActivity extends BaseActivity implements LeafManager.On
         if(progressBar!=null)
             progressBar.setVisibility(View.GONE);
         edtNewNumber.editText.setText("");
-        Toast.makeText(this, "Number changed successfully , Please Login Again With New Number", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_number_change_successfully), Toast.LENGTH_LONG).show();
         logout();
     }
 
