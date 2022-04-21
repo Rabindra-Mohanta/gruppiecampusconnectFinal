@@ -258,7 +258,7 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
     public boolean isValid() {
         boolean valid = true;
         if (!isValueValidOnly(etTitle)) {
-            Toast.makeText(this, "Please Enter Title", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_please_enter_title), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;

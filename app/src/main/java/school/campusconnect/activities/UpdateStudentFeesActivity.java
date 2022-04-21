@@ -183,11 +183,11 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etFeesType.getText().toString().trim())) {
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Fees Type", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesActivity.this, getResources().getString(R.string.toast_enter_fees_type), Toast.LENGTH_SHORT).show();
                     etFeesType.requestFocus();
                 } else if (TextUtils.isEmpty(etFeesTypeVal.getText().toString().trim())) {
                     etFeesTypeVal.requestFocus();
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Fees Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesActivity.this, getResources().getString(R.string.toast_enter_fees_amount), Toast.LENGTH_SHORT).show();
                 } else {
                     feesAdapter.add(new FeesDetailTemp(etFeesType.getText().toString(), etFeesTypeVal.getText().toString()));
                     hide_keyboard(view);
@@ -202,11 +202,11 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etDate.getText().toString().trim())) {
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Select Due Date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesActivity.this, getResources().getString(R.string.toast_select_due_date), Toast.LENGTH_SHORT).show();
                     etDate.requestFocus();
                 } else if (TextUtils.isEmpty(etDateAmount.getText().toString().trim())) {
                     etDateAmount.requestFocus();
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Due Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesActivity.this, getResources().getString(R.string.toast_enter_due_amount), Toast.LENGTH_SHORT).show();
                 } else {
                     dueDateAdapter.add(new DueDates(etDate.getText().toString(), etDateAmount.getText().toString()));
                     hide_keyboard(view);
@@ -221,11 +221,11 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etDatePaid.getText().toString().trim())) {
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Select Paid Date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesActivity.this, getResources().getString(R.string.toast_select_paid_date), Toast.LENGTH_SHORT).show();
                     etDatePaid.requestFocus();
                 } else if (TextUtils.isEmpty(etPaidAmount.getText().toString().trim())) {
                     etPaidAmount.requestFocus();
-                    Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Paid Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateStudentFeesActivity.this, getResources().getString(R.string.toast_please_enter_paid_amount), Toast.LENGTH_SHORT).show();
                 } else {
                     paidDateAdapter.add(new FeePaidDetails(etDatePaid.getText().toString(), etPaidAmount.getText().toString()));
                     hide_keyboard(view);
@@ -268,12 +268,12 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
 
                     } else {
                         if (TextUtils.isEmpty(etDatePaid.getText().toString().trim())) {
-                            Toast.makeText(UpdateStudentFeesActivity.this, "Please Select Paid Date", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpdateStudentFeesActivity.this, getResources().getString(R.string.toast_please_select_paid_date), Toast.LENGTH_SHORT).show();
                             etDatePaid.requestFocus();
                             return;
                         } else if (TextUtils.isEmpty(etPaidAmount.getText().toString().trim())) {
                             etPaidAmount.requestFocus();
-                            Toast.makeText(UpdateStudentFeesActivity.this, "Please Enter Due Paid Amount", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpdateStudentFeesActivity.this, getResources().getString(R.string.toast_please_enter_due_paid_amount), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -291,10 +291,10 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
                     updateStudentFees.feeDetails = new HashMap<>();
                     for (int i = 0; i < list.size(); i++) {
                         if (TextUtils.isEmpty(list.get(i).getType())) {
-                            Toast.makeText(this, "Please Enter Type", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getResources().getString(R.string.toast_please_enter_type), Toast.LENGTH_SHORT).show();
                             return;
                         } else if (TextUtils.isEmpty(list.get(i).getAmount())) {
-                            Toast.makeText(this, "Please Enter Amount", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this,  getResources().getString(R.string.toast_please_enter_amount), Toast.LENGTH_SHORT).show();
                             return;
                         } else {
                             updateStudentFees.feeDetails.put(list.get(i).getType(), list.get(i).getAmount());
@@ -372,7 +372,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
             }
 
             if (feedDetailAmount > total) {
-                Toast.makeText(this, "Fees Detail Amount should not be greater than total fees amount", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_fees_details_amount_should_not_be_greater), Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -382,7 +382,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
                     paidFees = paidFees + Integer.parseInt(updateStudentFees.paidDates.get(i).getAmountPaid());
                 }
                 if (paidFees > total) {
-                    Toast.makeText(this, "Paid Amount should not more than Total Fees", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_paid_amount_should_not_more_than_total), Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -393,7 +393,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
         public boolean isValid () {
             boolean valid = true;
             if (!isValueValidOnly(etTotalFees)) {
-                Toast.makeText(this, "Please add total fees", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_please_add_total_fees), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
             return valid;

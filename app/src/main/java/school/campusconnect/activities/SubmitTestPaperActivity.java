@@ -267,7 +267,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
 
         setSupportActionBar(mToolBar);
         setBackEnabled(false);
-        tvTitle.setText("Submit Answer Paper ");
+        tvTitle.setText(getResources().getString(R.string.title_submit_answer_paper));
         setTitle("");
         iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -438,7 +438,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
                     }
                 }
             } catch (Exception e) {
-                Toast.makeText(SubmitTestPaperActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
@@ -683,7 +683,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
         }*/
        if (!isValueValidOnly(edtDesc)) {
             if (showToast)
-                Toast.makeText(this, "Please Enter Description", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_description), Toast.LENGTH_SHORT).show();
             return false;
         }/*  if (!isValueValidOnly(et_date)) {
             if (showToast)
@@ -693,7 +693,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
 
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_image_video_pdf), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -769,7 +769,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
         switch (apiId) {
 
             case LeafManager.API_SUBMIT_TEST_PAPER:
-                Toast.makeText(SubmitTestPaperActivity.this, "Successfully Submitted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.toast_successfully_submit), Toast.LENGTH_SHORT).show();
                /* if (isEdit) {
                     LeafPreference.getInstance(AddHwPostActivity.this).setBoolean("is_topic_added", true);
                     new SendNotification(edtTitle.getText().toString(), false).execute();
@@ -877,7 +877,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -955,7 +955,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
                 }
 */
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1062,14 +1062,14 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(SubmitTestPaperActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -1097,7 +1097,7 @@ public class SubmitTestPaperActivity extends BaseActivity implements LeafManager
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(SubmitTestPaperActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SubmitTestPaperActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

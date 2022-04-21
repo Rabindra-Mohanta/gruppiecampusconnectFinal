@@ -820,7 +820,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             } else {
                 holder.btnYes.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(item.verifiedComment)) {
-                    holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                    holder.txt_comments.setText(getResources().getString(R.string.txt_comment)+" :\n" + item.verifiedComment);
                     holder.txt_comments.setVisibility(View.VISIBLE);
                 } else {
                     holder.txt_comments.setVisibility(View.GONE);
@@ -862,7 +862,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Test Paper found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_test_paper_found));
                     txtEmpty.setVisibility(View.VISIBLE);
                 } else {
                     txtEmpty.setText("");
@@ -870,7 +870,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
                 }
                 return list.size();
             } else {
-                txtEmpty.setText("No Test Paper found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_test_paper_found));
                 txtEmpty.setVisibility(View.VISIBLE);
                 return 0;
             }

@@ -299,7 +299,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
                     if(listThumbnails!=null){
                         uploadThumbnail(listThumbnails,0);
                     }else {
-                        Toast.makeText(AddTimeTablePostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
                 }
             },Constants.FILE_TYPE_PDF);
@@ -352,7 +352,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
                         }
                         if (TransferState.FAILED.equals(state)) {
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(AddTimeTablePostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -456,13 +456,13 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
         if (!isValueValidOnly(edtTitle)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Title",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_title),Toast.LENGTH_SHORT).show();
             valid = false;
         }
         if(listImages.size()==0 && TextUtils.isEmpty(pdfPath))
         {
             if(showToast)
-                Toast.makeText(this, "Please Add Image or pdf",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_image_pdf),Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -517,7 +517,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
         {
 
             default:
-                Toast.makeText(AddTimeTablePostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTIME_TABLE_UPDATED, true);
                 //new SendNotification(mainRequest).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -619,7 +619,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,  getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -671,7 +671,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
                 }
 */
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -785,7 +785,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddTimeTablePostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -813,7 +813,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddTimeTablePostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddTimeTablePostActivity.this,  getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

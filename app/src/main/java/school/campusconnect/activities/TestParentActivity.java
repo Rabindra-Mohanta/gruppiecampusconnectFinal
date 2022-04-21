@@ -527,7 +527,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_delete, menu);
-        menu.findItem(R.id.menuDelete).setTitle("Delete Test/Exam");
+        menu.findItem(R.id.menuDelete).setTitle(getResources().getString(R.string.menu_delete_test_exam));
         menu.findItem(R.id.menuGetLink).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
@@ -869,7 +869,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 } else {
                     holder.btnYes.setVisibility(View.VISIBLE);
                     if (!TextUtils.isEmpty(item.verifiedComment)) {
-                        holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                        holder.txt_comments.setText(getResources().getString(R.string.txt_comment)+" :\n" + item.verifiedComment);
                         holder.txt_comments.setVisibility(View.VISIBLE);
                     } else {
                         holder.txt_comments.setVisibility(View.GONE);
@@ -888,7 +888,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Test Paper found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_test_paper_found));
                     txtEmpty.setVisibility(View.VISIBLE);
                 } else {
                     txtEmpty.setText("");
@@ -896,7 +896,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                 }
                 return list.size();
             } else {
-                txtEmpty.setText("No Test Paper found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_test_paper_found));
                 txtEmpty.setVisibility(View.VISIBLE);
                 return 0;
             }

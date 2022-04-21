@@ -113,10 +113,10 @@ public class RemoveBannerActivity extends BaseActivity implements LeafManager.On
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(getApplicationContext(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),  getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getApplicationContext(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         } else {

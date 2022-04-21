@@ -359,7 +359,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
         setSupportActionBar(mToolBar);
         setBackEnabled(false);
-        tvTitle.setText("Add Homework");
+        tvTitle.setText(getResources().getString(R.string.txt_add_homework));
         setTitle("");
         iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -535,7 +535,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                     }
                 }
             } catch (Exception e) {
-                Toast.makeText(AddHwPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
@@ -570,7 +570,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddHwPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -583,7 +583,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddHwPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -641,7 +641,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
-                            Toast.makeText(AddHwPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -708,7 +708,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                             updateList(pos, key);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(AddHwPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             if(progressDialog!=null)
                                 progressDialog.dismiss();
                         }
@@ -775,7 +775,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
         if (!isValueValidOnly(edtTitle)) {
             if (showToast)
-                Toast.makeText(this, "Please Enter Topic Name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_enter_topic_name), Toast.LENGTH_SHORT).show();
             return false;
         }
       /*  if (!isValueValidOnly(edtDesc)) {
@@ -866,7 +866,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         switch (apiId) {
 
             case LeafManager.API_HW_ADD:
-                Toast.makeText(AddHwPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
                /* if (isEdit) {
                     LeafPreference.getInstance(AddHwPostActivity.this).setBoolean("is_topic_added", true);
                     new SendNotification(edtTitle.getText().toString(), false).execute();
@@ -974,7 +974,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -1138,7 +1138,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                 }
 */
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1245,14 +1245,14 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddHwPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -1280,7 +1280,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddHwPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

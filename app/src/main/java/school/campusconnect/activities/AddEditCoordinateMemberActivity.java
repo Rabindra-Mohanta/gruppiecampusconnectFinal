@@ -224,7 +224,7 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
     private void setImageFragment() {
 
         imageFragment = UploadImageFragment.newInstance(isEdit?studentData.image:null, true, true);
-        btnAdd.setText(isEdit?"Update":"Add");
+        btnAdd.setText(isEdit?getResources().getString(R.string.lbl_update):getResources().getString(R.string.lbl_add));
 
         setTitle(isEdit? getResources().getString(R.string.title_cordinate_details)+" - (" + getIntent().getStringExtra("className") + ")":getResources().getString(R.string.title_add_cordinate));
 

@@ -136,7 +136,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
         phoneNumber = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.phoneNumber);
         countryCode = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.countryCode);
 
-        tvOtpSendMsg.setText("OTP has been sent to " + phoneNumber);
+        tvOtpSendMsg.setText(getResources().getString(R.string.toast_otp_send_to) + phoneNumber);
 
         isIndia = countryCode.equals("IN");
 
@@ -404,13 +404,13 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
                 txtGetOtp.setEnabled(false);
                 txtGetOtp.setTextColor(getResources().getColor(R.color.colorTextLight));
                 llOtpSend.setVisibility(View.VISIBLE);
-                Toast.makeText(this, "OTP Sent To Your Entered Mobile Successfully!!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_otp_sent_mobile_success), Toast.LENGTH_LONG).show();
             } else {
                 AppLog.e("TESTSUCC", "else");
                 txtGetOtp.setEnabled(true);
                 txtGetOtp.setTextColor(getResources().getColor(R.color.colorTextWhite));
                 llOtpSend.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "OTP Sent To Your Email Successfully!!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_otp_send_email_success), Toast.LENGTH_LONG).show();
             }
             smsListener();
         } else if (apiId == LeafManager.API_ID_LOGIN) {
@@ -541,7 +541,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(userExistActivity, "Invalid OTP", Toast.LENGTH_SHORT).show();
+                Toast.makeText(userExistActivity, getResources().getString(R.string.toast_invalid_otp), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -607,7 +607,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             manager.getGroupDetail(this, BuildConfig.APP_ID);
 
         } else {
-            Toast.makeText(this, "Invalid OTP/Password", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_invalid_otp_password), Toast.LENGTH_LONG).show();
         }
     }
 

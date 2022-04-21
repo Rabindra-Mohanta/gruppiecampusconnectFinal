@@ -189,7 +189,7 @@ public class BaseFragment extends Fragment {
         });*/
         try {
             Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.toolbar), R.string.no_internet, Snackbar.LENGTH_SHORT)
-                    .setAction("SETTINGS", new View.OnClickListener() {
+                    .setAction(getResources().getString(R.string.action_settings), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
 

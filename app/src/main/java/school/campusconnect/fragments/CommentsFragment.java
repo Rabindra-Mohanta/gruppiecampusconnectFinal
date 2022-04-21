@@ -221,7 +221,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
         if (!mComment.getCommentString().get().trim().equals(""))
             addComment(mComment.getCommentString().get());
         else
-            Toast.makeText(getActivity(), "Please enter comment first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_enter_comment_first), Toast.LENGTH_SHORT).show();
     }
 
     private void getData() {

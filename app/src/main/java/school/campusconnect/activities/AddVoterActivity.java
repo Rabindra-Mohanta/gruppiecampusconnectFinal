@@ -172,7 +172,7 @@ public class AddVoterActivity extends BaseActivity implements View.OnClickListen
             return false;
         }
         else if (!binding.etEmail.getText().toString().isEmpty() && !Patterns.EMAIL_ADDRESS.matcher(binding.etEmail.getText()).matches()) {
-            Toast.makeText(this, "Enter valid Email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_enter_valid_email), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -184,7 +184,7 @@ public class AddVoterActivity extends BaseActivity implements View.OnClickListen
 
         if (apiId == LeafManager.ADD_VOTER_MASTER_LIST)
         {
-            Toast.makeText(getApplicationContext(),"Voter Added SuccessFully...",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_voter_add_successfully),Toast.LENGTH_SHORT).show();
             finish();
         }
     }

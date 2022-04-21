@@ -33,6 +33,7 @@
         app:cardCornerRadius="@dimen/padding_5dp"
         android:layout_width="match_parent"
         android:visibility="gone"
+        android:layout_below="@id/etSearch"
         android:layout_marginTop="@dimen/padding_3dp"
         android:layout_height="wrap_content">
 
@@ -99,8 +100,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.baoyz.widget.PullRefreshLayout>
-
-
 
 
     <ProgressBar

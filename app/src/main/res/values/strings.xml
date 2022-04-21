@@ -187,6 +187,7 @@
     <string name="lbl_select_issue">Select Issue</string>
     <string name="lbl_select_type">Select Type</string>
     <string name="lbl_comments">Comments</string>
+
     <string name="lbl_chat">Messages</string>
     <string name="lbl_que">Doubts</string>
     <string name="lbl_replies">Replies</string>
@@ -861,7 +862,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="menu_remove_test_exam">Remove Test/Exam</string>
     <string name="menu_add_update_time_table">Add/Update Time Table</string>
     <string name="menu_add_topic">Add Topic</string>
-
+    <string name="menu_delete_test_exam">Delete Test/Exam</string>
+    <string name="menu_change_language">Change Language</string>
     <string name="lbl_submit_assignment">Submit Assignment</string>
 
     <string name="title_add_bus_student">Add Bus Student</string>
@@ -893,6 +895,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="post">Post</string>
     <string name="title_details">Details</string>
     <string name="title_member_details">Member Detail</string>
+    <string name="title_submit_answer_paper">Submit Answer Paper</string>
 
 
     <string name="toast_enter_name">Please Enter Name</string>
@@ -978,7 +981,90 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_please_select_from_date">Please Select From Date</string>
     <string name="toast_please_select_to_date">Please Select To Date</string>
     <string name="toast_status_sucessfully_update">Status successfully updated</string>
-
+    <string name="toast_please_add_album_name">Please Add Album Name</string>
+    <string name="toast_please_add_image_or_video">Please Add Image or video</string>
+    <string name="toast_successfully_posted">Successfully Posted</string>
+    <string name="toast_add_file_successfully">Add File Successfully</string>
+    <string name="toast_select_group_type">Select Group Type</string>
+    <string name="toast_successfully_updated_group_details">Successfully updated group details</string>
+    <string name="toast_please_enter_post_first">Please enter post first</string>
+    <string name="toast_file_delete_successfully">File Deleted Successfully</string>
+    <string name="toast_input_some_query_first">Input some query first</string>
+    <string name="toast_select_any_team">Please select any team first</string>
+    <string name="toast_enter_fees_type">Please Enter Fees Type</string>
+    <string name="toast_enter_fees_amount">Please Enter Fees Amount</string>
+    <string name="toast_select_due_date">Please Select Due Date</string>
+    <string name="toast_enter_due_date_amount">Please Enter Due Date Amount</string>
+    <string name="toast_enter_due_amount">Please Enter Due Amount</string>
+    <string name="toast_select_paid_date">Please Select Paid Date</string>
+    <string name="toast_please_enter_paid_amount">Please Enter Paid Amount</string>
+    <string name="toast_please_select_paid_date">Please Select Paid Date</string>
+    <string name="toast_please_enter_due_paid_amount">Please Enter Due Paid Amount</string>
+    <string name="toast_please_enter_type">Please Enter Type</string>
+    <string name="toast_please_enter_amount">Please Enter Amount</string>
+    <string name="toast_fees_details_amount_should_not_be_greater">Fees Detail Amount should not be greater than total fees amount</string>
+    <string name="toast_paid_amount_should_not_more_than_total">Paid Amount should not more than Total Fees</string>
+    <string name="toast_please_add_total_fees">Please add total fees</string>
+    <string name="toast_enter_comment_first">Enter comment first</string>
+    <string name="toast_enter_reply_first">Please enter reply first</string>
+    <string name="toast_please_add_des_image_pdf">Please Add Description or Image or pdf</string>
+    <string name="toast_add_title">Please Add Title</string>
+    <string name="toast_select_test_time">Please Select Test Time</string>
+    <string name="toast_select_test_date">Please Select Test Date</string>
+    <string name="toast_enter_valid_email">Enter valid Email</string>
+    <string name="toast_voter_add_successfully">Voter Added SuccessFully...</string>
+    <string name="toast_select_contact">Please select contact</string>
+    <string name="toast_image_download">Image Downloaded.</string>
+    <string name="toast_mark_card_uploaded">Marks Card Uploaded</string>
+    <string name="toast_select_image_pdf">Please Select Image Or Pdf</string>
+    <string name="toast_microphone_permission_needed">Microphone permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="toast_select_start_and_date">Please Select Start and End Time</string>
+    <string name="toast_select_subject_and_staff">Please Select Subject and Staff</string>
+    <string name="toast_successfully_add_time_table">Successfully Added Time Table</string>
+    <string name="toast_select_end_time_after_start_time">Select End Time After a Start Time</string>
+    <string name="toast_period_value_already_used">Period Value Already Used...</string>
+    <string name="toast_password_not_match">Password Not Match.!</string>
+    <string name="toast_device_not_supported">This device is not supported.</string>
+    <string name="toast_location_data_not_available">Location data not available</string>
+    <string name="toast_edit_member_success">Edit Member successfully</string>
+    <string name="toast_delete_member_success">Delete Member successfully</string>
+    <string name="toast_otp_sent_mobile_success">OTP Sent To Your Entered Mobile Successfully!!!</string>
+    <string name="toast_otp_send_email_success">OTP Sent To Your Email Successfully!!!</string>
+    <string name="toast_invalid_otp">Invalid OTP</string>
+    <string name="toast_invalid_otp_password">Invalid OTP/Password</string>
+    <string name="toast_add_at_least_one_due_date">Please add at least one due date</string>
+    <string name="toast_total_fees_and_due_date_amount_same">Total Fees and Due Dates Amounts should be same</string>
+    <string name="toast_student_added">Student added.</string>
+    <string name="toast_validation_error">validation Error</string>
+    <string name="toast_failed_save_image">Failed to save Image. </string>
+    <string name="toast_please_add_text">Please Add Text</string>
+    <string name="toast_add_one_teacher">Please add at least one teacher</string>
+    <string name="toast_add_staff_successfully">Add Staff successfully</string>
+    <string name="toast_edit_staff_successfully">Edit Staff successfully</string>
+    <string name="toast_delete_staff_successfully">Delete Staff successfully</string>
+    <string name="toast_no_kid_found">No Kids found.</string>
+    <string name="toast_enter_class_name">Please Enter Class Name</string>
+    <string name="toast_add_image_pdf">Please Add Image or pdf</string>
+    <string name="toast_add_title_description_image_video">Please Add Title and Description or Select Image Or Video</string>
+    <string name="toast_user_cannot_upload_image_video_same_time">User cannot upload image and video at the same time</string>
+    <string name="toast_add_one_subject_pdf">Please add at least one subject and pdf</string>
+    <string name="toast_paid_amount_should_not_grater_than_amount">Paid amount should not grater than Amount Due</string>
+    <string name="toast_please_add_attachment">Please Add Attachment</string>
+    <string name="toast_successfully_paid">Successfully Paid</string>
+    <string name="toast_wrong_password">Wrong Password</string>
+    <string name="toast_add_course_name">Please Add Course Name</string>
+    <string name="toast_enter_relationship">Please Enter Relationship</string>
+    <string name="toast_delete_family_member_successfully">Delete Family Member successfully</string>
+    <string name="toast_update_family_member_successfully">Update Family Member successfully</string>
+    <string name="toast_add_vendor_name">Please Add Vendor Name</string>
+    <string name="toast_success">Success</string>
+    <string name="toast_delete_success">Delete Success</string>
+    <string name="toast_course_update">Course Updated successfully</string>
+    <string name="toast_you_are_not_authorized">You are not authorized to access this App</string>
+    <string name="toast_please_disable_attendance">Please disable attendance</string>
+    <string name="toast_please_disable_gps">Please disable GPS</string>
+    <string name="toast_create_mark_card">Please Create Mark Card</string>
+    <string name="toast_otp_send_to">OTP has been sent to </string>
 
     <string name="txt_enter_old_pin">Enter Old Pin...</string>
     <string name="txt_old_pin_wrong">Old Pin Wrong...</string>
@@ -1000,6 +1086,40 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_no_coordinate_found">No Coordinate found.</string>
     <string name="txt_phone">Phone: </string>
     <string name="txt_no_booth_member_found">No Booth Member found</string>
+
+    <string name="txt_by">By </string>
+    <string name="txt_multiple_group">Multiple Group</string>
+    <string name="txt_news_feed">News Feed</string>
+    <string name="txt_personal_chats">Personal Chats</string>
+    <string name="txt_group_chats">Group Chats</string>
+    <string name="txt_book_selected"> book selected</string>
+    <string name="txt_add_homework">Add Homework</string>
+    <string name="txt_remove_from_admin">Remove from admin</string>
+    <string name="txt_make_as_admin">Make as admin</string>
+    <string name="txt_no_staff">No Staff found.</string>
+    <string name="txt_select_start_time">Select Start Time</string>
+    <string name="txt_to"> to </string>
+    <string name="txt_select_end_time">Select End Time</string>
+    <string name="txt_select_language">Select Language</string>
+    <string name="txt_constituency_not_found">No Constituency found.</string>
+    <string name="txt_last_submission_date">Last Submission Date : </string>
+    <string name="txt_comment">Comment</string>
+    <string name="txt_no_assignment_found">No Assignment found.</string>
+    <string name="txt_pin">Pin</string>
+    <string name="txt_confirm_pin_wrong">Confirm Pin Wrong...</string>
+    <string name="txt_enter_pin">Enter Pin...</string>
+    <string name="txt_enter_valid_pin">Enter Valid Pin...</string>
+    <string name="txt_basic_info">Basic Info</string>
+    <string name="txt_other_info">Other Info</string>
+    <string name="txt_no_taluks_found">No Taluks found.</string>
+    <string name="txt_no_test_paper_found">No Test Paper found.</string>
+    <string name="txt_open">Open</string>
+    <string name="txt_constituency_issue">Constituency Issue </string>
+    <string name="txt_no_ticket_found">No Tickets Found...</string>
+    <string name="txt_please_provide_marks">Please Provide Marks</string>
+    <string name="txt_reply">Reply</string>
+
+
 
     <string name="hint_search_voter">Search Voter</string>
     <string name="hint_search_booths">Search Booths</string>

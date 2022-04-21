@@ -774,7 +774,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
                 break;
 
             case LeafManager.API_ID_DELETE_POST:
-                Toast.makeText(getApplicationContext(), "Post Deleted Succesfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 if (type.equalsIgnoreCase("group"))
                     LeafPreference.getInstance(ReadMoreActivity.this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
                 else if (type.equalsIgnoreCase("team"))
@@ -807,7 +807,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
             case LeafManager.API_REPORT:
                 if (progressBar != null)
                     progressBar.setVisibility(View.GONE);
-                Toast.makeText(this, "Post Reported Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_post_reported_sucessfully), Toast.LENGTH_SHORT).show();
                 break;
 
             case LeafManager.API_READ_MORE_GROUP_POST: {
@@ -999,7 +999,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
             logout();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(this, "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } else {

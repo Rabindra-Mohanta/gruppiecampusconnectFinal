@@ -137,7 +137,7 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
         });*/
         try {
             Snackbar snackbar = Snackbar.make(findViewById(R.id.toolbar), R.string.no_internet, Snackbar.LENGTH_SHORT)
-                    .setAction("SETTINGS", new View.OnClickListener() {
+                    .setAction(getResources().getString(R.string.action_settings), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
 
@@ -241,14 +241,14 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Taluks found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_taluks_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Taluks found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_taluks_found));
                 return 0;
             }
 

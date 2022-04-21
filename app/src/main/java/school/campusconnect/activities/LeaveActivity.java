@@ -105,12 +105,12 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
             valid = false;
         }
         else if (kidsAdapter == null) {
-            Toast.makeText(this, "Select Kids", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.lbl_select_kids), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         else {
             if (kidsAdapter.getSelectedKidsCount() ==0) {
-                Toast.makeText(this, "Select Kids", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.lbl_select_kids), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
         }
@@ -142,11 +142,11 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    Toast.makeText(mContext, "No Kids found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, getResources().getString(R.string.toast_no_kid_found), Toast.LENGTH_SHORT).show();
                 }
                 return list.size();
             } else {
-                Toast.makeText(mContext, "No Kids found.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getResources().getString(R.string.toast_no_kid_found), Toast.LENGTH_SHORT).show();
                 return 0;
             }
 

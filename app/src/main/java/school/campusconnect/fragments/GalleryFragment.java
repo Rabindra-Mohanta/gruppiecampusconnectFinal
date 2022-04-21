@@ -261,6 +261,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 if (currentPage == 1) {
               //      PostDataItem.deleteGeneralPosts(mGroupId+"");
+                    GalleryTable.deleteGallery();
                     listData.clear();
 
                    /* listData.addAll(res.data);
@@ -272,10 +273,10 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 }
                 listData.clear();*/
 
-                if(res.data.size()==0)
+                /*if(res.data.size()==0)
                     txtEmpty.setVisibility(View.VISIBLE);
                 else
-                    txtEmpty.setVisibility(View.GONE);
+                    txtEmpty.setVisibility(View.GONE);*/
 
                 //galleryAdapter.notifyDataSetChanged();
 
@@ -285,12 +286,14 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 mIsLoading = false;
 
                 if(res.data.size()>0)
-                saveToLocallay(res.data);
+                    listData.addAll(res.data);
+                    galleryAdapter.add(listData);
+                    saveToLocallay(res.data);
 
                 break;
 
             case LeafManager.API_GALLERY_DELETE:
-                Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 currentPage=1;
                 AmazoneRemove.remove(currentItem.fileName);
                 GalleryTable.deleteGallery();
@@ -336,8 +339,6 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                 galleryTable.save();
             }
         }
-
-        galleryAdapter.add(data);
 
     }
 
@@ -385,10 +386,10 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {

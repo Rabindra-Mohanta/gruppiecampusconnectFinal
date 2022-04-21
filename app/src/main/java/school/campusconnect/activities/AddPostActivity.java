@@ -451,7 +451,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         serviceIntent.putExtra("isFromChat", isFromChat);
         ContextCompat.startForegroundService(this, serviceIntent);
 
-        Toast.makeText(this, "Video Uploading in background", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_video_upload_background), Toast.LENGTH_SHORT).show();
         finish();
 
     }
@@ -610,7 +610,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     }
                 }
             } catch (Exception e) {
-                Toast.makeText(AddPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddPostActivity.this, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
@@ -655,7 +655,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -668,7 +668,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -727,7 +727,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
-                            Toast.makeText(AddPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -786,7 +786,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                             updateList(pos, key);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(AddPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             if (progressDialog != null)
                                 progressDialog.dismiss();
                         }
@@ -863,7 +863,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 } else {
                     valid = false;
                     if (showToast)
-                        Toast.makeText(this, "Please Add Title and Description or Select Image Or Video", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getResources().getString(R.string.toast_add_title_description_image_video), Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (isValueValidOnly(edtDesc)) {
@@ -871,7 +871,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 } else {
                     valid = false;
                     if (showToast)
-                        Toast.makeText(this, "Please Add Description or Select Image Or Video", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getResources().getString(R.string.toast_add_description_image_or_video), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -885,7 +885,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             Picasso.with(AddPostActivity.this)
                     .load(R.drawable.icon_popup_youtube)
                     .into(img_youtube);
-            Toast.makeText(this, "User cannot upload image and video at the same time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_user_cannot_upload_image_video_same_time), Toast.LENGTH_SHORT).show();
         }
 
         return valid;
@@ -994,7 +994,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 break;
 
             default:
-                Toast.makeText(AddPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddPostActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
                 if (postType.equalsIgnoreCase("group")) {
                     LeafPreference.getInstance(AddPostActivity.this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
                     new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1195,7 +1195,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     private void requestPermissionForCamera(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, code);
@@ -1204,7 +1204,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -1362,7 +1362,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 }
 */
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1476,7 +1476,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddPostActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     fileTypeImageOrVideo = Constants.FILE_TYPE_YOUTUBE;
                     String videoId = "";
@@ -1505,7 +1505,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddPostActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

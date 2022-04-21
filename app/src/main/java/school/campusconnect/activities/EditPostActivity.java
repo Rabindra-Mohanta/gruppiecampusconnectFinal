@@ -262,7 +262,7 @@ public class EditPostActivity extends BaseActivity implements View.OnClickListen
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(this, "Shared successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_shared_successfully), Toast.LENGTH_SHORT).show();
 
         if (SelectShareTypeActivity.selectShareTypeActivity != null)
             SelectShareTypeActivity.selectShareTypeActivity.finish();

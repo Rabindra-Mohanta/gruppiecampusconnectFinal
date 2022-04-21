@@ -203,7 +203,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                     LeafManager leafManager = new LeafManager();
                     leafManager.sendMsgToNotSubmittedStudents(HWParentActivity.this, group_id, getStudentIds(), new SendMsgToStudentReq(et_msg.getText().toString()));
                 } else {
-                    Toast.makeText(HWParentActivity.this, "Please enter msg", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HWParentActivity.this, getResources().getString(R.string.toast_enter_msg), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -266,7 +266,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         }
         if (!TextUtils.isEmpty(item.lastSubmissionDate)) {
             txt_lastDate.setVisibility(View.VISIBLE);
-            txt_lastDate.setText("Last Submission Date : " + item.lastSubmissionDate);
+            txt_lastDate.setText(getResources().getString(R.string.txt_last_submission_date) + item.lastSubmissionDate);
         } else {
             txt_lastDate.setVisibility(View.GONE);
             txt_lastDate.setText("");
@@ -463,7 +463,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                 break;
             case LeafManager.API_SEND_MSG_TO_NOTSUBMITTED_STUDENT:
                 et_msg.setText("");
-                Toast.makeText(this, "Message send successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_message_send_success), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -690,7 +690,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                     if (item.assignmentVerified) {
                         holder.btnYes.setVisibility(View.VISIBLE);
                         if (!TextUtils.isEmpty(item.verifiedComment)) {
-                            holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                            holder.txt_comments.setText(getResources().getString(R.string.txt_comment)+" :\n" + item.verifiedComment);
                             holder.txt_comments.setVisibility(View.VISIBLE);
                         } else {
                             holder.txt_comments.setVisibility(View.GONE);
@@ -700,7 +700,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                         if (item.assignmentReassigned) {
                             holder.btnNo.setVisibility(View.VISIBLE);
                             if (!TextUtils.isEmpty(item.reassignComment)) {
-                                holder.txt_comments.setText("Comment :\n" + item.reassignComment);
+                                holder.txt_comments.setText(getResources().getString(R.string.txt_comment)+" :\n" + item.reassignComment);
                                 holder.txt_comments.setVisibility(View.VISIBLE);
                             } else {
                                 holder.txt_comments.setVisibility(View.GONE);
@@ -723,7 +723,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Assignment found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_assignment_found));
                     txtEmpty.setVisibility(View.VISIBLE);
                 } else {
                     txtEmpty.setText("");
@@ -731,7 +731,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                 }
                 return list.size();
             } else {
-                txtEmpty.setText("No Assignment found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_assignment_found));
                 txtEmpty.setVisibility(View.VISIBLE);
                 return 0;
             }

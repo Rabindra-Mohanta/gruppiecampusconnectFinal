@@ -48,7 +48,7 @@ public class NestedTeamAdapter extends RecyclerView.Adapter<NestedTeamAdapter.Vi
 
         AppLog.e("TeamListAdapterNew", "item ; " + new Gson().toJson(team));
         holder.tvTeamName.setText(team.name);
-        holder.txt_count.setText("Members : "+team.members);
+        holder.txt_count.setText(context.getResources().getString(R.string.lbl_members)+" : "+team.members);
 
         if (!TextUtils.isEmpty(team.image)) {
             holder.imgTeam.setVisibility(View.VISIBLE);

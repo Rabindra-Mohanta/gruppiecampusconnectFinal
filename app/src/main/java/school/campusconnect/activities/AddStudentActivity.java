@@ -148,7 +148,7 @@ public class AddStudentActivity extends BaseActivity {
 
         switch (apiId) {
             case LeafManager.API_ADD_STUDENT:
-                Toast.makeText(this, "Student added.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_student_added), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.IS_STUDENT_ADDED,true);
                 finish();
                 break;

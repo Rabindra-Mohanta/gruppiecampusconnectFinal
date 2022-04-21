@@ -75,7 +75,7 @@ public class AllUserListActivity extends BaseActivity implements LeafManager.OnC
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     if (isConnectionAvailable()) {
                         if (edtSearch.getText().toString().isEmpty()) {
-                            Toast.makeText(AllUserListActivity.this, "Input some query first", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AllUserListActivity.this, getResources().getString(R.string.toast_input_some_query_first), Toast.LENGTH_LONG).show();
                         } else {
                             fragment.lastSent = 0;
                             fragment.limit = 9;

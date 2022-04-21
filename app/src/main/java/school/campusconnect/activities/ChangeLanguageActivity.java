@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import butterknife.Bind;
@@ -14,32 +16,51 @@ import school.campusconnect.R;
 
 public class ChangeLanguageActivity extends BaseActivity {
 
-    @Bind(R.id.rgLanguage)
-    RadioGroup rgLanguage;
+    @Bind(R.id.rbEnglish)
+    RadioButton rbEnglish;
 
+    @Bind(R.id.rbKannada)
+    RadioButton rbKannada;
+
+    private boolean isSplash = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_language);
         ButterKnife.bind(this);
+        
+        if (getIntent() != null)
+        {
+            isSplash = getIntent().getBooleanExtra("isSplash",false);
+        }
 
-
-        rgLanguage.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        rbEnglish.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i)
-                {
-                    case R.id.rbEnglish:
-                        updateViews("en");
-                        break;
-
-                    case R.id.rbKannada:
-                        updateViews("kn");
-                        break;
-                }
+            public void onClick(View v) {
+                updateViews("en");
             }
         });
 
+        rbKannada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateViews("kn");
+            }
+        });
+
+        String AppLang = getResources().getConfiguration().locale.getLanguage();
+        Log.e("AppLang","AppLang "+ AppLang);
+
+        if (AppLang.equalsIgnoreCase("kn"))
+        {
+            rbKannada.setChecked(true);
+            rbEnglish.setChecked(false);
+        }
+        else
+        {
+            rbEnglish.setChecked(true);
+            rbKannada.setChecked(false);
+        }
     }
 
     private void updateViews(String languageCode) {
@@ -49,8 +70,15 @@ public class ChangeLanguageActivity extends BaseActivity {
         editor.putString("Locale.Helper.Selected.Language", languageCode);
         Log.e("LocaleHelper","language "+languageCode);
         editor.apply();
-        gotoActivity(ConstituencyListActivity.class,null,true);
 
+        if (isSplash)
+        {
+            gotoActivity(LoginActivity2.class,null,true);
+        }
+        else
+        {
+            gotoActivity(ConstituencyListActivity.class,null,true);
+        }
     }
 
     public void gotoActivity(Class className, Bundle bundle, boolean isClearStack) {

@@ -379,7 +379,7 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
             binding.txtEmpty.setText("");
             adapter.addData(result);
         } else {
-            binding.txtEmpty.setText("No Tickets Found...");
+            binding.txtEmpty.setText(getResources().getString(R.string.txt_no_ticket_found));
             getTicketListApi();
         }
     }

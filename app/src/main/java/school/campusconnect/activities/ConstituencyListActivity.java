@@ -188,7 +188,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         });*/
         try {
             Snackbar snackbar = Snackbar.make(findViewById(R.id.toolbar), R.string.no_internet, Snackbar.LENGTH_SHORT)
-                    .setAction("SETTINGS", new View.OnClickListener() {
+                    .setAction(getResources().getString(R.string.action_settings), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
 
@@ -308,14 +308,14 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Constituency found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_constituency_not_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Constituency found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_constituency_not_found));
                 return 0;
             }
 
@@ -414,7 +414,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
             setBackgroundImage();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error in set wallpaper", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_error_set_wallpaper), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -467,7 +467,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);

@@ -112,13 +112,13 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         else if (!isValueValid(layout_password))
             return false;
         if(layout_password.getText().toString().length()<6){
-            Toast.makeText(this, "Should be atleast 6 character", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.lbl_new_password_validation), Toast.LENGTH_SHORT).show();
             return false;
         }
         else if (!isValueValid(layout_password_conf))
             return false;
         else if (!layout_password.getText().toString().matches(layout_password_conf.getText().toString())) {
-            Toast.makeText(this, "Password Not Match.!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_password_not_match), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

@@ -482,9 +482,9 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
                     }
 
                     if(pos!=-1){
-                        btnAdd.setText("Update");
+                        btnAdd.setText(getResources().getString(R.string.lbl_update));
                     }else {
-                        btnAdd.setText("Save");
+                        btnAdd.setText(getResources().getString(R.string.lbl_save));
                     }
 
                     return;
@@ -494,9 +494,9 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
                 hide_keyboard(view);
 
                 if (TextUtils.isEmpty(etName.getText().toString().trim())) {
-                    Toast.makeText(AddFamilyStudentActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFamilyStudentActivity.this, getResources().getString(R.string.toast_enter_name), Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etRelationShip.getText().toString().trim())) {
-                    Toast.makeText(AddFamilyStudentActivity.this, "Please Enter Relationship", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFamilyStudentActivity.this, getResources().getString(R.string.toast_enter_relationship), Toast.LENGTH_SHORT).show();
                 } else {
                     FamilyMemberResponse.FamilyMemberData item;
                     if(pos!=-1){
@@ -564,11 +564,11 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
         switch (apiId) {
             case LeafManager.API_CREATE_FAMILY_MEMBER:
                 if(isDelete){
-                    Toast.makeText(this, "Delete Family Member successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_delete_family_member_successfully), Toast.LENGTH_SHORT).show();
                 }else if(pos!=-1){
-                    Toast.makeText(this, "Update Family Member successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_update_family_member_successfully), Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(this, "Delete Family Member successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_delete_family_member_successfully), Toast.LENGTH_SHORT).show();
                 }
 
                 finish();

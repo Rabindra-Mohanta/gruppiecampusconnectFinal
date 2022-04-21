@@ -129,7 +129,7 @@ public class SharePersonalNameListActivity extends BaseActivity implements LeafM
                     edtSearch.setCursorVisible(false);
 //                    if (isConnectionAvailable()) {
                     if (edtSearch.getText().toString().isEmpty()) {
-                        Toast.makeText(SharePersonalNameListActivity.this, "Input some query first", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SharePersonalNameListActivity.this, getResources().getString(R.string.toast_input_some_query), Toast.LENGTH_LONG).show();
                     } else {
                         fragment.getFilteredList(edtSearch.getText().toString());
                     }

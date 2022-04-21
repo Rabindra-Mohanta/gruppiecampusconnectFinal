@@ -107,7 +107,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
 
         if(isNest)
         {
-            holder.txtCount.setText("Teams : " + item.getTeamCount());
+            holder.txtCount.setText(mContext.getResources().getString(R.string.lbl_teams)+" : " + item.getTeamCount());
             holder.txtCount.setVisibility(View.VISIBLE);
         }
         else {

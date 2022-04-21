@@ -261,14 +261,14 @@ public class SelectContactActivity extends BaseActivity {
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Contacts found.");
+                    txtEmpty.setText(getResources().getString(R.string.msg_no_contaacts));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Contacts found.");
+                txtEmpty.setText(getResources().getString(R.string.msg_no_contaacts));
                 return 0;
             }
 
@@ -314,7 +314,7 @@ public class SelectContactActivity extends BaseActivity {
                 setResult(Activity.RESULT_OK,intent);
                 finish();
             }else {
-                Toast.makeText(this,"Please select contact",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,getResources().getString(R.string.toast_select_contact),Toast.LENGTH_SHORT).show();
             }
         }
     }

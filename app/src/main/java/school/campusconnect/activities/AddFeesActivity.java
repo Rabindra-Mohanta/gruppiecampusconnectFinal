@@ -159,11 +159,11 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etFeesType.getText().toString().trim())) {
-                    Toast.makeText(AddFeesActivity.this, "Please Enter Fees Type", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFeesActivity.this, getResources().getString(R.string.toast_enter_fees_type), Toast.LENGTH_SHORT).show();
                     etFeesType.requestFocus();
                 } else if (TextUtils.isEmpty(etFeesTypeVal.getText().toString().trim())) {
                     etFeesTypeVal.requestFocus();
-                    Toast.makeText(AddFeesActivity.this, "Please Enter Fees Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFeesActivity.this, getResources().getString(R.string.toast_enter_fees_amount), Toast.LENGTH_SHORT).show();
                 } else {
                     feesAdapter.add(new FeesDetailTemp(etFeesType.getText().toString(), etFeesTypeVal.getText().toString()));
                     hide_keyboard(view);
@@ -179,11 +179,11 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etDate.getText().toString().trim())) {
-                    Toast.makeText(AddFeesActivity.this, "Please Select Due Date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFeesActivity.this, getResources().getString(R.string.toast_select_due_date), Toast.LENGTH_SHORT).show();
                     etDate.requestFocus();
                 } else if (TextUtils.isEmpty(etDateAmount.getText().toString().trim())) {
                     etDateAmount.requestFocus();
-                    Toast.makeText(AddFeesActivity.this, "Please Enter Due Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFeesActivity.this, getResources().getString(R.string.toast_enter_due_amount), Toast.LENGTH_SHORT).show();
                 } else {
                     dueDateAdapter.add(new DueDates(etDate.getText().toString(), etDateAmount.getText().toString()));
                     hide_keyboard(view);
@@ -219,12 +219,12 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
 
                     } else {
                         if (TextUtils.isEmpty(etDate.getText().toString().trim())) {
-                            Toast.makeText(AddFeesActivity.this, "Please Select Due Date", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddFeesActivity.this, getResources().getString(R.string.toast_select_due_date), Toast.LENGTH_SHORT).show();
                             etDate.requestFocus();
                             return;
                         } else if (TextUtils.isEmpty(etDateAmount.getText().toString().trim())) {
                             etDateAmount.requestFocus();
-                            Toast.makeText(AddFeesActivity.this, "Please Enter Due Date Amount", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddFeesActivity.this, getResources().getString(R.string.toast_enter_due_amount), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -242,10 +242,10 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
                     feesReq.feeDetails = new HashMap<>();
                     for (int i = 0; i < list.size(); i++) {
                         if (TextUtils.isEmpty(list.get(i).getType())) {
-                            Toast.makeText(this, "Please Enter Type", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getResources().getString(R.string.toast_please_enter_type), Toast.LENGTH_SHORT).show();
                             return;
                         } else if (TextUtils.isEmpty(list.get(i).getAmount())) {
-                            Toast.makeText(this, "Please Enter Amount", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getResources().getString(R.string.toast_please_enter_amount), Toast.LENGTH_SHORT).show();
                             return;
                         } else {
                             feesReq.feeDetails.put(list.get(i).getType(), list.get(i).getAmount());
@@ -290,7 +290,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
 
     private boolean validateFees() {
         if (feesReq.dueDates==null || feesReq.dueDates.size() == 0) {
-            Toast.makeText(this, "Please add at least one due date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,  getResources().getString(R.string.toast_add_at_least_one_due_date), Toast.LENGTH_SHORT).show();
             return false;
         }
         int total = Integer.parseInt(etTotalFees.getText().toString());
@@ -302,7 +302,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
         }
 
         if(feedDetailAmount>total){
-            Toast.makeText(this, "Fees Detail Amount should not be greater than total fees amount", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_fees_details_amount_should_not_be_greater), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -311,7 +311,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
             dueFees = dueFees + Integer.parseInt(feesReq.dueDates.get(i).getMinimumAmount());
         }
         if(dueFees!=total){
-            Toast.makeText(this, "Total Fees and Due Dates Amounts should be same", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_total_fees_and_due_date_amount_same), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -324,7 +324,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
             Toast.makeText(this, "Please add Title", Toast.LENGTH_SHORT).show();
             valid = false;
         }else*/ if (!isValueValidOnly(etTotalFees)) {
-            Toast.makeText(this, "Please add total fees", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_please_add_total_fees), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;

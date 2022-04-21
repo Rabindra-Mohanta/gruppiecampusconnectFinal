@@ -202,7 +202,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             @Override
             public void onSuccess(int apiId, BaseResponse response) {
                 binding.progressBar.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(), "User Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent();
                 setResult(RESULT_OK,i);
                 finish();

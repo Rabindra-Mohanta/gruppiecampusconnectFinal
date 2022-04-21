@@ -189,7 +189,7 @@ public class AddCourseActivity extends BaseActivity implements LeafManager.OnAdd
 
         if (!isValueValidOnly(edtTitle)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Course Name",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_course_name),Toast.LENGTH_SHORT).show();
             valid = false;
         }
 
@@ -217,7 +217,7 @@ public class AddCourseActivity extends BaseActivity implements LeafManager.OnAdd
         {
 
             default:
-                Toast.makeText(AddCourseActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddCourseActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.IS_VENDOR_POST_UPDATED, true);
                 new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

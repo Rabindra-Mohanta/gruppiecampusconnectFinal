@@ -66,8 +66,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     @Bind(R.id.layout_number)
     EditText edtNumber;
 
-    @Bind(R.id.rgLanguage)
-    RadioGroup rgLanguage;
+   /* @Bind(R.id.rgLanguage)
+    RadioGroup rgLanguage;*/
 
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
@@ -155,7 +155,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
         });
 
 
-        rgLanguage.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+       /* rgLanguage.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i)
@@ -169,7 +169,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
                         break;
                 }
             }
-        });
+        });*/
     }
 
     private void updateViews(String languageCode) {
@@ -402,7 +402,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
             AppLog.e("TAG", "Response is : " + new Gson().toJson(response));
 
             if (!res.data.isAllowedToAccessApp) {
-                Toast.makeText(loginActivity2, "You are not authorized to access this App", Toast.LENGTH_SHORT).show();
+                Toast.makeText(loginActivity2, getResources().getString(R.string.toast_you_are_not_authorized), Toast.LENGTH_SHORT).show();
                 return;
             }
 

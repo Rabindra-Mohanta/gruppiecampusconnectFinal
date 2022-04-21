@@ -181,7 +181,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         if (!isValueValid(etName)) {
             valid = false;
         } else if (adapter.getSelectedList().size() == 0) {
-            Toast.makeText(this, "Please add at least one teacher", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_add_one_teacher), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -284,14 +284,14 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Staff found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_staff));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Staff found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_staff));
                 return 0;
             }
 

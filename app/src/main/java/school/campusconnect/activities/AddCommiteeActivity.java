@@ -17,6 +17,7 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityAddCommiteeBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
+import school.campusconnect.datamodel.committee.CommitteeTBL;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -51,7 +52,7 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
 
             if (getIntent().getStringExtra("screen").equalsIgnoreCase("add"))
             {
-                binding.btnAddCommittee.setText("Add");
+                binding.btnAddCommittee.setText(getResources().getString(R.string.add));
                 setTitle(getResources().getString(R.string.lbl_add_committee));
             }
             else if (getIntent().getStringExtra("screen").equalsIgnoreCase("update"))
@@ -59,7 +60,7 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
                 setTitle(getResources().getString(R.string.lbl_update_committee));
                 committeeID = getIntent().getStringExtra("committee_id");
                 binding.etName.setText(getIntent().getStringExtra("committee_name"));
-                binding.btnAddCommittee.setText("Update");
+                binding.btnAddCommittee.setText(getResources().getString(R.string.lbl_update));
             }
         }
 
@@ -121,6 +122,8 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
                 {
                     Intent i = getIntent();
                     i.putExtra("Delete","No");
+                    LeafPreference.getInstance(AddCommiteeActivity.this).setBoolean(LeafPreference.ADD_COMMITTEE, true);
+                    CommitteeTBL.deleteMember(GroupDashboardActivityNew.groupId,TeamID);
                     i.putExtra("Title",binding.etName.getText().toString());
                     setResult(RESULT_OK,i);
                     finish();
@@ -133,6 +136,8 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
                 {
                     Intent i = getIntent();
                     i.putExtra("Delete","Yes");
+                    LeafPreference.getInstance(AddCommiteeActivity.this).setBoolean(LeafPreference.ADD_COMMITTEE, true);
+                    CommitteeTBL.deleteMember(GroupDashboardActivityNew.groupId,TeamID);
                     setResult(RESULT_OK,i);
                     finish();
                 }

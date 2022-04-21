@@ -199,7 +199,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
                 spMarkCard.setAdapter(adapter);
 
                 if (markCardList == null || markCardList.size() == 0) {
-                    Toast.makeText(this, "Please Create Mark Card", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_create_mark_card), Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
@@ -211,7 +211,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
                 adapter.notifyDataSetChanged();
                 break;
             case LeafManager.API_MARK_SHEET:
-                Toast.makeText(this, "Marks Card Uploaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_mark_card_uploaded), Toast.LENGTH_SHORT).show();
                 AddPostResponse addPostResponse = (AddPostResponse) response;
                 AppLog.e(TAG, "addPostResponse : " + addPostResponse);
                 adapter.updateTrue(selectedPos);
@@ -259,7 +259,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final StudentMarkCardListResponse.SubjectDataTeam item = listAttendance.get(position);
             holder.tvName.setText(item.name);
-            holder.tvNumber.setText("Roll No." + (TextUtils.isEmpty(item.rollNumber) ? "" : item.rollNumber));
+            holder.tvNumber.setText(getResources().getString(R.string.lbl_roll_No)+". " + (TextUtils.isEmpty(item.rollNumber) ? "" : item.rollNumber));
 
             if (!TextUtils.isEmpty(item.image)) {
                 holder.imgLead_default.setVisibility(View.INVISIBLE);
@@ -494,7 +494,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     leafManager.addMarksheet(UpdateMarksheetActivity.this, groupId, teamId, mark_card_id, studentData.getStudentId(), studentData.getRollNumber(), uploadMarkRequest);
                 } else {
-                    Toast.makeText(UpdateMarksheetActivity.this, "Please Provide Marks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateMarksheetActivity.this, getResources().getString(R.string.txt_please_provide_marks), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -586,11 +586,11 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
     private boolean isValid(EditText etTitle) {
         if (!isValueValidOnly(etTitle)) {
-            Toast.makeText(UpdateMarksheetActivity.this, "Please Enter Title", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateMarksheetActivity.this, getResources().getString(R.string.toast_please_enter_title), Toast.LENGTH_SHORT).show();
             return false;
         }
         if (TextUtils.isEmpty(imgPath) && TextUtils.isEmpty(pdfPath)) {
-            Toast.makeText(this, "Please Select Image Or Pdf", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_select_image_pdf), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -631,7 +631,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -732,7 +732,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
                 pdfPath = selectedImageURI.toString();
 
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

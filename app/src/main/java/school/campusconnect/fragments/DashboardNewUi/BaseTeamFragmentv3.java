@@ -77,6 +77,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.AddTicketActivity;
 import school.campusconnect.activities.CalendarActivity;
+import school.campusconnect.activities.ChangeLanguageActivity;
 import school.campusconnect.activities.ChangeNumberActivity;
 import school.campusconnect.activities.ChangePasswordActivity;
 import school.campusconnect.activities.ChangePinActivity;
@@ -266,17 +267,20 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_mobile).setVisible(false);
             menu.findItem(R.id.menu_change_pin).setVisible(false);
+          //  menu.findItem(R.id.menu_change_language).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
 
         } else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pin).setVisible(false);
+           // menu.findItem(R.id.menu_change_language).setVisible(false);
             menu.findItem(R.id.menu_change_mobile).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
 
         } else {
             menu.findItem(R.id.menu_change_pin).setVisible(true);
             menu.findItem(R.id.menu_logout).setVisible(true);
+           // menu.findItem(R.id.menu_change_language).setVisible(true);
             menu.findItem(R.id.menu_change_pass).setVisible(true);
             menu.findItem(R.id.menu_change_mobile).setVisible(true);
         }
@@ -329,6 +333,12 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 Intent intentpin= new Intent(getActivity(), ChangePinActivity.class);
                 startActivity(intentpin);
                 return true;
+
+/*            case R.id.menu_change_language:
+                Intent intent1= new Intent(getActivity(), ChangeLanguageActivity.class);
+                startActivity(intent1);
+                return true;*/
+
 
             case R.id.menu_change_mobile:
                 Intent intentNumber= new Intent(getActivity(), ChangeNumberActivity.class);

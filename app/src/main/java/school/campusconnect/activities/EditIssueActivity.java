@@ -133,7 +133,7 @@ public class EditIssueActivity extends BaseActivity implements LeafManager.OnAdd
                     etPhone2.setTextColor(getResources().getColor(R.color.white));
                     etDesig2.setTextColor(getResources().getColor(R.color.white));
 
-                    btnCreateClass.setText("Save");
+                    btnCreateClass.setText(getResources().getString(R.string.lbl_save));
                     return;
                 }
                 isEdit = false;
@@ -143,7 +143,7 @@ public class EditIssueActivity extends BaseActivity implements LeafManager.OnAdd
                 etName2.setEnabled(false);
                 etPhone2.setEnabled(false);
                 etDesig2.setEnabled(false);
-                btnCreateClass.setText("Edit");
+                btnCreateClass.setText(getResources().getString(R.string.lbl_edit));
 
                 if (isValid()) {
 

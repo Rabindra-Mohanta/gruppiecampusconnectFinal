@@ -128,7 +128,7 @@ public class AddBusStudentActivity extends BaseActivity {
     private void setImageFragment() {
         if (isEdit) {
             imageFragment = UploadImageFragment.newInstance(studentData.getImage(), true, true);
-            btnAdd.setText("Update");
+            btnAdd.setText(getResources().getString(R.string.lbl_update));
             setTitle(getResources().getString(R.string.title_student_details));
         } else {
             imageFragment = UploadImageFragment.newInstance(null, true, true);
@@ -223,15 +223,15 @@ public class AddBusStudentActivity extends BaseActivity {
 
         switch (apiId) {
             case LeafManager.API_BUS_STUDENTS_ADD:
-                Toast.makeText(this, "Add Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_EDIT_STUDENTS:
-                Toast.makeText(this, "Edit Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_edit_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_BUS_STUDENTS_DELETE:
-                Toast.makeText(this, "Delete Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_delete_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
 

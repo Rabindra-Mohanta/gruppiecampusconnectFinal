@@ -37,6 +37,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     private final String role;
     private Context mContext;
     CourseListener listener;
+
     public CourseAdapter(ArrayList<CoursePostResponse.CoursePostData> listData, CourseListener listener, String role) {
         this.listData=listData;
         this.listener=listener;

@@ -173,7 +173,7 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
             AppLog.e("External" + "permission", "checkpermission , denied");
             if (ActivityCompat.shouldShowRequestPermissionRationale(VideoClassActivity.this, Manifest.permission.RECORD_AUDIO))
             {
-                Toast.makeText(VideoClassActivity.this, "Microphone permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(VideoClassActivity.this, getResources().getString(R.string.toast_microphone_permission_needed), Toast.LENGTH_LONG).show();
             }
             else
             {
@@ -430,7 +430,7 @@ public class VideoClassActivity extends BaseActivity implements HBRecorderListen
                 if (!Settings.canDrawOverlays(this)) {
                     //Permission is not available. Display error text.
 
-                    Toast.makeText(VideoClassActivity.this, "Draw over permission not available.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VideoClassActivity.this, getResources().getString(R.string.toast_draw_over_permission), Toast.LENGTH_SHORT).show();
                     isRecordingStarted = false;
 
                     if (classListFragment != null)

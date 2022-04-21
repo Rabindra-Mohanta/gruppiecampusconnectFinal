@@ -215,7 +215,7 @@ public class TestExamEditActivity extends BaseActivity implements OnPhotoEditorL
             public void onFailure(@NonNull Exception exception)
             {
                 AppLog.e(TAG, "onFailure called with exception : " + exception.getLocalizedMessage());
-                Toast.makeText(TestExamEditActivity.this, "Failed to save Image. ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TestExamEditActivity.this, getResources().getString(R.string.toast_failed_save_image), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -272,7 +272,7 @@ public class TestExamEditActivity extends BaseActivity implements OnPhotoEditorL
             public void onFailure(@NonNull Exception exception)
             {
                 AppLog.e(TAG, "onFailure called with exception : " + exception.getLocalizedMessage());
-                Toast.makeText(TestExamEditActivity.this, "Failed to save Image. ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TestExamEditActivity.this, getResources().getString(R.string.toast_failed_save_image), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -483,7 +483,7 @@ public class TestExamEditActivity extends BaseActivity implements OnPhotoEditorL
                         mPhotoEditor.addText(etTitle.getText().toString(), getResources().getColor(R.color.pink));
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(TestExamEditActivity.this, "Please Add Text", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TestExamEditActivity.this, getResources().getString(R.string.toast_please_add_text), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     if (rbt1.isChecked()) {
@@ -572,7 +572,7 @@ public class TestExamEditActivity extends BaseActivity implements OnPhotoEditorL
                         public void onFailure(@NonNull Exception exception)
                         {
                             AppLog.e(TAG , "onFailure called with exception : "+exception.getLocalizedMessage());
-                            Toast.makeText(TestExamEditActivity.this , "Failed to save Image. " , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TestExamEditActivity.this , getResources().getString(R.string.toast_failed_save_image) , Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -624,7 +624,7 @@ public class TestExamEditActivity extends BaseActivity implements OnPhotoEditorL
                             uploadThumbnail(editedPaths , index+1, checked);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(TestExamEditActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TestExamEditActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
 
                         }
                     }

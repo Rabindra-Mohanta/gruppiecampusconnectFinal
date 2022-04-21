@@ -101,7 +101,7 @@ public class EditCourseActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etName.getText().toString().trim())) {
-                    Toast.makeText(EditCourseActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditCourseActivity.this, getResources().getString(R.string.toast_enter_name), Toast.LENGTH_SHORT).show();
                 } else {
                     hide_keyboard(view);
                    // String str = etName.getText().toString() + ",IN," + etPhone.getText().toString();
@@ -141,7 +141,7 @@ public class EditCourseActivity extends BaseActivity {
                 else
                 {
                     if (TextUtils.isEmpty(etName.getText().toString().trim())) {
-                        Toast.makeText(EditCourseActivity.this, "Please Enter Name", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditCourseActivity.this, getResources().getString(R.string.toast_enter_name), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -186,7 +186,7 @@ public class EditCourseActivity extends BaseActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     leafManager.addBoothsMember(this, group_id, team_id, category, req);*/
                 }else {
-                    Toast.makeText(EditCourseActivity.this, "Please Add at least one contact", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditCourseActivity.this, getResources().getString(R.string.toast_add_one_contact), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -200,7 +200,8 @@ public class EditCourseActivity extends BaseActivity {
 
         switch (apiId) {
             case LeafManager.API_EDIT_COURSE:
-                Toast.makeText(this, "Course Updated successfully", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(this, getResources().getString(R.string.toast_course_update), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }

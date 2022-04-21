@@ -122,7 +122,7 @@ public class TeamSettingsActivity extends BaseActivity {
                             progressBar.setVisibility(View.VISIBLE);
                         manager.enableDisableGps(this, groupId + "", teamId);
                     } else {
-                        Toast.makeText(this, "Please disable attendance", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getResources().getString(R.string.toast_please_disable_attendance), Toast.LENGTH_SHORT).show();
                         switch_enable_gps.setChecked(false);
                     }
                 }
@@ -143,7 +143,7 @@ public class TeamSettingsActivity extends BaseActivity {
                             progressBar.setVisibility(View.VISIBLE);
                         manager.enableDisableAttendance(this, groupId + "", teamId);
                     } else {
-                        Toast.makeText(this, "Please disable GPS", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getResources().getString(R.string.toast_please_disable_gps), Toast.LENGTH_SHORT).show();
                         switch_attendance.setChecked(false);
                     }
                 }

@@ -9,54 +9,63 @@
     tools:context=".activities.ChangeLanguageActivity">
 
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/lblChangeLanguage"
+        android:textColor="@color/color_white"
+        style="@style/LabelHeader2"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_22sp"
+        android:layout_height="?actionBarSize"
+        android:text="@string/txt_select_language"
+        />
+
+    <ImageView
+        android:layout_below="@id/lblChangeLanguage"
+        android:id="@+id/img_login"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="@dimen/padding_40dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/app_icon"
+        android:visibility="visible" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical">
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/lblChangeLanguage"
-            android:textColor="@color/color_white"
-            style="@style/LabelHeader2"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:text="Select Language"
-            />
+
 
         <LinearLayout
             android:layout_gravity="center"
             android:id="@+id/llChangeLanguage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             >
 
-            <RadioGroup
-                android:layout_marginTop="@dimen/padding_20dp"
-                android:id="@+id/rgLanguage"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    style="@style/LabelHeader2"
-                    android:text="English"
-                    android:textColor="@color/color_white"
-                    android:buttonTint="@color/color_white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/rbEnglish"/>
+            <RadioButton
+                style="@style/LabelHeader2"
+                android:text="English"
+                android:textSize="24sp"
+                android:textColor="@color/color_white"
+                android:buttonTint="@color/color_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rbEnglish"/>
 
-                <RadioButton
-                    style="@style/LabelHeader2"
-                    android:textColor="@color/color_white"
-                    android:buttonTint="@color/color_white"
-                    android:text="Kannada"
-                    android:layout_marginTop="@dimen/padding_10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/rbKannada"/>
-            </RadioGroup>
+            <RadioButton
+                style="@style/LabelHeader2"
+                android:textColor="@color/color_white"
+                android:buttonTint="@color/color_white"
+                android:text="Kannada"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rbKannada"/>
         </LinearLayout>
     </LinearLayout>
 

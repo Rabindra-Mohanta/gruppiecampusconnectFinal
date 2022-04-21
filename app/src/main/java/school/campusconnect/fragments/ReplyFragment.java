@@ -201,7 +201,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
         if (!mComment.getCommentString().get().equals(""))
             addComment(mComment.getCommentString().get());
         else
-            Toast.makeText(getActivity(), "Please enter reply first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_enter_reply_first), Toast.LENGTH_SHORT).show();
     }
 
     private void getData() {
@@ -525,7 +525,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
                     editComment(edt_comment.getText().toString(), comment_id);
                     dialog.dismiss();
                 } else
-                    Toast.makeText(getActivity(), "Enter comment first", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_enter_comment_first), Toast.LENGTH_SHORT).show();
             }
         });
 

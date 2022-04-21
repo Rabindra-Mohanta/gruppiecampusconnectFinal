@@ -283,7 +283,7 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
         switch (apiId) {
             case LeafManager.API_VENDOR_DELETE:
-                Toast.makeText(this, "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.IS_VENDOR_POST_UPDATED, true);
                 AmazoneRemove.remove(item.fileName);
                 finish();
@@ -299,10 +299,10 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(this, "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(this, "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } else {

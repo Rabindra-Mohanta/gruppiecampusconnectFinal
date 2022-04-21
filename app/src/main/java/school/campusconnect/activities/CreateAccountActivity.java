@@ -202,7 +202,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
         {
             if(spType.getSelectedItemPosition()==-1 || spType.getSelectedItemPosition()==0)
             {
-                Toast.makeText(this, "Select Group Type", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_select_group_type), Toast.LENGTH_SHORT).show();
                 valid=false;
             }
         }
@@ -310,7 +310,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(this, "Successfully updated group details.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
             LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGROUPUPDATED, true);
         }
         setResult(RESULT_OK);

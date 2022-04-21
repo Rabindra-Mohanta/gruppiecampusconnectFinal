@@ -167,26 +167,26 @@ public class Activity_Walkthrough extends AppCompatActivity implements View.OnCl
 
             case 0:
 
-                tvTitle.setText("Multiple Group");
+                tvTitle.setText(getResources().getString(R.string.txt_multiple_group));
                 tvDescription.setText(getResources().getString(R.string.lorem_small));
 
                 break;
 
             case 1:
 
-                tvTitle.setText("News Feed");
+                tvTitle.setText(getResources().getString(R.string.txt_news_feed));
                 tvDescription.setText(getResources().getString(R.string.lorem_small));
 
                 break;
 
             case 2:
 
-                tvTitle.setText("Personal Chats");
+                tvTitle.setText(getResources().getString(R.string.txt_personal_chats));
                 tvDescription.setText(getResources().getString(R.string.lorem_small));
 
                 break;
             case 4:
-                tvTitle.setText("Group Chats");
+                tvTitle.setText(getResources().getString(R.string.txt_group_chats));
                 tvDescription.setText(getResources().getString(R.string.lorem_small));
                 break;
 

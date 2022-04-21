@@ -170,7 +170,7 @@ public class MarksheetActivity extends BaseActivity {
                 }
                 break;
             case LeafManager.API_MARK_SHEET:
-                Toast.makeText(this, "Marks Card Uploaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_mark_card_uploaded), Toast.LENGTH_SHORT).show();
                 AddPostResponse addPostResponse = (AddPostResponse) response;
                 AppLog.e(TAG, "addPostResponse : " + addPostResponse);
                 break;
@@ -436,11 +436,11 @@ public class MarksheetActivity extends BaseActivity {
 
     private boolean isValid(EditText etTitle) {
         if (!isValueValidOnly(etTitle)) {
-            Toast.makeText(MarksheetActivity.this, "Please Enter Title", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MarksheetActivity.this, getResources().getString(R.string.toast_please_enter_title), Toast.LENGTH_SHORT).show();
             return false;
         }
         if (TextUtils.isEmpty(imgPath) && TextUtils.isEmpty(pdfPath)) {
-            Toast.makeText(this, "Please Select Image Or Pdf", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_select_image_pdf), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -481,7 +481,7 @@ public class MarksheetActivity extends BaseActivity {
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -578,7 +578,7 @@ public class MarksheetActivity extends BaseActivity {
                 pdfPath = imageCaptureFile.toString();
 
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

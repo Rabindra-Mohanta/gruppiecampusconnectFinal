@@ -40,6 +40,8 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -180,14 +182,14 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
 
         if (!isValueValidOnly(edtTitle.editText)) {
             valid = false;
-            Toast.makeText(this, "Please Add Description", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_add_description), Toast.LENGTH_SHORT).show();
             return valid;
         }
 
 //        if (!isValueValidOnly(edt_post) && !isValueValidOnly(edtVideo.editText) && !isValueValidOnly(img_thumbnail)) {
         if (!isValueValidOnly(edtTitle.editText) && !isValueValidOnlyString(videoUrl) && !isValueValidOnlyString(imgUrl)) {
             valid = false;
-            Toast.makeText(this, "Please Add Description Or Select Image Or Video", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_add_description_image_or_video), Toast.LENGTH_SHORT).show();
 //        } else if (isValueValidOnly(img_thumbnail) && isValueValidOnly(edtVideo.editText)) {
         } else if (isValueValidOnlyString(imgUrl) && isValueValidOnlyString(videoUrl)) {
             valid = false;
@@ -381,7 +383,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
     public void onSuccess(int apiId, BaseResponse response) {
       //  hideLoadingDialog();
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(AddQuestionActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(AddQuestionActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
         /*if (postType.equalsIgnoreCase("group"))
             LeafPreference.getInstance(AddQuestionActivity.this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
         else if (postType.equalsIgnoreCase("team"))
@@ -496,7 +498,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }
@@ -606,23 +608,24 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             if (checkPermissionForWriteExternal()) {
                 Uri uri = onImageSelected(data);
-               AppLog.e("AddPostActivity", "ImageSelected URI : " + uri.toString());
+                AppLog.e("AddPostActivity", "ImageSelected URI : " + uri.toString());
                 ImageCompressionAsyncTask_Post imageCompressionAsyncTask = new ImageCompressionAsyncTask_Post(AddQuestionActivity.this, 800, 480, false);
                 imageCompressionAsyncTask.setOnImageCompressed(new ImageCompressionAsyncTask_Post.OnImageCompressed() {
                     @Override
                     public void onCompressedImage(ProfileImage profileImage) {
                         proImage = profileImage;
                         if (profileImage.imageString.isEmpty()) {
-                            Toast.makeText(AddQuestionActivity.this, "Not able to compress selected image. Please verify", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddQuestionActivity.this, getResources().getString(R.string.toast_not_able_to_compress), Toast.LENGTH_SHORT).show();
                         } else {
-                           AppLog.e("AddPOstActivity", "imageUrl : " + profileImage.imageUrl);
+                            AppLog.e("AddPOstActivity", "imageUrl : " + profileImage.imageUrl);
                             imgUrl = profileImage.imageUrl;
 //                            allUrl = profileImage.imageUrl;
 //                            img_thumbnail.setText(profileImage.imageUrl);
-                           AppLog.e("IMAGE__", "image is " + imgUrl);
+                            AppLog.e("IMAGE__", "image is " + imgUrl);
 //                            Picasso.with(AddQuestionActivity.this).load(imgUrl).into(img_thumbnail);
                             img_image.setImageBitmap(profileImage.image);
                         }
@@ -631,29 +634,29 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
                 });
                 imageCompressionAsyncTask.execute(uri.toString());
             } else {
-                Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
             }
 
 
         } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-           AppLog.e("AddPost", "onActivityResult ");
+            AppLog.e("AddPost", "onActivityResult ");
             if (checkPermissionForWriteExternal()) {
                 if (imageCaptureFile != null) {
                     galleryAddPic(imageCaptureFile.getPath());
-                   AppLog.e("AddPost", "imageCapture File Not Null ");
+                    AppLog.e("AddPost", "imageCapture File Not Null ");
                     ImageCompressionAsyncTask imageCompressionAsyncTask = new ImageCompressionAsyncTask(AddQuestionActivity.this, Constants.image_width, Constants.image_height, false);
                     imageCompressionAsyncTask.setOnImageCompressed(new ImageCompressionAsyncTask.OnImageCompressed() {
                         @Override
                         public void onCompressedImage(ProfileImage profileImage) {
                             proImage = profileImage;
-                           AppLog.e("AddPost", "onCOmpressedImage : " + profileImage.imageUrl);
+                            AppLog.e("AddPost", "onCOmpressedImage : " + profileImage.imageUrl);
                             if (profileImage.imageString.isEmpty()) {
-                                Toast.makeText(AddQuestionActivity.this, "Not able to compress selected image. Please verify", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddQuestionActivity.this, getResources().getString(R.string.toast_not_able_to_compress), Toast.LENGTH_SHORT).show();
                             } else {
                                 imgUrl = profileImage.imageUrl;
 //                                allUrl = profileImage.imageUrl;
 //                                img_thumbnail.setText(profileImage.imageUrl);
-                               AppLog.e("IMAGE__", "image is " + imgUrl);
+                                AppLog.e("IMAGE__", "image is " + imgUrl);
 //                                Picasso.with(AddQuestionActivity.this).load(imgUrl).into(img_thumbnail);
                                 img_image.setImageBitmap(profileImage.image);
                             }
@@ -665,7 +668,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
                     Toast.makeText(AddQuestionActivity.this, getString(R.string.msg_unable_get_camera_image), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
             }
         } else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
@@ -673,15 +676,13 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
 //                Uri videoUri = onImageSelected(data);
 //                String fileSelected = data.getStringExtra("pdf");
                 Uri selectedImageURI = data.getData();
-               AppLog.e("SelectedURI : ",selectedImageURI.toString());
-                if(selectedImageURI.toString().startsWith("content"))
-                {
+                AppLog.e("SelectedURI : ", selectedImageURI.toString());
+                if (selectedImageURI.toString().startsWith("content")) {
                     imgUrl = getPDFPath(selectedImageURI);
+                } else {
+                    imgUrl = selectedImageURI.getPath();
                 }
-                else {
-                    imgUrl=selectedImageURI.getPath();
-                }
-               AppLog.e("PDF", "imgUrl is " + imgUrl);
+                AppLog.e("PDF", "imgUrl is " + imgUrl);
                 File file = new File(imgUrl);
                 try {
                     InputStream inputStream = null;//You can get an inputStream using any IO API
@@ -708,7 +709,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
                 }
 
 
-               AppLog.e("PDF", "Video URI= " + imgUrl);
+                AppLog.e("PDF", "Video URI= " + imgUrl);
                 if (!imgUrl.equals(""))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(img_image);
             }
@@ -776,7 +777,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
            AppLog.e("PDF", "selection1 is " + cursor.getString(column_index));
             return cursor.getString(column_index);
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_LONG).show();
             /*try {
                AppLog.e("PDF", "path is " + getPath(this, uri));
                 return getPath(this, uri);
@@ -1051,7 +1052,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddQuestionActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_LONG).show();
                 else {
                     String videoId = "";
 //                    try {
@@ -1083,7 +1084,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
                                 @Override
                                 public void onError() {
                                    AppLog.e("onError is->", "onError");
-                                    Toast.makeText(AddQuestionActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_LONG).show();
                                 }
                             });
                     dialog.dismiss();

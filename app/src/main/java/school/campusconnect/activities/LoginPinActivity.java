@@ -59,8 +59,8 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
                 binding.lblForgot.setVisibility(View.GONE);
                 ButtonValidation = "Confirm";
-                binding.lblHint.setText("Confirm Pin");
-                binding.btnNext.setText("Done");
+                binding.lblHint.setText(getResources().getString(R.string.lbl_conPin));
+                binding.btnNext.setText(getResources().getString(R.string.done));
             }
             else
             {
@@ -70,16 +70,16 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 Token = getIntent().getStringExtra("token");
                 binding.lblForgot.setVisibility(View.GONE);
                 ButtonValidation = "Set Pin";
-                binding.lblHint.setText("Set Pin");
-                binding.btnNext.setText("Next");
+                binding.lblHint.setText(getResources().getString(R.string.lbl_setPin));
+                binding.btnNext.setText(getResources().getString(R.string.next));
             }
         }
         else
         {
             binding.lblForgot.setVisibility(View.VISIBLE);
-            binding.lblHint.setText("Pin");
+            binding.lblHint.setText(getResources().getString(R.string.txt_pin));
             ButtonValidation = "Next";
-            binding.btnNext.setText("Done");
+            binding.btnNext.setText(getResources().getString(R.string.done));
         }
 
         Log.e(TAG,"groupId "+groupId);
@@ -219,12 +219,12 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
         if (binding.etPin.getOTP().isEmpty() || binding.etPin.getOTP().length() < 4)
         {
-            binding.lblError.setText("Enter Confirm Pin...");
+            binding.lblError.setText(getResources().getString(R.string.txt_enter_confirm_pin));
             return false;
         }
         if (!binding.etPin.getOTP().equalsIgnoreCase(getIntent().getStringExtra("set_otp")))
         {
-            binding.lblError.setText("Confirm Pin Wrong...");
+            binding.lblError.setText(getResources().getString(R.string.txt_confirm_pin_wrong));
             return false;
         }
         return true;
@@ -232,7 +232,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
     private boolean isSetValid() {
         if (binding.etPin.getOTP().isEmpty() || binding.etPin.getOTP().length() < 4)
         {
-            binding.lblError.setText("Enter Pin...");
+            binding.lblError.setText(getResources().getString(R.string.txt_enter_pin));
             return false;
         }
         return true;
@@ -241,12 +241,12 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
         if (binding.etPin.getOTP().isEmpty() || binding.etPin.getOTP().length() < 4)
         {
-            binding.lblError.setText("Enter Pin...");
+            binding.lblError.setText(getResources().getString(R.string.txt_enter_pin));
             return false;
         }
         else if (!binding.etPin.getOTP().equalsIgnoreCase(LeafPreference.getInstance(this).getString(LeafPreference.PIN)))
         {
-            binding.lblError.setText("Enter Valid Pin...");
+            binding.lblError.setText(getResources().getString(R.string.txt_enter_valid_pin));
             return false;
         }
         return true;

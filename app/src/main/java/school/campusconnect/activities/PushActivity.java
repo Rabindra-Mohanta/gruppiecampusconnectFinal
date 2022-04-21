@@ -206,7 +206,7 @@ public class PushActivity extends BaseActivity implements
                 break;
             default:
                 Constants.requestCode = Constants.finishCode;
-                Toast.makeText(this, "Shared successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_shared_successfully), Toast.LENGTH_SHORT).show();
 
                 if (SelectShareTypeActivity.selectShareTypeActivity != null)
                     SelectShareTypeActivity.selectShareTypeActivity.finish();
@@ -392,14 +392,14 @@ public class PushActivity extends BaseActivity implements
                 progressBar2.setVisibility(View.VISIBLE);
                 addPost("personal", mGroupId, mAdapter2.getSelectedgroups());
             } else {
-                Toast.makeText(this, "Please select any friend first", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_select_friend_first), Toast.LENGTH_SHORT).show();
             }
         } else {
             if (!mAdapter.getSelectedgroups().equals("")) {
                 progressBar.setVisibility(View.VISIBLE);
                 addPost("team", mGroupId, mAdapter.getSelectedgroups());
             } else {
-                Toast.makeText(this, "Please select any team first", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_select_any_team), Toast.LENGTH_SHORT).show();
             }
         }
     }

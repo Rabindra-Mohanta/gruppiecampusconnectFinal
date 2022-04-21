@@ -136,9 +136,9 @@ public class AddStaffActivity extends BaseActivity {
             if (isAdmin) {
                 menu.findItem(R.id.menuMakeAdmin).setVisible(true);
                 if (isPost) {
-                    menu.findItem(R.id.menuMakeAdmin).setTitle("Remove from admin");
+                    menu.findItem(R.id.menuMakeAdmin).setTitle(getResources().getString(R.string.txt_remove_from_admin));
                 } else {
-                    menu.findItem(R.id.menuMakeAdmin).setTitle("Make as admin");
+                    menu.findItem(R.id.menuMakeAdmin).setTitle(getResources().getString(R.string.txt_make_as_admin));
                 }
 
             } else {
@@ -394,7 +394,7 @@ public class AddStaffActivity extends BaseActivity {
 
         switch (apiId) {
             case LeafManager.API_STAFF_ADD:
-                Toast.makeText(this, "Add Staff successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_staff_successfully), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_STAFF_EDIT:
@@ -407,11 +407,11 @@ public class AddStaffActivity extends BaseActivity {
                 break;
 
             case LeafManager.UPDATE_PHONE_STAFF:
-                Toast.makeText(this, "Edit Staff successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_edit_staff_successfully), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_STAFF_DELETE:
-                Toast.makeText(this, "Delete Staff successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_delete_staff_successfully), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
 
@@ -420,9 +420,9 @@ public class AddStaffActivity extends BaseActivity {
                 isPost = !isPost;
                 if (mainMenu != null) {
                     if (isPost) {
-                        mainMenu.findItem(R.id.menuMakeAdmin).setTitle("Remove from admin");
+                        mainMenu.findItem(R.id.menuMakeAdmin).setTitle(getResources().getString(R.string.txt_remove_from_admin));
                     } else {
-                        mainMenu.findItem(R.id.menuMakeAdmin).setTitle("Make as admin");
+                        mainMenu.findItem(R.id.menuMakeAdmin).setTitle(getResources().getString(R.string.txt_make_as_admin));
                     }
                 }
                 break;

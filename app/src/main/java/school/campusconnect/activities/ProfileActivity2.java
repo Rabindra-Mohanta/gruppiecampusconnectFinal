@@ -139,8 +139,8 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         progressBar1.setSecondaryProgress(99);
 
 
-        mTabLayout.addTab(mTabLayout.newTab().setText("Basic Info"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("Other Info"));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_basic_info)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_other_info)));
 
         mPagerView = (WrappingViewPager) findViewById(R.id.tabViewPager);
 
@@ -407,7 +407,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
 
         }
 
-        Toast.makeText(this, "validation Error", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_validation_error), Toast.LENGTH_LONG).show();
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();

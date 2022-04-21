@@ -2151,17 +2151,17 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                         if (team.boothId.equalsIgnoreCase(homeTeamDataTBLList.get(i).boothId))
                         {
-                            tv_Desc.setText("Members : "+String.valueOf(homeTeamDataTBLList.get(i).members));
+                            tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(homeTeamDataTBLList.get(i).members));
                             break;
                         }
                         else {
-                            tv_Desc.setText("Members : "+String.valueOf(team.members));
+                            tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
                         }
                     }
                 }
                 else
                 {
-                    tv_Desc.setText("Members : "+String.valueOf(team.members));
+                    tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
                 }
             }
             if (member.equalsIgnoreCase("yes"))
@@ -2174,17 +2174,17 @@ public class GroupDashboardActivityNew extends BaseActivity
                     {
                         if (team.teamId.equalsIgnoreCase(eventSubBoothTBLS.get(i).teamId))
                         {
-                            tv_Desc.setText("Members : "+String.valueOf(eventSubBoothTBLS.get(i).members));
+                            tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(eventSubBoothTBLS.get(i).members));
                             break;
                         }
                         else {
-                            tv_Desc.setText("Members : "+String.valueOf(team.members));
+                            tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
                         }
                     }
                 }
                 else
                 {
-                    tv_Desc.setText("Members : "+String.valueOf(team.members));
+                    tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
                 }
             }
             else{
@@ -2197,23 +2197,23 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                         if (team.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
                         {
-                            tv_Desc.setText("Members : "+String.valueOf(homeTeamDataTBLList.get(i).members));
+                            tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(homeTeamDataTBLList.get(i).members));
                             break;
                         }
                         else {
-                            tv_Desc.setText("Members : "+String.valueOf(team.members));
+                            tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
                         }
                     }
                 }
                 else
                 {
-                    tv_Desc.setText("Members : "+String.valueOf(team.members));
+                    tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
                 }
             }
         }
         else
         {
-            tv_Desc.setText("Members : "+String.valueOf(team.members));
+            tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
         }
 
         setBackEnabled(true);
@@ -2238,7 +2238,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         setBackEnabled(true);
         tvToolbar.setText(name);
-        tv_Desc.setText("Members : "+String.valueOf(members));
+        tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(members));
         tv_Desc.setVisibility(View.VISIBLE);
         tv_toolbar_icon.setVisibility(View.GONE);
         tv_toolbar_default.setVisibility(View.GONE);
@@ -2637,7 +2637,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             tvToolbar.setText(group.name);
             tv_toolbar_icon.setVisibility(View.GONE);
             tv_toolbar_default.setVisibility(View.GONE);
-            tv_Desc.setText("Members : "+String.valueOf(group.members));
+            tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(group.members));
 
             if (group.name.equalsIgnoreCase("Notice Board") || group.name.equalsIgnoreCase("Announcement"))
             {
@@ -2668,7 +2668,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         tv_toolbar_icon.setVisibility(View.GONE);
         tv_toolbar_default.setVisibility(View.GONE);
 
-        tvToolbar.setText("Announcement");
+        tvToolbar.setText(getResources().getString(R.string.lbl_announcements));
         tv_Desc.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, GenralPostConstituencyFragment.newInstance(groupId,"Announcement")).addToBackStack("home").commitAllowingStateLoss();
         tabLayout.setVisibility(View.GONE);

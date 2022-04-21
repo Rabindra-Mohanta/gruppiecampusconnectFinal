@@ -321,7 +321,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 {
                     ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
                 }
-                tvTimePickerTitle.setText("Select Start Time");
+                tvTimePickerTitle.setText(getResources().getString(R.string.txt_select_start_time));
                 fragment.setCustomTitle(tvTimePickerTitle);
                 fragment.show();
                 break;
@@ -334,10 +334,10 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
             valid = false;
         }
         else if (etTimeAddNew.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Please Select Start and End Time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_select_start_and_date), Toast.LENGTH_SHORT).show();
             valid = false;
         }else if (subjStaffList == null) {
-            Toast.makeText(this, "Please Select Subject and Staff", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_select_subject_and_staff), Toast.LENGTH_SHORT).show();
             valid = false;
         }
 
@@ -353,7 +353,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         switch (apiId) {
             case LeafManager.API_TT_ADD_SUB_Staff:
                 etTimeAddNew.setText("");
-                Toast.makeText(this, "Successfully Added Time Table", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_successfully_add_time_table), Toast.LENGTH_SHORT).show();
                 callCurrentTimeTableApi();
                 break;
 
@@ -471,7 +471,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
             final TimeTableList2Response.SessionsTimeTable item = list.get(position);
             holder.et_period.setText(item.getPeriod());
 
-            holder.et_time.setText(item.getStartTime()+" to "+item.getEndTime());
+            holder.et_time.setText(item.getStartTime()+getResources().getString(R.string.txt_to)+item.getEndTime());
 
             holder.et_subject.setText(item.getSubjectName());
 
@@ -611,14 +611,14 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                     {
                         start_time_new = startDate;
                         end_time_new = format.format(calendar.getTime());
-                        etTimeAddNew.setText(start_time_new+" to "+end_time_new);
+                        etTimeAddNew.setText(start_time_new+getResources().getString(R.string.txt_to)+end_time_new);
 
                     }
                     else
                     {
                         start_time_edit = startDate;
                         end_time_edit = format.format(calendar.getTime());
-                        et_time.setText(start_time_edit+" to "+end_time_edit);
+                        et_time.setText(start_time_edit+getResources().getString(R.string.txt_to)+end_time_edit);
                     }
                 }
                 else
@@ -633,7 +633,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                         et_time.setText("");
                     }
                     openEndTimeDialog(startDate);
-                    Toast.makeText(getApplicationContext(),"Select End Time After a Start Time",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_end_time_after_start_time),Toast.LENGTH_SHORT).show();
                 }
             }
         },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
@@ -661,7 +661,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         {
             ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
         }
-        tvTimePickerTitle.setText("Select End Time");
+        tvTimePickerTitle.setText(getResources().getString(R.string.txt_select_end_time));
 
         fragment.setCustomTitle(tvTimePickerTitle);
         fragment.show();
@@ -682,7 +682,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         dialog.setContentView(R.layout.edit_tt_dialog);
         et_period_dialog = dialog.findViewById(R.id.et_period);
         et_time = dialog.findViewById(R.id.et_time);
-        et_time.setText(item.getStartTime()+" to "+item.getEndTime());
+        et_time.setText(item.getStartTime()+getResources().getString(R.string.txt_to)+item.getEndTime());
         et_period_dialog.setText(item.getPeriod());
         spSubject_dialog = dialog.findViewById(R.id.spSubject);
         spStaff_dialog = dialog.findViewById(R.id.spStaff);
@@ -720,7 +720,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                 {
                     ((ViewGroup)tvTimePickerTitle.getParent()).removeView(tvTimePickerTitle);
                 }
-                tvTimePickerTitle.setText("Select Start Time");
+                tvTimePickerTitle.setText(getResources().getString(R.string.txt_select_start_time));
                 fragment.setCustomTitle(tvTimePickerTitle);
                 fragment.show();
             }
@@ -739,7 +739,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                     {
                         if (periodList.get(i).getPeriod().toLowerCase().trim().equalsIgnoreCase(et_period_dialog.getText().toString().toLowerCase().trim()))
                         {
-                            Toast.makeText(AddTimeTable2.this, "Period Value Already Used...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTimeTable2.this, getResources().getString(R.string.toast_period_value_already_used), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -747,18 +747,18 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
                 if (periodLast.equalsIgnoreCase(et_period_dialog.getText().toString().toLowerCase().trim()))
                 {
-                    Toast.makeText(AddTimeTable2.this, "Period Value Already Used...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTimeTable2.this, getResources().getString(R.string.toast_period_value_already_used), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (et_time.getText().toString().isEmpty())
                 {
-                    Toast.makeText(AddTimeTable2.this, "Select Start and End Time...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTimeTable2.this, getResources().getString(R.string.toast_select_start_and_date), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(spSubject_dialog.getSelectedItemPosition()==-1 || spStaff_dialog.getSelectedItemPosition()==-1){
-                    Toast.makeText(AddTimeTable2.this, "Please Select Subject and Staff", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTimeTable2.this, getResources().getString(R.string.toast_select_subject_and_staff), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!isConnectionAvailable()) {

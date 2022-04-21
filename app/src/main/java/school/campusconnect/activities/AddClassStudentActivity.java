@@ -214,7 +214,7 @@ public class AddClassStudentActivity extends BaseActivity {
     private void setImageFragment() {
         if (isEdit) {
             imageFragment = UploadImageFragment.newInstance(studentData.getImage(), true, true);
-            btnAdd.setText("Update");
+            btnAdd.setText(getResources().getString(R.string.lbl_update));
             setTitle(getResources().getString(R.string.title_student_details)+" - ("+getIntent().getStringExtra("className")+")");
         } else {
             imageFragment = UploadImageFragment.newInstance(null, true, true);

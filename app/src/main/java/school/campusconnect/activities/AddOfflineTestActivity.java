@@ -144,7 +144,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
 
 
         if (isEdit) {
-            btnCreateClass.setText("Update");
+            btnCreateClass.setText(getResources().getString(R.string.lbl_update));
             data = new Gson().fromJson(getIntent().getStringExtra("data"), OfflineTestRes.ScheduleTestData.class);
             subjectList = new Gson().fromJson(getIntent().getStringExtra("subjectList"), new TypeToken<ArrayList<SubjectStaffResponse.SubjectData>>() {
             }.getType());

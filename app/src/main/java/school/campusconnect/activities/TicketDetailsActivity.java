@@ -190,6 +190,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     MediaPlayer mediaPlayer  = new MediaPlayer();
     private Handler mHandler = new Handler();
 
+    private String btnApproveText,btnDenyText;
     Runnable myRunnable = new Runnable() {
         @Override
         public void run() {
@@ -345,18 +346,27 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 {
                     if (Option.equalsIgnoreCase("approved"))
                     {
-                        btnApprove.setText("Not Approve");
-                        btnDeny.setText("Deny");
+                        btnApprove.setText(getResources().getString(R.string.lbl_not_approve));
+                        btnDeny.setText(getResources().getString(R.string.deny));
+
+                        btnApproveText = "Not Approve";
+                        btnDenyText = "Deny";
                     }
                     else if (Option.equalsIgnoreCase("notApproved"))
                     {
-                        btnApprove.setText("Approve");
-                        btnDeny.setText("Deny");
+                        btnApprove.setText(getResources().getString(R.string.lbl_approve));
+                        btnDeny.setText(getResources().getString(R.string.deny));
+
+                        btnApproveText = "Approve";
+                        btnDenyText = "Deny";
                     }
                     else if (Option.equalsIgnoreCase("denied"))
                     {
-                        btnApprove.setText("Approve");
-                        btnDeny.setText("Not Approve");
+                        btnApprove.setText(getResources().getString(R.string.lbl_approve));
+                        btnDeny.setText(getResources().getString(R.string.lbl_not_approve));
+
+                        btnApproveText = "Approve";
+                        btnDenyText = "Not Approve";
                     }
                     else if (Option.equalsIgnoreCase("overDue"))
                     {
@@ -370,18 +380,29 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 {
                     if (Option.equalsIgnoreCase("open"))
                     {
-                        btnApprove.setText("Close");
-                        btnDeny.setText("Hold");
+                        btnApprove.setText(getResources().getString(R.string.menu_close));
+                        btnDeny.setText(getResources().getString(R.string.lbl_hold));
+
+                        btnApproveText = "Close";
+                        btnDenyText = "Hold";
                     }
                     else if (Option.equalsIgnoreCase("hold"))
                     {
-                        btnApprove.setText("Open");
-                        btnDeny.setText("Close");
+                        btnApprove.setText(getResources().getString(R.string.txt_open));
+                        btnDeny.setText(getResources().getString(R.string.menu_close));
+
+                        btnApproveText = "Open";
+                        btnDenyText = "Close";
+
                     }
                     else if (Option.equalsIgnoreCase("close"))
                     {
-                        btnApprove.setText("Open");
-                        btnDeny.setText("Hold");
+                        btnApprove.setText(getResources().getString(R.string.txt_open));
+                        btnDeny.setText(getResources().getString(R.string.lbl_hold));
+
+                        btnApproveText = "Open";
+                        btnDenyText = "Hold";
+
                     }
                     else if (Option.equalsIgnoreCase("overDue"))
                     {
@@ -395,18 +416,28 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 {
                     if (Option.equalsIgnoreCase("approved"))
                     {
-                        btnApprove.setText("Not Approve");
-                        btnDeny.setText("Deny");
+                        btnApprove.setText(getResources().getString(R.string.lbl_not_approve));
+                        btnDeny.setText(getResources().getString(R.string.deny));
+
+                        btnApproveText = "Not Approve";
+                        btnDenyText = "Deny";
                     }
                     else if (Option.equalsIgnoreCase("notApproved"))
                     {
-                        btnApprove.setText("Approve");
-                        btnDeny.setText("Deny");
+                        btnApprove.setText(getResources().getString(R.string.lbl_approve));
+                        btnDeny.setText(getResources().getString(R.string.deny));
+
+                        btnApproveText = "Approve";
+                        btnDenyText = "Deny";
                     }
                     else if (Option.equalsIgnoreCase("denied"))
                     {
-                        btnApprove.setText("Approve");
-                        btnDeny.setText("Not Approve");
+                        btnApprove.setText(getResources().getString(R.string.lbl_approve));
+                        btnDeny.setText(getResources().getString(R.string.lbl_not_approve));
+
+                        btnApproveText = "Approve";
+                        btnDenyText = "Not Approve";
+
                     }
                     else if (Option.equalsIgnoreCase("overDue"))
                     {
@@ -421,7 +452,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
             if (taskData != null)
             {
-                issueTitle.setText("Constituency Issue "+taskData.getConstituencyIssueJurisdiction());
+                issueTitle.setText(getResources().getString(R.string.txt_constituency_issue)+taskData.getConstituencyIssueJurisdiction());
 
                 tvDepartmentName.setText(taskData.getConstituencyIssueDepartmentTaskForce().getName());
                 tvDepartmentDesg.setText(taskData.getConstituencyIssueDepartmentTaskForce().getConstituencyDesignation());
@@ -658,19 +689,19 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 Log.e(TAG,"groupID"+GroupDashboardActivityNew.groupId);
 
 
-                if (btnApprove.getText().toString().equalsIgnoreCase("Not Approve"))
+                if (btnApproveText.equalsIgnoreCase("Not Approve"))
                 {
                     Status = "notApproved";
                 }
-                else if (btnApprove.getText().toString().equalsIgnoreCase("Approve"))
+                else if (btnApproveText.equalsIgnoreCase("Approve"))
                 {
                     Status = "approved";
                 }
-                else if (btnApprove.getText().toString().equalsIgnoreCase("Close"))
+                else if (btnApproveText.equalsIgnoreCase("Close"))
                 {
                     Status = "close";
                 }
-                else if (btnApprove.getText().toString().equalsIgnoreCase("Open"))
+                else if (btnApproveText.equalsIgnoreCase("Open"))
                 {
                     Status = "open";
                 }
@@ -701,19 +732,19 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
                 Log.e(TAG,"groupID"+GroupDashboardActivityNew.groupId);
 
-                if (btnDeny.getText().toString().equalsIgnoreCase("Deny"))
+                if (btnDenyText.equalsIgnoreCase("Deny"))
                 {
                     Status = "denied";
                 }
-                if (btnDeny.getText().toString().equalsIgnoreCase("Not Approve"))
+                if (btnDenyText.equalsIgnoreCase("Not Approve"))
                 {
                     Status = "notApproved";
                 }
-                else if (btnDeny.getText().toString().equalsIgnoreCase("Hold"))
+                else if (btnDenyText.equalsIgnoreCase("Hold"))
                 {
                     Status = "hold";
                 }
-                else if (btnDeny.getText().toString().equalsIgnoreCase("Close"))
+                else if (btnDenyText.equalsIgnoreCase("Close"))
                 {
                     Status = "close";
                 }

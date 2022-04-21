@@ -197,7 +197,7 @@ public class StudentFeesPayActivity extends BaseActivity {
     }
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -325,7 +325,7 @@ public class StudentFeesPayActivity extends BaseActivity {
             int actualDue = Integer.parseInt(etDueAmount.getText().toString());
             int payDue = Integer.parseInt(etDueAmountPay.getText().toString());
             if(payDue>actualDue){
-                Toast.makeText(this, "Paid amount should not grater than Amount Due", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_paid_amount_should_not_grater_than_amount), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
         }catch (Exception e){
@@ -345,7 +345,7 @@ public class StudentFeesPayActivity extends BaseActivity {
             etDueAmountPay.setError(null);
             etDate.setError(null);
             etMode.setError(null);
-            Toast.makeText(this, "Please Add Attachment", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_please_add_attachment), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -357,7 +357,7 @@ public class StudentFeesPayActivity extends BaseActivity {
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(StudentFeesPayActivity.this, "Successfully Paid", Toast.LENGTH_SHORT).show();
+        Toast.makeText(StudentFeesPayActivity.this, getResources().getString(R.string.toast_successfully_paid), Toast.LENGTH_SHORT).show();
         LeafPreference.getInstance(StudentFeesPayActivity.this).setBoolean("fees_paid", true);
         finish();
     }
@@ -414,7 +414,7 @@ public class StudentFeesPayActivity extends BaseActivity {
                             updateList(pos, key);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(StudentFeesPayActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(StudentFeesPayActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             if (progressDialog != null)
                                 progressDialog.dismiss();
                         }

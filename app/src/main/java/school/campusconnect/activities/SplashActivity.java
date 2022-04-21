@@ -222,7 +222,12 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (isConnectionAvailable()) {
-                        Intent intent = new Intent(SplashActivity.this, LoginActivity2.class);
+                     /*   Intent intent = new Intent(SplashActivity.this, LoginActivity2.class);
+                        startActivity(intent);
+                        finish();*/
+
+                        Intent intent = new Intent(SplashActivity.this, ChangeLanguageActivity.class);
+                        intent.putExtra("isSplash",true);
                         startActivity(intent);
                         finish();
                     } else {
@@ -260,7 +265,7 @@ public class SplashActivity extends AppCompatActivity {
     public void showNoNetworkMsg() {
         try {
             Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.no_internet, Snackbar.LENGTH_INDEFINITE)
-                    .setAction("SETTINGS", new View.OnClickListener() {
+                    .setAction(getResources().getString(R.string.action_settings), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             onBackPressed();

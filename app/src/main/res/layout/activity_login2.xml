@@ -129,7 +129,7 @@
                 style="@style/LoginEditText" />
 
 
-            <androidx.appcompat.widget.AppCompatTextView
+           <!-- <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/lblChangeLanguage"
                 android:textColor="@color/colorTextWhite"
                 style="@style/LabelHeader2"
@@ -174,7 +174,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/rbKannada"/>
                 </RadioGroup>
-            </LinearLayout>
+            </LinearLayout>-->
 
             <TextView
                 android:id="@+id/txtTerms"

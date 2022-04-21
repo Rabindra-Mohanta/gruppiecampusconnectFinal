@@ -110,7 +110,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
             }
         }
         if(TextUtils.isEmpty(mText)){
-            Toast.makeText(pushActivity, "No Data Found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(pushActivity, getResources().getString(R.string.msg_no_data_found), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -147,7 +147,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
                 recyclerView.setAdapter(new ClassesAdapter(mData));
                 break;
             default:
-                Toast.makeText(this, "Shared successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_shared_successfully), Toast.LENGTH_SHORT).show();
                 Intent login = new Intent(this, GroupDashboardActivityNew.class);
                 login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(login);
@@ -244,7 +244,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -254,7 +254,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 

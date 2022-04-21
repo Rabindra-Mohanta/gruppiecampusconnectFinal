@@ -257,7 +257,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     private void showPasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter Password");
+        builder.setTitle(getResources().getString(R.string.hint_pass));
 
 // Set up the input
         final EditText input = new EditText(this);
@@ -273,7 +273,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                     Intent intent = new Intent(AboutGroupActivity2.this, ClassAddTokenActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(AboutGroupActivity2.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutGroupActivity2.this, getResources().getString(R.string.toast_wrong_password), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -362,7 +362,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }
@@ -434,7 +434,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            Toast.makeText(getApplicationContext(), "Image Downloaded.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_image_download), Toast.LENGTH_SHORT).show();
             super.onPostExecute(bitmap);
         }
     }
@@ -631,7 +631,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         Log.e("KEYY", "key is " + key);
         if (filePath == null) {
             Log.e("UPLOADTEST", "filepath null");
-            Toast.makeText(this, "Could not find the filepath of the selected file",
+            Toast.makeText(this, getResources().getString(R.string.toast_could_not_find_file),
                     Toast.LENGTH_LONG).show();
             return;
         }
@@ -751,7 +751,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 break;
             }
             case LeafManager.API_ID_EDIT_GROUP:
-                Toast.makeText(this, "Successfully updated group details.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
                 if (isConnectionAvailable()) {
@@ -762,7 +762,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 break;
             case LeafManager.API_ID_DELETE_GROUPPIC:
 
-                Toast.makeText(this, "Successfully updated group details", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
                 //  showLoadingDialog();
                 if (progressBar != null)
                     progressBar.setVisibility(View.VISIBLE);
@@ -806,16 +806,16 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                     try {
                         String name = databaseHandler.getNameFromNum(item.adminPhone.replaceAll(" ", ""));
                         if (!name.equals("")) {
-                            tvGroupCreator.setText("By " + name);
+                            tvGroupCreator.setText(getResources().getString(R.string.txt_by) + name);
                         } else {
-                            tvGroupCreator.setText("By " + res.data.get(0).adminName);
+                            tvGroupCreator.setText(getResources().getString(R.string.txt_by) + res.data.get(0).adminName);
                         }
                     } catch (NullPointerException e) {
                         tvGroupCreator.setText(/*"Created By: " + */res.data.get(0).adminName);
                     }
                 } else {
                     AppLog.e("CONTACTSS", "count is 0");
-                    tvGroupCreator.setText("By " + res.data.get(0).adminName);
+                    tvGroupCreator.setText(getResources().getString(R.string.txt_by) + res.data.get(0).adminName);
                 }
                 txtAbout.setText(res.data.get(0).aboutGroup);
 
@@ -839,7 +839,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
                 tvGroupName.setText(item.name);
 
-                tvTitleToolbar.setText(("constituency".equalsIgnoreCase(item.category))?getResources().getString(R.string.lbl_about_constituency):"About School");
+                tvTitleToolbar.setText(("constituency".equalsIgnoreCase(item.category))?getResources().getString(R.string.lbl_about_constituency):getResources().getString(R.string.action_about_group));
                 break;
             }
         }

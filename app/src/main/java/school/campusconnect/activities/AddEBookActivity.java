@@ -131,10 +131,10 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etSubject.getText().toString().trim())) {
-                    Toast.makeText(AddEBookActivity.this, "Please Add Subject", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.toast_please_add_subject), Toast.LENGTH_SHORT).show();
                     etSubject.requestFocus();
                 } else if (pdfSelected.size() == 0) {
-                    Toast.makeText(AddEBookActivity.this, "Please Select Pdf", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                 } else {
                     adapter.add(new EBooksResponse.SubjectBook(etSubject.getText().toString(), etDesc.getText().toString(), pdfSelected));
                     hide_keyboard(view);
@@ -167,16 +167,16 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
 
                     } else if (TextUtils.isEmpty(etSubject.getText().toString().trim()) && pdfSelected.size() == 0) {
                         if (adapter.getList().size() == 0) {
-                            Toast.makeText(this, "Please add at least one subject and pdf", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getResources().getString(R.string.toast_add_one_subject_pdf), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     } else {
                         if (TextUtils.isEmpty(etSubject.getText().toString().trim())) {
-                            Toast.makeText(AddEBookActivity.this, "Please Add Subject", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.toast_please_add_subject), Toast.LENGTH_SHORT).show();
                             etSubject.requestFocus();
                             return;
                         } else if (pdfSelected.size() == 0) {
-                            Toast.makeText(AddEBookActivity.this, "Please Select Pdf", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddEBookActivity.this,  getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -224,7 +224,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -246,7 +246,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
     public boolean isValid() {
         boolean valid = true;
         if (!isValueValidOnly(etName)) {
-            Toast.makeText(this, "Please Enter Class Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_enter_class_name), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -442,9 +442,9 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                 }
             }
             if (pdfSelected.size() == 0) {
-                Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
             } else {
-                etPdf.setText(pdfSelected.size() + " book selected");
+                etPdf.setText(pdfSelected.size() + getResources().getString(R.string.txt_book_selected));
             }
         }
     }
@@ -468,7 +468,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                         thumbnailListMulti.add(listThumbnails);
                         createMultipleListThumbnail(index + 1);
                     } else {
-                        Toast.makeText(AddEBookActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -496,7 +496,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                         updateList(pos, pdfPos, key);
                     }
                     if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddEBookActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                         progressBar.setVisibility(View.GONE);
                     }
@@ -578,7 +578,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                         updateThumbnailList(pos, pdfPos, key);
                     }
                     if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddEBookActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                         progressDialog.dismiss();
                     }

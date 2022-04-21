@@ -247,7 +247,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
                 Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
                 logout();
             } else if (error.status.equals("404")) {
-                Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), error.title, Toast.LENGTH_SHORT).show();
             }
@@ -269,7 +269,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
                 Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
                 logout();
             } else if (msg.contains("404")) {
-                Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
                 logout();
             } else {
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
@@ -488,7 +488,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
 //            addComment(mComment.getCommentString().get());
             Toast.makeText(getActivity(), mComment.getCommentString().get(), Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(getActivity(), "Please enter post first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_enter_post_first), Toast.LENGTH_SHORT).show();
     }
 
     public class DataBinding {

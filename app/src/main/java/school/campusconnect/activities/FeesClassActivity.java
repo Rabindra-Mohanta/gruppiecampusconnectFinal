@@ -151,7 +151,7 @@ public class FeesClassActivity extends BaseActivity {
                     dialog.dismiss();
                     paidFeesFragment.callApi(selectedClassId);
                 } else {
-                    Toast.makeText(FeesClassActivity.this, "Select Class", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FeesClassActivity.this, getResources().getString(R.string.lbl_select_class), Toast.LENGTH_SHORT).show();
                 }
             }
         });

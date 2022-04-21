@@ -281,7 +281,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         }
         if (!TextUtils.isEmpty(item.lastSubmissionDate)) {
             txt_lastDate.setVisibility(View.VISIBLE);
-            txt_lastDate.setText("Last Submission Date : " + item.lastSubmissionDate);
+            txt_lastDate.setText(getResources().getString(R.string.txt_last_submission_date) + item.lastSubmissionDate);
         } else {
             txt_lastDate.setVisibility(View.GONE);
             txt_lastDate.setText("");
@@ -645,7 +645,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 if (item.assignmentVerified) {
                     holder.btnYes.setVisibility(View.VISIBLE);
                     if(!TextUtils.isEmpty(item.verifiedComment)){
-                        holder.txt_comments.setText("Comment :\n" + item.verifiedComment);
+                        holder.txt_comments.setText(getResources().getString(R.string.txt_comment)+" :\n"+ item.verifiedComment);
                         holder.txt_comments.setVisibility(View.VISIBLE);
                     }else {
                         holder.txt_comments.setVisibility(View.GONE);
@@ -655,7 +655,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                     if (item.assignmentReassigned) {
                         holder.btnNo.setVisibility(View.VISIBLE);
                         if(!TextUtils.isEmpty(item.reassignComment)){
-                            holder.txt_comments.setText("Comment :\n" + item.reassignComment);
+                            holder.txt_comments.setText(getResources().getString(R.string.txt_comment)+" :\n"+ item.reassignComment);
                             holder.txt_comments.setVisibility(View.VISIBLE);
                         }else {
                             holder.txt_comments.setVisibility(View.GONE);
@@ -702,7 +702,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Assignment found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_assignment_found));
                     txtEmpty.setVisibility(View.VISIBLE);
                 } else {
                     txtEmpty.setText("");
@@ -710,7 +710,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
                 }
                 return list.size();
             } else {
-                txtEmpty.setText("No Assignment found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_assignment_found));
                 txtEmpty.setVisibility(View.VISIBLE);
                 return 0;
             }

@@ -373,7 +373,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
 
         setSupportActionBar(mToolBar);
         setBackEnabled(false);
-        tvTitle.setText("Add Test/Exam");
+        tvTitle.setText(getResources().getString(R.string.menu_text_exam));
         setTitle("");
         iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -553,7 +553,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     }
                 }
             } catch (Exception e) {
-                Toast.makeText(AddTestPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
@@ -588,7 +588,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddTestPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -601,7 +601,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(AddTestPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -658,7 +658,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
-                            Toast.makeText(AddTestPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -726,7 +726,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                             updateList(pos, key);
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            Toast.makeText(AddTestPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             if (progressDialog != null)
                                 progressDialog.dismiss();
                         }
@@ -792,7 +792,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         Log.e("videoType : ", fileTypeImageOrVideo + "");
         if (!isValueValidOnly(edtTitle)) {
             if (showToast)
-                Toast.makeText(this, "Please Enter Topic Name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_enter_topic_name), Toast.LENGTH_SHORT).show();
             return false;
         }/*
         if (!isValueValidOnly(edtDesc)) {
@@ -803,23 +803,23 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         if(switchSchedule.isChecked()) {
             if (!isValueValidOnly(et_date)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Select Test Date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_select_test_date), Toast.LENGTH_SHORT).show();
                 return false;
             }
             if (!isValueValidOnly(et_time_start)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Select Test Time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_select_test_time), Toast.LENGTH_SHORT).show();
                 return false;
             }
             if (!isValueValidOnly(et_time_end)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Select Test Time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_select_test_time), Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Image or video or pdf", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_image_video_pdf), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -895,7 +895,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         switch (apiId) {
 
             case LeafManager.API_TEST_EXAM_ADD:
-                Toast.makeText(AddTestPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
                /* if (isEdit) {
                     LeafPreference.getInstance(AddTestPostActivity.this).setBoolean("is_topic_added", true);
                     new SendNotification(edtTitle.getText().toString(), false).execute();
@@ -1003,7 +1003,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -1157,7 +1157,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                 }
 */
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1264,14 +1264,14 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddTestPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -1299,7 +1299,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddTestPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddTestPostActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

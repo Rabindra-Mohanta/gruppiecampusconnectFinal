@@ -276,13 +276,13 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
         switch (apiId) {
             case LeafManager.API_GALLERY_DELETE:
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
-                Toast.makeText(this, "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 AmazoneRemove.remove(item.fileName);
                 finish();
                 break;
             case LeafManager.API_GALLERY_FILE_DELETE:
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
-                Toast.makeText(this, "File Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_file_delete_successfully), Toast.LENGTH_SHORT).show();
                 AmazoneRemove.remove(itemFile);
                 finish();
                 break;

@@ -1031,8 +1031,6 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 saveTotalPage(totalPages2);
 
-
-
                 mIsLoading = false;
 
                 if (currentPage2 == 1) {
@@ -1699,9 +1697,22 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         {
             if (resultCode == Activity.RESULT_OK)
             {
-                Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(login);
+
+                if (type.equalsIgnoreCase("team"))
+                {
+                    Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(login);
+                }
+                else if (type.equalsIgnoreCase("booth"))
+                {
+                    BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                    Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(login);
+                }
+
+
             }
         }
     }

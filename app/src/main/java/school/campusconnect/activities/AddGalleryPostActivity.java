@@ -724,12 +724,12 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         } else {
             if (!isValueValidOnly(edtTitle)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Add Album Name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_please_add_album_name), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
             if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Add Image or video", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_please_add_image_or_video), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
             if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -807,14 +807,14 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         switch (apiId) {
 
             default:
-                Toast.makeText(AddGalleryPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_posted_successfully), Toast.LENGTH_SHORT).show();
 
                 LeafPreference.getInstance(AddGalleryPostActivity.this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
 
                 finish();
                 break;
             case LeafManager.API_GALLERY_FILE_ADD:
-                Toast.makeText(AddGalleryPostActivity.this, "Add File Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_add_file_successfully), Toast.LENGTH_SHORT).show();
 
                 LeafPreference.getInstance(AddGalleryPostActivity.this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
 
@@ -1081,7 +1081,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                 }
 */
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1188,14 +1188,14 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddGalleryPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -1223,7 +1223,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddGalleryPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

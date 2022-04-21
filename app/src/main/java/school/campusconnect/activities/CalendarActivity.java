@@ -218,7 +218,7 @@ public class CalendarActivity extends BaseActivity {
         progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ADD_EVENT:
-                Toast.makeText(this, "Success", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_success), Toast.LENGTH_LONG).show();
                 break;
 
             case LeafManager.API_GET_EVENTS:
@@ -236,7 +236,7 @@ public class CalendarActivity extends BaseActivity {
 
                 break;
             case LeafManager.API_DELETE_EVENT:
-                 Toast.makeText(this, "Delete Success", Toast.LENGTH_LONG).show();
+                 Toast.makeText(this, getResources().getString(R.string.toast_delete_success), Toast.LENGTH_LONG).show();
                 break;
 
         }
@@ -397,7 +397,7 @@ public class CalendarActivity extends BaseActivity {
             tvData.setVisibility(View.GONE);
         }
         else {
-            tvData.setText("No Data Found");
+            tvData.setText(getResources().getString(R.string.msg_no_data_found));
             tvData.setVisibility(View.VISIBLE);
         }
     }
@@ -427,7 +427,7 @@ public class CalendarActivity extends BaseActivity {
     @Override
     public void onFailure(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(this, "Try Again", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getResources().getString(R.string.please_try_again), Toast.LENGTH_LONG).show();
     }
 
     @Override

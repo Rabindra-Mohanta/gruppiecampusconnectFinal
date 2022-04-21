@@ -173,13 +173,13 @@ public class TeamUsersActivity extends BaseActivity {
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Users found.");
+                    txtEmpty.setText(getResources().getString(R.string.msg_no_users));
                 }
                 return list.size();
             }
             else
             {
-                txtEmpty.setText("No Users found.");
+                txtEmpty.setText(getResources().getString(R.string.msg_no_users));
                 return 0;
             }
 

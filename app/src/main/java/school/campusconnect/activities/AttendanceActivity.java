@@ -335,7 +335,7 @@ public class AttendanceActivity extends BaseActivity {
                 attendanceAdapter.notifyDataSetChanged();
                 break;
             case LeafManager.API_TAKE_ATTENDANCE:
-                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_success), Toast.LENGTH_SHORT).show();
               /*  AbsentAttendanceRes absentAttendanceRes = (AbsentAttendanceRes) response;
                 AppLog.e(TAG, "AbsentAttendanceRes : " + absentAttendanceRes);*/
                 new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

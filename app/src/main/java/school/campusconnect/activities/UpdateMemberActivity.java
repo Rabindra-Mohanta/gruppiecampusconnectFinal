@@ -219,7 +219,7 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
     private void setImageFragment() {
 
         imageFragment = UploadImageFragment.newInstance(studentData.image, true, true);
-        btnAdd.setText("Update");
+        btnAdd.setText(getResources().getString(R.string.lbl_update));
         setTitle(getResources().getString(R.string.title_member_details)+" - (" + getIntent().getStringExtra("className") + ")");
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
@@ -338,11 +338,11 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
 
         switch (apiId) {
             case LeafManager.API_UPDATE_BOOTH_MEMEBER:
-                Toast.makeText(this, "Edit Member successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_edit_member_success), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_DELETE_USER:
-                Toast.makeText(this, "Delete Member successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_delete_member_success), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }

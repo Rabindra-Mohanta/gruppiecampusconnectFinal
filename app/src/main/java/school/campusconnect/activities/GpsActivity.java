@@ -242,8 +242,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         1).show();
             } else {
-                Toast.makeText(this,
-                        "This device is not supported.", Toast.LENGTH_LONG)
+                Toast.makeText(this, getResources().getString(R.string.toast_device_not_supported), Toast.LENGTH_LONG)
                         .show();
                 //finish();
             }
@@ -399,7 +398,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
                 }
                 else
                 {
-                    Toast.makeText(this, "Location data not available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,  getResources().getString(R.string.toast_location_data_not_available), Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -414,7 +413,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
         }
         else if(msg.contains("400") || msg.contains("Bad Request"))
         {
-            Toast.makeText(this, "Location data not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_location_data_not_available), Toast.LENGTH_SHORT).show();
             handler.removeCallbacks(runnable);
         }
         else

@@ -50,7 +50,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final AttendanceListRes.AttendanceData item = listAttendance.get(position);
         holder.tvName.setText(item.name);
-        holder.tvNumber.setText("Roll No."+(TextUtils.isEmpty(item.rollNumber)?"":item.rollNumber));
+        holder.tvNumber.setText(mContext.getResources().getString(R.string.lbl_roll_No)+"."+(TextUtils.isEmpty(item.rollNumber)?"":item.rollNumber));
 
         holder.chkAttendance.setChecked(item.isChecked);
 
