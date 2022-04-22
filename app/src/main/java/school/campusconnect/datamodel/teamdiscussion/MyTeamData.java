@@ -25,6 +25,10 @@ public class MyTeamData extends BaseResponse {
     @Expose
     public String name;
 
+    @SerializedName("kanName")
+    @Expose
+    public String kanName;
+
     public int members;
     public String boothNumber;
 

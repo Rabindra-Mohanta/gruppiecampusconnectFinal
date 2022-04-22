@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -99,6 +101,28 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 {
                     binding.lblError.setText("");
                 }
+                /*if (otp.length() == 4)
+                {
+                    hide_keyboard();
+                    HomeScreen();
+                }*/
+            }
+        });
+
+        binding.etPin.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                Log.e(TAG,"keyCode "+keyCode);
+                Log.e(TAG,"keyCode "+event.toString());
+
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    hide_keyboard();
+                    HomeScreen();
+                    return true;
+                }
+                return false;
+
             }
         });
 

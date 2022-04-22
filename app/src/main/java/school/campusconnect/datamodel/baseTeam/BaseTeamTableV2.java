@@ -20,6 +20,9 @@ public class BaseTeamTableV2 extends Model {
     @Column(name = "activity")
     public String activity;
 
+    @Column(name = "kanActivity")
+    public String kanActivity;
+
     @Column(name = "group_id")
     public String group_id;
 

@@ -1,5 +1,6 @@
 package school.campusconnect.adapters;
 
+import android.content.Context;
 import android.icu.text.Transliterator;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,18 +28,20 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
     private Boolean isExpanded = false;
     private String Category;
     Transliterator transliterator;
+    Context context;
 
     public TeamListAdapterNewV2(ArrayList<BaseTeamv2Response.TeamListData> teamList,OnTeamClickListener listener,String Category) {
         this.listener = listener;
         this.teamData = teamList;
         this.Category = Category;
-        transliterator = Transliterator.getInstance("Latin-Kannada");
+       // transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
 
     @NonNull
     @Override
     public TeamListAdapterNewV2.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         ItemTeamListV2Binding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_team_list_v2,parent,false);
         return new ViewHolder(binding);
     }
@@ -49,7 +52,17 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
         BaseTeamv2Response.TeamListData data = teamData.get(position);
 
         //holder.binding.tvActivityName.setText(transliterator.transliterate(data.getActivity()));
-        holder.binding.tvActivityName.setText(data.getActivity());
+
+
+        if (context.getResources().getConfiguration().locale.getLanguage().equalsIgnoreCase("kn"))
+        {
+            holder.binding.tvActivityName.setText(data.getKanActivity());
+        }
+        else
+        {
+            holder.binding.tvActivityName.setText(data.getActivity());
+        }
+
 
         if (Category.equalsIgnoreCase("constituency"))
         {

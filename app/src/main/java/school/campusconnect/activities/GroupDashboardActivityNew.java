@@ -2,6 +2,9 @@ package school.campusconnect.activities;
 
 import android.Manifest;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.icu.text.Transliterator;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,6 +26,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -108,6 +113,8 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
+
+import static android.os.Build.ID;
 
 public class GroupDashboardActivityNew extends BaseActivity
         implements View.OnClickListener, LeafManager.OnCommunicationListener, LeafManager.OnAddUpdateListener<AddPostValidationError> {
@@ -1075,14 +1082,16 @@ public class GroupDashboardActivityNew extends BaseActivity
         return true;
     }
 
-    /*private void sendNotification(String messageBody, String title) {
+    /*Not USED*/
+    private void sendNotification(String messageBody, String title) {
+
         AppLog.e(TAG,"sendNotification() called");
 
         String CHANNEL_ID = "gruppie_02";// The id of the channel.
 
         Intent intent = new Intent(this, GroupDashboardActivityNew.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 *//* Request code *//*, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -1108,8 +1117,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             notificationManager.createNotificationChannel(mChannel);
         }
         assert notificationManager != null;
-        notificationManager.notify(0 *//* ID of notification *//*, notificationBuilder.build());
-    }*/
+        notificationManager.notify(0, notificationBuilder.build());
+    }
 
     private void showHomeInfowWindow() {
 

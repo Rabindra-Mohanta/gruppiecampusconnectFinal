@@ -31,6 +31,7 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -74,6 +75,9 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
 
     @Bind(R.id.btnNext)
     Button btnNext;
+
+    @Bind(R.id.imgBack)
+    ImageView imgBack;
 
     String countryCode;
     String countryName;
@@ -120,6 +124,25 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
         edtCountry.setText(countryName);
         edtCountry.setFocusable(false);
 
+
+        if (getIntent() != null && getIntent().getExtras() != null &&  getIntent().getExtras().getBoolean("enableBack"))
+        {
+            imgBack.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            imgBack.setVisibility(View.GONE);
+        }
+
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity2.this, ChangeLanguageActivity.class);
+                intent.putExtra("isSplash",true);
+                intent.putExtra("enableBack",true);
+                startActivity(intent);
+            }
+        });
         edtCountry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -111,6 +111,7 @@ public class Home extends BaseActivity {
         if (!TextUtils.isEmpty(from)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pin).setVisible(false);
+
         }
         return super.onCreateOptionsMenu(menu);
     }

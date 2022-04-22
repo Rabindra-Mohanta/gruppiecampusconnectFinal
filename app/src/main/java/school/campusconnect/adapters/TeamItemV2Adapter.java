@@ -66,7 +66,25 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
 
         AppLog.e("TeamListAdapterNew", "item ; " + new Gson().toJson(team));
        // holder.tvTeamName.setText(transliterator.transliterate(team.name));
-        holder.tvTeamName.setText(team.name);
+
+        if (context.getResources().getConfiguration().locale.getLanguage().equalsIgnoreCase("kn"))
+        {
+
+            if (team.kanName != null)
+            {
+                holder.tvTeamName.setText(team.kanName);
+            }
+            else
+            {
+                holder.tvTeamName.setText(team.name);
+            }
+
+        }
+        else
+        {
+            holder.tvTeamName.setText(team.name);
+        }
+
 
         int postUnseenCount = 0;
 

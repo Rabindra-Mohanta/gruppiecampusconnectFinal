@@ -267,12 +267,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_mobile).setVisible(false);
             menu.findItem(R.id.menu_change_pin).setVisible(false);
+            menu.findItem(R.id.menu_change_language).setVisible(false);
           //  menu.findItem(R.id.menu_change_language).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
 
         } else if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pin).setVisible(false);
+            menu.findItem(R.id.menu_change_language).setVisible(false);
            // menu.findItem(R.id.menu_change_language).setVisible(false);
             menu.findItem(R.id.menu_change_mobile).setVisible(false);
             menu.findItem(R.id.menu_change_pass).setVisible(false);
@@ -280,7 +282,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         } else {
             menu.findItem(R.id.menu_change_pin).setVisible(true);
             menu.findItem(R.id.menu_logout).setVisible(true);
-           // menu.findItem(R.id.menu_change_language).setVisible(true);
+            menu.findItem(R.id.menu_change_language).setVisible(true);
             menu.findItem(R.id.menu_change_pass).setVisible(true);
             menu.findItem(R.id.menu_change_mobile).setVisible(true);
         }
@@ -334,10 +336,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 startActivity(intentpin);
                 return true;
 
-/*            case R.id.menu_change_language:
+            case R.id.menu_change_language:
                 Intent intent1= new Intent(getActivity(), ChangeLanguageActivity.class);
+                intent1.putExtra("isDashboard",true);
                 startActivity(intent1);
-                return true;*/
+                return true;
 
 
             case R.id.menu_change_mobile:
@@ -620,6 +623,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                     baseTeamTable.group_id = data.getFeaturedIconData().get(i).groupId;
                     baseTeamTable.activity = data.getActivity();
+                    baseTeamTable.kanActivity = data.getKanActivity();
                     baseTeamTable.featureIcons = new Gson().toJson(data.getFeaturedIconData());
 
                     if (!LeafPreference.getInstance(getContext()).getString("MY_TEAM_INSERT").isEmpty())

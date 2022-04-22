@@ -5,11 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -293,11 +296,24 @@ public class BaseFragment extends Fragment {
             BoothPresidentTBL.deleteAll();
             MyTeamSubBoothTBL.deleteAll();
 
-            Intent intent = new Intent(getActivity(), LoginActivity2.class);
+            updateViews("en");
+           /* Intent intent = new Intent(getActivity(), LoginActivity2.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            startActivity(intent);*/
         }
 
+    }
+    private void updateViews(String languageCode) {
+
+        SharedPreferences preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Locale.Helper.Selected.Language", languageCode);
+        Log.e("LocaleHelper","language "+languageCode);
+        editor.apply();
+
+        Intent intent = new Intent(getActivity(), LoginActivity2.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 }

@@ -680,6 +680,21 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         GruppieContactGroupIdModel.deleteAll();
         new DatabaseHandler(this).deleteAll();
 
+   /*     Intent intent = new Intent(this, LoginActivity2.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);*/
+
+        updateViews("en");
+    }
+
+    private void updateViews(String languageCode) {
+
+        SharedPreferences preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Locale.Helper.Selected.Language", languageCode);
+        Log.e("LocaleHelper","language "+languageCode);
+        editor.apply();
+
         Intent intent = new Intent(this, LoginActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -744,9 +759,11 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         EBookClassItem.deleteAll();
         MyTeamSubBoothTBL.deleteAll();
 
-        Intent intent = new Intent(this, LoginActivity2.class);
+      /*  Intent intent = new Intent(this, LoginActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        startActivity(intent);*/
+
+        updateViews("en");
     }
 
     // call the updating code on the main thread,

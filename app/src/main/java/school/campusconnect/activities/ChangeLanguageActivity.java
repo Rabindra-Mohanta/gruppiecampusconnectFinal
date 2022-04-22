@@ -1,6 +1,7 @@
 package school.campusconnect.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.widget.RadioGroup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.databinding.ActivityChangeLanguageBinding;
 
 public class ChangeLanguageActivity extends BaseActivity {
 
@@ -22,31 +24,69 @@ public class ChangeLanguageActivity extends BaseActivity {
     @Bind(R.id.rbKannada)
     RadioButton rbKannada;
 
+    ActivityChangeLanguageBinding binding;
+
     private boolean isSplash = false;
+    private boolean isDashboard = false;
+    private boolean isEnableBack = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_language);
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_change_language);
         ButterKnife.bind(this);
         
         if (getIntent() != null)
         {
             isSplash = getIntent().getBooleanExtra("isSplash",false);
+            isDashboard = getIntent().getBooleanExtra("isDashboard",false);
+            isEnableBack = getIntent().getBooleanExtra("enableBack",false);
         }
 
         rbEnglish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateViews("en");
+                if (rbEnglish.isChecked())
+                {
+                    rbKannada.setChecked(false);
+                }
+                else
+                {
+                    rbKannada.setChecked(true);
+                }
+
             }
         });
 
         rbKannada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateViews("kn");
+                if (rbKannada.isChecked())
+                {
+                    rbEnglish.setChecked(false);
+                }
+                else
+                {
+                    rbEnglish.setChecked(true);
+                }
             }
         });
+
+
+        if(isSplash)
+        {
+            if (isEnableBack)
+            {
+                binding.imgBack.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                binding.imgBack.setVisibility(View.GONE);
+            }
+        }
+        else {
+
+            binding.imgBack.setVisibility(View.VISIBLE);
+        }
 
         String AppLang = getResources().getConfiguration().locale.getLanguage();
         Log.e("AppLang","AppLang "+ AppLang);
@@ -61,6 +101,30 @@ public class ChangeLanguageActivity extends BaseActivity {
             rbEnglish.setChecked(true);
             rbKannada.setChecked(false);
         }
+
+
+        binding.imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        binding.btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (rbEnglish.isChecked())
+                {
+                    updateViews("en");
+                }
+                else if (rbKannada.isChecked())
+                {
+                    updateViews("kn");
+                }
+
+            }
+        });
     }
 
     private void updateViews(String languageCode) {
@@ -73,7 +137,13 @@ public class ChangeLanguageActivity extends BaseActivity {
 
         if (isSplash)
         {
-            gotoActivity(LoginActivity2.class,null,true);
+            Bundle b = new Bundle();
+            b.putBoolean("enableBack",true);
+            gotoActivity(LoginActivity2.class,b,true);
+        }
+        else if (isDashboard)
+        {
+            gotoActivity(GroupDashboardActivityNew.class,null,true);
         }
         else
         {

@@ -35,6 +35,10 @@ public class BaseTeamv2Response extends BaseResponse implements Serializable {
         @Expose
         public String activity;
 
+        @SerializedName("kanActivity")
+        @Expose
+        public String kanActivity;
+
         public ArrayList<MyTeamData> getFeaturedIconData() {
             return MyTeamData;
         }
@@ -49,6 +53,14 @@ public class BaseTeamv2Response extends BaseResponse implements Serializable {
 
         public void setActivity(String activity) {
             this.activity = activity;
+        }
+
+        public String getKanActivity() {
+            return kanActivity;
+        }
+
+        public void setKanActivity(String kanActivity) {
+            this.kanActivity = kanActivity;
         }
     }
   /*  public static class featuredIconData implements Serializable
