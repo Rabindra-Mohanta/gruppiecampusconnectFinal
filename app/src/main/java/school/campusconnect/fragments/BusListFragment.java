@@ -53,8 +53,8 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -68,7 +68,8 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         BusResponse res = (BusResponse) response;
         List<BusResponse.BusData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -78,12 +79,14 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>

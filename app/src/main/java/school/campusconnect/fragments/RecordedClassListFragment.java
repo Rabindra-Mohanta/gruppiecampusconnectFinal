@@ -96,8 +96,8 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        //progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -113,7 +113,8 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //  progressBar.setVisibility(View.GONE);
         VideoClassResponse res = (VideoClassResponse) response;
         List<VideoClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -123,12 +124,14 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
 

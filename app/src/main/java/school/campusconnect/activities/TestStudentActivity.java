@@ -512,7 +512,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
     public void getAssignment(boolean isLoading) {
         if(isLoading)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestPaper(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId, "");
     }
@@ -544,7 +545,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+   //     progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_TEST_EXAM_PAPER_LIST:
                 TestPaperRes assignmentRes = (TestPaperRes) response;
@@ -669,7 +671,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+            //progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -989,7 +992,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_assignment), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                //progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.deleteTestPaperStudent(TestStudentActivity.this, group_id, team_id, subject_id, TestStudentActivity.this.item.testExamId, item.studentTestExamId);
             }
@@ -1024,7 +1028,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
         AppLog.e(TAG , "initializeZoom Called");
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+    //    progressBar.setVisibility(View.VISIBLE);
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
         zoomSDK.initialize(this, zoomKey, zoomSecret, new ZoomSDKInitializeListener() {
@@ -1052,7 +1057,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
             @Override
             public void onZoomAuthIdentityExpired() {
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+              //  progressBar.setVisibility(View.GONE);
                 AppLog.e(TAG , "onZoomAuthIdentityExpired Called");
 
 
@@ -1179,7 +1185,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
             Log.e(TAG, "meetinsstatusChanged Join: " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
-                progressBar.setVisibility(View.GONE);
+             //   progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
             }
 
         }
@@ -1191,8 +1198,8 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
             Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
 
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
-                progressBar.setVisibility(View.GONE);
-
+              //  progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
                 /*if (getActivity() != null) {
                     ((VideoClassActivity) getActivity()).startBubbleService();
                 }*/

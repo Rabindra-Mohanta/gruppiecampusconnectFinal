@@ -126,7 +126,8 @@ public class MarksheetActivity extends BaseActivity {
         init_();
 
         AppLog.e(TAG, "getStudents : ");
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         leafManager.getStudents(this, GroupDashboardActivityNew.groupId, teamId);
     }
 
@@ -153,7 +154,8 @@ public class MarksheetActivity extends BaseActivity {
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_STUDENTS:
                 StudentRes res = (StudentRes) response;
@@ -181,13 +183,15 @@ public class MarksheetActivity extends BaseActivity {
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         AppLog.e("onFailure", "Failure");
         if (msg.contains("401") || msg.contains("Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -369,7 +373,8 @@ public class MarksheetActivity extends BaseActivity {
         hide_keyboard();
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+               // progressBar.setVisibility(View.VISIBLE);
             upLoadImageOnCloud(addMarkSheetReq);
         } else {
             showNoNetworkMsg();
@@ -408,7 +413,8 @@ public class MarksheetActivity extends BaseActivity {
 
                 @Override
                 public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                 //   progressBar.setVisibility(View.GONE);
                     AppLog.e(TAG, "Upload Error : " + ex);
                     Toast.makeText(MarksheetActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                 }

@@ -180,7 +180,8 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         if(isConnectionAvailable())
         {
             if(progressBar!=null)
-            progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+          //  progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.getLeadsListBySearch_new(this, groupId+"", teamId+"", search);
         }
@@ -194,7 +195,8 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
        AppLog.e(TAG, "Success");
        AppLog.e(TAG,"response lead list:"+ response.toString());
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
       /*  switch (apiId) {
             case LeafManager.API_ID_LEAD_LIST_SEARCH:
@@ -207,7 +209,8 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
     public void onFailure(int apiId, String msg) {
        AppLog.e(TAG, "Failure");
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+    //    progressBar.setVisibility(View.GONE);
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();

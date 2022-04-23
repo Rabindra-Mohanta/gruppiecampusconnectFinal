@@ -188,7 +188,8 @@ public class CalendarActivity extends BaseActivity {
                     AddEventReq addEventReq=new AddEventReq();
                     addEventReq.setText(etTitle.getText().toString());
                     addEventReq.setType(rbtEvent.isChecked()?"event":"holiday");
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                   // progressBar.setVisibility(View.VISIBLE);
                     leafManager.addEvent(CalendarActivity.this,GroupDashboardActivityNew.groupId,addEventReq,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
                     dialog.dismiss();
                 }
@@ -215,7 +216,8 @@ public class CalendarActivity extends BaseActivity {
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ADD_EVENT:
                 Toast.makeText(this, getResources().getString(R.string.toast_success), Toast.LENGTH_LONG).show();
@@ -378,13 +380,15 @@ public class CalendarActivity extends BaseActivity {
 
     private void getEventInMonth(){
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getEventList(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
     }
     private void getEventInDay(){
 
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getEventInDay(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
 
     }
@@ -426,14 +430,16 @@ public class CalendarActivity extends BaseActivity {
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.please_try_again), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onException(int apiId, String msg) {
         super.onException(apiId,msg);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     private class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder>{
@@ -505,7 +511,8 @@ public class CalendarActivity extends BaseActivity {
         SMBDialogUtils.showSMBDialogOKCancel(this,  getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                  progressBar.setVisibility(View.VISIBLE);
+               //   progressBar.setVisibility(View.VISIBLE);
+                  showLoadingBar(progressBar);
                   leafManager.deleteEvent(CalendarActivity.this,GroupDashboardActivityNew.groupId,eventInDayData.getEventId());
             }
         });

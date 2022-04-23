@@ -36,12 +36,13 @@ import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 
 
-public class CommitteeListFragment extends Fragment implements LeafManager.OnCommunicationListener {
+public class CommitteeListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
 public static String TAG = "CommitteeListFragment";
 FragmentCommitteeListBinding binding;
 private String TeamID;
@@ -179,13 +180,15 @@ int teamMemberCount = -1;
 
 
     private void getCommittee() {
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+      //  binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.getCommittee(this, GroupDashboardActivityNew.groupId,TeamID);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   binding.progressBar.setVisibility(View.GONE);
 
         switch (apiId)
         {
@@ -225,12 +228,14 @@ int teamMemberCount = -1;
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // binding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   binding.progressBar.setVisibility(View.GONE);
     }
 
     public class CommitteeAdapter extends RecyclerView.Adapter<CommitteeAdapter.ViewHolder>
@@ -356,7 +361,8 @@ int teamMemberCount = -1;
         startActivity(intent);
     }
     private void onDeleteClick(committeeResponse.committeeData committeeData) {
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+      //  binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.removeCommittee(this,GroupDashboardActivityNew.groupId,TeamID,committeeData.getCommitteeId());
     }
 }

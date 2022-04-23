@@ -133,19 +133,19 @@ public class BaseFragment extends Fragment {
        AppLog.e("PBAR showLoadingBar", "called");
 //        if (mProgressBar == null) {
         // mProgressBar.setVisibility(View.VISIBLE);
-        mProgressBar = v;
+       // mProgressBar = v;
 //        } else {
-        mProgressBar.setVisibility(View.VISIBLE);
+      //  mProgressBar.setVisibility(View.VISIBLE);
 //        }
     }
 
     public void hideLoadingBar() {
        AppLog.e("PBAR hideLoadingBar", "called");
-        if (mProgressBar == null) {
+       /* if (mProgressBar == null) {
         } else {
             mProgressBar.setVisibility(View.INVISIBLE);
             mProgressBar = null;
-        }
+        }*/
     }
 
     public void hideLoadingDialog() {

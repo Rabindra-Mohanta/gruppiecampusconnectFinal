@@ -278,7 +278,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         if (!isConnectionAvailable()) {
             return;
         }
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+       // binding.progressBar.setVisibility(View.VISIBLE);
         manager.myTeamListV2(this, GroupDashboardActivityNew.groupId);
     }
     private void notificationApiCall() {
@@ -375,7 +376,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
             case LeafManager.API_MY_TEAM_LISTV2:
 
-                binding.progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+            //    binding.progressBar.setVisibility(View.GONE);
 
                 BaseTeamv2Response res = (BaseTeamv2Response) response;
                 AppLog.e(TAG, "BaseTeamv2Response " + new Gson().toJson(res.getTeamData()));
@@ -595,7 +597,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    binding.progressBar.setVisibility(View.GONE);
 
         if (getActivity() != null) {
 
@@ -617,7 +620,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    binding.progressBar.setVisibility(View.GONE);
         if (getActivity() != null)
             Toast.makeText(getActivity(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }

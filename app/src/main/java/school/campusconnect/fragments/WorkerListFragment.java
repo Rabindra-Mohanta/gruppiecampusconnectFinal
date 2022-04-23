@@ -138,7 +138,8 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
         {
             if(isConnectionAvailable())
             {
-                binding.progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(binding.progressBar);
+             //   binding.progressBar.setVisibility(View.VISIBLE);
                 manager.getWorkerList(this,GroupDashboardActivityNew.groupId,teamID,committeeID);
             }
             else
@@ -152,7 +153,9 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        binding.progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
+        //    binding.progressBar.setVisibility(View.GONE);
 
         if (LeafManager.WORKER_LIST == apiId)
         {
@@ -201,13 +204,15 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    binding.progressBar.setVisibility(View.GONE);
         AppLog.e(TAG,"onFailure"+msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    binding.progressBar.setVisibility(View.GONE);
         AppLog.e(TAG,"onException"+msg);
     }
 

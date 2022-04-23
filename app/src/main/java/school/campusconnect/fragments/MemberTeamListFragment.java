@@ -201,8 +201,8 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     private void boothListApiCall() {
 
-        progressBar.setVisibility(View.VISIBLE);
-
+       // progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
         LeafManager leafManager = new LeafManager();
         leafManager.getBoothTeams(this,GroupDashboardActivityNew.groupId,team_id);
 
@@ -306,7 +306,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+     //   progressBar.setVisibility(View.GONE);
 
 
 
@@ -379,12 +379,14 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+    //    progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+      //  progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>

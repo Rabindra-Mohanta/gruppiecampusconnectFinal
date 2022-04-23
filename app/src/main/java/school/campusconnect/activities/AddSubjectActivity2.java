@@ -84,7 +84,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         init();
 
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
     }
 
@@ -112,7 +113,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_subject), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                  //  progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteSubjectStaff(AddSubjectActivity2.this, GroupDashboardActivityNew.groupId,team_id, subjectData.getSubjectId());
                 }
             });
@@ -160,14 +162,16 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                         AddSubjectStaffReq request = new AddSubjectStaffReq();
                         request.setSubjectName(etName.getText().toString());
                         request.setStaffId(adapter.getSelectedList());
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                       // progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.updateSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,subjectData.getSubjectId(), request);
                     } else {
                         AddSubjectStaffReq request = new AddSubjectStaffReq();
                         request.setSubjectName(etName.getText().toString());
                         request.setStaffId(adapter.getSelectedList());
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                        //progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.addSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id, request);
                     }
@@ -191,7 +195,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ADD_SUBJECT_STAFF:
@@ -200,7 +205,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                 finish();
                 break;
             case LeafManager.API_STAFF:
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+               // progressBar.setVisibility(View.GONE);
                 StaffResponse res = (StaffResponse) response;
                 List<StaffResponse.StaffData> result = res.getData();
                 AppLog.e(TAG, "ClassResponse " + result);
@@ -222,7 +228,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
     @Override
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -243,7 +250,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 

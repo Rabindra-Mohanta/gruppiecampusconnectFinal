@@ -130,7 +130,8 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
 
     private void callAPi(boolean isLoading) {
         if(isLoading)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        //    progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id, "");
     }
@@ -142,7 +143,8 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         SubjectStaffResponse res = (SubjectStaffResponse) response;
         List<SubjectStaffResponse.SubjectData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
@@ -172,12 +174,14 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder> {

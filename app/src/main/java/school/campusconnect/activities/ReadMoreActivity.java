@@ -484,7 +484,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         this.userId = userId;
 
         if (progressBar != null)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+         //   progressBar.setVisibility(View.VISIBLE);
 
         if (type.equalsIgnoreCase("groupPost") || type.equalsIgnoreCase("groupPostComment")) {
             linComments.setVisibility(type.equalsIgnoreCase("groupPost") ? View.GONE : View.VISIBLE);
@@ -708,7 +709,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     public void onClick(DialogInterface dialog, int which) {
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+            //    progressBar.setVisibility(View.VISIBLE);
             if (type.equals("team")) {
                 manager.deleteTeamPost(ReadMoreActivity.this, mGroupId + "", mTeamId + "", item.id);
             } else {
@@ -724,7 +726,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     public void onSuccess(int apiId, BaseResponse response) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ID_FAV:
                 if (response.status.equalsIgnoreCase("favourite")) {
@@ -785,7 +788,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
 
             case LeafManager.API_REPORT_LIST:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                 //   progressBar.setVisibility(View.GONE);
                 if (dialogProgressBar != null)
                     dialogProgressBar.setVisibility(View.GONE);
                 ReportResponse response1 = (ReportResponse) response;
@@ -806,13 +810,15 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
 
             case LeafManager.API_REPORT:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                  //  progressBar.setVisibility(View.GONE);
                 Toast.makeText(this, getResources().getString(R.string.toast_post_reported_sucessfully), Toast.LENGTH_SHORT).show();
                 break;
 
             case LeafManager.API_READ_MORE_GROUP_POST: {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //  progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "API_READ_MORE_GROUP_POST: " + response.toString());
 
@@ -828,7 +834,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
             case LeafManager.API_READ_MORE_TEAM_POST: {
 
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //  progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "API_READ_MORE_TEAM_POST: " + response.toString());
 
@@ -844,7 +851,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
             case LeafManager.API_READ_MORE_INDIVIDUAL: {
 
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //  progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "API_READ_MORE_TEAM_POST_COMMENT: " + response.toString());
 
@@ -859,7 +867,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
             case LeafManager.API_READ_MORE_GALLERY: {
 
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //  progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "API_READ_MORE_TEAM_POST: " + response.toString());
 
@@ -979,7 +988,9 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         //hideLoadingDialog();
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
+
         AppLog.e("OnFailure", "OnFailure Called");
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -993,7 +1004,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     @Override
     public void onFailure(int apiId, String msg) {
         //hideLoadingDialog();
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
@@ -1016,7 +1028,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     }
 
     public void onFavClick(PostItem item, int pos) {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+     //   progressBar.setVisibility(View.VISIBLE);
         int fav = 0;
         if (item.isFavourited) {
             fav = 0;
@@ -1069,7 +1082,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
 
         if (!liked) {
             liked = true;
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //   progressBar.setVisibility(View.VISIBLE);
             if (type.equals("group") || type.equals("favourite"))
                 manager.setLikes(this, mGroupId + "", item.id);
             else if (type.equals("team") || type.equalsIgnoreCase("teamPost") || type.equalsIgnoreCase("teamPostComment"))
@@ -1241,14 +1255,16 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     private void getReportData() {
         LeafManager mManager = new LeafManager();
         //showLoadingDialog();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //   progressBar.setVisibility(View.VISIBLE);
         mManager.getReportList(this);
     }
 
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
         //showLoadingDialog();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //   progressBar.setVisibility(View.VISIBLE);
         mManager.reportPost(this, mGroupId + "", item.id, report_id);
     }
 

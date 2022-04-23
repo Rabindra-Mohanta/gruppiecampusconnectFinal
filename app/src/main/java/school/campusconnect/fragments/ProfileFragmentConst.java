@@ -308,7 +308,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                 if (position != 0)
                 {
                     isCasteClickable = true;
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
                     leafManager.getCaste(ProfileFragmentConst.this,etReligion.getSelectedItem().toString());
                 }
                 else
@@ -364,7 +364,9 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             item.voterId = etVoterId.getText().toString();
             item.aadharNumber = etAadhar.getText().toString();
 
-            progressBar.setVisibility(View.VISIBLE);
+          //  progressBar.setVisibility(View.VISIBLE);
+
+            showLoadingBar(progressBar);
 
             Log.e(TAG,"profile image "+imageFragment.getmProfileImage());
             Log.e(TAG,"profile name "+ etName.getText().toString());
@@ -460,7 +462,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         if (getActivity() == null) {
             return;
         }
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+
         if (LeafManager.API_ID_GET_PROFILE == apiId) {
             ProfileResponse res = (ProfileResponse) response;
             AppLog.e(TAG, "ProfileResponse" + res);
@@ -597,7 +600,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             if (casteId != null)
             {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
                 leafManager.getSubCaste(this,casteId);
             }
 
@@ -697,7 +700,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
     public void profileApiCall()
     {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
         LeafManager leafManager = new LeafManager();
         leafManager.getProfileDetails(this);
     }
@@ -796,22 +799,21 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         }
 
         imageFragment.setEditEnabled(isEdit);
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
         leafManager.getReligion(this);
     }
 
     @Override
     public void onFailure(int apiId, String msg)
     {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         Log.e(TAG,"onException"+ msg);
     }
 
     @Override
     public void onException(int apiId, String msg)
     {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         Log.e(TAG,"onException"+ msg);
     }
 
@@ -832,7 +834,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
         if (casteId != null)
         {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
             leafManager.getSubCaste(ProfileFragmentConst.this,casteId);
         }
     }

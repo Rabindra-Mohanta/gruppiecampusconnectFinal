@@ -257,7 +257,8 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteGalleryPost(this, GroupDashboardActivityNew.groupId + "", item.getAlbumId());
 
@@ -271,7 +272,8 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+       //     progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_GALLERY_DELETE:
@@ -294,7 +296,8 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
 
         if (msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -309,7 +312,8 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 
@@ -353,7 +357,8 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                       // progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
                         manager.deleteGalleryFile(GalleryDetailActivity.this, GroupDashboardActivityNew.groupId + "", item.getAlbumId(), itemImage.getImagePath());
                     } else {

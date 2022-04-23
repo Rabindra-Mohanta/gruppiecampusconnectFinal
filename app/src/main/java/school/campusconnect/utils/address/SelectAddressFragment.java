@@ -443,7 +443,8 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
         findAddress = new FindAddress(loc.latitude, loc.longitude, getContext(), this);
         findAddress.execute();
 
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+        //binding.progressBar.setVisibility(View.VISIBLE);
 
     }
 
@@ -490,7 +491,8 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
     @Override
     public void onLocationDetect(Address address) {
 
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  binding.progressBar.setVisibility(View.GONE);
 
         if (address != null) {
 
@@ -516,8 +518,9 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
     }
 
     private void sendAddress(Address address) {// address object used to store lat lang , and also contain visible address line
-        binding.progressBar.setVisibility(View.GONE);
+      //  binding.progressBar.setVisibility(View.GONE);
 
+        hideLoadingBar();
         Log.e(TAG,"address"+address);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.KEY_BUNDLE_LOCATION, address);

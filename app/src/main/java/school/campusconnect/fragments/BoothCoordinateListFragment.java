@@ -60,8 +60,8 @@ public class BoothCoordinateListFragment extends BaseFragment implements LeafMan
         init();
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -86,7 +86,8 @@ public class BoothCoordinateListFragment extends BaseFragment implements LeafMan
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         BoothMemberResponse res = (BoothMemberResponse) response;
         list = res.getData();
         AppLog.e(TAG, "StudentRes " + list);
@@ -96,12 +97,14 @@ public class BoothCoordinateListFragment extends BaseFragment implements LeafMan
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesStudentAdapter extends RecyclerView.Adapter<ClassesStudentAdapter.ViewHolder> {

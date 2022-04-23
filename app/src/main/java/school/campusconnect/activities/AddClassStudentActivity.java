@@ -157,7 +157,8 @@ public class AddClassStudentActivity extends BaseActivity {
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_student), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                 //   progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteClassStudent(AddClassStudentActivity.this, GroupDashboardActivityNew.groupId, team_id,studentData.getUserId());
                 }
             });
@@ -272,14 +273,16 @@ public class AddClassStudentActivity extends BaseActivity {
 
                         addStudentReq.phone = null;
                         AppLog.e(TAG, "send data : " + new Gson().toJson(addStudentReq));
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                        //   progressBar.setVisibility(View.VISIBLE);
                         leafManager.editClassStudent(this, group_id, team_id,studentData.getUserId(), addStudentReq);
                     }
                     else {
                         addStudentReq.phone = etPhone.getText().toString();
                         addStudentReq.image=imageFragment.getmProfileImage();
                         AppLog.e(TAG, "send data : " + addStudentReq);
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                        //   progressBar.setVisibility(View.VISIBLE);
                         leafManager.addClassStudent(this, group_id, team_id, addStudentReq);
                     }
                 }
@@ -366,7 +369,8 @@ public class AddClassStudentActivity extends BaseActivity {
         super.onSuccess(apiId, response);
         submitted = false;
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ADD_ClASS_STUDENTS:
@@ -378,7 +382,8 @@ public class AddClassStudentActivity extends BaseActivity {
                 String[] str = getResources().getStringArray(R.array.array_country_values);
                 addStudentReq.countryCode = str[currentCountry - 1];
                 addStudentReq.phone = etPhone.getText().toString();
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                //progressBar.setVisibility(View.VISIBLE);
                 leafManager.editClassStudentPhone(this, group_id,studentData.getUserId(), addStudentReq);
                /* Toast.makeText(this, "Edit Student successfully", Toast.LENGTH_SHORT).show();
                 finish();*/
@@ -402,7 +407,8 @@ public class AddClassStudentActivity extends BaseActivity {
         super.onFailure(apiId, msg);
         submitted =false;
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
 
         if (msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -419,7 +425,8 @@ public class AddClassStudentActivity extends BaseActivity {
 
         submitted =false;
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

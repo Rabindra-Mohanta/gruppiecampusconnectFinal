@@ -272,7 +272,9 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
         if (isConnectionAvailable()) {
             if (isValid()) {
               //  showLoadingDialog();
-                progressBar.setVisibility(View.VISIBLE);
+
+                showLoadingBar(progressBar);
+                //progressBar.setVisibility(View.VISIBLE);
 
 //                        if (!edtVideo.editText.getText().toString().equals("")) {
                 if (!videoUrl.equals("")) {
@@ -382,7 +384,8 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
       //  hideLoadingDialog();
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+    //    progressBar.setVisibility(View.GONE);
         Toast.makeText(AddQuestionActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
         /*if (postType.equalsIgnoreCase("group"))
             LeafPreference.getInstance(AddQuestionActivity.this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
@@ -398,7 +401,8 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
        // hideLoadingDialog();
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
        AppLog.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
        AppLog.e("AddContactActivity", "onFailure  ,, msg : " + error);
         if (error.status.equals("401")) {
@@ -422,7 +426,8 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
     @Override
     public void onException(int apiId, String error) {
       //  hideLoadingDialog();
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
         Toast.makeText(AddQuestionActivity.this, error, Toast.LENGTH_SHORT).show();
     }
 

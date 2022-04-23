@@ -175,7 +175,8 @@ public class SelectContactActivity extends BaseActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             list.clear();
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -191,8 +192,8 @@ public class SelectContactActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
             adapter.add(list);
 
         }

@@ -125,7 +125,8 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void getMarkCardList() {
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
             leafManager.getMarkCard2List(this, GroupDashboardActivityNew.groupId, team_id, selectedTest.offlineTestExamId);
         } else {
@@ -136,7 +137,8 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void getSubjectList() {
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
 
         leafManager.getOfflineTestList(this, GroupDashboardActivityNew.groupId, team_id);
     }
@@ -151,7 +153,8 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
         if (getActivity() == null)
             return;
 
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_OFFLINE_TEST_LIST: {
                 OfflineTestRes res = (OfflineTestRes) response;
@@ -193,12 +196,14 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder> {
@@ -362,7 +367,8 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void addMarksApi(MarkCardResponse2.MarkCardStudent item) {
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         AddMarksReq req = new AddMarksReq();
         req.subjectMarksDetails = item.subjectMarksDetails;
         leafManager.addObtainMark(this, GroupDashboardActivityNew.groupId, team_id, item.offlineTestExamId, item.userId, req);

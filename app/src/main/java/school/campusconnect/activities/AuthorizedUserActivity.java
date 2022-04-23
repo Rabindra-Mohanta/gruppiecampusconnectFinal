@@ -137,7 +137,8 @@ public class AuthorizedUserActivity extends BaseActivity implements LeafManager.
     private void getSearchData(String search) {
       //  showLoadingDialog();
         if(progressBar!=null)
-        progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         LeafManager manager = new LeafManager();
         manager.getAuthorizedListFromSearch(this, groupId+"", search);
     }
@@ -148,7 +149,8 @@ public class AuthorizedUserActivity extends BaseActivity implements LeafManager.
        AppLog.e("ListSearchResponse", response.toString());
       //  hideLoadingDialog();
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_AUTHOREIZED_USER:
@@ -162,7 +164,8 @@ public class AuthorizedUserActivity extends BaseActivity implements LeafManager.
        AppLog.e("onFailureCalled", "Failure");
      //   hideLoadingDialog();
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();

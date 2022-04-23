@@ -94,7 +94,8 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
 
     private void callAPi(boolean isLoading) {
         if (isLoading)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getOfflineTestList(this, GroupDashboardActivityNew.groupId, team_id);
     }
@@ -110,7 +111,8 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         OfflineTestRes res = (OfflineTestRes) response;
         ArrayList<OfflineTestRes.ScheduleTestData> result = res.data;
         AppLog.e(TAG, "ClassResponse " + result);
@@ -121,12 +123,14 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder> {

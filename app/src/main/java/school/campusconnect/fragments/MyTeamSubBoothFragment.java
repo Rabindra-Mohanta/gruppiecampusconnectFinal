@@ -160,7 +160,9 @@ public static String TAG = "MyTeamSubBoothFragment";
             return;
         }
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+
+        showLoadingBar(progressBar);
+        //progressBar.setVisibility(View.VISIBLE);
         leafManager.getMyTeamSubBooth(this,GroupDashboardActivityNew.groupId);
     }
 
@@ -289,7 +291,8 @@ public static String TAG = "MyTeamSubBoothFragment";
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         MyTeamSubBoothResponse res = (MyTeamSubBoothResponse) response;
 
         saveToLocally(res.getData());
@@ -298,12 +301,15 @@ public static String TAG = "MyTeamSubBoothFragment";
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>

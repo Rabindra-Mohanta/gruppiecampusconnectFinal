@@ -152,7 +152,8 @@ public class AddVoterActivity extends BaseActivity implements View.OnClickListen
 
 
                         AppLog.e(TAG, "send data : " + new Gson().toJson(req));
-                        binding.progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(binding.progressBar);
+                       // binding.progressBar.setVisibility(View.VISIBLE);
                         manager.addVoterMasterList(this, GroupDashboardActivityNew.groupId, team_id, req);
 
                     }
@@ -180,7 +181,8 @@ public class AddVoterActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // binding.progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.ADD_VOTER_MASTER_LIST)
         {
@@ -191,13 +193,15 @@ public class AddVoterActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onFailure"+msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onException"+msg);
     }
 }

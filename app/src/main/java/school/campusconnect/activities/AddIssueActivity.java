@@ -96,7 +96,8 @@ public class AddIssueActivity extends BaseActivity implements LeafManager.OnAddU
                     request.issue = etName.getText().toString();
                     request.jurisdiction = etJurisdiction.getText().toString();
                     request.dueDays = etDate.getText().toString();
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                   // progressBar.setVisibility(View.VISIBLE);
                     AppLog.e(TAG, "request :" + request);
                     leafManager.addIssue(this, GroupDashboardActivityNew.groupId, request);
 
@@ -119,7 +120,8 @@ public class AddIssueActivity extends BaseActivity implements LeafManager.OnAddU
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ISSUE_REGISTER:
@@ -131,7 +133,8 @@ public class AddIssueActivity extends BaseActivity implements LeafManager.OnAddU
     @Override
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -152,7 +155,8 @@ public class AddIssueActivity extends BaseActivity implements LeafManager.OnAddU
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

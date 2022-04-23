@@ -234,7 +234,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
                 if (position != 0)
                 {
                     isCasteClickable = true;
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                   // progressBar.setVisibility(View.VISIBLE);
                     leafManager.getCaste(AddFamilyStudentActivity.this,etReligion.getSelectedItem().toString());
                 }
                 else
@@ -274,7 +275,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
                     dialog.dismiss();
 
                     list.remove(pos);
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                 //   progressBar.setVisibility(View.VISIBLE);
                     FamilyMemberResponse req = new FamilyMemberResponse();
                     req.setData(list);
                     AppLog.e(TAG,"req : "+req);
@@ -302,7 +304,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
             isFirstTimeCaste = false;
             isFirstTimeSubCaste = false;
             isCasteClickable = true;
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //   progressBar.setVisibility(View.VISIBLE);
             leafManager.getReligion(this);
 
             genderAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, genderArray);
@@ -391,7 +394,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
             imageFragment.setInitialLatterImage(item.name);
         }
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //   progressBar.setVisibility(View.VISIBLE);
         leafManager.getReligion(this);
     }
 
@@ -534,7 +538,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
 
                     item.image = imageFragment.getmProfileImage();
 
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                    //   progressBar.setVisibility(View.VISIBLE);
                     FamilyMemberResponse req = new FamilyMemberResponse();
                     req.setData(list);
                     AppLog.e(TAG,"req : "+new Gson().toJson(req));
@@ -677,7 +682,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
 
                 if (casteId != null)
                 {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                    //   progressBar.setVisibility(View.VISIBLE);
                     leafManager.getSubCaste(this,casteId);
                 }
 
@@ -742,7 +748,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
 
         if (msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -757,7 +764,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 
@@ -772,7 +780,8 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
 
         if (casteId != null)
         {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //   progressBar.setVisibility(View.VISIBLE);
             leafManager.getSubCaste(this,casteId);
         }
     }

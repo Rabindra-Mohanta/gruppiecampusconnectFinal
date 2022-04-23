@@ -2027,7 +2027,9 @@ public class GroupDashboardActivityNew extends BaseActivity
         AppLog.e("SearchResponse", response.toString());
         hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ALL_CONTACT_LIST:
@@ -2039,7 +2041,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         AppLog.e("onFailure", "Failure");
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -2052,7 +2055,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Override
     public void onFailure(int apiId, String msg) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         AppLog.e("onFailure", "Failure");
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -2065,7 +2069,8 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Override
     public void onException(int apiId, String msg) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
 

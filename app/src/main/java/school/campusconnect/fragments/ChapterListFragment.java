@@ -149,7 +149,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     public void getChapters(boolean isLoading) {
         if (isLoading)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
@@ -179,7 +180,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_CHAPTER_REMOVE:
                /* chapterList.remove(spChapter.getSelectedItemPosition());
@@ -284,12 +286,14 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -306,7 +310,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                     //   progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
                         manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
                     } else {
@@ -325,7 +330,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             });
         } else {
             if (isConnectionAvailable()) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                //   progressBar.setVisibility(View.VISIBLE);
                 LeafManager manager = new LeafManager();
                 manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
             } else {
@@ -352,7 +358,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isConnectionAvailable()) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                    //   progressBar.setVisibility(View.VISIBLE);
                     LeafManager manager = new LeafManager();
                     manager.deleteChapter(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId);
                 } else {
@@ -396,7 +403,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //   progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteTopic(this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, currentItem.topicId);
 

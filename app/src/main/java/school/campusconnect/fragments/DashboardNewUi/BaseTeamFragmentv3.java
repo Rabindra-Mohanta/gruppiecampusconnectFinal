@@ -469,7 +469,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (!isConnectionAvailable()) {
             return;
         }
-        binding.progressBar.setVisibility(View.VISIBLE);
+    //    binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
         manager.myTeamListV2(this, GroupDashboardActivityNew.groupId);
     }
     @Override
@@ -600,7 +601,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         switch (apiId) {
             case LeafManager.API_MY_TEAM_LISTV2:
 
-                binding.progressBar.setVisibility(View.GONE);
+             //   binding.progressBar.setVisibility(View.GONE);
+
+                hideLoadingBar();
 
                 BaseTeamv2Response res = (BaseTeamv2Response) response;
                 AppLog.e(TAG, "BaseTeamv2Response " + new Gson().toJson(res.getTeamData()));
@@ -827,7 +830,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
             case LeafManager.API_BANNER_LIST:
 
-                binding.progressBarBanner.setVisibility(View.GONE);
+          //      binding.progressBarBanner.setVisibility(View.GONE);
+                hideLoadingBar();
 
                 BannerRes bannerRes = (BannerRes) response;
 
@@ -973,11 +977,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+     //   binding.progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
 
         if (apiId == LeafManager.API_BANNER_LIST)
         {
-            binding.progressBarBanner.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  binding.progressBarBanner.setVisibility(View.GONE);
             binding.rvSliderBanner.setVisibility(View.GONE);
             binding.imgSlider.setVisibility(View.VISIBLE);
         }
@@ -1001,11 +1008,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+//        binding.progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
 
         if (apiId == LeafManager.API_BANNER_LIST)
         {
-            binding.progressBarBanner.setVisibility(View.GONE);
+            hideLoadingBar();
+  //          binding.progressBarBanner.setVisibility(View.GONE);
             binding.rvSliderBanner.setVisibility(View.GONE);
             binding.imgSlider.setVisibility(View.VISIBLE);
         }
@@ -1306,7 +1316,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (!isConnectionAvailable()) {
             return;
         }
-        binding.progressBarBanner.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBarBanner);
+    //    binding.progressBarBanner.setVisibility(View.VISIBLE);
         manager.getBannerList(this,GroupDashboardActivityNew.groupId);
     }
 
@@ -1819,7 +1830,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        binding.progressBar.setVisibility(View.GONE);
+                //        binding.progressBar.setVisibility(View.GONE);
                         if (progressDialog != null) {
                             progressDialog.dismiss();
                         }

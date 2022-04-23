@@ -80,7 +80,8 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
     private void getAttendanceDetail() {
         tvMonth.setText(MixOperations.getMonth(calendar.getTime()).toUpperCase());
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         leafManager.getAttendanceDetail(this, GroupDashboardActivityNew.groupId, teamId,userId,rollNo, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
     }
 
@@ -106,7 +107,8 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         if (getActivity() == null)
             return;
         AttendanceDetailRes res = (AttendanceDetailRes) response;
@@ -115,12 +117,14 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class ReportDetailAdapter extends RecyclerView.Adapter<ReportDetailAdapter.ViewHolder> {

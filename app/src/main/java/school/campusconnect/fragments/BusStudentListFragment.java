@@ -61,7 +61,8 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -86,7 +87,8 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         BusStudentRes res = (BusStudentRes) response;
         List<BusStudentRes.StudentData> result = res.getData();
         AppLog.e(TAG, "StudentRes " + result);
@@ -96,12 +98,14 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     public class BusStudentAdapter extends RecyclerView.Adapter<BusStudentAdapter.ViewHolder>

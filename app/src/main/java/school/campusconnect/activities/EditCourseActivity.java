@@ -196,7 +196,8 @@ public class EditCourseActivity extends BaseActivity {
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_EDIT_COURSE:
@@ -211,7 +212,8 @@ public class EditCourseActivity extends BaseActivity {
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
         if (msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -226,7 +228,8 @@ public class EditCourseActivity extends BaseActivity {
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 

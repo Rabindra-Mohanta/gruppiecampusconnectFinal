@@ -108,7 +108,8 @@ public class NewPassActivity extends BaseActivity {
                 newPassReq.password = layout_password.getText().toString();
                 newPassReq.confirmPassword = layout_password_conf.getText().toString();
 
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+             //   progressBar.setVisibility(View.VISIBLE);
                 manager.newPass(this, newPassReq);
             } else {
                 showNoNetworkMsg();
@@ -226,7 +227,8 @@ public class NewPassActivity extends BaseActivity {
                     });
 
             if (progressBar != null)
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+            //    progressBar.setVisibility(View.GONE);
 
             Intent login = new Intent(this, GroupDashboardActivityNew.class);
             login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -243,7 +245,8 @@ public class NewPassActivity extends BaseActivity {
 
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
 
     }
 
@@ -252,7 +255,8 @@ public class NewPassActivity extends BaseActivity {
 
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 

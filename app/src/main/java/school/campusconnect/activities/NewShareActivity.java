@@ -80,7 +80,8 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
         setTitle(R.string.lbl_share_post);
         final LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
 
         GroupItem mGroupItem = new Gson().fromJson(LeafPreference.getInstance(this).getString(Constants.GROUP_DATA), GroupItem.class);
         if(!TextUtils.isEmpty(mGroupItem.getGroupId())){
@@ -116,15 +117,16 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
     }
 
     private void getData() {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         leafManager.myTeamList(this, mGroupId + "");
     }
 
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
-
+     //   progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         switch (apiId) {
             case LeafManager.API_MY_TEAM_LIST:
                 ArrayList<ShareGroupItemList> mData =new ArrayList<>();
@@ -159,18 +161,21 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         super.onFailure(apiId, error.message);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         super.onFailure(apiId, msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         super.onException(apiId, msg);
     }
 
@@ -303,7 +308,10 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
         SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_share_in) + team.getName() + getResources().getString(R.string.smb_), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+
+                showLoadingBar(progressBar);
+
+            //    progressBar.setVisibility(View.VISIBLE);
                 AddPostRequest request = new AddPostRequest();
                 request.text = mText;
                 request.title = "";

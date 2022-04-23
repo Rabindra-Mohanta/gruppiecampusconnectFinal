@@ -53,7 +53,8 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
             team_id = getArguments().getString("team_id");
         }
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -67,7 +68,8 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         if(apiId==LeafManager.API_EBOOK_LIST){
             EBooksResponse res = (EBooksResponse) response;
             List<EBooksResponse.EBookData> result = res.getData();
@@ -85,12 +87,14 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -164,7 +168,8 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
     }
 
     private void onTreeClick(EBooksResponse.EBookData classData) {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.updateEBookInClass(this,group_id,team_id,classData.getBooksId());
     }

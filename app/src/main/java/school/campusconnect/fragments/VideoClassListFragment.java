@@ -270,7 +270,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void getLiveClassEventApi() {
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        //    progressBar.setVisibility(View.VISIBLE);
             leafManager.getLiveClassEvents(this, GroupDashboardActivityNew.groupId);
         }
     }
@@ -278,7 +279,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void calApi(boolean isLoading) {
         if(isLoading)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        //    progressBar.setVisibility(View.VISIBLE);
         leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
     }
 
@@ -397,7 +399,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_Video_Class) {
             VideoClassResponse res = (VideoClassResponse) response;
             result = res.getData();
@@ -499,12 +502,14 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     public void callEventApi() {
@@ -796,7 +801,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     public void startMeetingFromActivity() {
         if (!videoClassClicked) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
             Log.e(TAG, "onTreeClick  : " + videoClassClicked);
             videoClassClicked = true;
             startMeeting();
@@ -822,7 +828,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         //   EnterSubjectDialog();
 
         if ("booth".equalsIgnoreCase(category) ||"boothVideo".equalsIgnoreCase(category) || "constituency".equalsIgnoreCase(category)) {
-            progressBar.setVisibility(View.VISIBLE);
+           // progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
             leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
         }else {
             getSubjectList(classData.getId());
@@ -838,7 +845,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
 
-        progressBar.setVisibility(View.VISIBLE);
+        // progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
         zoomSDK.initialize(getActivity(), zoomKey, zoomSecret, new ZoomSDKInitializeListener() {
@@ -866,7 +874,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             @Override
             public void onZoomAuthIdentityExpired() {
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+                //progressBar.setVisibility(View.GONE);
 
             }
         });///APP_KEY , APP_SECRET
@@ -1490,7 +1499,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
             Log.e(TAG, "meetinsstatusChanged Join: " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+                //progressBar.setVisibility(View.GONE);
                 progressBarZoom.setVisibility(View.GONE);
             }
 
@@ -1505,7 +1515,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
             long saveTime = 0;
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+                //progressBar.setVisibility(View.GONE);
                 progressBarZoom.setVisibility(View.GONE);
 
                 saveTime = System.currentTimeMillis();
@@ -1938,7 +1949,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     dialog.dismiss();
                     StopMeetingReq stopMeetingReq = new StopMeetingReq(item.meetingIdOnLive, subjectAdapter.getSelected());
                     AppLog.e(TAG, "stopMeetingReq : " + stopMeetingReq);
-                    progressBar.setVisibility(View.VISIBLE);
+
+                    showLoadingBar(progressBar);
+                   // progressBar.setVisibility(View.VISIBLE);
 
                     leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), stopMeetingReq);
                 } else {
@@ -1950,7 +1963,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                // progressBar.setVisibility(View.VISIBLE);
                 leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
             }
         });
@@ -2020,7 +2034,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void getSubjectList(String teamId) {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
     }
 

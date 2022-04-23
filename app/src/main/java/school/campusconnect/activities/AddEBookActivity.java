@@ -256,7 +256,8 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_EBOOK_REGISTER:
@@ -378,7 +379,8 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
     @Override
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -399,7 +401,8 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 
@@ -498,7 +501,8 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                     if (TransferState.FAILED.equals(state)) {
                         Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        //progressBar.setVisibility(View.GONE);
                     }
                 }
 
@@ -513,7 +517,8 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
 
                 @Override
                 public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                    //progressBar.setVisibility(View.GONE);
                     progressDialog.dismiss();
                     AppLog.e(TAG, "Upload Error : " + ex);
                     Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();
@@ -546,7 +551,8 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                 }
                 progressDialog.dismiss();
                 AppLog.e(TAG, "mainRequest :" + mainRequest);
-                progressBar.setVisibility(View.VISIBLE);
+          //      progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
                 leafManager.addEBook(this, GroupDashboardActivityNew.groupId, mainRequest);
             } else {
                 pdfPos = 0;
@@ -579,7 +585,8 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                     }
                     if (TransferState.FAILED.equals(state)) {
                         Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        //progressBar.setVisibility(View.GONE);
                         progressDialog.dismiss();
                     }
                 }
@@ -595,7 +602,8 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
 
                 @Override
                 public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                    //progressBar.setVisibility(View.GONE);
                     progressDialog.dismiss();
                     AppLog.e(TAG, "Upload Error : " + ex);
                     Toast.makeText(AddEBookActivity.this, getResources().getString(R.string.upload_error), Toast.LENGTH_SHORT).show();

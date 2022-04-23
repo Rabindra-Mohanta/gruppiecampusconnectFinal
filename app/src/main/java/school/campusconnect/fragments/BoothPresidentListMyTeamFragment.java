@@ -175,7 +175,8 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
         if (!isConnectionAvailable()) {
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
 
         leafManager.getMyBooths(this,GroupDashboardActivityNew.groupId);
@@ -266,7 +267,8 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
         BoothResponse res = (BoothResponse) response;
         List<MyTeamData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -328,12 +330,14 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
     }
 
 

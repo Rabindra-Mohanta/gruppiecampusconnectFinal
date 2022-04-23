@@ -199,7 +199,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
                     return;
                 }
                 if (!TextUtils.isEmpty(et_msg.getText().toString())) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+               //     progressBar.setVisibility(View.VISIBLE);
                     LeafManager leafManager = new LeafManager();
                     leafManager.sendMsgToNotSubmittedStudents(HWParentActivity.this, group_id, getStudentIds(), new SendMsgToStudentReq(et_msg.getText().toString()));
                 } else {
@@ -409,7 +410,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_home_work), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+               // progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.deleteAssignmentTeacher(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId);
             }
@@ -433,7 +435,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         } else {
             filter = "notSubmitted";
         }
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+   //     progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getAssignment(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.assignmentId, filter);
     }
@@ -441,7 +444,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ASSIGNMENT_LIST:
                 AssignmentRes assignmentRes = (AssignmentRes) response;
@@ -486,7 +490,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -925,7 +930,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     private void notVerifyAssignmentFromActResult(boolean isVerify, String comments, String _finalUrl) {
 
         if (isVerify) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        //    progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             ReassignReq reassignReq = new ReassignReq(comments);
             reassignReq.fileName = new ArrayList<>();
@@ -933,7 +939,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             AppLog.e(TAG, "reassignReq :" + reassignReq);
             leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true, reassignReq);
         } else {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             leafManager.reassignAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true, new ReassignReq(comments));
         }
@@ -942,7 +949,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
     private void notVerifyAssignmentFromActResult(boolean isVerify, String comments, ArrayList<String> _finalUrl) {
 
         if (isVerify) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        //    progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             ReassignReq reassignReq = new ReassignReq(comments);
             reassignReq.fileName = new ArrayList<>();
@@ -950,7 +958,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
             AppLog.e(TAG, "reassignReq :" + reassignReq);
             leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, selectedAssignment.studentAssignmentId, true, reassignReq);
         } else {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+         //   progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             ReassignReq reassignReq = new ReassignReq(comments);
             reassignReq.fileName = new ArrayList<>();
@@ -965,7 +974,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         SMBDialogUtils.showSMBDialogOKCancel(this, msg, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+              //  progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.verifyAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentVerified, new ReassignReq("text"));
             }
@@ -976,7 +986,8 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
         SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_want_to_move) + item.studentName + getResources().getString(R.string.smb_assignment_not_verified), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                //  progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.reassignAssignment(HWParentActivity.this, group_id, team_id, subject_id, HWParentActivity.this.item.assignmentId, item.studentAssignmentId, !item.assignmentReassigned, new ReassignReq("text"));
             }

@@ -105,7 +105,8 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
 
             if (isValid()) {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+             //       progressBar.setVisibility(View.VISIBLE);
                 LeafManager manager = new LeafManager();
                 SignUpRequest request = new SignUpRequest();
                 request.name = edtName.getText().toString();
@@ -128,7 +129,8 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
 
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
 
         Intent i = new Intent(this, UserExistActivity.class);
         startActivity(i);
@@ -143,7 +145,8 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
         btnNext.setEnabled(true);
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
 
     }
 
@@ -152,7 +155,8 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
         btnNext.setEnabled(true);
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
         Toast.makeText(SignUpActivity2.this, error, Toast.LENGTH_SHORT).show();
     }
 }

@@ -137,7 +137,8 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_member), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+              //      progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteUser(UpdateMemberActivity.this, GroupDashboardActivityNew.groupId, studentData.id);
                 }
             });
@@ -147,21 +148,24 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
         if(item.getItemId() == R.id.menuAllowAddMember){
             AppLog.e(TAG,"menuAllowAddMember");
             menu.findItem(R.id.menuAllowAddMember).setChecked(!menu.findItem(R.id.menuAllowAddMember).isChecked());
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //      progressBar.setVisibility(View.VISIBLE);
             leafManager.allowAddOtherMember(UpdateMemberActivity.this, GroupDashboardActivityNew.groupId,team_id,studentData.id);
             return true;
         }
         if(item.getItemId() == R.id.menuAllowPost){
             AppLog.e(TAG,"menuAllowPost");
             menu.findItem(R.id.menuAllowPost).setChecked(!menu.findItem(R.id.menuAllowPost).isChecked());
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //      progressBar.setVisibility(View.VISIBLE);
             leafManager.allowTeamPost(UpdateMemberActivity.this, GroupDashboardActivityNew.groupId,team_id,studentData.id);
             return true;
         }
         if(item.getItemId() == R.id.menuAllowCommnet){
             AppLog.e(TAG,"menuAllowCommnet");
             menu.findItem(R.id.menuAllowCommnet).setChecked(!menu.findItem(R.id.menuAllowCommnet).isChecked());
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //      progressBar.setVisibility(View.VISIBLE);
             leafManager.allowTeamPostComment(UpdateMemberActivity.this, GroupDashboardActivityNew.groupId,team_id,studentData.id);
             return true;
         }
@@ -267,7 +271,8 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
                     studentData.aadharNumber = etAadhar.getText().toString();
 
                     AppLog.e(TAG, "send data : " + studentData);
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                    //      progressBar.setVisibility(View.VISIBLE);
                     leafManager.updateBoothsMember(this, group_id, team_id, studentData.id, studentData);
                 } else {
                     submitted = false;
@@ -334,7 +339,8 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
         super.onSuccess(apiId, response);
         submitted = false;
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_UPDATE_BOOTH_MEMEBER:
@@ -358,7 +364,8 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
         super.onFailure(apiId, msg);
         submitted = false;
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
 
         if (msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -375,7 +382,8 @@ public class UpdateMemberActivity extends BaseActivity implements LeafManager.On
 
         submitted = false;
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

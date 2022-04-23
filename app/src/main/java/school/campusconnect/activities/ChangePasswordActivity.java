@@ -97,7 +97,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                 changePasswordRequest.newPasswordFirst = layout_password.getText().toString();
                 changePasswordRequest.newPasswordSecond = layout_password_conf.getText().toString();
 
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+               // progressBar.setVisibility(View.VISIBLE);
                 hide_keyboard();
                 manager.changePassword(this, changePasswordRequest);
             } else {
@@ -134,7 +135,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     @Override
     public void onFailure(int apiId, ErrorResponseModel<PasswordValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         AppLog.e(TAG, "onFailure : " + error);
         Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show();
     }
@@ -145,7 +147,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -153,7 +156,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 

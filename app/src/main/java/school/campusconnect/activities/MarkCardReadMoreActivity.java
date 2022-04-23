@@ -224,7 +224,8 @@ public class MarkCardReadMoreActivity extends BaseActivity implements DialogInte
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             //manager.deleteMarkCart(this, mGroupId+"",teamId,userId,rollNo,currentItem.marksCardId);
 
@@ -241,8 +242,8 @@ public class MarkCardReadMoreActivity extends BaseActivity implements DialogInte
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
-
+      //  progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         switch (apiId) {
             case LeafManager.API_MARK_SHEET_DELETE:
                 Toast.makeText(this, getResources().getString(R.string.toast_mark_card_delete_successfully), Toast.LENGTH_SHORT).show();
@@ -253,8 +254,8 @@ public class MarkCardReadMoreActivity extends BaseActivity implements DialogInte
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
-
+       // progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         if (msg.contains("401:Unauthorized") || msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();

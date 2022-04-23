@@ -273,7 +273,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                     return;
                 }
                 if (!TextUtils.isEmpty(et_msg.getText().toString())) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+              //      progressBar.setVisibility(View.VISIBLE);
                     LeafManager leafManager = new LeafManager();
                     leafManager.sendMsgToNotSubmittedStudents(TestParentActivity.this, group_id, getStudentIds(), new SendMsgToStudentReq(et_msg.getText().toString()));
                 } else {
@@ -570,7 +571,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isConnectionAvailable()) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                 //   progressBar.setVisibility(View.VISIBLE);
                     LeafManager manager = new LeafManager();
                     manager.deleteTestExam(TestParentActivity.this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
                 } else {
@@ -597,7 +599,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         } else {
             filter = "notSubmitted";
         }
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestPaper(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId, filter);
     }
@@ -605,7 +608,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_TEST_EXAM_PAPER_LIST:
                 TestPaperRes assignmentRes = (TestPaperRes) response;
@@ -680,7 +684,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -1025,7 +1030,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     private void notVerifyAssignmentFromActResult(boolean isVerify, String comments, ArrayList<String> _finalUrl) {
 
         if (isVerify) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             ReassignReq reassignReq = new ReassignReq(comments);
             reassignReq.fileName = new ArrayList<>();
@@ -1040,7 +1046,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         SMBDialogUtils.showSMBDialogOKCancel(this, msg, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                // progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 ReassignReq reassignReq = new ReassignReq("");
                 leafManager.verifyTestPaper(TestParentActivity.this, group_id, team_id, subject_id, TestParentActivity.this.item.testExamId, item.studentTestExamId, false, reassignReq);
@@ -1071,7 +1078,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
         zoomSDK.initialize(this, zoomKey, zoomSecret, new ZoomSDKInitializeListener() {
@@ -1099,7 +1107,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
             @Override
             public void onZoomAuthIdentityExpired() {
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+             //   progressBar.setVisibility(View.GONE);
 
             }
         });///APP_KEY , APP_SECRET
@@ -1221,7 +1230,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
             Log.e(TAG, "meetinsstatusChanged Join: " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+                //   progressBar.setVisibility(View.GONE);
             }
 
         }
@@ -1233,7 +1243,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
 
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+                //   progressBar.setVisibility(View.GONE);
 
                 if(!isRestarted)
                 startLiveTest();
@@ -1517,7 +1528,9 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     public void startLiveTest()
     {
-        progressBar.setVisibility(View.VISIBLE);
+
+        showLoadingBar(progressBar);
+        //progressBar.setVisibility(View.VISIBLE);
 
         sendNotificationProctoring(true);
 
@@ -1526,7 +1539,8 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     }
 
     public void stopLiveTest() {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //progressBar.setVisibility(View.VISIBLE);
 
         sendNotificationProctoring(false);
 

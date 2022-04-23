@@ -142,11 +142,13 @@ public class PushActivity extends BaseActivity implements
 
         mAdapter.addItems(mData);
         recyclerView.setAdapter(mAdapter);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
         getData();
 
-        progressBar2.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar2);
+       // progressBar2.setVisibility(View.VISIBLE);
         mAdapter2 = new ShareGroupAdapter(new ArrayList<ShareGroupItemList>(), "personal", 0);
         //new TaskForFriends().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         getPersonalList();
@@ -166,8 +168,9 @@ public class PushActivity extends BaseActivity implements
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar2.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
+        //progressBar2.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_MY_TEAM_LIST:
@@ -286,13 +289,15 @@ public class PushActivity extends BaseActivity implements
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar2.setVisibility(View.GONE);
+        hideLoadingBar();
+        //      progressBar2.setVisibility(View.GONE);
         super.onFailure(apiId, msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar2.setVisibility(View.GONE);
+        hideLoadingBar();
+        //      progressBar2.setVisibility(View.GONE);
         super.onException(apiId, msg);
     }
 
@@ -374,7 +379,8 @@ public class PushActivity extends BaseActivity implements
                 break;
 
             case R.id.relative_group:
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+            //    progressBar.setVisibility(View.VISIBLE);
                 addPost("group", mGroupId, String.valueOf(mGroupId));
                 break;
 
@@ -389,14 +395,16 @@ public class PushActivity extends BaseActivity implements
     public void isValid() {
         if (indiShow) {
             if (!mAdapter2.getSelectedgroups().equals("")) {
-                progressBar2.setVisibility(View.VISIBLE);
+              //  progressBar2.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar2);
                 addPost("personal", mGroupId, mAdapter2.getSelectedgroups());
             } else {
                 Toast.makeText(this, getResources().getString(R.string.toast_select_friend_first), Toast.LENGTH_SHORT).show();
             }
         } else {
             if (!mAdapter.getSelectedgroups().equals("")) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                //    progressBar.setVisibility(View.VISIBLE);
                 addPost("team", mGroupId, mAdapter.getSelectedgroups());
             } else {
                 Toast.makeText(this, getResources().getString(R.string.toast_select_any_team), Toast.LENGTH_SHORT).show();
@@ -500,7 +508,8 @@ public class PushActivity extends BaseActivity implements
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            progressBar2.setVisibility(View.GONE);
+            hideLoadingBar();
+      //      progressBar2.setVisibility(View.GONE);
             if (dialog != null && dialog.isShowing())
                 dialog.dismiss();
             recyclerView2.setAdapter(mAdapter2);

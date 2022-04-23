@@ -143,7 +143,8 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
         {
             if (isConnectionAvailable())
             {
-                binding.progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(binding.progressBar);
+            //    binding.progressBar.setVisibility(View.VISIBLE);
                 manager.voterMasterList(this, GroupDashboardActivityNew.groupId,team_id);
             }
             else
@@ -155,7 +156,8 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+    //    binding.progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.VOTER_MASTER_LIST)
         {
@@ -205,13 +207,15 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onFailure"+msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onException"+msg);
 
     }

@@ -5,13 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -109,22 +113,27 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
             }
         });
 
-        binding.etPin.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                Log.e(TAG,"keyCode "+keyCode);
+
+
+
+
+    /*    binding.etPin.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e(TAG,"keyCode "+event.getAction());
                 Log.e(TAG,"keyCode "+event.toString());
 
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (event.getAction() == KeyEvent.KEYCODE_ENTER) {
                     hide_keyboard();
                     HomeScreen();
                     return true;
                 }
                 return false;
-
             }
-        });
+        });*/
+
+
 
        /* binding.etPin.addTextChangedListener(new TextWatcher() {
             @Override
@@ -282,11 +291,12 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  binding.progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_JOIN_GROUP) {
             AppLog.e("UserExist->", "join group api response");
-            binding.progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(binding.progressBar);
+           // binding.progressBar.setVisibility(View.VISIBLE);
 
             AppLog.e("UserExist->", "getGroupDetail api called");
             manager.getGroupDetail(this, BuildConfig.APP_ID);
@@ -324,7 +334,8 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       //binding.progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.API_JOIN_GROUP) {
             AppLog.e("UserExist-> on Failure", "join group api response");
@@ -336,7 +347,8 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //binding.progressBar.setVisibility(View.GONE);
     }
 
     private void gotoHomeScreenThroughSplash() {

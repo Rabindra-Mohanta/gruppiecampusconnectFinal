@@ -132,7 +132,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
         init_();
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //   progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getMarkCardList(this, groupId, teamId);
     }
@@ -164,7 +165,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
                     AppLog.e(TAG, "getStudents : ");
                     list.clear();
                     adapter.notifyDataSetChanged();
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                    //   progressBar.setVisibility(View.VISIBLE);
                     leafManager.getMarkCardStudents(UpdateMarksheetActivity.this, GroupDashboardActivityNew.groupId, teamId, mark_card_id);
                 }
             }
@@ -184,7 +186,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_MARK_CARD_LIST: {
                 MarkCardListResponse res = (MarkCardListResponse) response;
@@ -223,13 +226,15 @@ public class UpdateMarksheetActivity extends BaseActivity {
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         AppLog.e("onFailure", "Failure");
         if (msg.contains("401") || msg.contains("Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -491,7 +496,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
                 if (isAllMark(subjectMarks)) {
                     dialog.dismiss();
                     AppLog.e(TAG, "Request : " + uploadMarkRequest);
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                  //  progressBar.setVisibility(View.VISIBLE);
                     leafManager.addMarksheet(UpdateMarksheetActivity.this, groupId, teamId, mark_card_id, studentData.getStudentId(), studentData.getRollNumber(), uploadMarkRequest);
                 } else {
                     Toast.makeText(UpdateMarksheetActivity.this, getResources().getString(R.string.txt_please_provide_marks), Toast.LENGTH_SHORT).show();
@@ -519,7 +525,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
         hide_keyboard();
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+               // progressBar.setVisibility(View.VISIBLE);
             upLoadImageOnCloud(addMarkSheetReq);
         } else {
             showNoNetworkMsg();
@@ -557,7 +564,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
                 @Override
                 public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //    progressBar.setVisibility(View.GONE);
                     AppLog.e(TAG, "Upload Error : " + ex);
                     Toast.makeText(UpdateMarksheetActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                 }

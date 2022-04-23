@@ -187,7 +187,8 @@ public class InviteFriendActivity extends BaseActivity implements View.OnClickLi
             if (isConnectionAvailable()) {
                 if (isValid()) {
                     if (progressBar != null)
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                     //   progressBar.setVisibility(View.VISIBLE);
                      request = new AddLeadRequest();
                     request.name = edtLeadName.editText.getText().toString();
                     request.phone = edtPhone.editText.getText().toString();
@@ -295,7 +296,8 @@ public class InviteFriendActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+            //progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getString(R.string.msg_added_lead), Toast.LENGTH_LONG).show();
 
         LeafPreference.getInstance(InviteFriendActivity.this).setBoolean(LeafPreference.ISUSERDELETED1, true);
@@ -375,7 +377,8 @@ public class InviteFriendActivity extends BaseActivity implements View.OnClickLi
     public void onFailure(int apiId, ErrorResponseModel<AddFriendValidationError> error) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
         AppLog.e("AddLeadActivity", "onFailure  ,, msg : " + error);
         if (error.status.equals("401")) {
@@ -401,7 +404,8 @@ public class InviteFriendActivity extends BaseActivity implements View.OnClickLi
     public void onException(int apiId, String msg) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 

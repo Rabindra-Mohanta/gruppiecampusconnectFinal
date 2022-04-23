@@ -291,7 +291,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     private void loginApi() {
         btnNext.setEnabled(false);
         if (progressBar != null)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+         //   progressBar.setVisibility(View.VISIBLE);
 
         if (RememberPref.getInstance(this).contains(RememberPref.REMEMBER_USERNAME)) {
             String number = RememberPref.getInstance(this).getString(RememberPref.REMEMBER_USERNAME);
@@ -410,7 +411,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
         btnNext.setEnabled(true);
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.API_VERSION) {
             VersionCheckResponse res = (VersionCheckResponse) response;
@@ -451,7 +453,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     public void onFailure(int apiId, String msg) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
         btnNext.setEnabled(true);
     }
 
@@ -459,7 +462,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     public void onException(int apiId, String msg) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         btnNext.setEnabled(true);
     }
 

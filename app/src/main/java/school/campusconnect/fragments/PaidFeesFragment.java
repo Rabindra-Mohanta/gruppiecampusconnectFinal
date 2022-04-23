@@ -100,14 +100,16 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
         } else {
             filter = "approved";
         }
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+     //   progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getPaidStudentList(this, GroupDashboardActivityNew.groupId,filter,selectedClassId);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+   //     progressBar.setVisibility(View.GONE);
         PaidStudentFeesRes res = (PaidStudentFeesRes) response;
         List<PaidStudentFeesRes.StudentFees> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -117,12 +119,14 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //     progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //     progressBar.setVisibility(View.GONE);
     }
 
     public void callApi(String selectedClassId) {

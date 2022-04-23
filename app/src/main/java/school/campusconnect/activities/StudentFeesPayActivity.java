@@ -355,7 +355,8 @@ public class StudentFeesPayActivity extends BaseActivity {
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
 
         Toast.makeText(StudentFeesPayActivity.this, getResources().getString(R.string.toast_successfully_paid), Toast.LENGTH_SHORT).show();
         LeafPreference.getInstance(StudentFeesPayActivity.this).setBoolean("fees_paid", true);
@@ -366,14 +367,16 @@ public class StudentFeesPayActivity extends BaseActivity {
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
         Toast.makeText(StudentFeesPayActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 
@@ -432,7 +435,8 @@ public class StudentFeesPayActivity extends BaseActivity {
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                     //   progressBar.setVisibility(View.GONE);
                         if (progressDialog != null) {
                             progressDialog.dismiss();
                         }

@@ -241,14 +241,16 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
     private void getData()
     {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+    //    progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getBoothMember(this, GroupDashboardActivityNew.groupId, classData.teamId,committeeData.getCommitteeId());
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         BoothMemberResponse res = (BoothMemberResponse) response;
         saveToLocal(res.getData());
 
@@ -290,12 +292,14 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesStudentAdapter extends RecyclerView.Adapter<ClassesStudentAdapter.ViewHolder> {

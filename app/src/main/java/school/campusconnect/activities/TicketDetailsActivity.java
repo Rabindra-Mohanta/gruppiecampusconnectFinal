@@ -240,7 +240,8 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    ProgressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(ProgressBar);
+                   // ProgressBar.setVisibility(View.VISIBLE);
                     manager.deleteTicket(TicketDetailsActivity.this, GroupDashboardActivityNew.groupId,taskData.getIssuePostId());
                 }
             });
@@ -602,7 +603,8 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        ProgressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   ProgressBar.setVisibility(View.GONE);
 
         switch (apiId)
         {
@@ -654,13 +656,16 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onFailure(int apiId, String msg) {
-        ProgressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
+        //   ProgressBar.setVisibility(View.GONE);
         AppLog.e(TAG, "onFailure " + msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        ProgressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   ProgressBar.setVisibility(View.GONE);
         AppLog.e(TAG, "onException " + msg);
     }
 
@@ -709,7 +714,8 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
-                        ProgressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(ProgressBar);
+                        //ProgressBar.setVisibility(View.VISIBLE);
 
                         if (Role.equalsIgnoreCase("isAdmin"))
                         {
@@ -754,7 +760,8 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
-                        ProgressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(ProgressBar);
+                        //ProgressBar.setVisibility(View.VISIBLE);
                         if (Role.equalsIgnoreCase("isAdmin"))
                         {
                             manager.setApprovedTicketByAdmin(TicketDetailsActivity.this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),Status);
@@ -886,12 +893,14 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     {
         AddCommentTaskDetailsReq req = new AddCommentTaskDetailsReq();
         req.setText(etComment.getText().toString());
-        ProgressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(ProgressBar);
+        //ProgressBar.setVisibility(View.VISIBLE);
         manager.setAddCommentTaskDetails(this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),req);
     }
     private void getComment()
     {
-        ProgressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(ProgressBar);
+        //ProgressBar.setVisibility(View.VISIBLE);
         manager.getCommentTaskDetails(this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId());
     }
     private void redirectMap()

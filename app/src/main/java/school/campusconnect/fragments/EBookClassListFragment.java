@@ -104,13 +104,15 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
 
     private void getClassList() {
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
         leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+     //   progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -146,12 +148,14 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        //   progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        //   progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder> {

@@ -154,7 +154,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
                         public void onClick(DialogInterface dialog, int which) {
                             // showLoadingDialog();
                             if(progressBar!=null)
-                                progressBar.setVisibility(View.VISIBLE);
+                                showLoadingBar(progressBar);
+                                //progressBar.setVisibility(View.VISIBLE);
                             LeafManager manager=new LeafManager();
                             manager.deleteGroup(CreateAccountActivity.this,groupItem.getGroupId()+"");
                         }
@@ -219,7 +220,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
                 if (isConnectionAvailable()) {
                     if (isValid()) {
                         if(progressBar!=null)
-                            progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(progressBar);
+                        //progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
 
                         CreateGroupReguest request = new CreateGroupReguest();
@@ -287,7 +289,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+            //progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_ID_CREATE_GROUP) {
             Toast.makeText(this, getString(R.string.msg_creted), Toast.LENGTH_LONG).show();
             LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGROUPUPDATED, true);
@@ -350,7 +353,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         //hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
        AppLog.e("CreateAccount", "onFailure  ,, msg : " + error);
         if (error.status.equals("401")) {
@@ -374,7 +378,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
     public void onException(int apiId, String msg) {
         //hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

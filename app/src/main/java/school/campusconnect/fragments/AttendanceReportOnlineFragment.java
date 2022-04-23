@@ -111,7 +111,8 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
 
     private void getAttendanceReport(MonthData item) {
         selectedMonthYear = item.dispName+"_"+Calendar.getInstance().get(Calendar.YEAR);
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getAttendanceReportOnline(this, GroupDashboardActivityNew.groupId, team_id, item.month, Calendar.getInstance().get(Calendar.YEAR));
     }
@@ -127,7 +128,8 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         if (getActivity() == null)
             return;
 
@@ -142,12 +144,14 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.ViewHolder> {

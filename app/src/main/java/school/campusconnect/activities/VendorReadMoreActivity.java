@@ -262,7 +262,8 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+         //   progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
             LeafManager manager = new LeafManager();
             manager.deleteVendorPost(this, GroupDashboardActivityNew.groupId+"",currentItem.vendorId);
         } else {
@@ -279,8 +280,8 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
-
+       // progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         switch (apiId) {
             case LeafManager.API_VENDOR_DELETE:
                 Toast.makeText(this, getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
@@ -293,8 +294,8 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
-
+       // progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         if (msg.contains("401:Unauthorized") || msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
@@ -312,6 +313,7 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
     @Override
     public void onException(int apiId, String msg) {
+        hideLoadingBar();
             Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

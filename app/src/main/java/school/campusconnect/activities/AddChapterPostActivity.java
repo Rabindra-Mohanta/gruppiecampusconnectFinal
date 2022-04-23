@@ -266,7 +266,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         }
     }
     private void getChapters() {
-        progressBar.setVisibility(View.VISIBLE);
+
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
@@ -373,7 +375,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                //  progressBar.setVisibility(View.VISIBLE);
               //  btnShare.setEnabled(false);
 
                 mainRequest = new AddGalleryPostRequest();
@@ -620,7 +623,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            progressBar.setVisibility(View.GONE);
+                            hideLoadingBar();
+                           // progressBar.setVisibility(View.GONE);
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
@@ -643,7 +647,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        // progressBar.setVisibility(View.GONE);
                         if (progressDialog!=null) {
                             progressDialog.dismiss();
                         }
@@ -720,7 +725,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        // progressBar.setVisibility(View.GONE);
                         if (progressDialog != null) {
                             progressDialog.dismiss();
                         }
@@ -877,7 +883,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         switch (apiId) {
 
             case LeafManager.API_CHAPTER_ADD:
@@ -953,7 +960,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
     //    btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -978,7 +986,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     public void onException(int apiId, String error) {
  //       btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(AddChapterPostActivity.this, error, Toast.LENGTH_SHORT).show();
 
     }

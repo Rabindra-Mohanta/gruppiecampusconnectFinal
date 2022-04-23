@@ -112,7 +112,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
         if (isConnectionAvailable())
         {
-            binding.progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(binding.progressBar);
+           // binding.progressBar.setVisibility(View.VISIBLE);
             manager.getVoterProfile(this,GroupDashboardActivityNew.groupId,userID);
         }
         else
@@ -190,7 +191,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
     private void makeAppAdmin() {
 
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+    //    binding.progressBar.setVisibility(View.VISIBLE);
         manager.makeAppAdmin(this,GroupDashboardActivityNew.groupId,userID);
 
     }
@@ -201,7 +203,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         manager.removeTeamUser(new LeafManager.OnAddUpdateListener<AddPostValidationError>() {
             @Override
             public void onSuccess(int apiId, BaseResponse response) {
-                binding.progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+                //binding.progressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent();
                 setResult(RESULT_OK,i);
@@ -210,13 +213,15 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
             @Override
             public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-                binding.progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+                //binding.progressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),error.message,Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onException(int apiId, String error) {
-                binding.progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+                //binding.progressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
                 Log.e(TAG,"onException"+error);
             }
@@ -307,7 +312,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                 if (position != 0)
                 {
                     isCasteClickable = true;
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(binding.progressBar);
+                   // binding.progressBar.setVisibility(View.VISIBLE);
                     manager.getCaste(VoterProfileActivity.this,binding.etReligion.getSelectedItem().toString());
                 }
                 else
@@ -452,14 +458,18 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         item.image = imageFragment.getmProfileImage();
 
         Log.e(TAG,"request"+ new Gson().toJson(item));
-        binding.progressBar.setVisibility(View.VISIBLE);
+
+        showLoadingBar(binding.progressBar);
+        // binding.progressBar.setVisibility(View.VISIBLE);
         manager.updateProfileVoter(VoterProfileActivity.this,GroupDashboardActivityNew.groupId,userID, item);
 
     }
 
 
     public void onSuccess(int apiId, BaseResponse response) {
-        binding.progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
+       // binding.progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.API_VOTER_PROFILE_GET)
         {
@@ -574,7 +584,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
             if (casteId != null)
             {
-                binding.progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(binding.progressBar);
+          //      binding.progressBar.setVisibility(View.VISIBLE);
                 manager.getSubCaste(VoterProfileActivity.this,casteId);
             }
 
@@ -746,7 +757,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             imageFragment.setInitialLatterImage(data.name);
         }
 
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+       // binding.progressBar.setVisibility(View.VISIBLE);
         manager.getReligion(this);
 
     }
@@ -798,13 +810,15 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
 
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onFailure"+msg);
     }
 
 
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onException"+msg);
 
     }
@@ -825,7 +839,8 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
         if (casteId != null)
         {
-            binding.progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(binding.progressBar);
+       //     binding.progressBar.setVisibility(View.VISIBLE);
             manager.getSubCaste(this,casteId);
         }
     }

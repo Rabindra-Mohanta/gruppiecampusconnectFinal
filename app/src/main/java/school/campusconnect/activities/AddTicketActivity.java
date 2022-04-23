@@ -228,7 +228,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         gotGPS = false;
         handler = new Handler();
 
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+       // binding.progressBar.setVisibility(View.VISIBLE);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         setSupportActionBar(mToolBar);
@@ -280,8 +281,9 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        Log.e(TAG,"progressbar Visibility"+binding.progressBar.getVisibility());
-        binding.progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
+      //  binding.progressBar.setVisibility(View.GONE);
 
         switch (apiId)
         {
@@ -290,7 +292,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 resultIssue = res.getData();
                 AppLog.e(TAG, "ClassResponse " + new Gson().toJson(resultIssue));
                 bindIssue();
-                binding.progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(binding.progressBar);
+                // binding.progressBar.setVisibility(View.VISIBLE);
                 searchIssueFragmentDialog.setData(res.getData());
                 leafManager.getSubBooth(this,GroupDashboardActivityNew.groupId);
                 break;
@@ -315,12 +318,14 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  binding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  binding.progressBar.setVisibility(View.GONE);
     }
 
     private void bindIssue() {
@@ -578,7 +583,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             if (isValid(true)) {
 
                 if (binding.progressBar != null)
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(binding.progressBar);
+                // binding.progressBar.setVisibility(View.VISIBLE);
 
                 mainRequest = new AddTicketRequest();
 
@@ -1281,7 +1287,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            binding.progressBar.setVisibility(View.GONE);
+                            hideLoadingBar();
+                            //  binding.progressBar.setVisibility(View.GONE);
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
@@ -1304,7 +1311,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        binding.progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        //  binding.progressBar.setVisibility(View.GONE);
                         if (progressDialog!=null) {
                             progressDialog.dismiss();
                         }
@@ -1377,7 +1385,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        binding.progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        //  binding.progressBar.setVisibility(View.GONE);
                         if (progressDialog != null) {
                             progressDialog.dismiss();
                         }

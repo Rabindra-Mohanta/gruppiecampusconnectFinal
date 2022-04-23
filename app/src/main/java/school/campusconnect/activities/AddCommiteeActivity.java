@@ -89,7 +89,8 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
                     AddCommitteeReq req = new AddCommitteeReq();
                     req.setCommitteeName(binding.etName.getText().toString());
 
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(binding.progressBar);
+                   // binding.progressBar.setVisibility(View.VISIBLE);
 
                     if (binding.btnAddCommittee.getText().toString().equalsIgnoreCase("Add"))
                     {
@@ -107,7 +108,8 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // binding.progressBar.setVisibility(View.GONE);
 
         switch (apiId)
         {
@@ -148,12 +150,14 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // binding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // binding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -182,7 +186,8 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (isConnectionAvailable()) {
-                            binding.progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(binding.progressBar);
+                            //binding.progressBar.setVisibility(View.VISIBLE);
                             LeafManager manager = new LeafManager();
                             manager.removeCommittee(AddCommiteeActivity.this, GroupDashboardActivityNew.groupId,TeamID,committeeID);
                         } else {

@@ -78,7 +78,9 @@ public class RemoveBannerActivity extends BaseActivity implements LeafManager.On
                 req.setBannerFileType("image");
 
                 AppLog.e(TAG, "send data : " + new Gson().toJson(req));
-                binding.progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(binding.progressBar);
+                //  progressBar.setVisibility(View.VISIBLE);
+             //   binding.progressBar.setVisibility(View.VISIBLE);
                 manager.addBannerList(RemoveBannerActivity.this,GroupDashboardActivityNew.groupId,req);
 
             }
@@ -96,8 +98,8 @@ public class RemoveBannerActivity extends BaseActivity implements LeafManager.On
 
 
     public void onSuccess(int apiId, BaseResponse response) {
-
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //binding.progressBar.setVisibility(View.GONE);
        if (apiId == LeafManager.API_ADD_BANNER_LIST)
        {
            Intent returnIntent = new Intent();
@@ -108,7 +110,8 @@ public class RemoveBannerActivity extends BaseActivity implements LeafManager.On
 
 
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //binding.progressBar.setVisibility(View.GONE);
         if (msg.contains("401:Unauthorized") || msg.contains("401")) {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
@@ -127,7 +130,8 @@ public class RemoveBannerActivity extends BaseActivity implements LeafManager.On
 
 
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 

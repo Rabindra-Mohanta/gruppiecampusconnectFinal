@@ -89,7 +89,8 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
 
         init();
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+   //     progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTeamSubjects(this, groupId, teamId);
     }
@@ -240,7 +241,8 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
                     request.subjects.add(hashMap);
                     request.duration = etFrom.getText().toString() + " to " + etTo.getText().toString();
 
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                   // progressBar.setVisibility(View.VISIBLE);
                     AppLog.e(TAG, "request :" + request);
                     leafManager.createMarkCard(this, GroupDashboardActivityNew.groupId, teamId, request);
                 }
@@ -303,7 +305,8 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_CREATE_MARK_CARD:
@@ -327,7 +330,8 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
     @Override
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -348,7 +352,8 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

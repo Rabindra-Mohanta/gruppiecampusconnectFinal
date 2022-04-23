@@ -345,7 +345,8 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         if (!isConnectionAvailable()) {
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
+     //   progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
         LeafManager leafManager = new LeafManager();
 
         if(mGroupItem.canPost){
@@ -357,7 +358,9 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+     //   progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
         BoothResponse res = (BoothResponse) response;
         List<MyTeamData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -505,12 +508,14 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+     //   progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+      //  progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>

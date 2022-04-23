@@ -131,7 +131,8 @@ public class MarkSheetListFragment extends BaseFragment implements LeafManager.O
             }
         });
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getMarkCardList(this, mGroupId, teamId);
     }
@@ -167,7 +168,8 @@ public class MarkSheetListFragment extends BaseFragment implements LeafManager.O
         if(getActivity()==null){
             return;
         }
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_MARK_CARD_LIST: {
                 MarkCardListResponse res = (MarkCardListResponse) response;

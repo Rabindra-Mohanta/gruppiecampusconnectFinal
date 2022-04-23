@@ -111,7 +111,8 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         initviews();
 
         if(progressBar!=null)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //progressBar.setVisibility(View.VISIBLE);
 
         LeafManager manager = new LeafManager();
         manager.getProfileDetails(this);
@@ -212,7 +213,8 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
     public void callUpdateApi() {
         if (isValid()) {
             if(progressBar!=null)
-            progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+            //progressBar.setVisibility(View.VISIBLE);
 
             LeafManager manager = new LeafManager();
             ProfileItemUpdate item = new ProfileItemUpdate();
@@ -339,12 +341,14 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
             imageFragment.isImageChanged = false;
             finish();
         }
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<ProfileValidationError> error) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         try {
             if(error.errors==null)
                 return;
@@ -434,7 +438,8 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
     }
 

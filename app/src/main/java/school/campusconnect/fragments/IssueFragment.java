@@ -68,8 +68,8 @@ public class IssueFragment extends BaseFragment implements LeafManager.OnCommuni
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         init();
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+   //     progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -120,7 +120,8 @@ public class IssueFragment extends BaseFragment implements LeafManager.OnCommuni
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
         IssueListResponse res = (IssueListResponse) response;
         result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -130,12 +131,14 @@ public class IssueFragment extends BaseFragment implements LeafManager.OnCommuni
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>

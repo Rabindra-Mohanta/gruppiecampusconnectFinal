@@ -62,13 +62,15 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         leafManager.myTeamListNew(this,GroupDashboardActivityNew.groupId);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         MyTeamsResponse res = (MyTeamsResponse) response;
         List<MyTeamData> result = res.getResults();
         AppLog.e(TAG, "Team name is " + result);
@@ -78,12 +80,14 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class TeamDiscussNew extends RecyclerView.Adapter<TeamDiscussNew.ViewHolder>

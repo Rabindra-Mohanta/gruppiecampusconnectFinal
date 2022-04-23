@@ -303,17 +303,20 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         switch (view.getId()) {
             case R.id.switchAllowPost:
                 if (binding.progressBar != null)
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(binding.progressBar);
+                  //  binding.progressBar.setVisibility(View.VISIBLE);
                     manager.allowTeamPost(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
             case R.id.switchAllowAddUser:
                 if (binding.progressBar != null)
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(binding.progressBar);
+                   // binding.progressBar.setVisibility(View.VISIBLE);
                     manager.allowAddOtherMember(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
             case R.id.switchAllowComment:
                 if (binding.progressBar != null)
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(binding.progressBar);
+                   // binding.progressBar.setVisibility(View.VISIBLE);
                     manager.allowTeamPostComment(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
 
@@ -388,7 +391,8 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
             mFriendId = mLeadItem.getId();
             //  showLoadingDialog();
             if (binding.progressBar != null)
-                binding.progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(binding.progressBar);
+               // binding.progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.removeTeamUser(this, mGroupId + "", teamId, mLeadItem.getId());
 
@@ -432,7 +436,8 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         LeafPreference.getInstance(this).setBoolean(LeafPreference.ISUSERDELETED, true);
         // hideLoadingDialog();
         if (binding.progressBar != null)
-            binding.progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // binding.progressBar.setVisibility(View.GONE);
         AppLog.e("UserDetail", "onSuccessCalled");
 
         switch (apiId) {
@@ -496,7 +501,8 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     public void onFailure(int apiId, ErrorResponseModel error) {
         //hideLoadingDialog();
         if (binding.progressBar != null)
-            binding.progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // binding.progressBar.setVisibility(View.GONE);
         AppLog.e("LeadDetail", "onFailurecalled");
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -535,7 +541,8 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     public void onException(int apiId, String error) {
         //hideLoadingDialog();
         if (binding.progressBar != null)
-            binding.progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
 
         switch (apiId) {

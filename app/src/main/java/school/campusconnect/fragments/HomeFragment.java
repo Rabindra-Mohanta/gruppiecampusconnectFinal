@@ -143,7 +143,8 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     }
 
     private void getGroupList() {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getGroups(this, from, talukName, category, categoryName);
     }
@@ -181,7 +182,9 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_ID_GROUP_DETAIL) {
             AppLog.e("UserExist->", "getGroupDetail api response");
 
@@ -256,12 +259,14 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
     }
 
     public class GroupAdapterNew extends RecyclerView.Adapter<GroupAdapterNew.ViewHolder> {
@@ -378,7 +383,8 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
         if ("constituency".equalsIgnoreCase(category)) {
             LeafManager manager = new LeafManager();
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+         //   progressBar.setVisibility(View.VISIBLE);
             manager.getGroupDetail(this, groupItem.getGroupId());
         } else {
             LeafPreference.getInstance(getActivity()).setInt(Constants.TOTAL_MEMBER, groupItem.totalUsers);

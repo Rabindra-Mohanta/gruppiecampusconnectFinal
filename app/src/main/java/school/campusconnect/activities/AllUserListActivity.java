@@ -136,7 +136,8 @@ public class AllUserListActivity extends BaseActivity implements LeafManager.OnC
         {
            // showLoadingDialog();
             if(progressBar!=null)
-            progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.getAllUsersListBySearch(this, groupId+"", search);
         }
@@ -152,7 +153,8 @@ public class AllUserListActivity extends BaseActivity implements LeafManager.OnC
        AppLog.e("ListSearchResponse", response.toString());
       //  hideLoadingDialog();
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ALL_USERS_LIST:
@@ -166,7 +168,8 @@ public class AllUserListActivity extends BaseActivity implements LeafManager.OnC
        AppLog.e("onFailureCalled", "Failure");
       //  hideLoadingDialog();
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();

@@ -162,14 +162,17 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
 
     public void getTestExam(boolean isLoading) {
         if(isLoading)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        //    progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestExamList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
 
     public void getTestLiveEvents() {
+
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+    //    progressBar.setVisibility(View.VISIBLE);
         leafManager.getTestLiveEvents(this, GroupDashboardActivityNew.groupId);
     }
 
@@ -191,7 +194,8 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_TEST_EXAM_REMOVE:
                 getTestExam(true);
@@ -266,12 +270,14 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override

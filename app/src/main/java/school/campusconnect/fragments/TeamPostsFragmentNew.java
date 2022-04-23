@@ -531,7 +531,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             AppLog.e("TeamPostFrag", "DataFromAPI");
         } else {
             mBinding.setSize(0);
-            mBinding.progressBar2.setVisibility(View.GONE);
+            hideLoadingBar();
+           // mBinding.progressBar2.setVisibility(View.GONE);
         }
     }
 
@@ -923,7 +924,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                     if (isBoothClick != null && isBoothClick.equalsIgnoreCase("yes"))
                     {
-                        Intent intent = new Intent(getActivity(), CommitteeActivity.class);
+                        Intent intent = new Intent(getContext(), CommitteeActivity.class);
                         intent.putExtra("class_data",new Gson().toJson(teamData));
                         intent.putExtra("title",teamData.name);
                         intent.putExtra("team_count", teamData.members);
@@ -938,7 +939,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                         if (teamData.category.equalsIgnoreCase("booth"))
                         {
-                            Intent intent = new Intent(getActivity(), CommitteeActivity.class);
+                            Intent intent = new Intent(getContext(), CommitteeActivity.class);
                             intent.putExtra("class_data",new Gson().toJson(teamData));
                             intent.putExtra("title",teamData.name);
                             intent.putExtra("team_count", teamData.members);
@@ -947,7 +948,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         }
                         else {
                             try {
-                                Intent intent = new Intent(getActivity(), LeadsListActivity.class);
+                                Intent intent = new Intent(getContext(), LeadsListActivity.class);
                                 intent.putExtra("id", mGroupId);
                                 intent.putExtra("team_id", team_id);
                                 intent.putExtra("class_data",new Gson().toJson(teamData));

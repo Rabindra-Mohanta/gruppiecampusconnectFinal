@@ -159,7 +159,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
     private void apiCall(boolean isLoading) {
         if(isLoading)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {
             leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
@@ -177,7 +178,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
@@ -216,12 +218,14 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
     }
 
 

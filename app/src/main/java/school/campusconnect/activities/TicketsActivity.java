@@ -214,7 +214,8 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //binding.progressBar.setVisibility(View.GONE);
 
         switch (apiId)
         {
@@ -386,22 +387,26 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //binding.progressBar.setVisibility(View.GONE);
         AppLog.e(TAG, "onFailure " + msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //binding.progressBar.setVisibility(View.GONE);
         AppLog.e(TAG, "onException " + msg);
     }
     private void getUpdateTicketListApi() {
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+      //  binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.getTicketsUpdateEvent(this,GroupDashboardActivityNew.groupId,Role,Option);
     }
 
     private void getTicketListApi() {
-        binding.progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(binding.progressBar);
+     //   binding.progressBar.setVisibility(View.VISIBLE);
         mIsLoading = true;
         leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(currentPage));
     }

@@ -146,6 +146,24 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
     }
 
+    public void showLoadingBar(View v) {
+        AppLog.e("PBAR showLoadingBar", "called");
+//        if (mProgressBar == null) {
+        // mProgressBar.setVisibility(View.VISIBLE);
+        // mProgressBar = v;
+//        } else {
+        //  mProgressBar.setVisibility(View.VISIBLE);
+//        }
+    }
+
+    public void hideLoadingBar() {
+        AppLog.e("PBAR hideLoadingBar", "called");
+       /* if (mProgressBar == null) {
+        } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar = null;
+        }*/
+    }
     public void showKeyboard(View view)
     {
         InputMethodManager inputMethodManager =

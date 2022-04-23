@@ -218,7 +218,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+            //    progressBar.setVisibility(View.VISIBLE);
 
             LeafManager manager = new LeafManager();
             OtpVerifyReq otpVerifyReq = new OtpVerifyReq();
@@ -294,7 +295,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                //progressBar.setVisibility(View.VISIBLE);
 
             LeafManager manager = new LeafManager();
             LoginRequest request = new LoginRequest();
@@ -362,7 +364,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             hide_keyboard();
             //showLoadingDialog();
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+                //progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             ForgotPasswordRequest request = new ForgotPasswordRequest();
             request.countryCode = countryCode;
@@ -392,7 +395,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
             //hideLoadingDialog();
             if (progressBar != null)
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+            //    progressBar.setVisibility(View.GONE);
 
             if (isIndia) {
                 AppLog.e("TESTSUCC", "if");
@@ -495,7 +499,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
         if (apiId == LeafManager.API_JOIN_GROUP) {
             AppLog.e("UserExist->", "join group api response");
             if (progressBar != null)
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+               // progressBar.setVisibility(View.GONE);
 
             AppLog.e("UserExist->", "getGroupDetail api called");
             manager.getGroupDetail(this, BuildConfig.APP_ID);
@@ -532,7 +537,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
         if (apiId == LeafManager.API_ID_OTP_VERIFY) {
             if (progressBar != null)
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+               // progressBar.setVisibility(View.GONE);
 
             OtpVerifyRes otpVerifyRes = (OtpVerifyRes) response;
             if (otpVerifyRes.data != null && otpVerifyRes.data.otpVerified) {
@@ -598,7 +604,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+            //progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.API_JOIN_GROUP) {
             AppLog.e("UserExist-> on Failure", "join group api response");
@@ -615,7 +622,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     public void onFailure(int apiId, ErrorResponseModel<ForgotPasswordValidationError> error) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         ForgotPasswordValidationError fieldErrors = error.errors.get(0);
     }
 
@@ -624,7 +632,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

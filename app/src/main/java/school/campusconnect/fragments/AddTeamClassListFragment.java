@@ -60,8 +60,8 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -79,7 +79,8 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -89,12 +90,14 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>

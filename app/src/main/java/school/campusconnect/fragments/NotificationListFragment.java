@@ -178,7 +178,8 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
     {
         if(isConnectionAvailable())
         {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+        //    progressBar.setVisibility(View.VISIBLE);
             mIsLoading = true;
             leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId,String.valueOf(currentPage));
         }
@@ -232,7 +233,8 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
 
         NotificationListRes res = (NotificationListRes) response;
         totalPages = res.getTotalNumberOfPages();
@@ -284,12 +286,14 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder>

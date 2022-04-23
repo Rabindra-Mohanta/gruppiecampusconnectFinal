@@ -107,7 +107,8 @@ public class AdminStudentFeesActivity extends BaseActivity {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
-                            progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(progressBar);
+                          //  progressBar.setVisibility(View.VISIBLE);
                             leafManager.approveOrHoldFees(AdminStudentFeesActivity.this, groupId, team_id, user_id, resData.paymentId, "approve");
                         }
 
@@ -129,7 +130,8 @@ public class AdminStudentFeesActivity extends BaseActivity {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
-                            progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(progressBar);
+                            //  progressBar.setVisibility(View.VISIBLE);
                             leafManager.approveOrHoldFees(AdminStudentFeesActivity.this, groupId, team_id, user_id, resData.paymentId, "notApprove");
                         }
 
@@ -151,7 +153,8 @@ public class AdminStudentFeesActivity extends BaseActivity {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
-                            progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(progressBar);
+                            //  progressBar.setVisibility(View.VISIBLE);
                             leafManager.approveOrHoldFees(AdminStudentFeesActivity.this, groupId, team_id, user_id, resData.paymentId, "hold");
                         }
 
@@ -215,7 +218,8 @@ public class AdminStudentFeesActivity extends BaseActivity {
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
         if(apiId==LeafManager.API_DUE_DATE_STATUS){
 
         }else {

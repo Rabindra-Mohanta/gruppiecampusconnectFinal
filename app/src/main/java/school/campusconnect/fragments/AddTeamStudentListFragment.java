@@ -85,7 +85,8 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     @Override
     public void onStart() {
         super.onStart();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this, groupId+"", teamId+"",false);
 
         if(getActivity()!=null){
@@ -113,7 +114,8 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED,true);
             getActivity().finish();
         } else {
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
             StudentRes res = (StudentRes) response;
             List<StudentRes.StudentData> result = res.getData();
             AppLog.e(TAG, "ClassResponse " + result);
@@ -135,7 +137,8 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     public void onClick(View view) {
         if (adapter != null && adapter.getSelectedCount() > 0) {
             LeafManager leafManager = new LeafManager();
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+          //  progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
@@ -144,13 +147,15 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         Toast.makeText(getActivity(), msg+"", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
     }
     public void selectAll(boolean checked) {
         if(adapter!=null){

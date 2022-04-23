@@ -250,7 +250,9 @@ public class PublicGroupJoinFragment extends BaseFragment implements LeafManager
                     mAdapter = new JoinAdapter(list, this, count);
                     mBinding.recyclerView.setAdapter(mAdapter);
 
-                    mBinding.progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+
+                  //  mBinding.progressBar.setVisibility(View.GONE);
                 } else {
                     try {
                         Toast.makeText(getActivity(), getResources().getString(R.string.toast_add_to_group), Toast.LENGTH_SHORT).show();

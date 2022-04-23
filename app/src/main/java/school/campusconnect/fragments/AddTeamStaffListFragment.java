@@ -79,7 +79,8 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     @Override
     public void onStart() {
         super.onStart();
-        progressBar.setVisibility(View.VISIBLE);
+       showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this, groupId+"", teamId+"",false);
 
     }
@@ -104,7 +105,8 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED,true);
             getActivity().finish();
         } else {
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
             StaffResponse res = (StaffResponse) response;
             List<StaffResponse.StaffData> result = res.getData();
             AppLog.e(TAG, "ClassResponse " + result);
@@ -126,7 +128,8 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     public void onClick(View view) {
         if (adapter != null && adapter.getSelectedCount() > 0) {
             LeafManager leafManager = new LeafManager();
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+         //   progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_select_staff), Toast.LENGTH_SHORT).show();
@@ -135,13 +138,15 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         Toast.makeText(getActivity(), msg+"", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
     }
 
     public void selectAll(boolean checked) {

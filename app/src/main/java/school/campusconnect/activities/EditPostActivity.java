@@ -176,7 +176,9 @@ public class EditPostActivity extends BaseActivity implements View.OnClickListen
             hide_keyboard();
             //  showLoadingDialog();
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+
+                showLoadingBar(progressBar);
+            //  progressBar.setVisibility(View.VISIBLE);
 
             LeafManager manager = new LeafManager();
             AddPostRequestDescription request = new AddPostRequestDescription();
@@ -260,7 +262,8 @@ public class EditPostActivity extends BaseActivity implements View.OnClickListen
 
         //  hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         Toast.makeText(this, getResources().getString(R.string.toast_shared_successfully), Toast.LENGTH_SHORT).show();
 
@@ -291,14 +294,16 @@ public class EditPostActivity extends BaseActivity implements View.OnClickListen
 //        For OnCommunicationListener
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<BaseValidationError> error) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
        AppLog.e("GeneralPostFragment", "onFailure  ,, msg : " + error);
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -312,7 +317,8 @@ public class EditPostActivity extends BaseActivity implements View.OnClickListen
     public void onException(int apiId, String error) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
 

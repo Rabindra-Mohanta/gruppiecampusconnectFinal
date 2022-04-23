@@ -130,7 +130,8 @@ public class StudentFeesActivity extends BaseActivity {
 
     private void getStudentFeesDetail() {
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       //progressBar.setVisibility(View.VISIBLE);
         leafManager.getStudentFees(this, groupId, team_id, user_id);
     }
 
@@ -138,7 +139,9 @@ public class StudentFeesActivity extends BaseActivity {
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+
+        //    progressBar.setVisibility(View.GONE);
 
         StudentFeesRes res = (StudentFeesRes) response;
         if (res.getData().size() > 0) {

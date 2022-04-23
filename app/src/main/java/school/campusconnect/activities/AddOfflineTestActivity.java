@@ -317,12 +317,14 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 LeafManager leafManager = new LeafManager();
-                                progressBar.setVisibility(View.VISIBLE);
+                                showLoadingBar(progressBar);
+                                //progressBar.setVisibility(View.VISIBLE);
                                 leafManager.createOfflineTest(AddOfflineTestActivity.this, groupId, teamId, request);
                             }
                         });
                     } else {
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                        //progressBar.setVisibility(View.VISIBLE);
                         leafManager.createOfflineTest(this, groupId, teamId, request);
                     }
                 }
@@ -408,7 +410,8 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_SUBJECT_STAFF:
@@ -435,7 +438,8 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
     @Override
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -456,7 +460,8 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 

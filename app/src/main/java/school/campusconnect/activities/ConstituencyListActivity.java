@@ -170,7 +170,8 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
 
     private void getConstituencyList() {
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             leafManager.getConstituencyList(this);
         } else {
@@ -216,7 +217,8 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_ID_GROUP_DETAIL) {
             AppLog.e("UserExist->", "getGroupDetail api response");
 
@@ -353,7 +355,8 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
 
         if (item.groupCount == 1) {
             LeafManager manager = new LeafManager();
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //progressBar.setVisibility(View.VISIBLE);
             manager.getGroupDetail(this, item.getGroupId());
         } else {
             Intent intent = new Intent(ConstituencyListActivity.this, Home.class);

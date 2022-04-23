@@ -372,7 +372,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                   // progressBar.setVisibility(View.VISIBLE);
            //     btnShare.setEnabled(false);
 
                 AddPostRequest request = new AddPostRequest();
@@ -723,7 +724,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            progressBar.setVisibility(View.GONE);
+                            hideLoadingBar();
+                        //    progressBar.setVisibility(View.GONE);
                             if (progressDialog != null) {
                                 progressDialog.dismiss();
                             }
@@ -745,7 +747,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        //    progressBar.setVisibility(View.GONE);
                         if (progressDialog != null) {
                             progressDialog.dismiss();
                         }
@@ -809,7 +812,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        //    progressBar.setVisibility(View.GONE);
                         if (progressDialog != null) {
                             progressDialog.dismiss();
                         }
@@ -937,13 +941,15 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 break;
             case R.id.switch_reply:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                  //  progressBar.setVisibility(View.VISIBLE);
                 manager.allowPersonalReply(this, group_id + "", friend_id);
                 break;
 
             case R.id.switch_comment:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                  //  progressBar.setVisibility(View.VISIBLE);
                 manager.allowPersonalComment(this, group_id + "", friend_id);
                 break;
 
@@ -983,7 +989,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ALLOW_PERSONAL_REPLY:
 
@@ -1042,7 +1049,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
    //     btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -1083,7 +1091,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     public void onException(int apiId, String error) {
        // btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
         Toast.makeText(AddPostActivity.this, error, Toast.LENGTH_SHORT).show();
 
         switch (apiId) {

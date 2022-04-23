@@ -84,7 +84,8 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
 
         isAdmin = getArguments().getBoolean("isAdmin");
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
 
         init();
 
@@ -139,7 +140,8 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         StaffResponse res = (StaffResponse) response;
         result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -149,12 +151,14 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
 

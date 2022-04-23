@@ -126,7 +126,8 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
         {
             if (isConnectionAvailable())
             {
-                binding.progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(binding.progressBar);
+            //    binding.progressBar.setVisibility(View.VISIBLE);
                 manager.getWorkerStreetList(this, GroupDashboardActivityNew.groupId,teamId,"masterList");
             }
             else
@@ -152,7 +153,8 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // binding.progressBar.setVisibility(View.GONE);
 
         if (LeafManager.WORKER_STREET_LIST == apiId)
         {
@@ -201,14 +203,16 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onFailure(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onFailure"+msg);
 
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // binding.progressBar.setVisibility(View.GONE);
         Log.e(TAG,"onException"+msg);
     }
 

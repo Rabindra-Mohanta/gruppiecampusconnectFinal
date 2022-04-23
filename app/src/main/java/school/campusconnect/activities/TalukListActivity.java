@@ -119,7 +119,8 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
 
     private void getTaluksList() {
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+         //   progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             leafManager.getTaluks(this);
         } else {
@@ -165,7 +166,8 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         TaluksRes taluksRes = (TaluksRes) response;
         AppLog.e(TAG, "taluksRes " + taluksRes);
         rvClass.setAdapter(new GroupAdapterNew(taluksRes.data));

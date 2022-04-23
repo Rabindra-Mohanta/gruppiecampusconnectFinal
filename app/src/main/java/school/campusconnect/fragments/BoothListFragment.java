@@ -251,13 +251,13 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             return;
         }
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+     //   progressBar.setVisibility(View.VISIBLE);
         leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+      //  progressBar.setVisibility(View.GONE);
         BoothResponse res = (BoothResponse) response;
         //result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -325,12 +325,12 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+      //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+      //  progressBar.setVisibility(View.GONE);
     }
 
 

@@ -47,8 +47,8 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+     //   progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -62,7 +62,8 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
         SubjectResponse res = (SubjectResponse) response;
         List<SubjectResponse.SubjectData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -72,12 +73,14 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder>

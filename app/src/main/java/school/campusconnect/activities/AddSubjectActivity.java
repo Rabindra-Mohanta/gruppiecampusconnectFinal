@@ -87,7 +87,8 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_subject), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                   // progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteSubjects(AddSubjectActivity.this, GroupDashboardActivityNew.groupId, subjectData.getSubjectId());
                 }
             });
@@ -137,14 +138,16 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
                         SubjectResponse.SubjectData request = new SubjectResponse.SubjectData();
                         request.name = etName.getText().toString();
                         request.subjects = adapter.getList();
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                        // progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.editSubject(this, GroupDashboardActivityNew.groupId, subjectData.subjectId, request);
                     } else {
                         SubjectResponse.SubjectData request = new SubjectResponse.SubjectData();
                         request.name = etName.getText().toString();
                         request.subjects = adapter.getList();
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                        // progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.addSubject(this, GroupDashboardActivityNew.groupId, request);
                         // }
@@ -170,7 +173,8 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+     //       progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_SUBJECTS_ADD:
@@ -190,7 +194,8 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //       progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -211,7 +216,8 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //       progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

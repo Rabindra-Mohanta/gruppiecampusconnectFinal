@@ -154,7 +154,8 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
        AppLog.e("SearchResponse", response.toString());
         //hideLoadingDialog();
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
 
@@ -172,7 +173,8 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         //hideLoadingDialog();
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
        AppLog.e("onFailure", "Failure");
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -186,7 +188,8 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
     public void onException(int apiId, String error) {
         //hideLoadingDialog();
         if(progressBar!=null)
-        progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class ObservableString extends BaseObservable {
@@ -298,7 +301,8 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                     if (isValid()) {
                        // showLoadingDialog();
                         if(progressBar!=null)
-                        progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(progressBar);
+               //         progressBar.setVisibility(View.VISIBLE);
 
 //                        if (!edtVideo.editText.getText().toString().equals("")) {
                         if (!videoUrl.equals("")) {

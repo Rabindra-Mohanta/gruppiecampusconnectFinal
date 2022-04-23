@@ -318,7 +318,8 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                    //progressBar.setVisibility(View.VISIBLE);
                 //btnShare.setEnabled(false);
 
                 mainRequest = new AddHwPostRequest();
@@ -546,7 +547,8 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
 
                         }
                         if (TransferState.FAILED.equals(state)) {
-                            progressBar.setVisibility(View.GONE);
+                            hideLoadingBar();
+                          //  progressBar.setVisibility(View.GONE);
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
@@ -569,7 +571,8 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        //  progressBar.setVisibility(View.GONE);
                         if (progressDialog!=null) {
                             progressDialog.dismiss();
                         }
@@ -642,7 +645,8 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
 
                     @Override
                     public void onError(int id, Exception ex) {
-                        progressBar.setVisibility(View.GONE);
+                        hideLoadingBar();
+                        //  progressBar.setVisibility(View.GONE);
                         if (progressDialog != null) {
                             progressDialog.dismiss();
                         }
@@ -771,7 +775,8 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         switch (apiId) {
 
             case LeafManager.API_SUBMIT_ASSIGNMENT:
@@ -793,7 +798,8 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
       //  btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -820,7 +826,8 @@ public class SubmitAssignmentActivity extends BaseActivity implements LeafManage
     public void onException(int apiId, String error) {
     //    btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         Toast.makeText(SubmitAssignmentActivity.this, error, Toast.LENGTH_SHORT).show();
 
     }

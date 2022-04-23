@@ -184,7 +184,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             return;
         }
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getBoothVoterList(this, GroupDashboardActivityNew.groupId,boothID);
     }
 
@@ -241,7 +242,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+    //    progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.API_BOOTH_VOTER_LIST)
         {
@@ -293,7 +295,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
 
         Log.e(TAG,"onFailure"+msg);
 
@@ -301,7 +304,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
 
         Log.e(TAG,"onException"+msg);
     }

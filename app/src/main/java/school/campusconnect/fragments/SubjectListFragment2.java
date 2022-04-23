@@ -54,7 +54,8 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
         team_id=getArguments().getString("team_id");
         className=getArguments().getString("className");
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -68,7 +69,8 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
         SubjectStaffResponse res = (SubjectStaffResponse) response;
         List<SubjectStaffResponse.SubjectData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -78,12 +80,14 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder>

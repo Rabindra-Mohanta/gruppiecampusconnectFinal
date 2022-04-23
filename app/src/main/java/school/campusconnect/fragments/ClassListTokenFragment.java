@@ -54,8 +54,8 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -72,7 +72,8 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+    //    progressBar.setVisibility(View.GONE);
         if(getActivity()==null){
             return;
         }
@@ -89,12 +90,14 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -218,7 +221,8 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
         SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), getResources().getString(R.string.smb_add_jitsi_token), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+             //   progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.addJitiToken(ClassListTokenFragment.this, GroupDashboardActivityNew.groupId, classData.getId());
             }
