@@ -164,6 +164,7 @@
     <string name="lbl_pincode">Pincode</string>
     <string name="lbl_id_num">Id Number</string>
     <string name="lbl_setPin">Set Pin</string>
+    <string name="lbl_setFingerPrint">Register Fingerprint</string>
     <string name="lbl_setOldPin">Old Pin</string>
     <string name="lbl_setNewPin">New Pin</string>
     <string name="lbl_conPin">Confirm Pin</string>
@@ -212,6 +213,7 @@
     <string name="lbl_search_contact"><u>Add from contacts</u></string>
     <string name="lbl_add_contact">Add From Contact</string>
     <string name="lbl_or">OR</string>
+    <string name="lbl_finger_print">Fingerprint</string>
     <string name="lbl_allow_post">Allow Post</string>
     <string name="lbl_allow_comments">Allow Comments</string>
     <string name="lbl_TotalOpenIssueTickets">Total Open Issues Tickets</string>
@@ -1118,7 +1120,6 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_no_ticket_found">No Tickets Found...</string>
     <string name="txt_please_provide_marks">Please Provide Marks</string>
     <string name="txt_reply">Reply</string>
-
 
 
     <string name="hint_search_voter">Search Voter</string>

@@ -1,21 +1,23 @@
 package school.campusconnect.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import android.Manifest;
+import android.app.KeyguardManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.CancellationSignal;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +53,9 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
     private void inits() {
 
+
+
+
         manager = new LeafManager();
 
 
@@ -82,6 +87,14 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
         }
         else
         {
+            if (LeafPreference.getInstance(this).getBoolean(LeafPreference.FINGERPRINT))
+            {
+                binding.llFingerPrint.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                binding.llFingerPrint.setVisibility(View.GONE);
+            }
             binding.lblForgot.setVisibility(View.VISIBLE);
             binding.lblHint.setText(getResources().getString(R.string.txt_pin));
             ButtonValidation = "Next";
@@ -169,9 +182,161 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 logout();
             }
         });
+
+
+        binding.btnAddFingerPrint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (checkBiometricSupport())
+                {
+                    BiometricPrompt biometricPrompt = null;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        biometricPrompt = new BiometricPrompt.Builder(LoginPinActivity.this)
+                                .setTitle("Set FingerPrint")
+                                .setDescription("This app uses biometric authentication to protect your data.")
+                                .setNegativeButton(getResources().getString(R.string.lbl_cancel), getMainExecutor(),
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Log.e(TAG,"CancellationSignal Click");
+                                            }
+                                        })
+                                .build();
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        biometricPrompt.authenticate(getCancellationSignal(), getMainExecutor(), new BiometricPrompt.AuthenticationCallback() {
+                            @Override
+                            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                                super.onAuthenticationError(errorCode, errString);
+                                Toast.makeText(getApplicationContext(),errString,Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,"onAuthenticationError "+errString);
+
+                            }
+
+                            @Override
+                            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                                super.onAuthenticationHelp(helpCode, helpString);
+                                Toast.makeText(getApplicationContext(),helpString,Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,"onAuthenticationHelp "+helpString);
+                            }
+
+                            @Override
+                            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                                super.onAuthenticationSucceeded(result);
+                                Log.e(TAG,"onAuthenticationSucceeded ");
+                                gotoHomeScreenThroughSplash();
+                            }
+
+                            @Override
+                            public void onAuthenticationFailed() {
+                                super.onAuthenticationFailed();
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.error),Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,"onAuthenticationFailed ");
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
-    private void HomeScreen() {
+
+
+
+    private CancellationSignal getCancellationSignal() {
+        CancellationSignal cancellationSignal;
+        cancellationSignal = new CancellationSignal();
+        cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
+            @Override
+            public void onCancel() {
+                Log.e(TAG,"CancellationSignal Click");
+            }
+        });
+        return cancellationSignal;
+    }
+
+
+
+
+    private boolean checkBiometricSupportNewScreen() {
+
+        BiometricManager biometricManager = BiometricManager.from(getApplicationContext());
+        Log.e(TAG,"code "+biometricManager.canAuthenticate());
+
+        if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
+        {
+            return true;
+        }
+        else if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE)
+        {
+            Log.e(TAG, "No biometric features available on this device.");
+            return false;
+        }
+        else if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE)
+        {
+            Log.e(TAG, "Biometric features are currently unavailable.");
+            return false;
+        }
+        return false;
+    }
+
+    private boolean checkBiometricSupport() {
+
+        BiometricManager biometricManager = BiometricManager.from(getApplicationContext());
+        Log.e(TAG,"code "+biometricManager.canAuthenticate());
+
+        if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS)
+        {
+            return true;
+        }
+        else if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE)
+        {
+            Log.e(TAG, "No biometric features available on this device.");
+            Toast.makeText(getApplicationContext(),"No biometric features available on this device.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE)
+        {
+            Log.e(TAG, "Biometric features are currently unavailable.");
+            Toast.makeText(getApplicationContext(),"Biometric features are currently unavailable.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED)
+        {
+            Log.e(TAG, "Add FigerPrint.");
+            Toast.makeText(getApplicationContext(),"Add FigerPrint.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return false;
+    }
+
+    public boolean checkPermission() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.USE_BIOMETRIC) != PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+
+        if (requestCode == 0) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            }
+        }
+
+    }
+
+
+        private void HomeScreen() {
 
         if (ButtonValidation.equalsIgnoreCase("Next"))
         {
@@ -184,52 +349,70 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
         {
             if (isValidConfirm())
             {
-                LeafPreference.getInstance(this).setString(LeafPreference.PIN,binding.etPin.getOTP());
-                LeafPreference.getInstance(this).setString(LeafPreference.TOKEN,Token);
 
-                if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                if (checkBiometricSupportNewScreen())
+                {
+                    Intent fingerPrint = new Intent(this, FingerPrintActivity.class);
+                    fingerPrint.putExtra("Role",Role);
+                    fingerPrint.putExtra("groupID",groupId);
+                    fingerPrint.putExtra("groupCount",groupCount);
+                    fingerPrint.putExtra("pin",binding.etPin.getOTP());
+                    fingerPrint.putExtra("token",Token);
+                    fingerPrint.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(fingerPrint);
+                    finish();
+                }
+                else
+                {
+                    LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.FINGERPRINT,false);
+                    LeafPreference.getInstance(this).setString(LeafPreference.PIN,binding.etPin.getOTP());
+                    LeafPreference.getInstance(this).setString(LeafPreference.TOKEN,Token);
 
-                    Log.e(TAG,"groupId "+groupId);
-                    Log.e(TAG,"groupCount "+groupCount);
+                    if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
 
-                    LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, Integer.parseInt(groupCount));
+                        Log.e(TAG,"groupId "+groupId);
+                        Log.e(TAG,"groupCount "+groupCount);
 
-                    if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
-                        Intent login = new Intent(this, ConstituencyListActivity.class);
-                        login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(login);
-                        finish();
-                    } else {
-                        manager = new LeafManager();
-                        manager.getGroupDetail(this, groupId);
-                    }
-                } else {
-                    if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
-                        AppLog.e("UserExist->", "join group api called");
-                        LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, Integer.parseInt(groupCount));
-                        if ("taluk".equalsIgnoreCase(Role)) {
-                            Intent login = new Intent(this, TalukListActivity.class);
+                        LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, Integer.parseInt(groupCount));
+
+                        if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
+                            Intent login = new Intent(this, ConstituencyListActivity.class);
                             login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(login);
                             finish();
                         } else {
-
-                            if (Integer.parseInt(groupCount) > 1) {
-                                Intent login = new Intent(this, Home.class);
+                            manager = new LeafManager();
+                            manager.getGroupDetail(this, groupId);
+                        }
+                    } else {
+                        if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                            AppLog.e("UserExist->", "join group api called");
+                            LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, Integer.parseInt(groupCount));
+                            if ("taluk".equalsIgnoreCase(Role)) {
+                                Intent login = new Intent(this, TalukListActivity.class);
                                 login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(login);
                                 finish();
                             } else {
-                                manager = new LeafManager();
-                                manager.getGroupDetail(this, groupId);
+
+                                if (Integer.parseInt(groupCount) > 1) {
+                                    Intent login = new Intent(this, Home.class);
+                                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(login);
+                                    finish();
+                                } else {
+                                    manager = new LeafManager();
+                                    manager.getGroupDetail(this, groupId);
+                                }
                             }
+                        } else {
+                            AppLog.e("UserExist->", "join Direct group api called");
+                            manager = new LeafManager();
+                            manager.joinGroupDirect(this, BuildConfig.APP_ID);
                         }
-                    } else {
-                        AppLog.e("UserExist->", "join Direct group api called");
-                        manager = new LeafManager();
-                        manager.joinGroupDirect(this, BuildConfig.APP_ID);
                     }
                 }
+
             }
         }
 
@@ -324,6 +507,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
                         }
                     });
+
 
             Intent login = new Intent(this, GroupDashboardActivityNew.class);
             login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

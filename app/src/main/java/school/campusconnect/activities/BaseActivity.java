@@ -174,7 +174,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     }
 
     public synchronized void showLoadingDialogText() {
-        try {
+
+      /*  try {
             if (mProgressBar == null) {
                 mProgressBar = new ProgressDialog(this);
                 mProgressBar.setMessage("Initializing...");
@@ -188,15 +189,15 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         }catch (Exception e)
         {
            AppLog.e("BaseActivity",e.toString());
-        }
+        }*/
 
     }
     public synchronized void hideLoadingDialogText() {
-        if (mProgressBar != null && mProgressBar.isShowing()) {
+      /*  if (mProgressBar != null && mProgressBar.isShowing()) {
             mProgressBar.hide();
             mProgressBar.cancel();
             mProgressBar = null;
-        }
+        }*/
     }
 
     public synchronized void hideLoadingDialog() {

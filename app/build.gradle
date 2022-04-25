@@ -198,11 +198,11 @@ android {
                 buildConfigField("String", "AppName", '"MGV School"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')*/
-                 /*  ndk {
+                   ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
                        abiFilters 'armeabi-v7a','armeabi-v8a'//
-                   }*/
+                   }
             }
     buildTypes {
         release {
@@ -408,7 +408,6 @@ dependencies {
     /*otp view*/
     implementation 'com.github.aabhasr1:OtpView:v1.1.2'
 
-
     /*range bar*/
     implementation 'com.github.Jay-Goo:RangeSeekBar:2.0.4'
 
@@ -416,6 +415,9 @@ dependencies {
     implementation 'com.ss.bannerslider:bannerslider:2.0.0'
 
     implementation 'com.google.mlkit:translate:17.0.0'
+
+    //bio metric fingerprint use
+    implementation "androidx.biometric:biometric:1.1.0"
 
 
 

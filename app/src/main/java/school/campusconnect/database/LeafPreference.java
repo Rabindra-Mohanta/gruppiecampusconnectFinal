@@ -38,6 +38,7 @@ public class LeafPreference {
     private static SharedPreferences.Editor sEditor;
     public static final String LOGIN_ID = "login_id";
     public static final String TOKEN = "centerr_status";
+    public static final String FINGERPRINT = "finger_print";
     public static final String PIN = "pin";
     public static final String NAME = "name";
     public static final String NUM = "num";

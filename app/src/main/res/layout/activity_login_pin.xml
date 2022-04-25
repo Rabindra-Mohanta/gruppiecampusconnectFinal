@@ -105,6 +105,44 @@
                 style="@style/LabelHeader2"
                 />
 
+            <LinearLayout
+                android:id="@+id/llFingerPrint"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:text="@string/lbl_or"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorTextWhite"
+                    style="@style/LabelHeader2"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:text="@string/lbl_finger_print"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorTextWhite"
+                    style="@style/LabelHeader2"
+                    />
+
+                <Button
+                    android:id="@+id/btnAddFingerPrint"
+                    android:layout_width="@dimen/login_button_width"
+                    style="@style/LoginButton"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:layout_marginBottom="@dimen/padding_10dp"
+                    android:text="@string/lbl_finger_print"
+                    android:visibility="visible"
+                    android:layout_height="@dimen/login_button_height" />
+            </LinearLayout>
+
            <!-- <EditText
                 android:id="@+id/etPin"
                 android:layout_marginTop="@dimen/padding_10dp"
@@ -132,6 +170,8 @@
             android:textColor="@color/colorTextWhite"
             style="@style/LabelHeader2"
             />
+
+
 
 
         <ProgressBar
