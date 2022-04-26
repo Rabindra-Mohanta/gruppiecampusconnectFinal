@@ -2,6 +2,8 @@ package school.campusconnect.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
@@ -168,6 +170,7 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
         if (aVoid == null) {
             AppLog.e(TAG, "onPostExecute  :" + file.getAbsolutePath());
             if (listenerSignle != null) {
+
                 listenerSignle.onDownload(file);
             }
         } else {
@@ -196,6 +199,14 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
             }
             return file;
         }
+    }
+
+    public void addGallery(String path) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(path);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
     }
 
     @Override

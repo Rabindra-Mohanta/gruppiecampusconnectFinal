@@ -23,6 +23,7 @@ public class Constants {
     public static final String FILE_TYPE_AUDIO = "audio";
     public static final String FILE_TYPE_YOUTUBE = "youtube";
     public static final String FILE_TYPE_IMAGE = "image";
+    public static final String FILE_TYPE_BIRTHDAY = "birthday";
 
     public static final String GROUP_DATA = "GROUP_DATA";
     public static final String TYPE = "TYPE";

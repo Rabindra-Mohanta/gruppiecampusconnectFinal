@@ -190,7 +190,7 @@
     <string name="lbl_que">ಅನುಮಾನಗಳು</string>
     <string name="lbl_replies">ಪ್ರತ್ಯುತ್ತರಗಳು</string>
     <string name="lbl_my_family">ನನ್ನ ಕುಟುಂಬ</string>
-    <string name="lbl_my_issue"> ನನ್ನ ಸಮಸ್ಯೆಗಳು</string>
+    <string name="lbl_my_issue">ನನ್ನ ಸಮಸ್ಯೆಗಳು</string>
     <string name="lbl_Read_more">ಮತ್ತಷ್ಟು ಓದು..</string>
     <string name="lbl_answer">ಉತ್ತರಗಳು</string>
     <string name="lbl_delete_doubt">ಅನುಮಾನವನ್ನು ಅಳಿಸಿ</string>
@@ -310,7 +310,7 @@
     <string name="action_report_post">ವರದಿ ಪೋಸ್ಟ್</string>
     <string name="action_edit_contact">ಸಂಪರ್ಕವನ್ನು ಸಂಪಾದಿಸಿ</string>
     <string name="next">ಮುಂದೆ</string>
-    <string name="done">ಲಾಗಿನ್</string>
+    <string name="done">ಮುಂದೆ</string>
     <string name="deny">ನಿರಾಕರಿಸು</string>
     <string name="to_this_group">ಈ ಗುಂಪಿಗೆ</string>
     <string name="to_groups">ಗುಂಪುಗಳಿಗೆ</string>
@@ -365,7 +365,7 @@
     <string name="lbl_more">ಇತರೆ</string>
     <string name="lbl_mark">ಗುರುತುಗಳು</string>
     <string name="lbl_profile">ಪ್ರೊಫೈಲ್</string>
-    <string name="lbl_make_app_admin">ಅಪ್ಲಿಕೇಶನ್ ನಿರ್ವಾಹಕರಾಗಿ</string>
+    <string name="lbl_make_app_admin">ಅಡ್ಮಿನ್ ಮಾಡಿ</string>
     <string name="lbl_gruppie">ಗ್ರುಪ್ಪಿ</string>
     <string name="lbl_admin_change_des">ನಿರ್ವಾಹಕರಾಗಿ ನೀವು ಹೊಂದಿರುವ ಎಲ್ಲಾ ಸವಲತ್ತುಗಳನ್ನು ಹೊಸ ನಿರ್ವಾಹಕರಿಗೆ ವರ್ಗಾಯಿಸಲಾಗುತ್ತದೆ. ನೀವು ಮುಂದುವರಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
     <string name="lbl_join_gruppie">ಗ್ರುಪ್ಪಿ ಗೆ ಸೇರಿ</string>
@@ -419,7 +419,7 @@
     <string name="lbl_create_group">ಗುಂಪು ರಚಿಸಿ</string>
     <string name="lbl_update_changes">ಬದಲಾವಣೆಗಳನ್ನು ನವೀಕರಿಸಿ</string>
     <string name="lbl_add_friend">ಸ್ನೇಹಿತರನ್ನು ಸೇರಿಸಿ/ಆಹ್ವಾನಿಸಿ</string>
-    <string name="lbl_home">ಮನೆ</string>
+    <string name="lbl_home">ಹೋಂ</string>
     <string name="lbl_app_name_tab">ಮಾಗೋಡು</string>
     <string name="msg_logged_out">ಯಾರೋ ನಿಮ್ಮ ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿದ್ದಾರೆ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಲಾಗಿನ್ ಮಾಡಿ.</string>
     <string name="msg_app_exit">ನೀವು ಅಪ್ಲಿಕೇಶನ್‌ನಿಂದ ನಿರ್ಗಮಿಸಲು ಬಯಸುವಿರಾ</string>
@@ -707,7 +707,7 @@
     <string name="lbl_roll_No">ರೋಲ್ ನಂ</string>
     <string name="lbl_morning">ಬೆಳಗ್ಗೆ</string>
     <string name="lbl_all_booth_member">ಎಲ್ಲಾ ಮತಗಟ್ಟೆ ಸದಸ್ಯರು...</string>
-    <string name="lbl_add_ticket">ಟಿಕೆಟ್\nೆರೆಯಿರಿ</string>
+    <string name="lbl_add_ticket">ಹೊಸ ಟಿಕೆಟ್</string>
     <string name="lbl_select_class_">ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="lbl_evening">ಸಂಜೆ</string>
     <string name="lbl_add_issue">ಸಮಸ್ಯೆಯನ್ನು ಸೇರಿಸಿ</string>

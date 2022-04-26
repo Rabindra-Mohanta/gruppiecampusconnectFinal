@@ -52,7 +52,9 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.FingerPrintActivity"></activity>
+        <activity android:name=".activities.FingerPrintActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ChangeLanguageActivity"
             android:exported="false"

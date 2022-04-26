@@ -50,11 +50,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
         inits();
     }
 
-
     private void inits() {
-
-
-
 
         manager = new LeafManager();
 
@@ -480,7 +476,6 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
             AppLog.e("UserExist->", "join group api response");
             showLoadingBar(binding.progressBar);
            // binding.progressBar.setVisibility(View.VISIBLE);
-
             AppLog.e("UserExist->", "getGroupDetail api called");
             manager.getGroupDetail(this, BuildConfig.APP_ID);
         }
@@ -491,7 +486,6 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
             AppLog.e(TAG, "group detail ->" + new Gson().toJson(gRes));
 
             LeafPreference.getInstance(this).setInt(Constants.TOTAL_MEMBER, gRes.data.get(0).totalUsers);
-
             //save group detail
             LeafPreference.getInstance(this).setString(Constants.GROUP_DATA, new Gson().toJson(gRes.data.get(0)));
 

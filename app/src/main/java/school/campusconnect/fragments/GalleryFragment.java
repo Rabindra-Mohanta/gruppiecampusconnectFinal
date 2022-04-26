@@ -2,10 +2,18 @@ package school.campusconnect.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +28,9 @@ import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,12 +69,14 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     @Bind(R.id.img_top)
     ImageView imgTop;
 
+
+
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
    /* @Bind(R.id.swipeRefreshLayout)
     PullRefreshLayout swipeRefreshLayout;*/
-
+   Bitmap BirthdayTempleteBitmap,MlaBitmap,UserBitmap;
 
 
     public boolean mIsLoading = false;
@@ -78,6 +91,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     private LeafManager manager;
     private String mGroupId;
     private GalleryPostRes.GalleryData currentItem;
+
 
     @Nullable
     @Override
@@ -100,6 +114,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
             totalPages = Integer.parseInt(LeafPreference.getInstance(getContext()).getString("GalleryTotalPage"));
         }
 
+
         scrollListener();
 
         checkEvent();
@@ -108,6 +123,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
         return view;
     }
+
+
 
     private void checkEvent() {
 
@@ -341,6 +358,10 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
         }
 
     }
+
+
+
+
 
     private void getLocally()
     {

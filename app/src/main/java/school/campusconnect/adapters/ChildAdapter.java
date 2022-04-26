@@ -3,6 +3,13 @@ package school.campusconnect.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +25,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +47,8 @@ import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.Constants;
 
 public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder> {
+
+    private final String TAG = "ChildAdapter";
     private List<ItemImage> items;
     private final ArrayList<String> allImageList;
     private int currentOffset = 0;
@@ -43,6 +56,8 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
     private int mDisplay = 0;
     private int mTotal = 0;
     private Context context;
+    private boolean isBirthday = false;
+    Bitmap BirthdayTempleteBitmap,MlaBitmap,UserBitmap;
 
     String imagePreviewUrl = "";
     public ChildAdapter(int mDisplay, int mTotal, Context context, ArrayList<String> allImageList) {
@@ -92,6 +107,53 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
         imagePreviewUrl = LeafPreference.getInstance(context).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
     }
 
+   /* public ChildAdapter(int mDisplay, int mTotal, Context context, ArrayList<String> allImageList,boolean isBirthday) {
+        this.allImageList = allImageList;
+        this.isBirthday = isBirthday;
+        this.mDisplay = mDisplay;
+        this.mTotal = mTotal;
+        this.context = context;
+        for (String s : allImageList) {
+            Log.e("ChildAdapter Images", s);
+        }
+
+        items = new ArrayList<>();
+
+        // ArrayList<ItemImage> tempData=new ArrayList<>();
+        for (int i = 0; i < allImageList.size(); i++) {
+            ItemImage itemImage = new ItemImage(allImageList.get(i));
+            int colSpan1;
+            int rowSpan1;
+
+            if (allImageList.size() == 1) {
+                colSpan1 = 2;
+                rowSpan1 = 2;
+            } else {
+                colSpan1 = 1;
+                rowSpan1 = 1;
+            }
+
+            if (colSpan1 == 2 && !isCol2Avail)
+                isCol2Avail = true;
+            else if (colSpan1 == 2 && isCol2Avail)
+                colSpan1 = 1;
+
+            itemImage.setColumnSpan(colSpan1);
+            itemImage.setRowSpan(rowSpan1);
+            itemImage.setPosition(currentOffset + i);
+            items.add(itemImage);
+
+          *//*  int size = Constants.MAX_IMAGE_NUM;
+            if (tempData.size() < size)
+                size = tempData.size();
+            for (int j = 0; j < size; j++) {
+                items.add(tempData.get(j));
+            }*//*
+        }
+
+
+        imagePreviewUrl = LeafPreference.getInstance(context).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
+    }*/
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -117,6 +179,10 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
         }
     }
 
+ /*   public void isBirthday(boolean isBirthday)
+    {
+        this.isBirthday = isBirthday;
+    }*/
     @Override
     public AsymmetricItem getItem(int position) {
         return (AsymmetricItem) items.get(position);
@@ -157,7 +223,6 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
         }
 
-
         public void bind(final List<ItemImage> item, final int position, int mDisplay, int mTotal, final Context mContext) {
 
             Log.e("MULTI_BIND", "image " + position + "is " + Constants.decodeUrlToBase64(item.get(position).getImagePath()));
@@ -178,8 +243,73 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                 });
             }
             else {
+
+               /* if (isBirthday)
+                {
+                    BirthdayTempleteBitmap = drawableToBitmap(context.getResources().getDrawable(R.drawable.birthday_templete));
+                    MlaBitmap = drawableToBitmap(context.getResources().getDrawable(R.drawable.mla));
+
+                    Log.e(TAG,"BirthdayTempleteBitmap H "+BirthdayTempleteBitmap.getHeight());
+                    Log.e(TAG,"BirthdayTempleteBitmap W "+BirthdayTempleteBitmap.getWidth());
+
+                    Log.e(TAG,"MlaBitmap H "+MlaBitmap.getHeight());
+                    Log.e(TAG,"MlaBitmap W "+MlaBitmap.getWidth());
+
+
+                    asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                        @Override
+                        public void onDownload(File file) {
+                            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                            UserBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                            Log.e(TAG,"UserBitmap H "+UserBitmap.getHeight());
+                            Log.e(TAG,"UserBitmap W "+UserBitmap.getWidth());
+
+                            File file1 = createBitmap(BirthdayTempleteBitmap,MlaBitmap,UserBitmap,file);
+
+                            Picasso.with(mContext).load(file1).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError() {
+                                    Log.e("Picasso", "Error : ");
+                                }
+                            });
+
+                        }
+                        @Override
+                        public void error(String msg) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void progressUpdate(int progress, int max) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                }
+                            });
+                        }
+                    });
+                }*/
+               /* else
+                {
+
+                }*/
+
                 String path = Constants.decodeUrlToBase64(item.get(position).getImagePath());
                 String newStr = path.substring(path.indexOf("/images")+1);
+
                 Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -253,6 +383,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                         asyncTask.cancel(true);
                     }
                 });
+
             }
 
 
@@ -287,6 +418,55 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
             // textView.setText(String.valueOf(item.getPosition()));
         }
+    }
+
+    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap, File file) {
+
+        Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
+        Canvas canvas = new Canvas(result);
+
+        canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
+        Paint paint = new Paint();
+        paint.setColor(context.getResources().getColor(R.color.black));
+        paint.setTextSize(result.getHeight()*0.15f);
+
+        String user= "user";
+        Rect rect = new Rect();
+        paint.getTextBounds(user,0,user.length(),rect);
+        paint.setTextAlign(Paint.Align.LEFT);
+        canvas.drawBitmap(mlaBitmap, (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.4), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.4), null);
+        canvas.drawBitmap(userBitmap,userBitmap.getWidth()*0.4f , userBitmap.getWidth()*0.4f, null);
+        canvas.drawText(user,result.getWidth()-rect.width()-50,result.getHeight()*0.30f,paint);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(bytes.toByteArray());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException"+e.getMessage());
+        }
+
+        return file;
+
+    }
+
+    public Bitmap drawableToBitmap(Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 }
 

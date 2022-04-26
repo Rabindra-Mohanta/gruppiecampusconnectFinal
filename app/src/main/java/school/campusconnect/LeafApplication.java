@@ -1,6 +1,7 @@
 package school.campusconnect;
 
 import android.app.Application;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
@@ -176,7 +177,16 @@ public class LeafApplication extends Application  {
     }*/
 
     public File AppFilesPath(){
-        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        File mainFolder;
+
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+            mainFolder  = new File(getCacheDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        }
+        else
+        {
+            mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        }
+
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }
