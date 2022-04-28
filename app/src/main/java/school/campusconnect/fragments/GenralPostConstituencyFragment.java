@@ -1,8 +1,16 @@
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,11 +36,15 @@ import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -75,6 +87,8 @@ import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneImageDownload;
+import school.campusconnect.utils.AmazoneMultiImageDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
@@ -86,7 +100,7 @@ import school.campusconnect.views.SMBDialogUtils;
 public class GenralPostConstituencyFragment extends BaseFragment implements LeafManager.OnCommunicationListener,
         PostAdapter.OnItemClickListener, DialogInterface.OnClickListener, LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener {
 
-    private static final String TAG = "GeneralPostFragment";
+    private static final String TAG = "GenralPostConstFragment";
     private LayoutListButtonBinding mBinding;
     private PostAdapter mAdapter;
     private ReportAdapter mAdapter2;
@@ -112,6 +126,8 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
     EventTBL eventTBL;
 
     String type;
+
+    ArrayList<Integer> birthdayPostCreationQueue ; /// QUEUE TO MAINTAIN BIRTHDAY POST TASKS... SO IT DOESNT REPEAT.
 
     //private Query query;
 
@@ -532,21 +548,8 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         SendNotificationGlobal.send(notificationModel);
     }
 
-    private void savePostData(List<PostItem> results) {
-
-     /*   String highestUpdateTime = "";
-        long time = 0;
-        for (int i = 0;i<results.size();i++)
-        {
-            if ( time < DateTimeHelper.updatedTime(results.get(i).updatedAt))
-            {
-                time = DateTimeHelper.updatedTime(results.get(i).updatedAt);
-
-                highestUpdateTime = results.get(i).updatedAt;
-            }
-        }
-
-        Log.e(TAG,"highestUpdateTime" + highestUpdateTime);*/
+    private void savePostData(List<PostItem> results)
+    {
 
         for (int i = 0; i < results.size(); i++) {
 
@@ -576,7 +579,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             postItem.isFavourited = item.isFavourited;
             postItem.canEdit = item.canEdit;
             postItem.phone = item.phone;
-            postItem.type = "group";
+            postItem.type = item.type;
             postItem.group_id = mGroupId + "";
             postItem.page = currentPage;
             postItem.thumbnail = item.thumbnail;
@@ -918,6 +921,25 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         }
     }
 
+    @Override
+    public void callBirthdayPostCreation(PostItem item, int position)
+    {
+
+        if(birthdayPostCreationQueue == null)
+        {
+            birthdayPostCreationQueue = new ArrayList<>();
+        }
+
+        if(birthdayPostCreationQueue.contains(position))
+        {
+            return;
+        }
+
+        birthdayPostCreationQueue.add(position);
+        createBirthPostAndSave(item ,position);
+
+    }
+
     private static String[] fromString(String string) {
 //        String[] strings = string.replace("[", "").replace("]", "").split(", ");
         /* String result[] = new String[strings.length];
@@ -1131,5 +1153,108 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         }
     }
 
+
+    private void createBirthPostAndSave(PostItem item , int position)
+    {
+        Bitmap MlaBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
+
+        Log.e(TAG,"MlaBitmap H "+MlaBitmap.getHeight());
+        Log.e(TAG,"MlaBitmap W "+MlaBitmap.getWidth());
+
+        ArrayList<String> imageList = new ArrayList<>();
+        imageList.add(item.fileName.get(0));
+        imageList.add(item.bdayUserImage);
+         AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
+            @Override
+            public void onDownload(ArrayList<File> file) {
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                Bitmap BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.get(0).getAbsolutePath(),bmOptions);
+
+                Log.e(TAG,"BirthdayTempleteBitmap H "+BirthdayTempleteBitmap.getHeight());
+                Log.e(TAG,"BirthdayTempleteBitmap W "+BirthdayTempleteBitmap.getWidth());
+
+                Bitmap UserBitmap;
+
+                if(file.size()>1 && file.get(1)!=null )
+                UserBitmap = BitmapFactory.decodeFile(file.get(1).getAbsolutePath(),bmOptions);
+                else
+                UserBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.user));
+
+
+                Log.e(TAG,"UserBitmap H "+UserBitmap.getHeight());
+                Log.e(TAG,"UserBitmap W "+UserBitmap.getWidth());
+
+                if(item.bdayUserName ==null || item.bdayUserName.equalsIgnoreCase(""))
+                {
+                    item.bdayUserName = "Username";
+                }
+
+                createBitmap(BirthdayTempleteBitmap,MlaBitmap,UserBitmap, item.bdayUserName,file.get(0));
+                birthdayPostCreationQueue.remove(Integer.valueOf(position));
+                mAdapter.notifyItemChanged(position);
+
+                Log.e(TAG , "created Bitmap saved at : "+file.get(0));
+            }
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });
+    }
+
+
+    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file) {
+
+        Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
+        Canvas canvas = new Canvas(result);
+
+        canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
+        Paint paint = new Paint();
+        paint.setColor(getActivity().getResources().getColor(R.color.black));
+        paint.setTextSize(result.getHeight()*0.10f);
+
+
+        Rect rect = new Rect();
+        paint.getTextBounds(userName,0,userName.length(),rect);
+        paint.setTextAlign(Paint.Align.LEFT);
+        canvas.drawBitmap(mlaBitmap, (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.5), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.4), null);
+        canvas.drawBitmap(userBitmap,userBitmap.getWidth()*0.4f , userBitmap.getWidth()*0.4f, null);
+        canvas.drawText(userName,result.getWidth()-rect.width()-50,result.getHeight()*0.30f,paint);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(bytes.toByteArray());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException"+e.getMessage());
+        }
+
+        return file;
+
+    }
+
+    public Bitmap drawableToBitmap(Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
 
 }

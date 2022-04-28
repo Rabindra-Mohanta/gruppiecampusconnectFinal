@@ -367,7 +367,6 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     {
         List<GalleryTable> galleryTableList = GalleryTable.getGallery(GroupDashboardActivityNew.groupId,currentPage);
 
-
         if (galleryTableList != null && galleryTableList.size() > 0)
         {
             for (int i = 0;i<galleryTableList.size();i++)

@@ -628,7 +628,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     baseTeamTable.activity = data.getActivity();
                     baseTeamTable.kanActivity = data.getKanActivity();
                     baseTeamTable.featureIcons = new Gson().toJson(data.getFeaturedIconData());
-
+                    AppLog.e(TAG , "kanActivity : "+data.getKanActivity());
                     if (!LeafPreference.getInstance(getContext()).getString("MY_TEAM_INSERT").isEmpty())
                     {
                         baseTeamTable._now = LeafPreference.getInstance(getContext()).getString("MY_TEAM_INSERT");
@@ -1330,6 +1330,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             for (int i = 0; i < dataItemList.size(); i++) {
                 BaseTeamv2Response.TeamListData myTeamData= new BaseTeamv2Response.TeamListData();
                 myTeamData.activity = dataItemList.get(i).activity;
+                myTeamData.kanActivity = dataItemList.get(i).kanActivity;
                 myTeamData.MyTeamData= new Gson().fromJson(dataItemList.get(i).featureIcons, new TypeToken<ArrayList<MyTeamData>>() {}.getType());
                 teamList.add(myTeamData);
             }

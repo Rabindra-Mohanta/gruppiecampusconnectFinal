@@ -56,8 +56,9 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
     private int mDisplay = 0;
     private int mTotal = 0;
     private Context context;
-    private boolean isBirthday = false;
-    Bitmap BirthdayTempleteBitmap,MlaBitmap,UserBitmap;
+  //  private boolean isBirthday = false;
+    //Bitmap BirthdayTempleteBitmap,MlaBitmap,UserBitmap;
+    boolean showDownloadButton = true;
 
     String imagePreviewUrl = "";
     public ChildAdapter(int mDisplay, int mTotal, Context context, ArrayList<String> allImageList) {
@@ -105,6 +106,11 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
 
         imagePreviewUrl = LeafPreference.getInstance(context).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
+    }
+
+    public void setShowDownloadButton(boolean showOrhide)
+    {
+        showDownloadButton = showOrhide;
     }
 
    /* public ChildAdapter(int mDisplay, int mTotal, Context context, ArrayList<String> allImageList,boolean isBirthday) {
@@ -219,7 +225,6 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
             progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
             progressBar1 = (ProgressBar) itemView.findViewById(R.id.progressBar1);
             llProgress = (FrameLayout) itemView.findViewById(R.id.llProgress);
-
 
         }
 

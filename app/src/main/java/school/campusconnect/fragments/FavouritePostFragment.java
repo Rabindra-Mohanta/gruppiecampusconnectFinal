@@ -471,6 +471,11 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     }
 
     @Override
+    public void callBirthdayPostCreation(PostItem item, int position) {
+
+    }
+
+    @Override
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {

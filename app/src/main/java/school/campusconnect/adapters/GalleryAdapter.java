@@ -205,7 +205,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             Log.e(TAG,"MlaBitmap H "+MlaBitmap.getHeight());
             Log.e(TAG,"MlaBitmap W "+MlaBitmap.getWidth());
 
-        *//*    asyncTask = AmazoneImageDownload.download(mContext, item.getFileName().get(0), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+            asyncTask = AmazoneImageDownload.download(mContext, item.getFileName().get(0), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                 @Override
                 public void onDownload(File file) {
                     BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -235,7 +235,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                         }
                     });
                 }
-            });*//*
+            });
         }
 */
     }

@@ -895,6 +895,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         }
     }
 
+    @Override
+    public void callBirthdayPostCreation(PostItem item, int position) {
+
+    }
+
     private static String[] fromString(String string) {
 //        String[] strings = string.replace("[", "").replace("]", "").split(", ");
         /* String result[] = new String[strings.length];

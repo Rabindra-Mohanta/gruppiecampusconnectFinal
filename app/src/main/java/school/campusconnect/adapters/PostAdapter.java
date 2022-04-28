@@ -20,6 +20,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
@@ -171,10 +172,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             holder.imgLead_default.setImageDrawable(drawable);
         }
 
-        if (!TextUtils.isEmpty(item.fileType)) {
+        if (!TextUtils.isEmpty(item.fileType) && !item.type.equalsIgnoreCase("birthdaypost")) {
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
-                if (item.fileName != null) {
-
+                if (item.fileName != null)
+                {
                     ChildAdapter adapter;
                     if (item.fileName.size() == 3) {
                         adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
@@ -228,7 +229,29 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.recyclerView.setVisibility(View.GONE);
             }
-        } else {
+        }
+        else if(item.type.equalsIgnoreCase("birthdaypost"))
+        {
+                if (item.fileName != null) {
+
+                    ChildAdapter adapter;
+                    if (item.fileName.size() == 3) {
+                        adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
+                    } else {
+                        adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
+                    }
+                    adapter.setShowDownloadButton(false);
+                    holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
+                    holder.recyclerView.setVisibility(View.VISIBLE);
+                }
+                holder.imgPlay.setVisibility(View.GONE);
+                holder.imgPhoto.setVisibility(View.GONE);
+
+                if(!AmazoneImageDownload.isImageDownloaded(item.fileName.get(0)))
+                listener.callBirthdayPostCreation(item , position);
+
+        }
+        else {
 
             holder.imgPhoto.setVisibility(View.GONE);
             holder.imgPlay.setVisibility(View.GONE);
@@ -670,6 +693,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
         void onMoreOptionClick(PostItem item);
 
         void onDeleteVideoClick(PostItem item, int adapterPosition);
+
+        void callBirthdayPostCreation(PostItem item , int position);
     }
 
     public boolean isConnectionAvailable() {

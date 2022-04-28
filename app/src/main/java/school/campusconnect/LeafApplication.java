@@ -179,7 +179,7 @@ public class LeafApplication extends Application  {
     public File AppFilesPath(){
         File mainFolder;
 
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mainFolder  = new File(getCacheDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         }
         else
