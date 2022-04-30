@@ -37,10 +37,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
-import school.campusconnect.activities.AddPostActivity;
 import school.campusconnect.activities.CalendarActivity;
 import school.campusconnect.activities.ChangePasswordActivity;
 import school.campusconnect.activities.ChangePinActivity;
@@ -48,7 +48,6 @@ import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.activities.GalleryActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.NotificationListActivity;
-import school.campusconnect.activities.PeopleActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ReadMoreActivity;
 import school.campusconnect.adapters.FeedAdapter;
@@ -70,6 +69,8 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
+
+import static school.campusconnect.utils.Constants.INTERVAL_EVENTAPI;
 
 public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick, SchoolFeedAdapater.onClick {
     private static final String TAG = "BaseTeamFragmentv2";
@@ -295,7 +296,17 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
-            ((GroupDashboardActivityNew) getActivity()).callEventApi();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run()
+                {
+                    if (getActivity() != null)
+                    {
+                        ((GroupDashboardActivityNew) getActivity()).callEventApi();
+                    }
+                }
+            } , new Random().nextInt(INTERVAL_EVENTAPI));
         }
 
         if (getContext() != null && menuItem != null) {

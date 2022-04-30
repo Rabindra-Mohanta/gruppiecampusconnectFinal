@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,6 +34,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,6 +57,8 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
+
+import static school.campusconnect.utils.Constants.INTERVAL_EVENTAPI;
 
 public class BoothPresidentListMyTeamFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
 
@@ -90,7 +94,17 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
         inits();
 
         getDataMyBoothLocally();
-        callEventApi();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run()
+            {
+                if (getActivity() != null)
+                {
+                    callEventApi();
+                }
+            }
+        } , new Random().nextInt(INTERVAL_EVENTAPI));
+
 
         return view;
     }

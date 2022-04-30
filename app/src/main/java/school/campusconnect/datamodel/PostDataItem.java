@@ -99,7 +99,7 @@ public class PostDataItem extends Model {
 
     //Constituency  app (needed to pagination all genral post)
     public static List<PostDataItem> getGeneralPosts(String group_id,int page) {
-        return new Select().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).where("page = ?", page).execute();
+        return new Select().from(PostDataItem.class).where("type = ? Or type = ?", "group","birthdayPost").where("group_id = ?", group_id).where("page = ?", page).execute();
     }
 
     public static List<PostDataItem> getLastGeneralPost() {

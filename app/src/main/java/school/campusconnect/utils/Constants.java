@@ -51,6 +51,8 @@ public class Constants {
     public static int image_width = 1800;
     public static int image_height = 1200;
 
+    public static int INTERVAL_EVENTAPI = 2000;
+
     public static int requestCode = -1;
     public static boolean finishActivity;
 

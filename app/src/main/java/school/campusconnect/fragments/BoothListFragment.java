@@ -196,7 +196,6 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             }
         });
 
-        transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     @Override

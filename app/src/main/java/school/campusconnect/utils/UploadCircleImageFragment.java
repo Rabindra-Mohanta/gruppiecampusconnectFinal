@@ -51,6 +51,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     public boolean isForUpload = false;
     public boolean isGroupOrProfile = false;
     ImageView imgDefault;
+    private static String TAG = "UploadCircleImageFragment";
 
     public boolean isEditEnabled() {
         return isEditEnabled;
@@ -100,7 +101,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         else
             getDefaultImageView().setImageResource(R.drawable.icon_default_propic);
 
-        Log.e("UploadImageFragment", "Update Default Photo Called Visibility : " + getDefaultImageView().getVisibility());
+        Log.e(TAG, "Update Default Photo Called Visibility : " + getDefaultImageView().getVisibility());
     }
 
     public void setInitialLatterImage(String name) {
@@ -142,7 +143,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_upload_circle_image, container, false);
-        Log.e(TAG,"onCreateView");
+        AppLog.e(TAG,"onCreateView");
         imgService = (CircleImageView) rootView.findViewById(R.id.img_service);
         //imgPlusLayout = (RelativeLayout) rootView.findViewById(R.id.upload_img);
         imgPlus = (CircleImageView) rootView.findViewById(R.id.img_plus);
@@ -296,6 +297,8 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        AppLog.e(TAG , "onActivityResult");
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             boolean excludeCrop = getArguments().getBoolean("exclude_crop", false);
             if (excludeCrop) {
@@ -352,13 +355,20 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
 
     @Override
     public void setImageToView(ProfileImage profileImage) {
-        Log.e("CROP_TRACK", "from profile setImageToView method 1 " + profileImage.imageString);
+        Log.e(TAG, "from profile setImageToView method 1 " + profileImage.imageString);
         //imgPlusLayout.setVisibility(View.GONE);
         imgPlus.setVisibility(View.GONE);
         imgDefault.setVisibility(View.GONE);
         mProfileImage = profileImage.imageString;
+
         profileImage.imageString = mProfileImage;
-        imgService.setImageBitmap(profileImage.image);
+       // imgService.setImageBitmap(profileImage.image);
+        if (Constants.decodeUrlToBase64(profileImage.imageString).contains("http")) {
+            updatePhotoFromUrl(profileImage.imageString);
+        } else {
+            setImageFromString(profileImage.imageString);
+        }
+
         isImageChanged = true;
         if(getActivity() instanceof ProfileActivity2)
             ((ProfileActivity2) getActivity()).callUpdateApi();

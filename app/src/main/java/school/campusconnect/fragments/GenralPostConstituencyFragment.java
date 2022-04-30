@@ -304,6 +304,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
         List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId,currentPage);
 
+        AppLog.e(TAG , "data item list size : "+dataItemList.size() + " , apieVent  :"+apiEvent);
         String lastId = null;
         if (dataItemList.size() != 0) {
             showLoadingBar(mBinding.progressBar);
@@ -322,6 +323,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                 postItem.createdAt = dataItemList.get(i).createdAt;
                 postItem.title = dataItemList.get(i).title;
                 postItem.fileType = dataItemList.get(i).fileType;
+                postItem.type = dataItemList.get(i).type;
                 postItem.fileName = new Gson().fromJson(dataItemList.get(i).fileName, new TypeToken<ArrayList<String>>() {
                 }.getType());
                 postItem.thumbnailImage = new Gson().fromJson(dataItemList.get(i).thumbnailImage, new TypeToken<ArrayList<String>>() {
@@ -343,7 +345,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                 PostList.add(postItem);
             }
             hideLoadingBar();
-            AppLog.e(TAG, "DataFromLocal");
+            AppLog.e(TAG, "DataFromLocal : lastId : "+lastId);
             mAdapter.notifyDataSetChanged();
 
             mBinding.setSize(mAdapter.getItemCount());
@@ -579,7 +581,12 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             postItem.isFavourited = item.isFavourited;
             postItem.canEdit = item.canEdit;
             postItem.phone = item.phone;
+
+            if(item.type.equalsIgnoreCase("birthdayPost"))
             postItem.type = item.type;
+            else
+            postItem.type = "group";
+
             postItem.group_id = mGroupId + "";
             postItem.page = currentPage;
             postItem.thumbnail = item.thumbnail;
@@ -1167,6 +1174,11 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
          AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
             @Override
             public void onDownload(ArrayList<File> file) {
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                 Bitmap BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.get(0).getAbsolutePath(),bmOptions);
 

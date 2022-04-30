@@ -69,6 +69,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 
 import id.zelory.compressor.Compressor;
@@ -126,6 +127,7 @@ import ss.com.bannerslider.Slider;
 import ss.com.bannerslider.viewholder.ImageSlideViewHolder;
 
 import static android.app.Activity.RESULT_OK;
+import static school.campusconnect.utils.Constants.INTERVAL_EVENTAPI;
 
 public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick, SliderAdapter.Listner {
 
@@ -481,11 +483,20 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         {
             mHandler.post(myRunnable);
         }
-        if (getActivity() != null) {
-         /*   ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
-            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);*/
-            ((GroupDashboardActivityNew) getActivity()).callEventApi();
-        }
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run()
+                {
+                    AppLog.e(TAG , "run called  at  : "+System.currentTimeMillis());
+                    if (getActivity() != null)
+                    {
+                        ((GroupDashboardActivityNew) getActivity()).callEventApi();
+                    }
+                }
+            } , new Random().nextInt(INTERVAL_EVENTAPI));
+
+
 
         if (getContext() != null && menuItem != null) {
             menuItem.setIcon(buildCounterDrawable(LeafPreference.getInstance(getContext()).getInt(GroupDashboardActivityNew.groupId + "_notification_count")));
