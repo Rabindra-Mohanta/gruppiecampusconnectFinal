@@ -5,4 +5,7 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/addfriends"
         android:title="@string/menu_invite"/>
+
+    <item android:id="@+id/menu_print_member_list"
+        android:title="@string/menu_print_member"/>
 </menu>

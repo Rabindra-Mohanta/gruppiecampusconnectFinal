@@ -1227,5 +1227,6 @@
 
     <string name="lbl_setFingerPrint">Register Fingerprint</string>
     <string name="lbl_finger_print">Fingerprint</string>
+    <string name="menu_print_member">Print MemberList</string>
 
 </resources>

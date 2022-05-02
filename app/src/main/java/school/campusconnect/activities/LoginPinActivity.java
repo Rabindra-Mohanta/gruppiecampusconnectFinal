@@ -63,8 +63,8 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 groupCount = getIntent().getStringExtra("groupCount");
                 Role =  getIntent().getStringExtra("Role");
                 Token = getIntent().getStringExtra("token");
-
                 binding.lblForgot.setVisibility(View.GONE);
+                binding.btnSkip.setVisibility(View.GONE);
                 ButtonValidation = "Confirm";
                 binding.lblHint.setText(getResources().getString(R.string.lbl_conPin));
                 binding.btnNext.setText(getResources().getString(R.string.done));
@@ -76,6 +76,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 Role =  getIntent().getStringExtra("Role");
                 Token = getIntent().getStringExtra("token");
                 binding.lblForgot.setVisibility(View.GONE);
+                binding.btnSkip.setVisibility(View.VISIBLE);
                 ButtonValidation = "Set Pin";
                 binding.lblHint.setText(getResources().getString(R.string.lbl_setPin));
                 binding.btnNext.setText(getResources().getString(R.string.next));
@@ -91,6 +92,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
             {
                 binding.llFingerPrint.setVisibility(View.GONE);
             }
+            binding.btnSkip.setVisibility(View.GONE);
             binding.lblForgot.setVisibility(View.VISIBLE);
             binding.lblHint.setText(getResources().getString(R.string.txt_pin));
             ButtonValidation = "Next";
@@ -119,6 +121,13 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                     hide_keyboard();
                     HomeScreen();
                 }*/
+            }
+        });
+
+        binding.btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                skipPin();
             }
         });
 
@@ -348,6 +357,8 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
                 if (checkBiometricSupportNewScreen())
                 {
+
+                    LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.SKIP_PIN,"no");
                     Intent fingerPrint = new Intent(this, FingerPrintActivity.class);
                     fingerPrint.putExtra("Role",Role);
                     fingerPrint.putExtra("groupID",groupId);
@@ -360,6 +371,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 }
                 else
                 {
+                    LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.SKIP_PIN,"no");
                     LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.FINGERPRINT,false);
                     LeafPreference.getInstance(this).setString(LeafPreference.PIN,binding.etPin.getOTP());
                     LeafPreference.getInstance(this).setString(LeafPreference.TOKEN,Token);
@@ -423,6 +435,58 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 i.putExtra("groupCount",groupCount);
                 i.putExtra("groupID",groupId);
                 startActivity(i);
+            }
+        }
+
+    }
+    private void skipPin()
+    {
+        LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.SKIP_PIN,"yes");
+        LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.FINGERPRINT,false);
+        LeafPreference.getInstance(this).setString(LeafPreference.PIN,binding.etPin.getOTP());
+        LeafPreference.getInstance(this).setString(LeafPreference.TOKEN,Token);
+
+        if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+
+            Log.e(TAG,"groupId "+groupId);
+            Log.e(TAG,"groupCount "+groupCount);
+
+            LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, Integer.parseInt(groupCount));
+
+            if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
+                Intent login = new Intent(this, ConstituencyListActivity.class);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(login);
+                finish();
+            } else {
+                manager = new LeafManager();
+                manager.getGroupDetail(this, groupId);
+            }
+        } else {
+            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                AppLog.e("UserExist->", "join group api called");
+                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, Integer.parseInt(groupCount));
+                if ("taluk".equalsIgnoreCase(Role)) {
+                    Intent login = new Intent(this, TalukListActivity.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                } else {
+
+                    if (Integer.parseInt(groupCount) > 1) {
+                        Intent login = new Intent(this, Home.class);
+                        login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(login);
+                        finish();
+                    } else {
+                        manager = new LeafManager();
+                        manager.getGroupDetail(this, groupId);
+                    }
+                }
+            } else {
+                AppLog.e("UserExist->", "join Direct group api called");
+                manager = new LeafManager();
+                manager.joinGroupDirect(this, BuildConfig.APP_ID);
             }
         }
 

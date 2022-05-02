@@ -102,7 +102,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
+  /*  @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId())
@@ -118,7 +118,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         }
         return super.onOptionsItemSelected(item);
 
-    }
+    }*/
 
     public void onAddFrendSelected()
     {

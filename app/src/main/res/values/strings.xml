@@ -867,7 +867,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="menu_delete_test_exam">Delete Test/Exam</string>
     <string name="menu_change_language">Change Language</string>
     <string name="lbl_submit_assignment">Submit Assignment</string>
-
+    <string name="menu_print_member">Print Member</string>
     <string name="title_add_bus_student">Add Bus Student</string>
     <string name="title_add_">Add </string>
     <string name="title_booth_member">Booth Member</string>
@@ -898,7 +898,6 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="title_details">Details</string>
     <string name="title_member_details">Member Detail</string>
     <string name="title_submit_answer_paper">Submit Answer Paper</string>
-
 
     <string name="toast_enter_name">Please Enter Name</string>
     <string name="toast_enter_phone">Please Enter Phone</string>

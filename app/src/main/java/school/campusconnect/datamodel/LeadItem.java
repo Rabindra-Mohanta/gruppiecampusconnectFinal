@@ -33,7 +33,10 @@ public class LeadItem implements Parcelable {
     public int leadCount;
     public String dob;
     public String qualification;
+
+    @SerializedName(value = "designation")
     public String occupation;
+
     public String[] otherLeads;
     public AddressItem address;
     public String gender;
@@ -46,7 +49,6 @@ public class LeadItem implements Parcelable {
     public String voterId;
     public String bloodGroup;
     public String aadharNumber;
-
 
     public boolean isRoleOnConstituency() {
         return roleOnConstituency;

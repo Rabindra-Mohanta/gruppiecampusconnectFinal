@@ -149,7 +149,16 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
             menu.findItem(R.id.menu_change_pin).setVisible(false);
 
         } else {
-            menu.findItem(R.id.menu_change_pin).setVisible(true);
+
+            if (LeafPreference.getInstance(getContext()).getString(LeafPreference.SKIP_PIN).equalsIgnoreCase("yes"))
+            {
+                menu.findItem(R.id.menu_change_pin).setVisible(false);
+            }
+            else
+            {
+                menu.findItem(R.id.menu_change_pin).setVisible(true);
+            }
+
             menu.findItem(R.id.menu_logout).setVisible(true);
             menu.findItem(R.id.menu_change_pass).setVisible(true);
         }

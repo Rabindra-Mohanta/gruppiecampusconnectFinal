@@ -12,6 +12,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -21,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -51,12 +54,15 @@ import butterknife.ButterKnife;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddBoothStudentActivity;
 import school.campusconnect.activities.AddClassStudentActivity;
+import school.campusconnect.activities.AddCommiteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.UpdateMemberActivity;
 import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.LeadItem;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
@@ -301,6 +307,110 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
         hideLoadingBar();
         // progressBar.setVisibility(View.GONE);
     }
+
+
+
+    private boolean checkPermissionForWriteExternal() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            AppLog.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            AppLog.e("External" + "permission", "checkpermission , denied");
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
+            }
+            return false;
+        }
+    }
+
+
+    public void exportDataToCSV() {
+
+        if (!checkPermissionForWriteExternal()) {
+            return;
+        }
+
+        File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        File csvFolder = new File(mainFolder,"Excel");
+        if (!csvFolder.exists()) {
+            csvFolder.mkdir();
+        }
+        File file = new File(csvFolder, getArguments().getString("title")+"_"+getResources().getString(R.string.lbl_members) + ".xls");
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet firstSheet = workbook.createSheet(getArguments().getString("title")+"_"+getResources().getString(R.string.lbl_members));
+
+            HSSFRow rowA = firstSheet.createRow(0);
+            rowA.createCell(0).setCellValue("Name");
+            rowA.createCell(1).setCellValue("Voter Id");
+            rowA.createCell(3).setCellValue("Phone Number");
+            rowA.createCell(4).setCellValue("DOB");
+            rowA.createCell(5).setCellValue("Gender");
+            rowA.createCell(6).setCellValue("Blood Group");
+
+
+            if (list != null)
+            {
+                for(int i=0;i<list.size();i++){
+
+                    BoothMemberResponse.BoothMemberData item = list.get(i);
+                    HSSFRow rowData = firstSheet.createRow(i + 1);
+                    rowData.createCell(0).setCellValue(item.name);
+                    rowData.createCell(1).setCellValue(item.voterId);
+                    rowData.createCell(3).setCellValue(item.phone);
+                    rowA.createCell(4).setCellValue(item.dob);
+                    rowA.createCell(5).setCellValue(item.gender);
+                    rowA.createCell(6).setCellValue(item.bloodGroup);
+
+                }
+            }
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file);
+                workbook.write(fos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            shareFile(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void shareFile(File file) {
+        Uri uriFile;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            uriFile = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
+        } else {
+            uriFile = Uri.fromFile(file);
+        }
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile) ;
+        sharingIntent.setType("text/csv");
+        startActivity(Intent.createChooser(sharingIntent, "share file with"));
+    }
+
 
     public class ClassesStudentAdapter extends RecyclerView.Adapter<ClassesStudentAdapter.ViewHolder> {
         List<BoothMemberResponse.BoothMemberData> list;

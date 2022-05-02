@@ -1,12 +1,19 @@
 
 package school.campusconnect.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,11 +21,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
+import school.campusconnect.activities.AddBoothStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.LeadsListActivity;
 import school.campusconnect.activities.NestedTeamActivity;
 import school.campusconnect.activities.UpdateMemberActivity;
 import school.campusconnect.activities.VoterProfileActivity;
+import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.lead.LeadDataTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
@@ -26,6 +37,8 @@ import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -40,6 +53,13 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -212,6 +232,153 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             }
         });*/
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+
+        if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.isPost)
+            menu.findItem(R.id.menu_print_member_list).setVisible(true);
+        else
+            menu.findItem(R.id.menu_print_member_list).setVisible(false);
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.menu_invite:
+                Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
+                intent.putExtra("group_id",groupId);
+                intent.putExtra("team_id", teamId);
+                intent.putExtra("category", classData.category);
+                startActivity(intent);
+                break;
+
+
+            case R.id.menu_print_member_list:
+                exportDataToCSV();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+
+    private boolean checkPermissionForWriteExternal() {
+        int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            AppLog.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            AppLog.e("External" + "permission", "checkpermission , denied");
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
+            }
+            return false;
+        }
+    }
+
+    public void exportDataToCSV() {
+
+        if (!checkPermissionForWriteExternal()) {
+            return;
+        }
+
+        File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        File csvFolder = new File(mainFolder,"Excel");
+        if (!csvFolder.exists()) {
+            csvFolder.mkdir();
+        }
+        File file = new File(csvFolder, getArguments().getString("team_name")+"_"+getResources().getString(R.string.lbl_members) + ".xls");
+
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet firstSheet = workbook.createSheet(getArguments().getString("team_name")+"_"+getResources().getString(R.string.lbl_members));
+
+            HSSFRow rowA = firstSheet.createRow(0);
+            rowA.createCell(0).setCellValue("Name");
+            rowA.createCell(1).setCellValue("Voter Id");
+            rowA.createCell(2).setCellValue("Email");
+            rowA.createCell(3).setCellValue("Phone Number");
+            rowA.createCell(4).setCellValue("Education");
+            rowA.createCell(5).setCellValue("Profession");
+            rowA.createCell(6).setCellValue("DOB");
+            rowA.createCell(7).setCellValue("Gender");
+            rowA.createCell(8).setCellValue("Blood Group");
+
+
+            if (list != null)
+            {
+                for(int i=0;i<list.size();i++){
+
+                    LeadItem item = list.get(i);
+                    HSSFRow rowData = firstSheet.createRow(i + 1);
+                    rowData.createCell(0).setCellValue(item.name);
+                    rowData.createCell(1).setCellValue(item.voterId);
+                    rowData.createCell(2).setCellValue(item.email);
+                    rowData.createCell(3).setCellValue(item.phone);
+                    rowData.createCell(4).setCellValue(item.qualification);
+                    rowA.createCell(5).setCellValue(item.occupation);
+                    rowA.createCell(6).setCellValue(item.dob);
+                    rowA.createCell(7).setCellValue(item.gender);
+                    rowA.createCell(8).setCellValue(item.bloodGroup);
+
+                }
+            }
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file);
+                workbook.write(fos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            shareFile(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void shareFile(File file) {
+        Uri uriFile;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            uriFile = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", file);
+        } else {
+            uriFile = Uri.fromFile(file);
+        }
+        Intent sharingIntent = new Intent();
+        sharingIntent.setAction(Intent.ACTION_SEND);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile) ;
+        sharingIntent.setType("text/csv");
+        startActivity(Intent.createChooser(sharingIntent, "share file with"));
+    }
+
 
 
     @Override

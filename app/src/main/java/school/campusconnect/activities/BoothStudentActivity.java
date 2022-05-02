@@ -1,17 +1,22 @@
 package school.campusconnect.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 
@@ -21,6 +26,7 @@ import school.campusconnect.R;
 import school.campusconnect.datamodel.committee.committeeResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.BoothStudentListFragment;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class BoothStudentActivity extends BaseActivity {
@@ -79,12 +85,28 @@ public class BoothStudentActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         if(classData.isTeamAdmin)
         getMenuInflater().inflate(R.menu.menu_member, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.isPost)
+        {
+            menu.findItem(R.id.menu_print_member_list).setVisible(true);
+        }
+        else
+        {
+            menu.findItem(R.id.menu_print_member_list).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -104,6 +126,13 @@ public class BoothStudentActivity extends BaseActivity {
 
                 return true;
             }
+
+            case R.id.menu_print_member_list:
+            {
+                classListFragment.exportDataToCSV();
+                return true;
+            }
+
 
             case R.id.edit_committee: {
 

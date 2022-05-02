@@ -373,7 +373,16 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menu_change_pass).setVisible(true);
         menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
-        menu.findItem(R.id.menu_change_pin).setVisible(true);
+
+        if (LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.SKIP_PIN).equalsIgnoreCase("yes"))
+        {
+            menu.findItem(R.id.menu_change_pin).setVisible(false);
+        }
+        else
+        {
+            menu.findItem(R.id.menu_change_pin).setVisible(true);
+        }
+
         menu.findItem(R.id.menu_change_mobile).setVisible(true);
         menu.findItem(R.id.menu_change_language).setVisible(true);
 

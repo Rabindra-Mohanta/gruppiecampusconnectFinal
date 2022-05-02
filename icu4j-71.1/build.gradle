@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('icu4j-71.1.jar'))
