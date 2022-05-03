@@ -7,8 +7,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -1171,6 +1175,8 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         ArrayList<String> imageList = new ArrayList<>();
         imageList.add(item.fileName.get(0));
         imageList.add(item.bdayUserImage);
+        imageList.add(item.createdByImage);
+
          AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
             @Override
             public void onDownload(ArrayList<File> file) {
@@ -1185,13 +1191,18 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                 Log.e(TAG,"BirthdayTempleteBitmap H "+BirthdayTempleteBitmap.getHeight());
                 Log.e(TAG,"BirthdayTempleteBitmap W "+BirthdayTempleteBitmap.getWidth());
 
-                Bitmap UserBitmap;
+
+                Bitmap UserBitmap,MlaBitMap;
 
                 if(file.size()>1 && file.get(1)!=null )
-                UserBitmap = BitmapFactory.decodeFile(file.get(1).getAbsolutePath(),bmOptions);
+                    UserBitmap = BitmapFactory.decodeFile(file.get(1).getAbsolutePath(),bmOptions);
                 else
-                UserBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.user));
+                    UserBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.user));
 
+                if(file.size()>1 && file.get(2)!=null )
+                    MlaBitMap = BitmapFactory.decodeFile(file.get(2).getAbsolutePath(),bmOptions);
+                else
+                    MlaBitMap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
 
                 Log.e(TAG,"UserBitmap H "+UserBitmap.getHeight());
                 Log.e(TAG,"UserBitmap W "+UserBitmap.getWidth());
@@ -1201,7 +1212,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                     item.bdayUserName = "Username";
                 }
 
-                createBitmap(BirthdayTempleteBitmap,MlaBitmap,UserBitmap, item.bdayUserName,file.get(0));
+                createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, item.bdayUserName,file.get(0),item.createdBy);
                 birthdayPostCreationQueue.remove(Integer.valueOf(position));
                 mAdapter.notifyItemChanged(position);
 
@@ -1219,28 +1230,81 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         });
     }
 
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
 
-    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file) {
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
+    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file,String mlaName) {
 
         Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
+
+        userBitmap = getResizedBitmap(userBitmap, (int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)));
+        mlaBitmap = getResizedBitmap(mlaBitmap,(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)));
+
+        String[] splitUserName = userName.split("\\s+");
+
         Canvas canvas = new Canvas(result);
-
         canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
-        Paint paint = new Paint();
-        paint.setColor(getActivity().getResources().getColor(R.color.black));
-        paint.setTextSize(result.getHeight()*0.10f);
 
+
+        Paint paint = new Paint();
+        paint.setColor(getActivity().getResources().getColor(R.color.birthDayTextColor));
+        paint.setTextSize(result.getHeight()*0.05f);
 
         Rect rect = new Rect();
-        paint.getTextBounds(userName,0,userName.length(),rect);
+
+        Rect rect1 = new Rect();
+
+        if (splitUserName.length > 1)
+        {
+            paint.getTextBounds(splitUserName[0],0,splitUserName[0].length(),rect);
+            paint.getTextBounds(splitUserName[1],0,splitUserName[1].length(),rect1);
+        }
+        else
+        {
+            paint.getTextBounds(userName,0,userName.length(),rect);
+        }
+
+        Log.e(TAG,"rect"+rect);
+        Log.e(TAG,"rect1"+rect1);
+
         paint.setTextAlign(Paint.Align.LEFT);
-        canvas.drawBitmap(mlaBitmap, (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.5), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.4), null);
-        canvas.drawBitmap(userBitmap,userBitmap.getWidth()*0.4f , userBitmap.getWidth()*0.4f, null);
-        canvas.drawText(userName,result.getWidth()-rect.width()-50,result.getHeight()*0.30f,paint);
+
+        Paint paint2 = new Paint();
+        paint2.setColor(getActivity().getResources().getColor(R.color.mlaTextColor));
+        paint2.setTextSize(result.getHeight()*0.02f);
+        Rect rect2 = new Rect();
+        paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);
+        paint2.setTextAlign(Paint.Align.LEFT);
+
+
+        canvas.drawBitmap(getRoundedCornerBitmap(mlaBitmap,mlaBitmap.getWidth()/2), (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.195), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.380), null);
+        canvas.drawBitmap(getRoundedCornerBitmap(userBitmap,userBitmap.getWidth()/2),userBitmap.getWidth()*0.199f , userBitmap.getWidth()*0.342f, null);
+
+        canvas.drawText(splitUserName[0],result.getWidth()-rect.width()-20,result.getHeight()*0.44f,paint);
+        canvas.drawText(splitUserName[1],result.getWidth()-rect.width()-20,result.getHeight()*0.44f+rect1.height(),paint);
+        canvas.drawText(mlaName,result.getWidth()-rect2.width()-50,result.getHeight()*0.95f,paint2);
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
-
 
         try {
             FileOutputStream out = new FileOutputStream(file);
@@ -1252,6 +1316,23 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         }
 
         return file;
+
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
 
     }
 

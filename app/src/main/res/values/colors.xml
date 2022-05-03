@@ -9,6 +9,8 @@
     <color name="colorPrimaryLight">#6093FF</color>
     <color name="colorAccent">#293f6e</color>
     <color name="black">#000000</color>
+    <color name="birthDayTextColor">#FF5757</color>
+    <color name="mlaTextColor">#004AAD</color>
 
 
     <color name="colorTextLight">#8D8D8D</color>

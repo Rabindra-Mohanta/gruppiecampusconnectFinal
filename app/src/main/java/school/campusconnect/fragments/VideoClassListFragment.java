@@ -158,12 +158,42 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     boolean isZoomStarted;
 
+    private long ReconnectTime = 0;
+
 
     LeafPreference leafPreference;
 
     LeafManager leafManager;
     private long mLastClickTime = 0;
     String category="";
+
+
+    CountDownTimer countDownTimer = new CountDownTimer(3*60000,1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            Log.e(TAG,"onTick"+millisUntilFinished);
+        }
+
+        @Override
+        public void onFinish() {
+
+            isAutomatically = true;
+
+            if (isAutomatically)
+            {
+                Log.e(TAG,"countDownTimer onFinish isAutomatically");
+                ZoomSDK.getInstance().getMeetingService().leaveCurrentMeeting(true);
+            }
+            else
+            {
+                Log.e(TAG,"countDownTimer onFinish");
+            }
+
+        }
+    };
+    private boolean isAutomatically = false;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,6 +203,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         isSentNotification = false;
         isZoomStarted = false;
     }
+
 
 
     @Nullable
@@ -303,11 +334,26 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         // setListener();
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        AppLog.e(TAG, "onDestroyView called");
+
+    }
+
     @Override
     public void onStop() {
         super.onStop();
 
         AppLog.e(TAG, "onStop called");
+
+       /* if (!isZoomStarted)
+        {
+            mHandler.removeCallbacks(myRunnable);
+        }*/
+
 
         LocalBroadcastManager.getInstance(VideoClassListFragment.this.getActivity()).unregisterReceiver(mMessageReceiver);
     }
@@ -1508,15 +1554,18 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     };
 
 
+
     MeetingServiceListener StartMeetListener = new MeetingServiceListener() {
         @Override
         public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
             Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
 
             long saveTime = 0;
+
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
                 hideLoadingBar();
                 //progressBar.setVisibility(View.GONE);
+
                 progressBarZoom.setVisibility(View.GONE);
 
                 saveTime = System.currentTimeMillis();
@@ -1528,6 +1577,10 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 }*/
             }
 
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_INMEETING"))
+            {
+                startTimer();
+            }
             if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING")) {
 //                AppLog.e(TAG, "meeting Disconnecting : " + item.canPost + " , " + meetingCreatedBy);
 
@@ -1535,19 +1588,53 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     ((VideoClassActivity) getActivity()).stopRecording();
                 }*/
 
+
                 isZoomStarted = false;
 
 
-
-
-
-                if (isFirstTime)
+                if (isAutomatically)
                 {
+                    LeafPreference.getInstance(getContext()).remove(LeafPreference.VIDEO_CALL_START_TIME);
+                    new SendNotificationResume(item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    startZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, "", item.className, item.jitsiToken);
+                }
+                else
+                {
+                    if (isFirstTime)
+                    {
                   /*  Log.e(TAG,"prefrence save time"+ LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME));
                     String savedTime = LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME);
 
                     String[] savedValuePart = savedTime.split("_");
                     String StartTime = savedValuePart[1];*/
+
+                        if(checkTiming(saveTime))
+                        {
+                            isFirstTime = false;
+                            LeafPreference.getInstance(getContext()).remove(LeafPreference.VIDEO_CALL_START_TIME);
+                            new SendNotificationResume(item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            startZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, "", item.className, item.jitsiToken);
+                        }
+                        else
+                        {
+                            dialogMeetingConfirmation();
+                        }
+                    }
+                    else
+                    {
+                        dialogMeetingConfirmation();
+                    }
+
+                }
+                endTimer();
+
+                /*if (isFirstTime)
+                {
+                  *//*  Log.e(TAG,"prefrence save time"+ LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME));
+                    String savedTime = LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME);
+
+                    String[] savedValuePart = savedTime.split("_");
+                    String StartTime = savedValuePart[1];*//*
 
                     if(checkTiming(saveTime))
                     {
@@ -1564,7 +1651,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 else
                 {
                     dialogMeetingConfirmation();
-                }
+                }*/
 
           /*      try {
                     ((VideoClassActivity) getActivity()).removeBubble();
@@ -2039,5 +2126,16 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
     }
 
+
+    private void startTimer()
+    {
+        countDownTimer.start();
+    }
+
+    private void endTimer()
+    {
+        isAutomatically = false;
+        countDownTimer.cancel();
+    }
 
 }

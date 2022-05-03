@@ -248,7 +248,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.imgPhoto.setVisibility(View.GONE);
 
                 if(!AmazoneImageDownload.isImageDownloaded(item.fileName.get(0)))
-                listener.callBirthdayPostCreation(item , position);
+                    listener.callBirthdayPostCreation(item , position);
 
         }
         else {
