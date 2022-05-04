@@ -644,7 +644,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
 
                     BaseTeamv2Response.TeamListData data = result.get(i);
 
-                    baseTeamTable.group_id = data.getFeaturedIconData().get(i).groupId;
+
+                    baseTeamTable.group_id = GroupDashboardActivityNew.groupId;
                     baseTeamTable.activity = data.getActivity();
                     baseTeamTable.kanActivity = data.getKanActivity();
                     baseTeamTable.featureIcons = new Gson().toJson(data.getFeaturedIconData());
@@ -863,6 +864,10 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                     bannerData = bannerRes.getBannerData().get(0);
 
                     Log.e(TAG,"banner Data"+new Gson().toJson(bannerData));*/
+
+
+
+                    Log.e(TAG,"API_BANNER_LIST banner Data"+new Gson().toJson(bannerRes.getBannerData()));
 
                     BannerTBL.deleteBanner(GroupDashboardActivityNew.groupId);
 
@@ -1788,6 +1793,9 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             }
         }
         AppLog.e(TAG, "Final PAth :: " + imageSliderList.toString());
+
+        listAmazonS3Url.clear();
+
         upLoadImageOnCloud(0);
 
     }
@@ -1800,12 +1808,21 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             if (progressDialog!=null) {
                 progressDialog.dismiss();
             }
+
           ///  mainRequest.fileName = listAmazonS3Url;
+
+            Log.e(TAG,"banner Data upLoadImageOnCloud "+new Gson().toJson(bannerData));
+
+            Log.e(TAG,"banner Data imageSliderList Size"+imageSliderList.size());
+
+
 
             if (bannerData.getFileName()!=null && bannerData.getFileName().size() > 0)
             {
                 listAmazonS3Url.addAll(bannerData.getFileName());
             }
+
+            Log.e(TAG,"banner Data listAmazonS3Url Size "+ listAmazonS3Url.size());
 
             req.setBannerFile(listAmazonS3Url);
             req.setBannerFileType("image");

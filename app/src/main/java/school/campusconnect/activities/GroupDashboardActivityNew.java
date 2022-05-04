@@ -506,7 +506,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("ANNOUNCEMENT_POST",res.data.get(0).announcementPostEventAt);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("CALENDAR_POST",res.data.get(0).calendarEventAt);
 
-                if (HomeTeamDataTBL.getAll().size() > 0)
+              /*  if (HomeTeamDataTBL.getAll().size() > 0)
                 {
                     HomeTeamDataTBL.deleteAll();
                 }
@@ -526,10 +526,10 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                         homeTeamDataTBL.save();
                     }
-                }
+                }*/
 
 
-                if (BoothPostEventTBL.getAll().size() > 0)
+        /*        if (BoothPostEventTBL.getAll().size() > 0)
                 {
                     BoothPostEventTBL.deleteAll();
                 }
@@ -556,7 +556,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
 
                     }
-                }
+                }*/
 
 
             }
@@ -1062,12 +1062,12 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     private void showLogoutPopup() {
 
-       /* SMBDialogUtils.showSMBDialogOK(GroupDashboardActivityNew.this, getResources().getString(R.string.smb_dialog_permission_change), new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOK(GroupDashboardActivityNew.this, getResources().getString(R.string.smb_dialog_permission_change), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 logoutWithoutEvents();
             }
-        });*/
+        });
 
     }
 
@@ -2109,6 +2109,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     public void onTeamSelected(MyTeamData team,String myBooth,String member) {
 
         AppLog.e(TAG,"onTeamSelected "+team.name);
+        AppLog.e(TAG,"onTeamSelected "+new Gson().toJson(team));
 
      /*   if (mGroupItem.isAdmin || mGroupItem.isBoothPresident)
         {
@@ -2154,7 +2155,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
         {
-            if (myBooth.equalsIgnoreCase("yes"))
+          /*  if (myBooth.equalsIgnoreCase("yes"))
             {
                 if (BoothPostEventTBL.getAll().size() > 0)
                 {
@@ -2202,6 +2203,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 }
             }
             else{
+
                 if (HomeTeamDataTBL.getAll().size() > 0)
                 {
                     List<HomeTeamDataTBL> homeTeamDataTBLList = HomeTeamDataTBL.getAll();
@@ -2223,7 +2225,32 @@ public class GroupDashboardActivityNew extends BaseActivity
                 {
                     tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
                 }
+            }*/
+
+            if (HomeTeamDataTBL.getAll().size() > 0)
+            {
+                List<HomeTeamDataTBL> homeTeamDataTBLList = HomeTeamDataTBL.getAll();
+
+                for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                {
+                    AppLog.e(TAG,"HomeTeamDataTBL Team ID "+homeTeamDataTBLList.get(i).teamId);
+
+                    if (team.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                    {
+                        tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(homeTeamDataTBLList.get(i).members));
+                        break;
+                    }
+                    else {
+                        tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
+                    }
+                }
             }
+            else
+            {
+                tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
+            }
+
+
         }
         else
         {

@@ -67,7 +67,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
         this.mTotal = mTotal;
         this.context = context;
         for (String s : allImageList) {
-            Log.e("ChildAdapter Images", s);
+            Log.e(TAG,"Images"+ s);
         }
 
         items = new ArrayList<>();
@@ -163,13 +163,13 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("RecyclerViewActivity", "onCreateView");
+        Log.d(TAG, "onCreateView");
         return new ViewHolder(parent, viewType, items, allImageList);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d("RecyclerViewActivity", "onBindView position=" + position);
+        Log.d(TAG, "onBindView position=" + position);
         holder.bind(items, position, mDisplay, mTotal, context);
     }
 
@@ -216,7 +216,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
             this.allImageList = allImageList;
             for (String s : allImageList) {
-                Log.e("ViewHolder Images", s);
+                Log.e(TAG,"ViewHolder Images"+ s);
             }
             mImageView = (ImageView) itemView.findViewById(R.id.mImageView);
             textView = (TextView) itemView.findViewById(R.id.tvCount);
@@ -230,11 +230,14 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
         public void bind(final List<ItemImage> item, final int position, int mDisplay, int mTotal, final Context mContext) {
 
-            Log.e("MULTI_BIND", "image " + position + "is " + Constants.decodeUrlToBase64(item.get(position).getImagePath()));
+            Log.e(TAG, "bind image " + position + "is " + Constants.decodeUrlToBase64(item.get(position).getImagePath()));
 
             if(AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())){
                 llProgress.setVisibility(View.GONE);
                 imgDownload.setVisibility(View.GONE);
+
+                Log.e(TAG, "AmazoneImageDownload image "  + AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath()).getAbsolutePath());
+
                 Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath())).fit().placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -243,7 +246,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
                     @Override
                     public void onError() {
-                        Log.e("Picasso", "Error : ");
+                        Log.e(TAG,"Picasso Error : ");
                     }
                 });
             }
@@ -323,7 +326,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
                     @Override
                     public void onError() {
-                        Log.e("Picasso", "Error : ");
+                        Log.e(TAG, " Picasso Error : ");
                     }
                 });
                 imgDownload.setVisibility(View.VISIBLE);
@@ -347,7 +350,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
                                     @Override
                                     public void onError() {
-                                        Log.e("Picasso", "Error : ");
+                                        Log.e(TAG,"Picasso Error : ");
                                     }
                                 });
                             }

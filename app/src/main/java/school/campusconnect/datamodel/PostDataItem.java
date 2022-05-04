@@ -122,6 +122,10 @@ public class PostDataItem extends Model {
         new Delete().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).execute();
     }
 
+    public static void deleteGeneralPostsBirthday(String group_id) {
+        new Delete().from(PostDataItem.class).where("type = ?", "birthdayPost").where("group_id = ?", group_id).execute();
+    }
+
     public static void deletePersonalChatPosts(String group_id, String friend_id) {
         new Delete().from(PostDataItem.class).where("type = ?", "personal").where("group_id = ?", group_id).where("friend_id = ?", friend_id).execute();
     }

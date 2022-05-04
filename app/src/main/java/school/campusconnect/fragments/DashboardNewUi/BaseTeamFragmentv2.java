@@ -417,7 +417,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
                     BaseTeamv2Response.TeamListData data = result.get(i);
 
-                    baseTeamTable.group_id = data.getFeaturedIconData().get(0).groupId;
+                    baseTeamTable.group_id = GroupDashboardActivityNew.groupId;
                     baseTeamTable.activity = data.getActivity();
                     baseTeamTable.featureIcons = new Gson().toJson(data.getFeaturedIconData());
 

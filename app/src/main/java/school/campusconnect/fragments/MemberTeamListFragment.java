@@ -560,7 +560,6 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         @Override
         protected Void doInBackground(Void... voids) {
 
-
             Log.e(TAG,"lastUpdatedSubBoothTeamTime  "+res1.data.get(0).lastUpdatedSubBoothTeamTime);
 
             LeafPreference.getInstance(getContext()).setString("SUB_BOOTH_EVENT_UPDATE",res1.data.get(0).lastUpdatedSubBoothTeamTime);

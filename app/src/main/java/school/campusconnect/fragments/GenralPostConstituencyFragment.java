@@ -302,6 +302,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("ANNOUNCEMENT_POST"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", PostDataItem.getLastGeneralPost().get(0)._now)) {
                 apiEvent = true;
                 PostDataItem.deleteGeneralPosts(mGroupId);
+                PostDataItem.deleteGeneralPostsBirthday(mGroupId);
             }
 
         }
@@ -430,6 +431,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             mAdapter.clear();
             currentPage = 1;
             PostDataItem.deleteGeneralPosts(mGroupId);
+            PostDataItem.deleteGeneralPostsBirthday(mGroupId);
             getData(false);
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, false);
         }
@@ -456,6 +458,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
                 if (currentPage == 1) {
                     PostDataItem.deleteGeneralPosts(mGroupId + "");
+                    PostDataItem.deleteGeneralPostsBirthday(mGroupId);
                     PostList.clear();
 
                     PostList.addAll(res.getResults());
@@ -506,10 +509,12 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             case LeafManager.API_ID_DELETE_POST:
                 Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
                 PostList.clear();
-                currentPage = 1;
                 PostDataItem.deleteGeneralPosts(mGroupId);
-                getData(false);
+                PostDataItem.deleteGeneralPostsBirthday(mGroupId);
+                mAdapter.notifyDataSetChanged();
                 AmazoneRemove.remove(currentItem.fileName);
+                currentPage = 1;
+                getData(false);
                 sendNotification(currentItem);
                 break;
 
@@ -936,6 +941,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
     public void callBirthdayPostCreation(PostItem item, int position)
     {
 
+        Log.e(TAG,"callBirthdayPostCreation"+position);
         if(birthdayPostCreationQueue == null)
         {
             birthdayPostCreationQueue = new ArrayList<>();
@@ -943,6 +949,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
         if(birthdayPostCreationQueue.contains(position))
         {
+            Log.e(TAG,"callBirthdayPostCreation contains"+position);
             return;
         }
 
@@ -1181,6 +1188,8 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             @Override
             public void onDownload(ArrayList<File> file) {
 
+                Log.e(TAG,"onDownload "+position);
+
                 if(getActivity() == null)
                 {
                     return;
@@ -1199,7 +1208,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                 else
                     UserBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.user));
 
-                if(file.size()>1 && file.get(2)!=null )
+                if(file.size()>2 && file.get(2)!=null )
                     MlaBitMap = BitmapFactory.decodeFile(file.get(2).getAbsolutePath(),bmOptions);
                 else
                     MlaBitMap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
@@ -1214,6 +1223,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
                 createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, item.bdayUserName,file.get(0),item.createdBy);
                 birthdayPostCreationQueue.remove(Integer.valueOf(position));
+                Log.e(TAG,"mAdapter notifyItemChanged"+position);
                 mAdapter.notifyItemChanged(position);
 
                 Log.e(TAG , "created Bitmap saved at : "+file.get(0));
@@ -1261,47 +1271,59 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
         String[] splitUserName = userName.split("\\s+");
 
+        String[] splitmlaName = mlaName.split("\\s+");
+
         Canvas canvas = new Canvas(result);
         canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
-
-
         Paint paint = new Paint();
         paint.setColor(getActivity().getResources().getColor(R.color.birthDayTextColor));
-        paint.setTextSize(result.getHeight()*0.05f);
+        paint.setTextSize(result.getHeight()*0.07f);
 
+        paint.setTextAlign(Paint.Align.CENTER);
         Rect rect = new Rect();
-
         Rect rect1 = new Rect();
 
         if (splitUserName.length > 1)
         {
             paint.getTextBounds(splitUserName[0],0,splitUserName[0].length(),rect);
             paint.getTextBounds(splitUserName[1],0,splitUserName[1].length(),rect1);
+
+            canvas.drawText(splitUserName[0],(result.getWidth()*0.74f),result.getHeight()*0.44f,paint);
+            canvas.drawText(splitUserName[1],(result.getWidth()*0.74f),result.getHeight()*0.46f+rect1.height(),paint);
         }
         else
         {
             paint.getTextBounds(userName,0,userName.length(),rect);
+            canvas.drawText(userName,result.getWidth()*0.8f,result.getHeight()*0.44f,paint);
         }
 
-        Log.e(TAG,"rect"+rect);
-        Log.e(TAG,"rect1"+rect1);
-
-        paint.setTextAlign(Paint.Align.LEFT);
 
         Paint paint2 = new Paint();
         paint2.setColor(getActivity().getResources().getColor(R.color.mlaTextColor));
-        paint2.setTextSize(result.getHeight()*0.02f);
-        Rect rect2 = new Rect();
-        paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);
-        paint2.setTextAlign(Paint.Align.LEFT);
 
+        paint2.setTextAlign(Paint.Align.CENTER);
+
+        Rect rect2 = new Rect();
+        Rect rect3 = new Rect();
+
+        if (splitmlaName.length > 1)
+        {
+            paint2.setTextSize(result.getHeight()*0.03f);
+            paint2.getTextBounds(splitmlaName[0],0,splitmlaName[0].length(),rect2);
+            paint2.getTextBounds(splitmlaName[1],0,splitmlaName[1].length(),rect3);
+
+            canvas.drawText(splitmlaName[0],result.getWidth()*0.81f,result.getHeight()*0.93f,paint2);
+            canvas.drawText(splitmlaName[1],result.getWidth()*0.81f,result.getHeight()*0.95f,paint2);
+        }
+        else
+        {
+            paint2.setTextSize(result.getHeight()*0.05f);
+            paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);
+            canvas.drawText(mlaName,result.getWidth()*0.81f,result.getHeight()*0.95f,paint2);
+        }
 
         canvas.drawBitmap(getRoundedCornerBitmap(mlaBitmap,mlaBitmap.getWidth()/2), (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.195), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.380), null);
         canvas.drawBitmap(getRoundedCornerBitmap(userBitmap,userBitmap.getWidth()/2),userBitmap.getWidth()*0.199f , userBitmap.getWidth()*0.342f, null);
-
-        canvas.drawText(splitUserName[0],result.getWidth()-rect.width()-20,result.getHeight()*0.44f,paint);
-        canvas.drawText(splitUserName[1],result.getWidth()-rect.width()-20,result.getHeight()*0.44f+rect1.height(),paint);
-        canvas.drawText(mlaName,result.getWidth()-rect2.width()-50,result.getHeight()*0.95f,paint2);
 
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);

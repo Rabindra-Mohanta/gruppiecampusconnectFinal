@@ -19,15 +19,6 @@ public class BoothPostEventTBL extends Model {
     @Column(name = "lastBoothPostAt")
     public String lastBoothPostAt;
 
-
-    public String getLastCommitteeForBoothUpdatedEventAt() {
-        return lastCommitteeForBoothUpdatedEventAt;
-    }
-
-    public void setLastCommitteeForBoothUpdatedEventAt(String lastCommitteeForBoothUpdatedEventAt) {
-        this.lastCommitteeForBoothUpdatedEventAt = lastCommitteeForBoothUpdatedEventAt;
-    }
-
     @Column(name = "lastCommitteeForBoothUpdatedEventAt")
     public String lastCommitteeForBoothUpdatedEventAt;
 
