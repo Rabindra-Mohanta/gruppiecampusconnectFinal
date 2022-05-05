@@ -158,7 +158,6 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
             }
 
 
-
             textView.setText("+" + (mTotal - mDisplay));
             if (mTotal > mDisplay) {
                 if (position == mDisplay - 1) {

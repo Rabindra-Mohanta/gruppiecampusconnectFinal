@@ -541,6 +541,8 @@ public static String TAG = "MyTeamSubBoothFragment";
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);*/
                 MyTeamSubBoothTBL.deleteSubBooth(GroupDashboardActivityNew.groupId);
+                myTeamDataList.clear();
+                adapter.add(myTeamDataList);
                 getLocally();
             }
         }

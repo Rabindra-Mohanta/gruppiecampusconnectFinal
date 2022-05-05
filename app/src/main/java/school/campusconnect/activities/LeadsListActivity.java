@@ -55,6 +55,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
     LeadListFragment fragment;
     String groupId = "";
     String teamId = "";
+    boolean apiCall = false;
     int teamMemberCount=0;
 
     @Override
@@ -79,6 +80,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         if (getIntent() != null) {
             groupId = getIntent().getExtras().getString("id");
             teamId = getIntent().getExtras().getString("team_id");
+            apiCall = getIntent().getBooleanExtra("apiCall",false);
             teamMemberCount = getIntent().getExtras().getInt("team_count");
             classData = new Gson().fromJson(getIntent().getStringExtra("class_data"), MyTeamData.class);
             AppLog.e(TAG, "groupId is " + groupId);
@@ -145,7 +147,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         edtSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               AppLog.e(TAG, "edtSearch onClick ");
+                AppLog.e(TAG, "edtSearch onClick ");
                 edtSearch.setCursorVisible(true);
             }
         });

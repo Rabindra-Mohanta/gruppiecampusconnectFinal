@@ -2,6 +2,7 @@ package school.campusconnect.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -31,8 +32,14 @@ import school.campusconnect.activities.LeadsListActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.FragmentCommitteeListBinding;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.PostTeamDataItem;
 import school.campusconnect.datamodel.committee.CommitteeTBL;
 import school.campusconnect.datamodel.committee.committeeResponse;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
+import school.campusconnect.datamodel.event.TeamEventDataTBL;
+import school.campusconnect.datamodel.event.TeamEventModelRes;
+import school.campusconnect.datamodel.event.TeamPostEventModelRes;
+import school.campusconnect.datamodel.lead.LeadDataTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -120,6 +127,7 @@ int teamMemberCount = -1;
                 Intent intent = new Intent(getActivity(), LeadsListActivity.class);
                 intent.putExtra("id", GroupDashboardActivityNew.groupId);
                 intent.putExtra("team_id", classData.teamId);
+                intent.putExtra("apiCall", false);
                 intent.putExtra("team_name", classData.name);
                 intent.putExtra("class_data",new Gson().toJson(classData));
                 intent.putExtra("all",true);
@@ -129,6 +137,8 @@ int teamMemberCount = -1;
                 startActivity(intent);
             }
         });
+
+
 
     }
     @Override
@@ -140,8 +150,9 @@ int teamMemberCount = -1;
              getCommittee();
         }
 
-    }
+        callEventApiTeam();
 
+    }
 
 
     private void getdataLocally() {
@@ -169,7 +180,7 @@ int teamMemberCount = -1;
                 getCommittee();
             }
             else
-            adapter.add(committeeDataList);
+                adapter.add(committeeDataList);
         }
         else
         {
@@ -364,5 +375,117 @@ int teamMemberCount = -1;
         showLoadingBar(binding.progressBar);
       //  binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.removeCommittee(this,GroupDashboardActivityNew.groupId,TeamID,committeeData.getCommitteeId());
+    }
+
+    public void callEventApiTeam() {
+
+
+        LeafManager leafManager = new LeafManager();
+        leafManager.getTeamEvent(new LeafManager.OnCommunicationListener() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+
+                AppLog.e(TAG, "onSuccess : " + response.status);
+                TeamEventModelRes res = (TeamEventModelRes) response;
+
+                new EventAsync(res).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+            }
+
+            @Override
+            public void onFailure(int apiId, String msg) {
+                AppLog.e(TAG, "onFailure : " + msg);
+            }
+
+            @Override
+            public void onException(int apiId, String msg) {
+                AppLog.e(TAG, "onException : " + msg);
+            }
+        }, GroupDashboardActivityNew.groupId,TeamID);
+    }
+
+    class EventAsync extends AsyncTask<Void, Void, Void> {
+
+        TeamEventModelRes res1;
+        private boolean needRefresh = false;
+
+        public EventAsync(TeamEventModelRes res1) {
+            this.res1 =res1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            if (res1.getData().size() > 0)
+            {
+                TeamEventDataTBL.deleteTeamEvent(TeamID);
+
+                for (int i = 0;i<res1.getData().size();i++)
+                {
+                    TeamEventDataTBL teamEventDataTBL = new TeamEventDataTBL();
+                    teamEventDataTBL.teamId = res1.getData().get(i).getTeamId();
+                    teamEventDataTBL.lastUserToTeamUpdatedAtEventAt = res1.getData().get(i).getLastUserToTeamUpdatedAtEventAt();
+
+                    if (res1.getData().get(i).getLastCommitteeForBoothUpdatedEventAt() != null)
+                    {
+                        teamEventDataTBL.lastCommitteeForBoothUpdatedEventAt = res1.getData().get(i).getLastCommitteeForBoothUpdatedEventAt();
+                    }
+                    teamEventDataTBL.members = res1.getData().get(i).getMembers();
+
+                    teamEventDataTBL.save();
+                }
+
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (TeamEventDataTBL.getTeamEvent(TeamID).size()>0)
+            {
+                List<TeamEventDataTBL> teamEvent= TeamEventDataTBL.getTeamEvent(TeamID);
+
+                List<CommitteeTBL> committeeTBLList = CommitteeTBL.getMember(GroupDashboardActivityNew.groupId,TeamID);
+
+                if (committeeTBLList.size() > 0)
+                {
+                    for (int i = 0;i<teamEvent.size();i++)
+                    {
+                        if (TeamID.equalsIgnoreCase(teamEvent.get(i).teamId))
+                        {
+                            if (teamEvent.get(i).lastCommitteeForBoothUpdatedEventAt != null && MixOperations.isNewEventUpdate(teamEvent.get(i).lastCommitteeForBoothUpdatedEventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", committeeTBLList.get(committeeTBLList.size()-1)._now))
+                            {
+                                CommitteeTBL.deleteMember(GroupDashboardActivityNew.groupId,TeamID);
+                                AppLog.e(TAG," onPostExecute isNewEvent getCommittee");
+                                getCommittee();
+                            }
+
+                        }
+                    }
+                }
+
+                List<LeadDataTBL> leadDataTBLList = LeadDataTBL.getLeadData(GroupDashboardActivityNew.groupId,TeamID);
+
+                if (leadDataTBLList.size() > 0)
+                {
+                    for (int i = 0;i<teamEvent.size();i++)
+                    {
+                        if (TeamID.equalsIgnoreCase(teamEvent.get(i).lastUserToTeamUpdatedAtEventAt))
+                        {
+                            if (teamEvent.get(i).lastUserToTeamUpdatedAtEventAt != null && MixOperations.isNewEventUpdate(teamEvent.get(i).lastUserToTeamUpdatedAtEventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", leadDataTBLList.get(leadDataTBLList.size()-1)._now))
+                            {
+                                LeadDataTBL.deleteLead(GroupDashboardActivityNew.groupId,TeamID);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
     }
 }

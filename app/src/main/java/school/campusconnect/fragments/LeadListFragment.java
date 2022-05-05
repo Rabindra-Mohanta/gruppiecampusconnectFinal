@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -31,6 +32,9 @@ import school.campusconnect.activities.UpdateMemberActivity;
 import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
+import school.campusconnect.datamodel.committee.CommitteeTBL;
+import school.campusconnect.datamodel.event.TeamEventDataTBL;
+import school.campusconnect.datamodel.event.TeamEventModelRes;
 import school.campusconnect.datamodel.lead.LeadDataTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.utils.AppLog;
@@ -76,7 +80,9 @@ import school.campusconnect.datamodel.LeadResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 
 public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLeadSelectListener,
         LeafManager.OnCommunicationListener {
@@ -90,6 +96,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     String groupId = "";
     private int REQUEST_UPDATE_PROFILE = 9;
     String teamId = "";
+    private boolean apiCall;
     LeafManager mManager = new LeafManager();
     public boolean mIsLoading = false;
     public int totalPages = 1;
@@ -165,6 +172,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         groupId = getArguments().getString("id");
         teamId = getArguments().getString("team_id");
+        apiCall = getArguments().getBoolean("apiCall",false);
         if(getArguments().containsKey("team_count"))
         teamMemberCount = getArguments().getInt("team_count");
         else
@@ -231,6 +239,11 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 }
             }
         });*/
+
+        if (apiCall)
+        {
+            callEventApiTeam();
+        }
     }
 
     @Override
@@ -404,17 +417,20 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     }
 
 
-    private void getData() {
-        if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar);
-            mIsLoading = true;
+    public void getData(boolean call) {
 
-            mManager.getTeamMember(this, groupId + "", teamId + "",itemClick);
+        if (call)
+        {
+            if (isConnectionAvailable()) {
+                showLoadingBar(mBinding.progressBar);
+                mIsLoading = true;
 
-        } else {
-            showNoNetworkMsg();
+                mManager.getTeamMember(this, groupId + "", teamId + "",itemClick);
+
+            } else {
+                showNoNetworkMsg();
+            }
         }
-
     }
 
     @Override
@@ -551,6 +567,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 leadDataTBL.allowedToAddTeamPostComment = results.get(i).allowedToAddTeamPostComment;
                 leadDataTBL.allowedToAddTeamPost = results.get(i).allowedToAddTeamPost;
                 leadDataTBL.aadharNumber = results.get(i).aadharNumber;
+                leadDataTBL._now = DateTimeHelper.getCurrentTime();
 
                 leadDataTBL.save();
 
@@ -598,7 +615,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         }
         else
         {
-            getData();
+            getData(true);
         }
     }
 
@@ -641,6 +658,32 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         } catch (Exception ex) {
             AppLog.e("LeadListFragment", "OnExecption : " + msg);
         }
+    }
+    public void callEventApiTeam() {
+
+
+        LeafManager leafManager = new LeafManager();
+        leafManager.getTeamEvent(new LeafManager.OnCommunicationListener() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+
+                AppLog.e(TAG, "onSuccess : " + response.status);
+                TeamEventModelRes res = (TeamEventModelRes) response;
+
+                new EventAsync(res).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+            }
+
+            @Override
+            public void onFailure(int apiId, String msg) {
+                AppLog.e(TAG, "onFailure : " + msg);
+            }
+
+            @Override
+            public void onException(int apiId, String msg) {
+                AppLog.e(TAG, "onException : " + msg);
+            }
+        }, GroupDashboardActivityNew.groupId,teamId);
     }
 
     public void refreshData(List<LeadItem> result) {
@@ -685,6 +728,73 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 Intent i = new Intent(getContext(), GroupDashboardActivityNew.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
+            }
+        }
+    }
+
+    class EventAsync extends AsyncTask<Void, Void, Void> {
+
+        TeamEventModelRes res1;
+        private boolean needRefresh = false;
+
+        public EventAsync(TeamEventModelRes res1) {
+            this.res1 =res1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            if (res1.getData().size() > 0)
+            {
+                TeamEventDataTBL.deleteTeamEvent(teamId);
+
+                for (int i = 0;i<res1.getData().size();i++)
+                {
+                    TeamEventDataTBL teamEventDataTBL = new TeamEventDataTBL();
+                    teamEventDataTBL.teamId = res1.getData().get(i).getTeamId();
+                    if (res1.getData().get(i).getLastCommitteeForBoothUpdatedEventAt() != null)
+                    {
+                        teamEventDataTBL.lastCommitteeForBoothUpdatedEventAt = res1.getData().get(i).getLastCommitteeForBoothUpdatedEventAt();
+                    }
+                    teamEventDataTBL.lastUserToTeamUpdatedAtEventAt = res1.getData().get(i).getLastUserToTeamUpdatedAtEventAt();
+                    teamEventDataTBL.members = res1.getData().get(i).getMembers();
+
+                    teamEventDataTBL.save();
+                }
+
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (TeamEventDataTBL.getTeamEvent(teamId).size()>0)
+            {
+                List<TeamEventDataTBL> teamEvent= TeamEventDataTBL.getTeamEvent(teamId);
+
+                List<LeadDataTBL> leadDataTBLList = LeadDataTBL.getLeadData(GroupDashboardActivityNew.groupId,teamId);
+
+                if (leadDataTBLList.size() > 0)
+                {
+                    for (int i = 0;i<teamEvent.size();i++)
+                    {
+                        if (teamId.equalsIgnoreCase(teamEvent.get(i).lastUserToTeamUpdatedAtEventAt))
+                        {
+                            if (teamEvent.get(i).lastUserToTeamUpdatedAtEventAt != null && MixOperations.isNewEventUpdate(teamEvent.get(i).lastUserToTeamUpdatedAtEventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", leadDataTBLList.get(leadDataTBLList.size()-1)._now))
+                            {
+                                currentPage = 1;
+                                LeadDataTBL.deleteLead(GroupDashboardActivityNew.groupId,teamId);
+                                getData(true);
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }

@@ -319,6 +319,6 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
         if (progressBar != null)
             hideLoadingBar();
         // progressBar.setVisibility(View.GONE);
-        Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

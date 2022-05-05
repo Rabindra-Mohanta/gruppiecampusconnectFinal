@@ -390,9 +390,13 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
                 if(mGroupItem.canPost){
                     BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                    myTeamDataList.clear();
+                    adapter.add(myTeamDataList);
                     getDataBoothLocally();
                 }else {
                     PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                    myTeamDataList.clear();
+                    adapter.add(myTeamDataList);
                     getDataMyBoothLocally();
                 }
                 

@@ -435,7 +435,6 @@ public class ImageUtil {
                 LeafApplication.getInstance().getCacheDir(),"cache_image");
 
 
-
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {

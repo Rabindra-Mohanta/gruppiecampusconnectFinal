@@ -109,6 +109,9 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
                 llProgress.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
                 progressBar1.setVisibility(View.GONE);
+
+                AppLog.e(TAG, "filename : "+file.getAbsolutePath());
+
                 playerView.setVideoPath(file.getPath());
 
                 AppLog.e(GroupDashboardActivityNew.class.getName(), "filename saved in preference : "+getIntent().getStringExtra("video"));

@@ -488,6 +488,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             if (resultCode == Activity.RESULT_OK)
             {
                 MyTeamVotersTBL.deleteBooth(GroupDashboardActivityNew.groupId,boothID);
+                myTeamDataList.clear();
+                adapter.add(myTeamDataList);
                 getLocally();
             }
         }

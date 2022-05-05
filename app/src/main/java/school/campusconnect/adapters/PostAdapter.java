@@ -19,6 +19,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
+import school.campusconnect.datamodel.teamdiscussion.TeamPostGetData;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
@@ -230,6 +231,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.recyclerView.setVisibility(View.GONE);
             }
         }
+
         else if(item.type.equalsIgnoreCase("birthdaypost"))
         {
                 if (item.fileName != null) {
@@ -489,6 +491,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
         @Bind(R.id.imgDownloadPdf)
         ImageView imgDownloadPdf;
 
+        @Bind(R.id.linExternalPush)
+        LinearLayout linExternalPush;
+
+        @Bind(R.id.external_txt_push)
+        ImageView external_txt_push;
+
         public ImageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -506,10 +514,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
 
         @OnClick({R.id.txt_like, R.id.txt_fav, R.id.rel, R.id.txt_readmore, R.id.iv_delete,
                 R.id.txt_comments, R.id.txt_drop_delete, R.id.txt_drop_report,R.id.txt_drop_deletevideo, R.id.txt_drop_share,
-                R.id.txt_que, R.id.txt_push, R.id.txt_name, R.id.txt_like_list, R.id.img_comments, R.id.img_like})
+                R.id.txt_que, R.id.txt_push, R.id.txt_name, R.id.txt_like_list, R.id.img_comments, R.id.img_like, R.id.linExternalPush, R.id.external_txt_push})
         public void OnLikeClick(View v) {
             item = list.get(getLayoutPosition());
             switch (v.getId()) {
+                case R.id.external_txt_push:
+                case R.id.linExternalPush:
+                    if (lin_drop.getVisibility() == View.VISIBLE)
+                        lin_drop.setVisibility(View.GONE);
+                    if (isConnectionAvailable()) {
+                        listener.onExternalShareClick(item);
+                    } else {
+                        showNoNetworkMsg();
+                    }
+                    break;
+
                 case R.id.img_like:
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
@@ -518,7 +537,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     } else {
                         showNoNetworkMsg();
                     }
-
                     break;
                 case R.id.txt_like:
                     if (lin_drop.getVisibility() == View.VISIBLE)
@@ -691,6 +709,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
         void onLikeListClick(PostItem item);
 
         void onMoreOptionClick(PostItem item);
+
+        void onExternalShareClick(PostItem item);
 
         void onDeleteVideoClick(PostItem item, int adapterPosition);
 

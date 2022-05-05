@@ -20,9 +20,11 @@ import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.ReadUnreadPostUsers;
+import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetData;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
@@ -174,7 +176,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         }
 
 
-        if (!TextUtils.isEmpty(item.fileType)) {
+        if (!TextUtils.isEmpty(item.fileType) && !item.fileType.equalsIgnoreCase("birthdaypost"))
+        {
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null) {
                /* int height=0;
@@ -208,7 +211,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                 }
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.imgPhoto.setVisibility(View.GONE);
-            } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+            }
+            else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
                 holder.constThumb.setVisibility(View.VISIBLE);
                 holder.imgPhoto.setVisibility(View.GONE);
                 holder.recyclerView.setVisibility(View.GONE);
@@ -236,7 +240,30 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.recyclerView.setVisibility(View.GONE);
             }
-        } else {
+        }
+        else if(item.fileType.equalsIgnoreCase("birthdaypost"))
+        {
+            if (item.fileName != null) {
+
+                ChildAdapter adapter;
+                if (item.fileName.size() == 3) {
+                    adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
+                } else {
+                    adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
+                }
+                adapter.setShowDownloadButton(false);
+                holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
+                holder.recyclerView.setVisibility(View.VISIBLE);
+            }
+            holder.imgPlay.setVisibility(View.GONE);
+            holder.imgPhoto.setVisibility(View.GONE);
+
+            if(!AmazoneImageDownload.isImageDownloaded(item.fileName.get(0)))
+                listener.callBirthdayPostCreation(item , position);
+
+        }
+        else
+            {
             holder.imgPhoto.setVisibility(View.GONE);
             holder.imgPlay.setVisibility(View.GONE);
             holder.recyclerView.setVisibility(View.GONE);
@@ -461,6 +488,12 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         @Bind(R.id.imgDownloadPdf)
         ImageView imgDownloadPdf;
 
+        @Bind(R.id.linExternalPush)
+        LinearLayout linExternalPush;
+
+        @Bind(R.id.external_txt_push)
+        ImageView external_txt_push;
+
         public ImageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -490,10 +523,23 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
         @OnClick({R.id.txt_like, R.id.txt_fav, R.id.rel, R.id.txt_readmore, R.id.iv_delete,
                 R.id.txt_comments, R.id.txt_drop_delete, R.id.txt_drop_report , R.id.txt_drop_deletevideo, R.id.txt_drop_share, R.id.img_comments,
-                R.id.txt_push, R.id.txt_name, R.id.img_like, R.id.txt_readUnreadUuser})
+                R.id.txt_push, R.id.txt_name, R.id.img_like, R.id.txt_readUnreadUuser, R.id.linExternalPush, R.id.external_txt_push})
         public void OnLikeClick(View v) {
             item = list.get(getLayoutPosition());
             switch (v.getId()) {
+
+                case R.id.external_txt_push:
+                case R.id.linExternalPush:
+                        if (lin_drop.getVisibility() == View.VISIBLE)
+                            lin_drop.setVisibility(View.GONE);
+                         if (isConnectionAvailable()) {
+                            listener.onExternalShareClick(item);
+                        } else {
+                            showNoNetworkMsg();
+                        }
+                    break;
+
+
                 case R.id.img_like:
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
@@ -621,6 +667,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                     if (isConnectionAvailable()) {
                         AppLog.e("onShareClick", "method called");
                         listener.onPushClick(item);
+
+
                     } else {
                         showNoNetworkMsg();
                     }
@@ -659,6 +707,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
         void onReportClick(TeamPostGetData item);
 
+        void onExternalShareClick(TeamPostGetData item);
+
         void onShareClick(TeamPostGetData item);
 
         void onPushClick(TeamPostGetData item);
@@ -666,6 +716,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         void onNameClick(TeamPostGetData item);
 
         void onLikeListClick(TeamPostGetData item);
+
+        void callBirthdayPostCreation(TeamPostGetData item , int position);
 
         void onDeleteVideoClick(TeamPostGetData item , int position);
     }

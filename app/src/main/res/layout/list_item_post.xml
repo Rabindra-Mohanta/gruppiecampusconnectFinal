@@ -356,6 +356,22 @@
                         android:src="@drawable/icon_post_push" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linExternalPush"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_10dp"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/external_txt_push"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"
+                        android:gravity="center_vertical"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_share" />
+                </LinearLayout>
+
 
             </LinearLayout>
         </LinearLayout>

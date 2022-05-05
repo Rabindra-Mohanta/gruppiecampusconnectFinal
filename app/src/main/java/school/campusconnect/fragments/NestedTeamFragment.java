@@ -125,6 +125,7 @@ public class NestedTeamFragment extends BaseFragment implements LeafManager.OnCo
     public void onTreeClick(int position) {
         Intent intent = new Intent(getActivity(), LeadsListActivity.class);
         intent.putExtra("id", groupId);
+        intent.putExtra("apiCall", false);
         intent.putExtra("team_id", listTeams.get(position).teamId);
         intent.putExtra("team_name", listTeams.get(position).name);
         intent.putExtra("isAdmin", false);

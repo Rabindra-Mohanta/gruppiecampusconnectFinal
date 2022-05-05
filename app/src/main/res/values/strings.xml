@@ -1182,6 +1182,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="smb_add_jitsi_token">Are you sure you want to add jitsiToken.?</string>
     <string name="smb_attach_file">Attach Selected file?</string>
     <string name="smb_change_team_admin">Are you sure you want to change team admin</string>
+    <string name="smb_no_file_attached">No File Attached...</string>
+    <string name="smb_no_file_download">Please Download All Files...</string>
 
 
     <string-array name="publc_private_array">

@@ -90,6 +90,7 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
             case R.id.menu_add_chat:
                 Intent intent2 = new Intent(getActivity(), LeadsListActivity.class);
                 intent2.putExtra("id",  GroupDashboardActivityNew.groupId);
+                intent2.putExtra("apiCall", false);
                 intent2.putExtra("team_id", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
                 intent2.putExtra("item_click", true);
                 startActivity(intent2);

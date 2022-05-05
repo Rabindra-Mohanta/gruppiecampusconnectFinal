@@ -207,6 +207,7 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
             Intent intent = new Intent(getActivity(), LeadsListActivity.class);
             intent.putExtra("id", GroupDashboardActivityNew.groupId);
             intent.putExtra("team_id", myTeamData.teamId);
+            intent.putExtra("apiCall", false);
             intent.putExtra("team_name", myTeamData.name);
             intent.putExtra("isAdmin", false);
             intent.putExtra("isNest", true);

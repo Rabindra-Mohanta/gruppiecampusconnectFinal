@@ -29,6 +29,7 @@ import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
 import school.campusconnect.datamodel.committee.committeeResponse;
+import school.campusconnect.datamodel.event.TeamEventModelRes;
 import school.campusconnect.datamodel.event.TeamPostEventModelRes;
 import school.campusconnect.datamodel.feed.AdminFeederResponse;
 import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
@@ -1951,5 +1952,8 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TeamPostEventModelRes> getTeamPostEvent(@Path("group_id") String group_id,@Path("team_id") String team_id);
 
+    @GET("api/v1/groups/{group_id}/team/{team_id}/events/team")  //Get team events inside all booth members
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TeamEventModelRes> getTeamEvent(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
 }

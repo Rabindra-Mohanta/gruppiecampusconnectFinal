@@ -385,8 +385,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             else {
                 if (imageFragment.isImageChanged && !TextUtils.isEmpty(imageFragment.getmProfileImage())) {
                     AppLog.e(TAG, "Image Changed.." + new Gson().toJson(item));
-                    item.image = imageFragment.getmProfileImage();
                 }
+                item.image = imageFragment.getmProfileImage();
                 AppLog.e(TAG, "Image Not Changed.." + new Gson().toJson(item));
                 manager.updateProfileDetails(this, item);
             }

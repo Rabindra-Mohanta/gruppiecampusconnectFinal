@@ -469,6 +469,8 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             if (resultCode == Activity.RESULT_OK)
             {
                 BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                myTeamDataList.clear();
+                adapter.add(myTeamDataList);
                 getDataLocally();
             }
         }

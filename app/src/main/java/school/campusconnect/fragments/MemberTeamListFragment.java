@@ -619,6 +619,8 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);*/
                 MemberTeamTBL.deleteMemberBooth(GroupDashboardActivityNew.groupId,team_id);
+                myTeamDataList.clear();
+                adapter.add(myTeamDataList);
                 getDataLocally();
             }
         }

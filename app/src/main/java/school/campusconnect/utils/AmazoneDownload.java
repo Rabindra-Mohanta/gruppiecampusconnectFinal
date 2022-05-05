@@ -49,6 +49,27 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
         return asynch;
     }
 
+
+    public static File getDownloadPath(String url) {
+        try {
+            if (!TextUtils.isEmpty(url)) {
+                url = Constants.decodeUrlToBase64(url);
+                String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                File file;
+                if (key.contains("/")) {
+                    String[] splitStr = key.split("/");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".pdf");
+                } else {
+                    file = new File(getDirForMedia(""), key + ".pdf");
+                }
+                return file;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static boolean isPdfDownloaded(String url) {
         try {
             if (!TextUtils.isEmpty(url)) {

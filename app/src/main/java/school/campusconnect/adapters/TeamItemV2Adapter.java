@@ -4,6 +4,7 @@ import android.content.Context;
 import android.icu.text.Transliterator;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +29,15 @@ import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ItemTeamV2Binding;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.notificationList.CountNotificationTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
 public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.ViewHolder> {
+
+    public static final String TAG = "TeamItemV2Adapter";
 
     ArrayList<MyTeamData> featuredIconData;
     Context context;
@@ -89,7 +93,22 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         int postUnseenCount = 0;
 
         if(team.teamId != null && !team.teamId.equalsIgnoreCase(""))
+        {
             postUnseenCount = leafPreference.getInt(team.teamId+"_post");
+
+            /*if (CountNotificationTBL.getCountNotification(team.teamId).size() > 0)
+            {
+                Log.e(TAG,"CountNotificationTBL Size "+CountNotificationTBL.getCountNotification(team.teamId).size());
+
+                for (int i = 0;i<CountNotificationTBL.getCountNotification(team.teamId).size();i++)
+                {
+                    if (team.teamId.equalsIgnoreCase(CountNotificationTBL.getCountNotification(team.teamId).get(i).teamID))
+                        postUnseenCount = CountNotificationTBL.getCountNotification(team.teamId).get(i).count;
+                        Log.e(TAG,"match Count");
+                }
+
+            }*/
+        }
         else if(team.name.equalsIgnoreCase("notice board"))
         {
             postUnseenCount = leafPreference.getInt(team.groupId+"_post");
@@ -104,6 +123,9 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         {
             postUnseenCount = leafPreference.getInt(team.groupId+"_TEST_EXAM_NOTI_COUNT");
         }
+
+        Log.e(TAG,"postUnseenCount "+postUnseenCount);
+
 
             /*else if(team.name.equalsIgnoreCase("vendor connect"))
             {

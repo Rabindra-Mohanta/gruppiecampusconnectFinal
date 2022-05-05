@@ -112,7 +112,6 @@ public class MemberTeamTBL extends Model {
     }
 
 
-
     public static void deleteMemberBooth(String group_id,String teamId) {
         new Delete().from(MemberTeamTBL.class).where("groupId = ?", group_id).where("teamId = ?", teamId).execute();
     }

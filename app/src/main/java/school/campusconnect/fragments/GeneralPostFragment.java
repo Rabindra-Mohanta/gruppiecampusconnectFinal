@@ -5,10 +5,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
 import android.icu.text.Transliterator;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -20,7 +23,9 @@ import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.firebase.SendNotificationGlobal;
 import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneRemove;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -46,6 +51,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -87,6 +93,8 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
+
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 //import com.google.api.services.samples.youtube.cmdline.Auth;
 
@@ -884,6 +892,148 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             mBinding.llAskDoubt.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onExternalShareClick(PostItem item) {
+
+        boolean isDownloaded = true;
+
+        if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+
+        } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneDownload.isPdfDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, item.video);
+            intent.setType("text/plain");
+            startActivity(intent);
+        } else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneVideoDownload.isVideoDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        } else if(item.fileType.equalsIgnoreCase("birthdaypost")){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (!item.fileType.equals(Constants.FILE_TYPE_YOUTUBE))
+        {
+            if (item.fileName != null && item.fileName.size() > 0)
+            {
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+
+                        if(item.fileType.equals(Constants.FILE_TYPE_IMAGE))
+                        {
+                            files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+                        else if (item.fileType.equals(Constants.FILE_TYPE_PDF))
+                        {
+                            files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+                        else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO))
+                        {
+                            files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("*/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
     }
 
     @Override

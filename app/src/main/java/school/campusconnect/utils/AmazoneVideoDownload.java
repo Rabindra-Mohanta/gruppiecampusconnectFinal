@@ -45,7 +45,28 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
         return asynchTask;
     }
 
-    public boolean isVideoDownloaded(String url) {
+
+
+    public static File getDownloadPath(String url) {
+        try {
+            if (!TextUtils.isEmpty(url)) {
+                url = Constants.decodeUrlToBase64(url);
+                String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                File file;
+                if (key.contains("/")) {
+                    String[] splitStr = key.split("/");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".mp4");
+                } else {
+                    file = new File(getDirForMedia(""), key + ".mp4");
+                }
+                return file;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static boolean isVideoDownloaded(String url) {
         try {
             if (!TextUtils.isEmpty(url)) {
                 url = Constants.decodeUrlToBase64(url);
@@ -184,7 +205,7 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
 
     }
 
-    private  File getDirForMedia(String folder) {
+    private static File getDirForMedia(String folder) {
         File mainFolder = LeafApplication.getInstance().AppFilesPath();
         if (!mainFolder.exists()) {
             mainFolder.mkdir();

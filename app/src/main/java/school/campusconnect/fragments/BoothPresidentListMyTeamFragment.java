@@ -564,6 +564,8 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
             if (resultCode == Activity.RESULT_OK)
             {
                 PublicFormBoothTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                myTeamDataList.clear();
+                adapter.add(myTeamDataList);
                 getDataMyBoothLocally();
             }
         }

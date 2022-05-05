@@ -2830,8 +2830,8 @@ public class GroupDashboardActivityNew extends BaseActivity
         }
     }
 
-
     private void DeleteOldSavedVideos() {
+
         LeafPreference leafPreference = LeafPreference.getInstance(GroupDashboardActivityNew.this);
         if (!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase("")) {
             ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {

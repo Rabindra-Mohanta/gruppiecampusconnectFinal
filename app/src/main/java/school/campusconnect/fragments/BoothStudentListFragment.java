@@ -209,6 +209,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
 
     private void getDataLocally() {
+
         List<CommitteeMemberTBL> memberTBLList = CommitteeMemberTBL.getCommitteeMember(GroupDashboardActivityNew.groupId,classData.teamId,committeeData.getCommitteeId());
 
         list.clear();
@@ -556,6 +557,8 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);*/
                 CommitteeMemberTBL.deleteCommitteeMember(GroupDashboardActivityNew.groupId, classData.teamId,committeeData.getCommitteeId());
+                list.clear();
+                adapter.add(list);
                 getDataLocally();
             }
         }

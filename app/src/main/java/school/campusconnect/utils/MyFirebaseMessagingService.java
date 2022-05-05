@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.notificationList.CountNotificationTBL;
 import school.campusconnect.firebase.SendNotificationModel;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -171,7 +172,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                     case "post": {
                         if ("team".equalsIgnoreCase(data.postType)) {
+
                             leafPreference.setInt(data.teamId + "_post", leafPreference.getInt(data.teamId + "_post") + 1);
+
+                        /*    if (CountNotificationTBL.getCountNotification(data.teamId).size() > 0)
+                            {
+                                int count = CountNotificationTBL.getCountNotification(data.teamId).get(0).count;
+                                CountNotificationTBL.updateCountNotification(data.teamId,count+1);
+                            }
+                            else
+                            {
+                                CountNotificationTBL countNotificationTBL = new CountNotificationTBL();
+                                countNotificationTBL.count = 1;
+                                countNotificationTBL.teamID = data.teamId;
+                                countNotificationTBL.save();
+                            }*/
+
+
                         } else if ("group".equalsIgnoreCase(data.postType)) {
                             leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
                         }

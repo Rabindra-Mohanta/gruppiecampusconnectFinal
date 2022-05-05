@@ -59,10 +59,18 @@ public class LeadDataTBL extends Model {
     @Column(name = "page")
     public int page;
 
+    @Column(name = "_now")
+    public String _now;
+
 
     public static List<LeadDataTBL> getLead(String groupID,String teamID,int page)
     {
         return new Select().from(LeadDataTBL.class).where("groupID = ?",groupID).where("teamID = ?",teamID).where("page = ?",page).execute();
+    }
+
+    public static List<LeadDataTBL> getLeadData(String groupID,String teamID)
+    {
+        return new Select().from(LeadDataTBL.class).where("groupID = ?",groupID).where("teamID = ?",teamID).execute();
     }
 
     public static List<LeadDataTBL> deleteLead(String groupID,String teamID,int page){

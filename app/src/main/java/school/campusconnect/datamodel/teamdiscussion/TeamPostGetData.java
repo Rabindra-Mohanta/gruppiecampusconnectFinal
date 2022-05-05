@@ -21,6 +21,9 @@ public class TeamPostGetData extends BaseResponse {
     public ArrayList<String> fileName; // Url Encoded in base 64
     public ArrayList<String> thumbnailImage; // Url Encoded in base 64
 
+    public String bdayUserName;
+    public String bdayUserImage;
+
     public String createdById;
     public String createdByImage;
     public String createdBy;

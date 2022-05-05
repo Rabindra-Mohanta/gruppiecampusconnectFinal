@@ -5,9 +5,23 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -60,7 +74,10 @@ import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneImageDownload;
+import school.campusconnect.utils.AmazoneMultiImageDownload;
 import school.campusconnect.utils.AmazoneRemove;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -80,6 +97,10 @@ import com.activeandroid.ActiveAndroid;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,8 +130,13 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
+import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
+
+import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static com.zipow.videobox.confapp.ConfMgr.getApplicationContext;
 
 /**
  * Created by frenzin04 on 3/29/2017.
@@ -125,6 +151,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     LeafManager manager = new LeafManager();
     String mGroupId = "";
     int position = -1;
+    ArrayList<Integer> birthdayPostCreationQueue ; /// QUEUE TO MAINTAIN BIRTHDAY POST TASKS... SO IT DOESNT REPEAT.
 
     private int REQUEST_CODE_UPDATE_TEAM = 9;
     public boolean mIsLoading = false;
@@ -317,7 +344,6 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 if ( teamData.subCategory!= null && teamData.subCategory.equalsIgnoreCase("boothPresidents"))
                 {
                     show_Dialog(R.array.booth);
-
                 }
                 else
                 {
@@ -362,6 +388,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         dialog.show();
                     }
                 }
+
                 break;
             case R.id.action_settings:
                 Intent intent1 = new Intent(getActivity(), TeamSettingsActivity.class);
@@ -931,7 +958,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         mAdapter2 = new TeamListAdapter(teamPostList, this, "team", mGroupId, team_id, count, databaseHandler, teamData);
         mBinding.recyclerView2.setAdapter(mAdapter2);
 
-      /*  if (type.equalsIgnoreCase("team"))
+        /*  if (type.equalsIgnoreCase("team"))
         {
 
         }*/
@@ -939,6 +966,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         callEventApiTeamPost();
 
         if (getActivity() instanceof GroupDashboardActivityNew) {
+
           /*  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -957,6 +985,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     }
                 }
             });*/
+
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -975,7 +1004,6 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
                             return;
 
-
                         if (teamData.category.equalsIgnoreCase("booth"))
                         {
                             Intent intent = new Intent(getContext(), CommitteeActivity.class);
@@ -989,21 +1017,21 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                             try {
                                 Intent intent = new Intent(getContext(), LeadsListActivity.class);
                                 intent.putExtra("id", mGroupId);
+                                intent.putExtra("apiCall", true);
                                 intent.putExtra("team_id", team_id);
                                 intent.putExtra("class_data",new Gson().toJson(teamData));
                                 intent.putExtra("team_name", teamName);
+                                intent.putExtra("apiCall", false);
                                 intent.putExtra("team_count", teamData.members);
                                 intent.putExtra("isAdmin", teamData.isTeamAdmin);
                                 startActivity(intent);
                                 AppLog.e("Team id : ", team_id + "");
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 AppLog.e("floating", "error is " + e.toString());
                             }
                         }
-
-
                     }
-
                 }
             });
         }
@@ -1574,6 +1602,149 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     }
 
     @Override
+    public void onExternalShareClick(TeamPostGetData item) {
+        //chanage share data Post share option to external applications
+
+        boolean isDownloaded = true;
+
+        if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+
+        } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneDownload.isPdfDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, item.video);
+            intent.setType("text/plain");
+            startActivity(intent);
+        } else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneVideoDownload.isVideoDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        } else if(item.fileType.equalsIgnoreCase("birthdaypost")){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (!item.fileType.equals(Constants.FILE_TYPE_YOUTUBE))
+        {
+            if (item.fileName != null && item.fileName.size() > 0)
+            {
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+
+                        if(item.fileType.equals(Constants.FILE_TYPE_IMAGE))
+                        {
+                            files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+                        else if (item.fileType.equals(Constants.FILE_TYPE_PDF))
+                        {
+                            files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+                        else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO))
+                        {
+                            files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("*/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    }
+
+    @Override
     public void onShareClick(TeamPostGetData item) {
         GroupDashboardActivityNew.is_share_edit = true;
         GroupDashboardActivityNew.share_type = "team";
@@ -1608,6 +1779,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     @Override
     public void onPushClick(TeamPostGetData item) {
 
+
+
         GroupDashboardActivityNew.is_share_edit = true;
         GroupDashboardActivityNew.share_type = "team";
         GroupDashboardActivityNew.share_title = item.title;
@@ -1634,6 +1807,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         intent.putExtra("id", mGroupId);
         intent.putExtra("post_id", item.id);
         startActivity(intent);
+
     }
 
     @Override
@@ -1661,6 +1835,225 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             showNoNetworkMsg();
         }
     }
+
+    @Override
+    public void callBirthdayPostCreation(TeamPostGetData item, int position) {
+        Log.e(TAG,"callBirthdayPostCreation"+position);
+        if(birthdayPostCreationQueue == null)
+        {
+            birthdayPostCreationQueue = new ArrayList<>();
+        }
+
+        if(birthdayPostCreationQueue.contains(position))
+        {
+            Log.e(TAG,"callBirthdayPostCreation contains"+position);
+            return;
+        }
+
+        birthdayPostCreationQueue.add(position);
+        createBirthPostAndSave(item ,position);
+    }
+
+    private void createBirthPostAndSave(TeamPostGetData item , int position)
+    {
+        Bitmap MlaBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
+
+        Log.e(TAG,"MlaBitmap H "+MlaBitmap.getHeight());
+        Log.e(TAG,"MlaBitmap W "+MlaBitmap.getWidth());
+
+        ArrayList<String> imageList = new ArrayList<>();
+        imageList.add(item.fileName.get(0));
+        imageList.add(item.bdayUserImage);
+        imageList.add(item.createdByImage);
+
+        AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
+            @Override
+            public void onDownload(ArrayList<File> file) {
+
+                Log.e(TAG,"onDownload "+position);
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                Bitmap BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.get(0).getAbsolutePath(),bmOptions);
+
+                Log.e(TAG,"BirthdayTempleteBitmap H "+BirthdayTempleteBitmap.getHeight());
+                Log.e(TAG,"BirthdayTempleteBitmap W "+BirthdayTempleteBitmap.getWidth());
+
+
+                Bitmap UserBitmap,MlaBitMap;
+
+                if(file.size()>1 && file.get(1)!=null )
+                    UserBitmap = BitmapFactory.decodeFile(file.get(1).getAbsolutePath(),bmOptions);
+                else
+                    UserBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.user));
+
+                if(file.size()>2 && file.get(2)!=null )
+                    MlaBitMap = BitmapFactory.decodeFile(file.get(2).getAbsolutePath(),bmOptions);
+                else
+                    MlaBitMap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
+
+                Log.e(TAG,"UserBitmap H "+UserBitmap.getHeight());
+                Log.e(TAG,"UserBitmap W "+UserBitmap.getWidth());
+
+                if(item.bdayUserName ==null || item.bdayUserName.equalsIgnoreCase(""))
+                {
+                    item.bdayUserName = "Username";
+                }
+
+                createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, item.bdayUserName,file.get(0),item.createdBy);
+                birthdayPostCreationQueue.remove(Integer.valueOf(position));
+                Log.e(TAG,"mAdapter notifyItemChanged"+position);
+                mAdapter2.notifyItemChanged(position);
+
+                Log.e(TAG , "created Bitmap saved at : "+file.get(0));
+            }
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
+    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file,String mlaName) {
+
+        Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
+
+        userBitmap = getResizedBitmap(userBitmap, (int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)));
+        mlaBitmap = getResizedBitmap(mlaBitmap,(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)));
+
+        String[] splitUserName = userName.split("\\s+");
+
+        String[] splitmlaName = mlaName.split("\\s+");
+
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
+        Paint paint = new Paint();
+        paint.setColor(getActivity().getResources().getColor(R.color.birthDayTextColor));
+        paint.setTextSize(result.getHeight()*0.07f);
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        Rect rect = new Rect();
+        Rect rect1 = new Rect();
+
+        if (splitUserName.length > 1)
+        {
+            paint.getTextBounds(splitUserName[0],0,splitUserName[0].length(),rect);
+            paint.getTextBounds(splitUserName[1],0,splitUserName[1].length(),rect1);
+
+            canvas.drawText(splitUserName[0],(result.getWidth()*0.74f),result.getHeight()*0.44f,paint);
+            canvas.drawText(splitUserName[1],(result.getWidth()*0.74f),result.getHeight()*0.46f+rect1.height(),paint);
+        }
+        else
+        {
+            paint.getTextBounds(userName,0,userName.length(),rect);
+            canvas.drawText(userName,result.getWidth()*0.8f,result.getHeight()*0.44f,paint);
+        }
+
+
+        Paint paint2 = new Paint();
+        paint2.setColor(getActivity().getResources().getColor(R.color.mlaTextColor));
+
+        paint2.setTextAlign(Paint.Align.CENTER);
+
+        Rect rect2 = new Rect();
+        Rect rect3 = new Rect();
+
+        if (splitmlaName.length > 1)
+        {
+            paint2.setTextSize(result.getHeight()*0.03f);
+            paint2.getTextBounds(splitmlaName[0],0,splitmlaName[0].length(),rect2);
+            paint2.getTextBounds(splitmlaName[1],0,splitmlaName[1].length(),rect3);
+
+            canvas.drawText(splitmlaName[0],result.getWidth()*0.81f,result.getHeight()*0.93f,paint2);
+            canvas.drawText(splitmlaName[1],result.getWidth()*0.81f,result.getHeight()*0.95f,paint2);
+        }
+        else
+        {
+            paint2.setTextSize(result.getHeight()*0.05f);
+            paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);
+            canvas.drawText(mlaName,result.getWidth()*0.81f,result.getHeight()*0.95f,paint2);
+        }
+
+        canvas.drawBitmap(getRoundedCornerBitmap(mlaBitmap,mlaBitmap.getWidth()/2), (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.195), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.380), null);
+        canvas.drawBitmap(getRoundedCornerBitmap(userBitmap,userBitmap.getWidth()/2),userBitmap.getWidth()*0.199f , userBitmap.getWidth()*0.342f, null);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(bytes.toByteArray());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException"+e.getMessage());
+        }
+
+        return file;
+
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
+
+    }
+
+    public Bitmap drawableToBitmap(Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
 
     @Override
     public void onDeleteVideoClick(TeamPostGetData item, int position) {

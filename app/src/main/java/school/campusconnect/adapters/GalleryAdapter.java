@@ -284,6 +284,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         @Bind(R.id.txt_drop_delete)
         TextView txt_drop_delete;
 
+        @Bind(R.id.txt_share)
+        TextView txt_share;
+
         @Bind(R.id.txt_drop_deletevideo)
         TextView txt_drop_deletevideo;
         @Bind(R.id.viewDeleteVideo)
@@ -312,11 +315,18 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     new SpacesItemDecoration(mContext.getResources().getDimensionPixelSize(R.dimen.padding_3dp)));
         }
 
-        @OnClick({R.id.iv_delete,R.id.txt_drop_delete,R.id.rel,R.id.txt_drop_deletevideo})
+        @OnClick({R.id.iv_delete,R.id.txt_drop_delete,R.id.rel,R.id.txt_drop_deletevideo,R.id.txt_share})
         public void onClick(View view)
         {
             switch (view.getId())
             {
+                case R.id.txt_share:
+                    if (lin_drop.getVisibility() == View.VISIBLE)
+                        lin_drop.setVisibility(View.GONE);
+                    listener.onExternalShareClick(listData.get(getAdapterPosition()));
+                    break;
+
+
                 case R.id.rel:
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
@@ -349,6 +359,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     {
         public void onPostClick(GalleryPostRes.GalleryData galleryData);
         public void onDeleteClick(GalleryPostRes.GalleryData galleryData);
+        void onExternalShareClick(GalleryPostRes.GalleryData item);
         void onDeleteVideoClick(GalleryPostRes.GalleryData galleryData, int adapterPosition);
     }
 
