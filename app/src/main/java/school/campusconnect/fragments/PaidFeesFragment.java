@@ -198,7 +198,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Fee Found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_fee_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -208,7 +208,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
             }
             else
             {
-                txtEmpty.setText("No Fee Found");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_fee_found));
                 return 0;
             }
 

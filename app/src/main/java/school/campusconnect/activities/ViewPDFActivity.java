@@ -5,13 +5,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
 import android.view.View;
@@ -34,6 +39,8 @@ import school.campusconnect.R;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.views.SMBDialogUtils;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 public class ViewPDFActivity extends BaseActivity {
 
     public static ArrayList<Bitmap> itemData;
@@ -52,6 +59,7 @@ public class ViewPDFActivity extends BaseActivity {
     RelativeLayout llAfterDownload;
     RelativeLayout llBeforeDownload;
     ImageView imgDownloadPdf;
+    ImageView iconShareExternal;
     ImageView thumbnail;
     AmazoneDownload asyncTask;
     @Override
@@ -63,7 +71,7 @@ public class ViewPDFActivity extends BaseActivity {
         pdfView = findViewById(R.id.pdfView);
         fabButton = findViewById(R.id.fabButton);
         tvCurrentPage = findViewById(R.id.tvCurrentPage);
-
+        iconShareExternal = findViewById(R.id.iconShareExternal);
         imgDownloadPdf = (ImageView) findViewById(R.id.imgDownloadPdf);
         thumbnail = (ImageView) findViewById(R.id.thumbnail);
         llAfterDownload = (RelativeLayout) findViewById(R.id.llAfterDownload);
@@ -93,6 +101,48 @@ public class ViewPDFActivity extends BaseActivity {
                 llBeforeDownload.setVisibility(View.GONE);
                 llAfterDownload.setVisibility(View.VISIBLE);
                 download(pdf);
+            }
+        });
+
+        iconShareExternal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isDownloaded = true;
+
+                if (!AmazoneDownload.isPdfDownloaded(pdf))
+                {
+                    isDownloaded = false;
+                }
+
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    files.add(AmazoneDownload.getDownloadPath(pdf));
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("*/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

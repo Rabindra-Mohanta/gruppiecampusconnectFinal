@@ -150,7 +150,7 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:text="@{message}"
-            android:textSize="18sp"
+            style="@style/LabelEmptyText"
             android:textColor="@color/color_grey_icon"
             android:textAppearance="@style/TextAppearance.Regular"
             android:visibility="@{size &gt; 1 ? View.GONE : View.VISIBLE}" />

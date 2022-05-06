@@ -190,7 +190,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             }
         });
 
-        transliterator = Transliterator.getInstance("Latin-Kannada");
+     //   transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     private void searchData(String text) {
@@ -392,7 +392,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Booths found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_booth_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -402,7 +402,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             }
             else
             {
-                txtEmpty.setText("No Booths found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_booth_found));
                 return 0;
             }
 

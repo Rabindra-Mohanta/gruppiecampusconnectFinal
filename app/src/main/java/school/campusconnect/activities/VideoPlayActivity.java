@@ -1,10 +1,14 @@
 package school.campusconnect.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
+import androidx.core.content.FileProvider;
 
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.VideoOfflineObject;
@@ -35,12 +40,15 @@ import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 public class VideoPlayActivity extends AppCompatActivity implements OnPreparedListener {
 
     public static final String TAG = "VideoPlayActivity";
     VideoView playerView;
 
     ImageView imgDownload;
+    ImageView iconShareExternal;
     ImageView thumbnail;
     RelativeLayout beforeDownload;
     RelativeLayout afterDownload;
@@ -49,12 +57,14 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
     ProgressBar progressBar;
     ProgressBar progressBar1;
     View llProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_play);
 
         playerView = findViewById(R.id.video_view);
+        iconShareExternal = findViewById(R.id.iconShareExternal);
         imgDownload = findViewById(R.id.imgDownload);
         thumbnail = findViewById(R.id.thumbnail);
         beforeDownload = findViewById(R.id.llBeforeDownload);
@@ -88,6 +98,49 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
                 beforeDownload.setVisibility(View.GONE);
                 afterDownload.setVisibility(View.VISIBLE);
                 startProcess();
+            }
+        });
+
+        iconShareExternal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                boolean isDownloaded = true;
+
+                if (!AmazoneVideoDownload.isVideoDownloaded((getIntent().getStringExtra("video"))))
+                {
+                    isDownloaded = false;
+                }
+
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    files.add(AmazoneVideoDownload.getDownloadPath(getIntent().getStringExtra("video")));
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("*/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

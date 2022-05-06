@@ -65,6 +65,7 @@ import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.event.TeamPostEventModelRes;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
+import school.campusconnect.datamodel.notificationList.CountNotificationTBL;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
@@ -940,6 +941,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
 
+
         if (!LeafPreference.getInstance(getContext()).getString(mGroupId+"_"+team_id+"_"+type).isEmpty())
         {
             totalPages2 = Integer.parseInt(LeafPreference.getInstance(getContext()).getString(mGroupId+"_"+team_id+"_"+type));
@@ -963,7 +965,25 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         }*/
 
-        callEventApiTeamPost();
+
+        if(type.equalsIgnoreCase("team"))
+        {
+            if (CountNotificationTBL.getCountNotification(team_id).size() > 0)
+            {
+                CountNotificationTBL.deleteCountNotification(team_id);
+                PostTeamDataItem.deleteTeamPosts(team_id,type);
+                AppLog.e(TAG,"CountNotificationTBL deleteCountNotification");
+            }
+            else {
+                callEventApiTeamPost();
+            }
+        }
+
+        if(!type.equalsIgnoreCase("team"))
+        {
+            callEventApiTeamPost();
+        }
+
 
         if (getActivity() instanceof GroupDashboardActivityNew) {
 
@@ -990,12 +1010,27 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 @Override
                 public void onClick(View v) {
 
+                    int members = 0;
+                    if (HomeTeamDataTBL.getTeamPost(team_id).size()>0)
+                    {
+                        List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getTeamPost(team_id);
+
+                        for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                        {
+                            if (team_id.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                            {
+                                members = homeTeamDataTBLList.get(i).members;
+                            }
+                        }
+
+                    }
+
                     if (isBoothClick != null && isBoothClick.equalsIgnoreCase("yes"))
                     {
                         Intent intent = new Intent(getContext(), CommitteeActivity.class);
                         intent.putExtra("class_data",new Gson().toJson(teamData));
                         intent.putExtra("title",teamData.name);
-                        intent.putExtra("team_count", teamData.members);
+                        intent.putExtra("team_count", members);
                         intent.putExtra("isBoothClick","yes");
                         startActivity(intent);
                     }
@@ -1009,7 +1044,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                             Intent intent = new Intent(getContext(), CommitteeActivity.class);
                             intent.putExtra("class_data",new Gson().toJson(teamData));
                             intent.putExtra("title",teamData.name);
-                            intent.putExtra("team_count", teamData.members);
+                            intent.putExtra("team_count", members);
                             intent.putExtra("isBoothClick","yes");
                             startActivity(intent);
                         }
@@ -1021,8 +1056,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                                 intent.putExtra("team_id", team_id);
                                 intent.putExtra("class_data",new Gson().toJson(teamData));
                                 intent.putExtra("team_name", teamName);
-                                intent.putExtra("apiCall", false);
-                                intent.putExtra("team_count", teamData.members);
+                                intent.putExtra("team_count", members);
                                 intent.putExtra("isAdmin", teamData.isTeamAdmin);
                                 startActivity(intent);
                                 AppLog.e("Team id : ", team_id + "");
@@ -1071,6 +1105,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 AppLog.e(TAG, "onSuccess : " + response.status);
                 TeamPostEventModelRes res = (TeamPostEventModelRes) response;
 
+                if(getActivity() != null)
+                {
+                     ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(res.getData().get(0).getMembers()));
+                }
                 new EventAsync(res).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
             }
@@ -1951,6 +1989,63 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         userBitmap = getResizedBitmap(userBitmap, (int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)));
         mlaBitmap = getResizedBitmap(mlaBitmap,(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)));
 
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
+        Paint paint = new Paint();
+        paint.setColor(getActivity().getResources().getColor(R.color.birthDayTextColor));
+        paint.setTextSize(result.getHeight()*0.07f);
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        Rect rect = new Rect();
+
+        Log.e(TAG,"userBitmap w : "+userBitmap.getWidth()+" h : "+userBitmap.getHeight());
+        Log.e(TAG,"mlaBitmap w : "+mlaBitmap.getWidth()+" h : "+mlaBitmap.getHeight());
+
+        Log.e(TAG,"result w : "+result.getWidth()+" h : "+result.getHeight());
+
+        paint.getTextBounds(userName,0,userName.length(),rect);
+        canvas.drawText(userName,result.getWidth()*0.107f,result.getHeight()*0.52f,paint);
+
+
+        Paint paint2 = new Paint();
+        paint2.setColor(getActivity().getResources().getColor(R.color.mlaTextColor));
+
+        paint2.setTextAlign(Paint.Align.RIGHT);
+
+        Rect rect2 = new Rect();
+
+
+        paint2.setTextSize(result.getHeight()*0.05f);
+        paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);
+        canvas.drawText(mlaName,result.getWidth()*0.94f,result.getHeight()*0.95f,paint2);
+
+        canvas.drawBitmap(getRoundedCornerBitmap(mlaBitmap,mlaBitmap.getWidth()/2), (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.195), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.380), null);
+        canvas.drawBitmap(getRoundedCornerBitmap(userBitmap,userBitmap.getWidth()/2),userBitmap.getWidth()*0.107f , userBitmap.getWidth()*0.135f, null);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(bytes.toByteArray());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException"+e.getMessage());
+        }
+
+        return file;
+
+    }
+
+    //OLD BIRTHDAY POST
+    /*private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file,String mlaName) {
+
+        Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
+
+        userBitmap = getResizedBitmap(userBitmap, (int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)));
+        mlaBitmap = getResizedBitmap(mlaBitmap,(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)));
+
         String[] splitUserName = userName.split("\\s+");
 
         String[] splitmlaName = mlaName.split("\\s+");
@@ -2021,7 +2116,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         return file;
 
-    }
+    }*/
 
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 

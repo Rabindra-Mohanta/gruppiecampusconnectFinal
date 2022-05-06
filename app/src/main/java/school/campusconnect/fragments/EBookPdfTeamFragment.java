@@ -255,14 +255,14 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No E-Book Found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No E-Book Found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 return 0;
             }
         }
@@ -373,14 +373,14 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Pdf Found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_pdf_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Pdf Found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_pdf_found));
                 return 0;
             }
 

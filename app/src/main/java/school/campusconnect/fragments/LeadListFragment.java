@@ -173,8 +173,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         groupId = getArguments().getString("id");
         teamId = getArguments().getString("team_id");
         apiCall = getArguments().getBoolean("apiCall",false);
+
         if(getArguments().containsKey("team_count"))
-        teamMemberCount = getArguments().getInt("team_count");
+            teamMemberCount = getArguments().getInt("team_count");
         else
             teamMemberCount = -1;
 
@@ -185,6 +186,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         allMember = getArguments().getBoolean("all",false);
         boolean isNest = getArguments().getBoolean("isNest", false);
         AppLog.e(TAG, "isAdmin is " + isAdmin);
+        AppLog.e(TAG, "apiCall is " + apiCall);
         AppLog.e(TAG, "item_click is " + itemClick);
         AppLog.e(TAG, "teamMemberCount is " + teamMemberCount);
 

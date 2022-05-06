@@ -238,14 +238,14 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Students found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Students found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 return 0;
             }
 

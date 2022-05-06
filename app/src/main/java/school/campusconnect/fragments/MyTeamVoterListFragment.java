@@ -413,7 +413,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Voters found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_voter_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -423,7 +423,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             }
             else
             {
-                txtEmpty.setText("No Voters found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_voter_found));
                 return 0;
             }
 

@@ -286,7 +286,7 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
             {
                 if(list.size()==0)
                 {
-                    binding.txtEmpty.setText("No Workers found.");
+                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_worker_found));
                 }
                 else {
                     binding.txtEmpty.setText("");
@@ -296,7 +296,7 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
             }
             else
             {
-                binding.txtEmpty.setText("No Workers found.");
+                binding.txtEmpty.setText(getResources().getString(R.string.txt_no_worker_found));
                 return 0;
             }
 

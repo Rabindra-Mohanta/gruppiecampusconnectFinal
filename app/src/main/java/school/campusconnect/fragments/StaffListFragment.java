@@ -335,7 +335,8 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Staff found.");
+
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_staff_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -345,7 +346,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
             }
             else
             {
-                txtEmpty.setText("No Staff found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_staff_found));
                 return 0;
             }
 

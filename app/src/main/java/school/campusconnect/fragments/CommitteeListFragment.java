@@ -284,7 +284,7 @@ int teamMemberCount = -1;
             {
                 if(list.size()==0)
                 {
-                    binding.txtEmpty.setText("No Committee found.");
+                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_committee_found));
                 }
                 else {
                     binding.txtEmpty.setText("");
@@ -294,7 +294,7 @@ int teamMemberCount = -1;
             }
             else
             {
-                binding.txtEmpty.setText("No Committee found.");
+                binding.txtEmpty.setText(getResources().getString(R.string.txt_no_committee_found));
                 return 0;
             }
 

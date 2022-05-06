@@ -172,7 +172,7 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Students found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 }else {
                     txtEmpty.setText("");
                 }
@@ -181,7 +181,7 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No Students found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 return 0;
             }
 

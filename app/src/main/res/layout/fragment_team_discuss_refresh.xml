@@ -38,5 +38,5 @@
         android:gravity="center"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:textSize="18sp" />
+        style="@style/LabelEmptyText" />
 </RelativeLayout>

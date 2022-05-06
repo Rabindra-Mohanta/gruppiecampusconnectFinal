@@ -362,7 +362,7 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Notification found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_notification_found));
                 }
                 else
                 {
@@ -372,7 +372,7 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
             }
             else
             {
-                txtEmpty.setText("No Notification found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_notification_found));
                 return 0;
             }
 

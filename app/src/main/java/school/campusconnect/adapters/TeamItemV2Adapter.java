@@ -51,7 +51,7 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         this.featuredIconData = featuredIconData;
         this.listener = listener;
         this.itemCount = itemCount;
-        transliterator = Transliterator.getInstance("Latin-Kannada");
+     //   transliterator = Transliterator.getInstance("Latin-Kannada");
     }
 
     @NonNull
@@ -96,7 +96,7 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         {
             postUnseenCount = leafPreference.getInt(team.teamId+"_post");
 
-            /*if (CountNotificationTBL.getCountNotification(team.teamId).size() > 0)
+            if (CountNotificationTBL.getCountNotification(team.teamId).size() > 0)
             {
                 Log.e(TAG,"CountNotificationTBL Size "+CountNotificationTBL.getCountNotification(team.teamId).size());
 
@@ -107,7 +107,11 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
                         Log.e(TAG,"match Count");
                 }
 
-            }*/
+            }
+        }
+        else if (team.type.equalsIgnoreCase("Broadcast"))
+        {
+            postUnseenCount = leafPreference.getInt(team.groupId+"_post");
         }
         else if(team.name.equalsIgnoreCase("notice board"))
         {

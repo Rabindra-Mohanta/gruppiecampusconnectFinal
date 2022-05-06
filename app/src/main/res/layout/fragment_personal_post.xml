@@ -36,7 +36,6 @@
                 android:visibility="gone"
                 android:layout_centerInParent="true" />
 
-
         </RelativeLayout>
 
         <TextView
@@ -48,7 +47,7 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:text="@string/msg_no_post"
-            android:textSize="18sp"
+            style="@style/LabelEmptyText"
             android:visibility="gone" />
 
     </RelativeLayout>

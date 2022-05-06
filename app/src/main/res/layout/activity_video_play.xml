@@ -6,7 +6,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.VideoPlayActivity">
 
+
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iconShareExternal"
+            android:layout_gravity="end"
+            android:layout_width="50dp"
+            android:padding="@dimen/padding_10dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_share"
+            android:layout_height="50dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/toolbar"
         android:visibility="gone"
         android:background="@android:color/black"
         android:layout_width="match_parent"
@@ -58,6 +74,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_below="@id/toolbar"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

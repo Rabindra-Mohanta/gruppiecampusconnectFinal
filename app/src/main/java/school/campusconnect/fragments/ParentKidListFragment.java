@@ -163,7 +163,7 @@ public class ParentKidListFragment extends BaseFragment implements LeafManager.O
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Kids found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_kid_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -173,7 +173,7 @@ public class ParentKidListFragment extends BaseFragment implements LeafManager.O
             }
             else
             {
-                txtEmpty.setText("No Kids found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_kid_found));
                 return 0;
             }
 

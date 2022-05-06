@@ -121,7 +121,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Subject found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -131,7 +131,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No Subject found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 return 0;
             }
 

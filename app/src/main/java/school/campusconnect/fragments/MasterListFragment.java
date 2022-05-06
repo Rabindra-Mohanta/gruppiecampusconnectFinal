@@ -284,7 +284,8 @@ public class MasterListFragment extends BaseFragment implements LeafManager.OnCo
             {
                 if(list.size()==0)
                 {
-                    binding.txtEmpty.setText("No Booth found.");
+
+                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_booth_found));
                 }
                 else {
                     binding.txtEmpty.setText("");
@@ -294,7 +295,7 @@ public class MasterListFragment extends BaseFragment implements LeafManager.OnCo
             }
             else
             {
-                binding.txtEmpty.setText("No Booth found.");
+                binding.txtEmpty.setText(getResources().getString(R.string.txt_no_booth_found));
                 return 0;
             }
 

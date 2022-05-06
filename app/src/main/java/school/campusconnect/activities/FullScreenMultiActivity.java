@@ -1,19 +1,33 @@
 package school.campusconnect.activities;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.adapters.MultiImageAdapter;
+import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneImageDownload;
+import school.campusconnect.utils.AmazoneVideoDownload;
+import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.Constants;
+
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class FullScreenMultiActivity extends BaseActivity implements MultiImageAdapter.OnImageClickListener {
 
@@ -22,6 +36,9 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
 
     @Bind(R.id.iconBack)
     ImageView iconBack;
+
+    @Bind(R.id.iconShareExternal)
+    ImageView iconShareExternal;
 
     ArrayList<String> listImages;
 
@@ -55,6 +72,67 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        iconShareExternal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                boolean isDownloaded = true;
+
+                if (listImages.size()> 0)
+                {
+
+                    for (int i = 0;i<listImages.size();i++)
+                    {
+                        if (!AmazoneImageDownload.isImageDownloaded((listImages.get(i))))
+                        {
+                            isDownloaded = false;
+                        }
+                    }
+                }
+
+
+                if (listImages != null && listImages.size() > 0)
+                {
+                    if (isDownloaded)
+                    {
+                        ArrayList<File> files =new ArrayList<>();
+
+                        for (int i = 0;i<listImages.size();i++)
+                        {
+
+                            files.add(AmazoneImageDownload.getDownloadPath(listImages.get(i)));
+
+                        }
+
+                        ArrayList<Uri> uris = new ArrayList<>();
+
+                        for(File file: files){
+
+                            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                                uris.add(FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                            } else {
+                                uris.add(Uri.fromFile(file));
+                            }
+
+                        }
+
+
+                        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                        intent.setType("*/*");
+                        intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                        startActivity(Intent.createChooser(intent, "Share File"));
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
             }
         });
 

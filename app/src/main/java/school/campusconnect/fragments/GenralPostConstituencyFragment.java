@@ -1319,8 +1319,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         }
     }
 
-
-    private void createBirthPostAndSave(PostItem item , int position)
+      private void createBirthPostAndSave(PostItem item , int position)
     {
         Bitmap MlaBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
 
@@ -1388,6 +1387,10 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         });
     }
 
+
+
+
+
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
                 .getHeight(), Bitmap.Config.ARGB_8888);
@@ -1410,7 +1413,65 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         return output;
     }
 
-    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file,String mlaName) {
+     private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file,String mlaName) {
+
+        Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
+
+        userBitmap = getResizedBitmap(userBitmap, (int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)));
+        mlaBitmap = getResizedBitmap(mlaBitmap,(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)));
+
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
+        Paint paint = new Paint();
+        paint.setColor(getActivity().getResources().getColor(R.color.birthDayTextColor));
+        paint.setTextSize(result.getHeight()*0.07f);
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        Rect rect = new Rect();
+
+        Log.e(TAG,"userBitmap w : "+userBitmap.getWidth()+" h : "+userBitmap.getHeight());
+        Log.e(TAG,"mlaBitmap w : "+mlaBitmap.getWidth()+" h : "+mlaBitmap.getHeight());
+
+         Log.e(TAG,"result w : "+result.getWidth()+" h : "+result.getHeight());
+
+         paint.getTextBounds(userName,0,userName.length(),rect);
+         canvas.drawText(userName,result.getWidth()*0.107f,result.getHeight()*0.52f,paint);
+
+
+        Paint paint2 = new Paint();
+        paint2.setColor(getActivity().getResources().getColor(R.color.mlaTextColor));
+
+        paint2.setTextAlign(Paint.Align.RIGHT);
+
+        Rect rect2 = new Rect();
+
+
+         paint2.setTextSize(result.getHeight()*0.05f);
+         paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);
+         canvas.drawText(mlaName,result.getWidth()*0.94f,result.getHeight()*0.95f,paint2);
+
+        canvas.drawBitmap(getRoundedCornerBitmap(mlaBitmap,mlaBitmap.getWidth()/2), (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.195), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.380), null);
+        canvas.drawBitmap(getRoundedCornerBitmap(userBitmap,userBitmap.getWidth()/2),userBitmap.getWidth()*0.107f , userBitmap.getWidth()*0.135f, null);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(bytes.toByteArray());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException"+e.getMessage());
+        }
+
+        return file;
+
+    }
+
+
+    //OLD POST BIRTHDAY
+    /*private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file,String mlaName) {
 
         Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
 
@@ -1487,7 +1548,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
         return file;
 
-    }
+    }*/
 
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
 

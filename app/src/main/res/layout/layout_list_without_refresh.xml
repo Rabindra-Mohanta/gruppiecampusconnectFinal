@@ -140,7 +140,7 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:text="@{message}"
-            android:textSize="18sp"
+            style="@style/LabelEmptyText"
             android:visibility="@{size &gt; 0 ? View.GONE : View.VISIBLE}" />
 
 

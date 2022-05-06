@@ -209,7 +209,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No E-Book Found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -219,7 +219,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
             }
             else
             {
-                txtEmpty.setText("No E-Book Found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 return 0;
             }
 

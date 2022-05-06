@@ -263,7 +263,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
             txtEmpty.setText("");
         } else {
             txtEmpty.setVisibility(View.VISIBLE);
-            txtEmpty.setText("No Test/Exam Found");
+            txtEmpty.setText(getResources().getString(R.string.txt_no_test_exam_found));
         }
 
     }
@@ -340,14 +340,14 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Test/Exam found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_test_exam_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Test/Exam found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_test_exam_found));
                 return 0;
             }
 

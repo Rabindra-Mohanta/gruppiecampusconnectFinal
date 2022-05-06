@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -77,7 +78,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             String loginId = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID);
 
-            if (!loginId.equals(data.createdById)) {
+            if (loginId.equals(data.createdById)) {
 
                 LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
 
@@ -170,26 +171,41 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     }
                     break;
 
+                    case "gallery": {
+
+                        if ("post".equalsIgnoreCase(data.postType)) {
+
+                            //leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
+                        }
+
+                    }
+                    break;
+
                     case "post": {
+
+                        AppLog.e(TAG, "post: ");
+
                         if ("team".equalsIgnoreCase(data.postType)) {
+
+                            AppLog.e(TAG, "team: postType");
 
                             leafPreference.setInt(data.teamId + "_post", leafPreference.getInt(data.teamId + "_post") + 1);
 
-                        /*    if (CountNotificationTBL.getCountNotification(data.teamId).size() > 0)
+                            if (CountNotificationTBL.getCountNotification(data.teamId).size() > 0)
                             {
                                 int count = CountNotificationTBL.getCountNotification(data.teamId).get(0).count;
                                 CountNotificationTBL.updateCountNotification(data.teamId,count+1);
+                                AppLog.e(TAG,"update ");
                             }
-                            else
-                            {
+                            else {
                                 CountNotificationTBL countNotificationTBL = new CountNotificationTBL();
                                 countNotificationTBL.count = 1;
                                 countNotificationTBL.teamID = data.teamId;
                                 countNotificationTBL.save();
-                            }*/
-
-
-                        } else if ("group".equalsIgnoreCase(data.postType)) {
+                                AppLog.e(TAG, "save ");
+                            }
+                        }
+                        else if ("group".equalsIgnoreCase(data.postType)) {
                             leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
                         }
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);

@@ -112,7 +112,7 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Subject found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -122,7 +122,7 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
             }
             else
             {
-                txtEmpty.setText("No Subject found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 return 0;
             }
 

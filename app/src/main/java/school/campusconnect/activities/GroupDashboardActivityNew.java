@@ -1196,7 +1196,9 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         manager = new LeafManager();
 
-        //transliterator = Transliterator.getInstance("Latin-Kannada");
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            transliterator = Transliterator.getInstance("Latin-Kannada");
+        }*/
     }
 
     //NOFIREBASEDATABASE

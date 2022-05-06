@@ -164,7 +164,7 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -174,7 +174,7 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 

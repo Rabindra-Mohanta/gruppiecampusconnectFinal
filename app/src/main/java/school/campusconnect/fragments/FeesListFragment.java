@@ -206,14 +206,14 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Fee Created.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_fee_created));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Fee Created.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_fee_created));
                 return 0;
             }
 

@@ -179,14 +179,15 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Data found.");
+                    txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
+
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Data found.");
+                txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
                 return 0;
             }
 

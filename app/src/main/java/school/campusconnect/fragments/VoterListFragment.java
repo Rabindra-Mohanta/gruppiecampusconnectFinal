@@ -289,7 +289,7 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
             {
                 if(list.size()==0)
                 {
-                    binding.txtEmpty.setText("No Voters found.");
+                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_voter_found));
                 }
                 else {
                     binding.txtEmpty.setText("");
@@ -299,7 +299,7 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
             }
             else
             {
-                binding.txtEmpty.setText("No Voters found.");
+                binding.txtEmpty.setText(getResources().getString(R.string.txt_no_voter_found));
                 return 0;
             }
 

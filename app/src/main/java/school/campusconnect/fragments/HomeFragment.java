@@ -334,14 +334,14 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Group found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_group_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Group found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_group_found));
                 return 0;
             }
 

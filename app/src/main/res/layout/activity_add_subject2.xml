@@ -78,7 +78,7 @@
                             android:visibility="gone"
                             android:paddingEnd="16dp"
                             android:paddingStart="16dp"
-                            android:textSize="18sp" />
+                            style="@style/LabelEmptyText" />
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvSubjects"
                             android:layout_width="match_parent"

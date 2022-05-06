@@ -159,7 +159,7 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Kids found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_kid_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -169,7 +169,7 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
             }
             else
             {
-                txtEmpty.setText("No Kids found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_kid_found));
                 return 0;
             }
 

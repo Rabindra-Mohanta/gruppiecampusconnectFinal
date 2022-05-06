@@ -56,8 +56,17 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -258,6 +267,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     }
 
     private void init() {
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
@@ -813,9 +823,8 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
             default:
                 Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_posted_successfully), Toast.LENGTH_SHORT).show();
-
+                new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 LeafPreference.getInstance(AddGalleryPostActivity.this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
-
                 finish();
                 break;
             case LeafManager.API_GALLERY_FILE_ADD:
@@ -1408,4 +1417,114 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         }
     }
 */
+
+    private class SendNotification extends AsyncTask<String, String, String> {
+        String receiverToken;
+        private String server_response;
+
+        public SendNotification(String token) {
+            receiverToken = token;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String message = "";
+                    message = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.NAME) + " Has Posted in " + GroupDashboardActivityNew.group_name;
+                    topic = group_id;
+                    object.put("to", "/topics/" + topic);
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                    //   object.put("notification", notificationObj);
+
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", group_id);
+                    dataObj.put("createdById", LeafPreference.getInstance(AddGalleryPostActivity.this).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("postId", "");
+                    dataObj.put("title", title);
+                    dataObj.put("postType", "post");
+                    dataObj.put("Notification_type", "gallery");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+
+                    wr.writeBytes(object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
+    }
 }

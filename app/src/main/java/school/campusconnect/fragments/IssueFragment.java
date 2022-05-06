@@ -169,7 +169,7 @@ public class IssueFragment extends BaseFragment implements LeafManager.OnCommuni
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Issue found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_issue_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -179,7 +179,7 @@ public class IssueFragment extends BaseFragment implements LeafManager.OnCommuni
             }
             else
             {
-                txtEmpty.setText("No Issue found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_issue_found));
                 return 0;
             }
 

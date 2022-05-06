@@ -65,10 +65,9 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:textSize="18sp" />
+            style="@style/LabelEmptyText" />
 
     </RelativeLayout>
 </layout>

@@ -405,7 +405,8 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Booths found.");
+
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_booth_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -415,7 +416,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             }
             else
             {
-                txtEmpty.setText("No Booths found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_booth_found));
                 return 0;
             }
 

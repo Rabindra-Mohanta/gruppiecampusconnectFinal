@@ -198,14 +198,14 @@ public class TestSubjectListFragment extends BaseFragment implements LeafManager
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Subject found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Subject found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 return 0;
             }
 

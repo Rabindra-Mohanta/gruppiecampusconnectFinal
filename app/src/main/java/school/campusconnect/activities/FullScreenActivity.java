@@ -7,12 +7,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AppLog;
@@ -36,12 +39,15 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.views.TouchImageView;
+
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class FullScreenActivity extends BaseActivity {
 
@@ -58,6 +64,9 @@ public class FullScreenActivity extends BaseActivity {
 
     String image;
 
+
+    @Bind(R.id.iconShareExternal)
+    ImageView iconShareExternal;
 
     @Bind(R.id.imgCancel)
     ImageView imgCancel;
@@ -130,6 +139,50 @@ public class FullScreenActivity extends BaseActivity {
             public void onClick(View v) {
                 asyncTask.cancel(true);
             }
+        });
+
+        iconShareExternal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isDownloaded = true;
+
+                if (!AmazoneImageDownload.isImageDownloaded((image)))
+                {
+                    isDownloaded = false;
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    files.add(AmazoneImageDownload.getDownloadPath(image));
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("*/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
         });
 
         ivDownload.setOnClickListener(new View.OnClickListener() {

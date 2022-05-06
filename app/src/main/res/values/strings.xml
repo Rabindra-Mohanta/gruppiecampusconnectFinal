@@ -131,7 +131,7 @@
     <string name="msg_no_users">No users found.</string>
     <string name="msg_no_contaacts">No contacts found.</string>
     <string name="msg_no_fav">No favourite posts found.</string>
-    <string name="msg_no_post">No posts found.</string>
+    <string name="msg_no_post">...</string><!--No posts found-->
     <string name="msg_no_que">No doubts found.</string>
     <string name="msg_no_noti">No notifications.</string>
     <string name="msg_no_groups">No Groups found.</string>
@@ -529,7 +529,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_restore">RESTORE</string>
     <string name="lbl_ques_p_">Question paper will be\navailable after exam start</string>
     <string name="lbl_new_password_validation">Should be atleast 6 character</string>
-    <string name="msg_no_data_found">No data found.</string>
+    <string name="msg_no_data_found">...</string><!--No data found.-->
     <string name="lbl_time_table">Time Table</string>
     <string name="lbl_vendor">Vendor Name</string>
     <string name="lbl_vendor_connect">Vendors</string>
@@ -545,7 +545,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_read_unread_users">Read Unread Users</string>
     <string name="lbl_read_users">Read Users</string>
     <string name="lbl_un_read_users">Unread Users</string>
-    <string name="lbl_no_user_found">No User Found</string>
+    <string name="lbl_no_user_found">...</string><!--No User Found-->
     <string name="lbl_classes">All Classes</string>
     <string name="lbl_class_name">Class</string>
     <string name="lbl_addharCard">Aadhaar Card</string>
@@ -1074,19 +1074,19 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_enter_confirm_pin">Enter Confirm Pin...</string>
     <string name="txt_my_groups">My Groups</string>
     <string name="txt_public_groups">Public Groups</string>
-    <string name="txt_no_ebook_found">No E-Book found.</string>
-    <string name="txt_no_time_table_found">No Time Table found.</string>
-    <string name="txt_no_mark_card_found">No MarkCard Found!</string>
-    <string name="txt_no_student_found">No Students found.</string>
-    <string name="txt_no_booth_team_found">No Booths Teams found.</string>
+
+    <string name="txt_no_time_table_found">...</string><!--No Time Table found.-->
+    <string name="txt_no_mark_card_found">...</string><!--No MarkCard Found!-->
+
+    <string name="txt_no_booth_team_found">...</string><!--No Booths Teams found.-->
     <string name="txt_roll_no_student">Roll No\n( Student )</string>
     <string name="txt_name_student">Name\n( Student )</string>
-    <string name="txt_no_street_found">No Streets found.</string>
-    <string name="txt_no_class_found">No Class found.</string>
-    <string name="txt_no_bus_found">No Bus found.</string>
-    <string name="txt_no_coordinate_found">No Coordinate found.</string>
+    <string name="txt_no_street_found">...</string><!--No Streets found.-->
+
+    <string name="txt_no_bus_found">...</string><!--No Bus found.-->
+    <string name="txt_no_coordinate_found">...</string><!--No Coordinate found.-->
     <string name="txt_phone">Phone: </string>
-    <string name="txt_no_booth_member_found">No Booth Member found</string>
+    <string name="txt_no_booth_member_found">...</string><!--No Booth Member found-->
 
     <string name="txt_by">By </string>
     <string name="txt_multiple_group">Multiple Group</string>
@@ -1102,21 +1102,44 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_to"> to </string>
     <string name="txt_select_end_time">Select End Time</string>
     <string name="txt_select_language">Select Language</string>
-    <string name="txt_constituency_not_found">No Constituency found.</string>
+    <string name="txt_constituency_not_found">...</string><!--No Constituency found.-->
     <string name="txt_last_submission_date">Last Submission Date : </string>
     <string name="txt_comment">Comment</string>
-    <string name="txt_no_assignment_found">No Assignment found.</string>
+    <string name="txt_no_booth_found">...</string><!--No Booths found-->
+    <string name="txt_no_voter_found">...</string><!--No Voters found-->
+    <string name="txt_no_subject_found">...</string><!--No Subject found-->
+    <string name="txt_no_staff_found">...</string><!--No Staff found.-->
+    <string name="txt_no_student_found">...</string><!--No Student found.-->
+    <string name="txt_no_post_found">...</string><!--No Post found.-->
+    <string name="txt_no_worker_found">...</string><!--No Workers found.-->
+    <string name="txt_no_assignment_found">...</string><!--No Assignment found.-->
+    <string name="txt_no_class_found">...</string><!--No Class found-->
+    <string name="txt_no_committee_found">...</string><!--No Committee found.-->
+    <string name="txt_no_ebook_found">...</string><!--No E-Book found.-->
+    <string name="txt_no_family_member_found">...</string><!--No Family Member found.-->
+    <string name="txt_no_fee_created">...</string><!--No Fee Created..-->
+    <string name="txt_no_fee_found">...</string><!--No Fee Found-->
+    <string name="txt_no_group_found">...</string><!--No Group found.-->
+    <string name="txt_no_issue_found">...</string><!--No Issue found.-->
+    <string name="txt_no_notification_found">...</string><!--No Notification found.-->
+    <string name="txt_no_hw_found">...</string><!--No HomeWork found.-->
+    <string name="txt_no_test_exam_found">...</string><!--No Test/Exam Found.-->
+    <string name="txt_no_kid_found">...</string><!--No Kids found.-->
+    <string name="txt_no_people_found">...</string><!--No People found.-->
+    <string name="txt_no_pdf_found">...</string><!--No Pdf Found.-->
+    <string name="txt_no_test_found">...</string><!--No Test found-->
+
     <string name="txt_pin">Pin</string>
     <string name="txt_confirm_pin_wrong">Confirm Pin Wrong...</string>
     <string name="txt_enter_pin">Enter Pin...</string>
     <string name="txt_enter_valid_pin">Enter Valid Pin...</string>
     <string name="txt_basic_info">Basic Info</string>
     <string name="txt_other_info">Other Info</string>
-    <string name="txt_no_taluks_found">No Taluks found.</string>
-    <string name="txt_no_test_paper_found">No Test Paper found.</string>
+    <string name="txt_no_taluks_found">...</string><!--No Taluks found.-->
+    <string name="txt_no_test_paper_found">...</string><!--No Test Paper found.-->
     <string name="txt_open">Open</string>
     <string name="txt_constituency_issue">Constituency Issue </string>
-    <string name="txt_no_ticket_found">No Tickets Found...</string>
+    <string name="txt_no_ticket_found">...</string><!--No Tickets Found-->
     <string name="txt_please_provide_marks">Please Provide Marks</string>
     <string name="txt_reply">Reply</string>
 

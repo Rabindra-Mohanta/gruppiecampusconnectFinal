@@ -158,14 +158,14 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Test found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_test_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Test found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_test_found));
                 return 0;
             }
 

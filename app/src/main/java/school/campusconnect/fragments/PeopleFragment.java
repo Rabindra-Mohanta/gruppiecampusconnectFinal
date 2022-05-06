@@ -171,13 +171,13 @@ public class PeopleFragment extends BaseFragment implements LeafManager.OnCommun
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No People found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_people_found));
                 }
                 return list.size();
             }
             else
             {
-                txtEmpty.setText("No People found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_people_found));
                 return 0;
             }
 
