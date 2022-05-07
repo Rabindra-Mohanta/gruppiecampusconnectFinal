@@ -56,6 +56,7 @@ ActivityRecordAudioBinding binding;
         setSupportActionBar(mToolBar);
         setBackEnabled(false);
         setTitle(getResources().getString(R.string.lbl_RecordAudio));
+
         if (checkPermissionForWriteExternal())
         {
             MediaRecorderReady();
@@ -70,14 +71,18 @@ ActivityRecordAudioBinding binding;
 
     private void inits() {
 
-        binding.BtnRecording.setOnClickListener(new View.OnClickListener() {
+        startAudio();
+       // isAudio = false;
+        binding.BtnRecording.setImageDrawable(getResources().getDrawable(R.drawable.ic__stop_audio));
+
+       /* binding.BtnRecording.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isAudio)
                 {
                     isAudio = false;
                     binding.BtnRecording.setImageDrawable(getResources().getDrawable(R.drawable.ic__stop_audio));
-                    startAudio();
+                    //startAudio();
                 }
                 else
                 {
@@ -86,26 +91,31 @@ ActivityRecordAudioBinding binding;
                     stopAudio();
                 }
             }
-        });
+        });*/
+
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (isAudio)
+                binding.BtnRecording.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_audio));
+                stopAudio();
+                String uri = Uri.fromFile(fileRecordAudio).toString();
+                Log.e(TAG,"uri "+uri);
+                Intent i = new Intent();
+                i.putExtra("AudioData",uri);
+                setResult(RESULT_OK,i);
+                finish();
+
+               /* if (isAudio)
                 {
 
-                    String uri = Uri.fromFile(fileRecordAudio).toString();
-                    Log.e(TAG,"uri "+uri);
-                    Intent i = new Intent();
-                    i.putExtra("AudioData",uri);
-                    setResult(RESULT_OK,i);
-                    finish();
+
                 }
                 else
                 {
                     Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_stop_audio),Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
     }

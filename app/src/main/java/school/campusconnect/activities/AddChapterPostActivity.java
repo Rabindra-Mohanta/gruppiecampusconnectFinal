@@ -246,6 +246,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
         if(shareList!=null && shareList.size()>0){
+
             SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -414,7 +415,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     progressDialog.setMessage("Preparing Audio...");
                     progressDialog.show();
                     uploadToAmazone(mainRequest);
-
                 }
                 else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     mainRequest.fileType = fileTypeImageOrVideo;
@@ -1103,6 +1103,14 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         }
     }
 
+    public void requestPermissionForRecordAudio(int code) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+            Toast.makeText(this, getResources().getString(R.string.toast_audio_permission_needed), Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
+        }
+    }
+
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
@@ -1112,13 +1120,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         }
     }
 
-    public void requestPermissionForRecordAudio(int code) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-            Toast.makeText(this, getResources().getString(R.string.toast_audio_permission_needed), Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
-        }
-    }
+
     private void showCropDialog(Uri imageCapture,boolean isCamera) {
 
         Log.e(TAG,"imageGEt "+imageCapture);

@@ -54,6 +54,7 @@
                     android:id="@+id/BtnRecording"
                     android:layout_below="@id/tvTimer"
                     android:layout_width="200dp"
+                    android:clickable="false"
                     android:layout_height="200dp"
                     android:src="@drawable/ic_play_audio"
                     android:layout_centerHorizontal="true"

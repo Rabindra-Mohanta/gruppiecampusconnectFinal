@@ -89,6 +89,7 @@ import school.campusconnect.utils.BackgroundVideoUploadService;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.RecordAudioActivity;
 import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
@@ -149,6 +150,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Bind(R.id.llPersonalSetting)
     LinearLayout llPersonalSetting;
 
+    @Bind(R.id.llAudio)
+    LinearLayout llAudio;
+
     @Bind(R.id.switch_reply)
     Switch switch_reply;
 
@@ -167,6 +171,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     Dialog dialog;
 
+    private String audioPath = "";
+
     String group_id;
 
     public Uri imageCaptureFile;
@@ -177,6 +183,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     public static final int REQUEST_LOAD_PDF = 103;
     public static final int REQUEST_LOAD_VIDEO = 104;
     public static final int REQUEST_RECORD_VIDEO = 105;
+    public static final int REQUEST_LOAD_RECORD_AUDIO = 107;
+    public static final int REQUEST_LOAD_AUDIO = 106;
     String friend_id;
     String team_id;
 
@@ -241,6 +249,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         llYoutubeLink.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
+        llAudio.setOnClickListener(this);
         switch_reply.setOnClickListener(this);
         switch_comment.setOnClickListener(this);
       //  btnShare.setEnabled(false);
@@ -420,7 +429,14 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     progressDialog.setMessage("Preparing Pdf...");
                     progressDialog.show();
                     uploadToAmazone(request);
-                } else if (listImages.size() > 0) {
+                }
+                else if (!TextUtils.isEmpty(audioPath)) {
+                    request.fileType = Constants.FILE_TYPE_AUDIO;
+                    progressDialog.setMessage("Preparing Audio...");
+                    progressDialog.show();
+                    uploadToAmazone(request);
+                }
+                else if (listImages.size() > 0) {
                     request.fileType = Constants.FILE_TYPE_IMAGE;
                     progressDialog.setMessage("Uploading Image...");
                     progressDialog.show();
@@ -675,7 +691,11 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
                 }
             }, Constants.FILE_TYPE_VIDEO);
-        } else {
+        } else if (request.fileType.equals(Constants.FILE_TYPE_AUDIO)){
+            listImages.clear();
+            listImages.add(audioPath);
+            upLoadImageOnCloud(0);
+        }else {
             for (int i = 0; i < listImages.size(); i++) {
                 try {
                     File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
@@ -806,6 +826,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                             progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                         } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
                             progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        }else if (Constants.FILE_TYPE_AUDIO.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Audio " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                         }
                         AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                                 + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
@@ -885,6 +907,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             valid = false;
             removeImage();
             removePdf();
+            removeAudio();
             videoUrl = "";
             img_video.setImageResource(R.drawable.icon_youtube);
             Picasso.with(AddPostActivity.this)
@@ -902,6 +925,14 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         switch (v.getId()) {
             case R.id.btnShare:
                 addPost();
+                break;
+
+            case R.id.llAudio:
+                if (checkPermissionForWriteExternal()) {
+                    showAudioDialog(R.array.array_audio);
+                } else {
+                    requestPermissionForWriteExternal(24);
+                }
                 break;
 
             case R.id.llImage:
@@ -958,6 +989,79 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         }
     }
 
+    public void showAudioDialog(int resId) {
+        SMBDialogUtils.showSMBSingleChoiceDialog(AddPostActivity.this,
+                R.string.lbl_select_audio, resId, 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ListView lw = ((AlertDialog) dialog).getListView();
+                        switch (lw.getCheckedItemPosition()) {
+                            case 0:
+                                startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                                break;
+                            case 1:
+                                selectAudioFromFile(REQUEST_LOAD_AUDIO);
+                                break;
+                        }
+                    }
+                });
+    }
+
+    private void removeAudio() {
+
+        audioPath = "";
+        //   Picasso.with(this).load(R.drawable.icon_doc).into(imgDoc);
+
+       /* listImages.clear();
+        Picasso.with(this).load(R.drawable.icon_gallery).into(img_image);
+        showLastImage();
+        shareButtonEnableDisable();*/
+    }
+
+
+    private void selectAudioFromFile(int requestCode)
+    {
+        if(checkPermissionForAudio())
+        {
+            Intent audioIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            audioIntent.setType("audio/*");
+            startActivityForResult(Intent.createChooser(audioIntent, "Select Audio"), requestCode);
+        }
+        else {
+            requestPermissionForRecordAudio(26);
+        }
+    }
+
+    private void startRecording(int requestCode) {
+
+        if(checkPermissionForAudio())
+        {
+            Intent intent = new Intent(getApplicationContext(), RecordAudioActivity.class);
+            startActivityForResult(intent, requestCode);
+        }
+        else {
+            requestPermissionForRecordAudio(24);
+        }
+    }
+    private boolean checkPermissionForAudio() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            Log.e("External" + "permission", "checkpermission , granted");
+            return true;
+        } else {
+            Log.e("External" + "permission", "checkpermission , denied");
+            return false;
+        }
+    }
+
+    public void requestPermissionForRecordAudio(int code) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+            Toast.makeText(this, getResources().getString(R.string.toast_audio_permission_needed), Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
+        }
+    }
     private void recordVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -1242,6 +1346,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
             showLastImage();
             removePdf();
+            removeAudio();
 
 
         }
@@ -1283,9 +1388,27 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 Log.e(TAG,"error"+error);
             }
 
+            removeAudio();
             showLastImage();
             removePdf();
 
+        }
+
+        else if (requestCode == REQUEST_LOAD_RECORD_AUDIO) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                audioPath = data.getStringExtra("AudioData");
+                Log.e(TAG,"audioPath"+ audioPath);
+
+                listImages.clear();
+                fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
+                listImages.add(audioPath);
+                showLastImage();
+                removePdf();
+                removeImage();
+
+
+            }
         }
 
         else if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
@@ -1338,6 +1461,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
             listImages.add(imageCaptureFile.toString());
             showLastImage();
+            removeAudio();
             removePdf();
         } else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
             listImages.clear();
@@ -1361,6 +1485,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                             uri1, FLAG_GRANT_READ_URI_PERMISSION);
                 }
             }
+            removeAudio();
             showLastImage();
             removePdf();
         } else if (resultCode == Activity.RESULT_OK) {
@@ -1383,6 +1508,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 if (!TextUtils.isEmpty(pdfPath))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
                 removeImage();
+                removeAudio();
             }
         }
 
@@ -1414,6 +1540,25 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             case 21:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showPhotoDialog(R.array.array_image);
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+
+            case 24:
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+
+            case 26:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectAudioFromFile(REQUEST_LOAD_AUDIO);
                     Log.e("AddPost" + "permission", "granted camera");
                 } else {
                     Log.e("AddPost" + "permission", "denied camera");

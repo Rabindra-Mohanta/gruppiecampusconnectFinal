@@ -5,6 +5,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 
 import java.util.List;
 
@@ -115,6 +116,12 @@ public class BoothsTBL extends Model {
     }
     public static List<BoothsTBL> getLastBoothList(String group_id) {
         return new Select().from(BoothsTBL.class).orderBy("(groupId) DESC").limit(1).execute();
+    }
+    public static void updateBooth(String group_id,String teamId,int members) {
+        new Update(BoothsTBL.class).set("members = ?", members).where("groupId = ?", group_id).where("teamId = ?", teamId).execute();
+    }
+    public static List<BoothsTBL> getBooth(String group_id,String teamId) {
+        return new Select().from(BoothsTBL.class).where("groupId = ?", group_id).where("teamId = ?", teamId).execute();
     }
     public static void deleteBooth(String group_id) {
         new Delete().from(BoothsTBL.class).where("groupId = ?", group_id).execute();

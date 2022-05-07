@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content">
                     <RadioButton
                         style="@style/LabelHeader2"
-                        android:text="English"
+                        android:text="@string/txt_english"
                         android:textSize="20sp"
                         android:textColor="@color/color_white"
                         android:buttonTint="@color/color_white"
@@ -100,7 +100,7 @@
                         style="@style/LabelHeader2"
                         android:textColor="@color/color_white"
                         android:buttonTint="@color/color_white"
-                        android:text="Kannada"
+                        android:text="@string/txt_kannada"
                         android:layout_marginTop="@dimen/padding_20dp"
                         android:textSize="20sp"
                         android:layout_width="wrap_content"

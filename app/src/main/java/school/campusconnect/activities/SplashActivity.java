@@ -92,6 +92,8 @@ public class SplashActivity extends AppCompatActivity {
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             uriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         }
+
+
         new HandleShareFiles(action, type, uri, uriList).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -124,7 +126,7 @@ public class SplashActivity extends AppCompatActivity {
                     extension = ".mp4";
                 }
 
-                AppLog.e(TAG, "uriList : " + uriList);
+                AppLog.e(TAG, "fileType : " + type);
                 ArrayList<String> list = new ArrayList<>();
                 if (uriList != null) {
                     for (int i = 0; i < uriList.size(); i++) {

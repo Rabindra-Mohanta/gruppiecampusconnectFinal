@@ -185,7 +185,6 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
         mWakeLock.release();
         AppLog.e(TAG, "onPostExecute : ");
         if (aVoid == null) {
-            AppLog.e(TAG, "onPostExecute  :" + file.getAbsolutePath());
             if (listenerSignle != null) {
 
                 listenerSignle.onDownload(file);

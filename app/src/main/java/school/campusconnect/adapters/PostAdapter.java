@@ -19,6 +19,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerView;
 import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetData;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneImageDownload;
@@ -335,6 +336,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             holder.txt_title.setVisibility(View.VISIBLE);
 
         if (item.fileName != null && item.fileName.size() > 0) {
+            holder.linExternalPush.setVisibility(View.VISIBLE);
             if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
             {
                 holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
@@ -367,6 +369,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             holder.txtContent.setVisibility(View.GONE);
             holder.txt_readmore.setVisibility(View.GONE);
         }
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            holder.linPush.setVisibility(View.GONE);
+        }
+        else
+        {
+            holder.linPush.setVisibility(View.VISIBLE);
+        }
+
+        holder.llAudio.setVisibility(View.GONE);
     }
 
 
@@ -485,6 +498,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
         @Bind(R.id.linPush)
         LinearLayout linPush;
 
+
+
         @Bind(R.id.recyclerView)
         AsymmetricRecyclerView recyclerView;
 
@@ -496,6 +511,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
 
         @Bind(R.id.external_txt_push)
         ImageView external_txt_push;
+
+        @Bind(R.id.llAudio)
+        RelativeLayout llAudio;
 
         public ImageViewHolder(View itemView) {
             super(itemView);

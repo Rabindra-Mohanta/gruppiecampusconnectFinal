@@ -1143,6 +1143,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_please_provide_marks">Please Provide Marks</string>
     <string name="txt_reply">Reply</string>
 
+    <string name="txt_english">English</string>
+    <string name="txt_kannada">ಕನ್ನಡ</string>
 
     <string name="hint_search_voter">Search Voter</string>
     <string name="hint_search_booths">Search Booths</string>

@@ -38,6 +38,7 @@
                 android:layout_margin="@dimen/padding_5dp"
                 android:autoLink="web"
                 android:ellipsize="end"
+                android:textIsSelectable="true"
                 android:paddingLeft="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_5dp"
                 android:text="@string/hint_title_text"

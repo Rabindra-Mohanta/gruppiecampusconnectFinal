@@ -60,7 +60,10 @@ import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
 import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
+import school.campusconnect.datamodel.event.TeamEventDataTBL;
+import school.campusconnect.datamodel.event.TeamEventModelRes;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
+import school.campusconnect.datamodel.lead.LeadDataTBL;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
@@ -219,7 +222,6 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         showLoadingBar(progressBar);
         LeafManager leafManager = new LeafManager();
         leafManager.getBoothTeams(this,GroupDashboardActivityNew.groupId,team_id);
-
     }
 
     private void _init() {
@@ -254,6 +256,8 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 }
             }
         });
+
+        callEventApiTeam();
 
        // transliterator = Transliterator.getInstance("Latin-Kannada");
     }
@@ -626,4 +630,92 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         }
     }
 
+    public void callEventApiTeam() {
+
+
+        LeafManager leafManager = new LeafManager();
+        leafManager.getTeamEvent(new LeafManager.OnCommunicationListener() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+
+                AppLog.e(TAG, "onSuccess : " + response.status);
+                TeamEventModelRes res = (TeamEventModelRes) response;
+
+                new EventAsyncs(res).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+            }
+
+            @Override
+            public void onFailure(int apiId, String msg) {
+                AppLog.e(TAG, "onFailure : " + msg);
+            }
+
+            @Override
+            public void onException(int apiId, String msg) {
+                AppLog.e(TAG, "onException : " + msg);
+            }
+        }, GroupDashboardActivityNew.groupId,team_id);
+    }
+
+    class EventAsyncs extends AsyncTask<Void, Void, Void> {
+
+        TeamEventModelRes res1;
+        private boolean needRefresh = false;
+
+        public EventAsyncs(TeamEventModelRes res1) {
+            this.res1 =res1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+         /*   if (res1.getData().size() > 0)
+            {
+                TeamEventDataTBL.deleteTeamEvent(team_id);
+
+                for (int i = 0;i<res1.getData().size();i++)
+                {
+                    TeamEventDataTBL teamEventDataTBL = new TeamEventDataTBL();
+                    teamEventDataTBL.teamId = res1.getData().get(i).getTeamId();
+                    if (res1.getData().get(i).getLastCommitteeForBoothUpdatedEventAt() != null)
+                    {
+                        teamEventDataTBL.lastCommitteeForBoothUpdatedEventAt = res1.getData().get(i).getLastCommitteeForBoothUpdatedEventAt();
+                    }
+                    teamEventDataTBL.lastUserToTeamUpdatedAtEventAt = res1.getData().get(i).getLastUserToTeamUpdatedAtEventAt();
+                    teamEventDataTBL.members = res1.getData().get(i).getMembers();
+
+                    teamEventDataTBL.save();
+                }
+            }*/
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (res1.getData().size() > 0)
+            {
+                for (int i = 0;i<res1.getData().size();i++)
+                {
+                    List<BoothsTBL> boothsTBL = BoothsTBL.getBooth(GroupDashboardActivityNew.groupId,team_id);
+
+                    if (boothsTBL.size() > 0)
+                    {
+                        for (int j = 0; j<boothsTBL.size();j++)
+                        {
+                            if (res1.getData().get(i).getTeamId().equalsIgnoreCase(boothsTBL.get(j).teamId))
+                            {
+                                BoothsTBL.updateBooth(GroupDashboardActivityNew.groupId,res1.getData().get(i).getTeamId(),res1.getData().get(i).getMembers());
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
 }

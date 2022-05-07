@@ -546,7 +546,6 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
     private void startRecording(int requestCode) {
 
-
         if(checkPermissionForAudio())
         {
             Intent intent = new Intent(getApplicationContext(), RecordAudioActivity.class);

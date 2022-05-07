@@ -78,7 +78,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             String loginId = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID);
 
-            if (loginId.equals(data.createdById)) {
+            if (!loginId.equals(data.createdById)) {
 
                 LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
 

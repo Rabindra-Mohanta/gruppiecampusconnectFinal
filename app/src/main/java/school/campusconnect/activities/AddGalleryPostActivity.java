@@ -202,6 +202,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
         setListener();
 
+
         ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
         if (shareList != null && shareList.size() > 0) {
             String fileType = LeafApplication.getInstance().getType();
@@ -212,6 +213,9 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+
+                    Log.e(TAG,"fileType"+ fileType);
+                    Log.e(TAG,"shareList"+ shareList);
                     if (Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)
                             || Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)) {
                         listImages.addAll(shareList);

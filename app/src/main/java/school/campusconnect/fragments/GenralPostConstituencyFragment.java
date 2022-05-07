@@ -84,6 +84,7 @@ import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.LoginRequest;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostItem;
 import school.campusconnect.datamodel.PostResponse;
@@ -941,9 +942,9 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
         if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
 
+
             if (item.fileName.size()> 0)
             {
-
                 for (int i = 0;i<item.fileName.size();i++)
                 {
                     if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
@@ -951,77 +952,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                         isDownloaded = false;
                     }
                 }
-            }
-            else
-            {
-                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
-            }
 
-
-        } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
-
-            if (item.fileName.size()> 0)
-            {
-
-                for (int i = 0;i<item.fileName.size();i++)
-                {
-                    if (!AmazoneDownload.isPdfDownloaded((item.fileName.get(i))))
-                    {
-                        isDownloaded = false;
-                    }
-                }
-            }
-            else
-            {
-                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
-            }
-
-        } else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, item.video);
-            intent.setType("text/plain");
-            startActivity(intent);
-        } else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
-
-            if (item.fileName.size()> 0)
-            {
-
-                for (int i = 0;i<item.fileName.size();i++)
-                {
-                    if (!AmazoneVideoDownload.isVideoDownloaded((item.fileName.get(i))))
-                    {
-                        isDownloaded = false;
-                    }
-                }
-            }
-            else
-            {
-                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
-            }
-
-        } else if(item.fileType.equalsIgnoreCase("birthdaypost")){
-
-            if (item.fileName.size()> 0)
-            {
-
-                for (int i = 0;i<item.fileName.size();i++)
-                {
-                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
-                    {
-                        isDownloaded = false;
-                    }
-                }
-            }
-            else
-            {
-                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        if (!item.fileType.equals(Constants.FILE_TYPE_YOUTUBE))
-        {
-            if (item.fileName != null && item.fileName.size() > 0)
-            {
                 if (isDownloaded)
                 {
                     ArrayList<File> files =new ArrayList<>();
@@ -1030,20 +961,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-
-                        if(item.fileType.equals(Constants.FILE_TYPE_IMAGE))
-                        {
-                            files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
-                        }
-                        else if (item.fileType.equals(Constants.FILE_TYPE_PDF))
-                        {
-                            files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
-                        }
-                        else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO))
-                        {
-                            files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
-                        }
-
+                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
                     }
 
                     ArrayList<Uri> uris = new ArrayList<>();
@@ -1060,9 +978,8 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
                     }
 
-
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                    intent.setType("*/*");
+                    intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
                     intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                     startActivity(Intent.createChooser(intent, "Share File"));
@@ -1072,7 +989,182 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                     Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
                 }
             }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
 
+
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneDownload.isPdfDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("application/pdf");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, item.video);
+            intent.setType("text/plain");
+            startActivity(intent);
+        }
+        else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneVideoDownload.isVideoDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("video/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if(item.fileType.equalsIgnoreCase("birthdaypost")){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -1319,19 +1411,93 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         }
     }
 
-      private void createBirthPostAndSave(PostItem item , int position)
-    {
-        Bitmap MlaBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
+    Bitmap BirthdayTempleteBitmap = null;
+    Bitmap UserBitmap = null;
+    Bitmap MlaBitMap = null;
+    File fileSaveLocation = null;
 
-        Log.e(TAG,"MlaBitmap H "+MlaBitmap.getHeight());
-        Log.e(TAG,"MlaBitmap W "+MlaBitmap.getWidth());
+    private void createBirthPostAndSave(PostItem item , int position)
+    {
 
         ArrayList<String> imageList = new ArrayList<>();
         imageList.add(item.fileName.get(0));
         imageList.add(item.bdayUserImage);
         imageList.add(item.createdByImage);
 
-         AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
+        if(getActivity() == null)
+        {
+            return;
+        }
+
+
+
+        AmazoneImageDownload.download(getActivity(), item.bdayUserImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+            @Override
+            public void onDownload(File file) {
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
+                if(file == null)
+                {
+                    return;
+                }
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                UserBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                Log.e(TAG,"UserBitmap H "+ UserBitmap.getHeight());
+                Log.e(TAG,"UserBitmap W "+ UserBitmap.getWidth());
+
+                checkAllDownload(item.bdayUserName,item.createdBy,position,item.fileName.get(0));
+            }
+
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });
+
+        AmazoneImageDownload.download(getActivity(), item.createdByImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+            @Override
+            public void onDownload(File file) {
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
+                 if(file == null)
+                {
+                    return;
+                }
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                MlaBitMap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                Log.e(TAG,"UserBitmap H "+ MlaBitMap.getHeight());
+                Log.e(TAG,"UserBitmap W "+ MlaBitMap.getWidth());
+
+                checkAllDownload(item.bdayUserName,item.createdBy,position,item.fileName.get(0));
+            }
+
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });
+
+
+
+        /* AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
             @Override
             public void onDownload(ArrayList<File> file) {
 
@@ -1341,6 +1507,8 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                 {
                     return;
                 }
+
+
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                 Bitmap BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.get(0).getAbsolutePath(),bmOptions);
 
@@ -1351,14 +1519,26 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                 Bitmap UserBitmap,MlaBitMap;
 
                 if(file.size()>1 && file.get(1)!=null )
+                {
                     UserBitmap = BitmapFactory.decodeFile(file.get(1).getAbsolutePath(),bmOptions);
+                    Log.e(TAG,"UserBitmap if");
+                }
                 else
+                {
                     UserBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.user));
+                    Log.e(TAG,"UserBitmap else");
+                }
 
                 if(file.size()>2 && file.get(2)!=null )
+                {
                     MlaBitMap = BitmapFactory.decodeFile(file.get(2).getAbsolutePath(),bmOptions);
+                    Log.e(TAG,"MlaBitMap if");
+                }
                 else
+                {
                     MlaBitMap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
+                    Log.e(TAG,"MlaBitMap else");
+                }
 
                 Log.e(TAG,"UserBitmap H "+UserBitmap.getHeight());
                 Log.e(TAG,"UserBitmap W "+UserBitmap.getWidth());
@@ -1384,11 +1564,55 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             public void progressUpdate(int progress, int max) {
 
             }
-        });
+        });*/
+
+
     }
 
 
+    public void checkAllDownload(String UserName,String mlaName,int position,String file)
+    {
+        if (UserBitmap != null && MlaBitMap != null)
+        {
 
+            AmazoneImageDownload.download(getActivity(), file, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                @Override
+                public void onDownload(File file) {
+
+                    if(getActivity() == null)
+                    {
+                        return;
+
+                    }
+                    if(file == null)
+                    {
+                        return;
+                    }
+
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                    createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, UserName,file,mlaName);
+                    birthdayPostCreationQueue.remove(Integer.valueOf(position));
+                    Log.e(TAG,"mAdapter notifyItemChanged"+position);
+                    mAdapter.notifyItemChanged(position);
+                    Log.e(TAG , "created Bitmap saved at : "+file);
+
+                }
+
+                @Override
+                public void error(String msg) {
+
+                }
+
+                @Override
+                public void progressUpdate(int progress, int max) {
+
+                }
+            });
+
+        }
+    }
 
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
@@ -1426,7 +1650,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         paint.setColor(getActivity().getResources().getColor(R.color.birthDayTextColor));
         paint.setTextSize(result.getHeight()*0.07f);
 
-        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextAlign(Paint.Align.LEFT);
         Rect rect = new Rect();
 
         Log.e(TAG,"userBitmap w : "+userBitmap.getWidth()+" h : "+userBitmap.getHeight());
@@ -1435,7 +1659,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
          Log.e(TAG,"result w : "+result.getWidth()+" h : "+result.getHeight());
 
          paint.getTextBounds(userName,0,userName.length(),rect);
-         canvas.drawText(userName,result.getWidth()*0.107f,result.getHeight()*0.52f,paint);
+         canvas.drawText(userName,result.getWidth()*0.050f,result.getHeight()*0.52f,paint);
 
 
         Paint paint2 = new Paint();
@@ -1444,7 +1668,6 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         paint2.setTextAlign(Paint.Align.RIGHT);
 
         Rect rect2 = new Rect();
-
 
          paint2.setTextSize(result.getHeight()*0.05f);
          paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);

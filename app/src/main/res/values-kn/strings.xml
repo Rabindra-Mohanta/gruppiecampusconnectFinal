@@ -1225,6 +1225,9 @@
     <string name="term_and_condition">Terms and Conditions</string>
     <string name="privacy_policy">Privacy Policy</string>
 
+    <string name="txt_english">English</string>
+    <string name="txt_kannada">ಕನ್ನಡ</string>
+
     <string name="lbl_setFingerPrint">Register Fingerprint</string>
     <string name="lbl_finger_print">Fingerprint</string>
     <string name="menu_print_member">Print MemberList</string>

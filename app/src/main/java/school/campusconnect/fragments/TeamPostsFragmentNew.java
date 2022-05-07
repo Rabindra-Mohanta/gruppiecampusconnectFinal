@@ -148,7 +148,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     private static final String TAG = "TeamPostsFragmentNew";
     private LayoutListTeamsBinding mBinding;
-    private TeamListAdapter mAdapter2;
+    private
+    TeamListAdapter mAdapter2;
     LeafManager manager = new LeafManager();
     String mGroupId = "";
     int position = -1;
@@ -195,6 +196,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         AppLog.e(TAG, "TeamPostsFragmentNew");
         leafPreference = LeafPreference.getInstance(TeamPostsFragmentNew.this.getActivity());
     }
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -504,7 +506,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_teams, container, false);
 
-        mBinding.setSize(1);
+        mBinding.setSize(0);
         mBinding.setMessage(R.string.msg_no_post);
 
         ActiveAndroid.initialize(getActivity());
@@ -1587,6 +1589,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
     }
 
+
+
     @Override
     public void onPostClick(TeamPostGetData item) {
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
@@ -1644,18 +1648,55 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         //chanage share data Post share option to external applications
 
         boolean isDownloaded = true;
+        String type;
 
         if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
 
+
             if (item.fileName.size()> 0)
             {
-
                 for (int i = 0;i<item.fileName.size();i++)
                 {
                     if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
                     {
                         isDownloaded = false;
                     }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
                 }
             }
             else
@@ -1664,7 +1705,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             }
 
 
-        } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
 
             if (item.fileName.size()> 0)
             {
@@ -1676,18 +1718,56 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         isDownloaded = false;
                     }
                 }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("application/pdf");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
             }
             else
             {
                 Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
             }
 
-        } else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.putExtra(Intent.EXTRA_TEXT, item.video);
             intent.setType("text/plain");
             startActivity(intent);
-        } else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
+        }
+        else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
 
             if (item.fileName.size()> 0)
             {
@@ -1699,13 +1779,50 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         isDownloaded = false;
                     }
                 }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("video/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
             }
             else
             {
                 Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
             }
 
-        } else if(item.fileType.equalsIgnoreCase("birthdaypost")){
+        }
+        else if(item.fileType.equalsIgnoreCase("birthdaypost")){
 
             if (item.fileName.size()> 0)
             {
@@ -1717,6 +1834,42 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         isDownloaded = false;
                     }
                 }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
             }
             else
             {
@@ -1724,7 +1877,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             }
         }
 
-        if (!item.fileType.equals(Constants.FILE_TYPE_YOUTUBE))
+     /*   if (!item.fileType.equals(Constants.FILE_TYPE_YOUTUBE))
         {
             if (item.fileName != null && item.fileName.size() > 0)
             {
@@ -1768,7 +1921,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                    intent.setType("*/*");
+                    intent.setType("");
+                    intent.putExtra(Intent.EXTRA_TEXT,item.fileType);
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
                     intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                     startActivity(Intent.createChooser(intent, "Share File"));
@@ -1779,7 +1933,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 }
             }
 
-        }
+        }*/
+
     }
 
     @Override
@@ -1892,19 +2047,92 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         createBirthPostAndSave(item ,position);
     }
 
+    Bitmap BirthdayTempleteBitmap = null;
+    Bitmap UserBitmap = null;
+    Bitmap MlaBitMap = null;
+    File fileSaveLocation = null;
     private void createBirthPostAndSave(TeamPostGetData item , int position)
     {
-        Bitmap MlaBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
-
-        Log.e(TAG,"MlaBitmap H "+MlaBitmap.getHeight());
-        Log.e(TAG,"MlaBitmap W "+MlaBitmap.getWidth());
 
         ArrayList<String> imageList = new ArrayList<>();
         imageList.add(item.fileName.get(0));
         imageList.add(item.bdayUserImage);
         imageList.add(item.createdByImage);
 
-        AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
+        if(getActivity() == null)
+        {
+            return;
+        }
+
+
+
+        AmazoneImageDownload.download(getActivity(), item.bdayUserImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+            @Override
+            public void onDownload(File file) {
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
+                if(file == null)
+                {
+                    return;
+                }
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                UserBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                Log.e(TAG,"UserBitmap H "+ UserBitmap.getHeight());
+                Log.e(TAG,"UserBitmap W "+ UserBitmap.getWidth());
+
+                checkAllDownload(item.bdayUserName,item.createdBy,position,item.fileName.get(0));
+            }
+
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });
+
+        AmazoneImageDownload.download(getActivity(), item.createdByImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+            @Override
+            public void onDownload(File file) {
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
+                if(file == null)
+                {
+                    return;
+                }
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                MlaBitMap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                Log.e(TAG,"UserBitmap H "+ MlaBitMap.getHeight());
+                Log.e(TAG,"UserBitmap W "+ MlaBitMap.getWidth());
+
+                checkAllDownload(item.bdayUserName,item.createdBy,position,item.fileName.get(0));
+            }
+
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });
+
+
+
+        /* AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
             @Override
             public void onDownload(ArrayList<File> file) {
 
@@ -1914,6 +2142,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 {
                     return;
                 }
+
+
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                 Bitmap BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.get(0).getAbsolutePath(),bmOptions);
 
@@ -1924,14 +2154,26 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 Bitmap UserBitmap,MlaBitMap;
 
                 if(file.size()>1 && file.get(1)!=null )
+                {
                     UserBitmap = BitmapFactory.decodeFile(file.get(1).getAbsolutePath(),bmOptions);
+                    Log.e(TAG,"UserBitmap if");
+                }
                 else
+                {
                     UserBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.user));
+                    Log.e(TAG,"UserBitmap else");
+                }
 
                 if(file.size()>2 && file.get(2)!=null )
+                {
                     MlaBitMap = BitmapFactory.decodeFile(file.get(2).getAbsolutePath(),bmOptions);
+                    Log.e(TAG,"MlaBitMap if");
+                }
                 else
+                {
                     MlaBitMap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
+                    Log.e(TAG,"MlaBitMap else");
+                }
 
                 Log.e(TAG,"UserBitmap H "+UserBitmap.getHeight());
                 Log.e(TAG,"UserBitmap W "+UserBitmap.getWidth());
@@ -1944,7 +2186,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, item.bdayUserName,file.get(0),item.createdBy);
                 birthdayPostCreationQueue.remove(Integer.valueOf(position));
                 Log.e(TAG,"mAdapter notifyItemChanged"+position);
-                mAdapter2.notifyItemChanged(position);
+                mAdapter.notifyItemChanged(position);
 
                 Log.e(TAG , "created Bitmap saved at : "+file.get(0));
             }
@@ -1957,7 +2199,54 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             public void progressUpdate(int progress, int max) {
 
             }
-        });
+        });*/
+
+
+    }
+
+
+    public void checkAllDownload(String UserName,String mlaName,int position,String file)
+    {
+        if (UserBitmap != null && MlaBitMap != null)
+        {
+
+            AmazoneImageDownload.download(getActivity(), file, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                @Override
+                public void onDownload(File file) {
+
+                    if(getActivity() == null)
+                    {
+                        return;
+
+                    }
+                    if(file == null)
+                    {
+                        return;
+                    }
+
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                    createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, UserName,file,mlaName);
+                    birthdayPostCreationQueue.remove(Integer.valueOf(position));
+                    Log.e(TAG,"mAdapter notifyItemChanged"+position);
+                    mAdapter2.notifyItemChanged(position);
+                    Log.e(TAG , "created Bitmap saved at : "+file);
+
+                }
+
+                @Override
+                public void error(String msg) {
+
+                }
+
+                @Override
+                public void progressUpdate(int progress, int max) {
+
+                }
+            });
+
+        }
     }
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
