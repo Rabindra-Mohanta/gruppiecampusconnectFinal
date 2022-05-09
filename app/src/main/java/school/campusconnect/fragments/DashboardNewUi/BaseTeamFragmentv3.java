@@ -697,6 +697,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                             String topics = data.getFeaturedIconData().get(j).groupId + "_" + data.getFeaturedIconData().get(j).teamId;
                             currentTopics.add(topics);
                         }
+                        else if (!TextUtils.isEmpty(data.getFeaturedIconData().get(j).groupId))
+                        {
+                            String topics = data.getFeaturedIconData().get(j).groupId;
+                            currentTopics.add(topics);
+                        }
                     }
 
 

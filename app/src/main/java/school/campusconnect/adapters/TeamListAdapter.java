@@ -37,6 +37,7 @@ import school.campusconnect.utils.AppLog;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -105,18 +106,19 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
     MediaPlayer mediaPlayer  = new MediaPlayer();
     private Handler mHandler = new Handler();
     ImageViewHolder mholder;
-    private Boolean isStart = false;
+
     Runnable myRunnable = new Runnable() {
         @Override
         public void run() {
-
 
             try{
                 int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
                 Log.e(TAG,"mCurrentPosition"+ mCurrentPosition);
                 mholder.tvTimeAudio.setText(formatDate(mCurrentPosition));
-                mholder.seekBarAudio.setProgress(mCurrentPosition*10);
-                mHandler.postDelayed(myRunnable, 1000);
+                mholder.tvTimeTotalAudio.setText(formatDate(mediaPlayer.getDuration()/1000));
+                mholder.seekBarAudio.setProgress(mCurrentPosition);
+                if(mediaPlayer.isPlaying())
+                    mHandler.postDelayed(myRunnable, 1000);
             }catch (Exception e)
             {
                 Log.e(TAG,"exception"+ e.getMessage());
@@ -124,12 +126,10 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
         }
     };
-    int pos;
+    int pos = -1;
 
 
     AmazoneAudioDownload asyncTask;
-
-
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -144,21 +144,36 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
     }
 
     @Override
-    public void onViewRecycled(@NonNull ImageViewHolder holder) {
-        super.onViewRecycled(holder);
-
-        Log.e(TAG, "onViewRecycled: .");
+    public void onViewDetachedFromWindow(@NonNull ImageViewHolder holder) {
+        Log.e(TAG, "onDetachedFromRecyclerView: .");
 
         if (mholder == holder)
         {
             mHandler.removeCallbacks(myRunnable);
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-            holder.seekBarAudio.setProgress(0);
-            holder.tvTimeAudio.setText("00:00");
-            holder.imgPauseAudio.setVisibility(View.GONE);
-            holder.imgPlayAudio.setVisibility(View.VISIBLE);
+
+            if (mediaPlayer.isPlaying())
+            {
+                mediaPlayer.pause();
+                pos = -1;
+                holder.seekBarAudio.setProgress(0);
+                holder.tvTimeAudio.setText("00:00");
+                holder.tvTimeTotalAudio.setText("00:00");
+                holder.imgPauseAudio.setVisibility(View.GONE);
+                holder.imgPlayAudio.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                pos = -1;
+                holder.seekBarAudio.setProgress(0);
+                holder.tvTimeAudio.setText("00:00");
+                holder.tvTimeTotalAudio.setText("00:00");
+                holder.imgPauseAudio.setVisibility(View.GONE);
+                holder.imgPlayAudio.setVisibility(View.VISIBLE);
+            }
+
         }
+
+        super.onViewDetachedFromWindow(holder);
     }
 
     private void startProcess(String s, ImageViewHolder holder) {
@@ -343,6 +358,27 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);
                     }
                 }
+            } else if (item.fileType.equals(Constants.FILE_TYPE_AUDIO))
+            {
+                holder.llAudio.setVisibility(View.VISIBLE);
+                holder.imgPhoto.setVisibility(View.GONE);
+                holder.imgPlay.setVisibility(View.GONE);
+                holder.recyclerView.setVisibility(View.GONE);
+
+                if (AmazoneAudioDownload.isAudioDownloaded(item.fileName.get(0)))
+                {
+                    holder.imgPlayAudio.setVisibility(View.VISIBLE);
+                    holder.imgDownloadAudio.setVisibility(View.GONE);
+                    holder.imgPauseAudio.setVisibility(View.GONE);
+                    holder.llProgress.setVisibility(View.GONE);
+                }
+                else
+                {
+                    holder.imgDownloadAudio.setVisibility(View.VISIBLE);
+                    holder.imgPlayAudio.setVisibility(View.GONE);
+                    holder.imgPauseAudio.setVisibility(View.GONE);
+                    holder.llProgress.setVisibility(View.GONE);
+                }
             } else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
                 holder.imgPhoto.getLayoutParams().height = (Constants.screen_width * 204) / 480;
                 holder.imgPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -457,63 +493,95 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
             }
         });*/
 
+
         holder.imgPlayAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 try{
 
-                    pos = position;
+
 
                     if (mholder !=null)
                     {
+                        AppLog.e(TAG,"mholder not null");
                         mHandler.removeCallbacks(myRunnable);
                         mholder.imgPlayAudio.setVisibility(View.VISIBLE);
                         mholder.imgPauseAudio.setVisibility(View.GONE);
                         mholder.seekBarAudio.setProgress(0);
                         mholder.tvTimeAudio.setText("00:00");
+                        mholder.tvTimeTotalAudio.setText("00:00");
                     }
+
                     mholder = holder;
 
                     if (mediaPlayer != null && mediaPlayer.isPlaying())
                     {
+                        AppLog.e(TAG,"mediaPlayer isPlaying");
+
                         mediaPlayer.stop();
                         mediaPlayer.reset();
                         mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
                         mediaPlayer.prepare();
-                        mediaPlayer.start();
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                AppLog.e(TAG  , "ONPrepared : lenght : "+mp.getDuration());
+                                mholder.seekBarAudio.setMax(mediaPlayer.getDuration()/1000);
+                                mediaPlayer.start();
+                                mHandler.post(myRunnable);
+                            }
+                        });
+                      //  mediaPlayer.start();
+                        //mholder.seekBarAudio.setMax(mediaPlayer.getDuration());
                         holder.imgPlayAudio.setVisibility(View.GONE);
                         holder.imgPauseAudio.setVisibility(View.VISIBLE);
 
-                        ((AppCompatActivity) mContext).runOnUiThread(myRunnable);
+                    }
+                    else if (pos == position)
+                    {
+                        mediaPlayer.start();
+                        holder.imgPauseAudio.setVisibility(View.VISIBLE);
+                        holder.imgPlayAudio.setVisibility(View.GONE);
+                        mHandler.post(myRunnable);
                     }
                     else
                     {
+
+                        AppLog.e(TAG,"mediaPlayer is Not Playing");
+
+                        if (mediaPlayer != null)
+                        {
+                            mediaPlayer.stop();
+                            mediaPlayer.reset();
+                        }
+
                         mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
                         mediaPlayer.prepare();
-                        mediaPlayer.start();
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                AppLog.e(TAG  , "ONPrepared : lenght : "+mp.getDuration());
+                                mholder.seekBarAudio.setMax(mediaPlayer.getDuration()/1000);
+                                mediaPlayer.start();
+                                mHandler.post(myRunnable);
+                            }
+                        });
+                        //  mediaPlayer.start();
 
                         holder.imgPauseAudio.setVisibility(View.VISIBLE);
                         holder.imgPlayAudio.setVisibility(View.GONE);
-                        ((AppCompatActivity) mContext).runOnUiThread(myRunnable);
 
-                      /*  if (!isStart)
-                        {
-                            isStart = true;
-
-                        }*/
-
-                        //    Log.e(TAG,"media Player data"+mediaPlayer.getCurrentPosition()+"\n"+mediaPlayer.getDuration());
 
                     }
 
-
-
-
                 }
-                catch(Exception e){e.printStackTrace();
+                catch(Exception e)
+                {e.printStackTrace();
                     Log.e(TAG,"Exception"+e.getMessage());}
+                pos = position;
             }
+
         });
 
 
@@ -528,8 +596,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                     try{
                         mHandler.removeCallbacks(myRunnable);
                         mediaPlayer.pause();
-                        holder.imgPauseAudio.setVisibility(View.GONE);
-                        holder.imgPlayAudio.setVisibility(View.VISIBLE);
+                        mholder.imgPauseAudio.setVisibility(View.GONE);
+                        mholder.imgPlayAudio.setVisibility(View.VISIBLE);
                     }catch(Exception e){
                         e.printStackTrace();
                         Log.e(TAG,"Exception"+e.getMessage());
@@ -546,15 +614,18 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
                 if (pos == position)
                 {
-                    Log.e(TAG,"progress"+progress);
+                    Log.e(TAG,"progress "+progress + "\ngetDuration "+mediaPlayer.getDuration()/1000+" condition : "+(progress >= mediaPlayer.getDuration()/1000));
 
-                    if (progress == 100)
+
+                    if (progress >= mediaPlayer.getDuration()/1000)
                     {
                         mHandler.removeCallbacks(myRunnable);
-                        mediaPlayer.stop();
-                        mediaPlayer.reset();
-                        holder.imgPauseAudio.setVisibility(View.GONE);
-                        holder.imgPlayAudio.setVisibility(View.VISIBLE);
+                        mholder.imgPauseAudio.setVisibility(View.GONE);
+                        mholder.imgPlayAudio.setVisibility(View.VISIBLE);
+
+                        mholder.seekBarAudio.setProgress(0);
+                        mholder.tvTimeAudio.setText("00:00");
+                        mholder.tvTimeTotalAudio.setText("00:00");
                     }
                 }
 
@@ -572,6 +643,12 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         });
 
 
+        holder.seekBarAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         holder.txt_title.setText(item.title);
         if (TextUtils.isEmpty(item.title))
@@ -641,14 +718,13 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
         holder.txtLike.setVisibility(View.VISIBLE);
         holder.linLikes.setVisibility(View.VISIBLE);
 
-
         if (myTeamData.allowTeamPostCommentAll)
             holder.linComments.setVisibility(View.VISIBLE);
         else
             holder.linComments.setVisibility(View.GONE);
 
 
-        holder.llAudio.setVisibility(View.GONE);
+        //holder.llAudio.setVisibility(View.GONE);
     }
 
     @Override
@@ -784,6 +860,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
         @Bind(R.id.tvTimeAudio)
         TextView tvTimeAudio;
+
+        @Bind(R.id.tvTimeTotalAudio)
+        TextView tvTimeTotalAudio;
 
         @Bind(R.id.seekBarAudio)
         SeekBar seekBarAudio;

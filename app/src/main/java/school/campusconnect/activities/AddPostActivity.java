@@ -8,10 +8,12 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 
 import androidx.annotation.RequiresApi;
@@ -28,14 +30,18 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +81,7 @@ import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
+import school.campusconnect.adapters.TeamListAdapter;
 import school.campusconnect.adapters.UploadImageAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddPostRequest;
@@ -150,6 +157,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Bind(R.id.llPersonalSetting)
     LinearLayout llPersonalSetting;
 
+    @Bind(R.id.llAudioPreview)
+    RelativeLayout llAudioPreview;
+
     @Bind(R.id.llAudio)
     LinearLayout llAudio;
 
@@ -162,6 +172,26 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Bind(R.id.rvImages)
     RecyclerView rvImages;
 
+
+
+
+    @Bind(R.id.imgPlayAudio)
+    ImageView imgPlayAudio;
+
+    @Bind(R.id.imgPauseAudio)
+    ImageView imgPauseAudio;
+
+
+    @Bind(R.id.tvTimeAudio)
+    TextView tvTimeAudio;
+
+    @Bind(R.id.tvTimeTotalAudio)
+    TextView tvTimeTotalAudio;
+
+    @Bind(R.id.seekBarAudio)
+    SeekBar seekBarAudio;
+
+    MediaPlayer mediaPlayer  = new MediaPlayer();
 
     TextView btn_ok;
     TextView btn_cancel;
@@ -210,6 +240,58 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     private Boolean isGalleryMultiple = false;
     private Boolean isClear = true;
+
+    private Boolean isPause = false;
+
+
+    private Handler mHandler = new Handler();
+    TeamListAdapter.ImageViewHolder mholder;
+
+    Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            try{
+                int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                Log.e(TAG,"mCurrentPosition"+ mCurrentPosition);
+                tvTimeAudio.setText(formatDate(mCurrentPosition));
+                tvTimeTotalAudio.setText(formatDate(mediaPlayer.getDuration()/1000));
+                seekBarAudio.setProgress(mCurrentPosition);
+                if(mediaPlayer.isPlaying())
+                    mHandler.postDelayed(myRunnable, 1000);
+            }catch (Exception e)
+            {
+                Log.e(TAG,"exception"+ e.getMessage());
+            }
+
+        }
+    };
+
+    private String formatDate(int second)  {
+
+        String seconds , minutes;
+        if(second>60)
+        {
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+
+            if(second/60 < 10)
+                minutes = "0"+second/60;
+            else
+                minutes = ""+second/60;
+        }
+        else
+        {
+            minutes = "00";
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+        }
+        return minutes+":"+seconds;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -362,6 +444,110 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             }
         });*/
 
+        imgPlayAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                if (isPause)
+                {
+                    isPause = false;
+                    mediaPlayer.start();
+                   imgPauseAudio.setVisibility(View.VISIBLE);
+                    imgPlayAudio.setVisibility(View.GONE);
+                    mHandler.post(myRunnable);
+                }
+                else
+                {
+                    if (mediaPlayer != null)
+                    {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                    }
+
+                    try {
+                        mediaPlayer.setDataSource(audioPath);
+                        mediaPlayer.prepare();
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                AppLog.e(TAG  , "ONPrepared : lenght : "+mp.getDuration());
+                                seekBarAudio.setMax(mediaPlayer.getDuration()/1000);
+                                mediaPlayer.start();
+                                mHandler.post(myRunnable);
+                            }
+                        });
+                        //  mediaPlayer.start();
+
+                        imgPauseAudio.setVisibility(View.VISIBLE);
+                        imgPlayAudio.setVisibility(View.GONE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+        });
+
+        imgPauseAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try{
+                    isPause = true;
+                    mHandler.removeCallbacks(myRunnable);
+                    mediaPlayer.pause();
+                    imgPauseAudio.setVisibility(View.GONE);
+                    imgPlayAudio.setVisibility(View.VISIBLE);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG,"Exception"+e.getMessage());
+                }
+            }
+        });
+
+
+        seekBarAudio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                Log.e(TAG,"progress "+progress + "\ngetDuration "+mediaPlayer.getDuration()/1000+" condition : "+(progress >= mediaPlayer.getDuration()/1000));
+
+
+                if (progress >= mediaPlayer.getDuration()/1000)
+                {
+                    mHandler.removeCallbacks(myRunnable);
+                   imgPauseAudio.setVisibility(View.GONE);
+                    imgPlayAudio.setVisibility(View.VISIBLE);
+
+                   seekBarAudio.setProgress(0);
+                   tvTimeAudio.setText("00:00");
+                   tvTimeTotalAudio.setText("00:00");
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
+        seekBarAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
     }
 
     private void shareButtonEnableDisable() {
@@ -1403,6 +1589,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
+
+                llAudioPreview.setVisibility(View.VISIBLE);
+
                 showLastImage();
                 removePdf();
                 removeImage();

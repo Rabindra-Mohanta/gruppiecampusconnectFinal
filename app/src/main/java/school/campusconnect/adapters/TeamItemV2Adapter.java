@@ -96,7 +96,7 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         {
             postUnseenCount = leafPreference.getInt(team.teamId+"_post");
 
-            if (CountNotificationTBL.getCountNotification(team.teamId).size() > 0)
+            /*if (CountNotificationTBL.getCountNotification(team.teamId).size() > 0)
             {
                 Log.e(TAG,"CountNotificationTBL Size "+CountNotificationTBL.getCountNotification(team.teamId).size());
 
@@ -107,7 +107,7 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
                         Log.e(TAG,"match Count");
                 }
 
-            }
+            }*/
         }
         else if (team.type.equalsIgnoreCase("Broadcast"))
         {
@@ -123,6 +123,9 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         }else if(team.type.equals("Recorded Class"))
         {
             postUnseenCount = leafPreference.getInt(team.groupId+"_NOTES_VIDEO_NOTI_COUNT");
+        }else if(team.type.equals("Gallery"))
+        {
+            postUnseenCount = leafPreference.getInt(team.groupId+"_gallerypost");
         }else if(team.type.equals("Test"))
         {
             postUnseenCount = leafPreference.getInt(team.groupId+"_TEST_EXAM_NOTI_COUNT");

@@ -636,7 +636,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
 
 
-
                     UpdateDataEventRes.TeamListCount teamCount = res.data.get(0).teamsListCount;
                     TeamCountTBL groupCount = TeamCountTBL.getByTypeAndGroup("GROUP", groupId);
                     if (groupCount == null) {

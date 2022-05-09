@@ -849,9 +849,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 //                AppLog.e("TeamFragment", "visibleItemCount,totalItemCount,firstVisibleItemPosition=" + visibleItemCount + "," + totalItemCount + "," + firstVisibleItemPosition);
 //                AppLog.e("TeamFragment", "mIsLoading,totalPages2,currentPage2=" + mIsLoading + "," + totalPages2 + "," + currentPage2);
                 if (!mIsLoading && totalPages2 > currentPage2) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0
-                    ) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
                         currentPage2 = currentPage2 + 1;
                         getDataLocaly();
                     }
@@ -886,6 +884,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onDestroy() {
         super.onDestroy();
 
+        mAdapter2.RemoveAll();
         //NOFIREBASEDATABASE
      /*   if(query !=null)
             query.removeEventListener(firebaseNewPostListener);*/
@@ -943,7 +942,6 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
 
-
         if (!LeafPreference.getInstance(getContext()).getString(mGroupId+"_"+team_id+"_"+type).isEmpty())
         {
             totalPages2 = Integer.parseInt(LeafPreference.getInstance(getContext()).getString(mGroupId+"_"+team_id+"_"+type));
@@ -968,7 +966,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }*/
 
 
-        if(type.equalsIgnoreCase("team"))
+        /*if(type.equalsIgnoreCase("team"))
         {
             if (CountNotificationTBL.getCountNotification(team_id).size() > 0)
             {
@@ -979,7 +977,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             else {
                 callEventApiTeamPost();
             }
-        }
+        }*/
 
         if(!type.equalsIgnoreCase("team"))
         {

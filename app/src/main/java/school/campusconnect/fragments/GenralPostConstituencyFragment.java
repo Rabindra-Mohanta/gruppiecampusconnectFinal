@@ -287,15 +287,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        //NOFIREBASEDATABASE
-     /*   if(query !=null)
-            query.removeEventListener(firebaseNewPostListener);*/
-
-    }
+ 
 
     private void getGroupPostLocaly() {
 
@@ -453,6 +445,17 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
         manager.getGeneralPosts(this, mGroupId + "", currentPage);
         leafPreference.remove(mGroupId + "_post");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mAdapter.RemoveAll();
+        //NOFIREBASEDATABASE
+     /*   if(query !=null)
+            query.removeEventListener(firebaseNewPostListener);*/
+
     }
 
     @Override

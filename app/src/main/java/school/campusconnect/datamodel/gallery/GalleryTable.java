@@ -70,7 +70,7 @@ public class GalleryTable extends Model {
         return new Delete().from(GalleryTable.class).where("groupId = ?", group_id).where("page = ?", page).execute();
     }
     public static List<GalleryTable> getLastPost() {
-        return new Select().from(GalleryTable.class).orderBy("(groupId) DESC").limit(1).execute();
+        return new Select().from(GalleryTable.class).orderBy("DATETIME (updatedAt) DESC").limit(1).execute();
     }
 
     public  static List<GalleryTable> deleteGallery()

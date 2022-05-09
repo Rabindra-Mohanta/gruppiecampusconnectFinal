@@ -392,7 +392,6 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
         myTeamDataList.addAll(boothList);
         adapter.add(myTeamDataList);
-
     }
 
     @Override

@@ -175,6 +175,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                         if ("post".equalsIgnoreCase(data.postType)) {
 
+                            leafPreference.setInt(data.groupId + "_gallerypost", leafPreference.getInt(data.groupId + "_gallerypost") + 1);
                             //leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
                         }
 
@@ -191,11 +192,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                             leafPreference.setInt(data.teamId + "_post", leafPreference.getInt(data.teamId + "_post") + 1);
 
-                            if (CountNotificationTBL.getCountNotification(data.teamId).size() > 0)
+                            /*if (CountNotificationTBL.getCountNotification(data.teamId).size() > 0)
                             {
                                 int count = CountNotificationTBL.getCountNotification(data.teamId).get(0).count;
                                 CountNotificationTBL.updateCountNotification(data.teamId,count+1);
-                                AppLog.e(TAG,"update ");
+                                AppLog.e(TAG,"update");
                             }
                             else {
                                 CountNotificationTBL countNotificationTBL = new CountNotificationTBL();
@@ -203,7 +204,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 countNotificationTBL.teamID = data.teamId;
                                 countNotificationTBL.save();
                                 AppLog.e(TAG, "save ");
-                            }
+                            }*/
                         }
                         else if ("group".equalsIgnoreCase(data.postType)) {
                             leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);

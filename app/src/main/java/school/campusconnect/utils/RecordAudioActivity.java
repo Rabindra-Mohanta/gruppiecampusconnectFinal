@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -71,9 +72,9 @@ ActivityRecordAudioBinding binding;
 
     private void inits() {
 
-        startAudio();
+       // startAudio();
        // isAudio = false;
-        binding.BtnRecording.setImageDrawable(getResources().getDrawable(R.drawable.ic__stop_audio));
+       // binding.BtnRecording.setImageDrawable(getResources().getDrawable(R.drawable.ic__stop_audio));
 
        /* binding.BtnRecording.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +94,39 @@ ActivityRecordAudioBinding binding;
             }
         });*/
 
+
+        binding.BtnRecording.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                Log.e(TAG,"onTouch "+event.getAction());
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+               /*     if (isAudio)
+                    {
+                        isAudio = false;
+
+                    }*/
+                    binding.BtnRecording.setImageDrawable(getResources().getDrawable(R.drawable.ic__stop_audio));
+                    startAudio();
+
+                    return true;
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    // stop timer.
+             //       isAudio = true;
+                    binding.BtnRecording.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_audio));
+                    stopAudio();
+                    String uri = Uri.fromFile(fileRecordAudio).toString();
+                    Log.e(TAG,"uri "+uri);
+                    Intent i = new Intent();
+                    i.putExtra("AudioData",uri);
+                    setResult(RESULT_OK,i);
+                    finish();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override

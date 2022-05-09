@@ -101,6 +101,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     private LeafManager manager;
     private String mGroupId;
     private GalleryPostRes.GalleryData currentItem;
+    private boolean isAddPost = false;
 
 
     @Nullable
@@ -135,11 +136,11 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     }
 
 
-
     private void checkEvent() {
 
         if (GalleryTable.getLastPost().size() > 0)
         {
+            Log.e(TAG,"updatedAt"+GalleryTable.getLastPost().get(0).updatedAt);
             if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("GALLERY_POST"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",GalleryTable.getLastPost().get(0)._now)) {
                 GalleryTable.deleteGallery();
                 getData();
@@ -259,6 +260,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, false);
             currentPage=1;
             GalleryTable.deleteGallery();
+            isAddPost = true;
             getData();
         }
     }
