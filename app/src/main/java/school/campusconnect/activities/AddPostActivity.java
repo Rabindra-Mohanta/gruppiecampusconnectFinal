@@ -1203,6 +1203,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         Picasso.with(this).load(R.drawable.icon_gallery).into(img_image);
         showLastImage();
         shareButtonEnableDisable();*/
+        llAudioPreview.setVisibility(View.GONE);
     }
 
 
@@ -1586,6 +1587,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 audioPath = data.getStringExtra("AudioData");
                 Log.e(TAG,"audioPath"+ audioPath);
 
+
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
@@ -1596,6 +1598,31 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 removePdf();
                 removeImage();
 
+
+            }
+        }
+
+        else if (requestCode == REQUEST_LOAD_AUDIO) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                final Uri selectedAudio = data.getData();
+
+                if (selectedAudio.toString().startsWith("content")) {
+                    audioPath = ImageUtil.getPath(this, selectedAudio);
+                } else {
+                    audioPath = selectedAudio.getPath();
+                }
+                Log.e(TAG,"audioPath"+ audioPath);
+
+                listImages.clear();
+                fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
+                listImages.add(audioPath);
+
+                llAudioPreview.setVisibility(View.VISIBLE);
+
+
+                removePdf();
+                removeImage();
 
             }
         }

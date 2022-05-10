@@ -243,7 +243,12 @@ ActivityRecordAudioBinding binding;
     private void stopAudio() {
         timeSwapBuff += timeInMilliseconds;
         customHandler.removeCallbacks(updateTimerThread);
-        mediaRecorder.stop();
+        try {
+            mediaRecorder.stop();
+        } catch(RuntimeException stopException) {
+            Log.e(TAG,"RuntimeException "+stopException.getMessage());
+        }
+
     }
 
     private Runnable updateTimerThread = new Runnable() {

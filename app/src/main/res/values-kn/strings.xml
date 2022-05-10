@@ -129,7 +129,7 @@
     <string name="msg_no_users">ಯಾವುದೇ ಬಳಕೆದಾರರು ಕಂಡುಬಂದಿಲ್ಲ.</string>
     <string name="msg_no_contaacts">ಯಾವುದೇ ಸಂಪರ್ಕಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
     <string name="msg_no_fav">ಯಾವುದೇ ಮೆಚ್ಚಿನ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
-    <string name="msg_no_post">ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string> <!--ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ-->
+    <string name="msg_no_post">...</string> <!--ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ-->
     <string name="msg_no_que">ಯಾವುದೇ ಸಂದೇಹಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
     <string name="msg_no_noti">ಯಾವುದೇ ಅಧಿಸೂಚನೆಗಳಿಲ್ಲ.</string>
     <string name="msg_no_groups">ಯಾವುದೇ ಗುಂಪುಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>

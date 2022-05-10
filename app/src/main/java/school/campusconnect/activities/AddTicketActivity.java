@@ -24,6 +24,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -41,6 +43,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +75,7 @@ import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
+import school.campusconnect.adapters.TeamListAdapter;
 import school.campusconnect.adapters.UploadImageAdapter;
 import school.campusconnect.databinding.ActivityAddTicketBinding;
 import school.campusconnect.databinding.DialogCropImageBinding;
@@ -114,6 +118,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     public static final int REQUEST_LOAD_AUDIO = 106;
 
     private String audioPath = "";
+
     String videoUrl = "";
     String fileTypeImageOrVideo;
 
@@ -162,6 +167,57 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
 
 
+    private Boolean isPause = false;
+
+
+    private Handler mHandler = new Handler();
+    MediaPlayer mediaPlayer  = new MediaPlayer();
+
+    Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            try{
+                int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                Log.e(TAG,"mCurrentPosition"+ mCurrentPosition);
+                binding.tvTimeAudio.setText(formatDate(mCurrentPosition));
+                binding.tvTimeTotalAudio.setText(formatDate(mediaPlayer.getDuration()/1000));
+                binding.seekBarAudio.setProgress(mCurrentPosition);
+                if(mediaPlayer.isPlaying())
+                    mHandler.postDelayed(myRunnable, 1000);
+            }catch (Exception e)
+            {
+                Log.e(TAG,"exception"+ e.getMessage());
+            }
+
+        }
+    };
+
+    private String formatDate(int second)  {
+
+        String seconds , minutes;
+        if(second>60)
+        {
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+
+            if(second/60 < 10)
+                minutes = "0"+second/60;
+            else
+                minutes = ""+second/60;
+        }
+        else
+        {
+            minutes = "00";
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+        }
+        return minutes+":"+seconds;
+    }
 
     Handler handler;
     Runnable gpsTimer = new Runnable() {
@@ -239,6 +295,113 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         binding.rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new UploadImageAdapter(listImages, this);
         binding.rvImages.setAdapter(imageAdapter);
+
+
+        binding.imgPlayAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                if (isPause)
+                {
+
+                    isPause = false;
+                    mediaPlayer.start();
+                    binding.imgPauseAudio.setVisibility(View.VISIBLE);
+                    binding.imgPlayAudio.setVisibility(View.GONE);
+                    mHandler.post(myRunnable);
+                }
+                else
+                {
+                    if (mediaPlayer != null)
+                    {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                    }
+
+                    try {
+                        mediaPlayer.setDataSource(audioPath);
+                        mediaPlayer.prepare();
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                AppLog.e(TAG  , "ONPrepared : lenght : "+mp.getDuration());
+                                binding.seekBarAudio.setMax(mediaPlayer.getDuration()/1000);
+                                mediaPlayer.start();
+                                mHandler.post(myRunnable);
+                            }
+                        });
+                        //  mediaPlayer.start();
+
+                        binding.imgPauseAudio.setVisibility(View.VISIBLE);
+                        binding.imgPlayAudio.setVisibility(View.GONE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+        });
+
+        binding.imgPauseAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try{
+                    isPause = true;
+                    mHandler.removeCallbacks(myRunnable);
+                    mediaPlayer.pause();
+                    binding.imgPauseAudio.setVisibility(View.GONE);
+                    binding.imgPlayAudio.setVisibility(View.VISIBLE);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG,"Exception"+e.getMessage());
+                }
+            }
+        });
+
+
+        binding.seekBarAudio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                Log.e(TAG,"progress "+progress + "\ngetDuration "+mediaPlayer.getDuration()/1000+" condition : "+(progress >= mediaPlayer.getDuration()/1000));
+
+
+                if (progress >= mediaPlayer.getDuration()/1000)
+                {
+                    mHandler.removeCallbacks(myRunnable);
+                    binding.imgPauseAudio.setVisibility(View.GONE);
+                    binding.imgPlayAudio.setVisibility(View.VISIBLE);
+
+                    binding.seekBarAudio.setProgress(0);
+                    binding.tvTimeAudio.setText("00:00");
+                    binding.tvTimeTotalAudio.setText("00:00");
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
+        binding.seekBarAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
     }
     private void setListener() {
@@ -956,9 +1119,12 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 Log.e(TAG,"audioPath"+ audioPath);
 
 
+
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
+
+                binding.llAudioPreview.setVisibility(View.VISIBLE);
 
                 removePdf();
                 removeImage();
@@ -969,12 +1135,21 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
             if (resultCode == Activity.RESULT_OK) {
                 final Uri selectedAudio = data.getData();
-                audioPath = selectedAudio.toString();
+
+                if (selectedAudio.toString().startsWith("content")) {
+                    audioPath = ImageUtil.getPath(this, selectedAudio);
+                } else {
+                    audioPath = selectedAudio.getPath();
+                }
+
+
                 Log.e(TAG,"audioPath"+ audioPath);
 
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
+
+                binding.llAudioPreview.setVisibility(View.VISIBLE);
 
                 removePdf();
                 removeImage();
@@ -1032,6 +1207,8 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
     private void removeAudio() {
 
         audioPath = "";
+
+        binding.llAudioPreview.setVisibility(View.GONE);
     }
     private void removePdf() {
         pdfPath = "";

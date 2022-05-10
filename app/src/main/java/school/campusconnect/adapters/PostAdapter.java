@@ -372,6 +372,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 }
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.imgPhoto.setVisibility(View.GONE);
+                holder.llAudio.setVisibility(View.GONE);
 
                 if(!AmazoneImageDownload.isImageDownloaded(item.fileName.get(0)))
                     listener.callBirthdayPostCreation(item , position);
