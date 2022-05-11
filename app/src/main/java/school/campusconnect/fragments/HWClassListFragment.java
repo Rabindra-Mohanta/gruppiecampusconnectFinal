@@ -336,7 +336,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void onTreeClick(ClassResponse.ClassData classData) {
-        if(type.equals("Home Work") || type.equals("Recorded Class")){
+        if(type.equals("Home Work") || type.equals("Recorded Class") || type.equals("Syllabus Tracker")){
             Intent intent = new Intent(getContext(), HWClassSubjectActivity.class);
             intent.putExtra("team_id", classData.getId());
             intent.putExtra("title", classData.className);

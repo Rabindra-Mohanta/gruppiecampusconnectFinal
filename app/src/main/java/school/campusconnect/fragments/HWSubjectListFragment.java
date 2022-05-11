@@ -29,6 +29,7 @@ import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.ChapterActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWListActivity;
+import school.campusconnect.activities.SyllabusListActivity;
 import school.campusconnect.activities.TimeTabelActivity2;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.EBookClassItem;
@@ -265,7 +266,18 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
             intent.putExtra("canPost", classData.canPost);
             intent.putExtra("title", classData.name);
             startActivity(intent);
-        } else if ("Recorded Class".equalsIgnoreCase(type)) {
+        }
+        else if ("Syllabus Tracker".equalsIgnoreCase(type))
+        {
+            Intent intent = new Intent(getActivity(), SyllabusListActivity.class);
+            intent.putExtra("team_id", team_id);
+            intent.putExtra("className", className);
+            intent.putExtra("subject_id", classData.subjectId);
+            intent.putExtra("subject_name", classData.name);
+            intent.putExtra("title", classData.name);
+            startActivity(intent);
+        }
+        else if ("Recorded Class".equalsIgnoreCase(type)) {
             if (!TextUtils.isEmpty(path)) {
                 Intent intent = new Intent(getActivity(), AddChapterPostActivity.class);
                 intent.putExtra("group_id", GroupDashboardActivityNew.groupId);

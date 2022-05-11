@@ -909,6 +909,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 }
                 else
                 {
+                    bannerDataList.clear();
+                    bannerData = new BannerRes.BannerData();
                     binding.rvSliderBanner.setVisibility(View.GONE);
                     binding.imgSlider.setVisibility(View.VISIBLE);
                 }
@@ -1332,11 +1334,14 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         }
         else
         {
+            bannerData = new BannerRes.BannerData();
+            bannerDataList.clear();
             binding.rvSliderBanner.setVisibility(View.GONE);
             binding.imgSlider.setVisibility(View.VISIBLE);
         }
 
     }
+
 
 
     public void bannerListApiCall() {

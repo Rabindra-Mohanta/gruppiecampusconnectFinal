@@ -591,6 +591,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_staff_register">Staff Register</string>
     <string name="lbl_name">Name*</string>
     <string name="lbl_name_">Name</string>
+    <string name="lbl_add_syllabus">Add Syllabus</string>
     <string name="lbl_description">Description</string>
     <string name="lbl_staff_id">Staff Id</string>
     <string name="lbl_members">Members</string>

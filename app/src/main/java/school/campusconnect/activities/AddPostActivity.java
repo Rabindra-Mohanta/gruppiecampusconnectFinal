@@ -9,11 +9,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 
 import androidx.annotation.RequiresApi;
@@ -65,6 +67,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -160,8 +164,14 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Bind(R.id.llAudioPreview)
     RelativeLayout llAudioPreview;
 
+    @Bind(R.id.llAudioTimer)
+    RelativeLayout llAudioTimer;
+
     @Bind(R.id.llAudio)
     LinearLayout llAudio;
+
+    @Bind(R.id.imgAudio)
+    ImageView imgAudio;
 
     @Bind(R.id.switch_reply)
     Switch switch_reply;
@@ -190,6 +200,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
     @Bind(R.id.seekBarAudio)
     SeekBar seekBarAudio;
+
+    @Bind(R.id.tvAudioTimer)
+    TextView tvTimer;
 
     MediaPlayer mediaPlayer  = new MediaPlayer();
 
@@ -254,9 +267,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             try{
                 int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
                 Log.e(TAG,"mCurrentPosition"+ mCurrentPosition);
+                seekBarAudio.setProgress(mCurrentPosition);
                 tvTimeAudio.setText(formatDate(mCurrentPosition));
                 tvTimeTotalAudio.setText(formatDate(mediaPlayer.getDuration()/1000));
-                seekBarAudio.setProgress(mCurrentPosition);
                 if(mediaPlayer.isPlaying())
                     mHandler.postDelayed(myRunnable, 1000);
             }catch (Exception e)
@@ -266,6 +279,42 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
         }
     };
+
+
+
+
+
+    /*record audio*/
+    private Handler customHandler = new Handler();
+    private long startTime = 0L;
+    long timeInMilliseconds = 0L;
+    long timeSwapBuff = 0L;
+    long updatedTime = 0L;
+    long secs = 0L;
+    long mins  = 0L;
+    MediaRecorder mediaRecorder;
+    private File fileRecordAudio = null;
+
+
+    private Runnable updateTimerThread = new Runnable() {
+
+        public void run() {
+
+            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+
+            updatedTime = timeSwapBuff + timeInMilliseconds;
+
+            secs = (int) (updatedTime / 1000);
+            mins = secs / 60;
+            secs = secs % 60;
+            int milliseconds = (int) (updatedTime % 1000);
+            tvTimer.setText(String.format("%02d", mins) + ":"
+                    + String.format("%02d", secs));
+            customHandler.postDelayed(this, 0);
+        }
+
+    };
+
 
     private String formatDate(int second)  {
 
@@ -331,10 +380,17 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         llYoutubeLink.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        llAudio.setOnClickListener(this);
+      //  llAudio.setOnClickListener(this);
         switch_reply.setOnClickListener(this);
         switch_comment.setOnClickListener(this);
       //  btnShare.setEnabled(false);
+
+        if (checkPermissionForWriteExternal()) {
+
+        }
+        else {
+            requestPermissionForWriteExternal(24);
+        }
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -366,6 +422,48 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+
+
+
+        imgAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                Log.e(TAG,"onTouch "+event.getAction());
+
+                Log.e(TAG,"onTouch Y"+ event.getY());
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    if (checkPermissionForWriteExternal()) {
+
+                        MediaRecorderReady();
+                    }
+                    return true;
+                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+
+                    Log.e(TAG,"onTouch Y ACTION_UP"+ event.getY());
+
+                    if (checkPermissionForWriteExternal()) {
+
+                        String uri = Uri.fromFile(fileRecordAudio).toString();
+                        Log.e(TAG,"uri "+uri);
+                        audioPath = uri;
+                        listImages.clear();
+                        fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
+                        listImages.add(audioPath);
+                        showLastImage();
+                        removePdf();
+                        removeImage();
+                        stopAudio();
+                        llAudioPreview.setVisibility(View.VISIBLE);
+                    }
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -520,7 +618,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 if (progress >= mediaPlayer.getDuration()/1000)
                 {
                     mHandler.removeCallbacks(myRunnable);
-                   imgPauseAudio.setVisibility(View.GONE);
+                    imgPauseAudio.setVisibility(View.GONE);
                     imgPlayAudio.setVisibility(View.VISIBLE);
 
                    seekBarAudio.setProgress(0);
@@ -1114,11 +1212,12 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 break;
 
             case R.id.llAudio:
-                if (checkPermissionForWriteExternal()) {
-                    showAudioDialog(R.array.array_audio);
+                /*if (checkPermissionForWriteExternal()) {
+                   // showAudioDialog(R.array.array_audio);
+
                 } else {
                     requestPermissionForWriteExternal(24);
-                }
+                }*/
                 break;
 
             case R.id.llImage:
@@ -1765,9 +1864,11 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             case 24:
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                  //  startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                    //MediaRecorderReady();
                     Log.e("AddPost" + "permission", "granted camera");
                 } else {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_storage_permission_needed),Toast.LENGTH_SHORT).show();
                     Log.e("AddPost" + "permission", "denied camera");
                 }
                 break;
@@ -2047,6 +2148,104 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 AppLog.e(TAG, "Notification Send Fail");
             }
         }
+    }
+
+    /*record audio*/
+    public void MediaRecorderReady(){
+
+        if (fileRecordAudio != null)
+        {
+
+            if (mediaPlayer.isPlaying())
+            {
+                mHandler.removeCallbacks(myRunnable);
+                mediaPlayer.pause();
+            }
+
+            fileRecordAudio.delete();
+            mediaRecorder.reset();
+            tvTimer.setText("00:00");
+            tvTimeTotalAudio.setText("00:00");
+            tvTimeAudio.setText("00:00");
+            mHandler.removeCallbacks(myRunnable);
+            imgPauseAudio.setVisibility(View.GONE);
+            imgPlayAudio.setVisibility(View.VISIBLE);
+            seekBarAudio.setProgress(0);
+            tvTimeAudio.setText("00:00");
+            tvTimeTotalAudio.setText("00:00");
+            isPause = false;
+            startTime = 0L;
+            timeInMilliseconds = 0L;
+            timeSwapBuff = 0L;
+            updatedTime = 0L;
+            secs = 0L;
+            mins  = 0L;
+            mediaRecorder.release();
+        }
+        try {
+            fileRecordAudio = ImageUtil.getOutputMediaAudio(getApplicationContext());
+            mediaRecorder=new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+
+            Log.e(TAG,"fileRecordAudio "+fileRecordAudio.getAbsolutePath());
+            Log.e(TAG,"fileRecordAudio URL "+Uri.fromFile(fileRecordAudio));
+
+            try {
+                FileDescriptor fileDescriptor = getContentResolver().openFileDescriptor(Uri.fromFile(fileRecordAudio),"rwt").getFileDescriptor();
+                mediaRecorder.setOutputFile(fileDescriptor);
+
+                removePdf();
+                removeImage();
+                startAudio();
+
+
+            } catch (FileNotFoundException e) {
+                //e.printStackTrace();
+                Log.e(TAG,"FileNotFoundException "+e.getMessage());
+            }
+
+
+
+        } catch(RuntimeException stopException) {
+            // handle cleanup here
+            Log.e(TAG,"RuntimeException "+stopException.getMessage());
+        }
+
+    }
+
+    private void startAudio() {
+
+
+        try {
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+            llAudioTimer.setVisibility(View.VISIBLE);
+            llAudioPreview.setVisibility(View.GONE);
+            startTime = SystemClock.uptimeMillis();
+            customHandler.postDelayed(updateTimerThread, 0);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IllegalStateException "+e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException "+e.getMessage());
+        }
+    }
+
+    private void stopAudio() {
+        llAudioTimer.setVisibility(View.GONE);
+        timeSwapBuff += timeInMilliseconds;
+        customHandler.removeCallbacks(updateTimerThread);
+
+
+        try {
+            mediaRecorder.stop();
+        } catch(RuntimeException stopException) {
+            Log.e(TAG,"RuntimeException "+stopException.getMessage());
+        }
+
     }
 
 }

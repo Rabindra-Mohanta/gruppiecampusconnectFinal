@@ -16,7 +16,11 @@ public class PicassoImageLoadingService implements ImageLoadingService {
 
     @Override
     public void loadImage(String url, ImageView imageView) {
-        Picasso.with(context).load(url).into(imageView);
+
+        if (url == null && !url.equalsIgnoreCase("")) {
+            Picasso.with(context).load(url).into(imageView);
+        }
+
  //       Picasso.get().load(url).into(imageView);
     }
 
@@ -28,7 +32,11 @@ public class PicassoImageLoadingService implements ImageLoadingService {
 
     @Override
     public void loadImage(String url, int placeHolder, int errorDrawable, ImageView imageView) {
-        Picasso.with(context).load(url).placeholder(placeHolder).error(errorDrawable).into(imageView);
+        if (url != null && !url.equalsIgnoreCase("")) {
+            Picasso.with(context).load(url).placeholder(placeHolder).error(errorDrawable).into(imageView);
+        }
+
+
 //        Picasso.get().load(url).placeholder(placeHolder).error(errorDrawable).into(imageView);
     }
 }

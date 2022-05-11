@@ -246,7 +246,7 @@
                             <ImageView
                                 android:id="@+id/imgAudio"
                                 android:layout_width="30dp"
-                                android:src="@drawable/ic_audio"
+                                android:src="@drawable/ic_mic_audio"
                                 android:layout_height="30dp" />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -261,8 +261,48 @@
 
                 </androidx.cardview.widget.CardView>
 
+
+
+
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/llAudioTimer"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="@dimen/padding_5dp"
+                    app:cardCornerRadius="@dimen/padding_25dp"
+                    app:cardBackgroundColor="@color/white">
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/imgMic"
+                            android:layout_width="30dp"
+                            android:src="@drawable/ic_mic_red"
+                            android:layout_height="30dp" />
+
+                        <TextView
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
+                            android:id="@+id/tvAudioTimer"
+                            android:layout_toRightOf="@id/imgMic"
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:text="00:00"
+                            style="@style/LabelNormal"
+                            android:layout_height="wrap_content" />
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/llAudioPreview"
                 android:visibility="gone"

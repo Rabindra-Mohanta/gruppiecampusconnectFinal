@@ -162,7 +162,6 @@ public class AddBoothStudentActivity extends BaseActivity {
                     hide_keyboard(view);
                     String str = etName.getText().toString() + ",IN," + etPhone.getText().toString();
                     adapter.add(str);
-
                     etName.setText("");
                     etName.requestFocus();
                     etPhone.setText("");

@@ -1031,6 +1031,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 if (bannerTBL.size() > 0)
                 {
                     if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getApplicationContext()).getString("BANNER_API"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", bannerTBL.get(bannerTBL.size()-1)._now)) {
+                        BannerTBL.deleteBanner(groupId);
                         ((BaseTeamFragmentv3) currFrag).bannerListApiCall();
                     }
                 }
@@ -2317,7 +2318,15 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         Log.e(TAG,"groupSelected "+new Gson().toJson(group));
 
-        if (group.type.equals("Video Class")) {
+        if (group.type.equals("Syllabus Tracker"))
+        {
+            Intent intent = new Intent(this, HWClassActivity.class);
+            intent.putExtra("title", group.name);
+            intent.putExtra("type", group.type);
+            intent.putExtra("role", group.role);
+            startActivity(intent);
+        }
+        else if (group.type.equals("Video Class")) {
             Intent intent = new Intent(this, VideoClassActivity.class);
             intent.putExtra("title", group.name);
             intent.putExtra("category", group.category);
@@ -2360,7 +2369,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, HWClassActivity.class);
                 intent.putExtra("title", group.name);
-            } else {
+            }
+            else {
                 if (group.count == 1) {
                     if (group.type.equals("Home Work") || group.type.equals("Recorded Class")) {
                         intent = new Intent(this, HWClassSubjectActivity.class);

@@ -94,7 +94,6 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         subject_name = getArguments().getString("subject_name");
         canPost = getArguments().getBoolean("canPost");
 
-
         return view;
     }
 

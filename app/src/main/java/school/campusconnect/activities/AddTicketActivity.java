@@ -137,7 +137,6 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
 
     Dialog dialog;
 
-
     ArrayList<String> listAmazonS3Url = new ArrayList<>();
     ArrayList<String> listImages = new ArrayList<>();
     private String pdfPath = "";
