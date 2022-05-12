@@ -336,7 +336,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 postItem.canEdit = dataItemList.get(i).canEdit;
                 postItem.phone = dataItemList.get(i).phone;
                 postItem.thumbnail = dataItemList.get(i).thumbnail;
-
+                postItem.type = dataItemList.get(i).type;
                 PostList.add(postItem);
             }
             hideLoadingBar();

@@ -602,7 +602,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             postItem.phone = item.phone;
 
             if(item.type.equalsIgnoreCase("birthdayPost"))
-            postItem.type = item.type;
+             postItem.type = item.type;
             else
             postItem.type = "group";
 

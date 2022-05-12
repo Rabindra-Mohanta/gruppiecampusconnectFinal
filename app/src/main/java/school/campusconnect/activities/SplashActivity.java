@@ -224,10 +224,9 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (isConnectionAvailable()) {
-                     /*   Intent intent = new Intent(SplashActivity.this, LoginActivity2.class);
+                      /*  Intent intent = new Intent(SplashActivity.this, LoginActivity2.class);
                         startActivity(intent);
                         finish();*/
-
                         Intent intent = new Intent(SplashActivity.this, ChangeLanguageActivity.class);
                         intent.putExtra("isSplash",true);
                         startActivity(intent);

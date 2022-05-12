@@ -2,19 +2,15 @@ package school.campusconnect.adapters;
 
 import android.content.Context;
 import android.icu.text.Transliterator;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -27,9 +23,6 @@ import java.util.ArrayList;
 
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
-import school.campusconnect.databinding.ItemTeamV2Binding;
-import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
-import school.campusconnect.datamodel.notificationList.CountNotificationTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
@@ -96,18 +89,6 @@ public class TeamItemV2Adapter extends RecyclerView.Adapter<TeamItemV2Adapter.Vi
         {
             postUnseenCount = leafPreference.getInt(team.teamId+"_post");
 
-            /*if (CountNotificationTBL.getCountNotification(team.teamId).size() > 0)
-            {
-                Log.e(TAG,"CountNotificationTBL Size "+CountNotificationTBL.getCountNotification(team.teamId).size());
-
-                for (int i = 0;i<CountNotificationTBL.getCountNotification(team.teamId).size();i++)
-                {
-                    if (team.teamId.equalsIgnoreCase(CountNotificationTBL.getCountNotification(team.teamId).get(i).teamID))
-                        postUnseenCount = CountNotificationTBL.getCountNotification(team.teamId).get(i).count;
-                        Log.e(TAG,"match Count");
-                }
-
-            }*/
         }
         else if (team.type.equalsIgnoreCase("Broadcast"))
         {

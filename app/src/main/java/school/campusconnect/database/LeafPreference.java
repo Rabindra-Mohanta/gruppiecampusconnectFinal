@@ -62,6 +62,7 @@ public class LeafPreference {
     public static final String ISFRIENDUPDATED = "isfriendsupdated";
     public static final String ISGENERALPOSTUPDATED = "isgeneralpostupdated";
     public static final String ISTEAMPOSTUPDATED = "isteampostupdated";
+    public static final String ISSYLLABUSUPDATED = "issyllabusupdated";
     public static final String ISPERSONALPOSTUPDATED = "ispersonalpostupdated";
     public static final String ISALLCONTACTSAVED = "isallcontactsaved";
     public static final String LOGOUT_FOR_212 = "logout_for_212";

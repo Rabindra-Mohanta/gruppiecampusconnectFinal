@@ -349,6 +349,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/llLeftAudioView"
+                    android:layout_toLeftOf="@id/imgDeleteAudio"
                     android:orientation="vertical">
                     <SeekBar
                         android:id="@+id/seekBarAudio"
@@ -385,6 +386,20 @@
                     </RelativeLayout>
 
                 </LinearLayout>
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/imgDeleteAudio"
+                    android:layout_width="@dimen/padding_40dp"
+                    android:layout_height="@dimen/padding_40dp"
+                    android:adjustViewBounds="true"
+                    android:layout_centerVertical="true"
+                    android:tint="@color/white"
+                    android:layout_margin="@dimen/padding_15dp"
+                    android:src="@drawable/ic_delete_black"
+                    android:background="@drawable/round_primary_bg"
+                    android:padding="@dimen/padding_5dp"
+                    />
 
 
             </RelativeLayout>

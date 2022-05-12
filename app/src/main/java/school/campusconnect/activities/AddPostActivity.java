@@ -173,6 +173,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Bind(R.id.imgAudio)
     ImageView imgAudio;
 
+    @Bind(R.id.imgDeleteAudio)
+    ImageView imgDeleteAudio;
+
     @Bind(R.id.switch_reply)
     Switch switch_reply;
 
@@ -392,6 +395,15 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             requestPermissionForWriteExternal(24);
         }
 
+
+        if(checkPermissionForAudio())
+        {
+
+        }
+        else {
+            requestPermissionForRecordAudio(254);
+        }
+
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -427,6 +439,37 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
 
 
+        imgDeleteAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mediaPlayer.isPlaying())
+                {
+                    mHandler.removeCallbacks(myRunnable);
+                    mediaPlayer.pause();
+                }
+
+                tvTimer.setText("00:00");
+                tvTimeTotalAudio.setText("00:00");
+                tvTimeAudio.setText("00:00");
+                mHandler.removeCallbacks(myRunnable);
+                imgPauseAudio.setVisibility(View.GONE);
+                imgPlayAudio.setVisibility(View.VISIBLE);
+                seekBarAudio.setProgress(0);
+                tvTimeAudio.setText("00:00");
+                tvTimeTotalAudio.setText("00:00");
+                isPause = false;
+                startTime = 0L;
+                timeInMilliseconds = 0L;
+                timeSwapBuff = 0L;
+                updatedTime = 0L;
+                secs = 0L;
+                mins  = 0L;
+                removePdf();
+                removeImage();
+                llAudioPreview.setVisibility(View.GONE);
+            }
+        });
 
         imgAudio.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -439,6 +482,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
                     if (checkPermissionForWriteExternal()) {
+
 
                         MediaRecorderReady();
                     }
@@ -1344,6 +1388,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     public void requestPermissionForRecordAudio(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
             Toast.makeText(this, getResources().getString(R.string.toast_audio_permission_needed), Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
         }
@@ -1596,8 +1641,9 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     }
 
     private void requestPermissionForCamera(int code) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, code);
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, code);
@@ -1607,6 +1653,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -1860,6 +1907,16 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                     Log.e("AddPost" + "permission", "denied camera");
                 }
                 break;
+
+            case 254:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_audio_permission_needed),Toast.LENGTH_SHORT).show();
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+
 
             case 24:
 
@@ -2214,6 +2271,8 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         }
 
     }
+
+
 
     private void startAudio() {
 

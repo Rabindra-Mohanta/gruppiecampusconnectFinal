@@ -1253,5 +1253,11 @@
     <string name="smb_no_file_attached">No File Attached...</string>
     <string name="smb_no_file_download">Please Download All Files...</string>
     <string name="lbl_add_syllabus">Add Syllabus</string>
+    <string name="toast_add_topic_name">Please Add Topic Name</string>
+    <string name="txt_no_syllabus_found">...</string><!--No Syllabus found.-->
+    <string name="toast_syllabus_add_successfully">Syllabus Add SuccessFully...</string>
+    <string name="lbl_from_date">From Date</string>
+    <string name="lbl_to_date">To Date</string>
+
 
 </resources>

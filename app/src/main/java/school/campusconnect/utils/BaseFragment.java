@@ -68,10 +68,10 @@ import school.campusconnect.datamodel.masterList.StreetListTBL;
 import school.campusconnect.datamodel.masterList.VoterListTBL;
 import school.campusconnect.datamodel.masterList.WorkerListTBL;
 import school.campusconnect.datamodel.notificationList.AllNotificationTable;
-import school.campusconnect.datamodel.notificationList.CountNotificationTBL;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.personalchat.PersonalContactsModel;
 import school.campusconnect.datamodel.profile.ProfileTBL;
+import school.campusconnect.datamodel.syllabus.SyllabusTBL;
 import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -251,6 +251,7 @@ public class BaseFragment extends Fragment {
             BaseTeamTable.deleteAll();
             BaseTeamTableV2.deleteAll();
             MasterBoothListTBL.deleteAll();
+            SyllabusTBL.deleteAll();
             WorkerListTBL.deleteAll();
             StreetListTBL.deleteAll();
             BoothsTBL.deleteAll();
@@ -272,7 +273,7 @@ public class BaseFragment extends Fragment {
             CommitteeTBL.deleteMember();
             TeamEventDataTBL.deleteTeamEvent();
             LeadDataTBL.deleteAll();
-            CountNotificationTBL.deleteAll();
+
 //        GruppieContactAddressModel.deleteAll();
             BoothPostEventTBL.deleteAll();
             GruppieContactGroupIdModel.deleteAll();

@@ -41,6 +41,8 @@ import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
+import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
+import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -1955,5 +1957,13 @@ public interface LeafService {
     @GET("api/v1/groups/{group_id}/team/{team_id}/events/team")  //Get team events inside all booth members
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TeamEventModelRes> getTeamEvent(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @PUT("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body SyllabusModelReq req);
+
+    @GET("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SyllabusListModelRes> getSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
 
 }

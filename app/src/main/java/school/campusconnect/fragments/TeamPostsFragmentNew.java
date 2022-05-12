@@ -26,7 +26,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,34 +48,17 @@ import school.campusconnect.activities.TeamSettingsActivity;
 import school.campusconnect.activities.TeamUsersActivity;
 import school.campusconnect.adapters.ReportAdapter;
 import school.campusconnect.datamodel.EventTBL;
-import school.campusconnect.datamodel.PostDataItem;
-import school.campusconnect.datamodel.PostItem;
-import school.campusconnect.datamodel.SubjectCountTBL;
-import school.campusconnect.datamodel.TeamCountTBL;
-import school.campusconnect.datamodel.banner.BannerTBL;
-import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.booths.BoothsTBL;
-import school.campusconnect.datamodel.booths.EventSubBoothTBL;
-import school.campusconnect.datamodel.booths.MyBoothEventRes;
-import school.campusconnect.datamodel.booths.MyBoothEventTBL;
-import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
-import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.event.TeamPostEventModelRes;
-import school.campusconnect.datamodel.event.UpdateDataEventRes;
-import school.campusconnect.datamodel.notificationList.CountNotificationTBL;
-import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.firebase.SendNotificationGlobal;
 import school.campusconnect.firebase.SendNotificationModel;
-import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
-import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneImageDownload;
-import school.campusconnect.utils.AmazoneMultiImageDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
@@ -131,13 +113,10 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
-import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
-import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static com.zipow.videobox.confapp.ConfMgr.getApplicationContext;
 
 /**
  * Created by frenzin04 on 3/29/2017.
@@ -960,24 +939,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         mAdapter2 = new TeamListAdapter(teamPostList, this, "team", mGroupId, team_id, count, databaseHandler, teamData);
         mBinding.recyclerView2.setAdapter(mAdapter2);
 
-        /*  if (type.equalsIgnoreCase("team"))
-        {
 
-        }*/
-
-
-        /*if(type.equalsIgnoreCase("team"))
-        {
-            if (CountNotificationTBL.getCountNotification(team_id).size() > 0)
-            {
-                CountNotificationTBL.deleteCountNotification(team_id);
-                PostTeamDataItem.deleteTeamPosts(team_id,type);
-                AppLog.e(TAG,"CountNotificationTBL deleteCountNotification");
-            }
-            else {
-                callEventApiTeamPost();
-            }
-        }*/
 
         if(!type.equalsIgnoreCase("team"))
         {

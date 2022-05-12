@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import school.campusconnect.datamodel.ChapterTBL;
 import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.EBookClassItem;
@@ -68,9 +67,9 @@ import school.campusconnect.datamodel.masterList.StreetListTBL;
 import school.campusconnect.datamodel.masterList.VoterListTBL;
 import school.campusconnect.datamodel.masterList.WorkerListTBL;
 import school.campusconnect.datamodel.notificationList.AllNotificationTable;
-import school.campusconnect.datamodel.notificationList.CountNotificationTBL;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.profile.ProfileTBL;
+import school.campusconnect.datamodel.syllabus.SyllabusTBL;
 import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
@@ -652,6 +651,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         GroupDataItem.deleteAll();
         PostDataItem.deleteAllPosts();
 //        NotificationModel.deleteAll();
+        SyllabusTBL.deleteAll();
         BaseTeamTable.deleteAll();
         BaseTeamTableV2.deleteAll();
         TicketTBL.deleteAll();
@@ -660,7 +660,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         PublicFormBoothTBL.deleteAll();
         GalleryTable.deleteGallery();
         MemberTeamTBL.deleteAll();
-        CountNotificationTBL.deleteAll();
+
         WorkerListTBL.deleteAll();
         SubBoothWorkerEventTBL.deleteAll();
         MyBoothEventTBL.deleteAll();
@@ -735,7 +735,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         BannerTBL.deleteAll();
         BaseTeamTableV2.deleteAll();
         MasterBoothListTBL.deleteAll();
-        CountNotificationTBL.deleteAll();
+        SyllabusTBL.deleteAll();
         WorkerListTBL.deleteAll();
         HomeTeamDataTBL.deleteAll();
         StreetListTBL.deleteAll();

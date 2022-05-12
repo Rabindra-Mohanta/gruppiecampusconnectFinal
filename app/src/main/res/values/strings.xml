@@ -714,6 +714,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="hint_search_group">Search</string>
 
     <string name="lbl_paid_fees">Paid Fees</string>
+    <string name="lbl_from_date">From Date</string>
+    <string name="lbl_to_date">To Date</string>
+
     <string name="lbl_class_fees">Class Fees</string>
     <string name="due_amount">Amount Due</string>
     <string name="lbl_pay">Pay</string>
@@ -834,6 +837,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
 
     <string name="menu_import_students">Import Students</string>
     <string name="add">Add</string>
+    <string name="menu_edit_topic">Edit Topic</string>
     <string name="menu_invite">Invite</string>
     <string name="menu_delete_chapter">Delete Chapter</string>
     <string name="menu_add_chapter">Add Chapter</string>
@@ -910,6 +914,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_storage_permission_needed">Storage permission needed. Please allow in App Settings for additional functionality.</string>
     <string name="toast_enter_subject">Please Enter Subject</string>
     <string name="toast_select_pdf">Please Select PDF</string>
+    <string name="toast_add_topic_name">Please Add Topic Name</string>
+    <string name="toast_syllabus_add_successfully">Syllabus Add SuccessFully...</string>
     <string name="toast_upload_failed">Upload Failed</string>
     <string name="toast_some_problem_occure">Some Problem Occurred Please try again</string>
     <string name="toast_post_delete_successfully">Post Deleted Succesfully</string>
@@ -1122,6 +1128,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_no_fee_found">...</string><!--No Fee Found-->
     <string name="txt_no_group_found">...</string><!--No Group found.-->
     <string name="txt_no_issue_found">...</string><!--No Issue found.-->
+    <string name="txt_no_syllabus_found">...</string><!--No Syllabus found.-->
     <string name="txt_no_notification_found">...</string><!--No Notification found.-->
     <string name="txt_no_hw_found">...</string><!--No HomeWork found.-->
     <string name="txt_no_test_exam_found">...</string><!--No Test/Exam Found.-->

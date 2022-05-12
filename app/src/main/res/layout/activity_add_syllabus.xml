@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         >
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/topbar"
@@ -64,6 +64,37 @@
                             android:layout_marginTop="@dimen/padding_5dp"
                             android:inputType="textPersonName|textCapWords" />
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_10dp"
+                                android:paddingLeft="@dimen/padding_10dp"
+                                android:text="@string/lbl_topic_name"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorPrimary" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_5dp"
+                                android:orientation="horizontal">
+                                <EditText
+                                    android:id="@+id/etTopicName"
+                                    style="@style/RegEditText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/login_button_height"
+                                    android:inputType="textPersonName|textCapWords" />
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvTopic"
                             android:layout_marginTop="@dimen/padding_5dp"
@@ -98,12 +129,20 @@
                     android:layout_centerHorizontal="true"
                     android:layout_width="@dimen/login_button_width"
                     android:layout_height="@dimen/login_button_height"
-                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:layout_marginVertical="@dimen/padding_20dp"
                     android:text="@string/lbl_add" />
 
 
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 
