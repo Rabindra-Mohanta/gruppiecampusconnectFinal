@@ -286,7 +286,9 @@ public class GroupDashboardActivityNew extends BaseActivity
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_CONTACTS,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_CALENDAR
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CALL_PHONE
     };
 
 
@@ -2681,6 +2683,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         else if (group.type.equals("Master List")){
 
             Intent intent = new Intent(this, MasterListActivity.class);
+            intent.putExtra("name", group.name);
             startActivity(intent);
         }
         else {

@@ -323,8 +323,8 @@ public class MasterListFragment extends BaseFragment implements LeafManager.OnCo
 
     private void onTreeClick(BoothMasterListModelResponse.BoothMasterListData classData) {
         Intent intent = new Intent(getActivity(), WorkerListActivity.class);
-        intent.putExtra("team_id",classData.teamId);
-        intent.putExtra("committee_id",classData.boothCommittee.getCommitteeId());
+        intent.putExtra("data",classData);
+        intent.putExtra("name",classData.name);
         startActivity(intent);
     }
 }

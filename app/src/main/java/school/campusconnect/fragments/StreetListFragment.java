@@ -83,6 +83,7 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
     private void getDataLocally() {
 
         List<StreetListTBL> streetListTBLS = StreetListTBL.getStreetListAll(teamId);
+        streetDataArrayList.clear();
 
         if (streetListTBLS.size() != 0)
         {
@@ -161,10 +162,14 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
             StreetListModelResponse res = (StreetListModelResponse) response;
 
             ArrayList<StreetListModelResponse.StreetData> resList= res.getData();
-
+            streetDataArrayList.clear();
             if (resList.size()>0)
             {
                 saveToLocally(resList);
+            }
+            else
+            {
+                streetAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -325,6 +330,7 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
     private void onTreeClick(StreetListModelResponse.StreetData classData) {
         Intent intent = new Intent(getActivity(), VoterListActivity.class);
         intent.putExtra("team_id",teamId);
+        intent.putExtra("name",classData.name);
         startActivity(intent);
     }
 }

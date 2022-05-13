@@ -168,7 +168,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     String category="";
 
 
-    CountDownTimer countDownTimer = new CountDownTimer(3*60000,1000) {
+    CountDownTimer countDownTimer = new CountDownTimer(1*60000,1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             Log.e(TAG,"onTick"+millisUntilFinished);
@@ -1594,19 +1594,30 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
                 if (isAutomatically)
                 {
-                    LeafPreference.getInstance(getContext()).remove(LeafPreference.VIDEO_CALL_START_TIME);
-                    new SendNotificationResume(item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    startZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, "", item.className, item.jitsiToken);
+                    if (isFirstTime)
+                    {
+                        isFirstTime = false;
+                        LeafPreference.getInstance(getContext()).remove(LeafPreference.VIDEO_CALL_START_TIME);
+                        new SendNotificationResume(item.jitsiToken).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        startZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, "", item.className, item.jitsiToken);
+                    }
+                    else
+                    {
+                        dialogMeetingConfirmation();
+                    }
+
                 }
                 else
                 {
-                    if (isFirstTime)
+                    dialogMeetingConfirmation();
+
+                  /*  if (isFirstTime)
                     {
-                  /*  Log.e(TAG,"prefrence save time"+ LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME));
+                  *//*  Log.e(TAG,"prefrence save time"+ LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME));
                     String savedTime = LeafPreference.getInstance(getContext()).getString(LeafPreference.VIDEO_CALL_START_TIME);
 
                     String[] savedValuePart = savedTime.split("_");
-                    String StartTime = savedValuePart[1];*/
+                    String StartTime = savedValuePart[1];*//*
 
                         if(checkTiming(saveTime))
                         {
@@ -1624,7 +1635,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     {
                         dialogMeetingConfirmation();
                     }
-
+*/
                 }
                 endTimer();
 

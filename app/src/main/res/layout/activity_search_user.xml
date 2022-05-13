@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.SearchUserActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <include layout="@layout/layout_toolbar" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <EditText
+            android:layout_below="@id/topbar"
+            android:id="@+id/edtSearch"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/search_edittext_background"
+            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:drawablePadding="@dimen/padding_8dp"
+            android:imeOptions="actionSearch"
+            android:padding="10dp"
+            android:layout_margin="@dimen/padding_15dp"
+            android:singleLine="true"
+            android:textColor="@color/color_grey_icon"
+            android:textColorHint="@color/color_label"
+            android:textAppearance="@style/TextAppearance.Light"
+            android:textSize="@dimen/text_size_14sp"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@id/edtSearch"
+            android:id="@+id/rvSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/txtEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:visibility="gone"
+            style="@style/LabelEmptyText"/>
+
+    </RelativeLayout>
+</layout>

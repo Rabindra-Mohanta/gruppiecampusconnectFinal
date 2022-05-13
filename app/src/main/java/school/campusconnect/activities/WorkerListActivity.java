@@ -29,7 +29,7 @@ public class WorkerListActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_Workers));
+        setTitle(getIntent().getStringExtra("name"));
         inits();
     }
 

@@ -2,6 +2,7 @@ package school.campusconnect.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,11 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,10 +42,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddPostActivity;
 import school.campusconnect.activities.BoothCoordinateActivity;
 import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 
+import school.campusconnect.activities.SearchUserActivity;
 import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
@@ -56,6 +61,7 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.views.SMBDialogUtils;
 
 public class BoothListMyTeamFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
 
@@ -215,7 +221,30 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
 
 
             case R.id.menu_search:
-                showHideSearch();
+
+                if (edtSearch.getVisibility() == View.VISIBLE) {
+                    edtSearch.setVisibility(View.GONE);
+                }
+                else
+                {
+                    SMBDialogUtils.showSMBSingleChoiceDialog(getActivity(),
+                            R.string.hint_search_group, R.array.array_search, 0,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ListView lw = ((AlertDialog) dialog).getListView();
+                                    switch (lw.getCheckedItemPosition()) {
+                                        case 0:
+                                            startActivity(new Intent(getContext(), SearchUserActivity.class));
+                                            break;
+                                        case 1:
+                                            showHideSearch();
+                                            break;
+
+                                    }
+                                }
+                            });
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

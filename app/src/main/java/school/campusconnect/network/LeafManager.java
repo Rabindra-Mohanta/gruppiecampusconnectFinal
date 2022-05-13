@@ -41,6 +41,7 @@ import school.campusconnect.datamodel.masterList.WorkerListResponse;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
+import school.campusconnect.datamodel.searchUser.SearchUserModel;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
@@ -497,6 +498,7 @@ public class LeafManager {
     public static final int WORKER_STREET_LIST = 303;
     public static final int ADD_VOTER_MASTER_LIST = 304;
     public static final int VOTER_MASTER_LIST = 305;
+    public static final int API_VOTER_MASTER_DELETE = 306;
     public static final int UPDATE_PHONE_STAFF = 308;
     public static final int API_UPDATE_PHONE_STUDENT = 309;
     public static final int API_TAKE_ATTENDANCE = 315;
@@ -517,6 +519,7 @@ public class LeafManager {
     public static final int API_EVENT_TEAM_GET = 336;
     public static final int API_ADD_SYLLABUS = 337;
     public static final int API_GET_SYLLABUS = 338;
+    public static final int API_SEARCH_USER = 342;
     public LeafManager() {
 
     }
@@ -11981,6 +11984,47 @@ public class LeafManager {
 
     }
 
+    public void deleteVoterMaster(OnCommunicationListener listListener, String group_id, String team_id, String voter_id) {
+        mOnCommunicationListener = listListener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.deleteVoterMaster(group_id,team_id,voter_id);
+
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_VOTER_MASTER_DELETE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
     public void voterMasterList(OnCommunicationListener listListener, String group_id, String team_id) {
         mOnCommunicationListener = listListener;
 
@@ -12666,6 +12710,47 @@ public class LeafManager {
             }
             @Override
             public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+    }
+
+
+    public void getSearchUser(OnCommunicationListener listener, String group_id,String text)
+    {
+        mOnCommunicationListener = listener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<SearchUserModel> model = service.getSearch(group_id,text);
+
+        ResponseWrapper<SearchUserModel> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_SEARCH_USER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnCommunicationListener> error) {
                 if (mOnCommunicationListener != null) {
 
                     mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);

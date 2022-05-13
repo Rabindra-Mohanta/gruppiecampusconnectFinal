@@ -52,6 +52,8 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
     String committeeID,teamID;
     ArrayList<WorkerListResponse.WorkerData> workerDataArrayList = new ArrayList<>();
     WorkerAdapter workerAdapter;
+    BoothMasterListModelResponse.BoothMasterListData classData;
+
     public static WorkerListFragment newInstance() {
         WorkerListFragment fragment = new WorkerListFragment();
         Bundle args = new Bundle();
@@ -78,7 +80,7 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
     private void getDataLocaly() {
 
         List<WorkerListTBL> list = WorkerListTBL.getWorkerList(teamID);
-
+        workerDataArrayList.clear();
         if (list.size() != 0)
         {
             ArrayList<WorkerListResponse.WorkerData> workerData1 = new ArrayList<>();
@@ -124,8 +126,9 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
 
         if(bundle!=null)
         {
-            teamID =bundle.getString("team_id","");
-            committeeID =bundle.getString("committee_id","");
+            classData = (BoothMasterListModelResponse.BoothMasterListData) bundle.getSerializable("data");
+            teamID =classData.teamId;
+            committeeID =classData.boothCommittee.getCommitteeId();
 
             Log.e(TAG,"teamID"+teamID+"\ncommitteeID"+committeeID);
 
@@ -161,10 +164,14 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
         {
             WorkerListResponse res = (WorkerListResponse) response;
             ArrayList<WorkerListResponse.WorkerData> workerData = res.getData();
-
+            workerDataArrayList.clear();
             if (workerData != null && workerData.size()>0)
             {
                 saveToLocaly(workerData);
+            }
+            else
+            {
+                workerAdapter.notifyDataSetChanged();
             }
 
         }
@@ -199,7 +206,7 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
             workerListTBL.save();
         }
         workerDataArrayList.addAll(workerData);
-
+        workerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -326,6 +333,7 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
 
         Intent intent = new Intent(getActivity(), StreetListActivity.class);
         intent.putExtra("teamID",teamID);
+        intent.putExtra("name",classData.name);
         startActivity(intent);
     }
 }

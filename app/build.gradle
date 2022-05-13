@@ -213,11 +213,11 @@ android {
                buildConfigField("String", "AppName", '"DODDAGOUDAR"')
                buildConfigField("String", "AppCategory", '"CAMPUS"')
                buildConfigField("String", "APP_ID",  '"school"')*/
-                 /*  ndk {
+                   ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
                        abiFilters 'armeabi-v7a','armeabi-v8a'//
-                   }*/
+                   }
             }
     buildTypes {
         release {
@@ -245,10 +245,9 @@ android {
          //    buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"' // MGV
 
        //     buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
-       //   buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
-         buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'   /// PRODUCATION TEST SERVER...
+         buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
+  //       buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'   /// PRODUCATION TEST SERVER...
 
-             //buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
 
         //     buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'
        //   buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'

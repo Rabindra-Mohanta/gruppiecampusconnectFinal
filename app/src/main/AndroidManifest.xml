@@ -52,10 +52,15 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.SyllabusDetailsActivity"
+        <activity android:name=".activities.SearchUserActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".activities.SyllabusDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddSyllabusActivity"
             android:exported="false"

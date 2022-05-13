@@ -43,6 +43,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.SearchUserActivity;
 import school.campusconnect.activities.VoterProfileActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
@@ -295,7 +296,16 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
 
             case R.id.menu_search:
-                showHideSearch();
+
+                if (screen.equalsIgnoreCase("myTeam"))
+                {
+                    startActivity(new Intent(getContext(), SearchUserActivity.class));
+                }
+                else
+                {
+                    showHideSearch();
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

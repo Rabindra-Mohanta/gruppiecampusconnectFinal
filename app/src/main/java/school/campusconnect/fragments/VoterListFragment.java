@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddVoterActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VoterListActivity;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.FragmentStreetListBinding;
 import school.campusconnect.databinding.FragmentVoterListBinding;
 import school.campusconnect.datamodel.BaseResponse;
@@ -74,7 +76,19 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         inits();
-        //getDataLocaly();
+        getDataLocaly();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (LeafPreference.getInstance(getContext()).getBoolean("VoterUpate"))
+        {
+            VoterListTBL.deleteVoterList(team_id);
+            LeafPreference.getInstance(getContext()).setBoolean("VoterUpate",false);
+            getDataLocaly();
+        }
     }
 
     private void inits() {
@@ -93,7 +107,7 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
     private void getDataLocaly() {
 
         List<VoterListTBL> voterListTBLS = VoterListTBL.getVoterListTBLAll(team_id);
-
+        voterData.clear();
         if (voterListTBLS.size() != 0)
         {
             ArrayList<VoterListModelResponse.VoterData> data = new ArrayList<>();
@@ -132,11 +146,6 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        voterListApiCall(true);
-    }
 
     private void voterListApiCall(boolean b) {
         if (b)
@@ -164,10 +173,14 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
             VoterListModelResponse.VoterListRes res = (VoterListModelResponse.VoterListRes) response;
 
             ArrayList<VoterListModelResponse.VoterData> voterDataList = res.getData();
-
+            voterData.clear();
             if (voterDataList.size() > 0)
             {
                 saveToLocally(voterDataList);
+            }
+            else
+            {
+                voterAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -231,7 +244,7 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_master_booth,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_voter_master,parent,false);
             return new ViewHolder(view);
         }
 
@@ -290,9 +303,11 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
                 if(list.size()==0)
                 {
                     binding.txtEmpty.setText(getResources().getString(R.string.txt_no_voter_found));
+                    binding.btnSubmit.setVisibility(View.GONE);
                 }
                 else {
                     binding.txtEmpty.setText("");
+                    binding.btnSubmit.setVisibility(View.VISIBLE);
                 }
 
                 return list.size();
@@ -300,6 +315,7 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
             else
             {
                 binding.txtEmpty.setText(getResources().getString(R.string.txt_no_voter_found));
+                binding.btnSubmit.setVisibility(View.GONE);
                 return 0;
             }
 
@@ -315,6 +331,9 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
             @Bind(R.id.txt_name)
             TextView txt_name;
 
+            @Bind(R.id.chVoter)
+            CheckBox chVoter;
+
 
 
             public ViewHolder(View itemView) {
@@ -326,9 +345,9 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
     }
 
     private void onTreeClick(VoterListModelResponse.VoterData classData) {
-        /*Intent intent = new Intent(getContext(), AddVoterActivity.class);
-        intent.putExtra("team_id",classData.teamId);
+        Intent intent = new Intent(getContext(), AddVoterActivity.class);
+        intent.putExtra("data",classData);
         intent.putExtra("edit",true);
-        startActivity(intent);*/
+        startActivity(intent);
     }
 }

@@ -252,7 +252,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     }
 
 
-                    btnAdd.setText("Save");
+                    btnAdd.setText(getResources().getString(R.string.lbl_save));
                     return;
                 }
                 else {

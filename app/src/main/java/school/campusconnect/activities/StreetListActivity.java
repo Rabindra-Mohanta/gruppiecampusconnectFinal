@@ -30,7 +30,7 @@ public class StreetListActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_Street));
+        setTitle(getIntent().getStringExtra("name"));
         inits();
     }
 

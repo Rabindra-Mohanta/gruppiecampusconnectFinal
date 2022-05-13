@@ -11,8 +11,18 @@
             android:id="@+id/rvVoter"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@id/btnSubmit"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="@dimen/login_button_width"
+            style="@style/AddPostButton"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="@string/lbl_submit"
+            android:layout_marginVertical="@dimen/padding_10dp"
+            android:layout_height="@dimen/login_button_height" />
         <TextView
             android:id="@+id/txtEmpty"
             android:layout_width="match_parent"

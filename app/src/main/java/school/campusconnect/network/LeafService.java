@@ -39,6 +39,7 @@ import school.campusconnect.datamodel.masterList.WorkerListResponse;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
+import school.campusconnect.datamodel.searchUser.SearchUserModel;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
@@ -1898,6 +1899,12 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addVoter(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body VoterListModelResponse.AddVoterReq req);
 
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/voter/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteVoterMaster(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("voterId") String voterId);
+
+
     @GET("/api/v1/groups/{group_id}/team/{team_id}/get/voters/masterlist")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<VoterListModelResponse.VoterListRes> getVoterList(@Path("group_id") String group_id, @Path("team_id") String team_id);
@@ -1965,5 +1972,9 @@ public interface LeafService {
     @GET("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<SyllabusListModelRes> getSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
+
+    @GET("api/v1/groups/{group_id}/user/search")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SearchUserModel> getSearch(@Path("group_id") String group_id,@Query("filter") String text);
 
 }

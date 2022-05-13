@@ -30,7 +30,7 @@ public class VoterListActivity extends BaseActivity {
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_Voter));
+        setTitle(getIntent().getStringExtra("name"));
         inits();
     }
 

@@ -28,7 +28,7 @@ public class MasterListActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_Booths));
+        setTitle(getIntent().getStringExtra("name"));
         inits();
     }
 

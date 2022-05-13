@@ -558,6 +558,10 @@
         <item>Choose from Library</item>
     </string-array>
 
+    <string-array name="array_search">
+        <item>Search Voter</item>
+        <item>Search Booth</item>
+    </string-array>
 
     <string-array name="array_image_modify">
         <item>Take a Photo</item>

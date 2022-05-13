@@ -1021,6 +1021,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_select_test_date">Please Select Test Date</string>
     <string name="toast_enter_valid_email">Enter valid Email</string>
     <string name="toast_voter_add_successfully">Voter Added SuccessFully...</string>
+    <string name="toast_voter_delete_successfully">Voter Delete SuccessFully...</string>
     <string name="toast_select_contact">Please select contact</string>
     <string name="toast_image_download">Image Downloaded.</string>
     <string name="toast_mark_card_uploaded">Marks Card Uploaded</string>
