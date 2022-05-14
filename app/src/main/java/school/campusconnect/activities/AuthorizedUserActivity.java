@@ -185,6 +185,11 @@ public class AuthorizedUserActivity extends BaseActivity implements LeafManager.
     }
 
     @Override
+    public void onStartMeeting(LeadItem item) {
+
+    }
+
+    @Override
     public void onSMSClick(LeadItem item) {
 
     }

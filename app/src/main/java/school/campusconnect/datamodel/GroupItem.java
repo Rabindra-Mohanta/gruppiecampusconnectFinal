@@ -54,12 +54,28 @@ public class GroupItem implements Parcelable {
     public int boothCount;
     public boolean isBoothPresident;
 
+    public String zoomSecret;
+    public String zoomPassword;
+    public String zoomMeetingPassword;
+    public String zoomMeetingId;
+    public String zoomMail;
+    public String zoomKey;
+
+
 
     protected GroupItem(Parcel in) {
         id = in.readString();
         type = in.readString();
         subBoothName = in.readString();
         subBoothId = in.readString();
+
+        zoomSecret = in.readString();
+        zoomPassword = in.readString();
+        zoomMeetingPassword = in.readString();
+        zoomMeetingId = in.readString();
+        zoomMail = in.readString();
+        zoomKey = in.readString();
+
         totalUsers = in.readInt();
         subBoothMembers = in.readInt();
         totalPostsCount = in.readInt();
@@ -177,6 +193,14 @@ public class GroupItem implements Parcelable {
         dest.writeString(subBoothName);
         dest.writeString(subBoothId);
         dest.writeInt(totalUsers);
+
+        dest.writeString(zoomSecret);
+        dest.writeString(zoomPassword);
+        dest.writeString(zoomMeetingPassword);
+        dest.writeString(zoomMeetingId);
+        dest.writeString(zoomMail);
+        dest.writeString(zoomKey);
+
         dest.writeInt(subBoothMembers);
         dest.writeInt(totalPostsCount);
         dest.writeInt(subBoothCount);

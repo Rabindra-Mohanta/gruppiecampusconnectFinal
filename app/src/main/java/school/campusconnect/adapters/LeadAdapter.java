@@ -178,6 +178,8 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
             }
         });
 
+
+
     }
 
     private int dpToPx() {
@@ -223,12 +225,15 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
 
         ImageView tree;
         @Bind(R.id.line)
-
         View line;
         @Bind(R.id.relative)
         RelativeLayout relative;
         @Bind(R.id.relative_name)
         RelativeLayout relative_name;
+
+        @Bind(R.id.imgStartMeeting)
+        ImageView imgStartMeeting;
+
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -276,16 +281,21 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
         }
 
 
-        @OnClick({ R.id.img_chat, R.id.img_tree, R.id.imgCall} )
+        @OnClick({ R.id.img_chat, R.id.img_tree, R.id.imgCall,R.id.imgStartMeeting} )
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.img_chat:
 
                   //  listener.onSMSClick(list.get(getLayoutPosition()));
+                    Log.e(TAG,"phone number"+list.get(getAdapterPosition()).phone);
 
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
+
+                    String mobile =list.get(getAdapterPosition()).phone;
+                    String msg = "Please Download \n"+"https://play.google.com/store/apps/details?id="+mContext.getPackageName();
+                    Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + mobile + "&text=" + msg));
                     sendIntent.setPackage("com.whatsapp");
+
+
                     if (sendIntent.resolveActivity(mContext.getPackageManager()) != null) {
                         mContext.startActivity(sendIntent);
                     } else {
@@ -293,10 +303,14 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                     }
                     break;
 
+                case R.id.imgStartMeeting:
+                    listener.onStartMeeting(list.get(getLayoutPosition()));
+                    break;
 
                 case R.id.img_tree:
                     listener.onMailClick(list.get(getLayoutPosition()));
                     break;
+
                 case R.id.relative_name:
                     listener.onNameClick(list.get(getLayoutPosition()));
                     break;
@@ -345,6 +359,8 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
 
     public interface OnLeadSelectListener {
         void onCallClick(LeadItem item);
+
+        void onStartMeeting(LeadItem item);
 
         void onSMSClick(LeadItem item);
 

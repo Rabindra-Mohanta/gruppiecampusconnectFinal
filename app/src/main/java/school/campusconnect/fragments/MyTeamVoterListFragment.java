@@ -230,7 +230,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
         for(BoothVotersListResponse.VoterData item : myTeamDataList){
 
-            if (item.name.toLowerCase().contains(text.toLowerCase())){
+            if (item.name.toLowerCase().contains(text.toLowerCase()) || item.phone.toLowerCase().contains(text.toLowerCase())){
                 filteredList.add(item);
             }
         }

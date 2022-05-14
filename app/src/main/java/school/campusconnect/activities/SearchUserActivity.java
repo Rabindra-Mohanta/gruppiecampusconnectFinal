@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,27 +64,10 @@ public class SearchUserActivity extends BaseActivity implements LeafManager.OnCo
     ClassesAdapter adapter;
 
     private int REQUEST_UPDATE_PROFILE = 8;
-
     private List<SearchUserModel.SearchUserData> filteredList = new ArrayList<>();
-
-    private Handler mHandler = new Handler();
     String text;
-    Runnable myRunnable = new Runnable() {
-        @Override
-        public void run() {
-
-            try{
-                mHandler.postDelayed(myRunnable, 1000);
-                binding.progressBar.setVisibility(View.VISIBLE);
-                manager.getSearchUser(SearchUserActivity.this,GroupDashboardActivityNew.groupId,text);
-            }catch (Exception e)
-            {
-                Log.e(TAG,"exception"+ e.getMessage());
-            }
-
-        }
-    };
-
+    private CountDownTimer myCountDown;
+    private boolean isTimerOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +82,22 @@ public class SearchUserActivity extends BaseActivity implements LeafManager.OnCo
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle(getResources().getString(R.string.hint_search_voter));
+
+        myCountDown = new CountDownTimer(1000, 1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Log.e(TAG,"onTick"+millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                Log.e(TAG,"onFinish"+text);
+                binding.edtSearch.setEnabled(false);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                manager.getSearchUser(SearchUserActivity.this,GroupDashboardActivityNew.groupId,text);
+            }
+        };
 
         manager = new LeafManager();
         binding.edtSearch.setHint(getResources().getString(R.string.hint_search_voter));
@@ -120,16 +121,18 @@ public class SearchUserActivity extends BaseActivity implements LeafManager.OnCo
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                mHandler.removeCallbacks(myRunnable);
+
+                endTimer();
+
                 if (s.toString().length() > 2)
                 {
-                    mHandler.post(myRunnable);
                     searchData(s.toString());
                 }
                 else
                 {
                     adapter.add(filteredList);
                 }
+
             }
         });
 
@@ -149,15 +152,28 @@ public class SearchUserActivity extends BaseActivity implements LeafManager.OnCo
     private void searchData(String text) {
         this.text = text;
         adapter.add(filteredList);
+        startTimer();
 
     }
 
-
+    private void startTimer()
+    {
+        isTimerOn = true;
+        myCountDown.start();
+    }
+    private void endTimer()
+    {
+        if (isTimerOn)
+        {
+            isTimerOn = false;
+            myCountDown.cancel();
+        }
+    }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         binding.progressBar.setVisibility(View.GONE);
-
+        binding.edtSearch.setEnabled(true);
         if (apiId == LeafManager.API_SEARCH_USER)
         {
             SearchUserModel res = (SearchUserModel) response;
@@ -168,6 +184,7 @@ public class SearchUserActivity extends BaseActivity implements LeafManager.OnCo
 
     @Override
     public void onFailure(int apiId, String msg) {
+        binding.edtSearch.setEnabled(true);
         binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onFailure(apiId, msg);
@@ -175,6 +192,7 @@ public class SearchUserActivity extends BaseActivity implements LeafManager.OnCo
 
     @Override
     public void onException(int apiId, String msg) {
+        binding.edtSearch.setEnabled(true);
         binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onException(apiId, msg);
@@ -317,6 +335,12 @@ public class SearchUserActivity extends BaseActivity implements LeafManager.OnCo
 
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        endTimer();
     }
 
     @Override

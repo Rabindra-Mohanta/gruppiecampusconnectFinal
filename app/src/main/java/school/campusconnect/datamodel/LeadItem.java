@@ -49,6 +49,15 @@ public class LeadItem implements Parcelable {
     public String voterId;
     public String bloodGroup;
     public String aadharNumber;
+    public boolean isLive;
+
+    public boolean isLive() {
+        return isLive;
+    }
+
+    public void setLive(boolean live) {
+        isLive = live;
+    }
 
     public boolean isRoleOnConstituency() {
         return roleOnConstituency;

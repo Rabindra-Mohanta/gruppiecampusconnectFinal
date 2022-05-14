@@ -62,6 +62,9 @@ public class LeadDataTBL extends Model {
     @Column(name = "_now")
     public String _now;
 
+    @Column(name = "isLive")
+    public boolean isLive;
+
 
     public static List<LeadDataTBL> getLead(String groupID,String teamID,int page)
     {

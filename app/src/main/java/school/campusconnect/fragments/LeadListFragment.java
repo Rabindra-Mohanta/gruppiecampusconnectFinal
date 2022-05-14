@@ -40,6 +40,7 @@ import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,8 +65,11 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import school.campusconnect.R;
 import school.campusconnect.activities.AddPostActivity;
@@ -83,6 +87,18 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
+import us.zoom.sdk.FreeMeetingNeedUpgradeType;
+import us.zoom.sdk.InMeetingAudioController;
+import us.zoom.sdk.InMeetingChatMessage;
+import us.zoom.sdk.InMeetingEventHandler;
+import us.zoom.sdk.InMeetingServiceListener;
+import us.zoom.sdk.InstantMeetingOptions;
+import us.zoom.sdk.MeetingServiceListener;
+import us.zoom.sdk.MeetingStatus;
+import us.zoom.sdk.MeetingViewsOptions;
+import us.zoom.sdk.ZoomSDK;
+import us.zoom.sdk.ZoomSDKAuthenticationListener;
+import us.zoom.sdk.ZoomSDKInitializeListener;
 
 public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLeadSelectListener,
         LeafManager.OnCommunicationListener {
@@ -111,6 +127,10 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     private int teamMemberCount = 0;
 
     MyTeamData classData;
+
+    /*zoom*/
+
+    private boolean isZoomStarted = false;
 
     public LeadListFragment() {
 
@@ -466,6 +486,11 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     }
 
     @Override
+    public void onStartMeeting(LeadItem item) {
+        startMeetingZoom(item);
+    }
+
+    @Override
     public void onSMSClick(LeadItem item) {
         intent = new Intent(getActivity(), AddPostActivity.class);
         AppLog.e(TAG, "onSMSClick group_id " + groupId);
@@ -570,6 +595,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 leadDataTBL.allowedToAddTeamPost = results.get(i).allowedToAddTeamPost;
                 leadDataTBL.aadharNumber = results.get(i).aadharNumber;
                 leadDataTBL._now = DateTimeHelper.getCurrentTime();
+                leadDataTBL.isLive = false;
 
                 leadDataTBL.save();
 
@@ -608,6 +634,8 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 leadItem.allowedToAddTeamPostComment = leadDataTBL.get(i).allowedToAddTeamPostComment;
                 leadItem.allowedToAddTeamPost = leadDataTBL.get(i).allowedToAddTeamPost;
                 leadItem.aadharNumber = leadDataTBL.get(i).aadharNumber;
+
+                leadItem.isLive = leadDataTBL.get(i).isLive;
 
                 list.add(leadItem);
             }
@@ -790,6 +818,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                             if (teamEvent.get(i).lastUserToTeamUpdatedAtEventAt != null && MixOperations.isNewEventUpdate(teamEvent.get(i).lastUserToTeamUpdatedAtEventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", leadDataTBLList.get(leadDataTBLList.size()-1)._now))
                             {
                                 currentPage = 1;
+                                Log.e(TAG,"call Event");
                                 LeadDataTBL.deleteLead(GroupDashboardActivityNew.groupId,teamId);
                                 getData(true);
                             }
@@ -800,4 +829,433 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             }
         }
     }
+
+
+    /*Zooom */
+    private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
+
+    //showLoadingBar(mBinding.progressBar2);
+    ZoomSDK zoomSDK = ZoomSDK.getInstance();
+
+        zoomSDK.initialize(getActivity(), zoomKey, zoomSecret, new ZoomSDKInitializeListener() {
+        @Override
+        public void onZoomSDKInitializeResult(int i, int i1) {
+
+            AppLog.e(TAG, "Zoom SDK initialized : " + i + " , " + i1 + " , " + startOrJoin);
+
+            try {
+                ZoomSDK.getInstance().getMeetingSettingsHelper().setMuteMyMicrophoneWhenJoinMeeting(true);
+                ZoomSDK.getInstance().getMeetingSettingsHelper().disableCopyMeetingUrl(true);
+                ZoomSDK.getInstance().getMeetingSettingsHelper().setClaimHostWithHostKeyActionEnabled(false);
+                ZoomSDK.getInstance().getMeetingSettingsHelper().disableShowVideoPreviewWhenJoinMeeting(true);
+            } catch (Exception ex) {
+            }
+
+            if (startOrJoin)
+                startZoomMeeting(zoomMail, zoomPassword, zoomName, className, meetingId);
+            else {
+                AppLog.e(TAG, "after initialize : isLogged IN Zoom : " + ZoomSDK.getInstance().isLoggedIn());
+                // joinZoomMeeting(zoomName, zoomPassword, className, meetingId);
+                logoutZoomBeforeJoining(zoomName, zoomPassword, className, meetingId);
+            }
+        }
+
+        @Override
+        public void onZoomAuthIdentityExpired() {
+            //hideLoadingBar();
+            mBinding.progressBar.setVisibility(View.GONE);
+
+        }
+    });///APP_KEY , APP_SECRET
+
+    }
+
+    private void startZoomMeeting(String zoomMail, String password, String name, String className, String meetingId) {
+//        ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
+
+        AppLog.e(TAG, "startzoommeeting called " + zoomMail + ", " + password + " , " + name + ", " + meetingId);
+
+
+
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthListener);
+
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthLogoutListener);
+
+        ZoomSDK.getInstance().addAuthenticationListener(ZoomAuthListener);
+
+
+        if (!ZoomSDK.getInstance().isLoggedIn()) {
+            //  ZoomSDK.getInstance().logoutZoom();
+            Log.e(TAG, "loginwithzoom Called from startmeeting , not logged in already ");
+            ZoomSDK.getInstance().loginWithZoom(zoomMail, password);
+        } else {
+            Log.e(TAG, "logoutzoom Called from startmeeting , already loggedIn");
+            ZoomSDK.getInstance().logoutZoom();
+        }
+
+    }
+
+
+    private void logoutZoomBeforeJoining(String name, String zoomPassword, String className, String meetingID) {
+
+        AppLog.e(TAG, "logoutZoomBeforeJoining called " + name + ", " + className + ", " + meetingID);
+
+
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthLogoutListener);
+        ZoomSDK.getInstance().removeAuthenticationListener(ZoomAuthListener);
+        ZoomSDK.getInstance().addAuthenticationListener(ZoomAuthLogoutListener);
+        ZoomSDK.getInstance().logoutZoom();
+
+    }
+    ZoomSDKAuthenticationListener ZoomAuthLogoutListener = new ZoomSDKAuthenticationListener() {
+        @Override
+        public void onZoomSDKLoginResult(long result) {
+            AppLog.e(TAG, "logoutZoomBeforeJoining , onZoomSDKLoginResult : " + result);
+        }
+
+        @Override
+        public void onZoomSDKLogoutResult(long result) {
+            AppLog.e(TAG, "logoutZoomBeforeJoining , onZOomSDKLogoutResult : " + result);
+
+           /* ZoomSDK.getInstance().removeAuthenticationListener(this);
+            joinZoomMeeting(item.zoomName.get(0), item.zoomMeetingPassword, item.className, item.jitsiToken);*/
+        }
+
+        @Override
+        public void onZoomIdentityExpired() {
+            AppLog.e(TAG, "onZOomIdentityExpired");
+        }
+
+        @Override
+        public void onZoomAuthIdentityExpired() {
+            AppLog.e(TAG, "onZoomAuthIdentityExpired");
+        }
+
+    };
+
+    ZoomSDKAuthenticationListener ZoomAuthListener = new ZoomSDKAuthenticationListener() {
+        @Override
+        public void onZoomSDKLoginResult(long result) {
+            Log.e(TAG, "startmeeting , onZoomLogin Result : " + result);
+            if (result == 0) {
+
+                ZoomSDK.getInstance().removeAuthenticationListener(this);
+                InstantMeetingOptions opts = new InstantMeetingOptions();
+                opts.custom_meeting_id = "item.className";
+                opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
+                opts.no_invite = true;
+
+                //opts.meeting_views_options = MeetingViewsOptions.NO_TEXT_MEETING_ID;
+                if (getActivity() == null)
+                    return;
+
+                ZoomSDK.getInstance().getMeetingService().startInstantMeeting(LeadListFragment.this.getActivity(), opts);
+                ZoomSDK.getInstance().getMeetingService().removeListener(StartMeetListener);
+                ZoomSDK.getInstance().getMeetingService().removeListener(JoinMeetListener);
+                ZoomSDK.getInstance().getMeetingService().addListener(StartMeetListener);
+                ZoomSDK.getInstance().getInMeetingService().addListener(inMeetingListener);
+            }
+
+        }
+
+        @Override
+        public void onZoomSDKLogoutResult(long result) {
+            AppLog.e(TAG, "startmeeting, onZOomSDKLogoutResult : " + result);
+
+//            ZoomSDK.getInstance().loginWithZoom(item.zoomMail, item.zoomPassword);
+        }
+
+        @Override
+        public void onZoomIdentityExpired() {
+            AppLog.e(TAG, "onZOomIdentityExpired");
+        }
+
+        @Override
+        public void onZoomAuthIdentityExpired() {
+
+            AppLog.e(TAG, "onZoomAuthIdentityExpired");
+
+        }
+
+    };
+
+    InMeetingServiceListener inMeetingListener = new InMeetingServiceListener() {
+        @Override
+        public void onMeetingNeedPasswordOrDisplayName(boolean b, boolean b1, InMeetingEventHandler inMeetingEventHandler) {
+
+        }
+
+        @Override
+        public void onWebinarNeedRegister() {
+
+        }
+
+        @Override
+        public void onJoinWebinarNeedUserNameAndEmail(InMeetingEventHandler inMeetingEventHandler) {
+
+        }
+
+        @Override
+        public void onMeetingNeedColseOtherMeeting(InMeetingEventHandler inMeetingEventHandler) {
+
+        }
+
+        @Override
+        public void onMeetingFail(int i, int i1) {
+
+        }
+
+        @Override
+        public void onMeetingLeaveComplete(long l) {
+            AppLog.e(TAG, "onMeetingLeaveComplete");
+
+        }
+
+        @Override
+        public void onMeetingUserJoin(List<Long> list) {
+
+        }
+
+        @Override
+        public void onMeetingUserLeave(List<Long> list) {
+            AppLog.e(TAG, "onMeetingUserLeave");
+        }
+
+        @Override
+        public void onMeetingUserUpdated(long l) {
+
+        }
+
+        @Override
+        public void onMeetingHostChanged(long l) {
+            AppLog.e(TAG, "onMeetingHostChanged");
+        }
+
+        @Override
+        public void onMeetingCoHostChanged(long l) {
+
+        }
+
+        @Override
+        public void onActiveVideoUserChanged(long l) {
+
+        }
+
+        @Override
+        public void onActiveSpeakerVideoUserChanged(long l) {
+
+        }
+
+        @Override
+        public void onSpotlightVideoChanged(boolean b) {
+
+        }
+
+        @Override
+        public void onUserVideoStatusChanged(long l) {
+
+        }
+
+        @Override
+        public void onUserVideoStatusChanged(long l, VideoStatus videoStatus) {
+
+        }
+
+        @Override
+        public void onUserNetworkQualityChanged(long l) {
+
+        }
+
+        @Override
+        public void onMicrophoneStatusError(InMeetingAudioController.MobileRTCMicrophoneError mobileRTCMicrophoneError) {
+
+        }
+
+        @Override
+        public void onUserAudioStatusChanged(long l) {
+
+        }
+
+        @Override
+        public void onUserAudioStatusChanged(long l, AudioStatus audioStatus) {
+
+        }
+
+        @Override
+        public void onHostAskUnMute(long l) {
+
+        }
+
+        @Override
+        public void onHostAskStartVideo(long l) {
+
+        }
+
+        @Override
+        public void onUserAudioTypeChanged(long l) {
+
+        }
+
+        @Override
+        public void onMyAudioSourceTypeChanged(int i) {
+
+        }
+
+        @Override
+        public void onLowOrRaiseHandStatusChanged(long l, boolean b) {
+
+        }
+
+        @Override
+        public void onMeetingSecureKeyNotification(byte[] bytes) {
+
+        }
+
+        @Override
+        public void onChatMessageReceived(InMeetingChatMessage inMeetingChatMessage) {
+
+        }
+
+        @Override
+        public void onSilentModeChanged(boolean b) {
+
+        }
+
+        @Override
+        public void onFreeMeetingReminder(boolean b, boolean b1, boolean b2) {
+
+        }
+
+        @Override
+        public void onMeetingActiveVideo(long l) {
+
+        }
+
+        @Override
+        public void onSinkAttendeeChatPriviledgeChanged(int i) {
+
+        }
+
+        @Override
+        public void onSinkAllowAttendeeChatNotification(int i) {
+
+        }
+
+        @Override
+        public void onUserNameChanged(long l, String s) {
+
+        }
+
+        @Override
+        public void onFreeMeetingNeedToUpgrade(FreeMeetingNeedUpgradeType freeMeetingNeedUpgradeType, String s) {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToGiftFreeTrialStart() {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToGiftFreeTrialStop() {
+
+        }
+
+        @Override
+        public void onFreeMeetingUpgradeToProMeeting() {
+
+        }
+
+        @Override
+        public void onClosedCaptionReceived(String s) {
+
+        }
+
+        @Override
+        public void onRecordingStatus(RecordingStatus recordingStatus) {
+
+        }
+    };
+
+
+
+    MeetingServiceListener JoinMeetListener = new MeetingServiceListener() {
+        @Override
+        public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
+            Log.e(TAG, "meetinsstatusChanged Join: " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
+
+                mBinding.progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+
+            }
+
+        }
+    };
+
+    MeetingServiceListener StartMeetListener = new MeetingServiceListener() {
+        @Override
+        public void onMeetingStatusChanged(MeetingStatus meetingStatus, int errorCode, int internalErrorCode) {
+            Log.e(TAG, "meetinsstatusChanged : " + meetingStatus.name() + " errorcode : " + errorCode + " internalError: " + internalErrorCode);
+
+            long saveTime = 0;
+
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_CONNECTING")) {
+                hideLoadingBar();
+                mBinding.progressBar.setVisibility(View.GONE);
+
+            }
+
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_INMEETING"))
+            {
+
+            }
+            if (meetingStatus.name().equalsIgnoreCase("MEETING_STATUS_DISCONNECTING")) {
+
+
+
+                isZoomStarted = false;
+
+
+
+                }
+
+
+        }
+    };
+    private void startMeetingZoom(LeadItem item) {
+
+        try {
+            mBinding.progressBar.setVisibility(View.VISIBLE);
+
+            isZoomStarted = true;
+
+            if (isConnectionAvailable()) {
+
+                initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
+
+                if (!item.isLive) {
+                    initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
+
+                } else {
+                    initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name , false);
+
+
+                    SimpleDateFormat format = new SimpleDateFormat(
+                            "hh:mma", Locale.getDefault());
+                    format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+
+                }
+            }
+        else {
+                showNoNetworkMsg();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 }

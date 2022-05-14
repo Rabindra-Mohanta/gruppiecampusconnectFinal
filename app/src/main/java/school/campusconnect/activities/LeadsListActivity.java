@@ -246,6 +246,11 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
     }
 
     @Override
+    public void onStartMeeting(LeadItem item) {
+
+    }
+
+    @Override
     public void onSMSClick(LeadItem item) {
 
     }
