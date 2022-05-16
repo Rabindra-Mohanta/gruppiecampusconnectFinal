@@ -249,7 +249,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         binding.etEmail.setEnabled(false);
        // binding.etEmail.setTextColor(getResources().getColor(R.color.grey));
 
-        binding.etdob.setEnabled(false);
+      //  binding.etdob.setEnabled(false);
      //   binding.etdob.setTextColor(getResources().getColor(R.color.grey));
 
         binding.etEducation.setEnabled(false);
@@ -270,10 +270,10 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
 
 
         binding.etName.setText(data.name);
-    //    binding.etPhone.setText(data.phone);
+        binding.etPhone.setText(data.phone);
         binding.etVoterId.setText(data.voterId);
         binding.etEmail.setText(data.email);
-        binding.etdob.setText(data.dob);
+    //    binding.etdob.setText(data.dob);
         binding.etEducation.setText(data.qualification);
         binding.etProfession.setText(data.occupation);
 

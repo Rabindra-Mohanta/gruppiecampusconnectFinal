@@ -61,10 +61,18 @@ import com.squareup.picasso.Picasso;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -1226,36 +1234,152 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     private void startMeetingZoom(LeadItem item) {
 
         try {
-            mBinding.progressBar.setVisibility(View.VISIBLE);
+     //       mBinding.progressBar.setVisibility(View.VISIBLE);
 
             isZoomStarted = true;
 
             if (isConnectionAvailable()) {
+                new SendNotification(item).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                //initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
 
-                initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
-
-                if (!item.isLive) {
+           /*     if (!item.isLive) {
                     initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
 
                 } else {
                     initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name , false);
-
 
                     SimpleDateFormat format = new SimpleDateFormat(
                             "hh:mma", Locale.getDefault());
                     format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 
-                }
+                }*/
             }
         else {
                 showNoNetworkMsg();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG,"Exception start meeting "+e.getMessage());
         }
 
 
     }
+
+    private class SendNotification extends AsyncTask<String, String, String> {
+        private String server_response;
+        LeadItem data;
+
+        public SendNotification(LeadItem leadItem) {
+
+            this.data = leadItem;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String name = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
+                    String message =  name + " has Video Calling you." + data.name;
+
+                    object.put("to", "/topics/" + data.id);
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                  //  object.put("notification", notificationObj);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", GroupDashboardActivityNew.groupId);
+                    dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("createdByName", name);
+                    dataObj.put("isVideoCall",true);
+                    dataObj.put("iSNotificationSilent",true);
+                    dataObj.put("Notification_type", "videoCall");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+                    wr.writeBytes(object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Log.e(TAG, " Exception : " + ex.getMessage());
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                AppLog.e(TAG, "MalformedURLException :" + e.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
+                AppLog.e(TAG, "IOException :" + e.getMessage());
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
+    }
+
+
 
 }

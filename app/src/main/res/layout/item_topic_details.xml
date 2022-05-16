@@ -58,8 +58,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:id="@+id/llExpand">
+
+                    <TextView
+                        style="@style/LabelNormal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_10dp"
+                        android:paddingLeft="@dimen/padding_20dp"
+                        android:text="@string/lbl_plan"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -117,16 +127,85 @@
                         </LinearLayout>
 
                     </LinearLayout>
+                    <TextView
+                        style="@style/LabelNormal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_10dp"
+                        android:paddingLeft="@dimen/padding_20dp"
+                        android:text="@string/lbl_actual"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/chDone"
-                        android:layout_marginTop="@dimen/padding_5dp"
+                        <LinearLayout
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_10dp"
+                                android:paddingLeft="@dimen/padding_10dp"
+                                android:text="@string/lbl_from_date"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorPrimary" />
+                            <EditText
+                                android:id="@+id/etActualFromDate"
+                                style="@style/RegEditText"
+                                android:layout_width="match_parent"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:layout_height="@dimen/login_button_height"
+                                android:inputType="datetime" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_10dp"
+                                android:paddingLeft="@dimen/padding_10dp"
+                                android:text="@string/lbl_to_date"
+                                android:textAllCaps="true"
+
+                                android:textColor="@color/colorPrimary" />
+                            <EditText
+                                android:id="@+id/etActualToDate"
+                                style="@style/RegEditText"
+                                android:layout_width="match_parent"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:layout_height="@dimen/login_button_height"
+                                android:inputType="datetime" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnDone"
+                        android:layout_marginTop="@dimen/padding_20dp"
                         android:layout_marginHorizontal="@dimen/padding_10dp"
                         android:layout_width="wrap_content"
                         android:text="@string/lbl_completed"
                         android:textAllCaps="true"
-                        android:layoutDirection="rtl"
-                        android:layout_gravity="right"
+                        android:textColor="@color/white"
+                        android:paddingHorizontal="@dimen/padding_40dp"
+                        android:background="@drawable/add_post_button_bg"
+                        android:layout_gravity="center"
                         android:layout_height="wrap_content"/>
 
                 </LinearLayout>

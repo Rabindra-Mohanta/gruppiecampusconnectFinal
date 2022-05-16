@@ -224,13 +224,24 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (isConnectionAvailable()) {
+
+                        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+                        {
+                            Intent intent = new Intent(SplashActivity.this, ChangeLanguageActivity.class);
+                            intent.putExtra("isSplash",true);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else
+                        {
+                               Intent intent = new Intent(SplashActivity.this, LoginActivity2.class);
+                                startActivity(intent);
+                                finish();
+                        }
                       /*  Intent intent = new Intent(SplashActivity.this, LoginActivity2.class);
                         startActivity(intent);
                         finish();*/
-                        Intent intent = new Intent(SplashActivity.this, ChangeLanguageActivity.class);
-                        intent.putExtra("isSplash",true);
-                        startActivity(intent);
-                        finish();
+
 
 
                     } else {

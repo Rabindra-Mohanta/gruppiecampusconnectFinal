@@ -138,7 +138,7 @@
                 android:textColor="@color/colorPrimary" />-->
 
             <EditText
-                android:id="@+id/etdob"
+                android:id="@+id/etPhone"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:focusable="false"
@@ -502,7 +502,6 @@
                             android:layout_marginStart="@dimen/padding_10dp"
                             android:layout_weight="0.4"
                             android:gravity="start"
-
                             android:paddingTop="@dimen/padding_10dp"
                             android:textColor="@color/color_323232"
                             android:textSize="16sp" />
@@ -534,7 +533,6 @@
                             android:layout_gravity="center_vertical"
                             android:layout_weight="0.4"
                             android:gravity="start"
-
                             android:paddingTop="@dimen/padding_10dp"
                             android:textColor="@color/color_323232"
                             android:textSize="16sp"

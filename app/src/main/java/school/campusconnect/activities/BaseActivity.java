@@ -22,13 +22,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.ChapterTBL;
 import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.EBookClassItem;
@@ -90,6 +96,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -641,7 +649,31 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         }
     }
 
+    private void unsubcribe()
+    {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            AppLog.e("Firebase Topic", "unsubscribeFromTopic : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID) + " : Successful()");
+
+                        } else {
+                            AppLog.e("Firebase Topic", "unsubscribeFromTopic : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID) + " Fail()");
+                        }
+
+                    }
+                });
+    }
     public void logout() {
+
+
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            unsubcribe();
+        }
+
        AppLog.e("Logout", "onSuccessCalled");
         LeafPreference.getInstance(this).clearData();
         RememberPref.getInstance(this).clearData();
@@ -724,6 +756,11 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     }
 
     public void logoutWithoutEvents() {
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            unsubcribe();
+        }
         AppLog.e("Logout", "onSuccessCalled");
         LeafPreference.getInstance(this).clearData();
         RememberPref.getInstance(this).clearData();

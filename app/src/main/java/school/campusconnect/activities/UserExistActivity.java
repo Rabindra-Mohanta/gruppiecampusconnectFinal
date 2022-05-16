@@ -323,6 +323,20 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             showNoNetworkMsg();
         }
     }
+    private void subScribeUser() {
+        FirebaseMessaging.getInstance().subscribeToTopic(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            AppLog.e(TAG, "subscribeToTopic : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID)+ " : Successful()");
+                        } else {
+                            AppLog.e(TAG, "subscribeToTopic : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID) + " Fail()");
+                        }
+
+                    }
+                });
+    }
 
     @Override
     protected void onStart() {
@@ -441,6 +455,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             AppLog.e("LOGIN", "image is " + response1.image);
 
             addCleverTapProfile(response1);
+
+            subScribeUser();
 
             hide_keyboard();
 

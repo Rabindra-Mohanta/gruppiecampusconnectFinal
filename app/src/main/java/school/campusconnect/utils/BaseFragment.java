@@ -9,7 +9,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -19,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.LoginActivity2;
 import school.campusconnect.database.DatabaseHandler;
@@ -241,6 +248,12 @@ public class BaseFragment extends Fragment {
     public void logout() {
         if(getActivity()!=null)
         {
+
+            if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+            {
+                unsubcribe();
+            }
+
            AppLog.e("Logout", "onSuccessCalled");
             LeafPreference.getInstance(getActivity()).clearData();
             RememberPref.getInstance(getActivity()).clearData();
@@ -308,6 +321,23 @@ public class BaseFragment extends Fragment {
         }
 
     }
+
+    private void unsubcribe() {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(LeafPreference.getInstance(getContext()).getString(LeafPreference.LOGIN_ID))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            AppLog.e("Firebase Topic", "unsubscribeFromTopic : " + LeafPreference.getInstance(getContext()).getString(LeafPreference.LOGIN_ID) + " : Successful()");
+
+                        } else {
+                            AppLog.e("Firebase Topic", "unsubscribeFromTopic : " + LeafPreference.getInstance(getContext()).getString(LeafPreference.LOGIN_ID) + " Fail()");
+                        }
+
+                    }
+                });
+    }
+
     private void updateViews(String languageCode) {
 
         SharedPreferences preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getContext());

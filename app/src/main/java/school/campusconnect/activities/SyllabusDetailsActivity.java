@@ -157,7 +157,52 @@ public static final String TAG = "SyllabusDetailsActivity";
                     fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
                 }
             });
+
+
+
+
+            holder.binding.etActualFromDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    DatePickerFragment fragment = DatePickerFragment.newInstance();
+                    fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                        @Override
+                        public void onDateSelected(Calendar c) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+                            holder.binding.etActualFromDate.setText(format.format(c.getTime()));
+                        }
+                    });
+                    fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
+                }
+            });
+
+            holder.binding.etActualToDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    DatePickerFragment fragment = DatePickerFragment.newInstance();
+                    fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                        @Override
+                        public void onDateSelected(Calendar c) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+                            holder.binding.etActualToDate.setText(format.format(c.getTime()));
+                        }
+                    });
+                    fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
+                }
+            });
+
+
+            holder.binding.btnDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onTreeClick(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString());
+                }
+            });
         }
+
+
 
         @Override
         public int getItemCount() {
@@ -172,5 +217,9 @@ public static final String TAG = "SyllabusDetailsActivity";
                 binding = itemView;
             }
         }
+    }
+
+    private static void onTreeClick(String planto, String planfrom, String actualto, String actualfrom) {
+
     }
 }

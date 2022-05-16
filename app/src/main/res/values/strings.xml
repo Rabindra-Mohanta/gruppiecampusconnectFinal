@@ -717,6 +717,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_from_date">From Date</string>
     <string name="lbl_to_date">To Date</string>
 
+    <string name="lbl_plan">Plan</string>
+    <string name="lbl_actual">Actual</string>
+
     <string name="lbl_class_fees">Class Fees</string>
     <string name="due_amount">Amount Due</string>
     <string name="lbl_pay">Pay</string>

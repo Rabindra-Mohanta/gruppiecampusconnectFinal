@@ -994,6 +994,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 });
     }
 
+
+
     private void removeTopicFromPref(String topics) {
         if (!TextUtils.isEmpty(pref.getString(LeafPreference.Subscribed_Teams))) {
             ArrayList<String> teamTopics = new Gson().fromJson(pref.getString(LeafPreference.Subscribed_Teams), new TypeToken<ArrayList<String>>() {

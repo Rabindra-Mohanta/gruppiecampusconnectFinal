@@ -15,6 +15,7 @@ public class SendNotificationModel {
         public String body; // message of notification
         public String Notification_type;
         public boolean iSNotificationSilent;
+        public boolean isVideoCall;
         public String groupId;
         public String createdById;
         public String postId; // if related to post

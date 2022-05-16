@@ -16,6 +16,7 @@
 
 package school.campusconnect.utils;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,6 +25,8 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -36,8 +39,13 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.VideoCallingActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.firebase.SendNotificationModel;
 
@@ -81,6 +89,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
 
                 switch (data.Notification_type) {
+
+                    case "videoCall": {
+                        Intent intent = new Intent("MEETING_END");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("createdByName", data.createdByName);
+                        intent.setAction("MEETING_END");
+
+                    }
+                    break;
+
                     case "videoEnd": {
                         Intent intent = new Intent("MEETING_END");
                         intent.putExtra("teamId", data.teamId);
@@ -247,9 +265,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
                 }
-                if (!data.iSNotificationSilent) {
+
+               /* if (!data.iSNotificationSilent) {
                     sendNotification(data.body, data.title);
-                }
+                }*/
+                sendVideoCallNotification();
+
+              /*  if (data.isVideoCall)
+                {
+
+                }*/
             }
         }
 
@@ -257,6 +282,50 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             AppLog.e(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
+    }
+
+    private void sendVideoCallNotification()
+    {
+        AppLog.e(TAG, "sendVideoCallNotification ");
+
+        Intent fullScreenIntent = new Intent(this, VideoCallingActivity.class);
+
+        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.activity_video_calling);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, "1213")
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setContentTitle("Incoming call sg dgfs sf sd fsd f ")
+                        .setContentText("(919) 555-1234 \n sfdf \n sfdfsd s f\n sfsdsf \n")
+                        .setContent(mRemoteViews)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setCategory(NotificationCompat.CATEGORY_CALL)
+                        .setChannelId("1213")
+                        .setFullScreenIntent(fullScreenPendingIntent, true);
+
+        Notification incomingCallNotification = notificationBuilder.build();
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.app_name);// The user-visible name of the channel.
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel("1213", name, importance);
+            mChannel.setShowBadge(true);
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(mChannel);
+        }
+    //    notificationManager.notify(12134 /* ID of notification */, notificationBuilder.build());
+
+        startForeground(createID(), incomingCallNotification);
+    }
+
+    public int createID(){
+        Date now = new Date();
+        return Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
     }
     // [END receive_message]
 

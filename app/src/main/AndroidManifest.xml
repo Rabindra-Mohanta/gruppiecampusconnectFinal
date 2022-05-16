@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- This is only necessary if you are displaying notifications -->
@@ -39,6 +40,9 @@
             <action android:name="android.intent.action.DIAL" />
         </intent>
     </queries>
+    <queries>
+        <package android:name="com.whatsapp" />
+    </queries>
 
     <application
         android:name=".LeafApplication"
@@ -52,15 +56,16 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.SearchUserActivity"
+        <activity android:name=".activities.VideoCallingActivity"></activity>
+        <activity
+            android:name=".activities.SearchUserActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SyllabusDetailsActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.AddSyllabusActivity"
             android:exported="false"
