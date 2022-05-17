@@ -20,6 +20,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -27,6 +28,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -48,6 +50,7 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VideoCallingActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.firebase.SendNotificationModel;
+import school.campusconnect.service.IncomingVideoCallService;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -266,15 +269,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 }
 
-               /* if (!data.iSNotificationSilent) {
+                if (!data.iSNotificationSilent) {
                     sendNotification(data.body, data.title);
-                }*/
-                sendVideoCallNotification();
+                }
 
-              /*  if (data.isVideoCall)
+
+                if (data.isVideoCall)
                 {
-
-                }*/
+                    sendVideoCallNotification(data.body);
+                }
             }
         }
 
@@ -284,25 +287,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendVideoCallNotification()
+    private void sendVideoCallNotification(String s)
     {
         AppLog.e(TAG, "sendVideoCallNotification ");
-
-        Intent fullScreenIntent = new Intent(this, VideoCallingActivity.class);
-
+       String ACTION_STOP_LISTEN = "action_stop_listen";
+       Intent fullScreenIntent = new Intent(this, VideoCallingActivity.class);
+        fullScreenIntent.setAction(ACTION_STOP_LISTEN);
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.activity_video_calling);
+        RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.layout_video_calling_notification);
+
+    /*    mRemoteViews.setOnClickPendingIntent(R.id.btnStart, fullScreenPendingIntent);
+        mRemoteViews.setOnClickPendingIntent(R.id.btnStop, fullScreenPendingIntent);*/
+        mRemoteViews.setTextViewText(R.id.tvNotificationTitle,s);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, "1213")
                         .setSmallIcon(R.drawable.app_icon)
-                        .setContentTitle("Incoming call sg dgfs sf sd fsd f ")
-                        .setContentText("(919) 555-1234 \n sfdf \n sfdfsd s f\n sfsdsf \n")
                         .setContent(mRemoteViews)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_CALL)
                         .setChannelId("1213")
+                        .setAutoCancel(true)
                         .setFullScreenIntent(fullScreenPendingIntent, true);
 
         Notification incomingCallNotification = notificationBuilder.build();
@@ -318,9 +324,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             assert notificationManager != null;
             notificationManager.createNotificationChannel(mChannel);
         }
-    //    notificationManager.notify(12134 /* ID of notification */, notificationBuilder.build());
 
         startForeground(createID(), incomingCallNotification);
+
+    //    startCallService(s);
+    }
+
+    public void startCallService(String s) {
+        Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+        intent.putExtra("msg",s);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        }
     }
 
     public int createID(){

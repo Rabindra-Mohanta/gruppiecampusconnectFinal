@@ -1979,7 +1979,7 @@ public interface LeafService {
     Call<SearchUserModel> getSearch(@Path("group_id") String group_id,@Query("filter") String text);
 
 
-    @GET("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/status")
+    @POST("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/status")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> ChangeStatusPlan(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Query("topicId") String topicId, @Body ChangeStatusPlanModel.ChangeStatusModelReq changeStatusModelReq);
 

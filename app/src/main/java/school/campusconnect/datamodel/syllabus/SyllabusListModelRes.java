@@ -72,6 +72,22 @@ public class SyllabusListModelRes extends BaseResponse {
         @Expose
         private String topicId;
 
+        @SerializedName("toDate")
+        @Expose
+        private String toDate;
+
+        @SerializedName("fromDate")
+        @Expose
+        private String fromDate;
+
+        @SerializedName("actualStartDate")
+        @Expose
+        private String actualStartDate;
+
+        @SerializedName("actualEndDate")
+        @Expose
+        private String actualEndDate;
+
         public String getTopicName() {
             return topicName;
         }
@@ -86,6 +102,38 @@ public class SyllabusListModelRes extends BaseResponse {
 
         public void setTopicId(String topicId) {
             this.topicId = topicId;
+        }
+
+        public String getToDate() {
+            return toDate;
+        }
+
+        public void setToDate(String toDate) {
+            this.toDate = toDate;
+        }
+
+        public String getFromDate() {
+            return fromDate;
+        }
+
+        public void setFromDate(String fromDate) {
+            this.fromDate = fromDate;
+        }
+
+        public String getActualStartDate() {
+            return actualStartDate;
+        }
+
+        public void setActualStartDate(String actualStartDate) {
+            this.actualStartDate = actualStartDate;
+        }
+
+        public String getActualEndDate() {
+            return actualEndDate;
+        }
+
+        public void setActualEndDate(String actualEndDate) {
+            this.actualEndDate = actualEndDate;
         }
     }
 

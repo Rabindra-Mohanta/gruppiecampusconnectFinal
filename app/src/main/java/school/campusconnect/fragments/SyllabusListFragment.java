@@ -114,6 +114,9 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
 
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISSYLLABUSUPDATED)) {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISSYLLABUSUPDATED, false);
+            syllabusDataList.clear();
+            SyllabusTBL.deleteAll(teamId,subjectId);
+            adapter.add(syllabusDataList);
             apiCall();
         }
     }
@@ -258,6 +261,8 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
     private void onTreeClick(SyllabusListModelRes.SyllabusData classData) {
         Intent intent = new Intent(getContext(), SyllabusDetailsActivity.class);
         intent.putExtra("data",classData);
+        intent.putExtra("team_id",teamId);
+        intent.putExtra("subject_id",subjectId);
         startActivity(intent);
     }
 }

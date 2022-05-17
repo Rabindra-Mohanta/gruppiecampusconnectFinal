@@ -56,11 +56,19 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.VideoCallingActivity"></activity>
+        <activity android:name=".activities.VideoCallingActivity">
+
+        </activity>
         <activity
             android:name=".activities.SearchUserActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <service
+            android:name=".service.IncomingVideoCallService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".activities.SyllabusDetailsActivity"
             android:exported="false"
@@ -223,6 +231,13 @@
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
+
+       <!-- <receiver
+            android:name="utils.MyWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>-->
 
         <activity
             android:name=".activities.SplashActivity"

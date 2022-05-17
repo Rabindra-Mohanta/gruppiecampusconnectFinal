@@ -232,6 +232,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
 
             Intent login = new Intent(this, GroupDashboardActivityNew.class);
             startActivity(login);
+
         }else {
             ConstituencyRes taluksRes = (ConstituencyRes) response;
             AppLog.e(TAG, "ConstituencyRes " + taluksRes);

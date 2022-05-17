@@ -978,7 +978,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     @Override
     public void onException(int apiId, String msg) {
         hideLoadingDialog();
-        Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
 

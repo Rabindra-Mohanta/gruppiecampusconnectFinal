@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -25,22 +26,26 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivitySyllabusDetailsBinding;
 import school.campusconnect.databinding.ItemTopicDetailsBinding;
+import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.fragments.DatePickerFragment;
+import school.campusconnect.network.LeafManager;
 
 public class SyllabusDetailsActivity extends BaseActivity {
 
     ActivitySyllabusDetailsBinding binding;
 
     SyllabusListModelRes.SyllabusData data;
-
+    String teamID,subjectID;
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
 
     TopicAdapter adapter;
-
+    LeafManager manager;
 public static final String TAG = "SyllabusDetailsActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +81,12 @@ public static final String TAG = "SyllabusDetailsActivity";
 
         if ( getIntent().getExtras() != null) {
             data = (SyllabusListModelRes.SyllabusData) getIntent().getSerializableExtra("data");
+            teamID = getIntent().getStringExtra("team_id");
+            subjectID = getIntent().getStringExtra("subject_id");
             Log.e(TAG,"data "+new Gson().toJson(data));
         }
+
+        manager = new LeafManager();
 
         Log.e(TAG,"data size "+data.getTopicData().size());
 
@@ -87,7 +96,7 @@ public static final String TAG = "SyllabusDetailsActivity";
 
     }
 
-    public static class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>{
+    public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>{
 
         ArrayList<SyllabusListModelRes.TopicData> topicData;
         Context context;
@@ -109,6 +118,83 @@ public static final String TAG = "SyllabusDetailsActivity";
             SyllabusListModelRes.TopicData data = topicData.get(position);
 
             holder.binding.txtName.setText(data.getTopicName());
+
+            if (GroupDashboardActivityNew.isPost)
+            {
+                holder.binding.imgEdit.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.binding.imgEdit.setVisibility(View.GONE);
+            }
+
+            if (data.getToDate() != null && !data.getToDate().isEmpty())
+            {
+                holder.binding.etToDate.setText(data.getToDate());
+                holder.binding.etToDate.setEnabled(false);
+                holder.binding.etToDate.setTextColor(getResources().getColor(R.color.grey));
+            }
+            else
+            {
+                holder.binding.etToDate.setEnabled(true);
+                holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
+            }
+
+            if (data.getFromDate() != null && !data.getFromDate().isEmpty())
+            {
+                holder.binding.etFromDate.setText(data.getFromDate());
+                holder.binding.etFromDate.setEnabled(false);
+                holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.grey));
+            }
+            else
+            {
+                holder.binding.etFromDate.setEnabled(true);
+                holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
+            }
+
+            if (data.getActualStartDate() != null && !data.getActualStartDate().isEmpty())
+            {
+                holder.binding.etActualToDate.setText(data.getActualStartDate());
+                holder.binding.etActualToDate.setEnabled(false);
+                holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.grey));
+            }
+            else
+            {
+                holder.binding.etActualToDate.setEnabled(true);
+                holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.white));
+            }
+
+            if (data.getActualEndDate() != null && !data.getActualEndDate().isEmpty())
+            {
+                holder.binding.etActualFromDate.setText(data.getActualEndDate());
+                holder.binding.etActualFromDate.setEnabled(false);
+                holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.grey));
+            }
+            else
+            {
+                holder.binding.etActualFromDate.setEnabled(true);
+                holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.white));
+            }
+
+            holder.binding.imgEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.white));
+                    holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.white));
+                    holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
+                    holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
+
+                    holder.binding.etActualFromDate.setEnabled(true);
+                    holder.binding.etActualToDate.setEnabled(true);
+                    holder.binding.etFromDate.setEnabled(true);
+                    holder.binding.etToDate.setEnabled(true);
+
+
+                }
+            });
+
+
             holder.binding.imgTree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -134,7 +220,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                     fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                         @Override
                         public void onDateSelected(Calendar c) {
-                            SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+                            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                             holder.binding.etFromDate.setText(format.format(c.getTime()));
                         }
                     });
@@ -150,7 +236,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                     fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                         @Override
                         public void onDateSelected(Calendar c) {
-                            SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+                            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                             holder.binding.etToDate.setText(format.format(c.getTime()));
                         }
                     });
@@ -169,7 +255,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                     fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                         @Override
                         public void onDateSelected(Calendar c) {
-                            SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+                            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                             holder.binding.etActualFromDate.setText(format.format(c.getTime()));
                         }
                     });
@@ -185,7 +271,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                     fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                         @Override
                         public void onDateSelected(Calendar c) {
-                            SimpleDateFormat format = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+                            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
                             holder.binding.etActualToDate.setText(format.format(c.getTime()));
                         }
                     });
@@ -197,7 +283,7 @@ public static final String TAG = "SyllabusDetailsActivity";
             holder.binding.btnDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onTreeClick(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString());
+                    onTreeClick(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString(),data.getTopicId());
                 }
             });
         }
@@ -219,7 +305,42 @@ public static final String TAG = "SyllabusDetailsActivity";
         }
     }
 
-    private static void onTreeClick(String planto, String planfrom, String actualto, String actualfrom) {
+    private void onTreeClick(String planto, String planfrom, String actualto, String actualfrom,String topicId) {
 
+        ChangeStatusPlanModel.ChangeStatusModelReq req = new ChangeStatusPlanModel.ChangeStatusModelReq();
+        req.setToDate(planto);
+        req.setFromDate(planfrom);
+        req.setActualStartDate(actualto);
+        req.setActualEndDate(actualfrom);
+
+        Log.e(TAG,"req "+new Gson().toJson(req));
+        showLoadingBar(binding.progressBar);
+        manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamID,subjectID,topicId,req);
+    }
+
+    @Override
+    public void onSuccess(int apiId, BaseResponse response) {
+        hideLoadingBar();
+        if (apiId == LeafManager.API_CHANGE_STATUS_PLAN)
+        {
+          //  Toast.makeText(getApplicationContext(),"STATUS CHANGED",Toast.LENGTH_SHORT).show();
+            LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.ISSYLLABUSUPDATED, true);
+            finish();
+        }
+        super.onSuccess(apiId, response);
+    }
+
+    @Override
+    public void onFailure(int apiId, String msg) {
+        hideLoadingBar();
+        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+        super.onFailure(apiId, msg);
+    }
+
+    @Override
+    public void onException(int apiId, String msg) {
+        hideLoadingBar();
+        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+        super.onException(apiId, msg);
     }
 }

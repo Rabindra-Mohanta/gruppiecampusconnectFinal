@@ -41,6 +41,17 @@
                         style="@style/LabelHeader1" />
 
                     <ImageView
+                        android:id="@+id/imgEdit"
+                        android:layout_gravity="right|center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_10dp"
+                        android:src="@drawable/ic_edit_svg"
+                        android:visibility="gone"
+                        android:tint="@color/colorTextDark"
+                        android:paddingRight="16dp" />
+
+                    <ImageView
                         android:id="@+id/img_tree"
                         android:layout_gravity="right|center"
                         android:layout_width="wrap_content"
@@ -58,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:id="@+id/llExpand">
 
                     <TextView
@@ -200,7 +211,7 @@
                         android:layout_marginTop="@dimen/padding_20dp"
                         android:layout_marginHorizontal="@dimen/padding_10dp"
                         android:layout_width="wrap_content"
-                        android:text="@string/lbl_completed"
+                        android:text="@string/lbl_submit"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
                         android:paddingHorizontal="@dimen/padding_40dp"
