@@ -31,6 +31,7 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -273,10 +274,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     sendNotification(data.body, data.title);
                 }
 
-
                 if (data.isVideoCall)
                 {
-                    sendVideoCallNotification(data.body);
+                    sendVideoCallNotification(data.body,data.meetingID,data.zoomName,data.className);
                 }
             }
         }
@@ -287,18 +287,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendVideoCallNotification(String s)
+    private void sendVideoCallNotification(String s,String meetingId,String zoomName,String className)
     {
-        AppLog.e(TAG, "sendVideoCallNotification ");
+      /*  AppLog.e(TAG, "sendVideoCallNotification ");
        String ACTION_STOP_LISTEN = "action_stop_listen";
        Intent fullScreenIntent = new Intent(this, VideoCallingActivity.class);
         fullScreenIntent.setAction(ACTION_STOP_LISTEN);
+
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.layout_video_calling_notification);
 
-    /*    mRemoteViews.setOnClickPendingIntent(R.id.btnStart, fullScreenPendingIntent);
-        mRemoteViews.setOnClickPendingIntent(R.id.btnStop, fullScreenPendingIntent);*/
+        mRemoteViews.setOnClickPendingIntent(R.id.btnStart, fullScreenPendingIntent);
+        mRemoteViews.setOnClickPendingIntent(R.id.btnStop, fullScreenPendingIntent);
         mRemoteViews.setTextViewText(R.id.tvNotificationTitle,s);
 
         NotificationCompat.Builder notificationBuilder =
@@ -325,17 +326,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(mChannel);
         }
 
-        startForeground(createID(), incomingCallNotification);
+        startForeground(createID(), incomingCallNotification);*/
 
-    //    startCallService(s);
+        startCallService(s,meetingId,zoomName,className);
     }
 
-    public void startCallService(String s) {
+    public void startCallService(String s,String meetingId,String zoomName,String className) {
         Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
         intent.putExtra("msg",s);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        }
+        intent.putExtra("meetingID",meetingId);
+        intent.putExtra("zoomName",zoomName);
+        intent.putExtra("className",className);
+        intent.setAction(Constants.STARTFOREGROUND_ACTION);
+        startService(intent);
     }
 
     public int createID(){

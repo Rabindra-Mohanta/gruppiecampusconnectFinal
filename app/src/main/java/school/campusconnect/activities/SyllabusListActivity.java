@@ -48,6 +48,16 @@ public class SyllabusListActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (getIntent().getExtras().getString("role").equalsIgnoreCase("parent"))
+        {
+            menu.findItem(R.id.menuAdd).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId())

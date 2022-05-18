@@ -178,6 +178,15 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
             }
         });
 
+        if (item.pushTokens != null && item.pushTokens.size() > 0)
+        {
+            holder.imgStartMeeting.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.imgStartMeeting.setVisibility(View.GONE);
+        }
+
 
 
     }

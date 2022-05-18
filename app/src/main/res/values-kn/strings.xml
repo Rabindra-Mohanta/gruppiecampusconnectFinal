@@ -1260,5 +1260,9 @@
     <string name="lbl_to_date">To Date</string>
     <string name="toast_voter_delete_successfully">Voter Delete SuccessFully...</string>
 
+    <string name="lbl_plan">Planed</string>
+    <string name="lbl_actual">Actual</string>
+    <string name="menu_edit_topic">Edit Topic</string>
+
 
 </resources>

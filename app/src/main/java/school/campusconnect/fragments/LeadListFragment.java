@@ -54,6 +54,7 @@ import com.activeandroid.ActiveAndroid;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -116,7 +117,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     private LeadAdapter mAdapter;
     final int REQUEST_CALL = 234;
     Intent intent;
-
+    LeadItem leadItem;
     String groupId = "";
     private int REQUEST_UPDATE_PROFILE = 9;
     String teamId = "";
@@ -586,7 +587,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             {
                 LeadDataTBL leadDataTBL = new LeadDataTBL();
 
+                leadDataTBL.pushToken = new Gson().toJson(results.get(i).pushTokens);
                 leadDataTBL.groupID = groupId;
+                leadDataTBL.teamID = teamId;
                 leadDataTBL.teamID = teamId;
                 leadDataTBL.page = currentPage;
                 leadDataTBL.voterId = results.get(i).voterId;
@@ -642,7 +645,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 leadItem.allowedToAddTeamPostComment = leadDataTBL.get(i).allowedToAddTeamPostComment;
                 leadItem.allowedToAddTeamPost = leadDataTBL.get(i).allowedToAddTeamPost;
                 leadItem.aadharNumber = leadDataTBL.get(i).aadharNumber;
-
+                leadItem.pushTokens = new Gson().fromJson(leadDataTBL.get(i).pushToken,new TypeToken<ArrayList<LeadItem.pushTokenData>>() {}.getType());
                 leadItem.isLive = leadDataTBL.get(i).isLive;
 
                 list.add(leadItem);
@@ -895,10 +898,12 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         if (!ZoomSDK.getInstance().isLoggedIn()) {
             //  ZoomSDK.getInstance().logoutZoom();
             Log.e(TAG, "loginwithzoom Called from startmeeting , not logged in already ");
+            new SendNotification(leadItem).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             ZoomSDK.getInstance().loginWithZoom(zoomMail, password);
         } else {
             Log.e(TAG, "logoutzoom Called from startmeeting , already loggedIn");
             ZoomSDK.getInstance().logoutZoom();
+            initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", meetingId, name, className, true);
         }
 
     }
@@ -1232,15 +1237,14 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         }
     };
     private void startMeetingZoom(LeadItem item) {
-
+        this.leadItem = item;
         try {
-     //       mBinding.progressBar.setVisibility(View.VISIBLE);
-
+            mBinding.progressBar.setVisibility(View.VISIBLE);
             isZoomStarted = true;
 
             if (isConnectionAvailable()) {
-                new SendNotification(item).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                //initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
+
+                 initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
 
            /*     if (!item.isLive) {
                     initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
@@ -1280,66 +1284,86 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             URL url;
             HttpURLConnection urlConnection = null;
 
-            try {
-                url = new URL("https://fcm.googleapis.com/fcm/send");
-                urlConnection = (HttpURLConnection) url.openConnection();
-
-                urlConnection.setDoOutput(true);
-                urlConnection.setDoInput(true);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-
-
-                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
-
+            for (int i = 0;i<data.pushTokens.size();i++)
+            {
                 try {
-                    JSONObject object = new JSONObject();
+                    url = new URL("https://fcm.googleapis.com/fcm/send");
+                    urlConnection = (HttpURLConnection) url.openConnection();
 
-                    String topic;
-                    String title = getResources().getString(R.string.app_name);
-                    String name = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
-                    String message =  name + " has Video Calling you." + data.name;
+                    urlConnection.setDoOutput(true);
+                    urlConnection.setDoInput(true);
+                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                    urlConnection.setRequestProperty("Content-Type", "application/json");
 
-                    object.put("to", "/topics/" + data.id);
 
-                    JSONObject notificationObj = new JSONObject();
-                    notificationObj.put("title", title);
-                    notificationObj.put("body", message);
-                  //  object.put("notification", notificationObj);
+                    DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
 
-                    JSONObject dataObj = new JSONObject();
-                    dataObj.put("groupId", GroupDashboardActivityNew.groupId);
-                    dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
-                    dataObj.put("createdByName", name);
-                    dataObj.put("isVideoCall",true);
-                    dataObj.put("iSNotificationSilent",true);
-                    dataObj.put("Notification_type", "videoCall");
-                    dataObj.put("body", message);
-                    object.put("data", dataObj);
-                    wr.writeBytes(object.toString());
-                    Log.e(TAG, " JSON input : " + object.toString());
-                    wr.flush();
-                    wr.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Log.e(TAG, " Exception : " + ex.getMessage());
+                    try {
+                        JSONObject object = new JSONObject();
+
+                        String topic;
+                        String title = getResources().getString(R.string.app_name);
+                        String name = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
+                        String message =  name + " has Video Calling you." + data.name;
+
+
+                        List<String> listToken = new ArrayList<>();
+
+                        /*for(int i = 0;i<data.pushTokens.size();i++)
+                        {
+                            if (data.pushTokens.get(i).getDeviceToken() != null && !data.pushTokens.get(i).getDeviceToken().isEmpty())
+                            {
+                                listToken.add(data.pushTokens.get(i).getDeviceToken());
+                            }
+                        }
+
+                        String s = TextUtils.join(",", listToken);*/
+
+                        object.put("to", data.pushTokens.get(i).getDeviceToken());
+
+                        JSONObject notificationObj = new JSONObject();
+                        notificationObj.put("title", title);
+                        notificationObj.put("body", message);
+                        //  object.put("notification", notificationObj);
+
+                        JSONObject dataObj = new JSONObject();
+                        dataObj.put("groupId", GroupDashboardActivityNew.groupId);
+                        dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
+                        dataObj.put("createdByName", name);
+                        dataObj.put("isVideoCall",true);
+                        dataObj.put("meetingID","8528725624");
+                        dataObj.put("zoomName","Test");
+                        dataObj.put("className",data.name);
+                        dataObj.put("iSNotificationSilent",true);
+                        dataObj.put("Notification_type", "videoCall");
+                        dataObj.put("body", message);
+                        object.put("data", dataObj);
+                        wr.writeBytes(object.toString());
+                        Log.e(TAG, " JSON input : " + object.toString());
+                        wr.flush();
+                        wr.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        Log.e(TAG, " Exception : " + ex.getMessage());
+                    }
+                    urlConnection.connect();
+
+                    int responseCode = urlConnection.getResponseCode();
+                    AppLog.e(TAG, "responseCode :" + responseCode);
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        server_response = readStream(urlConnection.getInputStream());
+                    }
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    AppLog.e(TAG, "MalformedURLException :" + e.getMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    AppLog.e(TAG, "IOException :" + e.getMessage());
                 }
-                urlConnection.connect();
-
-                int responseCode = urlConnection.getResponseCode();
-                AppLog.e(TAG, "responseCode :" + responseCode);
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    server_response = readStream(urlConnection.getInputStream());
-                }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                AppLog.e(TAG, "MalformedURLException :" + e.getMessage());
-            } catch (IOException e) {
-                e.printStackTrace();
-                AppLog.e(TAG, "IOException :" + e.getMessage());
             }
+
 
             return server_response;
         }

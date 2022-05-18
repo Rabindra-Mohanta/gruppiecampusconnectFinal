@@ -57,6 +57,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     String team_id;
     String className;
     String type;
+    String role;
     String path;
 /*
     @Bind(R.id.swipeRefreshLayout)
@@ -73,6 +74,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
         team_id = getArguments().getString("team_id");
         className = getArguments().getString("title");
         type = getArguments().getString("type");
+        role = getArguments().getString("role");
         path = getArguments().getString("path"); // For Recorded Class only
 
         init();
@@ -272,6 +274,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
             Intent intent = new Intent(getActivity(), SyllabusListActivity.class);
             intent.putExtra("team_id", team_id);
             intent.putExtra("className", className);
+            intent.putExtra("role",role);
             intent.putExtra("subject_id", classData.subjectId);
             intent.putExtra("subject_name", classData.name);
             intent.putExtra("title", classData.name);

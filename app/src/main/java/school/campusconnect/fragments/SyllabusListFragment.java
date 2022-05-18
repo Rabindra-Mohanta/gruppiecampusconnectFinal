@@ -43,7 +43,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 public static final String TAG = "SyllabusListFragment";
 FragmentSyllabusListBinding binding;
 LeafManager manager;
-String teamId,subjectId;
+String teamId,subjectId,role;
 SyllabusAdapter adapter;
 ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>();
     public static SyllabusListFragment newInstance() {
@@ -99,8 +99,8 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
 
         teamId = getArguments().getString("team_id");
         subjectId = getArguments().getString("subject_id");
-
-        Log.e(TAG,"team ID"+teamId+"\nsubject Id"+subjectId);
+        role = getArguments().getString("role");
+        Log.e(TAG,"team ID"+teamId+"\nsubject Id"+subjectId+"Role \n"+role);
 
         manager = new LeafManager();
 
@@ -261,6 +261,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
     private void onTreeClick(SyllabusListModelRes.SyllabusData classData) {
         Intent intent = new Intent(getContext(), SyllabusDetailsActivity.class);
         intent.putExtra("data",classData);
+        intent.putExtra("role",role);
         intent.putExtra("team_id",teamId);
         intent.putExtra("subject_id",subjectId);
         startActivity(intent);

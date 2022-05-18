@@ -323,7 +323,7 @@ public class BaseFragment extends Fragment {
     }
 
     private void unsubcribe() {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(LeafPreference.getInstance(getContext()).getString(LeafPreference.LOGIN_ID))
+    /*    FirebaseMessaging.getInstance().unsubscribeFromTopic(LeafPreference.getInstance(getContext()).getString(LeafPreference.LOGIN_ID))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -335,7 +335,7 @@ public class BaseFragment extends Fragment {
                         }
 
                     }
-                });
+                });*/
     }
 
     private void updateViews(String languageCode) {

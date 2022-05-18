@@ -6,6 +6,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 
 public class LeadItem implements Parcelable {
 
@@ -41,6 +44,8 @@ public class LeadItem implements Parcelable {
     public AddressItem address;
     public String gender;
 
+    public ArrayList<pushTokenData> pushTokens;
+
     public int teamCount;
 
     public boolean isSelected;
@@ -50,6 +55,15 @@ public class LeadItem implements Parcelable {
     public String bloodGroup;
     public String aadharNumber;
     public boolean isLive;
+
+
+    public ArrayList<pushTokenData> getPushTokens() {
+        return pushTokens;
+    }
+
+    public void setPushTokens(ArrayList<pushTokenData> pushTokens) {
+        this.pushTokens = pushTokens;
+    }
 
     public boolean isLive() {
         return isLive;
@@ -280,6 +294,7 @@ public class LeadItem implements Parcelable {
 
 
 
+
     @Override
     public String toString() {
         return id+","+name;
@@ -309,5 +324,32 @@ public class LeadItem implements Parcelable {
         dest.writeParcelable(address, flags);
         dest.writeString(gender);
         dest.writeInt(teamCount);
+    }
+
+    public static class pushTokenData implements Serializable
+    {
+        @SerializedName("deviceType")
+        @Expose
+        private String deviceType;
+
+        @SerializedName("deviceToken")
+        @Expose
+        private String deviceToken;
+
+        public String getDeviceType() {
+            return deviceType;
+        }
+
+        public void setDeviceType(String deviceType) {
+            this.deviceType = deviceType;
+        }
+
+        public String getDeviceToken() {
+            return deviceToken;
+        }
+
+        public void setDeviceToken(String deviceToken) {
+            this.deviceToken = deviceToken;
+        }
     }
 }

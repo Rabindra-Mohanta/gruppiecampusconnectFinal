@@ -47,6 +47,7 @@ import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
+import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -521,6 +522,7 @@ public class LeafManager {
     public static final int API_ADD_SYLLABUS = 337;
     public static final int API_GET_SYLLABUS = 338;
     public static final int API_SEARCH_USER = 342;
+    public static final int API_STATUS_PLAN = 340;
     public static final int API_CHANGE_STATUS_PLAN = 341;
     public LeafManager() {
 
@@ -12785,6 +12787,53 @@ public class LeafManager {
         }.getType();
 
         wrapper.execute(API_CHANGE_STATUS_PLAN, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnCommunicationListener> error) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+    }
+
+
+
+
+
+
+
+
+    public void statusPlan(OnCommunicationListener listener, String group_id, String team_id, String subject_id, String chapter_id, SyllabusPlanRequest modelReq)
+    {
+        mOnCommunicationListener = listener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<BaseResponse> model = service.SyllabusPlan(group_id,team_id,subject_id,chapter_id,modelReq);
+
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_STATUS_PLAN, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {

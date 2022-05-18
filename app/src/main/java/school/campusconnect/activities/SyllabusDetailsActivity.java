@@ -32,6 +32,7 @@ import school.campusconnect.databinding.ItemTopicDetailsBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
+import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
 import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
 
@@ -40,7 +41,7 @@ public class SyllabusDetailsActivity extends BaseActivity {
     ActivitySyllabusDetailsBinding binding;
 
     SyllabusListModelRes.SyllabusData data;
-    String teamID,subjectID;
+    String teamID,subjectID,role;
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
 
@@ -60,7 +61,7 @@ public static final String TAG = "SyllabusDetailsActivity";
 
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit_topic,menu);
         return super.onCreateOptionsMenu(menu);
@@ -75,7 +76,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     private void inits() {
 
@@ -83,6 +84,7 @@ public static final String TAG = "SyllabusDetailsActivity";
             data = (SyllabusListModelRes.SyllabusData) getIntent().getSerializableExtra("data");
             teamID = getIntent().getStringExtra("team_id");
             subjectID = getIntent().getStringExtra("subject_id");
+            role = getIntent().getStringExtra("role");
             Log.e(TAG,"data "+new Gson().toJson(data));
         }
 
@@ -119,14 +121,6 @@ public static final String TAG = "SyllabusDetailsActivity";
 
             holder.binding.txtName.setText(data.getTopicName());
 
-            if (GroupDashboardActivityNew.isPost)
-            {
-                holder.binding.imgEdit.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                holder.binding.imgEdit.setVisibility(View.GONE);
-            }
 
             if (data.getToDate() != null && !data.getToDate().isEmpty())
             {
@@ -190,7 +184,6 @@ public static final String TAG = "SyllabusDetailsActivity";
                     holder.binding.etFromDate.setEnabled(true);
                     holder.binding.etToDate.setEnabled(true);
 
-
                 }
             });
 
@@ -203,9 +196,18 @@ public static final String TAG = "SyllabusDetailsActivity";
                     {
                         holder.binding.llExpand.setVisibility(View.VISIBLE);
                         holder.binding.imgTree.setRotation(270);
+
+                        if (role != null && role.equalsIgnoreCase("admin"))
+                        {
+                            holder.binding.imgEdit.setVisibility(View.VISIBLE);
+                        }
                     }
                     else
                     {
+                        if (holder.binding.imgEdit.getVisibility() == View.VISIBLE)
+                        {
+                            holder.binding.imgEdit.setVisibility(View.GONE);
+                        }
                         holder.binding.llExpand.setVisibility(View.GONE);
                         holder.binding.imgTree.setRotation(90);
                     }
@@ -283,9 +285,25 @@ public static final String TAG = "SyllabusDetailsActivity";
             holder.binding.btnDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onTreeClick(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString(),data.getTopicId());
+                    onTreeClick(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString(),data.getTopicId(),data.getTopicName());
                 }
             });
+
+            if (role != null && role.equalsIgnoreCase("parent"))
+            {
+                holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.grey));
+                holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.grey));
+                holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.grey));
+                holder.binding.etToDate.setTextColor(getResources().getColor(R.color.grey));
+
+                holder.binding.etActualFromDate.setEnabled(false);
+                holder.binding.etActualToDate.setEnabled(false);
+                holder.binding.etFromDate.setEnabled(false);
+                holder.binding.etToDate.setEnabled(false);
+
+                holder.binding.btnDone.setVisibility(View.GONE);
+                holder.binding.imgEdit.setVisibility(View.GONE);
+            }
         }
 
 
@@ -305,17 +323,91 @@ public static final String TAG = "SyllabusDetailsActivity";
         }
     }
 
-    private void onTreeClick(String planto, String planfrom, String actualto, String actualfrom,String topicId) {
+    private void onTreeClick(String planto, String planfrom, String actualto, String actualfrom,String topicId,String topicName) {
 
-        ChangeStatusPlanModel.ChangeStatusModelReq req = new ChangeStatusPlanModel.ChangeStatusModelReq();
-        req.setToDate(planto);
-        req.setFromDate(planfrom);
-        req.setActualStartDate(actualto);
-        req.setActualEndDate(actualfrom);
+        boolean isUpdate = true;
 
-        Log.e(TAG,"req "+new Gson().toJson(req));
-        showLoadingBar(binding.progressBar);
-        manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamID,subjectID,topicId,req);
+        for (int i = 0;i<data.getTopicData().size();i++)
+        {
+            if (topicId.equals(data.getTopicData().get(i).getTopicId()))
+            {
+                if (data.getTopicData().get(i).getToDate() == null && data.getTopicData().get(i).getFromDate() == null && data.getTopicData().get(i).getActualStartDate() == null && data.getTopicData().get(i).getActualEndDate() == null){
+                    isUpdate = false;
+                }
+            }
+        }
+
+        if (isUpdate)
+        {
+
+            ChangeStatusPlanModel.ChangeStatusModelReq req = new ChangeStatusPlanModel.ChangeStatusModelReq();
+            req.setToDate(planto);
+            req.setFromDate(planfrom);
+            req.setActualStartDate(actualto);
+            req.setActualEndDate(actualfrom);
+
+            Log.e(TAG,"req is Update"+new Gson().toJson(req));
+            showLoadingBar(binding.progressBar);
+            manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamID,subjectID,topicId,req);
+        }
+        else
+        {
+            SyllabusPlanRequest request = new SyllabusPlanRequest();
+
+            ArrayList<SyllabusPlanRequest.TopicData> list = new ArrayList<>();
+
+            SyllabusPlanRequest.TopicData topicData = new SyllabusPlanRequest.TopicData();
+
+            if (!planto.isEmpty())
+            {
+                topicData.setToDate(planto);
+            }
+            if (!planfrom.isEmpty())
+            {
+                topicData.setFromDate(planfrom);
+            }
+            if (!actualto.isEmpty())
+            {
+                topicData.setActualStartDate(actualto);
+            }
+            if (!actualfrom.isEmpty())
+            {
+                topicData.setActualEndDate(actualfrom);
+            }
+            if (!topicId.isEmpty())
+            {
+                topicData.setTopicId(topicId);
+            }
+            if (!topicName.isEmpty())
+            {
+                topicData.setTopicName(topicName);
+            }
+
+            list.add(topicData);
+
+            for (int i = 0;i<data.getTopicData().size();i++)
+            {
+                if (!topicId.equals(data.getTopicData().get(i).getTopicId()))
+                {
+                    SyllabusPlanRequest.TopicData topicData1 = new SyllabusPlanRequest.TopicData();
+                    topicData1.setToDate(data.getTopicData().get(i).getToDate());
+                    topicData1.setFromDate(data.getTopicData().get(i).getFromDate());
+                    topicData1.setActualStartDate(data.getTopicData().get(i).getActualStartDate());
+                    topicData1.setActualEndDate(data.getTopicData().get(i).getActualEndDate());
+                    topicData1.setTopicId(data.getTopicData().get(i).getTopicId());
+                    topicData1.setTopicName(data.getTopicData().get(i).getTopicName());
+
+                    list.add(topicData1);
+                }
+            }
+
+            request.setTopicData(list);
+            Log.e(TAG,"req is Not Update"+new Gson().toJson(request));
+
+            showLoadingBar(binding.progressBar);
+            manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamID,subjectID,data.getChapterId(),request);
+        }
+
     }
 
     @Override
@@ -324,6 +416,13 @@ public static final String TAG = "SyllabusDetailsActivity";
         if (apiId == LeafManager.API_CHANGE_STATUS_PLAN)
         {
           //  Toast.makeText(getApplicationContext(),"STATUS CHANGED",Toast.LENGTH_SHORT).show();
+            LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.ISSYLLABUSUPDATED, true);
+            finish();
+        }
+
+        if (apiId == LeafManager.API_STATUS_PLAN)
+        {
+            //  Toast.makeText(getApplicationContext(),"STATUS CHANGED",Toast.LENGTH_SHORT).show();
             LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.ISSYLLABUSUPDATED, true);
             finish();
         }

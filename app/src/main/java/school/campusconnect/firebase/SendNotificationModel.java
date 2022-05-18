@@ -15,13 +15,19 @@ public class SendNotificationModel {
         public String body; // message of notification
         public String Notification_type;
         public boolean iSNotificationSilent;
-        public boolean isVideoCall;
+
         public String groupId;
         public String createdById;
         public String postId; // if related to post
         public String postType; // if related to post
         public String teamId; // if related to team/class
         public String createdByName; // if related to team/class
+
+        /*video call paramater*/
+        public boolean isVideoCall;
+        public String meetingID;
+        public String zoomName;
+        public String className;
 
         @Override
         public String toString() {

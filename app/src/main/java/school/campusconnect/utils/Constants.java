@@ -17,6 +17,11 @@ public class Constants {
     public static final String APP_SECRET = "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB"; // zoom secret key
     public static final String WEB_DOMAIN = ""; //zooom domain name
 
+    public static final String STARTFOREGROUND_ACTION = "STARTFOREGROUND_ACTION";
+    public static final String STOPFOREGROUND_ACTION = "STOPFOREGROUND_ACTION";
+    public static final String ACCPET_ACTION = "ACCPET_ACTION";
+    public static final String DECLINE_ACTION = "DECLINE_ACTION";
+
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String FILE_TYPE_PDF = "pdf";

@@ -324,7 +324,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
         }
     }
     private void subScribeUser() {
-        FirebaseMessaging.getInstance().subscribeToTopic(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID))
+      /*  FirebaseMessaging.getInstance().subscribeToTopic(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -335,7 +335,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
                         }
 
                     }
-                });
+                });*/
     }
 
     @Override

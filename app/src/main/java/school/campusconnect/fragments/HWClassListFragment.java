@@ -340,6 +340,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             Intent intent = new Intent(getContext(), HWClassSubjectActivity.class);
             intent.putExtra("team_id", classData.getId());
             intent.putExtra("title", classData.className);
+            intent.putExtra("role", role);
             intent.putExtra("type", type);
             startActivity(intent);
         }else if("Time Table".equalsIgnoreCase(type)){
