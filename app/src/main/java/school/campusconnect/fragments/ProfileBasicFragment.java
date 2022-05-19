@@ -51,6 +51,9 @@ public class ProfileBasicFragment extends BaseFragment implements View.OnClickLi
     @Bind(R.id.qualification)
     public DrawableEditText edtQualification;
 
+    @Bind(R.id.address)
+    public DrawableEditText address;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

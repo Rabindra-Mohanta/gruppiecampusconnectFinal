@@ -283,14 +283,17 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         setHasOptionsMenu(true);
     }
 
+
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
 
-        if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.isPost)
-            menu.findItem(R.id.menu_print_member_list).setVisible(true);
-        else
-            menu.findItem(R.id.menu_print_member_list).setVisible(false);
-
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.isPost)
+                menu.findItem(R.id.menu_print_member_list).setVisible(true);
+            else
+                menu.findItem(R.id.menu_print_member_list).setVisible(false);
+        }
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -1330,14 +1333,16 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                         JSONObject dataObj = new JSONObject();
                         dataObj.put("groupId", GroupDashboardActivityNew.groupId);
                         dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
+                        dataObj.put("createdByImage", LeafPreference.getInstance(getActivity()).getString(LeafPreference.PROFILE_IMAGE_NEW));
                         dataObj.put("createdByName", name);
                         dataObj.put("isVideoCall",true);
                         dataObj.put("meetingID","8528725624");
                         dataObj.put("zoomName","Test");
                         dataObj.put("className",data.name);
                         dataObj.put("iSNotificationSilent",true);
-                        dataObj.put("Notification_type", "videoCall");
+                        dataObj.put("Notification_type", "videoCallStart");
                         dataObj.put("body", message);
+                        object.put("priority","high");
                         object.put("data", dataObj);
                         wr.writeBytes(object.toString());
                         Log.e(TAG, " JSON input : " + object.toString());

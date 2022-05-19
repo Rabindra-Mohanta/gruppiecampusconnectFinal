@@ -529,9 +529,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                         homeTeamDataTBL.save();
                     }
                 }*/
-
-
-        /*        if (BoothPostEventTBL.getAll().size() > 0)
+                 /*        if (BoothPostEventTBL.getAll().size() > 0)
                 {
                     BoothPostEventTBL.deleteAll();
                 }
@@ -559,8 +557,6 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                     }
                 }*/
-
-
             }
 
             dashboardCount.save();
@@ -1180,6 +1176,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(this).getString(Constants.GROUP_DATA), GroupItem.class);
         AppLog.e(TAG, "mGroupItem : " + new Gson().toJson(mGroupItem));
+
+        AppLog.e(TAG, "VIDEO_CALL : " + LeafPreference.getInstance(this).getString("LIVE_CALL"));
 
         tv_toolbar_icon = findViewById(R.id.iv_toolbar_icon);
         tv_toolbar_default = findViewById(R.id.iv_toolbar_default);

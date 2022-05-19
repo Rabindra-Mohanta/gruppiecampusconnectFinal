@@ -12,7 +12,7 @@ public class ProfileItemUpdate {
     public String dob;
     public String qualification;
     public String occupation;
-    public AddressItem address;
+    public String address;
     //public String profileCompletion;
     public String email;
 

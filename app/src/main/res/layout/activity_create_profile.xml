@@ -209,6 +209,7 @@
             android:layout_marginRight="@dimen/padding_30dp"
             android:background="@drawable/comment_send_background"
             android:elevation="8dp"
+            android:visibility="gone"
             android:src="@drawable/ic_arrow_right" />
 
         <ImageView
@@ -223,7 +224,7 @@
             android:layout_marginRight="@dimen/padding_30dp"
             android:elevation="8dp"
             android:src="@drawable/icon_tick_green"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </RelativeLayout>
     <!--</RelativeLayout>-->

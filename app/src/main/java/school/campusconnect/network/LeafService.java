@@ -43,6 +43,7 @@ import school.campusconnect.datamodel.searchUser.SearchUserModel;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
+import school.campusconnect.datamodel.syllabus.EditTopicModelReq;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
@@ -1987,5 +1988,9 @@ public interface LeafService {
     @POST("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/plan")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> SyllabusPlan(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Query("chapterId") String chapterId, @Body SyllabusPlanRequest planRequest);
+
+    @PUT("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> EditSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Query("chapterId") String chapterId, @Body EditTopicModelReq editTopicModelReq);
 
 }

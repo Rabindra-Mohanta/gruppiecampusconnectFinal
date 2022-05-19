@@ -29,6 +29,7 @@ import android.os.Build;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -99,7 +100,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.putExtra("teamId", data.teamId);
                         intent.putExtra("createdByName", data.createdByName);
                         intent.setAction("MEETING_END");
-
                     }
                     break;
 
@@ -266,8 +266,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         }
                     }
                     break;
-
-
                 }
 
                 if (!data.iSNotificationSilent) {
@@ -276,7 +274,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 if (data.isVideoCall)
                 {
-                    sendVideoCallNotification(data.body,data.meetingID,data.zoomName,data.className);
+                    sendVideoCallNotification(data.body,data.meetingID,data.zoomName,data.className,data.createdByImage,data.createdByName);
                 }
             }
         }
@@ -287,7 +285,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendVideoCallNotification(String s,String meetingId,String zoomName,String className)
+    private void sendVideoCallNotification(String s,String meetingId,String zoomName,String className,String image,String name)
     {
       /*  AppLog.e(TAG, "sendVideoCallNotification ");
        String ACTION_STOP_LISTEN = "action_stop_listen";
@@ -328,17 +326,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         startForeground(createID(), incomingCallNotification);*/
 
-        startCallService(s,meetingId,zoomName,className);
+        startCallService(s,meetingId,zoomName,className,image,name);
     }
 
-    public void startCallService(String s,String meetingId,String zoomName,String className) {
-        Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
-        intent.putExtra("msg",s);
-        intent.putExtra("meetingID",meetingId);
-        intent.putExtra("zoomName",zoomName);
-        intent.putExtra("className",className);
-        intent.setAction(Constants.STARTFOREGROUND_ACTION);
-        startService(intent);
+    public void startCallService(String s,String meetingId,String zoomName,String className,String image,String name) {
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+            intent.putExtra("msg",s);
+            intent.putExtra("meetingID",meetingId);
+            intent.putExtra("zoomName",zoomName);
+            intent.putExtra("className",className);
+            intent.putExtra("name",name);
+            intent.putExtra("image",image);
+            intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startForegroundService(intent);
+        }
     }
 
     public int createID(){

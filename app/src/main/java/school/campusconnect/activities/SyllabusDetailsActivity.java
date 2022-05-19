@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,7 +63,7 @@ public static final String TAG = "SyllabusDetailsActivity";
 
     }
 
-   /* @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit_topic,menu);
         return super.onCreateOptionsMenu(menu);
@@ -73,10 +75,16 @@ public static final String TAG = "SyllabusDetailsActivity";
         switch (item.getItemId())
         {
             case R.id.menuEditTopic:
+                Intent intent = new Intent(getApplicationContext(), EditTopicActivity.class);
+                intent.putExtra("data",data);
+                intent.putExtra("role",role);
+                intent.putExtra("team_id",teamID);
+                intent.putExtra("subject_id",subjectID);
+                startActivityForResult(intent,109);
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     private void inits() {
 
@@ -94,7 +102,6 @@ public static final String TAG = "SyllabusDetailsActivity";
 
         adapter = new TopicAdapter(data.getTopicData());
         binding.rvTopic.setAdapter(adapter);
-
 
     }
 
@@ -246,9 +253,6 @@ public static final String TAG = "SyllabusDetailsActivity";
                 }
             });
 
-
-
-
             holder.binding.etActualFromDate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -280,7 +284,6 @@ public static final String TAG = "SyllabusDetailsActivity";
                     fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
                 }
             });
-
 
             holder.binding.btnDone.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -356,6 +359,22 @@ public static final String TAG = "SyllabusDetailsActivity";
 
             ArrayList<SyllabusPlanRequest.TopicData> list = new ArrayList<>();
 
+            for (int i = 0;i<data.getTopicData().size();i++)
+            {
+                if (!topicId.equals(data.getTopicData().get(i).getTopicId()))
+                {
+                    SyllabusPlanRequest.TopicData topicData1 = new SyllabusPlanRequest.TopicData();
+                    topicData1.setToDate(data.getTopicData().get(i).getToDate());
+                    topicData1.setFromDate(data.getTopicData().get(i).getFromDate());
+                    topicData1.setActualStartDate(data.getTopicData().get(i).getActualStartDate());
+                    topicData1.setActualEndDate(data.getTopicData().get(i).getActualEndDate());
+                    topicData1.setTopicId(data.getTopicData().get(i).getTopicId());
+                    topicData1.setTopicName(data.getTopicData().get(i).getTopicName());
+
+                    list.add(topicData1);
+                }
+            }
+
             SyllabusPlanRequest.TopicData topicData = new SyllabusPlanRequest.TopicData();
 
             if (!planto.isEmpty())
@@ -384,22 +403,6 @@ public static final String TAG = "SyllabusDetailsActivity";
             }
 
             list.add(topicData);
-
-            for (int i = 0;i<data.getTopicData().size();i++)
-            {
-                if (!topicId.equals(data.getTopicData().get(i).getTopicId()))
-                {
-                    SyllabusPlanRequest.TopicData topicData1 = new SyllabusPlanRequest.TopicData();
-                    topicData1.setToDate(data.getTopicData().get(i).getToDate());
-                    topicData1.setFromDate(data.getTopicData().get(i).getFromDate());
-                    topicData1.setActualStartDate(data.getTopicData().get(i).getActualStartDate());
-                    topicData1.setActualEndDate(data.getTopicData().get(i).getActualEndDate());
-                    topicData1.setTopicId(data.getTopicData().get(i).getTopicId());
-                    topicData1.setTopicName(data.getTopicData().get(i).getTopicName());
-
-                    list.add(topicData1);
-                }
-            }
 
             request.setTopicData(list);
             Log.e(TAG,"req is Not Update"+new Gson().toJson(request));
@@ -441,5 +444,15 @@ public static final String TAG = "SyllabusDetailsActivity";
         hideLoadingBar();
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onException(apiId, msg);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 109 && resultCode == Activity.RESULT_OK)
+        {
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

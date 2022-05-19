@@ -85,6 +85,17 @@
             app:textHint="@string/lbl_qualification" />
 
         <school.campusconnect.views.DrawableEditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_20dp"
+            android:inputType="textNoSuggestions"
+            android:visibility="visible"
+            app:leftDrawable="@drawable/ic_contacts"
+            android:textAppearance="@style/TextAppearance.Light"
+            app:textHint="@string/hint_lead_address" />
+
+        <school.campusconnect.views.DrawableEditText
             android:id="@+id/roll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

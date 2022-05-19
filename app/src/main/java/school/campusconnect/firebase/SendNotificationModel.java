@@ -17,6 +17,7 @@ public class SendNotificationModel {
         public boolean iSNotificationSilent;
 
         public String groupId;
+        public String createdByImage;
         public String createdById;
         public String postId; // if related to post
         public String postType; // if related to post

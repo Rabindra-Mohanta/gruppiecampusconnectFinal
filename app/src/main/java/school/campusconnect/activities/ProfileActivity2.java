@@ -139,13 +139,12 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         progressBar1.setProgress(30);
         progressBar1.setSecondaryProgress(99);
 
-
         mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_basic_info)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_other_info)));
+    //    mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_other_info)));
 
         mPagerView = (WrappingViewPager) findViewById(R.id.tabViewPager);
 
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+/*        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -170,7 +169,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        });
+        });*/
 
     }
 
@@ -230,13 +229,15 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
             item.occupation = fragment1.edtOccupation.editText.getText().toString();
             item.qualification = fragment1.edtQualification.editText.getText().toString();
 
-            item.address = new AddressItem();
+
+            item.address = fragment1.address.editText.getText().toString();
+         /*
             item.address.line1 = fragment2.edtAddressOne.editText.getText().toString();
             item.address.line2 = fragment2.edtAddressTwo.editText.getText().toString();
             item.address.state = fragment2.edtState.editText.getText().toString();
             item.address.pin = fragment2.edtPincode.editText.getText().toString();
             item.address.city = fragment2.edtCity.editText.getText().toString();
-            item.address.country = fragment2.edtCountry.editText.getText().toString().toLowerCase();
+            item.address.country = fragment2.edtCountry.editText.getText().toString().toLowerCase();*/
             if (gender == 1) {
                 item.gender = "male";
 
@@ -276,13 +277,14 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         fragment1.edtEmail.editText.setText(item.email);
         fragment1.edtQualification.editText.setText(item.qualification);
         fragment1.edtOccupation.editText.setText(item.occupation);
+        fragment1.address.editText.setText(item.address);
 
-        if (item.address != null) {
-         /*   fragment2.edtState.editText.setText(item.address.state);
+      /*  if (item.address != null) {
+         *//*   fragment2.edtState.editText.setText(item.address.state);
             fragment2.edtPincode.editText.setText(item.address.pin);
             fragment2.edtCountry.editText.setText(item.address.country);
-            fragment2.edtCity.editText.setText(item.address.city);*/
-        }
+            fragment2.edtCity.editText.setText(item.address.city);*//*
+        }*/
 
         txtProgress.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
@@ -312,7 +314,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
             AppLog.e(TAG, "ProfileResponse" + res);
             if (res != null) {
                 fragment1 = new ProfileBasicFragment();
-                fragment2 = new ProfileOtherFragment();
+            //    fragment2 = new ProfileOtherFragment();
                 item = res.data;
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, res.data.name);
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
@@ -321,12 +323,14 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.EMAIL, res.data.email);
                AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
                AppLog.e("PROFILE IMAGE", "image is " + res.data.image);
+
                 if (tabAdapter == null) {
                     tabAdapter = new ProfileTabAdapter(getSupportFragmentManager(), fragment1, fragment2);
                     mPagerView.setAdapter(tabAdapter);
                 }
                 mPagerView.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
                 mPagerView.setOffscreenPageLimit(0);
+
                 fillDetails(item);
             }
             imageFragment.isImageChanged = false;
@@ -384,8 +388,12 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
                 fragment1.edtGender.editText.setError(fieldErrors.gender);
                 fragment1.edtGender.editText.requestFocus();
             }
+            if (fieldErrors.address != null ) {
+                fragment1.address.editText.setError(fieldErrors.address);
+                fragment1.address.editText.requestFocus();
+            }
 
-            if (fieldErrors.address != null) {
+           /* if (fieldErrors.address != null) {
                 if (fieldErrors.address.country != null) {
                     fragment2.edtCountry.editText.setError(fieldErrors.address.country);
                     fragment2.edtCountry.editText.requestFocus();
@@ -406,7 +414,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
                     fragment2.edtAddressTwo.editText.setError(fieldErrors.address.line2);
                     fragment2.edtAddressTwo.editText.requestFocus();
                 }
-            }
+            }*/
         } catch (Exception e) {
 
         }

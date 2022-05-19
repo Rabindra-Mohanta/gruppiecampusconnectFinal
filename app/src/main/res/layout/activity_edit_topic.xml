@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:context=".activities.EditTopicActivity"
         >
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/topbar"
@@ -26,15 +28,29 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTopic"
-            android:layout_marginTop="@dimen/padding_5dp"
+            android:layout_marginTop="@dimen/padding_10dp"
             android:layout_below="@id/topbar"
+            android:layout_above="@+id/btnDone"
+            android:layout_marginHorizontal="@dimen/padding_20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_topic_details"
+            tools:listitem="@layout/item_edit_topic"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
-          />
+            />
 
+        <Button
+            android:id="@+id/btnDone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="@dimen/padding_10dp"
+            android:layout_width="wrap_content"
+            android:text="@string/lbl_update"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:paddingHorizontal="@dimen/padding_40dp"
+            android:background="@drawable/add_post_button_bg"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 </layout>

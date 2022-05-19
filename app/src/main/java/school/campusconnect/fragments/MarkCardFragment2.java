@@ -28,6 +28,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.apache.poi.sl.usermodel.Line;
+import org.spongycastle.asn1.x509.Holder;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -284,27 +285,56 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
                 }
             });
 
-            holder.rvMarkCard.setAdapter(new MarksAdapter(item.subjectMarksDetails));
+
+
+            MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
+            holder.rvMarkCard.setAdapter(marksAdapter);
+            marksAdapter.addItem(item.isEdit);
+
+            if (item.isEdit)
+            {
+                marksAdapter.addItem(item.isEdit);
+                holder.btnAdd.setText(getResources().getString(R.string.lbl_save));
+            }
+            else
+            {
+                marksAdapter.addItem(item.isEdit);
+                holder.btnAdd.setText(getResources().getString(R.string.lbl_edit));
+            }
+
             holder.btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    holder.llMarkCard.setVisibility(View.GONE);
-                    holder.img_tree.setImageResource(R.drawable.arrow_up);
-                    if (item.subjectMarksDetails != null) {
-                        int totalObt = 0;
-                        for (int i = 0; i < item.subjectMarksDetails.size(); i++) {
-                            if (!TextUtils.isEmpty(item.subjectMarksDetails.get(i).obtainedMarks)) {
-                                totalObt += Integer.parseInt(item.subjectMarksDetails.get(i).obtainedMarks);
-                            }
-                        }
-                        item.totalObtainedMarks = totalObt + "";
-                    }
-                    notifyItemChanged(position);
 
-                    addMarksApi(item);
+                    if (!item.isEdit)
+                    {
+                        item.isEdit = true;
+                        marksAdapter.addItem(item.isEdit);
+                        holder.btnAdd.setText(getResources().getString(R.string.lbl_save));
+                    }
+                    else
+                    {
+                        holder.llMarkCard.setVisibility(View.GONE);
+                        holder.img_tree.setImageResource(R.drawable.arrow_up);
+                        item.isEdit = false;
+                        if (item.subjectMarksDetails != null) {
+                            int totalObt = 0;
+                            for (int i = 0; i < item.subjectMarksDetails.size(); i++) {
+                                if (!TextUtils.isEmpty(item.subjectMarksDetails.get(i).obtainedMarks)) {
+                                    totalObt += Integer.parseInt(item.subjectMarksDetails.get(i).obtainedMarks);
+                                }
+                            }
+                            item.totalObtainedMarks = totalObt + "";
+                        }
+                        notifyItemChanged(position);
+
+                        addMarksApi(item);
+                    }
+
                 }
             });
+
         }
 
         @Override
@@ -378,7 +408,8 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
     public class MarksAdapter extends RecyclerView.Adapter<MarksAdapter.ViewHolder> {
         List<MarkCardResponse2.SubjectMarkData> list;
         private Context mContext;
-
+        ViewHolder holder;
+        boolean isEdit = false;
         public MarksAdapter(ArrayList<MarkCardResponse2.SubjectMarkData> list) {
             this.list = list;
         }
@@ -392,12 +423,29 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
         @Override
         public void onBindViewHolder(final MarksAdapter.ViewHolder holder, final int position) {
+
+            this.holder = holder;
+
             final MarkCardResponse2.SubjectMarkData item = list.get(position);
 
             holder.tvSubject.setText(item.subjectName);
             holder.tvMax.setText(item.maxMarks);
             holder.tvMin.setText(item.minMarks);
             holder.etObtain.setText(item.obtainedMarks);
+
+            if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role))
+            {
+                if (!isEdit)
+                {
+                    holder.etObtain.setEnabled(false);
+                    holder.etObtain.setTextColor(getResources().getColor(R.color.grey));
+                }
+                else
+                {
+                    holder.etObtain.setEnabled(true);
+                    holder.etObtain.setTextColor(getResources().getColor(R.color.black));
+                }
+            }
 
             if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
                 holder.etObtain.addTextChangedListener(new TextWatcher() {
@@ -433,6 +481,11 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
                 return 0;
             }
 
+        }
+
+        public void addItem(boolean isEdit) {
+            this.isEdit = isEdit;
+            notifyDataSetChanged();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

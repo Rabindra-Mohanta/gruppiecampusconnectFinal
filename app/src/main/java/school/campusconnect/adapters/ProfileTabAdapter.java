@@ -17,7 +17,7 @@ public class ProfileTabAdapter extends FragmentPagerAdapter {
     public ProfileTabAdapter(FragmentManager fm, ProfileBasicFragment f, ProfileOtherFragment f1) {
         super(fm);
         this.f = f;
-        this.f1 = f1;
+     //   this.f1 = f1;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ProfileTabAdapter extends FragmentPagerAdapter {
                 return f;
             }
             case 1: {
-                return f1;
+                return f;
             }
             default:
                 return f;
@@ -42,7 +42,7 @@ public class ProfileTabAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 
 }

@@ -29,6 +29,7 @@ import school.campusconnect.utils.Constants;
 public class IncomingVideoCallService extends Service {
     String TAG = "IncomingVideoCallService";
     String meetingID,zoomName,className;
+    String image,name;
 
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -37,14 +38,21 @@ public class IncomingVideoCallService extends Service {
             meetingID = intent.getStringExtra("meetingID");
             zoomName = intent.getStringExtra("zoomName");
             className = intent.getStringExtra("className");
+            image= intent.getStringExtra("image");
+            name = intent.getStringExtra("name");
 
             sendVideoCallNotification(intent.getStringExtra("msg"));
+
             Log.e(TAG, "START SERVICE");
 
         } else if (intent.getAction().equals(Constants.ACCPET_ACTION)) {
 
             stopForeground(true);
             stopSelf();
+
+            meetingID = intent.getStringExtra("meetingID");
+            zoomName = intent.getStringExtra("zoomName");
+            className = intent.getStringExtra("className");
 
             Intent fullScreenIntent = new Intent(this, ZoomCallActivity.class);
             fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -65,12 +73,12 @@ public class IncomingVideoCallService extends Service {
             stopForeground(true);
             stopSelf();
 
-            Intent fullScreenIntent = new Intent(this, ZoomCallActivity.class);
+        /*    Intent fullScreenIntent = new Intent(this, ZoomCallActivity.class);
             fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             fullScreenIntent.putExtra("className",className);
             fullScreenIntent.putExtra("meetingID",meetingID);
             fullScreenIntent.putExtra("zoomName",zoomName);
-            startActivity(fullScreenIntent);
+            startActivity(fullScreenIntent);*/
 
         }
         return START_STICKY;
@@ -96,12 +104,12 @@ public class IncomingVideoCallService extends Service {
     private void sendVideoCallNotification(String s)
     {
 
-        Intent fullScreenIntent = new Intent(this, IncomingVideoCallService.class);
-        fullScreenIntent.setAction(Constants.STOPFOREGROUND_ACTION);
+        Intent fullScreenIntent = new Intent(this, VideoCallingActivity.class);
         fullScreenIntent.putExtra("className",className);
         fullScreenIntent.putExtra("meetingID",meetingID);
         fullScreenIntent.putExtra("zoomName",zoomName);
-
+        fullScreenIntent.putExtra("name",name);
+        fullScreenIntent.putExtra("image",image);
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.layout_video_calling_notification);
@@ -126,6 +134,7 @@ public class IncomingVideoCallService extends Service {
                 new NotificationCompat.Builder(this, "1213")
                         .setSmallIcon(R.drawable.app_icon)
                         .setContent(mRemoteViews)
+                        .setVibrate(new long[] { 1000, 1000})
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_CALL)
                         .setChannelId("1213")

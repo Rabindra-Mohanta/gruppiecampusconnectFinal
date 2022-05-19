@@ -51,6 +51,7 @@ public class MarkCardResponse2 extends BaseResponse {
         public String admissionNumber;
 
         public boolean isExpand = false;
+        public boolean isEdit = false;
     }
 
     public static class SubjectMarkData {
