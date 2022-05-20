@@ -98,6 +98,7 @@ import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
 
+import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 
@@ -872,8 +873,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     }
 
     private void selectVideoIntent() {
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         galleryIntent.setType("video/*");
+        galleryIntent.setFlags(FLAG_GRANT_READ_URI_PERMISSION|FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -1055,6 +1057,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         {
             Intent audioIntent = new Intent(Intent.ACTION_GET_CONTENT);
             audioIntent.setType("audio/*");
+            audioIntent.setFlags(FLAG_GRANT_READ_URI_PERMISSION|FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
             startActivityForResult(Intent.createChooser(audioIntent, "Select Audio"), requestCode);
         }
         else {
@@ -1079,6 +1082,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void selectPdf(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("application/pdf");
+        intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION|FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         startActivityForResult(intent, requestCode);
     }
 
@@ -1254,8 +1258,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             if (clipData == null) {
 //                String path = ImageUtil.getPath(this, selectedImage);
                 listImages.add(selectedImage.toString());
-                AddChapterPostActivity.this.getContentResolver().takePersistableUriPermission(
-                        selectedImage, FLAG_GRANT_READ_URI_PERMISSION);
+                AddChapterPostActivity.this.getContentResolver().takePersistableUriPermission(selectedImage, FLAG_GRANT_READ_URI_PERMISSION);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);

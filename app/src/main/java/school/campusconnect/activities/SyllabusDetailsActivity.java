@@ -226,6 +226,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                 public void onClick(View v) {
 
                     DatePickerFragment fragment = DatePickerFragment.newInstance();
+
                     fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                         @Override
                         public void onDateSelected(Calendar c) {
@@ -234,6 +235,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                         }
                     });
                     fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
+                    fragment.setTitle(R.string.lbl_from_date);
                 }
             });
 
@@ -242,6 +244,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                 public void onClick(View v) {
 
                     DatePickerFragment fragment = DatePickerFragment.newInstance();
+
                     fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                         @Override
                         public void onDateSelected(Calendar c) {
@@ -250,6 +253,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                         }
                     });
                     fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
+                    fragment.setTitle(R.string.lbl_to_date);
                 }
             });
 
@@ -258,6 +262,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                 public void onClick(View v) {
 
                     DatePickerFragment fragment = DatePickerFragment.newInstance();
+
                     fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                         @Override
                         public void onDateSelected(Calendar c) {
@@ -266,6 +271,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                         }
                     });
                     fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
+                    fragment.setTitle(R.string.lbl_from_date);
                 }
             });
 
@@ -274,6 +280,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                 public void onClick(View v) {
 
                     DatePickerFragment fragment = DatePickerFragment.newInstance();
+
                     fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                         @Override
                         public void onDateSelected(Calendar c) {
@@ -282,6 +289,7 @@ public static final String TAG = "SyllabusDetailsActivity";
                         }
                     });
                     fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
+                    fragment.setTitle(R.string.lbl_to_date);
                 }
             });
 

@@ -170,6 +170,7 @@ public class BackgroundVideoUploadGallery extends Service implements LeafManager
 
     @Override
     public void onDestroy() {
+        AppLog.e("BackgroundVideoUploadGallery","onDestroy");
         super.onDestroy();
         currentTask = null;
     }

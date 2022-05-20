@@ -25,6 +25,7 @@ import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.booths.SubBoothWorkerEventRes;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
+import school.campusconnect.datamodel.classs.StaffClassModelRes;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -562,6 +563,8 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/class/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ClassResponse> getClasses(@Path("group_id") String group_id);
+
+
 
     @GET("/api/v1/groups/{group_id}/class/video/conference")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1993,4 +1996,7 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> EditSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Query("chapterId") String chapterId, @Body EditTopicModelReq editTopicModelReq);
 
+    @GET("/api/v1/groups/{group_id}/class/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassResponse> getClassesOfStaff(@Path("group_id") String group_id, @Query("staffIf") String staffIf);
 }

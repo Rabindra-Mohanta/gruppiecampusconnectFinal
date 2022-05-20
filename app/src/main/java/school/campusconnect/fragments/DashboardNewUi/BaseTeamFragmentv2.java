@@ -72,7 +72,7 @@ import school.campusconnect.utils.DateTimeHelper;
 
 import static school.campusconnect.utils.Constants.INTERVAL_EVENTAPI;
 
-public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener, FeedAdapter.onClick, SchoolFeedAdapater.onClick {
+public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCommunicationListener, TeamListAdapterNewV2.OnTeamClickListener, View.OnClickListener,SchoolFeedAdapater.onClick {
     private static final String TAG = "BaseTeamFragmentv2";
 
 
@@ -794,7 +794,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
     public void onItemClick(NotificationListRes.NotificationListData item,Boolean readComment)
     {
-        AppLog.d(TAG,"onItemClick()"+item.getType()+"getShowComment"+item.getShowComment());
+        AppLog.e(TAG,"onItemClick() "+new Gson().toJson(item)+"getShowComment"+item.getShowComment());
 
         Intent i = new Intent(getContext(), ReadMoreActivity.class);
         Bundle bundle = new Bundle();

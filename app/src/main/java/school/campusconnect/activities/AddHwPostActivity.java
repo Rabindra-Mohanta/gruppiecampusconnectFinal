@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -95,6 +96,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.homework.AddHwPostRequest;
+import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
@@ -303,7 +305,20 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         et_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
+
+                DatePickerFragment fragment = DatePickerFragment.newInstance();
+
+                fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                    @Override
+                    public void onDateSelected(Calendar c) {
+                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                        et_date.setText(format.format(c.getTime()));
+                    }
+                });
+                fragment.show(getSupportFragmentManager(), "datepicker");
+                fragment.setTitle(R.string.lbl_from_date);
+
+                /*final Calendar calendar = Calendar.getInstance();
                 DatePickerDialog fragment = new DatePickerDialog(AddHwPostActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -315,7 +330,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
+                fragment.show();*/
             }
         });
         et_time.setOnClickListener(new View.OnClickListener() {

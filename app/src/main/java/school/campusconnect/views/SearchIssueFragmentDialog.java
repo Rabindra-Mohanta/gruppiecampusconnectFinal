@@ -198,6 +198,7 @@ public class SearchIssueFragmentDialog extends DialogFragment implements View.On
     public void setData(ArrayList<IssueListResponse.IssueData> data) {
         this.issueData = data;
     }
+
     public void setListener(SelectListener listener) {
         this.listener = listener;
     }

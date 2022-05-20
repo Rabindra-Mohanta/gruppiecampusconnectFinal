@@ -27,6 +27,7 @@ import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.booths.SubBoothWorkerEventRes;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
+import school.campusconnect.datamodel.classs.StaffClassModelRes;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -526,6 +527,7 @@ public class LeafManager {
     public static final int API_EDIT_SYLLABUS = 339;
     public static final int API_STATUS_PLAN = 340;
     public static final int API_CHANGE_STATUS_PLAN = 341;
+    public static final int API_CLASS_OF_STAFF = 346;
     public LeafManager() {
 
     }
@@ -12901,6 +12903,42 @@ public class LeafManager {
                 }
             }
         }, serviceErrorType);
+    }
+
+    public void getClassesOfStaff(OnCommunicationListener listListener, String group_id,String staff_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<ClassResponse> model = service.getClassesOfStaff(group_id,staff_id);
+        ResponseWrapper<ClassResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_CLASS_OF_STAFF, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
     }
 
 

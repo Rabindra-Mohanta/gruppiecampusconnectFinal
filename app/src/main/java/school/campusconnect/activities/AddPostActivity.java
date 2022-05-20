@@ -1356,6 +1356,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         {
             Intent audioIntent = new Intent(Intent.ACTION_GET_CONTENT);
             audioIntent.setType("audio/*");
+            audioIntent.setFlags(FLAG_GRANT_READ_URI_PERMISSION|FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
             startActivityForResult(Intent.createChooser(audioIntent, "Select Audio"), requestCode);
         }
         else {

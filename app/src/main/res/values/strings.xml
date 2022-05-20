@@ -868,6 +868,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="menu_delete_staff">Delete Staff</string>
     <string name="menu_make_admin">Make admin</string>
     <string name="menu_text_exam">Add Test/Exam</string>
+    <string name="menu_staff_filter">Staffs</string>
     <string name="menu_edit_test_exam">Edit Test/Exam</string>
     <string name="menu_remove_test_exam">Remove Test/Exam</string>
     <string name="menu_add_update_time_table">Add/Update Time Table</string>

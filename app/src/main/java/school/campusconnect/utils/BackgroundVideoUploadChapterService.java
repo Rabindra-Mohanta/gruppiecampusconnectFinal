@@ -59,7 +59,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
 
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
 
-    public static final String TAG = "BackgroundVideoUploadService";
+    public static final String TAG = "BackgroundVideoUploadChapterService";
 
     private Context context;
     private ArrayList<String> listImages = new ArrayList<>();
@@ -143,7 +143,9 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
 
     @Override
     public void onDestroy() {
+        AppLog.e(TAG, "onDestroy called : ");
         super.onDestroy();
+
     }
 
     private void createNotificationChannel() {
@@ -174,10 +176,13 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         } else {
             if (isEdit) {
                 LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).setBoolean("is_topic_added", true);
+           //     SendNotification(mainRequest.albumName, false);
                 new SendNotification(mainRequest.albumName, false).execute();
             } else {
+
                 LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).setBoolean("is_chapter_added", true);
-                new SendNotification(mainRequest.albumName, true).execute();
+         //       SendNotification(mainRequest.albumName, true);
+               new SendNotification(mainRequest.albumName, true).execute();
             }
         }
     }
@@ -235,7 +240,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
             Notification notification = notificationBuilder.build();
 
             AppLog.e(TAG, "start foregournd called 1");
-            this.startForeground(notifyId, notification);
+            BackgroundVideoUploadChapterService.this.startForeground(notifyId, notification);
         } else {
 
             notificationBuilder = new NotificationCompat.Builder(context)
@@ -249,7 +254,7 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
             Notification notification = notificationBuilder.build();
 
             AppLog.e(TAG, "start foregournd  2");
-            this.startForeground(notifyId, notification);
+            BackgroundVideoUploadChapterService.this.startForeground(notifyId, notification);
         }
 
         notificationBuilder.setProgress(100, 0, false);
@@ -285,8 +290,15 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         long fileSizeInMB = fileSizeInKB / 1024;
 
 
-        File videoCompresed = ImageUtil.getOutputMediaVideo(finalI);
+        File videoCompresed = ImageUtil.getOutputVideoFile(context,finalI);
 
+
+        if(true)
+        {
+            compressedCounts++;
+            compressVideo(compressedCounts);
+            return;
+        }
 
         AppLog.e(TAG, "compression Started id : " + finalI + ", output path : " + videoCompresed.getPath());
 
@@ -601,6 +613,93 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
         upLoadImageOnCloud(pos + 1);
     }
 
+  /*  public void SendNotification(String chapterName, boolean isChapter)
+    {
+        String server_response = null;
+
+
+        URL url;
+        HttpURLConnection urlConnection = null;
+
+        try {
+            url = new URL("https://fcm.googleapis.com/fcm/send");
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.setDoOutput(true);
+            urlConnection.setDoInput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+
+            DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+            try {
+                JSONObject object = new JSONObject();
+
+                String topic;
+                String title = getResources().getString(R.string.app_name);
+                String message = "";
+
+                if (isChapter) {
+                    message = subject_name + " : New chapter added";
+                } else {
+                    message = " New topic added to " + chapterName;
+                }
+
+                topic = group_id + "_" + team_id;
+                object.put("to", "/topics/" + topic);
+
+                JSONObject notificationObj = new JSONObject();
+                notificationObj.put("title", title);
+                notificationObj.put("body", message);
+                object.put("notification", notificationObj);
+
+                JSONObject dataObj = new JSONObject();
+                dataObj.put("groupId", group_id);
+                dataObj.put("createdById", LeafPreference.getInstance(BackgroundVideoUploadChapterService.this).getString(LeafPreference.LOGIN_ID));
+                dataObj.put("postId", "");
+                dataObj.put("teamId", team_id);
+                dataObj.put("title", title);
+                dataObj.put("postType", isChapter ? "chapter" : "topic");
+                dataObj.put("Notification_type", "VideoClass");
+                dataObj.put("body", message);
+                object.put("data", dataObj);
+
+                wr.writeBytes(object.toString());
+                Log.e(" JSON input : ", object.toString());
+                wr.flush();
+                wr.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            urlConnection.connect();
+
+            int responseCode = urlConnection.getResponseCode();
+            AppLog.e(TAG, "responseCode :" + responseCode);
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                server_response = readStream(urlConnection.getInputStream());
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        AppLog.e(TAG, "server_response :" + server_response);
+        if (!TextUtils.isEmpty(server_response)) {
+            AppLog.e(TAG, "Notification Sent");
+        } else {
+            AppLog.e(TAG, "Notification Send Fail");
+        }
+        Intent intent = new Intent("chapter_refresh");
+        sendBroadcast(intent);
+        stopForeground(false);
+
+
+    }*/
+
     private class SendNotification extends AsyncTask<String, String, String> {
 
         private final String chapterName;
@@ -719,7 +818,38 @@ public class BackgroundVideoUploadChapterService extends Service implements Leaf
             }
             Intent intent = new Intent("chapter_refresh");
             sendBroadcast(intent);
-            stopForeground(false);
+            currentTask = null;
+            stopService();
+
+
         }
+    }
+
+    private void stopService() {
+        AppLog.e(TAG, "stopService :" );
+        BackgroundVideoUploadChapterService.this.stopForeground(false);
+    }
+
+    private String readStream(InputStream in) {
+        BufferedReader reader = null;
+        StringBuffer response = new StringBuffer();
+        try {
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return response.toString();
     }
 }

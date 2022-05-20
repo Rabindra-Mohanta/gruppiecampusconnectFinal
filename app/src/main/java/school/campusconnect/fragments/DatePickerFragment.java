@@ -17,9 +17,9 @@ import school.campusconnect.R;
 import school.campusconnect.views.SMBAlterDialog;
 
 public class DatePickerFragment extends DialogFragment {
-
+    SMBAlterDialog dialog;
     private OnDateSelectListener onDateSelectListener;
-
+    private int i = 0;
     public static DatePickerFragment newInstance() {
        return new DatePickerFragment();
     }
@@ -30,12 +30,24 @@ public class DatePickerFragment extends DialogFragment {
         onDateSelectListener = listener;
     }
 
+    public void setTitle(int title) {
+        this.i = title;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        SMBAlterDialog dialog = new SMBAlterDialog(getContext());
+        dialog  = new SMBAlterDialog(getContext());
 
-        dialog.setTitle(R.string.hint_lead_dob);
+        if (i == 0)
+        {
+            dialog.setTitle(R.string.hint_lead_dob);
+        }
+        else
+        {
+            dialog.setTitle(i);
+        }
+
         //bug in support lib http://stackoverflow.com/questions/32784009/styling-custom-dialog-fragment-not-working
         final View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_date, null);
 
