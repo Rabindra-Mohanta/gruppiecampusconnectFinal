@@ -74,6 +74,11 @@ public class LeadDataTBL extends Model {
         return new Select().from(LeadDataTBL.class).where("groupID = ?",groupID).where("teamID = ?",teamID).where("page = ?",page).execute();
     }
 
+    public static List<LeadDataTBL> searchList(String value)
+    {
+        return new Select().from(LeadDataTBL.class).where("name LIKE ?", "%" + value + "%").limit(250).execute();
+    }
+
     public static List<LeadDataTBL> getLeadData(String groupID,String teamID)
     {
         return new Select().from(LeadDataTBL.class).where("groupID = ?",groupID).where("teamID = ?",teamID).execute();

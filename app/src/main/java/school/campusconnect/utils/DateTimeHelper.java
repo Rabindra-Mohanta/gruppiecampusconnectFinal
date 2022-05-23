@@ -156,7 +156,7 @@ public class DateTimeHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        Log.e(TAG,"getCurrentTime" +sdf.format(new Date()));
+     //   Log.e(TAG,"getCurrentTime" +sdf.format(new Date()));
         return sdf.format(new Date());
     }
 

@@ -696,6 +696,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strEraser">Eraser</string>
     <string name="strZoom">Zoom</string>
     <string name="lbl_enter_text">Enter Text</string>
+
     <string name="strBox">Box</string>
     <string name="hint_time">Select Time</string>
     <string name="hint_enter_marks">Enter Marks</string>

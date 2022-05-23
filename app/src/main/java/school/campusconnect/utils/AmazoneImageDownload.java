@@ -76,6 +76,7 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 } else {
                     file = new File(getDirForMedia(""), key + ".png");
                 }
+                Log.e(TAG,"file path"+file.getAbsolutePath());
                 return file;
             }
         } catch (Exception e) {

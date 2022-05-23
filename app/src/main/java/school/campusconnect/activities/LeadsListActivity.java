@@ -14,11 +14,14 @@ import school.campusconnect.datamodel.LeadResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.fragments.HomeFragment;
 import school.campusconnect.utils.AppLog;
+
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,6 +52,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
     EditText edtSearch;
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
+
 
     Intent intent;
     MyTeamData classData;
@@ -142,18 +146,33 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
 
     public void searchListener() {
 
-        edtSearch.setCursorVisible(false);
 
+        edtSearch.setOnEditorActionListener((v, actionId, event) -> {
+
+            Log.e(TAG,"search id"+actionId);
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+
+                if (edtSearch.getText().toString().length()>3)
+                {
+                    fragment.search(edtSearch.getText().toString());
+                }
+                return true;
+            }
+            return false;
+        });
+
+    //    edtSearch.setCursorVisible(false);
+/*
         edtSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppLog.e(TAG, "edtSearch onClick ");
                 edtSearch.setCursorVisible(true);
             }
-        });
+        });*/
 
 
-        edtSearch.addTextChangedListener(new TextWatcher() {
+       /* edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -166,16 +185,31 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
 
             @Override
             public void afterTextChanged(Editable s) {
-                fragment.search(s.toString());
+
+                if(s.length() > 3)
+                {
+                    fragment.search(s.toString());
+                }
+
             }
-        });
+        });*/
+
+       /* btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtSearch.getText().toString().length()>3)
+                {
+                    fragment.search(edtSearch.getText().toString());
+                }
+            }
+        });*/
 
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        fragment.search("");
+       // fragment.search("");
     }
 
     private void getSearchData(String search) {

@@ -273,7 +273,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         if (apiCall)
         {
-            callEventApiTeam();
+      //      callEventApiTeam();
         }
     }
 
@@ -586,45 +586,52 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         if (results.size() > 0)
         {
             list = new ArrayList<>();
-            for (int i = 0 ;i <results.size();i++)
+
+            for (int j = 0;j<740;j++)
             {
-                LeadDataTBL leadDataTBL = new LeadDataTBL();
+                Log.e(TAG,"j position"+j);
 
-                leadDataTBL.pushToken = new Gson().toJson(results.get(i).pushTokens);
-                leadDataTBL.groupID = groupId;
-                leadDataTBL.teamID = teamId;
-                leadDataTBL.teamID = teamId;
-                leadDataTBL.page = currentPage;
-                leadDataTBL.voterId = results.get(i).voterId;
-                leadDataTBL.id = results.get(i).id;
-                leadDataTBL.roleOnConstituency = results.get(i).roleOnConstituency;
-                leadDataTBL.phone = results.get(i).phone;
-                leadDataTBL.name = results.get(i).name;
-                leadDataTBL.image = results.get(i).image;
-                leadDataTBL.gender = results.get(i).gender;
-                leadDataTBL.dob = results.get(i).dob;
-                leadDataTBL.bloodGroup = results.get(i).bloodGroup;
-                leadDataTBL.allowedToAddUser = results.get(i).allowedToAddUser;
-                leadDataTBL.allowedToAddTeamPostComment = results.get(i).allowedToAddTeamPostComment;
-                leadDataTBL.allowedToAddTeamPost = results.get(i).allowedToAddTeamPost;
-                leadDataTBL.aadharNumber = results.get(i).aadharNumber;
-                leadDataTBL._now = DateTimeHelper.getCurrentTime();
-                leadDataTBL.isLive = false;
+                for (int i = 0 ;i <results.size();i++)
+                {
+                    LeadDataTBL leadDataTBL = new LeadDataTBL();
 
-                leadDataTBL.save();
+                    leadDataTBL.pushToken = new Gson().toJson(results.get(i).pushTokens);
+                    leadDataTBL.groupID = groupId;
+                    leadDataTBL.teamID = teamId;
+                    leadDataTBL.teamID = teamId;
+                    leadDataTBL.page = currentPage;
+                    leadDataTBL.voterId = results.get(i).voterId;
+                    leadDataTBL.id = results.get(i).id;
+                    leadDataTBL.roleOnConstituency = results.get(i).roleOnConstituency;
+                    leadDataTBL.phone = results.get(i).phone;
+                    leadDataTBL.name = results.get(i).name;
+                    leadDataTBL.image = results.get(i).image;
+                    leadDataTBL.gender = results.get(i).gender;
+                    leadDataTBL.dob = results.get(i).dob;
+                    leadDataTBL.bloodGroup = results.get(i).bloodGroup;
+                    leadDataTBL.allowedToAddUser = results.get(i).allowedToAddUser;
+                    leadDataTBL.allowedToAddTeamPostComment = results.get(i).allowedToAddTeamPostComment;
+                    leadDataTBL.allowedToAddTeamPost = results.get(i).allowedToAddTeamPost;
+                    leadDataTBL.aadharNumber = results.get(i).aadharNumber;
+                    leadDataTBL._now = DateTimeHelper.getCurrentTime();
+                    leadDataTBL.isLive = false;
 
+                    leadDataTBL.save();
+
+                }
+                list.addAll(results);
             }
-            list.addAll(results);
+
         }
 
-        mAdapter.addItems(results);
+        mAdapter.addItems(list);
         mAdapter.notifyDataSetChanged();
     }
 
 
     private void getToLocally() {
 
-        List<LeadDataTBL> leadDataTBL = LeadDataTBL.getLead(groupId,teamId,currentPage);
+     /*   List<LeadDataTBL> leadDataTBL = LeadDataTBL.getLead(groupId,teamId,currentPage);
 
         mAdapter.clear();
 
@@ -660,7 +667,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         else
         {
             getData(true);
-        }
+        }*/
     }
 
     @Override
@@ -742,7 +749,44 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
     }
 
     public void search(String strsearch) {
-        if(list!=null){
+
+        List<LeadDataTBL> leadDataTBL = LeadDataTBL.searchList(strsearch);
+
+        Log.e(TAG,"search value "+leadDataTBL.size());
+
+        mAdapter.clear();
+
+        if (leadDataTBL.size() > 0)
+        {
+            list = new ArrayList<>();
+
+            for (int i = 0;i<leadDataTBL.size();i++)
+            {
+                LeadItem leadItem = new LeadItem();
+                leadItem.id = leadDataTBL.get(i).id;
+                leadItem.voterId = leadDataTBL.get(i).voterId;
+                leadItem.roleOnConstituency = leadDataTBL.get(i).roleOnConstituency;
+                leadItem.phone = leadDataTBL.get(i).phone;
+                leadItem.name = leadDataTBL.get(i).name;
+                leadItem.image = leadDataTBL.get(i).image;
+                leadItem.gender = leadDataTBL.get(i).gender;
+                leadItem.dob = leadDataTBL.get(i).dob;
+                leadItem.bloodGroup = leadDataTBL.get(i).bloodGroup;
+                leadItem.allowedToAddUser = leadDataTBL.get(i).allowedToAddUser;
+                leadItem.allowedToAddTeamPostComment = leadDataTBL.get(i).allowedToAddTeamPostComment;
+                leadItem.allowedToAddTeamPost = leadDataTBL.get(i).allowedToAddTeamPost;
+                leadItem.aadharNumber = leadDataTBL.get(i).aadharNumber;
+                leadItem.pushTokens = new Gson().fromJson(leadDataTBL.get(i).pushToken,new TypeToken<ArrayList<LeadItem.pushTokenData>>() {}.getType());
+                leadItem.isLive = leadDataTBL.get(i).isLive;
+
+                list.add(leadItem);
+            }
+            mAdapter.addItems(list);
+            mBinding.setSize(mAdapter.getItemCount());
+            mAdapter.notifyDataSetChanged();
+        }
+
+     /*   if(list!=null){
             if(!TextUtils.isEmpty(strsearch)){
                 ArrayList<LeadItem> newList = new ArrayList<>();
                 for (int i=0;i<list.size();i++){
@@ -758,7 +802,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 mAdapter.addItems(list);
                 mAdapter.notifyDataSetChanged();
             }
-        }
+        }*/
     }
 
     @Override
@@ -831,10 +875,10 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                         {
                             if (teamEvent.get(i).lastUserToTeamUpdatedAtEventAt != null && MixOperations.isNewEventUpdate(teamEvent.get(i).lastUserToTeamUpdatedAtEventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", leadDataTBLList.get(leadDataTBLList.size()-1)._now))
                             {
-                                currentPage = 1;
+                              //  currentPage = 1;
                                 Log.e(TAG,"call Event");
-                                LeadDataTBL.deleteLead(GroupDashboardActivityNew.groupId,teamId);
-                                getData(true);
+                              //  LeadDataTBL.deleteLead(GroupDashboardActivityNew.groupId,teamId);
+                              //  getData(true);
                             }
                         }
                     }
