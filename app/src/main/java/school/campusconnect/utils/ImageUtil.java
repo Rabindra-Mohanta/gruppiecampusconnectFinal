@@ -457,10 +457,8 @@ public class ImageUtil {
     public static File getOutputMediaVideo() {
 
         // External sdcard location
-        File mediaStorageDir = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                IMAGE_DIRECTORY_NAME);
+        File mediaStorageDir =new File(
+                LeafApplication.getInstance().getCacheDir(),"cache_image");
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {

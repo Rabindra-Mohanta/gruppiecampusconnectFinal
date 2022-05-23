@@ -91,21 +91,23 @@ public class BoothStudentActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         if(classData.isTeamAdmin)
-        getMenuInflater().inflate(R.menu.menu_member, menu);
+             getMenuInflater().inflate(R.menu.menu_member, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.isPost)
-        {
-            menu.findItem(R.id.menu_print_member_list).setVisible(true);
-        }
-        else
-        {
-            menu.findItem(R.id.menu_print_member_list).setVisible(false);
-        }
+        if(classData.isTeamAdmin)
+            if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.isPost)
+            {
+                menu.findItem(R.id.menu_print_member_list).setVisible(true);
+            }
+            else
+            {
+                menu.findItem(R.id.menu_print_member_list).setVisible(false);
+            }
+
         return super.onPrepareOptionsMenu(menu);
     }
 

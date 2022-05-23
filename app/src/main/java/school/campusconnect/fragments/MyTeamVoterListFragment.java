@@ -152,7 +152,15 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(R.id.action_notification_list).setVisible(false);
-        menu.findItem(R.id.menu_search).setVisible(true);
+
+        if (GroupDashboardActivityNew.isAdmin && GroupDashboardActivityNew.isPost)
+        {
+            menu.findItem(R.id.menu_search).setVisible(true);
+        }
+        else
+        {
+            menu.findItem(R.id.menu_search).setVisible(false);
+        }
         super.onPrepareOptionsMenu(menu);
     }
 

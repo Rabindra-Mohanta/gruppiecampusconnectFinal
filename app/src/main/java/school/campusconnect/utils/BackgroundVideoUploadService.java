@@ -202,7 +202,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
         Intent intent = new Intent("postadded");
         sendBroadcast(intent);
-
+        currentTask = null;
         stopForeground(false);
     }
 
@@ -315,8 +315,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
         long fileSizeInMB = fileSizeInKB / 1024;
 
-
-        File videoCompresed  = ImageUtil.getOutputMediaVideo(finalI);
+        File videoCompresed  = ImageUtil.getOutputVideoFile(context,finalI);
 
 
         AppLog.e(TAG, "compression Started id : "+finalI+", output path : "+videoCompresed.getPath());
