@@ -2,12 +2,15 @@ package school.campusconnect.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -177,6 +180,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     }
 
 
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
 
@@ -212,6 +216,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 } else {
                     menu.findItem(R.id.menu_leave_team).setVisible(true);
                 }*/
+                menu.findItem(R.id.menu_archive_team).setVisible(false);
             }
 
 
@@ -250,6 +255,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         {
             if (type.equalsIgnoreCase("team"))
             {
+                Log.e(TAG,"type"+type);
                 if (HomeTeamDataTBL.getAll().size()>0)
                 {
                     List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getAll();
@@ -272,12 +278,36 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 }
 
+                Log.e(TAG,"teamData "+new Gson().toJson(teamData));
+
+                if (!teamData.isTeamAdmin)
+                {
+                    menu.findItem(R.id.menu_more).setVisible(false);
+                }
+            }
+            else if (type.equalsIgnoreCase("member"))
+            {
                 if (!teamData.isTeamAdmin)
                 {
                     menu.findItem(R.id.menu_more).setVisible(false);
                 }
             }
 
+            if (type.equalsIgnoreCase("team"))
+            {
+                if (teamData.isTeamAdmin)
+                {
+                    menu.findItem(R.id.menu_archive_team).setVisible(true);
+                }
+                else
+                {
+                    menu.findItem(R.id.menu_archive_team).setVisible(false);
+                }
+            }
+            else
+            {
+                menu.findItem(R.id.menu_archive_team).setVisible(false);
+            }
 
             if (type.equalsIgnoreCase("booth"))
             {
@@ -857,8 +887,19 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onStart() {
         super.onStart();
         mAdapter2.notifyDataSetChanged();
+        getContext().registerReceiver(updateReceiver,new IntentFilter("postadded"));
     }
 
+    BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if("postadded".equalsIgnoreCase(intent.getAction())){
+                PostTeamDataItem.deleteTeamPosts(team_id,type);
+                AppLog.e(TAG," onPostExecute isNewEvent");
+                callApi(true);
+            }
+        }
+    };
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -896,7 +937,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         {
             type = "booth";
         }
-        if (isMemberClick != null && isMemberClick.equalsIgnoreCase("yes"))
+        else if (isMemberClick != null && isMemberClick.equalsIgnoreCase("yes"))
         {
             type = "member";
         }

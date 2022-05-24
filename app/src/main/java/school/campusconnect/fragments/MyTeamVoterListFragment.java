@@ -53,7 +53,6 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
-
 public class MyTeamVoterListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
 
     public static String TAG = "MyTeamVoterListFragment";

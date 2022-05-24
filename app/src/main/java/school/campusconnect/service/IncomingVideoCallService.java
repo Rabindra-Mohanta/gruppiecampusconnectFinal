@@ -7,8 +7,10 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -110,6 +112,7 @@ public class IncomingVideoCallService extends Service {
         fullScreenIntent.putExtra("zoomName",zoomName);
         fullScreenIntent.putExtra("name",name);
         fullScreenIntent.putExtra("image",image);
+        fullScreenIntent.putExtra("isMessage",true);
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.layout_video_calling_notification);
@@ -134,7 +137,8 @@ public class IncomingVideoCallService extends Service {
                 new NotificationCompat.Builder(this, "1213")
                         .setSmallIcon(R.drawable.app_icon)
                         .setContent(mRemoteViews)
-                        .setVibrate(new long[] { 1000, 1000})
+                        .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_CALL)
                         .setChannelId("1213")
@@ -146,11 +150,18 @@ public class IncomingVideoCallService extends Service {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        AudioAttributes attr = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.app_name);// The user-visible name of the channel.
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel("1213", name, importance);
             mChannel.setShowBadge(true);
+            mChannel.enableVibration(true);
+            mChannel.setSound(Settings.System.DEFAULT_NOTIFICATION_URI,attr);
             assert notificationManager != null;
             notificationManager.createNotificationChannel(mChannel);
         }

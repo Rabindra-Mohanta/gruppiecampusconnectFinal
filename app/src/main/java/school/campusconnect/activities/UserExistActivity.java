@@ -220,6 +220,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (progressBar != null)
                 showLoadingBar(progressBar);
             //    progressBar.setVisibility(View.VISIBLE);
+            btnLogin.setTextColor(getResources().getColor(R.color.grey));
+            btnLogin.setEnabled(false);
 
             LeafManager manager = new LeafManager();
             OtpVerifyReq otpVerifyReq = new OtpVerifyReq();
@@ -297,6 +299,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (progressBar != null)
                 showLoadingBar(progressBar);
                 //progressBar.setVisibility(View.VISIBLE);
+            btnLogin.setTextColor(getResources().getColor(R.color.grey));
+            btnLogin.setEnabled(false);
 
             LeafManager manager = new LeafManager();
             LoginRequest request = new LoginRequest();
@@ -404,6 +408,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
+        btnLogin.setTextColor(getResources().getColor(R.color.white));
+        btnLogin.setEnabled(true);
 
         if (apiId == LeafManager.API_ID_FORGOT_PWD) {
 
@@ -618,6 +624,9 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     @Override
     public void onFailure(int apiId, String msg) {
 
+        btnLogin.setTextColor(getResources().getColor(R.color.white));
+        btnLogin.setEnabled(true);
+
         //hideLoadingDialog();
         if (progressBar != null)
             hideLoadingBar();
@@ -645,6 +654,9 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Override
     public void onException(int apiId, String error) {
+
+        btnLogin.setTextColor(getResources().getColor(R.color.white));
+        btnLogin.setEnabled(true);
 
         //hideLoadingDialog();
         if (progressBar != null)

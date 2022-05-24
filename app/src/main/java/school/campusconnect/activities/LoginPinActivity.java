@@ -54,7 +54,6 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
         manager = new LeafManager();
 
-
         if (LeafPreference.getInstance(this).getString(LeafPreference.PIN).isEmpty())
         {
             if (getIntent()!= null && getIntent().getStringExtra("set_otp") != null)
@@ -371,6 +370,10 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 }
                 else
                 {
+
+                    binding.btnNext.setTextColor(getResources().getColor(R.color.grey));
+                    binding.btnNext.setEnabled(false);
+
                     LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.SKIP_PIN,"no");
                     LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.FINGERPRINT,false);
                     LeafPreference.getInstance(this).setString(LeafPreference.PIN,binding.etPin.getOTP());
@@ -441,6 +444,10 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
     }
     private void skipPin()
     {
+
+        binding.btnSkip.setTextColor(getResources().getColor(R.color.grey));
+        binding.btnSkip.setEnabled(false);
+
         LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.SKIP_PIN,"yes");
         LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.FINGERPRINT,false);
         LeafPreference.getInstance(this).setString(LeafPreference.PIN,binding.etPin.getOTP());
@@ -534,6 +541,10 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+
+        binding.btnSkip.setTextColor(getResources().getColor(R.color.white));
+        binding.btnSkip.setEnabled(true);
+
         hideLoadingBar();
       //  binding.progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_JOIN_GROUP) {

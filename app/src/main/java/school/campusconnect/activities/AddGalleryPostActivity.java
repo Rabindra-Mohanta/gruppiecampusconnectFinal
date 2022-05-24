@@ -342,7 +342,8 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                 if (progressBar != null)
                     showLoadingBar(progressBar);
                 //    progressBar.setVisibility(View.VISIBLE);
-             //   btnShare.setEnabled(false);
+                btnShare.setEnabled(false);
+                btnShare.setTextColor(getResources().getColor(R.color.grey));
 
                 AddGalleryPostRequest request = new AddGalleryPostRequest();
                 request.albumName = edtTitle.getText().toString();
@@ -848,6 +849,8 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
        // btnShare.setEnabled(true);
+        btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
         if (progressBar != null)
             hideLoadingBar();
         //  progressBar.setVisibility(View.GONE);
@@ -876,6 +879,10 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     @Override
     public void onException(int apiId, String error) {
      //   btnShare.setEnabled(true);
+
+        btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
+
         if (progressBar != null)
             hideLoadingBar();
         //  progressBar.setVisibility(View.GONE);

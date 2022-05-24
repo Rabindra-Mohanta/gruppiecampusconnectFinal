@@ -318,6 +318,14 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         File videoCompresed  = ImageUtil.getOutputVideoFile(context,finalI);
 
 
+        if(true)
+        {
+            compressedCounts++;
+            compressVideo(compressedCounts);
+            return;
+        }
+
+
         AppLog.e(TAG, "compression Started id : "+finalI+", output path : "+videoCompresed.getPath());
 
         String width = "";
@@ -643,7 +651,8 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
             AppLog.e(TAG , "addPost mainRequest : "+new Gson().toJson(mainRequest));
             manager.addPost(this, group_id, team_id, mainRequest, postType, friend_id, isFromChat);
-        } else {
+        }
+        else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
 
             TransferObserver observer = null;

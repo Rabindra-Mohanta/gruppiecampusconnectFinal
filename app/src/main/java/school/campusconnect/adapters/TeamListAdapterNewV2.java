@@ -53,7 +53,6 @@ public class TeamListAdapterNewV2 extends RecyclerView.Adapter<TeamListAdapterNe
 
         //holder.binding.tvActivityName.setText(transliterator.transliterate(data.getActivity()));
 
-
         if (context.getResources().getConfiguration().locale.getLanguage().equalsIgnoreCase("kn"))
         {
             holder.binding.tvActivityName.setText(data.getKanActivity());

@@ -1798,10 +1798,10 @@ public class GroupDashboardActivityNew extends BaseActivity
             PublicForumListFragment classListFragment = new PublicForumListFragment();
             classListFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
-        } else {
+        }
+        else {
             onBoothTeams(mGroupItem.boothName, mGroupItem.boothId,"normal", false);
         }
-
     }
 
     private void makeAdminClick()

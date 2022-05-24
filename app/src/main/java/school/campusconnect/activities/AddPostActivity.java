@@ -710,9 +710,12 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
+
                     showLoadingBar(progressBar);
                    // progressBar.setVisibility(View.VISIBLE);
-           //     btnShare.setEnabled(false);
+                btnShare.setEnabled(false);
+                btnShare.setTextColor(getResources().getColor(R.color.grey));
+
 
                 AddPostRequest request = new AddPostRequest();
                 request.text = edtDesc.getText().toString();
@@ -982,7 +985,6 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
         i.putExtra("path",String.valueOf(imageCapture));
         i.putExtra("isCamera",isCamera);
         startActivityForResult(i,10);
-
 
     }
 
@@ -1487,6 +1489,10 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
    //     btnShare.setEnabled(true);
+
+        btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
+
         if (progressBar != null)
             hideLoadingBar();
         //    progressBar.setVisibility(View.GONE);
@@ -1529,6 +1535,10 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Override
     public void onException(int apiId, String error) {
        // btnShare.setEnabled(true);
+
+        btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
+
         if (progressBar != null)
             hideLoadingBar();
         //    progressBar.setVisibility(View.GONE);
@@ -1681,8 +1691,6 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             showLastImage();
             removePdf();
             removeAudio();
-
-
         }
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -1734,7 +1742,6 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 audioPath = data.getStringExtra("AudioData");
                 Log.e(TAG,"audioPath"+ audioPath);
 
-
                 listImages.clear();
                 fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
                 listImages.add(audioPath);
@@ -1744,8 +1751,6 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 showLastImage();
                 removePdf();
                 removeImage();
-
-
             }
         }
 
@@ -1826,6 +1831,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             showLastImage();
             removeAudio();
             removePdf();
+
         } else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
             listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_VIDEO;

@@ -147,7 +147,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
     public void searchListener() {
 
 
-        edtSearch.setOnEditorActionListener((v, actionId, event) -> {
+        /*edtSearch.setOnEditorActionListener((v, actionId, event) -> {
 
             Log.e(TAG,"search id"+actionId);
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -159,10 +159,10 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
                 return true;
             }
             return false;
-        });
+        });*/
 
-    //    edtSearch.setCursorVisible(false);
-/*
+      /*  edtSearch.setCursorVisible(false);
+
         edtSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,7 +172,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         });*/
 
 
-       /* edtSearch.addTextChangedListener(new TextWatcher() {
+        edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -192,7 +192,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
                 }
 
             }
-        });*/
+        });
 
        /* btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override

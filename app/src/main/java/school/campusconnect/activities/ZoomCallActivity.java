@@ -50,7 +50,7 @@ public static final String TAG = "ZoomCallActivity";
 
             if (isConnectionAvailable()) {
 
-                initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", meetingID, zoomName, className, true);
+                initializeZoom(GroupDashboardActivityNew.mGroupItem.zoomKey, GroupDashboardActivityNew.mGroupItem.zoomSecret, GroupDashboardActivityNew.mGroupItem.zoomMail, GroupDashboardActivityNew.mGroupItem.zoomPassword, meetingID, zoomName, className, true);
             }
             else {
                 showNoNetworkMsg();
@@ -121,7 +121,7 @@ public static final String TAG = "ZoomCallActivity";
         } else {
             Log.e(TAG, "logoutzoom Called from startmeeting , already loggedIn");
             ZoomSDK.getInstance().logoutZoom();
-            initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", meetingID, zoomName, className, true);
+            initializeZoom(GroupDashboardActivityNew.mGroupItem.zoomKey, GroupDashboardActivityNew.mGroupItem.zoomSecret, GroupDashboardActivityNew.mGroupItem.zoomMail, GroupDashboardActivityNew.mGroupItem.zoomPassword, meetingID, zoomName, className, true);
         }
 
     }
@@ -203,9 +203,7 @@ public static final String TAG = "ZoomCallActivity";
 
         @Override
         public void onZoomAuthIdentityExpired() {
-
             AppLog.e(TAG, "onZoomAuthIdentityExpired");
-
         }
 
     };

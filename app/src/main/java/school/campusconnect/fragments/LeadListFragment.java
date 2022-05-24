@@ -214,6 +214,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         isAdmin = getArguments().getBoolean("isAdmin", false);
         allMember = getArguments().getBoolean("all",false);
         boolean isNest = getArguments().getBoolean("isNest", false);
+
+        AppLog.e(TAG, "classData is " + new Gson().toJson(classData));
+
         AppLog.e(TAG, "isAdmin is " + isAdmin);
         AppLog.e(TAG, "apiCall is " + apiCall);
         AppLog.e(TAG, "item_click is " + itemClick);
@@ -271,10 +274,12 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             }
         });*/
 
-        if (apiCall)
+       /* if (apiCall)
         {
-      //      callEventApiTeam();
-        }
+
+        }*/
+
+        callEventApiTeam();
     }
 
     @Override
@@ -587,9 +592,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         {
             list = new ArrayList<>();
 
-            for (int j = 0;j<740;j++)
-            {
-                Log.e(TAG,"j position"+j);
+       //     for (int j = 0;j<740;j++)
+        //    {
+         //       Log.e(TAG,"j position"+j);
 
                 for (int i = 0 ;i <results.size();i++)
                 {
@@ -620,7 +625,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
                 }
                 list.addAll(results);
-            }
+//            }
 
         }
 
@@ -631,9 +636,11 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
     private void getToLocally() {
 
-     /*   List<LeadDataTBL> leadDataTBL = LeadDataTBL.getLead(groupId,teamId,currentPage);
+        List<LeadDataTBL> leadDataTBL = LeadDataTBL.getLead(groupId,teamId,currentPage);
 
         mAdapter.clear();
+
+        Log.e(TAG,"leadDataTBlSize "+leadDataTBL.size() +"team Member Count "+teamMemberCount);
 
         if (leadDataTBL.size() > 0 &&  ( leadDataTBL.size() == teamMemberCount  || teamMemberCount == -1))
         {
@@ -667,7 +674,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         else
         {
             getData(true);
-        }*/
+        }
     }
 
     @Override
@@ -750,7 +757,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
     public void search(String strsearch) {
 
-        List<LeadDataTBL> leadDataTBL = LeadDataTBL.searchList(strsearch);
+      /*  List<LeadDataTBL> leadDataTBL = LeadDataTBL.searchList(strsearch);
 
         Log.e(TAG,"search value "+leadDataTBL.size());
 
@@ -784,9 +791,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             mAdapter.addItems(list);
             mBinding.setSize(mAdapter.getItemCount());
             mAdapter.notifyDataSetChanged();
-        }
+        }*/
 
-     /*   if(list!=null){
+        if(list!=null){
             if(!TextUtils.isEmpty(strsearch)){
                 ArrayList<LeadItem> newList = new ArrayList<>();
                 for (int i=0;i<list.size();i++){
@@ -802,7 +809,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 mAdapter.addItems(list);
                 mAdapter.notifyDataSetChanged();
             }
-        }*/
+        }
     }
 
     @Override
@@ -871,14 +878,15 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 {
                     for (int i = 0;i<teamEvent.size();i++)
                     {
-                        if (teamId.equalsIgnoreCase(teamEvent.get(i).lastUserToTeamUpdatedAtEventAt))
+                        if (teamId.equalsIgnoreCase(teamEvent.get(i).teamId))
                         {
                             if (teamEvent.get(i).lastUserToTeamUpdatedAtEventAt != null && MixOperations.isNewEventUpdate(teamEvent.get(i).lastUserToTeamUpdatedAtEventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", leadDataTBLList.get(leadDataTBLList.size()-1)._now))
                             {
-                              //  currentPage = 1;
+                                currentPage = 1;
                                 Log.e(TAG,"call Event");
-                              //  LeadDataTBL.deleteLead(GroupDashboardActivityNew.groupId,teamId);
-                              //  getData(true);
+                                LeadDataTBL.deleteLead(GroupDashboardActivityNew.groupId,teamId);
+                                mAdapter.clear();
+                                getData(true);
                             }
                         }
                     }
@@ -950,7 +958,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         } else {
             Log.e(TAG, "logoutzoom Called from startmeeting , already loggedIn");
             ZoomSDK.getInstance().logoutZoom();
-            initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", meetingId, name, className, true);
+            initializeZoom(GroupDashboardActivityNew.mGroupItem.zoomKey, GroupDashboardActivityNew.mGroupItem.zoomSecret, GroupDashboardActivityNew.mGroupItem.zoomMail,  GroupDashboardActivityNew.mGroupItem.zoomPassword,  GroupDashboardActivityNew.mGroupItem.zoomMeetingId, name, className, true);
         }
 
     }
@@ -1291,20 +1299,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
             if (isConnectionAvailable()) {
 
-                 initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
-
-           /*     if (!item.isLive) {
-                    initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name, true);
-
-                } else {
-                    initializeZoom("NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk", "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB", "class1.gruppie@gmail.com", "Vivid#163", "8528725624", "Test", item.name , false);
-
-                    SimpleDateFormat format = new SimpleDateFormat(
-                            "hh:mma", Locale.getDefault());
-                    format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-
-                }*/
+                 initializeZoom(GroupDashboardActivityNew.mGroupItem.zoomKey, GroupDashboardActivityNew.mGroupItem.zoomSecret,  GroupDashboardActivityNew.mGroupItem.zoomMail,  GroupDashboardActivityNew.mGroupItem.zoomPassword,  GroupDashboardActivityNew.mGroupItem.zoomMeetingId, "Test", item.name, true);
             }
         else {
                 showNoNetworkMsg();
@@ -1322,9 +1317,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         LeadItem data;
 
         public SendNotification(LeadItem leadItem) {
-
             this.data = leadItem;
         }
+
 
         @Override
         protected String doInBackground(String... strings) {
@@ -1380,7 +1375,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                         dataObj.put("createdByImage", LeafPreference.getInstance(getActivity()).getString(LeafPreference.PROFILE_IMAGE_NEW));
                         dataObj.put("createdByName", name);
                         dataObj.put("isVideoCall",true);
-                        dataObj.put("meetingID","8528725624");
+                        dataObj.put("meetingID",GroupDashboardActivityNew.mGroupItem.zoomMeetingId);
                         dataObj.put("zoomName","Test");
                         dataObj.put("className",data.name);
                         dataObj.put("iSNotificationSilent",true);
