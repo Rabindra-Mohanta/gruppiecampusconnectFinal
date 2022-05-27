@@ -34,22 +34,22 @@ android {
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
-              /*  applicationId "smjes.gruppie"
-                versionCode 1
-                versionName "1.0"
+                applicationId "smjes.gruppie"
+                versionCode 2
+                versionName "1.1"
                 resValue "string", "app_name", '"SMJES"'
                 buildConfigField("String", "AppName", '"SMJES"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
+                buildConfigField("String", "APP_ID",  '"school"')
 
                 // [1. Gruppie Campus constituency]
-                applicationId "gcm.gruppie"
+            /*    applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
-                buildConfigField("String", "APP_ID",  '"constituency"')
+                buildConfigField("String", "APP_ID",  '"constituency"')*/
                 /// KITTUR MLA App...
              /*   applicationId "kittur.gruppie"
                 versionCode 10
@@ -212,11 +212,11 @@ android {
                buildConfigField("String", "AppName", '"DODDAGOUDAR"')
                buildConfigField("String", "AppCategory", '"CAMPUS"')
                buildConfigField("String", "APP_ID",  '"school"')*/
-                   ndk {
+                /*   ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
                        abiFilters 'armeabi-v7a','armeabi-v8a'//
-                   }
+                   }*/
             }
     buildTypes {
         release {
@@ -224,7 +224,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-          //    buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"' // MGV , SMJES
+              buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"' // MGV , SMJES
        //     buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
 //            buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://hoysala.gruppie.in"'
@@ -405,7 +405,7 @@ dependencies {
 
 
     implementation 'com.github.HBiSoft:HBRecorder:0.1.15'
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+//    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation "com.google.crypto.tink:tink-android:1.5.0"
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
 
