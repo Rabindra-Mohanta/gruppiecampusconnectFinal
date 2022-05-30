@@ -103,7 +103,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
 
         init();
 
-        progressBar.setVisibility(View.VISIBLE);
+      //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getFeesDetails(this, groupId, teamId);
     }

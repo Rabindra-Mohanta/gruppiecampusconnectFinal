@@ -2,6 +2,7 @@ package school.campusconnect.activities;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,10 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +41,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import school.campusconnect.adapters.ReportAdapter;
+import school.campusconnect.datamodel.attendance_report.AttendenceEditRequest;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.AbsentSubjectReq;
 import school.campusconnect.datamodel.subjects.SubjectResponse;
@@ -53,9 +58,10 @@ import school.campusconnect.datamodel.AttendanceListRes;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppDialog;
 import school.campusconnect.utils.AppLog;
 
-public class AttendanceActivity extends BaseActivity {
+public class AttendanceActivity extends BaseActivity implements AttendanceAdapter.listener {
 
     private static final String TAG = "AttendanceActivity";
     @Bind(R.id.toolbar)
@@ -134,7 +140,7 @@ public class AttendanceActivity extends BaseActivity {
         AppLog.e(TAG, ",groupId:" + groupId + ",teamId:" + teamId);
 
         rvAttendance.setLayoutManager(new LinearLayoutManager(this));
-        attendanceAdapter = new AttendanceAdapter(listAttendance, groupId, teamId);
+        attendanceAdapter = new AttendanceAdapter(listAttendance, groupId, teamId,this);
         rvAttendance.setAdapter(attendanceAdapter);
     }
 
@@ -216,7 +222,7 @@ public class AttendanceActivity extends BaseActivity {
         if(!TextUtils.isEmpty(absentName)){
             dialog.findViewById(R.id.llSubject).setVisibility(View.VISIBLE);
         }else {
-            dialog.findViewById(R.id.llSubject).setVisibility(View.GONE);
+            dialog.findViewById(R.id.llSubject).setVisibility(View.VISIBLE);
         }
 
         AttendanceSubjectAdapter subjectAdapter = new AttendanceSubjectAdapter(subjectList, new AttendanceSubjectListener() {
@@ -352,6 +358,11 @@ public class AttendanceActivity extends BaseActivity {
                     subjectList= subjectResponse.getData();
                 }
                 break;
+
+            case LeafManager.API_EDIT_ATTENDANCE_STUDENT:
+                Toast.makeText(this, getResources().getString(R.string.toast_success), Toast.LENGTH_SHORT).show();
+                finish();
+                break;
         }
     }
 
@@ -384,6 +395,142 @@ public class AttendanceActivity extends BaseActivity {
         if (progressBar != null)
             hideLoadingBar();
         //  progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void edit(AttendanceListRes.lastDayData attendance, String item,String name) {
+
+
+        boolean[] isEdit = {true};
+        Dialog dialogEdit = new Dialog(AttendanceActivity.this, R.style.AppDialog);
+        dialogEdit.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogEdit.setContentView(R.layout.dialog_edit_attendance);
+
+        TextView studentName = (TextView) dialogEdit.findViewById(R.id.tvStudent);
+        TextView tvDateTime = (TextView) dialogEdit.findViewById(R.id.tvDateTime);
+        TextView tvTeacherName = (TextView) dialogEdit.findViewById(R.id.tvTeacherName);
+        TextView tvSubjectName = (TextView) dialogEdit.findViewById(R.id.tvSubjectName);
+        Spinner spAttend = (Spinner) dialogEdit.findViewById(R.id.spAttend);
+        Button btnEdit = (Button) dialogEdit.findViewById(R.id.btnEdit);
+
+      //  studentName.setTextColor(getResources().getColor(R.color.grey));
+        tvDateTime.setTextColor(getResources().getColor(R.color.grey));
+        tvSubjectName.setTextColor(getResources().getColor(R.color.grey));
+        tvTeacherName.setTextColor(getResources().getColor(R.color.grey));
+
+        ArrayAdapter<String> ad = new ArrayAdapter<String>(this, R.layout.item_spinner_new_disable, R.id.tvItem, new String[]{"present","absent"});
+        spAttend.setAdapter(ad);
+        spAttend.setEnabled(false);
+
+        if (attendance.attendance.equalsIgnoreCase("present"))
+        {
+            spAttend.setSelection(0);
+        }
+        else
+        {
+            spAttend.setSelection(1);
+        }
+        studentName.setText(name);
+        tvDateTime.setText(attendance.date+","+attendance.time);
+        tvSubjectName.setText(attendance.subjectName);
+        tvTeacherName.setText(attendance.teacherName);
+
+
+        Log.e(TAG,"isAdmin"+GroupDashboardActivityNew.isAdmin);
+        Log.e(TAG,"teacherID "+attendance.teacherId);
+        Log.e(TAG,"LOGIN ID "+LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID));
+
+        if (GroupDashboardActivityNew.isAdmin || attendance.teacherId.equalsIgnoreCase(LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID)))
+        {
+            btnEdit.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            btnEdit.setVisibility(View.GONE);
+        }
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isEdit[0])
+                {
+                    isEdit[0] = false;
+          //          studentName.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tvDateTime.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tvSubjectName.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    tvTeacherName.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    btnEdit.setText(getResources().getString(R.string.lbl_save));
+
+                    ArrayAdapter<String> ad = new ArrayAdapter<String>(AttendanceActivity.this, R.layout.item_spinner_new, R.id.tvItem, new String[]{"present","absent"});
+                    spAttend.setAdapter(ad);
+                    spAttend.setEnabled(true);
+
+                    if (attendance.attendance.equalsIgnoreCase("present"))
+                    {
+                        spAttend.setSelection(0);
+                    }
+                    else
+                    {
+                        spAttend.setSelection(1);
+                    }
+                }
+                else
+                {
+                    isEdit[0] = true;
+                    dialogEdit.dismiss();
+                    AttendenceEditRequest request = new AttendenceEditRequest();
+                    request.setUserId(item);
+                    request.setAttendanceId(attendance.attendanceId);
+                    request.setAttendance(spAttend.getSelectedItem().toString());
+
+                /*if (attendance.attendance.equalsIgnoreCase("present"))
+                {
+                    request.setAttendance("absent");
+                }
+                else
+                {
+                    request.setAttendance("present");
+                }*/
+
+                    Log.e(TAG,"edit attendance req "+new Gson().toJson(request));
+
+                    leafManager.editAttendanceStudent(AttendanceActivity.this,groupId,teamId,request);
+                }
+
+            }
+        });
+
+        dialogEdit.show();
+
+        /*AppDialog.showConfirmDialog(this, getResources().getString(R.string.dialog_are_you_sure_you_want_to_change_attend), new AppDialog.AppDialogListener() {
+            @Override
+            public void okPositiveClick(DialogInterface dialog) {
+                AttendenceEditRequest request = new AttendenceEditRequest();
+                request.setUserId(item);
+                request.setAttendanceId(attendance.attendanceId);
+
+                if (attendance.attendance.equalsIgnoreCase("present"))
+                {
+                    request.setAttendance("absent");
+                }
+                else
+                {
+                    request.setAttendance("present");
+                }
+
+                Log.e(TAG,"edit attendance req "+new Gson().toJson(request));
+
+                leafManager.editAttendanceStudent(AttendanceActivity.this,groupId,teamId,request);
+
+
+            }
+            @Override
+            public void okCancelClick(DialogInterface dialog) {
+                dialog.dismiss();
+            }
+        });*/
+
+
     }
 
     private class SendNotification extends AsyncTask<String, String, String> {

@@ -14,7 +14,9 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
+import school.campusconnect.datamodel.attendance_report.AttendenceEditRequest;
 import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
@@ -1998,4 +2000,12 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/class/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ClassResponse> getClassesOfStaff(@Path("group_id") String group_id, @Query("staffIf") String staffIf);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/attendance/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editAttendanceForSelectedStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,@Body AttendenceEditRequest request);
+
+    @GET("api/v1/groups/{group_id}/team/{team_id}/offline/attendance/report/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<AttendanceReportParentRes> getOfflineAttendReportParent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year, @Query("userId") String user_id);
 }

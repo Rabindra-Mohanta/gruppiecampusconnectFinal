@@ -76,6 +76,15 @@
         android:src="@drawable/ic_share"
         android:layout_height="50dp" />
 
+    <ImageView
+        android:id="@+id/iconAdd"
+        android:layout_gravity="end"
+        android:layout_width="50dp"
+        android:padding="@dimen/padding_10dp"
+        android:layout_toLeftOf="@id/iconRotate"
+        android:src="@drawable/ic_add_post_new"
+        android:layout_height="50dp" />
+
     <ProgressBar
         android:id="@+id/progressBar1"
         android:layout_width="70dp"

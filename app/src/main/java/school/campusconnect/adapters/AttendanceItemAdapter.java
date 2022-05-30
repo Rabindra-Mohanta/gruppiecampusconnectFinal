@@ -21,8 +21,16 @@ public class AttendanceItemAdapter extends RecyclerView.Adapter<AttendanceItemAd
 
     ArrayList<AttendanceListRes.lastDayData> lastDaysAttendance;
     Context mContext;
-    public AttendanceItemAdapter(ArrayList<AttendanceListRes.lastDayData> lastDaysAttendance) {
+    OnClick click;
+    String user;
+    String studentName;
+
+
+    public AttendanceItemAdapter(ArrayList<AttendanceListRes.lastDayData> lastDaysAttendance, AttendanceAdapter attendanceAdapter,String position,String name) {
         this.lastDaysAttendance = lastDaysAttendance;
+        this.click = attendanceAdapter;
+        this.user = position;
+        this.studentName = name;
     }
 
     @NonNull
@@ -35,11 +43,18 @@ public class AttendanceItemAdapter extends RecyclerView.Adapter<AttendanceItemAd
 
     @Override
     public void onBindViewHolder(@NonNull AttendanceItemAdapter.ViewHolder holder, int position) {
+
         AttendanceListRes.lastDayData data = lastDaysAttendance.get(position);
-        if (data.attendance)
+
+        if (data.attendance.equalsIgnoreCase("present"))
         {
             holder.tvAttendance.setText("P");
             holder.tvAttendance.setBackgroundResource(R.color.color_green);
+        }
+        else if (data.attendance.equalsIgnoreCase("leave"))
+        {
+            holder.tvAttendance.setText("L");
+            holder.tvAttendance.setBackgroundResource(R.color.color_yellow);
         }
         else
         {
@@ -47,11 +62,26 @@ public class AttendanceItemAdapter extends RecyclerView.Adapter<AttendanceItemAd
             holder.tvAttendance.setBackgroundResource(R.color.red);
         }
 
+
+        holder.tvAttendance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!data.attendance.equalsIgnoreCase("leave"))
+                {
+                    click.add(data,user,studentName);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return lastDaysAttendance!=null?lastDaysAttendance.size() : 0;
+    }
+    public interface OnClick
+    {
+        public void add(AttendanceListRes.lastDayData lastDayData,String user,String userName);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

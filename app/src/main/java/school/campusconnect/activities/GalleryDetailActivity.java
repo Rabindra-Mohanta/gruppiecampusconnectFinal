@@ -328,10 +328,16 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
             if (allImageList.size() == 1){
                 Intent i = new Intent(this, FullScreenActivity.class);
                 i.putExtra("image", allImageList.get(0));
+                i.putExtra("album_id", this.item.getAlbumId());
+                i.putExtra("type", this.item.getFileType());
+                i.putExtra("edit",this.item.canEdit);
                 this.startActivity(i);
             } else {
                 Intent i = new Intent(this, FullScreenMultiActivity.class);
                 i.putStringArrayListExtra("image_list", allImageList);
+                i.putExtra("album_id", this.item.getAlbumId());
+                i.putExtra("type", this.item.getFileType());
+                i.putExtra("edit",this.item.canEdit);
                 this.startActivity(i);
             }
         }else {

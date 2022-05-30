@@ -21,6 +21,8 @@ import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AppLog;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -64,9 +66,11 @@ public class FullScreenActivity extends BaseActivity {
 
     String image;
 
-
     @Bind(R.id.iconShareExternal)
     ImageView iconShareExternal;
+
+    @Bind(R.id.iconAdd)
+    ImageView iconAdd;
 
     @Bind(R.id.imgCancel)
     ImageView imgCancel;
@@ -83,6 +87,8 @@ public class FullScreenActivity extends BaseActivity {
     String imagePreviewUrl = "";
     AmazoneImageDownload asyncTask;
 
+    private String album_id = "",type = "";
+    private boolean isEdit = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +96,32 @@ public class FullScreenActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         image = Constants.decodeUrlToBase64(getIntent().getStringExtra("image"));
+        album_id = getIntent().getStringExtra("album_id");
+        type= getIntent().getStringExtra("type");
+        isEdit = getIntent().getBooleanExtra("edit",false);
 
+
+        if (isEdit)
+        {
+            iconAdd.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            iconAdd.setVisibility(View.GONE);
+        }
+
+        iconAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddGalleryPostActivity.class);
+                intent.putExtra("isEdit", true);
+                intent.putExtra("album_id", album_id);
+                intent.putExtra("type", type);
+                startActivity(intent);
+            }
+        });
+
+        Log.e(TAG,"isEdit"+isEdit+"\n type"+type+"\nalbum id"+album_id);
         Log.e(TAG,"image path"+image);
         imagePreviewUrl = LeafPreference.getInstance(this).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
       //  Picasso.with(this).load(image).into(ivImage);
@@ -217,6 +248,7 @@ public class FullScreenActivity extends BaseActivity {
         });
     }
 
+    
     private void downloadImage() {
 
         ivDownload.setVisibility(View.GONE);

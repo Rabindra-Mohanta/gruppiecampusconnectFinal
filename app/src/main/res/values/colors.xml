@@ -26,6 +26,7 @@
     <color name="color_orange_hover">#3b5998</color>
     <!--<color name="color_green">#68ae12</color>-->
     <color name="color_green">#68ae12</color>
+    <color name="color_yellow">#FFEB3B</color>
     <color name="color_green_light">#68ae12</color>
     <color name="color_label">#444444</color>
     <color name="color_white">#ffffff</color>

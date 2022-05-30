@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/padding_10dp"
+        app:cardElevation="@dimen/padding_5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_15dp">
+
+                <LinearLayout
+                    android:id="@+id/llSubject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvStudent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/lbl_students"
+                        android:textSize="20dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_marginTop="@dimen/padding_10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:weightSum="2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_weight="1"
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/title_attendance"
+                                android:textAllCaps="true"
+                                android:textSize="@dimen/text_size_16sp"
+
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@color/black" />
+
+                            <FrameLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <Spinner
+                                    style="@style/commonSpinnerWhite"
+                                    android:id="@+id/spAttend"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/padding_30dp"
+                                    />
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:src="@drawable/arrow_down"
+                                    android:tint="@color/colorPrimary"
+                                    android:layout_marginEnd="@dimen/padding_10dp"
+                                    android:layout_gravity="right|center"
+                                    android:layout_height="15dp"/>
+                            </FrameLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:weightSum="2"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_weight="1"
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lbl_date_and_time"
+                                android:textAllCaps="true"
+                                android:textSize="@dimen/text_size_16sp"
+
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/tvDateTime"
+                                android:gravity="right"
+                                android:layout_weight="1"
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/text_size_16sp"
+
+                                android:layout_gravity="center_vertical"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:weightSum="2"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_weight="1"
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lbl_teacher"
+                                android:textAllCaps="true"
+                                android:textSize="@dimen/text_size_16sp"
+
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/tvTeacherName"
+                                android:gravity="right"
+                                android:layout_weight="1"
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/text_size_16sp"
+                                 />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:weightSum="2"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_weight="1"
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lbl_subject"
+                                android:textAllCaps="true"
+                                android:textSize="@dimen/text_size_16sp"
+
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/tvSubjectName"
+                                android:gravity="right"
+                                android:layout_weight="1"
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/text_size_16sp"
+                                 />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:id="@+id/btnEdit"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/padding_5dp"
+                    android:background="@drawable/add_post_button_bg"
+                    android:text="@string/lbl_edit"
+                    android:textColor="@color/white" />
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

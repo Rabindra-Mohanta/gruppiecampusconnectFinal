@@ -318,6 +318,12 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                 String path = Constants.decodeUrlToBase64(item.get(position).getImagePath());
                 String newStr = path.substring(path.indexOf("/images")+1);
 
+                Log.e(TAG,"full path "+imagePreviewUrl+newStr+"?tr=w-50");
+
+                Log.e(TAG,"imagePreviewUrl "+imagePreviewUrl);
+
+                Log.e(TAG,"newStr "+newStr);
+
                 Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
                     @Override
                     public void onSuccess() {

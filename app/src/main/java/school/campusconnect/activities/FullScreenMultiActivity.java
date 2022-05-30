@@ -9,6 +9,8 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -40,10 +42,15 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
     @Bind(R.id.iconShareExternal)
     ImageView iconShareExternal;
 
+    @Bind(R.id.iconAdd)
+    ImageView iconAdd;
+
     ArrayList<String> listImages;
 
     MultiImageAdapter adapter;
     boolean isFromFloatService = false;
+    private String album_id = "",type = "";
+    private boolean isEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,12 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
         ButterKnife.bind(this);
 
         listImages = getIntent().getStringArrayListExtra("image_list");
+        album_id = getIntent().getStringExtra("album_id");
+        type= getIntent().getStringExtra("type");
+        isEdit = getIntent().getBooleanExtra("edit",false);
+
+        Log.e("FullScreenMultiActivity","isEdit"+isEdit+"\n type"+type+"\nalbum id"+album_id);
+
 
         if(getIntent().hasExtra("from"))
         isFromFloatService = getIntent().getStringExtra("from").equalsIgnoreCase("floatservice");
@@ -72,6 +85,26 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        if (isEdit)
+        {
+            iconAdd.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            iconAdd.setVisibility(View.GONE);
+        }
+
+        iconAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddGalleryPostActivity.class);
+                intent.putExtra("isEdit", true);
+                intent.putExtra("album_id", album_id);
+                intent.putExtra("type", type);
+                startActivity(intent);
             }
         });
 
@@ -137,6 +170,10 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
         });
 
     }
+
+
+
+
 
     @Override
     public void onImageClick(String imagePath) {

@@ -30,6 +30,7 @@ import school.campusconnect.activities.LeadsListActivity;
 import school.campusconnect.activities.NestedTeamActivity;
 import school.campusconnect.activities.UpdateMemberActivity;
 import school.campusconnect.activities.VoterProfileActivity;
+import school.campusconnect.activities.ZoomCallActivity;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
 import school.campusconnect.datamodel.booths.BoothMemberResponse;
 import school.campusconnect.datamodel.committee.CommitteeTBL;
@@ -102,6 +103,8 @@ import us.zoom.sdk.InMeetingChatMessage;
 import us.zoom.sdk.InMeetingEventHandler;
 import us.zoom.sdk.InMeetingServiceListener;
 import us.zoom.sdk.InstantMeetingOptions;
+import us.zoom.sdk.JoinMeetingOptions;
+import us.zoom.sdk.JoinMeetingParams;
 import us.zoom.sdk.MeetingServiceListener;
 import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.MeetingViewsOptions;
@@ -279,7 +282,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         }*/
 
-        callEventApiTeam();
+ //       callEventApiTeam();
     }
 
     @Override
@@ -504,7 +507,19 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
     @Override
     public void onStartMeeting(LeadItem item) {
-        startMeetingZoom(item);
+      //  startMeetingZoom(item);
+
+        Log.e(TAG,"LeadItem "+new Gson().toJson(item));
+
+        new SendNotification(item).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        Intent fullScreenIntent = new Intent(getContext(), ZoomCallActivity.class);
+        fullScreenIntent.putExtra("className",item.name);
+        fullScreenIntent.putExtra("meetingID",GroupDashboardActivityNew.mGroupItem.zoomMeetingId);
+        fullScreenIntent.putExtra("zoomName","Test");
+        fullScreenIntent.putExtra("image",item.image);
+        fullScreenIntent.putExtra("isMessage",false);
+        fullScreenIntent.putExtra("name",item.name);
+        startActivity(fullScreenIntent);
     }
 
     @Override
@@ -885,6 +900,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                                 currentPage = 1;
                                 Log.e(TAG,"call Event");
                                 LeadDataTBL.deleteLead(GroupDashboardActivityNew.groupId,teamId);
+                                list.clear();
                                 mAdapter.clear();
                                 getData(true);
                             }
@@ -1347,7 +1363,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                         String topic;
                         String title = getResources().getString(R.string.app_name);
                         String name = LeafPreference.getInstance(getActivity()).getString(LeafPreference.NAME);
-                        String message =  name + " has Video Calling you." + data.name;
+                        String message =  name + " has Video Calling you.";
 
 
                         List<String> listToken = new ArrayList<>();
@@ -1371,11 +1387,12 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
                         JSONObject dataObj = new JSONObject();
                         dataObj.put("groupId", GroupDashboardActivityNew.groupId);
-                        dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
+                        dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.GCM_TOKEN));
                         dataObj.put("createdByImage", LeafPreference.getInstance(getActivity()).getString(LeafPreference.PROFILE_IMAGE_NEW));
                         dataObj.put("createdByName", name);
                         dataObj.put("isVideoCall",true);
                         dataObj.put("meetingID",GroupDashboardActivityNew.mGroupItem.zoomMeetingId);
+                        dataObj.put("meetingPassword",GroupDashboardActivityNew.mGroupItem.zoomMeetingPassword);
                         dataObj.put("zoomName","Test");
                         dataObj.put("className",data.name);
                         dataObj.put("iSNotificationSilent",true);
@@ -1411,6 +1428,8 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
             return server_response;
         }
+
+
 
         private String readStream(InputStream in) {
             BufferedReader reader = null;

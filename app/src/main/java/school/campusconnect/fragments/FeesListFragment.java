@@ -274,15 +274,14 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
     public void exportDataToCSV() {
         if (!checkPermissionForWriteExternal()) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
             } else {
-                AppLog.e(TAG, "requestPermissionForWriteExternal");
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1111);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1111);
             }
             return;
         }
 
-        File mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }

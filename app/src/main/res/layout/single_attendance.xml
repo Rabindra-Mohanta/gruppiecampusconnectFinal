@@ -97,6 +97,7 @@
                 android:layout_marginVertical="@dimen/padding_10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:reverseLayout="true"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

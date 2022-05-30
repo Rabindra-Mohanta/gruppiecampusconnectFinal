@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -313,6 +314,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                     break;
 
                 case R.id.imgStartMeeting:
+                    AppLog.e(TAG,"data "+new Gson().toJson(list.get(getLayoutPosition())));
                     listener.onStartMeeting(list.get(getLayoutPosition()));
                     break;
 

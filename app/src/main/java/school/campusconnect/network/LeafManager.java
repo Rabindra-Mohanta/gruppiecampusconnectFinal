@@ -16,7 +16,9 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
+import school.campusconnect.datamodel.attendance_report.AttendenceEditRequest;
 import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
@@ -528,6 +530,8 @@ public class LeafManager {
     public static final int API_STATUS_PLAN = 340;
     public static final int API_CHANGE_STATUS_PLAN = 341;
     public static final int API_CLASS_OF_STAFF = 346;
+    public static final int API_EDIT_ATTENDANCE_STUDENT =  354;
+    public static final int API_ATTENDANCE_REPORT_PARENT =  355;
     public LeafManager() {
 
     }
@@ -12925,6 +12929,80 @@ public class LeafManager {
 
             @Override
             public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+
+    public void editAttendanceStudent(OnCommunicationListener listListener, String group_id, String team_id, AttendenceEditRequest request) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.editAttendanceForSelectedStudent(group_id,team_id,request);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_EDIT_ATTENDANCE_STUDENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+
+    public void getAttendanceReportParent(OnCommunicationListener listListener, String group_id, String team_id, int month,int year,String user_id) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<AttendanceReportParentRes> model = service.getOfflineAttendReportParent(group_id,team_id,month,year,user_id);
+        ResponseWrapper<AttendanceReportParentRes> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnCommunicationListener>>() {
+        }.getType();
+
+        wrapper.execute(API_ATTENDANCE_REPORT_PARENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnCommunicationListener> error) {
                 if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
 

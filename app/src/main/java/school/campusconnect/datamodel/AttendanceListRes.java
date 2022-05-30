@@ -46,7 +46,22 @@ public class AttendanceListRes extends BaseResponse{
 
         @SerializedName("attendance")
         @Expose
-        public Boolean attendance;
+        public String attendance;
 
+        @SerializedName("attendanceId")
+        @Expose
+        public String attendanceId;
+
+        @SerializedName("teacherName")
+        @Expose
+        public String teacherName;
+
+        @SerializedName("teacherId")
+        @Expose
+        public String teacherId;
+
+        @SerializedName("subjectName")
+        @Expose
+        public String subjectName;
     }
 }

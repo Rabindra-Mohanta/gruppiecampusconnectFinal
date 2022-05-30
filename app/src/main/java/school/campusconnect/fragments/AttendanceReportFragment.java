@@ -190,7 +190,6 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             StartDate = EndDate-2;
         }
 
-
         String month = monthName[calendar.get(Calendar.MONTH)];
         CurrentMonth = getMonthNumber(month);
         Month = CurrentMonth;

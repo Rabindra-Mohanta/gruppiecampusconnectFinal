@@ -1260,10 +1260,13 @@
     <string name="lbl_to_date">To Date</string>
     <string name="toast_voter_delete_successfully">Voter Delete SuccessFully...</string>
 
+    <string name="dialog_are_you_sure_you_want_to_change_attend">Are You Sure You Want to Change Attendance ? </string>
+
     <string name="lbl_plan">Planed</string>
     <string name="lbl_actual">Actual</string>
     <string name="menu_edit_topic">Edit Topic</string>
     <string name="menu_staff_filter">Staffs</string>
+    <string name="lbl_date_and_time">Date &amp; Time</string>
 
 
 </resources>

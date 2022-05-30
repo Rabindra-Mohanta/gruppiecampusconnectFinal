@@ -2,6 +2,9 @@ package school.campusconnect.activities;
 
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -33,6 +36,16 @@ public class AttendanceDetailActivity extends BaseActivity {
         attendanceDetailFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,attendanceDetailFragment).commit();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

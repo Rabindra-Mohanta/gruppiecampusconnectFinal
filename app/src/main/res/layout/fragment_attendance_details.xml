@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/lbl_day"
+                android:text="@string/lbl_Date"
                 android:gravity="center"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold"
@@ -55,14 +55,14 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/lbl_morning"
+                android:text="@string/title_attendance"
                 android:gravity="center"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:layout_marginBottom="@dimen/padding_5dp"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold"
                 android:layout_height="wrap_content" />
-            <View
+           <!-- <View
                 android:layout_width="1px"
                 android:background="@color/color_divider"
                 android:layout_height="match_parent"/>
@@ -75,13 +75,12 @@
                 android:layout_marginBottom="@dimen/padding_5dp"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content" />-->
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvStudents"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/padding_10dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 

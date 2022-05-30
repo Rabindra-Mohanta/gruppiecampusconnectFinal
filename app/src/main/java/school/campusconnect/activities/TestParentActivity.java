@@ -1610,6 +1610,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             Intent i = new Intent(this, FullScreenMultiActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.putExtra("image_list", item.fileName);
+
             startActivity(i);
         }
     }

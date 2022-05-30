@@ -43,7 +43,7 @@ import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 
 public class FeesClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "FeesClassListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 

@@ -103,6 +103,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     }
                     break;
 
+                    case "AcceptVideoCall": {
+                        Intent intents= new Intent("call_accept");
+                        sendBroadcast(intents);
+                    }
+                    break;
+
+                    case "RejectVideoCall": {
+                        Intent intents= new Intent("call_decline");
+                        sendBroadcast(intents);
+                    }
+                    break;
+
                     case "videoEnd": {
                         Intent intent = new Intent("MEETING_END");
                         intent.putExtra("teamId", data.teamId);
@@ -274,7 +286,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 if (data.isVideoCall)
                 {
-                    sendVideoCallNotification(data.body,data.meetingID,data.zoomName,data.className,data.createdByImage,data.createdByName);
+                    sendVideoCallNotification(data.body,data.meetingID,data.zoomName,data.className,data.createdByImage,data.createdByName,data.createdById,data.meetingPassword);
                 }
             }
         }
@@ -285,7 +297,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendVideoCallNotification(String s,String meetingId,String zoomName,String className,String image,String name)
+    private void sendVideoCallNotification(String s,String meetingId,String zoomName,String className,String image,String name,String createdID,String password)
     {
       /*  AppLog.e(TAG, "sendVideoCallNotification ");
        String ACTION_STOP_LISTEN = "action_stop_listen";
@@ -325,20 +337,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         startForeground(createID(), incomingCallNotification);*/
-
-        startCallService(s,meetingId,zoomName,className,image,name);
+        startCallService(s,meetingId,zoomName,className,image,name,createdID,password);
     }
 
-    public void startCallService(String s,String meetingId,String zoomName,String className,String image,String name) {
+    public void startCallService(String s,String meetingId,String zoomName,String className,String image,String name,String id,String password) {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
             intent.putExtra("msg",s);
+            intent.putExtra("password",password);
             intent.putExtra("meetingID",meetingId);
             intent.putExtra("zoomName",zoomName);
             intent.putExtra("className",className);
             intent.putExtra("name",name);
+            intent.putExtra("createdID",id);
             intent.putExtra("image",image);
             intent.setAction(Constants.STARTFOREGROUND_ACTION);
             startForegroundService(intent);

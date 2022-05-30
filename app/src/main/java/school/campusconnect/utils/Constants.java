@@ -21,7 +21,8 @@ public class Constants {
     public static final String STOPFOREGROUND_ACTION = "STOPFOREGROUND_ACTION";
     public static final String ACCPET_ACTION = "ACCPET_ACTION";
     public static final String DECLINE_ACTION = "DECLINE_ACTION";
-
+    public static final String ACCPET_ACTION_SCREEN = "ACCPET_ACTION_SCREEN";
+    public static final String DECLINE_ACTION_SCREEN = "DECLINE_ACTION_SCREEN";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String FILE_TYPE_PDF = "pdf";

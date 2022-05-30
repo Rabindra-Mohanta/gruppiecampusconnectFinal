@@ -562,6 +562,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_communication_message">Communication Or Message</string>
     <string name="lbl_other_activity">Other Activity</string>
     <string name="lbl_teacher_name">Class Teacher</string>
+    <string name="lbl_teacher">Teacher</string>
     <string name="lbl_students">Students</string>
     <string name="lbl_class_register_student">Class/Student Register</string>
     <string name="lbl_register_student">Student Register</string>
@@ -827,6 +828,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_course">Course</string>
     <string name="lbl_select_sticker">Select Sticker</string>
     <string name="lbl_submit_attendance">Submit Attendance</string>
+    <string name="lbl_date_and_time">Date &amp; Time</string>
 
     <string name="lbl_do_you_want_to_continue_class">Do you want to Continue Class?</string>
 
@@ -1180,6 +1182,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="dialog_share_live_class">Do you want to share this live class?</string>
     <string name="dialog_remove_banner">Are You Sure You Want to Remove This Banner ?</string>
     <string name="dialog_are_you_sure">Are You Sure You Want to </string>
+    <string name="dialog_are_you_sure_you_want_to_change_attend">Are You Sure You Want to Change Attendance ? </string>
     <string name="dialog_ticket"> Ticket ?</string>
 
 

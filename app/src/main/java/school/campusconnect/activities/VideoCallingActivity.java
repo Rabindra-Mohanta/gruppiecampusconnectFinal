@@ -51,7 +51,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.Callback {
     public static final String TAG = "VideoCallingActivity";
-    String meetingID, zoomName, className;
+    String meetingID, zoomName, className,createdId,password;
     String image, name;
     Button accept, decline;
     TextView tvCallerName;
@@ -84,7 +84,10 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
         meetingID = getIntent().getStringExtra("meetingID");
         zoomName = getIntent().getStringExtra("zoomName");
         image = getIntent().getStringExtra("image");
+        password = getIntent().getStringExtra("password");
         name = getIntent().getStringExtra("name");
+        createdId = getIntent().getStringExtra("createdID");
+
         className = getIntent().getStringExtra("className");
 
         tvCallerName.setText(name);
@@ -96,11 +99,8 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
             setTurnScreenOn(true);
         }
 
-
         int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
         getWindow().addFlags(flag);
-
-
 
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,9 +109,14 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
                 Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("className", className);
+                intent.putExtra("createdID",createdId);
+                intent.putExtra("password",password);
                 intent.putExtra("meetingID", meetingID);
                 intent.putExtra("zoomName", zoomName);
-                intent.setAction(Constants.ACCPET_ACTION);
+                intent.putExtra("image", image);
+                intent.putExtra("name", name);
+
+                intent.setAction(Constants.ACCPET_ACTION_SCREEN);
                 startService(intent);
 
 
@@ -125,9 +130,10 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
                 Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("className", className);
+                intent.putExtra("createdID",createdId);
                 intent.putExtra("meetingID", meetingID);
                 intent.putExtra("zoomName", zoomName);
-                intent.setAction(Constants.STOPFOREGROUND_ACTION);
+                intent.setAction(Constants.DECLINE_ACTION_SCREEN);
                 startService(intent);
             }
         });
