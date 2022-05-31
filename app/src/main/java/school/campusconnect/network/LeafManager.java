@@ -16,6 +16,7 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.attendance_report.ApplyLeaveReq;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.attendance_report.AttendenceEditRequest;
@@ -49,9 +50,11 @@ import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
 import school.campusconnect.datamodel.syllabus.EditTopicModelReq;
+import school.campusconnect.datamodel.syllabus.StaffAnalysisRes;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
+import school.campusconnect.datamodel.syllabus.TodaySyllabusPlanRes;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -532,6 +535,9 @@ public class LeafManager {
     public static final int API_CLASS_OF_STAFF = 346;
     public static final int API_EDIT_ATTENDANCE_STUDENT =  354;
     public static final int API_ATTENDANCE_REPORT_PARENT =  355;
+    public static final int API_APPLY_FOR_LEAVE =  356;
+    public static final int API_TODAY_DATE_WISE_SYLLBUS_PLAN =  353;
+    public static final int API_STAFF_ANALYSIS =  347;
     public LeafManager() {
 
     }
@@ -13019,10 +13025,114 @@ public class LeafManager {
 
     }
 
+    public void applyForLeave(OnCommunicationListener listListener, String group_id, String team_id, ApplyLeaveReq req) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.applyForLeave(group_id,team_id,req);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnCommunicationListener>>() {
+        }.getType();
+
+        wrapper.execute(API_APPLY_FOR_LEAVE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnCommunicationListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+    public void getTodaySyllabusPlanList(OnCommunicationListener listListener, String group_id, String date) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<TodaySyllabusPlanRes> model = service.getTodayDateSyllabus(group_id,date);
+        ResponseWrapper<TodaySyllabusPlanRes> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnCommunicationListener>>() {
+        }.getType();
+
+        wrapper.execute(API_TODAY_DATE_WISE_SYLLBUS_PLAN, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnCommunicationListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
 
 
+    public void getStaffAnalysis(OnCommunicationListener listListener, String group_id, String staffid) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<StaffAnalysisRes> model = service.getAnalysisOfStaff(group_id,staffid);
+        ResponseWrapper<StaffAnalysisRes> wrapper = new ResponseWrapper<>(model);
 
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnCommunicationListener>>() {
+        }.getType();
 
+        wrapper.execute(API_STAFF_ANALYSIS, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnCommunicationListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
 
 
     public interface OnCommunicationListener {

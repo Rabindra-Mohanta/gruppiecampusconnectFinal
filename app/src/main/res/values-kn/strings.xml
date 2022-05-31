@@ -1267,6 +1267,11 @@
     <string name="menu_edit_topic">Edit Topic</string>
     <string name="menu_staff_filter">Staffs</string>
     <string name="lbl_date_and_time">Date &amp; Time</string>
-
-
+    <string name="toast_no_data_found">ಯಾವುದೇ ಡೇಟಾ ಕಂಡುಬಂದಿಲ್ಲ</string>
+    <string name="lbl_leave_req">Leave\nRequest</string>
+    <string name="lbl_leave_request">Leave Request</string>
+    <string name="lbl_no_of_day">No. Of Days</string>
+    <string name="lbl_today_topics">Today\'s Topics</string>
+    <string name="lbl_teacher">Teacher</string>
+    <string name="lbl_overall_anylysis">Overall Analysis</string>
 </resources>

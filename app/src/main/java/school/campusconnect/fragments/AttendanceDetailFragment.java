@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -38,6 +39,7 @@ import butterknife.OnClick;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
+import school.campusconnect.activities.ApplyLeaveActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
@@ -62,12 +64,17 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
+
+    @Bind(R.id.llLeaveReq)
+    public CardView llLeaveReq;
+
     Calendar calendar;
     private String mGroupId;
     private String teamId;
     private String userId;
     private String rollNo;
 
+    ArrayList<AttendanceReportParentRes.AttendanceReportData> attendanceReport = new ArrayList<>();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,13 +105,24 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
 
     private void init() {
         rvStudents.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        llLeaveReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), ApplyLeaveActivity.class);
+                i.putExtra("teamID",teamId);
+                startActivity(i);
+            }
+        });
     }
 
     private void getAttendanceDetail() {
+
+        attendanceReport.clear();
+
         tvMonth.setText(MixOperations.getMonth(calendar.getTime()).toUpperCase());
         LeafManager leafManager = new LeafManager();
         showLoadingBar(progressBar);
-
 
        // progressBar.setVisibility(View.VISIBLE);
       //  leafManager.getAttendanceDetail(this, GroupDashboardActivityNew.groupId, teamId,userId,rollNo, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
@@ -144,6 +162,7 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
 
         if (res.getData().size() > 0)
         {
+            attendanceReport.addAll(res.getData().get(0).getAttendanceReport());
             rvStudents.setAdapter(new ReportDetailAdapterV1(res.getData().get(0).getAttendanceReport()));
         }
         else
@@ -307,9 +326,15 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
             return false;
         }
     }
-    /*public void exportDataToCSV() {
+    public void exportDataToCSV() {
 
         if (!checkPermissionForWriteExternal()) {
+            return;
+        }
+
+        if (attendanceReport.size() == 0)
+        {
+            Toast.makeText(getContext(),getResources().getString(R.string.toast_no_data_found),Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -331,23 +356,17 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
             HSSFSheet firstSheet = workbook.createSheet(getArguments().getString("title")+"_"+tvMonth.getText().toString());
 
             HSSFRow rowA = firstSheet.createRow(0);
-            rowA.createCell(0).setCellValue("Roll No");
-            rowA.createCell(1).setCellValue("Name");
-            rowA.createCell(2).setCellValue("Morning Attendance");
-            rowA.createCell(3).setCellValue("Evening Attendance");
+            rowA.createCell(0).setCellValue("Date");
+            rowA.createCell(1).setCellValue("Attendance");
 
-
-            if (attendanceReportList != null)
+            if (attendanceReport != null)
             {
-                for(int i=0;i<attendanceReportList.size();i++){
+                for(int i=0;i<attendanceReport.size();i++){
 
-                    AttendanceReportRes.AttendanceReportData item = attendanceReportList.get(i);
+                    AttendanceReportParentRes.AttendanceReportData item = attendanceReport.get(i);
                     HSSFRow rowData = firstSheet.createRow(i + 1);
-                    rowData.createCell(0).setCellValue(item.getRollNumber());
-                    rowData.createCell(1).setCellValue(item.getStudentName());
-                    rowData.createCell(2).setCellValue(item.getMorningPresentCount()+"("+item.getTotalMorningAttendance()+")");
-                    rowData.createCell(3).setCellValue(item.getAfternoonPresentCount()+"("+item.getTotalAfternoonAttendance()+")");
-
+                    rowData.createCell(0).setCellValue(item.getDate()+"\n( "+item.getTime()+" )");
+                    rowData.createCell(1).setCellValue(item.getAttendance());
                 }
             }
             FileOutputStream fos = null;
@@ -370,7 +389,7 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     private void shareFile(File file) {
         Uri uriFile;

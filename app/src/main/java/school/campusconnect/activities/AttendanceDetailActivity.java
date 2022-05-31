@@ -11,6 +11,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.fragments.AttendanceDetailFragment;
+import school.campusconnect.fragments.AttendanceReportFragment;
 
 public class AttendanceDetailActivity extends BaseActivity {
 
@@ -40,11 +41,18 @@ public class AttendanceDetailActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_attendance_details,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.menu_print_excel:
+                ((AttendanceDetailFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).exportDataToCSV();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

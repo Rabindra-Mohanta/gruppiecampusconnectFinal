@@ -14,6 +14,7 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.attendance_report.ApplyLeaveReq;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.attendance_report.AttendenceEditRequest;
@@ -47,9 +48,11 @@ import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
 import school.campusconnect.datamodel.syllabus.EditTopicModelReq;
+import school.campusconnect.datamodel.syllabus.StaffAnalysisRes;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
+import school.campusconnect.datamodel.syllabus.TodaySyllabusPlanRes;
 import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
@@ -1999,7 +2002,7 @@ public interface LeafService {
 
     @GET("/api/v1/groups/{group_id}/class/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<ClassResponse> getClassesOfStaff(@Path("group_id") String group_id, @Query("staffIf") String staffIf);
+    Call<ClassResponse> getClassesOfStaff(@Path("group_id") String group_id, @Query("staffId") String staffIf);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/attendance/edit")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -2008,4 +2011,20 @@ public interface LeafService {
     @GET("api/v1/groups/{group_id}/team/{team_id}/offline/attendance/report/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AttendanceReportParentRes> getOfflineAttendReportParent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year, @Query("userId") String user_id);
+
+    @POST("api/v1/groups/{group_id}/team/{team_id}/student/leave/apply")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> applyForLeave(@Path("group_id") String group_id, @Path("team_id") String team_id,@Body ApplyLeaveReq req);
+
+    @GET("/api/v1/groups/{group_id}/today/staff/plan")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TodaySyllabusPlanRes> getTodayDateSyllabus(@Path("group_id") String group_id, @Query("date") String date);
+
+    @GET("api/v1/groups/{group_id}/staff/syllabus/analysis")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StaffAnalysisRes> getAnalysisOfStaff(@Path("group_id") String group_id, @Query("staffId") String staffId);
+
+
+
+
 }

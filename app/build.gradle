@@ -50,6 +50,16 @@ android {
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
                 buildConfigField("String", "APP_ID",  '"constituency"')*/
+
+
+             /*  applicationId "sudhakar.gruppie"
+               versionCode 1
+               versionName "1.0"
+               resValue "string", "app_name", '"SUDHAKAR LAL(JDS)"'
+               buildConfigField("String", "AppName", '"SUDHAKAR LAL(JDS)"')
+               buildConfigField("String", "AppCategory", '"constituency"')
+               buildConfigField("String", "APP_ID",  '"constituency"')*/
+
                 /// KITTUR MLA App...
              /*   applicationId "kittur.gruppie"
                 versionCode 10
@@ -224,6 +234,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
+         //   buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
+
+
           //    buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"' // MGV , SMJES
        //     buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
 //            buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'
@@ -232,7 +245,7 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://gcc4.gruppie.in"' // NPHPS,Akanksha,Gruppie campus
 //            buildConfigField "String", "BASE_URL", '"https://gcc5.gruppie.in"' // KREIS
-         //   buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"' // DODDAGOUDAR
+      //      buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"' // DODDAGOUDAR
      //       buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV
          //   buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'  // RPES, SHAHBAAZ
             buildConfigField("String", "API_KEY_FIREBASE1", '"key=AAAATq979wE:APA91bEw0Dh3Ju0phxXjisU4z0eEmC90mi8ciomV-4S9X38UM8eMaB72bRpgGrGvv_"')
@@ -242,6 +255,8 @@ android {
          {
 
          //    buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"' // MGV
+
+      //       buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
 
        //     buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
          buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
@@ -439,7 +454,8 @@ dependencies {
     //bio metric fingerprint use
     implementation "androidx.biometric:biometric:1.1.0"
 
-
+    //graph
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

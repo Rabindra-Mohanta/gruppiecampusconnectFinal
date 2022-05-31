@@ -530,6 +530,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_ques_p_">Question paper will be\navailable after exam start</string>
     <string name="lbl_new_password_validation">Should be atleast 6 character</string>
     <string name="msg_no_data_found">...</string><!--No data found.-->
+
     <string name="lbl_time_table">Time Table</string>
     <string name="lbl_vendor">Vendor Name</string>
     <string name="lbl_vendor_connect">Vendors</string>
@@ -553,6 +554,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
 
     <string name="lbl_add_tikit">Add Ticket</string>
     <string name="lbl_tikit">Tickets</string>
+
     <string name="lbl_select_role">Select Role</string>
     <string name="lbl_tikit_details">Ticket Details</string>
     <string name="lbl_task_force">Task Force</string>
@@ -562,6 +564,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_communication_message">Communication Or Message</string>
     <string name="lbl_other_activity">Other Activity</string>
     <string name="lbl_teacher_name">Class Teacher</string>
+    <string name="lbl_today_topics">Today\'s Topics</string>
+    <string name="lbl_overall_anylysis">Overall Analysis</string>
     <string name="lbl_teacher">Teacher</string>
     <string name="lbl_students">Students</string>
     <string name="lbl_class_register_student">Class/Student Register</string>
@@ -673,6 +677,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_completed">Completed</string>
     <string name="lbl_clear">Clear</string>
     <string name="lbl_filter">Filter</string>
+    <string name="lbl_no_of_day">No. Of Days</string>
 
     <string name="lbl_select_class">Select Class</string>
     <string name="strYes">Yes</string>
@@ -802,6 +807,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_morning">Morning</string>
     <string name="lbl_all_booth_member">All Booth Members...</string>
     <string name="lbl_add_ticket">Add\nTicket</string>
+    <string name="lbl_leave_req">Leave\nRequest</string>
+    <string name="lbl_leave_request">Leave Request</string>
     <string name="lbl_select_class_">Select Class ></string>
     <string name="lbl_evening">Evening</string>
     <string name="lbl_add_issue">Add Issue</string>
@@ -1081,6 +1088,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_please_disable_gps">Please disable GPS</string>
     <string name="toast_create_mark_card">Please Create Mark Card</string>
     <string name="toast_otp_send_to">OTP has been sent to </string>
+    <string name="toast_no_data_found">No data found.</string>
 
     <string name="txt_enter_old_pin">Enter Old Pin...</string>
     <string name="txt_old_pin_wrong">Old Pin Wrong...</string>
