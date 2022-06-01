@@ -51,9 +51,9 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 File file;
                 if (key.contains("/")) {
                     String[] splitStr = key.split("/");
-                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".png");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
                 } else {
-                    file = new File(getDirForMedia(""), key + ".png");
+                    file = new File(getDirForMedia(""), key);
                 }
                 return file.exists();
             }
@@ -72,9 +72,9 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 File file;
                 if (key.contains("/")) {
                     String[] splitStr = key.split("/");
-                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".png");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
                 } else {
-                    file = new File(getDirForMedia(""), key + ".png");
+                    file = new File(getDirForMedia(""), key);
                 }
                 Log.e(TAG,"file path"+file.getAbsolutePath());
                 return file;
@@ -103,9 +103,9 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 Log.e(TAG, "download key :" + key);
                 if (key.contains("/")) {
                     String[] splitStr = key.split("/");
-                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".png");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
                 } else {
-                    file = new File(getDirForMedia(""), key + ".png");
+                    file = new File(getDirForMedia(""), key);
                 }
                 if (!file.exists()) {
                     InputStream input = null;

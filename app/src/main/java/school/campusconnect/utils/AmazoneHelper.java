@@ -83,11 +83,13 @@ public class AmazoneHelper {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss");
         String key;
         if (Constants.FILE_TYPE_VIDEO.equals(fileType)) {
-            key = "videos/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "videos/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) +".mp4";
         } else if (Constants.FILE_TYPE_PDF.equals(fileType)) {
-            key = "pdf/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
-        } else {
-            key = "images/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "pdf/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) +".pdf";
+        } else if (Constants.FILE_TYPE_AUDIO.equals(fileType)) {
+            key = "audio/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) +".mp3";
+        }else {
+            key = "images/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) + ".jpg";
         }
         return key;
         // "gruppie_" + simpleDateFormat.format(new Date())+new Random().nextInt(999);
@@ -96,11 +98,11 @@ public class AmazoneHelper {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss");
         String key;
         if (Constants.FILE_TYPE_VIDEO.equals(fileType)) {
-            key = "videos/thumbnail/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "videos/thumbnail/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) +".jpg";
         } else if (Constants.FILE_TYPE_PDF.equals(fileType)) {
-            key = "pdf/thumbnail/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "pdf/thumbnail/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) + ".jpg";
         }else {
-            key = "gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) + ".jpg";
         }
         return key;
         // "gruppie_" + simpleDateFormat.format(new Date())+new Random().nextInt(999);

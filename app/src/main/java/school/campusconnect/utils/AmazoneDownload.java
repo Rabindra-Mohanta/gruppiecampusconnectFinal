@@ -58,9 +58,9 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                 File file;
                 if (key.contains("/")) {
                     String[] splitStr = key.split("/");
-                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".pdf");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
                 } else {
-                    file = new File(getDirForMedia(""), key + ".pdf");
+                    file = new File(getDirForMedia(""), key);
                 }
                 return file;
             }
@@ -78,9 +78,9 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                 File file;
                 if (key.contains("/")) {
                     String[] splitStr = key.split("/");
-                    file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".pdf");
+                    file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
                 } else {
-                    file = new File(getDirForMedia(""), key + ".pdf");
+                    file = new File(getDirForMedia(""), key);
                 }
                 return file.exists();
             }
@@ -132,9 +132,9 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
             Log.e(TAG, "download key :" + key);
             if (key.contains("/")) {
                 String[] splitStr = key.split("/");
-                file = new File(getDirForMedia(splitStr[0]), splitStr[1] + ".pdf");
+                file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
             } else {
-                file = new File(getDirForMedia(""), key + ".pdf");
+                file = new File(getDirForMedia(""), key);
             }
             if (!file.exists()) {
                 InputStream input = null;

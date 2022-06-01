@@ -62,5 +62,13 @@
     <color name="colorBrushBox">#FF0000</color>
     <color name="colorTransparent">#0000</color>
 
+    <color name="colorYellow">#FFFFFF00</color>
+    <color name="colorGREEN">#FF00FF00</color>
+    <color name="colorRED">#FFFF0000</color>
+
+    <color name="colorFirstPie">#FF5F1F</color>
+    <color name="colorSecondPie">#98FF91</color>
+    <color name="colorThirdPie">#91CBFF</color>
+
 </resources>
 

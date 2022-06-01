@@ -62,7 +62,6 @@ public class HWClassActivity extends BaseActivity {
         });
 
 
-
         HWClassListFragment classListFragment=new HWClassListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();

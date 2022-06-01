@@ -838,7 +838,11 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_date_and_time">Date &amp; Time</string>
 
     <string name="lbl_do_you_want_to_continue_class">Do you want to Continue Class?</string>
-
+    <string name="total_topic_count">Total Topics Count</string>
+    <string name="total_topic_pending">Total Topics Pending</string>
+    <string name="total_topic_completed">Total Topics Completed</string>
+    <string name="total_end_delay">Total End Delay</string>
+    <string name="total_com_on_time">Total Completed On-Time</string>
 
     <string name="rb_write_properly">Write Properly</string>
     <string name="rb_spelling_mistakes">Spelling Mistakes</string>

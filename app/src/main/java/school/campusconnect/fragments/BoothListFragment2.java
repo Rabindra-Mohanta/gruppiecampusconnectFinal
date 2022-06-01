@@ -161,6 +161,8 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
     }
 
 
+
+
     private void inits() {
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -210,6 +212,14 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onStart() {
         super.onStart();
+
+        if(LeafPreference.getInstance(getActivity()).getBoolean("booth_add")){
+            BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+            myTeamDataList.clear();
+            adapter.add(myTeamDataList);
+            LeafPreference.getInstance(getActivity()).setBoolean("booth_add", false);
+            boothListApiCall();
+        }
     }
 
     @Override

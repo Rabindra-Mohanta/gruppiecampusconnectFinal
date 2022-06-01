@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -54,6 +55,7 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
     String staffID;
     String date;
     private Boolean expandable = false;
+    private Boolean expandableChart = false;
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
 
@@ -81,6 +83,24 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
             @Override
             public void onClick(View v) {
                 setExpandable();
+            }
+        });
+
+        binding.imgDropdownAnylysis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (expandableChart)
+                {
+                    expandableChart = false;
+                    binding.llChartDetails.setVisibility(View.GONE);
+                    binding.imgDropdownAnylysis.setRotation(360);
+                }else
+                {
+                    expandableChart = true;
+                    binding.llChartDetails.setVisibility(View.VISIBLE);
+                    binding.imgDropdownAnylysis.setRotation(180);
+                }
             }
         });
 
@@ -115,12 +135,12 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
         Log.e(TAG,"set data call");
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0.5f, 2));
-        entries.add(new BarEntry(1f, 1));
-        entries.add(new BarEntry(1.5f, 3));
-
+        entries.add(new BarEntry(0.0f, staffAnalysisData.getTotalTopicsCount()));
+        entries.add(new BarEntry(0.5f, staffAnalysisData.getTotalTopicsCompleted()));
+        entries.add(new BarEntry(1.0f, staffAnalysisData.getTotalTopicsPending()));
 
         BarDataSet dataset = new BarDataSet(entries, "");
+        dataset.setDrawValues(true);
 
         dataset.setColors(new int[] {Color.YELLOW, Color.GREEN, Color.RED});
 
@@ -131,25 +151,10 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
         binding.chart1.getLegend().setEnabled(false);
 
 
-        XAxis xAxis = binding.chart1.getXAxis();
-        xAxis.setEnabled(true);
-        xAxis.setDrawGridLines(false);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-
-        YAxis yAxis = binding.chart1.getAxisRight();
-        yAxis.setEnabled(false);
-        yAxis.setDrawGridLines(false);
-
-        binding.chart1.setDescription(null);
-
-       /* ArrayList<String> xAxisLabel = new ArrayList<>();
-        xAxisLabel.add("Sun");
-        xAxisLabel.add("Mon");
-        xAxisLabel.add("Tue");
-
-        XAxis xAxis = binding.chart1.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        /*ArrayList<String> xAxisLabel = new ArrayList<>();
+        xAxisLabel.add(String.valueOf(staffAnalysisData.getTotalTopicsCount()));
+        xAxisLabel.add(String.valueOf(staffAnalysisData.getTotalTopicsCompleted()));
+        xAxisLabel.add(String.valueOf(staffAnalysisData.getTotalTopicsPending()));
 
         ValueFormatter formatter = new ValueFormatter() {
 
@@ -157,12 +162,24 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
             public String getFormattedValue(float value) {
                 return xAxisLabel.get((int) value);
             }
-        };
+        };*/
 
-        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
-        xAxis.setValueFormatter(formatter);
-        xAxis.setTextSize(5f);
-        xAxis.setTextColor(Color.RED);*/
+        XAxis xAxis = binding.chart1.getXAxis();
+        xAxis.setEnabled(true);
+        xAxis.setDrawLabels(false);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+       // xAxis.setValueFormatter(formatter);
+
+        YAxis yAxis = binding.chart1.getAxisRight();
+        yAxis.setEnabled(false);
+        yAxis.setDrawGridLines(false);
+
+        YAxis yAxisLeft = binding.chart1.getAxisLeft();
+        yAxisLeft.setDrawLabels(false);
+
+        binding.chart1.setDescription(null);
+
 
         BarData data = new BarData(dataset);
 
@@ -173,8 +190,6 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
         binding.chart1.setScaleEnabled(false);
         binding.chart1.setFitBars(true);
         binding.chart1.setBackground(null);
-
-
         binding.chart1.setData(data);
         binding.chart1.invalidate();
 
@@ -185,19 +200,24 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
         binding.pieChart.setDragDecelerationFrictionCoef(0.9f);
         binding.pieChart.setDrawCenterText(false);
         binding.pieChart.setDrawHoleEnabled(false);
+        binding.pieChart.setTouchEnabled(false);
 
         binding.pieChart.getLegend().setEnabled(false);
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
-        yValues.add(new PieEntry(34f));
-        yValues.add(new PieEntry(56f));
-        yValues.add(new PieEntry(66f));
+        yValues.add(new PieEntry(staffAnalysisData.getTotalTopicsPending()));
+        yValues.add(new PieEntry(staffAnalysisData.getTotalEndDelay()));
+        yValues.add(new PieEntry(staffAnalysisData.getTotalTopicsCompleted()-staffAnalysisData.getTotalEndDelay()));
+
+      /*  yValues.add(new PieEntry(5));
+        yValues.add(new PieEntry(6));
+        yValues.add(new PieEntry(75));*/
 
         binding.pieChart.setDrawEntryLabels(false);
 
         PieDataSet dataSet = new PieDataSet(yValues, "");
 
-        dataSet.setColors(Color.YELLOW, Color.GREEN, Color.RED);
+        dataSet.setColors(Color.parseColor("#FF5F1F"), Color.parseColor("#98FF91"), Color.parseColor("#91CBFF"));
         PieData pieData = new PieData((dataSet));
 
         binding.pieChart.setData(pieData);

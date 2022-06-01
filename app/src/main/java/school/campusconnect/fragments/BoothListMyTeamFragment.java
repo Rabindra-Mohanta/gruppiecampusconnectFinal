@@ -100,6 +100,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
     }
 
 
+
     private void getDataLocally() {
 
         List<BoothsTBL> boothListTBl = BoothsTBL.getBoothList(GroupDashboardActivityNew.groupId);

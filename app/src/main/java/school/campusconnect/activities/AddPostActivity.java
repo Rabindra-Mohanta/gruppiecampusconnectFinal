@@ -1684,7 +1684,6 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             String uri = data.getStringExtra("Data");
             Log.e(TAG,"uri"+ uri);
 
-
             fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
             listImages.add(uri);
 

@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+
+import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.utils.AppLog;
 
 import android.util.Log;
@@ -179,7 +181,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
             }
         });
 
-        if (item.pushTokens != null && item.pushTokens.size() > 0)
+        if (item.pushTokens != null && item.pushTokens.size() > 0 && GroupDashboardActivityNew.isAdmin)
         {
             holder.imgStartMeeting.setVisibility(View.VISIBLE);
         }

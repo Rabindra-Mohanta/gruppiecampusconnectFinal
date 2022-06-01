@@ -450,13 +450,11 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         progressDialog.setCancelable(false);
 
         enableOption();
-
-
     }
 
     private void enableOption() {
 
-        if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA")) {
+        if (mGroupItem.isAdmin) {
             binding.llAdTicket.setVisibility(View.VISIBLE);
         }
         else
@@ -471,6 +469,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         else
         {
             binding.imgEditBanner.setVisibility(View.GONE);
+            binding.imgSlider.setImageDrawable(getResources().getDrawable(R.drawable.old_banner));
         }
     }
 
@@ -811,6 +810,10 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                         dashboardCountv2.lastApiCalledNotification = System.currentTimeMillis();
                         dashboardCountv2.save();
                     }
+                }
+                else
+                {
+                    binding.llNormalFeed.setVisibility(View.GONE);
                 }
 
                 break;

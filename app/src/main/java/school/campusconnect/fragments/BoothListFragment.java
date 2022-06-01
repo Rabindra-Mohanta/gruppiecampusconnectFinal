@@ -238,6 +238,9 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         }
         etSearch.setText("");
         if(LeafPreference.getInstance(getActivity()).getBoolean("booth_add")){
+            BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+            result.clear();
+            adapter.add(result);
             LeafPreference.getInstance(getActivity()).setBoolean("booth_add", false);
             boothListApiCall();
         }

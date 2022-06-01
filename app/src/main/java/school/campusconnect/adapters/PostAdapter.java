@@ -330,7 +330,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.imgPlay.setVisibility(View.GONE);
                 if (item.thumbnailImage != null && item.thumbnailImage.size() > 0) {
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
-
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
                     if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
@@ -391,7 +390,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             public void onClick(View v) {
 
                 try{
-
 
 
                     if (mholder !=null)
