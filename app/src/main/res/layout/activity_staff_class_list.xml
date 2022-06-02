@@ -309,6 +309,18 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="@dimen/padding_40dp"
+            android:layout_below="@id/llAnalysis"
+            android:id="@+id/txtEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            style="@style/LabelEmptyText"/>
       </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -320,18 +332,6 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-
-
-    <TextView
-        android:id="@+id/txtEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:visibility="gone"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        style="@style/LabelEmptyText"/>
 
   </RelativeLayout>
 </layout>

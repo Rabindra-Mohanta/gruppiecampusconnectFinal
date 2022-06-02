@@ -132,7 +132,7 @@ int teamMemberCount = -1;
                 intent.putExtra("class_data",new Gson().toJson(classData));
                 intent.putExtra("all",true);
                 if(teamMemberCount != -1)
-                intent.putExtra("team_count", teamMemberCount);
+                 intent.putExtra("team_count", teamMemberCount);
                 intent.putExtra("isAdmin", classData.isTeamAdmin);
                 startActivity(intent);
             }

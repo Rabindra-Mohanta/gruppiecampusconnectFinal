@@ -1518,7 +1518,8 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     }
     public void onItemClick(NotificationListRes.NotificationListData item,Boolean readComment)
     {
-        AppLog.d(TAG,"onItemClick()");
+        AppLog.e(TAG,"data "+new Gson().toJson(item));
+
 
         Intent i = new Intent(getContext(), ReadMoreActivity.class);
         Bundle bundle = new Bundle();

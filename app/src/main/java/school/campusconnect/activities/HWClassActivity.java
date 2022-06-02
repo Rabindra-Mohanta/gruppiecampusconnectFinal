@@ -76,7 +76,7 @@ public class HWClassActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (getIntent().getStringExtra("type").equalsIgnoreCase("Syllabus Tracker"))
+        if (getIntent().getStringExtra("type").equalsIgnoreCase("Syllabus Tracker") && getIntent().getStringExtra("role").equalsIgnoreCase("admin"))
         {
             menu.findItem(R.id.menu_filter_staff).setVisible(true);
         }

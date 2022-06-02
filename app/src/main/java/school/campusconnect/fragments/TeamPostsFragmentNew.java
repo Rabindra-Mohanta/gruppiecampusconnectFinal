@@ -193,7 +193,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         this.menu = menu;
         menu.findItem(R.id.action_notification_list).setVisible(false);
 
-        if (isFromMain) {
+        if (isFromMain)
+        {
 
             if (teamData.isTeamAdmin || teamData.allowTeamPostAll) {
                 menu.findItem(R.id.menu_add_post).setVisible(true);
@@ -241,7 +242,9 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             }*/
 
 
-        } else {
+        }
+        else
+        {
 
             if (teamData.allowedToAddTeamPost) {
                 menu.findItem(R.id.menu_add_post).setVisible(true);
@@ -981,11 +984,15 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         mBinding.recyclerView2.setAdapter(mAdapter2);
 
 
+/*
+        CHANGES 2-6-22 (MEMBER COUNT PROBLEM)
 
         if(!type.equalsIgnoreCase("team"))
         {
             callEventApiTeamPost();
-        }
+        }*/
+
+        callEventApiTeamPost();
 
 
         if (getActivity() instanceof GroupDashboardActivityNew) {
@@ -1014,6 +1021,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 public void onClick(View v) {
 
                     int members = 0;
+
                     if (HomeTeamDataTBL.getTeamPost(team_id).size()>0)
                     {
                         List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getTeamPost(team_id);
@@ -1143,10 +1151,14 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISTEAMUPDATED)) {
-            if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
-                manager.getBooths(this, GroupDashboardActivityNew.groupId,"");
-            } else {
-                manager.myTeamList(this, GroupDashboardActivityNew.groupId);
+
+            if (GroupDashboardActivityNew.mGroupItem.canPost)
+            {
+                 if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
+                    manager.getBooths(this, GroupDashboardActivityNew.groupId,"");
+                } else {
+                    manager.myTeamList(this, GroupDashboardActivityNew.groupId);
+                }
             }
             //((GroupDashboardActivityNew)getActivity()).HomeClick();
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED, false);

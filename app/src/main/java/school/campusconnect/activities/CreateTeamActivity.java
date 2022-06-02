@@ -129,6 +129,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
             if(isEdit)
             {
                myTeamData=new Gson().fromJson(bundle.getString("team_data"), MyTeamData.class);
+               AppLog.e(TAG,"myTeamData "+new Gson().toJson(myTeamData));
                etTeamName.setText(myTeamData.name);
                btnCreateTeam.setText(getResources().getString(R.string.lbl_update));
             }

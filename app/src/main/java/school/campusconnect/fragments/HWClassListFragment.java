@@ -2,22 +2,34 @@ package school.campusconnect.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.baoyz.widget.PullRefreshLayout;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
@@ -26,7 +38,9 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -36,14 +50,18 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWClassSubjectActivity;
 import school.campusconnect.activities.MarksCardActivity2;
 import school.campusconnect.activities.RecClassSubjectActivity;
+import school.campusconnect.activities.StaffClassListActivity;
 import school.campusconnect.activities.TimeTabelActivity2;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.databinding.FragmentHwclassListBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
+import school.campusconnect.datamodel.syllabus.StaffAnalysisRes;
+import school.campusconnect.datamodel.syllabus.TodaySyllabusPlanRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
@@ -52,15 +70,18 @@ import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 
 public class HWClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
+
+    FragmentHwclassListBinding binding;
     private static final String TAG = "HWClassListFragment";
-    @Bind(R.id.rvTeams)
-    public RecyclerView rvClass;
 
-    @Bind(R.id.txtEmpty)
-    public TextView txtEmpty;
 
-    @Bind(R.id.progressBar)
-    public ProgressBar progressBar;
+    String staffID;
+    String date;
+    private Boolean expandable = false;
+    private Boolean expandableChart = false;
+
+    TodayTopicsAdapter adapter;
+
 /*
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;*/
@@ -76,14 +97,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
-        ButterKnife.bind(this, view);
-        rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        role = getArguments().getString("role");
-        type = getArguments().getString("type");
-
-        return view;
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_hwclass_list, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -109,6 +124,45 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                 }
             }
         });*/
+
+        binding.rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        role = getArguments().getString("role");
+        Log.e(TAG,"role"+role);
+
+        type = getArguments().getString("type");
+        Log.e(TAG,"type"+type);
+        date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+
+        staffID = LeafPreference.getInstance(getContext()).getString(LeafPreference.LOGIN_ID);
+
+        Log.e(TAG,"date"+date);
+
+        binding.imgDropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setExpandable();
+            }
+        });
+
+        binding.imgDropdownAnylysis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (expandableChart)
+                {
+                    expandableChart = false;
+                    binding.llChartDetails.setVisibility(View.GONE);
+                    binding.imgDropdownAnylysis.setRotation(360);
+                }else
+                {
+                    expandableChart = true;
+                    binding.llChartDetails.setVisibility(View.VISIBLE);
+                    binding.imgDropdownAnylysis.setRotation(180);
+                }
+            }
+        });
+
     }
 
     private void getDataLocally() {
@@ -132,7 +186,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                 item.rollNumber = currentItem.rollNumber;
                 result.add(item);
             }
-            rvClass.setAdapter(new ClassesAdapter(result));
+            binding.rvClass.setAdapter(new ClassesAdapter(result));
 
             TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
             if (dashboardCount != null) {
@@ -159,7 +213,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
     private void apiCall(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(binding.progressBar);
            // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {
@@ -171,6 +225,146 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         }
     }
 
+
+    private void setExpandable() {
+
+        if (expandable)
+        {
+            expandable = false;
+            adapter.isExpand(expandable);
+            binding.imgDropdown.setRotation(360);
+        }else
+        {
+            expandable = true;
+            adapter.isExpand(expandable);
+            binding.imgDropdown.setRotation(180);
+        }
+
+    }
+
+    private void setData(StaffAnalysisRes.StaffAnalysisData staffAnalysisData) {
+
+        /*bar graph*/
+
+        Log.e(TAG,"set data call");
+
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(0.0f, (float) staffAnalysisData.getTotalTopicsCount()));
+        entries.add(new BarEntry(0.5f, (float) staffAnalysisData.getTotalTopicsCompleted()));
+        entries.add(new BarEntry(1.0f, (float) staffAnalysisData.getTotalTopicsPending()));
+
+        BarDataSet dataset = new BarDataSet(entries, "");
+        dataset.setDrawValues(true);
+
+        dataset.setColors(new int[] {Color.YELLOW, Color.GREEN, Color.RED});
+
+        binding.chart1.getXAxis().setDrawGridLines(false);
+        binding.chart1.getAxisLeft().setDrawGridLines(false);
+        binding.chart1.getAxisRight().setDrawGridLines(false);
+
+        binding.chart1.getLegend().setEnabled(false);
+
+
+        /*ArrayList<String> xAxisLabel = new ArrayList<>();
+        xAxisLabel.add(String.valueOf(staffAnalysisData.getTotalTopicsCount()));
+        xAxisLabel.add(String.valueOf(staffAnalysisData.getTotalTopicsCompleted()));
+        xAxisLabel.add(String.valueOf(staffAnalysisData.getTotalTopicsPending()));
+
+        ValueFormatter formatter = new ValueFormatter() {
+
+            @Override
+            public String getFormattedValue(float value) {
+                return xAxisLabel.get((int) value);
+            }
+        };*/
+
+
+
+
+
+        XAxis xAxis = binding.chart1.getXAxis();
+        xAxis.setEnabled(true);
+        xAxis.setDrawLabels(false);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        // xAxis.setValueFormatter(formatter);
+
+        YAxis yAxis = binding.chart1.getAxisRight();
+        yAxis.setEnabled(false);
+        yAxis.setAxisMinValue(0f);
+        yAxis.setDrawGridLines(false);
+
+        YAxis yAxisLeft = binding.chart1.getAxisLeft();
+        yAxisLeft.setAxisMinValue(0f);
+        yAxisLeft.setDrawLabels(false);
+
+        binding.chart1.setDescription(null);
+
+
+        BarData data = new BarData(dataset);
+
+        data.setBarWidth(0.4f);
+
+        binding.chart1.setTouchEnabled(false);
+        binding.chart1.setDragEnabled(false);
+        binding.chart1.setScaleEnabled(false);
+        binding.chart1.setFitBars(false);
+        binding.chart1.setBackground(null);
+        binding.chart1.setData(data);
+        binding.chart1.invalidate();
+
+        /*pie graph*/
+
+        binding.pieChart.setUsePercentValues(true);
+        binding.pieChart.getDescription().setEnabled(false);
+        binding.pieChart.setDragDecelerationFrictionCoef(0.9f);
+        binding.pieChart.setDrawCenterText(false);
+        binding.pieChart.setDrawHoleEnabled(false);
+        binding.pieChart.setTouchEnabled(false);
+
+        binding.pieChart.getLegend().setEnabled(false);
+
+        ArrayList<PieEntry> yValues = new ArrayList<>();
+        yValues.add(new PieEntry(staffAnalysisData.getTotalTopicsPending()));
+        yValues.add(new PieEntry(staffAnalysisData.getTotalEndDelay()));
+        yValues.add(new PieEntry(staffAnalysisData.getTotalTopicsCompleted()-staffAnalysisData.getTotalEndDelay()));
+
+      /*  yValues.add(new PieEntry(5));
+        yValues.add(new PieEntry(6));
+        yValues.add(new PieEntry(75));*/
+
+        binding.pieChart.setDrawEntryLabels(false);
+
+        PieDataSet dataSet = new PieDataSet(yValues, "");
+
+        dataSet.setColors(Color.parseColor("#FF5F1F"), Color.parseColor("#98FF91"), Color.parseColor("#91CBFF"));
+        PieData pieData = new PieData((dataSet));
+
+        binding.pieChart.setData(pieData);
+        binding.pieChart.invalidate();
+
+
+    }
+
+    @Override
+    public void onStart() {
+
+        if (type.equalsIgnoreCase("Syllabus Tracker") && role.equalsIgnoreCase("teacher"))
+        {
+            LeafManager leafManager = new LeafManager();
+            showLoadingBar(binding.progressBar);
+            leafManager.getTodaySyllabusPlanList(this,GroupDashboardActivityNew.groupId,date);
+            leafManager.getStaffAnalysis(this,GroupDashboardActivityNew.groupId,staffID);
+        }
+        else
+        {
+            binding.llTodayData.setVisibility(View.GONE);
+            binding.llAnalysis.setVisibility(View.GONE);
+        }
+
+        super.onStart();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -180,18 +374,43 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     public void onSuccess(int apiId, BaseResponse response) {
         hideLoadingBar();
         //    progressBar.setVisibility(View.GONE);
-        ClassResponse res = (ClassResponse) response;
-        List<ClassResponse.ClassData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
-        rvClass.setAdapter(new ClassesAdapter(result));
 
-        TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
-        if(dashboardCount!=null){
-            dashboardCount.lastApiCalled = System.currentTimeMillis();
-            dashboardCount.save();
+        if (apiId == LeafManager.API_TODAY_DATE_WISE_SYLLBUS_PLAN)
+        {
+            TodaySyllabusPlanRes res = (TodaySyllabusPlanRes) response;
+            if (res.getTodaySyllabusData().size() > 0)
+            {
+                adapter = new TodayTopicsAdapter(res.getTodaySyllabusData());
+                binding.rvTodayData.setAdapter(adapter);
+            }
+            else
+            {
+                binding.llTodayData.setVisibility(View.GONE);
+            }
         }
+        else if (apiId == LeafManager.API_STAFF_ANALYSIS)
+        {
+            StaffAnalysisRes res = (StaffAnalysisRes) response;
 
-        saveToDB(result);
+            if (res.getData().size() > 0)
+            {
+                setData(res.getData().get(0));
+            }
+        }
+        else {
+            ClassResponse res = (ClassResponse) response;
+            List<ClassResponse.ClassData> result = res.getData();
+            AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
+            binding.rvClass.setAdapter(new ClassesAdapter(result));
+
+            TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
+            if(dashboardCount!=null){
+                dashboardCount.lastApiCalled = System.currentTimeMillis();
+                dashboardCount.save();
+            }
+
+            saveToDB(result);
+        }
     }
 
     private void saveToDB(List<ClassResponse.ClassData> result) {
@@ -219,12 +438,14 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onFailure(int apiId, String msg) {
         hideLoadingBar();
+        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
         //    progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
         hideLoadingBar();
+        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
         //    progressBar.setVisibility(View.GONE);
     }
 
@@ -290,14 +511,14 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
+                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 } else {
-                    txtEmpty.setText("");
+                    binding.txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
+                binding.txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 
@@ -358,5 +579,77 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             startActivity(intent);
         }
 
+    }
+
+
+    public class TodayTopicsAdapter extends RecyclerView.Adapter<TodayTopicsAdapter.ViewHolder>
+    {
+        ArrayList<TodaySyllabusPlanRes.TodaySyllabusData> list;
+        private Context mContext;
+        private boolean isExpand = false;
+        public TodayTopicsAdapter(ArrayList<TodaySyllabusPlanRes.TodaySyllabusData> list) {
+            this.list = list;
+        }
+
+        @Override
+        public TodayTopicsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today_topics,parent,false);
+            return new TodayTopicsAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final TodayTopicsAdapter.ViewHolder holder, final int position) {
+            final TodaySyllabusPlanRes.TodaySyllabusData item = list.get(position);
+
+            holder.tvTeamName.setText(item.getTeamName());
+            holder.tvTopicName.setText(item.getTopicName());
+            holder.tvChpName.setText(item.getChapterName());
+        }
+
+
+        private void isExpand(boolean b)
+        {
+            this.isExpand = b;
+            notifyDataSetChanged();
+        }
+        @Override
+        public int getItemCount() {
+
+            if(list!=null && list.size() > 0)
+            {
+                if (isExpand)
+                {
+                    return list.size();
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+
+        }
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+
+            @Bind(R.id.tvTeamName)
+            TextView tvTeamName;
+
+            @Bind(R.id.tvTopicName)
+            TextView tvTopicName;
+
+            @Bind(R.id.tvChpName)
+            TextView tvChpName;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this,itemView);
+
+            }
+        }
     }
 }

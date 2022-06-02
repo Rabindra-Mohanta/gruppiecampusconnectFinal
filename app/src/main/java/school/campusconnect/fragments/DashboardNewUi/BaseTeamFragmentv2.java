@@ -804,9 +804,19 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
             return;
         }
 
+
         if("groupPost".equals(item.getType()) && !item.getShowComment())
         {
             //then redirect to "/api/v1/groups/{groupId}/post/{postId}/read"
+            bundle.putString("groupId",item.getGroupId());
+            bundle.putString("postId",item.getPostId());
+            bundle.putString("type",item.getType());
+            bundle.putString("userId",item.getUserId());
+            i.putExtras(bundle);
+            startActivity(i);
+        }
+        else if ("notesVideosPost".equals(item.getType()))
+        {
             bundle.putString("groupId",item.getGroupId());
             bundle.putString("postId",item.getPostId());
             bundle.putString("type",item.getType());

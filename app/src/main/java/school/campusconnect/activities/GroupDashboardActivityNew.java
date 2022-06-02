@@ -2252,8 +2252,6 @@ public class GroupDashboardActivityNew extends BaseActivity
             {
                 tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(team.members));
             }
-
-
         }
         else
         {

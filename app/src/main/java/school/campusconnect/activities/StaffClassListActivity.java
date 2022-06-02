@@ -105,11 +105,7 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
         });
 
 
-        LeafManager leafManager = new LeafManager();
-        showLoadingBar(binding.progressBar);
-        leafManager.getClassesOfStaff(this,GroupDashboardActivityNew.groupId,staffID);
-        leafManager.getTodaySyllabusPlanList(this,GroupDashboardActivityNew.groupId,date);
-        leafManager.getStaffAnalysis(this,GroupDashboardActivityNew.groupId,staffID);
+
     }
 
     private void setExpandable() {
@@ -227,6 +223,11 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
     }
     @Override
     protected void onStart() {
+        LeafManager leafManager = new LeafManager();
+        showLoadingBar(binding.progressBar);
+        leafManager.getClassesOfStaff(this,GroupDashboardActivityNew.groupId,staffID);
+        leafManager.getTodaySyllabusPlanList(this,GroupDashboardActivityNew.groupId,date);
+        leafManager.getStaffAnalysis(this,GroupDashboardActivityNew.groupId,staffID);
         super.onStart();
     }
 
@@ -251,7 +252,7 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
             if (res.getTodaySyllabusData().size() > 0)
             {
                 adapter = new  TodayTopicsAdapter(res.getTodaySyllabusData());
-                binding.rvClass.setAdapter(adapter);
+                binding.rvTodayData.setAdapter(adapter);
             }
             else
             {

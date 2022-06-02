@@ -472,9 +472,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         String userId = bundle.getString("userId", null);
         String postId = bundle.getString("postId", null);
 
-
         AppLog.e(TAG, "DATA-  TYPE: " + type + " GRP: " + mGroupId + " TEAM: " + mTeamId + " USR: " + userId + " POST: " + postId);
-
 
         this.type = type;
         if(mGroupId!=null){

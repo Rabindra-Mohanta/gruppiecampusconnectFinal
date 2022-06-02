@@ -220,6 +220,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         AppLog.e(TAG, "classData is " + new Gson().toJson(classData));
 
+        AppLog.e(TAG, "GroupDashboardActivityNew isAdmin " + GroupDashboardActivityNew.isAdmin);
+        AppLog.e(TAG, "GroupDashboardActivityNew isAdmin is " + GroupDashboardActivityNew.mGroupItem.isAdmin);
+
         AppLog.e(TAG, "isAdmin is " + isAdmin);
         AppLog.e(TAG, "apiCall is " + apiCall);
         AppLog.e(TAG, "item_click is " + itemClick);
@@ -277,12 +280,17 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             }
         });*/
 
-       /* if (apiCall)
-        {
+     /*  CHANGES IN 2-6-22 (MEMBER COUNT PROBLEM)
 
+     if (apiCall)
+        {
+            callEventApiTeam();
         }*/
 
- //       callEventApiTeam();
+
+        callEventApiTeam();
+
+ //
     }
 
     @Override
@@ -301,6 +309,15 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 menu.findItem(R.id.menu_print_member_list).setVisible(true);
             else
                 menu.findItem(R.id.menu_print_member_list).setVisible(false);
+
+            if (classData.isTeamAdmin && GroupDashboardActivityNew.isAdmin)
+            {
+                menu.findItem(R.id.menu_invite).setVisible(true);
+            }
+            else
+            {
+                menu.findItem(R.id.menu_invite).setVisible(false);
+            }
         }
         super.onPrepareOptionsMenu(menu);
     }
@@ -611,13 +628,12 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         //    {
          //       Log.e(TAG,"j position"+j);
 
-                for (int i = 0 ;i <results.size();i++)
+                for (int i = 0 ;i < results.size();i++)
                 {
                     LeadDataTBL leadDataTBL = new LeadDataTBL();
 
                     leadDataTBL.pushToken = new Gson().toJson(results.get(i).pushTokens);
                     leadDataTBL.groupID = groupId;
-                    leadDataTBL.teamID = teamId;
                     leadDataTBL.teamID = teamId;
                     leadDataTBL.page = currentPage;
                     leadDataTBL.voterId = results.get(i).voterId;
@@ -633,15 +649,30 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                     leadDataTBL.allowedToAddTeamPostComment = results.get(i).allowedToAddTeamPostComment;
                     leadDataTBL.allowedToAddTeamPost = results.get(i).allowedToAddTeamPost;
                     leadDataTBL.aadharNumber = results.get(i).aadharNumber;
-                    leadDataTBL._now = DateTimeHelper.getCurrentTime();
+
+                    if (TeamEventDataTBL.getTeamEvent(teamId).size()>0)
+                    {
+                        List<TeamEventDataTBL> teamEvent= TeamEventDataTBL.getTeamEvent(teamId);
+
+                        for (int j = 0;j<teamEvent.size();j++)
+                        {
+                            if (teamId.equalsIgnoreCase(teamEvent.get(j).teamId))
+                            {
+                                leadDataTBL._now = teamEvent.get(j).lastUserToTeamUpdatedAtEventAt;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        leadDataTBL._now = DateTimeHelper.getCurrentTime();
+                    }
+
                     leadDataTBL.isLive = false;
 
                     leadDataTBL.save();
 
                 }
                 list.addAll(results);
-//            }
-
         }
 
         mAdapter.addItems(list);
@@ -657,7 +688,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         Log.e(TAG,"leadDataTBlSize "+leadDataTBL.size() +"team Member Count "+teamMemberCount);
 
-        if (leadDataTBL.size() > 0 &&  ( leadDataTBL.size() == teamMemberCount  || teamMemberCount == -1))
+       // if (leadDataTBL.size() > 0 &&  ( leadDataTBL.size() == teamMemberCount  || teamMemberCount == -1))  CHANGES 2-6-22 (MEMBER COUNT PROBLEM)
+
+        if (leadDataTBL.size() > 0)
         {
             list = new ArrayList<>();
 
@@ -911,7 +944,6 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             }
         }
     }
-
 
     /*Zooom */
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
