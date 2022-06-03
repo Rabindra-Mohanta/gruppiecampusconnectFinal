@@ -118,8 +118,6 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
         _init();
 
-        getDataLocally();
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run()
@@ -136,7 +134,6 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     }
 
     private void getEvent() {
-
 
         LeafManager leafManager = new LeafManager();
         leafManager.getSubBoothEvent(new LeafManager.OnCommunicationListener() {
@@ -159,6 +156,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         }, GroupDashboardActivityNew.groupId, team_id);
 
     }
+
 
     private void getDataLocally() {
 
@@ -329,7 +327,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
         }
 
-
+        getDataLocally();
     }
 
     @Override
@@ -388,9 +386,9 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             boothsTBL.leaveRequest = boothList.get(i).leaveRequest;
             boothsTBL.TeamDetails =new Gson().toJson(boothList.get(i).details);
 
-            if (!LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE").isEmpty())
+            if (!LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE_"+team_id).isEmpty())
             {
-                boothsTBL._now = LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE");
+                boothsTBL._now = LeafPreference.getInstance(getContext()).getString("SUB_BOOTH_EVENT_UPDATE_"+team_id);
             }
             else
             {
@@ -575,7 +573,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
             Log.e(TAG,"lastUpdatedSubBoothTeamTime  "+res1.data.get(0).lastUpdatedSubBoothTeamTime);
 
-            LeafPreference.getInstance(getContext()).setString("SUB_BOOTH_EVENT_UPDATE",res1.data.get(0).lastUpdatedSubBoothTeamTime);
+            LeafPreference.getInstance(getContext()).setString("SUB_BOOTH_EVENT_UPDATE_"+team_id,res1.data.get(0).lastUpdatedSubBoothTeamTime);
 
             if (MemberTeamTBL.getLastMemeberBoothList(GroupDashboardActivityNew.groupId,team_id).size() > 0)
             {
@@ -614,6 +612,8 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
             super.onPostExecute(aVoid);
                     if (needRefresh)
                     {
+                        Log.e(TAG,"event Call");
+                        myTeamDataList.clear();
                         adapter.notifyDataSetChanged();
                         getDataLocally();
                     }

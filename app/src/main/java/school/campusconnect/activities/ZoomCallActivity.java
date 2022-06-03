@@ -17,20 +17,36 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.LeadItem;
 import school.campusconnect.datamodel.PostTeamDataItem;
 import school.campusconnect.fragments.LeadListFragment;
 import school.campusconnect.utils.AppLog;
@@ -60,12 +76,15 @@ public static final String TAG = "ZoomCallActivity";
     String meetingID,zoomName,className,meetingPassword,createdID;
     boolean isMessage = false;
     String image, name;
-    TextView tvCallerName;
+    TextView tvCallerName,tvLbl;
+    Button btnCancel;
     UploadCircleImageFragment imageFragment;
+    LeadItem leadItem;
 
+    ArrayList<LeadItem.pushTokenData> pushTokenData = new ArrayList<>();
     private SurfaceHolder surfaceHolder;
     private Camera camera;
-
+    public static final String EXTRA_LEAD_ITEM = "extra_lead_item";
     public static final int REQUEST_CODE = 100;
 
     private SurfaceView surfaceView;
@@ -92,7 +111,9 @@ public static final String TAG = "ZoomCallActivity";
         setContentView(R.layout.activity_zoom_call);
 
         tvCallerName = findViewById(R.id.tvCallerName);
+        tvLbl = findViewById(R.id.tvLbl);
         progressBar = findViewById(R.id.progressBar);
+        btnCancel = findViewById(R.id.btnCancel);
 
         meetingID = getIntent().getStringExtra("meetingID");
         createdID = getIntent().getStringExtra("created");
@@ -102,6 +123,8 @@ public static final String TAG = "ZoomCallActivity";
         image = getIntent().getStringExtra("image");
         name = getIntent().getStringExtra("name");
         isMessage = getIntent().getBooleanExtra("isMessage",false);
+        leadItem = getIntent().getParcelableExtra(EXTRA_LEAD_ITEM);
+        AppLog.e(TAG,"mLeadItem Data" +new Gson().toJson(leadItem));
 
         tvCallerName.setText(name);
 
@@ -133,14 +156,30 @@ public static final String TAG = "ZoomCallActivity";
 
         }else
         {
+            Intent intent = getIntent();
+            Bundle args = intent.getBundleExtra("BUNDLE");
+            pushTokenData = (ArrayList<LeadItem.pushTokenData>) args.getSerializable("data");
+
+            AppLog.e(TAG,"mLeadItem Data size " + pushTokenData.size());
+
+            btnCancel.setVisibility(View.VISIBLE);
+            tvLbl.setText("Calling...");
             countDownTimer.start();
         }
+
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SendNotification(pushTokenData).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                finish();
+            }
+        });
     }
 
     private void startMeeting(boolean isMessage) {
         try {
             progressBar.setVisibility(View.VISIBLE);
-
 
             if (isConnectionAvailable()) {
 
@@ -758,6 +797,143 @@ public static final String TAG = "ZoomCallActivity";
             camera = null;
         }
     }
+    private class SendNotification extends AsyncTask<String, String, String> {
+        private String server_response;
+        ArrayList<LeadItem.pushTokenData> pushTokenData;
 
+
+        public SendNotification(ArrayList<LeadItem.pushTokenData> pushTokenData) {
+            this.pushTokenData = pushTokenData;
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            for (int i = 0;i<pushTokenData.size();i++)
+            {
+                try {
+                    url = new URL("https://fcm.googleapis.com/fcm/send");
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    urlConnection.setDoOutput(true);
+                    urlConnection.setDoInput(true);
+                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                    urlConnection.setRequestProperty("Content-Type", "application/json");
+
+
+                    DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                    try {
+                        JSONObject object = new JSONObject();
+
+                        String topic;
+                        String title = getResources().getString(R.string.app_name);
+                        String name = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.NAME);
+                        String message =  name + " has Cancel Video Call";
+
+                        List<String> listToken = new ArrayList<>();
+
+                        /*for(int i = 0;i<data.pushTokens.size();i++)
+                        {
+                            if (data.pushTokens.get(i).getDeviceToken() != null && !data.pushTokens.get(i).getDeviceToken().isEmpty())
+                            {
+                                listToken.add(data.pushTokens.get(i).getDeviceToken());
+                            }
+                        }
+
+                        String s = TextUtils.join(",", listToken);*/
+
+                        object.put("to", pushTokenData.get(i).getDeviceToken());
+
+                        JSONObject notificationObj = new JSONObject();
+                        notificationObj.put("title", title);
+                        notificationObj.put("body", message);
+                        //  object.put("notification", notificationObj);
+
+                        JSONObject dataObj = new JSONObject();
+                        dataObj.put("groupId", GroupDashboardActivityNew.groupId);
+                        dataObj.put("createdById", LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
+                        dataObj.put("createdByImage", LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.PROFILE_IMAGE_NEW));
+                        dataObj.put("createdByName", name);
+                        dataObj.put("isVideoCall",true);
+                        dataObj.put("meetingID",GroupDashboardActivityNew.mGroupItem.zoomMeetingId);
+                        dataObj.put("meetingPassword",GroupDashboardActivityNew.mGroupItem.zoomMeetingPassword);
+                        dataObj.put("zoomName","Test");
+                        dataObj.put("className",className);
+                        dataObj.put("iSNotificationSilent",true);
+                        dataObj.put("Notification_type", "videoCallEnd");
+                        dataObj.put("body", message);
+                        object.put("priority","high");
+                        object.put("data", dataObj);
+                        wr.writeBytes(object.toString());
+                        Log.e(TAG, " JSON input : " + object.toString());
+                        wr.flush();
+                        wr.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        Log.e(TAG, " Exception : " + ex.getMessage());
+                    }
+                    urlConnection.connect();
+
+                    int responseCode = urlConnection.getResponseCode();
+                    AppLog.e(TAG, "responseCode :" + responseCode);
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        server_response = readStream(urlConnection.getInputStream());
+                    }
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    AppLog.e(TAG, "MalformedURLException :" + e.getMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    AppLog.e(TAG, "IOException :" + e.getMessage());
+                }
+            }
+
+
+            return server_response;
+        }
+
+
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
+    }
 
 }

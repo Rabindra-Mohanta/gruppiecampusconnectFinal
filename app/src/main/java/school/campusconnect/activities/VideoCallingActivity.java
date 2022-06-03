@@ -115,7 +115,6 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
                 intent.putExtra("zoomName", zoomName);
                 intent.putExtra("image", image);
                 intent.putExtra("name", name);
-
                 intent.setAction(Constants.ACCPET_ACTION_SCREEN);
                 startService(intent);
 

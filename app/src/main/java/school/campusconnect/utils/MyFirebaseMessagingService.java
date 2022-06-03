@@ -284,10 +284,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     sendNotification(data.body, data.title);
                 }
 
-                if (data.isVideoCall)
+                if (data.isVideoCall && data.Notification_type.equalsIgnoreCase("videoCallStart"))
                 {
                     sendVideoCallNotification(data.body,data.meetingID,data.zoomName,data.className,data.createdByImage,data.createdByName,data.createdById,data.meetingPassword);
                 }
+
+                if (data.isVideoCall && data.Notification_type.equalsIgnoreCase("videoCallEnd"))
+                {
+                    Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.setAction(Constants.STOPFOREGROUND_ACTION);
+                    startService(intent);
+                }
+
             }
         }
 

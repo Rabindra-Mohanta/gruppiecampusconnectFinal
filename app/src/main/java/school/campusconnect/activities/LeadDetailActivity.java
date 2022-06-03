@@ -163,9 +163,10 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
        // setContentView(R.layout.item_other_lead);
       //  ButterKnife.bind(this);
         mLeadItem = getIntent().getParcelableExtra(EXTRA_LEAD_ITEM);
+        AppLog.e(TAG,"mLeadItem Data" +new Gson().toJson(mLeadItem));
         Toolbar mToolBar= binding.getRoot().findViewById(R.id.toolbar);
 
-        AppLog.e(TAG,"mLeadItem Data" +new Gson().toJson(mLeadItem));
+
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle(getResources().getString(R.string.title_details));

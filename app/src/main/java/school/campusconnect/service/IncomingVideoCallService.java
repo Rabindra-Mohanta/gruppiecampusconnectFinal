@@ -54,7 +54,6 @@ public class IncomingVideoCallService extends Service {
     String image,name;
 
 
-
     CountDownTimer countDownTimer = new CountDownTimer(1*60000,1000) {
         @Override
         public void onTick(long millisUntilFinished) {
@@ -183,7 +182,7 @@ public class IncomingVideoCallService extends Service {
 
             Log.e(TAG, "Received Stop Foreground Intent"+createID);
 
-            new SendNotification(createID,"Decline","RejectVideoCall").execute();
+       //     new SendNotification(createID,"Decline","RejectVideoCall").execute();
 
 
             stopForeground(true);
