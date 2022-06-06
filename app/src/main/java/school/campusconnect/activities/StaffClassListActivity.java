@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -52,7 +53,7 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
 
     public static final String TAG = "StaffClassListActivity";
     ActivityStaffClassListBinding binding;
-    String staffID;
+    String staffID,role,type;
     String date;
     private Boolean expandable = false;
     private Boolean expandableChart = false;
@@ -66,6 +67,8 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_staff_class_list);
         staffID = getIntent().getStringExtra("staff_id");
+        type = getIntent().getStringExtra("type");
+        role = getIntent().getStringExtra("role");
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
@@ -344,7 +347,6 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
 
             holder.txt_name.setText(item.getName());
             holder.txt_count.setVisibility(View.GONE);
-            holder.img_tree.setVisibility(View.GONE);
         }
 
         @Override
@@ -407,6 +409,13 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
     }
 
     private void onTreeClick(ClassResponse.ClassData classData) {
+
+        Intent intent = new Intent(getApplicationContext(), HWClassSubjectActivity.class);
+        intent.putExtra("team_id", classData.getId());
+        intent.putExtra("title", classData.className);
+        intent.putExtra("role", role);
+        intent.putExtra("type", type);
+        startActivity(intent);
 
     }
 

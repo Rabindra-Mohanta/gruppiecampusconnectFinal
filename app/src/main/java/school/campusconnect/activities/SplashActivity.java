@@ -249,14 +249,14 @@ public class SplashActivity extends AppCompatActivity {
                     }
                     // }
                 }
-            }, 1500);
+            }, 3000);
         } else {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     gotoHomeScreen();
                 }
-            }, 1000);
+            }, 3000);
         }
     }
 

@@ -192,7 +192,6 @@ public static final String TAG = "ZoomCallActivity";
             e.printStackTrace();
             Log.e(TAG,"Exception start meeting "+e.getMessage());
         }
-
     }
 
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin,boolean isMessage) {

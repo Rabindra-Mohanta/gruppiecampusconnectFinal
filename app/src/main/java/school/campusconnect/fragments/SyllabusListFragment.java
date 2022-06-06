@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -86,7 +87,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
                 data.setTopicData(new Gson().fromJson(tblList.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
                 syllabusDataList.add(data);
             }
-
+            Collections.reverse(syllabusDataList);
             adapter.add(syllabusDataList);
         }
         else
@@ -165,6 +166,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             }
         }
         syllabusDataList.addAll(syllabusData);
+        Collections.reverse(syllabusDataList);
         adapter.add(syllabusDataList);
     }
 

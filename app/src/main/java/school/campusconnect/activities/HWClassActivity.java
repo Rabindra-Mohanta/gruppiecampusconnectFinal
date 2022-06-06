@@ -89,6 +89,7 @@ public class HWClassActivity extends BaseActivity {
         if (item.getItemId() == R.id.menu_filter_staff)
         {
             staffFragmentDialog.show(getSupportFragmentManager(),"");
+            staffFragmentDialog.setData(getIntent().getStringExtra("type"),getIntent().getStringExtra("role"));
         }
         return super.onOptionsItemSelected(item);
     }

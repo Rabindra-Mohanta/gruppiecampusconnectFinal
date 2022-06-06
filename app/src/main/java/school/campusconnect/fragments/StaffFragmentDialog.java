@@ -48,6 +48,7 @@ import school.campusconnect.views.SearchIssueFragmentDialog;
 public class StaffFragmentDialog extends DialogFragment implements LeafManager.OnCommunicationListener{
     DialogStaffListBinding binding;
     Context context;
+    String role,Type;
     private ArrayList<StaffResponse.StaffData> result;
 
     public static StaffFragmentDialog newInstance()
@@ -123,6 +124,11 @@ public class StaffFragmentDialog extends DialogFragment implements LeafManager.O
     public void onException(int apiId, String msg) {
 
         //progressBar.setVisibility(View.GONE);
+    }
+
+    public void setData(String type, String role) {
+        this.role = role;
+        this.Type = type;
     }
 
     public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>
@@ -254,6 +260,8 @@ public class StaffFragmentDialog extends DialogFragment implements LeafManager.O
         Intent intent = new Intent(getActivity(), StaffClassListActivity.class);
         intent.putExtra("staff_id",classData.getStaffId());
         intent.putExtra("title",classData.getName());
+        intent.putExtra("role",role);
+        intent.putExtra("type",Type);
         startActivity(intent);
     }
 }

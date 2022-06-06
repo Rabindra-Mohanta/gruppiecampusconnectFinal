@@ -143,140 +143,163 @@
 
 
                                 <LinearLayout
-                                    android:id="@+id/llChartDetails"
-                                    android:visibility="gone"
-                                    android:layout_below="@+id/llChart"
+                                    android:layout_marginTop="@dimen/padding_10dp"
                                     android:layout_marginHorizontal="@dimen/padding_10dp"
                                     android:layout_width="match_parent"
-                                    android:orientation="vertical"
                                     android:layout_height="wrap_content"
-                                    >
+                                    android:orientation="horizontal"
+                                    android:visibility="gone"
+                                    android:id="@+id/llChartDetails"
+                                    android:layout_below="@+id/llChart"
+                                    android:weightSum="2">
                                     <LinearLayout
+                                        android:layout_weight="1"
+                                        android:layout_marginRight="@dimen/padding_5dp"
                                         android:layout_width="match_parent"
+                                        android:orientation="vertical"
                                         android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-                                        <ImageView
-                                            android:layout_gravity="center"
-                                            android:layout_width="@dimen/padding_20dp"
-                                            android:layout_height="@dimen/padding_20dp"
-                                            android:background="@color/colorYellow"/>
+                                        >
 
-                                        <TextView
+
+                                        <LinearLayout
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/padding_10dp"
-                                            android:text="@string/total_topic_count"
-                                            style="@style/LabelNormal"
-                                            android:textColor="@color/black"/>
+                                            android:orientation="horizontal">
+                                            <ImageView
+                                                android:layout_gravity="center"
+                                                android:layout_width="@dimen/padding_20dp"
+                                                android:layout_height="@dimen/padding_20dp"
+                                                android:background="@color/colorYellow"/>
 
-                                    </LinearLayout>
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginLeft="@dimen/padding_10dp"
+                                                android:text="@string/total_topic_count"
+                                                style="@style/LabelSmall"
+                                                android:textColor="@color/black"/>
 
-                                    <LinearLayout
-                                        android:layout_marginTop="@dimen/padding_10dp"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-                                        <ImageView
-                                            android:layout_gravity="center"
-                                            android:layout_width="@dimen/padding_20dp"
-                                            android:layout_height="@dimen/padding_20dp"
-                                            android:background="@color/colorGREEN"/>
+                                        </LinearLayout>
 
-                                        <TextView
+                                        <LinearLayout
+                                            android:layout_marginTop="@dimen/padding_10dp"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/padding_10dp"
-                                            android:text="@string/total_topic_completed"
-                                            style="@style/LabelNormal"
-                                            android:textColor="@color/black"/>
+                                            android:orientation="horizontal">
+                                            <ImageView
+                                                android:layout_gravity="center"
+                                                android:layout_width="@dimen/padding_20dp"
+                                                android:layout_height="@dimen/padding_20dp"
+                                                android:background="@color/colorGREEN"/>
 
-                                    </LinearLayout>
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginLeft="@dimen/padding_10dp"
+                                                android:text="@string/total_topic_completed"
+                                                style="@style/LabelSmall"
+                                                android:textColor="@color/black"/>
 
-                                    <LinearLayout
-                                        android:layout_marginTop="@dimen/padding_10dp"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-                                        <ImageView
-                                            android:layout_gravity="center"
-                                            android:layout_width="@dimen/padding_20dp"
-                                            android:layout_height="@dimen/padding_20dp"
-                                            android:background="@color/colorRED"/>
+                                        </LinearLayout>
 
-                                        <TextView
+                                        <LinearLayout
+                                            android:layout_marginTop="@dimen/padding_10dp"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/padding_10dp"
-                                            android:text="@string/total_topic_pending"
-                                            style="@style/LabelNormal"
-                                            android:textColor="@color/black"/>
+                                            android:orientation="horizontal">
+                                            <ImageView
+                                                android:layout_gravity="center"
+                                                android:layout_width="@dimen/padding_20dp"
+                                                android:layout_height="@dimen/padding_20dp"
+                                                android:background="@color/colorRED"/>
+
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginLeft="@dimen/padding_10dp"
+                                                android:text="@string/total_topic_pending"
+                                                style="@style/LabelSmall"
+                                                android:textColor="@color/black"/>
+
+                                        </LinearLayout>
+
+
+
 
                                     </LinearLayout>
-
                                     <LinearLayout
-                                        android:layout_marginTop="@dimen/padding_10dp"
+                                        android:layout_weight="1"
+                                        android:layout_marginLeft="@dimen/padding_5dp"
                                         android:layout_width="match_parent"
+                                        android:orientation="vertical"
                                         android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-                                        <ImageView
-                                            android:layout_gravity="center"
-                                            android:layout_width="@dimen/padding_20dp"
-                                            android:layout_height="@dimen/padding_20dp"
-                                            android:background="@color/colorFirstPie"/>
+                                        >
 
-                                        <TextView
+
+                                        <LinearLayout
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/padding_10dp"
-                                            android:text="@string/total_topic_pending"
-                                            style="@style/LabelNormal"
-                                            android:textColor="@color/black"/>
+                                            android:orientation="horizontal">
+                                            <ImageView
+                                                android:layout_gravity="center"
+                                                android:layout_width="@dimen/padding_20dp"
+                                                android:layout_height="@dimen/padding_20dp"
+                                                android:background="@color/colorFirstPie"/>
 
-                                    </LinearLayout>
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginLeft="@dimen/padding_10dp"
+                                                android:text="@string/total_topic_pending"
+                                                style="@style/LabelSmall"
+                                                android:textColor="@color/black"/>
 
-                                    <LinearLayout
-                                        android:layout_marginTop="@dimen/padding_10dp"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-                                        <ImageView
-                                            android:layout_gravity="center"
-                                            android:layout_width="@dimen/padding_20dp"
-                                            android:layout_height="@dimen/padding_20dp"
-                                            android:background="@color/colorSecondPie"/>
+                                        </LinearLayout>
 
-                                        <TextView
+                                        <LinearLayout
+                                            android:layout_marginTop="@dimen/padding_10dp"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/padding_10dp"
-                                            android:text="@string/total_end_delay"
-                                            style="@style/LabelNormal"
-                                            android:textColor="@color/black"/>
+                                            android:orientation="horizontal">
+                                            <ImageView
+                                                android:layout_gravity="center"
+                                                android:layout_width="@dimen/padding_20dp"
+                                                android:layout_height="@dimen/padding_20dp"
+                                                android:background="@color/colorSecondPie"/>
 
-                                    </LinearLayout>
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginLeft="@dimen/padding_10dp"
+                                                android:text="@string/total_end_delay"
+                                                style="@style/LabelSmall"
+                                                android:textColor="@color/black"/>
 
-                                    <LinearLayout
-                                        android:layout_marginTop="@dimen/padding_10dp"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-                                        <ImageView
-                                            android:layout_gravity="center"
-                                            android:layout_width="@dimen/padding_20dp"
-                                            android:layout_height="@dimen/padding_20dp"
-                                            android:background="@color/colorThirdPie"/>
+                                        </LinearLayout>
 
-                                        <TextView
+                                        <LinearLayout
+                                            android:layout_marginTop="@dimen/padding_10dp"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/padding_10dp"
-                                            android:text="@string/total_com_on_time"
-                                            style="@style/LabelNormal"
-                                            android:textColor="@color/black"/>
+                                            android:orientation="horizontal">
+                                            <ImageView
+                                                android:layout_gravity="center"
+                                                android:layout_width="@dimen/padding_20dp"
+                                                android:layout_height="@dimen/padding_20dp"
+                                                android:background="@color/colorThirdPie"/>
+
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginLeft="@dimen/padding_10dp"
+                                                android:text="@string/total_com_on_time"
+                                                style="@style/LabelSmall"
+                                                android:textColor="@color/black"/>
+
+                                        </LinearLayout>
+
 
                                     </LinearLayout>
-
-
                                 </LinearLayout>
                             </RelativeLayout>
                             <ImageView
