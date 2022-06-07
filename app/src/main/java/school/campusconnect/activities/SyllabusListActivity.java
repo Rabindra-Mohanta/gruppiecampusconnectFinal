@@ -63,6 +63,8 @@ public class SyllabusListActivity extends BaseActivity {
         switch (item.getItemId())
         {
             case R.id.menuAdd:
+
+
                 Intent intent = new Intent(getApplicationContext(), AddSyllabusActivity.class);
                 intent.putExtra("team_id", getIntent().getExtras().getString("team_id"));
                 intent.putExtra("subject_id", getIntent().getExtras().getString("subject_id"));

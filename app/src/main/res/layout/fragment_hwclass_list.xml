@@ -315,18 +315,38 @@
                     </FrameLayout>
                 </LinearLayout>
 
+
+                <Spinner
+                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:id="@+id/spFilter"
+                    style="@style/RegEditText"
+                    android:visibility="gone"
+                    android:layout_below="@id/llAnalysis"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_marginTop="@dimen/padding_20dp"
                     android:id="@+id/rvClass"
-                    android:layout_below="@id/llAnalysis"
+                    android:layout_below="@id/spFilter"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:id="@+id/rvStaff"
+                    android:layout_below="@id/spFilter"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:layout_marginTop="@dimen/padding_40dp"
-                    android:layout_below="@id/llAnalysis"
+                    android:layout_below="@id/spFilter"
                     android:id="@+id/txtEmpty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

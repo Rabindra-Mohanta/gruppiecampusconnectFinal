@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -32,6 +35,7 @@ import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.syllabus.SyllabusTBL;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppLog;
 
 public class AddSyllabusActivity extends BaseActivity implements View.OnClickListener, LeafManager.OnCommunicationListener {
 ActivityAddSyllabusBinding binding;
@@ -41,6 +45,8 @@ ActivityAddSyllabusBinding binding;
     TopicAdapter topicAdapter;
     LeafManager manager;
     String teamId,subjectId;
+    ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>();
+    String chapterID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +54,11 @@ ActivityAddSyllabusBinding binding;
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.lbl_add_syllabus));
+        setTitle(getResources().getString(R.string.title_add_chapter_plan));
 
         inits();
+        bindChapter();
+
         setListner();
 
 
@@ -70,6 +78,58 @@ ActivityAddSyllabusBinding binding;
     {
         binding.imgAdd.setOnClickListener(this);
         binding.btnAdd.setOnClickListener(this);
+        binding.imgAddChapter.setOnClickListener(this);
+        binding.ImgRemoveChapter.setOnClickListener(this);
+    }
+
+    private void bindChapter() {
+
+        List<SyllabusTBL> tblList = SyllabusTBL.getSyllabus(teamId,subjectId);
+
+        if (tblList.size() > 0)
+        {
+            for (int i = 0;i<tblList.size();i++)
+            {
+                SyllabusListModelRes.SyllabusData data = new SyllabusListModelRes.SyllabusData();
+
+                data.setChapterName(tblList.get(i).chapterName);
+                data.setChapterId(tblList.get(i).chapterId);
+                data.setTopicData(new Gson().fromJson(tblList.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
+                syllabusDataList.add(data);
+            }
+
+        }
+        else
+        {
+            binding.llChapterData.setVisibility(View.GONE);
+            binding.etcName.setVisibility(View.VISIBLE);
+        }
+
+        if (syllabusDataList != null && syllabusDataList.size() > 0) {
+
+            binding.llChapterData.setVisibility(View.VISIBLE);
+            binding.etcName.setVisibility(View.GONE);
+            String[] strChapter = new String[syllabusDataList.size()];
+            for (int i = 0; i < strChapter.length; i++) {
+                strChapter[i] = syllabusDataList.get(i).getChapterName();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, strChapter);
+            binding.spChapter.setAdapter(adapter);
+
+            binding.spChapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    AppLog.e(TAG, "onItemSelected : " + binding.spChapter.getSelectedItem().toString());
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+
     }
 
     @Override
@@ -145,6 +205,21 @@ ActivityAddSyllabusBinding binding;
                     manager.addSyllabus(this,GroupDashboardActivityNew.groupId,teamId,subjectId,req);
                 }
                 break;
+
+            case R.id.imgAddChapter:
+                binding.llChapterData.setVisibility(View.GONE);
+                binding.etcName.getText().clear();
+                binding.ImgRemoveChapter.setVisibility(View.VISIBLE);
+                binding.etcName.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.ImgRemoveChapter:
+                binding.llChapterData.setVisibility(View.VISIBLE);
+                binding.etcName.getText().clear();
+                binding.ImgRemoveChapter.setVisibility(View.GONE);
+                binding.etcName.setVisibility(View.GONE);
+                break;
+
         }
 
     }

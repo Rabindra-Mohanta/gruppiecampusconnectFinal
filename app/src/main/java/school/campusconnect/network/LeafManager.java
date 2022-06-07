@@ -12829,10 +12829,6 @@ public class LeafManager {
 
 
 
-
-
-
-
     public void statusPlan(OnCommunicationListener listener, String group_id, String team_id, String subject_id, String chapter_id, SyllabusPlanRequest modelReq)
     {
         mOnCommunicationListener = listener;
@@ -12872,7 +12868,6 @@ public class LeafManager {
             }
         }, serviceErrorType);
     }
-
 
 
     public void EditSyllabus(OnCommunicationListener listener, String group_id, String team_id, String subject_id, String chapter_id, EditTopicModelReq modelReq)
@@ -12950,7 +12945,6 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
-
 
     public void editAttendanceStudent(OnCommunicationListener listListener, String group_id, String team_id, AttendenceEditRequest request) {
         mOnCommunicationListener = listListener;

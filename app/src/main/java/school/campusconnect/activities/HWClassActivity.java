@@ -68,7 +68,7 @@ public class HWClassActivity extends BaseActivity {
 
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_syllabus_filter,menu);
         return super.onCreateOptionsMenu(menu);
@@ -92,7 +92,7 @@ public class HWClassActivity extends BaseActivity {
             staffFragmentDialog.setData(getIntent().getStringExtra("type"),getIntent().getStringExtra("role"));
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

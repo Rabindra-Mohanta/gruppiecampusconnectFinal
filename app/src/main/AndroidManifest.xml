@@ -57,8 +57,10 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.ApplyLeaveActivity"></activity>
-        <activity android:name=".activities.StaffClassListActivity"></activity>
+        <activity android:name=".activities.UpdateTopicActivity"></activity>
+        <activity android:name=".activities.AddChapterPlanActivity" />
+        <activity android:name=".activities.ApplyLeaveActivity" />
+        <activity android:name=".activities.StaffClassListActivity" />
         <activity android:name=".activities.EditTopicActivity" />
         <activity android:name=".activities.ZoomCallActivity" />
         <activity android:name=".activities.VideoCallingActivity" />

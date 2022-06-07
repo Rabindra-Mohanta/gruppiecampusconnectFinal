@@ -1,49 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-        <TextView
-            style="@style/LabelNormal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_10dp"
-            android:paddingLeft="@dimen/padding_10dp"
-            android:text="@string/lbl_topic_name"
-            android:textAllCaps="true"
-            android:textColor="@color/colorPrimary" />
+    <androidx.cardview.widget.CardView
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:layout_width="match_parent"
+        app:cardCornerRadius="@dimen/padding_5dp"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true">
 
         <RelativeLayout
+            android:padding="@dimen/padding_10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_5dp"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/etTopicName"
-                style="@style/RegEditText"
+            android:layout_height="wrap_content">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/login_button_height"
-                android:inputType="textPersonName|textCapWords" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:paddingLeft="@dimen/padding_10dp"
+                    android:text="@string/lbl_topic_name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/etTopicName"
+                        style="@style/RegEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/login_button_height"
+                        android:inputType="textPersonName|textCapWords" />
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    android:id="@+id/llExpand">
+
+                    <TextView
+                        style="@style/LabelNormal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_10dp"
+                        android:paddingLeft="@dimen/padding_10dp"
+                        android:text="@string/lbl_plan"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_marginRight="@dimen/padding_5dp"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_10dp"
+                                android:paddingLeft="@dimen/padding_10dp"
+                                android:text="@string/lbl_from_date"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorPrimary" />
+                            <EditText
+                                android:id="@+id/etFromDate"
+                                style="@style/RegEditText"
+                                android:layout_width="match_parent"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:layout_height="@dimen/login_button_height"
+                                android:inputType="datetime" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_marginLeft="@dimen/padding_5dp"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_10dp"
+                                android:paddingLeft="@dimen/padding_10dp"
+                                android:text="@string/lbl_to_date"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorPrimary" />
+                            <EditText
+                                android:id="@+id/etToDate"
+                                style="@style/RegEditText"
+                                android:layout_width="match_parent"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:layout_height="@dimen/login_button_height"
+                                android:inputType="datetime" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/imgDelete"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/padding_30dp"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/padding_5dp"
+                app:srcCompat="@drawable/ic_close"
+                app:tint="@android:color/holo_red_dark" />
 
         </RelativeLayout>
 
 
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-    <ImageView
-        android:id="@+id/imgDelete"
-        android:layout_width="@dimen/padding_30dp"
-        android:layout_height="@dimen/padding_30dp"
-        android:layout_alignParentRight="true"
-        android:padding="@dimen/padding_5dp"
-        app:srcCompat="@drawable/ic_close"
-        app:tint="@android:color/holo_red_dark" />
+
+
 
 
 

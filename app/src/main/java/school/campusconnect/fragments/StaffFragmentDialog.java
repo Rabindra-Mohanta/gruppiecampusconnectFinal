@@ -105,12 +105,9 @@ public class StaffFragmentDialog extends DialogFragment implements LeafManager.O
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-
         //progressBar.setVisibility(View.GONE);
         StaffResponse res = (StaffResponse) response;
         result = res.getData();
-
-
         binding.rvStaff.setAdapter(new StaffAdapter(result));
     }
 
@@ -122,7 +119,6 @@ public class StaffFragmentDialog extends DialogFragment implements LeafManager.O
 
     @Override
     public void onException(int apiId, String msg) {
-
         //progressBar.setVisibility(View.GONE);
     }
 

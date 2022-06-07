@@ -26,13 +26,13 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-             /*   applicationId "school.campusconnect"
+                applicationId "school.campusconnect"
                 versionCode 12
                 versionName "1.3"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
+                buildConfigField("String", "APP_ID",  '"school"')
 
               /*  applicationId "smjes.gruppie"
                 versionCode 1
@@ -52,13 +52,13 @@ android {
                 buildConfigField("String", "APP_ID",  '"constituency"')*/
 
 
-               applicationId "sudhakar.gruppie"
+            /*   applicationId "sudhakar.gruppie"
                versionCode 2
                versionName "2.0"
                resValue "string", "app_name", '"SUDHAKAR LAL(JDS)"'
                buildConfigField("String", "AppName", '"SUDHAKAR LAL(JDS)"')
                buildConfigField("String", "AppCategory", '"constituency"')
-               buildConfigField("String", "APP_ID",  '"constituency"')
+               buildConfigField("String", "APP_ID",  '"constituency"')*/
 
                 /// KITTUR MLA App...
              /*   applicationId "kittur.gruppie"
@@ -222,11 +222,11 @@ android {
                buildConfigField("String", "AppName", '"DODDAGOUDAR"')
                buildConfigField("String", "AppCategory", '"CAMPUS"')
                buildConfigField("String", "APP_ID",  '"school"')*/
-                 /*  ndk {
+                   ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
                        abiFilters 'armeabi-v7a','armeabi-v8a'//
-                   }*/
+                   }
             }
     buildTypes {
         release {
@@ -234,7 +234,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-          buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
+     //     buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
 
 
           //    buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"' // MGV , SMJES
@@ -256,10 +256,10 @@ android {
 
          //    buildConfigField "String", "BASE_URL", '"https://gcc6.gruppie.in/"' // MGV
 
-            buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
+          //  buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
 
        //     buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
-        //     buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
+             buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
    //      buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'   /// PRODUCATION TEST SERVER...
 
 

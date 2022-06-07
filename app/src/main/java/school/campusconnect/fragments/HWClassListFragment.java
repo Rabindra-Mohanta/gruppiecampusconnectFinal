@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,12 +48,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddChapterPlanActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.HWClassSubjectActivity;
 import school.campusconnect.activities.MarksCardActivity2;
 import school.campusconnect.activities.RecClassSubjectActivity;
 import school.campusconnect.activities.StaffClassListActivity;
 import school.campusconnect.activities.TimeTabelActivity2;
+import school.campusconnect.activities.UpdateTopicActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.FragmentHwclassListBinding;
 import school.campusconnect.datamodel.BaseResponse;
@@ -59,6 +63,7 @@ import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.SubjectItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.staff.StaffResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.syllabus.StaffAnalysisRes;
 import school.campusconnect.datamodel.syllabus.TodaySyllabusPlanRes;
@@ -81,13 +86,15 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     private Boolean expandableChart = false;
 
     TodayTopicsAdapter adapter;
-
+    private ArrayList<StaffResponse.StaffData> staffData = new ArrayList<>();
+    ArrayList<ClassResponse.ClassData> resultClass = new ArrayList<>();
 /*
     @Bind(R.id.swipeRefreshLayout)
     public PullRefreshLayout swipeRefreshLayout;*/
 
     String role;
     String type;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,7 +114,15 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
         init();
 
-        getDataLocally();
+        if (type.equalsIgnoreCase("Syllabus Tracker") && role.equalsIgnoreCase("admin"))
+        {
+            //binding.spFilter.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            getDataLocally();
+        }
+
     }
 
     private void init() {
@@ -125,7 +140,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             }
         });*/
 
-        binding.rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+    //    binding.rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         role = getArguments().getString("role");
         Log.e(TAG,"role"+role);
@@ -163,13 +178,59 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             }
         });
 
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_spinner, new String[]{"Class Wise","Staff Wise"});
+        binding.spFilter.setAdapter(adapter);
+
+        binding.spFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position == 0)
+                {
+                    binding.rvStaff.setVisibility(View.GONE);
+                    binding.rvClass.setVisibility(View.VISIBLE);
+
+                    if (resultClass.size() > 0)
+                    {
+                        binding.rvClass.setAdapter(new ClassesAdapter(resultClass));
+                    }
+                    else
+                    {
+                        getDataLocally();
+                    }
+                }
+                else
+                {
+                    binding.rvStaff.setVisibility(View.VISIBLE);
+                    binding.rvClass.setVisibility(View.GONE);
+
+                    if (staffData.size() > 0)
+                    {
+                        binding.rvStaff.setAdapter(new StaffAdapter(staffData));
+                    }
+                    else
+                    {
+                        staffData.clear();
+                        apiCallStaff();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     private void getDataLocally() {
 
         List<ClassListTBL> list = ClassListTBL.getAll(GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
-            ArrayList<ClassResponse.ClassData> result = new ArrayList<>();
+
             for (int i = 0; i < list.size(); i++) {
                 ClassListTBL currentItem = list.get(i);
                 ClassResponse.ClassData item = new ClassResponse.ClassData();
@@ -184,9 +245,9 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                 item.jitsiToken = currentItem.jitsiToken;
                 item.userId = currentItem.userId;
                 item.rollNumber = currentItem.rollNumber;
-                result.add(item);
+                resultClass.add(item);
             }
-            binding.rvClass.setAdapter(new ClassesAdapter(result));
+            binding.rvClass.setAdapter(new ClassesAdapter(resultClass));
 
             TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
             if (dashboardCount != null) {
@@ -211,6 +272,12 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         }
     }
 
+
+    private void apiCallStaff()
+    {
+        LeafManager leafManager = new LeafManager();
+        leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
+    }
     private void apiCall(boolean isLoading) {
         if(isLoading)
             showLoadingBar(binding.progressBar);
@@ -362,6 +429,15 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             binding.llAnalysis.setVisibility(View.GONE);
         }
 
+        if (type.equalsIgnoreCase("Syllabus Tracker") && role.equalsIgnoreCase("admin"))
+        {
+            binding.spFilter.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            binding.spFilter.setVisibility(View.GONE);
+        }
+
         super.onStart();
     }
 
@@ -388,6 +464,12 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                 binding.llTodayData.setVisibility(View.GONE);
             }
         }
+        else if (apiId == LeafManager.API_STAFF)
+        {
+            StaffResponse res = (StaffResponse) response;
+            staffData = res.getData();
+            binding.rvStaff.setAdapter(new StaffAdapter(staffData));
+        }
         else if (apiId == LeafManager.API_STAFF_ANALYSIS)
         {
             StaffAnalysisRes res = (StaffAnalysisRes) response;
@@ -399,9 +481,10 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         }
         else {
             ClassResponse res = (ClassResponse) response;
-            List<ClassResponse.ClassData> result = res.getData();
-            AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
-            binding.rvClass.setAdapter(new ClassesAdapter(result));
+            resultClass.clear();
+            resultClass = res.getData();
+            AppLog.e(TAG, "ClassResponse " + new Gson().toJson(resultClass));
+            binding.rvClass.setAdapter(new ClassesAdapter(resultClass));
 
             TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
             if(dashboardCount!=null){
@@ -409,7 +492,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                 dashboardCount.save();
             }
 
-            saveToDB(result);
+            saveToDB(resultClass);
         }
     }
 
@@ -599,15 +682,25 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         }
 
         @Override
-        public void onBindViewHolder(final TodayTopicsAdapter.ViewHolder holder, final int position) {
+        public void onBindViewHolder(final TodayTopicsAdapter.ViewHolder holder, final int position)
+        {
             final TodaySyllabusPlanRes.TodaySyllabusData item = list.get(position);
 
             holder.tvTeamName.setText(item.getTeamName());
             holder.tvTopicName.setText(item.getTopicName());
             holder.tvChpName.setText(item.getChapterName());
+
+            holder.imgTree.setVisibility(View.VISIBLE);
+
+            holder.imgTree.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), UpdateTopicActivity.class);
+                    i.putExtra("data",item);
+                    startActivity(i);
+                }
+            });
         }
-
-
         private void isExpand(boolean b)
         {
             this.isExpand = b;
@@ -633,8 +726,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             }
 
         }
-        public class ViewHolder extends RecyclerView.ViewHolder {
-
+        public class ViewHolder extends RecyclerView.ViewHolder
+        {
 
             @Bind(R.id.tvTeamName)
             TextView tvTeamName;
@@ -645,11 +738,150 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             @Bind(R.id.tvChpName)
             TextView tvChpName;
 
+            @Bind(R.id.imgTree)
+            ImageView imgTree;
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this,itemView);
 
             }
         }
+
+    }
+
+
+    public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>
+    {
+        List<StaffResponse.StaffData> list;
+        private Context mContext;
+
+        public StaffAdapter(List<StaffResponse.StaffData> list) {
+            this.list = list;
+        }
+
+        @Override
+        public StaffAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            mContext = parent.getContext();
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staff,parent,false);
+            return new StaffAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final StaffAdapter.ViewHolder holder, final int position) {
+            final StaffResponse.StaffData item = list.get(position);
+
+            if (!TextUtils.isEmpty(item.getImage())) {
+                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
+                        new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.img_lead_default.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50,50).into(holder.imgTeam, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        holder.img_lead_default.setVisibility(View.INVISIBLE);
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        holder.img_lead_default.setVisibility(View.VISIBLE);
+                                        TextDrawable drawable = TextDrawable.builder()
+                                                .buildRound(ImageUtil.getTextLetter(item.getName()), ImageUtil.getRandomColor(position));
+                                        holder.img_lead_default.setImageDrawable(drawable);
+                                        AppLog.e("Picasso", "Error : ");
+                                    }
+                                });
+                            }
+                        });
+            } else {
+                holder.img_lead_default.setVisibility(View.VISIBLE);
+                TextDrawable drawable = TextDrawable.builder()
+                        .buildRound(ImageUtil.getTextLetter(item.getName()), ImageUtil.getRandomColor(position));
+                holder.img_lead_default.setImageDrawable(drawable);
+            }
+
+            holder.txt_name.setText(item.getName());
+            if(!TextUtils.isEmpty(item.designation)){
+                holder.txt_count.setText("[" + item.getDesignation() + "]");
+                holder.txt_count.setVisibility(View.VISIBLE);
+            }else {
+                holder.txt_count.setVisibility(View.GONE);
+            }
+
+        }
+
+        @Override
+        public int getItemCount() {
+            if(list!=null)
+            {
+                if(list.size()==0)
+                {
+
+                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_staff_found));
+                }
+                else {
+                    binding.txtEmpty.setText("");
+                }
+
+                return list.size();
+            }
+            else
+            {
+                binding.txtEmpty.setText(getResources().getString(R.string.txt_no_staff_found));
+                return 0;
+            }
+
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            @Bind(R.id.img_lead)
+            ImageView imgTeam;
+
+            @Bind(R.id.img_lead_default)
+            ImageView img_lead_default;
+
+            @Bind(R.id.txt_name)
+            TextView txt_name;
+
+            @Bind(R.id.txt_count)
+            TextView txt_count;
+            @Bind(R.id.img_tree)
+            ImageView img_tree;
+
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this,itemView);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onTreeClickStaff(list.get(getAdapterPosition()));
+                    }
+                });
+                img_tree.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onTreeClickStaff(list.get(getAdapterPosition()));
+                    }
+                });
+
+            }
+        }
+    }
+
+    private void onTreeClickStaff(StaffResponse.StaffData classData) {
+
+        Intent intent = new Intent(getActivity(), StaffClassListActivity.class);
+        intent.putExtra("staff_id",classData.getStaffId());
+        intent.putExtra("title",classData.getName());
+        intent.putExtra("role",role);
+        intent.putExtra("type",type);
+        startActivity(intent);
     }
 }
