@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +47,7 @@ import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
 import school.campusconnect.datamodel.syllabus.SyllabusTBL;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 
 public class SyllabusListFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
@@ -54,6 +57,9 @@ LeafManager manager;
 String teamId,subjectId,role;
 SyllabusAdapter adapter;
 ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>();
+
+    ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataSpinnerList = new ArrayList<>();
+
     public static SyllabusListFragment newInstance() {
         SyllabusListFragment fragment = new SyllabusListFragment();
         Bundle args = new Bundle();
@@ -72,16 +78,103 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         inits();
 
-        getLocally();
+        bindChapter();
+
+   //     getLocallyAll();
 
     }
 
-    private void getLocally() {
+    private void bindChapter() {
+
+        List<SyllabusTBL> tblList = SyllabusTBL.getSyllabus(teamId,subjectId);
+
+        Log.e(TAG,"tblList "+tblList.size());
+
+        syllabusDataSpinnerList.clear();
+
+
+        if (tblList.size() > 0)
+        {
+            binding.llChapterAll.setVisibility(View.VISIBLE);
+
+            for (int i = 0;i<tblList.size();i++)
+            {
+                SyllabusListModelRes.SyllabusData data = new SyllabusListModelRes.SyllabusData();
+
+                data.setChapterName(tblList.get(i).chapterName);
+                data.setChapterId(tblList.get(i).chapterId);
+                data.setTopicData(new Gson().fromJson(tblList.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
+                syllabusDataSpinnerList.add(data);
+            }
+        }
+        else
+        {
+            binding.llChapterAll.setVisibility(View.GONE);
+        }
+
+
+        if (syllabusDataSpinnerList != null && syllabusDataSpinnerList.size() > 0) {
+
+            String[] strChapter = new String[syllabusDataSpinnerList.size()+1];
+
+            strChapter[0] = "All";
+
+            for (int i = 1; i < strChapter.length; i++) {
+                strChapter[i] = syllabusDataSpinnerList.get(i-1).getChapterName();
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner, strChapter);
+            binding.spChapter.setAdapter(adapter);
+
+            binding.spChapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    if (position == 0)
+                    {
+                        getLocallyAll();
+                    }
+                    else
+                    {
+
+                        for (int i = 1; i < strChapter.length; i++) {
+
+                            if (binding.spChapter.getSelectedItem().toString().equalsIgnoreCase(syllabusDataSpinnerList.get(i-1).getChapterName()))
+                            {
+                                AppLog.e(TAG, "Compare Value " + syllabusDataSpinnerList.get(i-1).getChapterId());
+                                getLocallyChapter(syllabusDataSpinnerList.get(i-1).getChapterId());
+                            }
+
+                        }
+                    }
+
+                  /*  for (int i = 0;i<syllabusDataList.size();i++)
+                    {
+                        if (binding.spChapter.getSelectedItem().toString().equalsIgnoreCase(syllabusDataList.get(i).getChapterName()))
+                        {
+                            AppLog.e(TAG, "Compare Value " + syllabusDataList.get(i).getChapterId());
+                        }
+                    }*/
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+
+    }
+
+    private void getLocallyAll() {
 
         List<SyllabusTBL> tblList = SyllabusTBL.getSyllabus(teamId,subjectId);
         syllabusDataList.clear();
+        adapter.add(syllabusDataList);
 
         if (tblList.size() > 0)
         {
@@ -96,10 +189,35 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             }
             Collections.reverse(syllabusDataList);
             adapter.add(syllabusDataList);
+
+
+
         }
         else
         {
             apiCall();
+        }
+    }
+
+    private void getLocallyChapter(String chapterID) {
+
+        List<SyllabusTBL> tblList = SyllabusTBL.getSyllabusChapter(teamId,subjectId,chapterID);
+        syllabusDataList.clear();
+        adapter.add(syllabusDataList);
+
+        if (tblList.size() > 0)
+        {
+            for (int i = 0;i<tblList.size();i++)
+            {
+                SyllabusListModelRes.SyllabusData data = new SyllabusListModelRes.SyllabusData();
+
+                data.setChapterName(tblList.get(i).chapterName);
+                data.setChapterId(tblList.get(i).chapterId);
+                data.setTopicData(new Gson().fromJson(tblList.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
+                syllabusDataList.add(data);
+            }
+            Collections.reverse(syllabusDataList);
+            adapter.add(syllabusDataList);
         }
     }
 
@@ -151,6 +269,20 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
                 SyllabusListModelRes res = (SyllabusListModelRes) response;
                 saveToLocally(res.getSyllabusData());
                 break;
+
+            case LeafManager.API_STATUS_PLAN:
+                syllabusDataList.clear();
+                SyllabusTBL.deleteAll(teamId,subjectId);
+                adapter.add(syllabusDataList);
+                apiCall();
+                break;
+
+            case LeafManager.API_CHANGE_STATUS_PLAN:
+                syllabusDataList.clear();
+                SyllabusTBL.deleteAll(teamId,subjectId);
+                adapter.add(syllabusDataList);
+                apiCall();
+                break;
         }
     }
 
@@ -174,10 +306,14 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
         syllabusDataList.addAll(syllabusData);
         Collections.reverse(syllabusDataList);
         adapter.add(syllabusDataList);
+
+        bindChapter();
+
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
+
         hideLoadingBar();
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
@@ -203,7 +339,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             mContext = parent.getContext();
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_issue,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chapter_list_v2,parent,false);
             return new ViewHolder(view);
         }
 
@@ -216,15 +352,25 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onTreeClick(data);
+             //       onTreeClick(data);
                 }
             });
-            holder.img_tree.setOnClickListener(new View.OnClickListener() {
+          /*  holder.img_tree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onTreeClick(data);
                 }
             });
+*/
+            if (data.getTopicData() != null && data.getTopicData().size() > 0)
+            {
+                holder.topicData.setVisibility(View.VISIBLE);
+                holder.topicData.setAdapter(new TopicAdapter(data.getTopicData(),data.getChapterId()));
+            }
+            else
+            {
+                holder.topicData.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -255,9 +401,11 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             @Bind(R.id.txt_name)
             TextView txt_name;
 
-            @Bind(R.id.img_tree)
-            ImageView img_tree;
+         /*   @Bind(R.id.img_tree)
+            ImageView img_tree;*/
 
+            @Bind(R.id.topicData)
+            RecyclerView topicData;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -286,10 +434,12 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
     public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder>{
 
         ArrayList<SyllabusListModelRes.TopicData> topicData;
+        String chapterID;
         Context context;
 
-        public TopicAdapter(ArrayList<SyllabusListModelRes.TopicData> topicData) {
+        public TopicAdapter(ArrayList<SyllabusListModelRes.TopicData> topicData,String chID) {
             this.topicData = topicData;
+            this.chapterID = chID;
         }
 
         @NonNull
@@ -315,8 +465,8 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             }
             else
             {
-                holder.binding.etToDate.setEnabled(true);
-                holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
+                holder.binding.etToDate.setEnabled(false);
+                holder.binding.etToDate.setTextColor(getResources().getColor(R.color.grey));
             }
 
             if (data.getFromDate() != null && !data.getFromDate().isEmpty())
@@ -327,8 +477,8 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             }
             else
             {
-                holder.binding.etFromDate.setEnabled(true);
-                holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
+                holder.binding.etFromDate.setEnabled(false);
+                holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.grey));
             }
 
             if (data.getActualStartDate() != null && !data.getActualStartDate().isEmpty())
@@ -339,8 +489,8 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             }
             else
             {
-                holder.binding.etActualToDate.setEnabled(true);
-                holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.white));
+                holder.binding.etActualToDate.setEnabled(false);
+                holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.grey));
             }
 
             if (data.getActualEndDate() != null && !data.getActualEndDate().isEmpty())
@@ -351,8 +501,8 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             }
             else
             {
-                holder.binding.etActualFromDate.setEnabled(true);
-                holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.white));
+                holder.binding.etActualFromDate.setEnabled(false);
+                holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.grey));
             }
 
             holder.binding.imgEdit.setOnClickListener(new View.OnClickListener() {
@@ -474,11 +624,11 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             holder.binding.btnDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                //    onTreeClickDone(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString(),data.getTopicId(),data.getTopicName());
+                    onTreeClickDone(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString(),data.getTopicId(),data.getTopicName(),topicData,chapterID);
                 }
             });
 
-            if (role != null && role.equalsIgnoreCase("parent"))
+            if (role != null && (role.equalsIgnoreCase("parent") || (role.equalsIgnoreCase("teacher"))))
             {
                 holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.grey));
                 holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.grey));
@@ -512,15 +662,17 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
         }
     }
 
-    /*private void onTreeClickDone(String planto, String planfrom, String actualto, String actualfrom,String topicId,String topicName) {
+
+
+    private void onTreeClickDone(String planto, String planfrom, String actualto, String actualfrom,String topicId,String topicName,ArrayList<SyllabusListModelRes.TopicData> topicData, String chapterID) {
 
         boolean isUpdate = true;
 
-        for (int i = 0;i<data.getTopicData().size();i++)
+        for (int i = 0;i<topicData.size();i++)
         {
-            if (topicId.equals(data.getTopicData().get(i).getTopicId()))
+            if (topicId.equals(topicData.get(i).getTopicId()))
             {
-                if (data.getTopicData().get(i).getToDate() == null && data.getTopicData().get(i).getFromDate() == null && data.getTopicData().get(i).getActualStartDate() == null && data.getTopicData().get(i).getActualEndDate() == null){
+                if (topicData.get(i).getToDate() == null && topicData.get(i).getFromDate() == null && topicData.get(i).getActualStartDate() == null && topicData.get(i).getActualEndDate() == null){
                     isUpdate = false;
                 }
             }
@@ -537,7 +689,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
 
             Log.e(TAG,"req is Update"+new Gson().toJson(req));
             showLoadingBar(binding.progressBar);
-            manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamID,subjectID,topicId,req);
+            manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,topicId,req);
         }
         else
         {
@@ -545,57 +697,57 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
 
             ArrayList<SyllabusPlanRequest.TopicData> list = new ArrayList<>();
 
-            for (int i = 0;i<data.getTopicData().size();i++)
+            for (int i = 0;i<topicData.size();i++)
             {
-                if (!topicId.equals(data.getTopicData().get(i).getTopicId()))
+                if (!topicId.equals(topicData.get(i).getTopicId()))
                 {
                     SyllabusPlanRequest.TopicData topicData1 = new SyllabusPlanRequest.TopicData();
-                    topicData1.setToDate(data.getTopicData().get(i).getToDate());
-                    topicData1.setFromDate(data.getTopicData().get(i).getFromDate());
-                    topicData1.setActualStartDate(data.getTopicData().get(i).getActualStartDate());
-                    topicData1.setActualEndDate(data.getTopicData().get(i).getActualEndDate());
-                    topicData1.setTopicId(data.getTopicData().get(i).getTopicId());
-                    topicData1.setTopicName(data.getTopicData().get(i).getTopicName());
+                    topicData1.setToDate(topicData.get(i).getToDate());
+                    topicData1.setFromDate(topicData.get(i).getFromDate());
+                    topicData1.setActualStartDate(topicData.get(i).getActualStartDate());
+                    topicData1.setActualEndDate(topicData.get(i).getActualEndDate());
+                    topicData1.setTopicId(topicData.get(i).getTopicId());
+                    topicData1.setTopicName(topicData.get(i).getTopicName());
 
                     list.add(topicData1);
                 }
             }
 
-            SyllabusPlanRequest.TopicData topicData = new SyllabusPlanRequest.TopicData();
+            SyllabusPlanRequest.TopicData topicData1 = new SyllabusPlanRequest.TopicData();
 
             if (!planto.isEmpty())
             {
-                topicData.setToDate(planto);
+                topicData1.setToDate(planto);
             }
             if (!planfrom.isEmpty())
             {
-                topicData.setFromDate(planfrom);
+                topicData1.setFromDate(planfrom);
             }
             if (!actualto.isEmpty())
             {
-                topicData.setActualStartDate(actualto);
+                topicData1.setActualStartDate(actualto);
             }
             if (!actualfrom.isEmpty())
             {
-                topicData.setActualEndDate(actualfrom);
+                topicData1.setActualEndDate(actualfrom);
             }
             if (!topicId.isEmpty())
             {
-                topicData.setTopicId(topicId);
+                topicData1.setTopicId(topicId);
             }
             if (!topicName.isEmpty())
             {
-                topicData.setTopicName(topicName);
+                topicData1.setTopicName(topicName);
             }
 
-            list.add(topicData);
+            list.add(topicData1);
 
             request.setTopicData(list);
             Log.e(TAG,"req is Not Update"+new Gson().toJson(request));
 
             showLoadingBar(binding.progressBar);
-            manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamID,subjectID,data.getChapterId(),request);
+            manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,chapterID,request);
         }
 
-    }*/
+    }
 }

@@ -238,6 +238,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void bindChapter() {
+
         if (chapterList != null && chapterList.size() > 0) {
             txtEmpty.setVisibility(View.GONE);
             llTop.setVisibility(View.VISIBLE);

@@ -10,15 +10,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -29,7 +34,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +69,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -168,9 +178,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.llTop)
     LinearLayout llTop;
 
-    @Bind(R.id.llAudio)
-    LinearLayout llAudio;
-
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
@@ -179,6 +186,55 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Bind(R.id.imgHome)
     public ImageView imgHome;
+
+
+
+
+
+    //audio
+
+
+    @Bind(R.id.llAudioPreview)
+    RelativeLayout llAudioPreview;
+
+    @Bind(R.id.llAudioTimer)
+    RelativeLayout llAudioTimer;
+
+    @Bind(R.id.llAudio)
+    LinearLayout llAudio;
+
+    @Bind(R.id.imgAudio)
+    ImageView imgAudio;
+
+    @Bind(R.id.imgDeleteAudio)
+    ImageView imgDeleteAudio;
+
+
+    @Bind(R.id.imgPlayAudio)
+    ImageView imgPlayAudio;
+
+    @Bind(R.id.imgPauseAudio)
+    ImageView imgPauseAudio;
+
+
+    @Bind(R.id.tvTimeAudio)
+    TextView tvTimeAudio;
+
+    @Bind(R.id.tvTimeTotalAudio)
+    TextView tvTimeTotalAudio;
+
+    @Bind(R.id.seekBarAudio)
+    SeekBar seekBarAudio;
+
+    @Bind(R.id.tvAudioTimer)
+    TextView tvTimer;
+
+    private String audioPath = "";
+    MediaPlayer mediaPlayer  = new MediaPlayer();
+    public static final int REQUEST_LOAD_RECORD_AUDIO = 107;
+    public static final int REQUEST_LOAD_AUDIO = 106;
+    private Boolean isPause = false;
+    //end audio
 
     TextView btn_ok;
     TextView btn_cancel;
@@ -202,8 +258,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
     public static final int REQUEST_LOAD_PDF = 103;
     public static final int REQUEST_LOAD_VIDEO = 104;
-    public static final int REQUEST_LOAD_RECORD_AUDIO = 105;
-    public static final int REQUEST_LOAD_AUDIO = 106;
+    public static final int REQUEST_RECORD_VIDEO = 105;
 
 
     String videoUrl = "";
@@ -214,7 +269,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     ArrayList<String> listAmazonS3Url = new ArrayList<>();
     ArrayList<String> listImages = new ArrayList<>();
     private String pdfPath = "";
-    private String audioPath = "";
+
     private TransferUtility transferUtility;
     private AddGalleryPostRequest mainRequest;
     private File cameraFile;
@@ -226,6 +281,96 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private String chapter_id;
     private ArrayList<ChapterRes.ChapterData> chapterList;
     private String sharePath;
+
+
+
+
+    private Handler mHandler = new Handler();
+    Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            try{
+                int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                Log.e(TAG,"mCurrentPosition"+ mCurrentPosition);
+                seekBarAudio.setProgress(mCurrentPosition);
+                tvTimeAudio.setText(formatDate(mCurrentPosition));
+                tvTimeTotalAudio.setText(formatDate(mediaPlayer.getDuration()/1000));
+                if(mediaPlayer.isPlaying())
+                    mHandler.postDelayed(myRunnable, 1000);
+            }catch (Exception e)
+            {
+                Log.e(TAG,"exception"+ e.getMessage());
+            }
+
+        }
+    };
+
+
+
+
+    /*record audio*/
+    private Handler customHandler = new Handler();
+    private long startTime = 0L;
+    long timeInMilliseconds = 0L;
+    long timeSwapBuff = 0L;
+    long updatedTime = 0L;
+    long secs = 0L;
+    long mins  = 0L;
+    MediaRecorder mediaRecorder;
+    private File fileRecordAudio = null;
+
+
+    private Runnable updateTimerThread = new Runnable() {
+
+        public void run() {
+
+            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+
+            updatedTime = timeSwapBuff + timeInMilliseconds;
+
+            secs = (int) (updatedTime / 1000);
+            mins = secs / 60;
+            secs = secs % 60;
+            int milliseconds = (int) (updatedTime % 1000);
+            tvTimer.setText(String.format("%02d", mins) + ":"
+                    + String.format("%02d", secs));
+            customHandler.postDelayed(this, 0);
+        }
+
+    };
+
+
+    private String formatDate(int second)  {
+
+        String seconds , minutes;
+        if(second>60)
+        {
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+
+            if(second/60 < 10)
+                minutes = "0"+second/60;
+            else
+                minutes = ""+second/60;
+        }
+        else
+        {
+            minutes = "00";
+            if(second % 60 < 10)
+                seconds = "0"+(second % 60);
+            else
+                seconds = ""+(second%60);
+        }
+        return minutes+":"+seconds;
+    }
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +432,22 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         //btnShare.setEnabled(false);
 
+        if (checkPermissionForWriteExternal()) {
+
+        }
+        else {
+            requestPermissionForWriteExternal(24);
+        }
+
+
+        if(checkPermissionForAudio())
+        {
+
+        }
+        else {
+            requestPermissionForRecordAudio(254);
+        }
+
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -320,9 +481,196 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
             }
         });
+
+
+
+        imgDeleteAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mediaPlayer.isPlaying())
+                {
+                    mHandler.removeCallbacks(myRunnable);
+                    mediaPlayer.pause();
+                }
+
+                tvTimer.setText("00:00");
+                tvTimeTotalAudio.setText("00:00");
+                tvTimeAudio.setText("00:00");
+                mHandler.removeCallbacks(myRunnable);
+                imgPauseAudio.setVisibility(View.GONE);
+                imgPlayAudio.setVisibility(View.VISIBLE);
+                seekBarAudio.setProgress(0);
+                tvTimeAudio.setText("00:00");
+                tvTimeTotalAudio.setText("00:00");
+                isPause = false;
+                startTime = 0L;
+                timeInMilliseconds = 0L;
+                timeSwapBuff = 0L;
+                updatedTime = 0L;
+                secs = 0L;
+                mins  = 0L;
+                removePdf();
+                removeImage();
+                llAudioPreview.setVisibility(View.GONE);
+            }
+        });
+
+        imgAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                Log.e(TAG,"onTouch "+event.getAction());
+
+                Log.e(TAG,"onTouch Y"+ event.getY());
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    if (checkPermissionForWriteExternal()) {
+
+
+                        MediaRecorderReady();
+                    }
+                    return true;
+                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+
+                    Log.e(TAG,"onTouch Y ACTION_UP"+ event.getY());
+
+                    if (checkPermissionForWriteExternal()) {
+
+                        String uri = Uri.fromFile(fileRecordAudio).toString();
+                        Log.e(TAG,"uri "+uri);
+                        audioPath = uri;
+                        listImages.clear();
+                        fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
+                        listImages.add(audioPath);
+                        showLastImage();
+                        removePdf();
+                        removeImage();
+                        stopAudio();
+                        llAudioPreview.setVisibility(View.VISIBLE);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
+
+        imgPlayAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                if (isPause)
+                {
+                    isPause = false;
+                    mediaPlayer.start();
+                    imgPauseAudio.setVisibility(View.VISIBLE);
+                    imgPlayAudio.setVisibility(View.GONE);
+                    mHandler.post(myRunnable);
+                }
+                else
+                {
+                    if (mediaPlayer != null)
+                    {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                    }
+
+                    try {
+                        mediaPlayer.setDataSource(audioPath);
+                        mediaPlayer.prepare();
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                AppLog.e(TAG  , "ONPrepared : lenght : "+mp.getDuration());
+                                seekBarAudio.setMax(mediaPlayer.getDuration()/1000);
+                                mediaPlayer.start();
+                                mHandler.post(myRunnable);
+                            }
+                        });
+                        //  mediaPlayer.start();
+
+                        imgPauseAudio.setVisibility(View.VISIBLE);
+                        imgPlayAudio.setVisibility(View.GONE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+        });
+
+        imgPauseAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try{
+                    isPause = true;
+                    mHandler.removeCallbacks(myRunnable);
+                    mediaPlayer.pause();
+                    imgPauseAudio.setVisibility(View.GONE);
+                    imgPlayAudio.setVisibility(View.VISIBLE);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG,"Exception"+e.getMessage());
+                }
+            }
+        });
+
+
+        seekBarAudio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                Log.e(TAG,"progress "+progress + "\ngetDuration "+mediaPlayer.getDuration()/1000+" condition : "+(progress >= mediaPlayer.getDuration()/1000));
+
+
+                if (progress >= mediaPlayer.getDuration()/1000)
+                {
+                    mHandler.removeCallbacks(myRunnable);
+                    imgPauseAudio.setVisibility(View.GONE);
+                    imgPlayAudio.setVisibility(View.VISIBLE);
+
+                    seekBarAudio.setProgress(0);
+                    tvTimeAudio.setText("00:00");
+                    tvTimeTotalAudio.setText("00:00");
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
+        seekBarAudio.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+
     }
 
     private void init() {
+
+
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
@@ -381,6 +729,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 //  progressBar.setVisibility(View.VISIBLE);
               //  btnShare.setEnabled(false);
 
+                btnShare.setEnabled(false);
+                btnShare.setTextColor(getResources().getColor(R.color.grey));
                 mainRequest = new AddGalleryPostRequest();
 
                 mainRequest.albumName = edtTitle.getText().toString();
@@ -409,14 +759,13 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     progressDialog.show();
                     uploadToAmazone(mainRequest);
 
-                }
-                else if (!TextUtils.isEmpty(audioPath)) {
-
+                }  else if (!TextUtils.isEmpty(audioPath)) {
                     mainRequest.fileType = Constants.FILE_TYPE_AUDIO;
                     progressDialog.setMessage("Preparing Audio...");
                     progressDialog.show();
                     uploadToAmazone(mainRequest);
                 }
+
                 else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     mainRequest.fileType = fileTypeImageOrVideo;
                     Log.e(TAG, "send data " + new Gson().toJson(mainRequest));
@@ -846,13 +1195,13 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 }
                 break;
 
-            case R.id.llAudio:
+          /*  case R.id.llAudio:
                 if (checkPermissionForWriteExternal()) {
                     showAudioDialog(R.array.array_audio);
                 } else {
                     requestPermissionForWriteExternal(24);
                 }
-                break;
+                break;*/
             case R.id.llYoutubeLink:
                 // if (checkPermissionForWriteExternal()) {
                 showYoutubeDialog();
@@ -884,6 +1233,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+        btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
         if (progressBar != null)
             hideLoadingBar();
         // progressBar.setVisibility(View.GONE);
@@ -960,7 +1311,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-    //    btnShare.setEnabled(true);
+        btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
         if (progressBar != null)
             hideLoadingBar();
         // progressBar.setVisibility(View.GONE);
@@ -986,7 +1338,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onException(int apiId, String error) {
- //       btnShare.setEnabled(true);
+       btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
         if (progressBar != null)
             hideLoadingBar();
         // progressBar.setVisibility(View.GONE);
@@ -1027,7 +1380,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                         ListView lw = ((AlertDialog) dialog).getListView();
                         switch (lw.getCheckedItemPosition()) {
                             case 0:
-                                startRecording(REQUEST_LOAD_RECORD_AUDIO);
+
                                 break;
                             case 1:
                                 selectAudioFromFile(REQUEST_LOAD_AUDIO);
@@ -1036,6 +1389,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     }
                 });
     }
+
+
 
     private void startCamera(int requestCode) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -1110,6 +1465,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     public void requestPermissionForRecordAudio(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
             Toast.makeText(this, getResources().getString(R.string.toast_audio_permission_needed), Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, code);
         }
@@ -1162,7 +1518,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
         }
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
+        {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
 
@@ -1234,6 +1591,52 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             }
 
         }
+
+
+
+        else if (requestCode == REQUEST_LOAD_RECORD_AUDIO) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                audioPath = data.getStringExtra("AudioData");
+                Log.e(TAG,"audioPath"+ audioPath);
+
+                listImages.clear();
+                fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
+                listImages.add(audioPath);
+
+                llAudioPreview.setVisibility(View.VISIBLE);
+
+                showLastImage();
+                removePdf();
+                removeImage();
+            }
+        }
+
+        else if (requestCode == REQUEST_LOAD_AUDIO) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                final Uri selectedAudio = data.getData();
+
+                if (selectedAudio.toString().startsWith("content")) {
+                    audioPath = ImageUtil.getPath(this, selectedAudio);
+                } else {
+                    audioPath = selectedAudio.getPath();
+                }
+                Log.e(TAG,"audioPath"+ audioPath);
+
+                listImages.clear();
+                fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
+                listImages.add(audioPath);
+
+                llAudioPreview.setVisibility(View.VISIBLE);
+
+
+                removePdf();
+                removeImage();
+
+            }
+        }
+
         else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
             listImages.clear();
             /*fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
@@ -1249,6 +1652,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             showCropDialog(imageCaptureFile,true);
 
         }
+
         else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
             listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_VIDEO;
@@ -1276,37 +1680,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             removeAudio();
 
         }
-        else if (requestCode == REQUEST_LOAD_RECORD_AUDIO) {
 
-            if (resultCode == Activity.RESULT_OK) {
-                audioPath = data.getStringExtra("AudioData");
-                Log.e(TAG,"audioPath"+ audioPath);
-
-                listImages.clear();
-                fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
-                listImages.add(audioPath);
-                showLastImage();
-                removePdf();
-                removeImage();
-
-               /* if (selectedImageURI.toString().startsWith("content")) {
-                    pdfUri = ImageUtil.getPath(this, selectedImageURI);
-                } else {
-                    pdfUri = selectedImageURI.getPath();
-                }
-*/
-                /*if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Log.e("PDF", "imgUrl is " + pdfPath);
-
-                if (!TextUtils.isEmpty(pdfPath))
-                    Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
-                removeImage();*/
-            }
-        }
         else if (requestCode == REQUEST_LOAD_PDF) {
             if (resultCode == Activity.RESULT_OK) {
                 pdfPath = data.getData().toString();
@@ -1327,39 +1701,10 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 if (!TextUtils.isEmpty(pdfPath))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
                 removeImage();
+                removeAudio();
             }
         }
-        else if (requestCode == REQUEST_LOAD_AUDIO) {
 
-            if (resultCode == Activity.RESULT_OK) {
-                final Uri selectedAudio = data.getData();
-                audioPath = selectedAudio.toString();
-                Log.e(TAG,"audioPath"+ audioPath);
-
-                listImages.clear();
-                fileTypeImageOrVideo = Constants.FILE_TYPE_AUDIO;
-                listImages.add(audioPath);
-
-                removePdf();
-                removeImage();
-               /* if (selectedImageURI.toString().startsWith("content")) {
-                    pdfUri = ImageUtil.getPath(this, selectedImageURI);
-                } else {
-                    pdfUri = selectedImageURI.getPath();
-                }
-*/
-                /*if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Log.e("PDF", "imgUrl is " + pdfPath);
-
-                if (!TextUtils.isEmpty(pdfPath))
-                    Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
-                removeImage();*/
-            }
-        }
 
         shareButtonEnableDisable();
 
@@ -1386,12 +1731,14 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         Picasso.with(this).load(R.drawable.icon_gallery).into(img_image);
         showLastImage();
         shareButtonEnableDisable();*/
+        llAudioPreview.setVisibility(View.GONE);
     }
 
     private void removePdf() {
         pdfPath = "";
         Picasso.with(this).load(R.drawable.icon_doc).into(imgDoc);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -1422,15 +1769,39 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 }
                 break;
 
+
+            case 254:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_audio_permission_needed),Toast.LENGTH_SHORT).show();
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+
+
             case 24:
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                    //  startRecording(REQUEST_LOAD_RECORD_AUDIO);
+                    //MediaRecorderReady();
+                    Log.e("AddPost" + "permission", "granted camera");
+                } else {
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_storage_permission_needed),Toast.LENGTH_SHORT).show();
+                    Log.e("AddPost" + "permission", "denied camera");
+                }
+                break;
+
+            case 26:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectAudioFromFile(REQUEST_LOAD_AUDIO);
                     Log.e("AddPost" + "permission", "granted camera");
                 } else {
                     Log.e("AddPost" + "permission", "denied camera");
                 }
                 break;
+
+
 
             case 25:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -1689,5 +2060,108 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 AppLog.e(TAG, "Notification Send Fail");
             }
         }
+    }
+
+
+
+
+
+
+    /*record audio*/
+    public void MediaRecorderReady(){
+
+        if (fileRecordAudio != null)
+        {
+
+            if (mediaPlayer.isPlaying())
+            {
+                mHandler.removeCallbacks(myRunnable);
+                mediaPlayer.pause();
+            }
+
+            fileRecordAudio.delete();
+            mediaRecorder.reset();
+            tvTimer.setText("00:00");
+            tvTimeTotalAudio.setText("00:00");
+            tvTimeAudio.setText("00:00");
+            mHandler.removeCallbacks(myRunnable);
+            imgPauseAudio.setVisibility(View.GONE);
+            imgPlayAudio.setVisibility(View.VISIBLE);
+            seekBarAudio.setProgress(0);
+            tvTimeAudio.setText("00:00");
+            tvTimeTotalAudio.setText("00:00");
+            isPause = false;
+            startTime = 0L;
+            timeInMilliseconds = 0L;
+            timeSwapBuff = 0L;
+            updatedTime = 0L;
+            secs = 0L;
+            mins  = 0L;
+            mediaRecorder.release();
+        }
+        try {
+            fileRecordAudio = ImageUtil.getOutputMediaAudio(getApplicationContext());
+            mediaRecorder=new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+
+            Log.e(TAG,"fileRecordAudio "+fileRecordAudio.getAbsolutePath());
+            Log.e(TAG,"fileRecordAudio URL "+Uri.fromFile(fileRecordAudio));
+
+            try {
+                FileDescriptor fileDescriptor = getContentResolver().openFileDescriptor(Uri.fromFile(fileRecordAudio),"rwt").getFileDescriptor();
+                mediaRecorder.setOutputFile(fileDescriptor);
+
+                removePdf();
+                removeImage();
+                startAudio();
+
+
+            } catch (FileNotFoundException e) {
+                //e.printStackTrace();
+                Log.e(TAG,"FileNotFoundException "+e.getMessage());
+            }
+
+
+
+        } catch(RuntimeException stopException) {
+            // handle cleanup here
+            Log.e(TAG,"RuntimeException "+stopException.getMessage());
+        }
+
+    }
+
+    private void startAudio() {
+
+
+        try {
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+            llAudioTimer.setVisibility(View.VISIBLE);
+            llAudioPreview.setVisibility(View.GONE);
+            startTime = SystemClock.uptimeMillis();
+            customHandler.postDelayed(updateTimerThread, 0);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IllegalStateException "+e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException "+e.getMessage());
+        }
+    }
+
+    private void stopAudio() {
+        llAudioTimer.setVisibility(View.GONE);
+        timeSwapBuff += timeInMilliseconds;
+        customHandler.removeCallbacks(updateTimerThread);
+
+
+        try {
+            mediaRecorder.stop();
+        } catch(RuntimeException stopException) {
+            Log.e(TAG,"RuntimeException "+stopException.getMessage());
+        }
+
     }
 }

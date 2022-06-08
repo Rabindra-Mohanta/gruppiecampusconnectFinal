@@ -40,6 +40,10 @@ public class TodaySyllabusPlanRes extends BaseResponse {
         @Expose
         private String teamId;
 
+        @SerializedName("subjectId")
+        @Expose
+        private String subjectId;
+
         @SerializedName("chapterName")
         @Expose
         private String chapterName;
@@ -47,6 +51,63 @@ public class TodaySyllabusPlanRes extends BaseResponse {
         @SerializedName("chapterId")
         @Expose
         private String chapterId;
+
+        @SerializedName("toDate")
+        @Expose
+        private String toDate;
+
+        @SerializedName("actualStartDate")
+        @Expose
+        private String toactualStartDateDate;
+
+        @SerializedName("fromDate")
+        @Expose
+        private String fromDate;
+
+        @SerializedName("actualEndDate")
+        @Expose
+        private String actualEndDate;
+
+
+        public String getToDate() {
+            return toDate;
+        }
+
+        public void setToDate(String toDate) {
+            this.toDate = toDate;
+        }
+
+        public String getToactualStartDateDate() {
+            return toactualStartDateDate;
+        }
+
+        public void setToactualStartDateDate(String toactualStartDateDate) {
+            this.toactualStartDateDate = toactualStartDateDate;
+        }
+
+        public String getFromDate() {
+            return fromDate;
+        }
+
+        public void setFromDate(String fromDate) {
+            this.fromDate = fromDate;
+        }
+
+        public String getActualEndDate() {
+            return actualEndDate;
+        }
+
+        public void setActualEndDate(String actualEndDate) {
+            this.actualEndDate = actualEndDate;
+        }
+
+        public String getSubjectId() {
+            return subjectId;
+        }
+
+        public void setSubjectId(String subjectId) {
+            this.subjectId = subjectId;
+        }
 
         public String getTopicName() {
             return topicName;

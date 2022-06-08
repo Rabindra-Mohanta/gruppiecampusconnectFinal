@@ -171,6 +171,7 @@
     <string name="lbl_valPin">Validate Pin</string>
     <string name="lbl_leads">My Friends</string>
     <string name="lbl_likes">Likes</string>
+    <string name="lbl_add_image">Add Image</string>
     <string name="lbl_join">Join</string>
     <string name="lbl_delete_album">Delete Album</string>
     <string name="lbl_delete_video">Delete Video</string>
@@ -1094,6 +1095,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_create_mark_card">Please Create Mark Card</string>
     <string name="toast_otp_send_to">OTP has been sent to </string>
     <string name="toast_no_data_found">No data found.</string>
+    <string name="toast_change_plan">Change Plan Successfully...</string>
+    <string name="toast_set_status_plan">Status Plan Set Successfully...</string>
+
 
     <string name="txt_enter_old_pin">Enter Old Pin...</string>
     <string name="txt_old_pin_wrong">Old Pin Wrong...</string>

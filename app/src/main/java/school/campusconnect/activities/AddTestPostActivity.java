@@ -97,6 +97,7 @@ import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.homework.AddHwPostRequest;
 import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
+import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
@@ -302,7 +303,21 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         et_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
+
+                DatePickerFragment fragment = DatePickerFragment.newInstance();
+
+                fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                    @Override
+                    public void onDateSelected(Calendar c) {
+                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                        et_date.setText(format.format(c.getTime()));
+                    }
+                });
+                fragment.show(getSupportFragmentManager(), "datepicker");
+                fragment.setTitle(R.string.hint_test_date);
+
+
+               /* final Calendar calendar = Calendar.getInstance();
                 DatePickerDialog fragment = new DatePickerDialog(AddTestPostActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -314,7 +329,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
+                fragment.show();*/
             }
         });
         et_time_start.setOnClickListener(new View.OnClickListener() {

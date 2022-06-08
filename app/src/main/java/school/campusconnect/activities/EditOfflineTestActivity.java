@@ -53,6 +53,7 @@ import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.test_exam.OfflineTestReq;
 import school.campusconnect.datamodel.test_exam.OfflineTestRes;
 import school.campusconnect.datamodel.test_exam.TestOfflineSubjectMark;
+import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.views.SMBDialogUtils;
@@ -234,6 +235,19 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
                 {
                     return;
                 }
+
+           /*     DatePickerFragment fragment = DatePickerFragment.newInstance();
+
+                fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                    @Override
+                    public void onDateSelected(Calendar c) {
+                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                        etResultDate.setText(format.format(c.getTime()));
+                    }
+                });
+                fragment.show(getSupportFragmentManager(), "datepicker");
+                fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
+                fragment.setTitle(R.string.lbl_ResultDate);*/
 
                 final Calendar calendar = Calendar.getInstance();
                 DatePickerDialog fragment = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {

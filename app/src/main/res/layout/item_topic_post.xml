@@ -155,7 +155,11 @@
                 android:id="@+id/llAudio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+
+
                 <LinearLayout
+                    android:visibility="visible"
                     android:id="@+id/llLeftAudioView"
                     android:layout_width="@dimen/pdf_download_icon_size"
                     android:layout_margin="@dimen/padding_15dp"
@@ -169,7 +173,7 @@
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
                         android:src="@drawable/pdf_download_icon"
-                         />
+                        />
 
                     <ImageView
                         android:id="@+id/imgPlayAudio"
@@ -222,6 +226,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -233,18 +238,34 @@
                         android:layout_height="wrap_content"
                         app:color="@color/colorPrimary"
                         android:clickable="false"
+                        android:thumbTint="@color/colorPrimary"
                         android:focusableInTouchMode="false"
                         />
 
-                    <TextView
-                      android:layout_marginLeft="@dimen/padding_15dp"
-                        android:id="@+id/tvTimeAudio"
-                        style="@style/LabelSmall"
-                        android:layout_width="wrap_content"
-                        android:gravity="center"
-                        android:layout_height="wrap_content"
-                        android:text="00:00"
-                        android:textColor="@color/colorTextLight" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_marginLeft="@dimen/padding_15dp"
+                            android:id="@+id/tvTimeAudio"
+                            style="@style/LabelSmall"
+                            android:layout_width="wrap_content"
+                            android:gravity="center"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textColor="@color/colorTextLight" />
+
+                        <TextView
+                            android:id="@+id/tvTimeTotalAudio"
+                            style="@style/LabelSmall"
+                            android:layout_marginRight="@dimen/padding_15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textColor="@color/colorTextLight" />
+                    </RelativeLayout>
+
                 </LinearLayout>
 
 

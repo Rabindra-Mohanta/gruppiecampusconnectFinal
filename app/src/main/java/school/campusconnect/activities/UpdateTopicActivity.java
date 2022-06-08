@@ -19,11 +19,14 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.databinding.ActivityAddChapterPlanBinding;
+
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityUpdateTopicBinding;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
+import school.campusconnect.datamodel.syllabus.SyllabusTBL;
 import school.campusconnect.datamodel.syllabus.TodaySyllabusPlanRes;
 import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
@@ -104,6 +107,7 @@ public class UpdateTopicActivity extends BaseActivity implements LeafManager.OnC
         binding.btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (binding.etFromDate.getText().toString().isEmpty())
                 {
                     Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_please_select_from_date),Toast.LENGTH_SHORT).show();
@@ -116,7 +120,7 @@ public class UpdateTopicActivity extends BaseActivity implements LeafManager.OnC
                 }
                 else
                 {
-                    SyllabusPlanRequest request = new SyllabusPlanRequest();
+                   /* SyllabusPlanRequest request = new SyllabusPlanRequest();
 
                     ArrayList<SyllabusPlanRequest.TopicData> list = new ArrayList<>();
 
@@ -130,9 +134,18 @@ public class UpdateTopicActivity extends BaseActivity implements LeafManager.OnC
 
                     request.setTopicData(list);
                     Log.e(TAG,"req is Not Update"+new Gson().toJson(request));
+*/
+
+                    ChangeStatusPlanModel.ChangeStatusModelReq req = new ChangeStatusPlanModel.ChangeStatusModelReq();
+                    req.setToDate(data.getToDate());
+                    req.setFromDate(data.getFromDate());
+                    req.setActualStartDate(binding.etFromDate.getText().toString());
+                    req.setActualEndDate(binding.etToDate.getText().toString());
+
+                    Log.e(TAG,"req is "+new Gson().toJson(req));
 
                     showLoadingBar(binding.progressBar);
-                    manager.statusPlan(UpdateTopicActivity.this,GroupDashboardActivityNew.groupId,data.getTeamId(),data.getChapterId(),data.getChapterId(),request);
+                    manager.changeStatusPlan(UpdateTopicActivity.this,GroupDashboardActivityNew.groupId,data.getTeamId(),data.getSubjectId(),data.getChapterId(),req);
                 }
             }
         });
@@ -141,8 +154,10 @@ public class UpdateTopicActivity extends BaseActivity implements LeafManager.OnC
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        if (apiId == LeafManager.API_STATUS_PLAN)
+        if (apiId == LeafManager.API_CHANGE_STATUS_PLAN)
         {
+            SyllabusTBL.deleteAll(data.getTeamId(),data.getSubjectId());
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_please_select_from_date),Toast.LENGTH_SHORT).show();
             finish();
         }
         super.onSuccess(apiId, response);

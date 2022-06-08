@@ -185,9 +185,6 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Bind(R.id.rvImages)
     RecyclerView rvImages;
 
-
-
-
     @Bind(R.id.imgPlayAudio)
     ImageView imgPlayAudio;
 

@@ -53,12 +53,36 @@ public class SyllabusModelReq implements Serializable {
         @Expose
         private String topicName;
 
+        @SerializedName("toDate")
+        @Expose
+        private String toDate;
+
+        @SerializedName("fromDate")
+        @Expose
+        private String fromDate;
+
         public String getTopicName() {
             return topicName;
         }
 
         public void setTopicName(String topicName) {
             this.topicName = topicName;
+        }
+
+        public String getToDate() {
+            return toDate;
+        }
+
+        public void setToDate(String toDate) {
+            this.toDate = toDate;
+        }
+
+        public String getFromDate() {
+            return fromDate;
+        }
+
+        public void setFromDate(String fromDate) {
+            this.fromDate = fromDate;
         }
     }
 

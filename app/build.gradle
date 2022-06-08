@@ -26,13 +26,13 @@ android {
                 multiDexEnabled true
 
                  // [ 1. Gruppie Campus ]
-                applicationId "school.campusconnect"
+              /*  applicationId "school.campusconnect"
                 versionCode 12
                 versionName "1.3"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
               /*  applicationId "smjes.gruppie"
                 versionCode 1
@@ -78,13 +78,13 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
                 // [ 2. RPES :  Campus Copy]
-              /*  applicationId "rpes.campusconnect"
-                versionCode 10
-                versionName "9.1"
+                applicationId "rpes.campusconnect"
+                versionCode 11
+                versionName "9.2"
                 resValue "string", "app_name", '"RPES"'
                 buildConfigField("String", "AppName", '"RPES"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
+                buildConfigField("String", "APP_ID",  '"school"')
 
                 // [ 2. R.P.A : Single]
 //                applicationId "rpa.gruppie"
@@ -106,15 +106,14 @@ android {
                 buildConfigField("String", "APP_ID",  '"60a9e3aaa0ccf76a8e5c2235"')*/
 
                 // [ 3. RPES JSPS ]
-         /*      applicationId "rpes_jsps.gruppie"
-               versionCode 16
-               versionName "2.4"
+              /*  applicationId "rpes_jsps.gruppie"
+                versionCode 16
+                versionName "2.4"
                 resValue "string", "app_name", '"RPES JSPS"'
                 buildConfigField("String", "AppName", '"RPES JSPS"')
                 buildConfigField("String", "AppCategory", '"SINGLE"')
-
-                buildConfigField("String", "APP_ID",  '"5d0c767c4e51ba54c9595bfb"')*/
-
+                buildConfigField("String", "APP_ID",  '"5d0c767c4e51ba54c9595bfb"')
+*/
                 // [ 4. EXPERT PUC ]
                 /*applicationId "expert_puc.gruppie"
                 versionCode 2
@@ -222,11 +221,11 @@ android {
                buildConfigField("String", "AppName", '"DODDAGOUDAR"')
                buildConfigField("String", "AppCategory", '"CAMPUS"')
                buildConfigField("String", "APP_ID",  '"school"')*/
-                   ndk {
+                /*   ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
                        abiFilters 'armeabi-v7a','armeabi-v8a'//
-                   }
+                   }*/
             }
     buildTypes {
         release {
@@ -247,7 +246,7 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://gcc5.gruppie.in"' // KREIS
       //      buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"' // DODDAGOUDAR
      //       buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV
-         //   buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'  // RPES, SHAHBAAZ
+            buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'  // RPES, SHAHBAAZ
             buildConfigField("String", "API_KEY_FIREBASE1", '"key=AAAATq979wE:APA91bEw0Dh3Ju0phxXjisU4z0eEmC90mi8ciomV-4S9X38UM8eMaB72bRpgGrGvv_"')
             buildConfigField("String", "API_KEY_FIREBASE2", '"f8uXctQrrogRCiZ64Kl48p_RXeh8GnLVvirJfAQONRZIvyYs4k8t2-tOB3shsy0i6y5IvKJRmBGBnjU748Ns4z0DSkoac7jg"')
         }
@@ -259,11 +258,11 @@ android {
           //  buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
 
        //     buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
-             buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
+          //   buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
    //      buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'   /// PRODUCATION TEST SERVER...
 
 
-        //     buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'
+             buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'
        //   buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'
 //           buildConfigField "String", "BASE_URL", '"https://lite.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://prod.gruppie.in"'

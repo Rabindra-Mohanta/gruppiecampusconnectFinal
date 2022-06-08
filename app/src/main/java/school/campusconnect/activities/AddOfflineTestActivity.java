@@ -27,6 +27,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,9 +49,11 @@ import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
 import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
+import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.test_exam.OfflineTestReq;
 import school.campusconnect.datamodel.test_exam.OfflineTestRes;
 import school.campusconnect.datamodel.test_exam.TestOfflineSubjectMark;
+import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.views.SMBDialogUtils;
@@ -331,7 +334,22 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                 break;
 
             case R.id.etDate: {
-                final Calendar calendar = Calendar.getInstance();
+
+
+                DatePickerFragment fragment = DatePickerFragment.newInstance();
+
+                fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                    @Override
+                    public void onDateSelected(Calendar c) {
+                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                        etDate.setText(format.format(c.getTime()));
+                    }
+                });
+                fragment.show(getSupportFragmentManager(), "datepicker");
+                fragment.setTitle(R.string.lbl_Date);
+
+
+               /* final Calendar calendar = Calendar.getInstance();
                 DatePickerDialog fragment = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -343,13 +361,14 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
+                fragment.show();*/
                 break;
             }
 
 
             case R.id.etStartTime: {
                 Calendar calendar = Calendar.getInstance();
+
                 TimePickerDialog fragment1 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -377,7 +396,21 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                 break;
             }
             case R.id.etResultDate: {
-                final Calendar calendar = Calendar.getInstance();
+
+                DatePickerFragment fragment = DatePickerFragment.newInstance();
+
+                fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                    @Override
+                    public void onDateSelected(Calendar c) {
+                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                        etResultDate.setText(format.format(c.getTime()));
+                    }
+                });
+                fragment.show(getSupportFragmentManager(), "datepicker");
+                fragment.setTitle(R.string.lbl_ResultDate);
+
+
+               /* final Calendar calendar = Calendar.getInstance();
                 DatePickerDialog fragment = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -389,7 +422,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
+                fragment.show();*/
                 break;
             }
         }
@@ -500,7 +533,21 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             holder.etDate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Calendar calendar = Calendar.getInstance();
+
+                    DatePickerFragment fragment = DatePickerFragment.newInstance();
+
+                    fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
+                        @Override
+                        public void onDateSelected(Calendar c) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                            holder.etDate.setText(format.format(c.getTime()));
+                        }
+                    });
+                    fragment.show(((AppCompatActivity) mContext).getSupportFragmentManager(), "datepicker");
+                    fragment.setTitle(R.string.lbl_Date);
+
+
+                   /* final Calendar calendar = Calendar.getInstance();
                     DatePickerDialog fragment = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -512,7 +559,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                         }
                     }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                     fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                    fragment.show();
+                    fragment.show();*/
                 }
             });
 

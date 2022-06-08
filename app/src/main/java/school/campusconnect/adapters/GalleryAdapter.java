@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,6 +35,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddGalleryPostActivity;
 import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
@@ -170,6 +172,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             holder.txt_drop_delete.setVisibility(View.VISIBLE);
             holder.iv_delete.setVisibility(View.VISIBLE);
 
+            holder.txt_add_image.setVisibility(View.VISIBLE);
+            holder.viewAddImage.setVisibility(View.VISIBLE);
+
+
             if (item.fileName != null && item.fileName.size() > 0) {
                 if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
                 {
@@ -181,6 +187,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         }
         else
             {
+                holder.txt_add_image.setVisibility(View.GONE);
+            holder.viewAddImage.setVisibility(View.GONE);
             holder.txt_drop_delete.setVisibility(View.GONE);
             holder.iv_delete.setVisibility(View.GONE);
             if (item.fileName != null && item.fileName.size() > 0) {
@@ -284,11 +292,19 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         @Bind(R.id.txt_drop_delete)
         TextView txt_drop_delete;
 
+        @Bind(R.id.txt_add_image)
+        TextView txt_add_image;
+
+        @Bind(R.id.viewAddImage)
+        View viewAddImage;
+
         @Bind(R.id.txt_share)
         TextView txt_share;
 
         @Bind(R.id.txt_drop_deletevideo)
         TextView txt_drop_deletevideo;
+
+
         @Bind(R.id.viewDeleteVideo)
         View viewDeleteVideo;
 
@@ -315,7 +331,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     new SpacesItemDecoration(mContext.getResources().getDimensionPixelSize(R.dimen.padding_3dp)));
         }
 
-        @OnClick({R.id.iv_delete,R.id.txt_drop_delete,R.id.rel,R.id.txt_drop_deletevideo,R.id.txt_share})
+        @OnClick({R.id.iv_delete,R.id.txt_drop_delete,R.id.rel,R.id.txt_drop_deletevideo,R.id.txt_share,R.id.txt_add_image})
         public void onClick(View view)
         {
             switch (view.getId())
@@ -326,6 +342,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     listener.onExternalShareClick(listData.get(getAdapterPosition()));
                     break;
 
+                case R.id.txt_add_image:
+                    Intent intent = new Intent(mContext, AddGalleryPostActivity.class);
+                    intent.putExtra("isEdit", true);
+                    intent.putExtra("album_id", listData.get(getAdapterPosition()).getAlbumId());
+                    intent.putExtra("type", listData.get(getAdapterPosition()).getFileType());
+                    mContext.startActivity(intent);
+                    break;
 
                 case R.id.rel:
                     if (lin_drop.getVisibility() == View.VISIBLE)

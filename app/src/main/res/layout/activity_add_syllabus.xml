@@ -171,6 +171,42 @@
                                 </RelativeLayout>
 
                                 <LinearLayout
+                                    android:visibility="gone"
+                                    android:id="@+id/llTopicData"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:weightSum="2"
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:orientation="horizontal">
+                                    <LinearLayout
+                                        android:layout_weight="0.3"
+                                        android:layout_width="match_parent"
+                                        android:visibility="visible"
+                                        android:layout_height="wrap_content">
+                                        <FrameLayout
+                                            android:layout_width="0dp"
+                                            android:layout_weight="1"
+                                            android:layout_height="wrap_content">
+
+                                            <Spinner
+                                                android:id="@+id/spTopic"
+                                                style="@style/RegEditText"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="@dimen/login_button_height" />
+
+                                            <ImageView
+                                                android:layout_width="25dp"
+                                                android:src="@drawable/icon_down_white"
+                                                android:layout_marginEnd="@dimen/padding_10dp"
+                                                android:layout_gravity="right|center"
+                                                android:layout_height="25dp"/>
+                                        </FrameLayout>
+                                    </LinearLayout>
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical"
@@ -255,6 +291,7 @@
 
 
                         <androidx.recyclerview.widget.RecyclerView
+                            android:visibility="gone"
                             android:id="@+id/rvTopic"
                             android:layout_marginTop="@dimen/padding_5dp"
                             android:layout_width="match_parent"
@@ -266,6 +303,7 @@
 
 
                         <ImageView
+                            android:visibility="gone"
                             android:layout_marginTop="@dimen/padding_15dp"
                             android:id="@+id/imgAdd"
                             android:layout_marginRight="@dimen/padding_5dp"

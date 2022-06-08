@@ -1259,9 +1259,10 @@
     <string name="lbl_from_date">From Date</string>
     <string name="lbl_to_date">To Date</string>
     <string name="toast_voter_delete_successfully">Voter Delete SuccessFully...</string>
-
+    <string name="toast_change_plan">Change Plan Successfully...</string>
+    <string name="toast_set_status_plan">Status Plan Set Successfully...</string>
     <string name="dialog_are_you_sure_you_want_to_change_attend">Are You Sure You Want to Change Attendance ? </string>
-
+    <string name="title_add_chapter_plan">Add Chapter Plan</string>
     <string name="lbl_plan">Planed</string>
     <string name="lbl_actual">Actual</string>
     <string name="menu_edit_topic">Edit Topic</string>
@@ -1274,4 +1275,11 @@
     <string name="lbl_today_topics">Today\'s Topics</string>
     <string name="lbl_teacher">Teacher</string>
     <string name="lbl_overall_anylysis">Overall Analysis</string>
+
+    <string name="total_topic_count">Total Topics Count</string>
+    <string name="total_topic_pending">Total Topics Pending</string>
+    <string name="total_topic_completed">Total Topics Completed</string>
+    <string name="total_end_delay">Total End Delay</string>
+    <string name="total_com_on_time">Total Completed On-Time</string>
+    <string name="lbl_add_image">Add Image</string>
 </resources>

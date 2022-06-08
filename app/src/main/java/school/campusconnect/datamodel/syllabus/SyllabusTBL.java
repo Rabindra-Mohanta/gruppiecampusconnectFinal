@@ -32,6 +32,11 @@ public class SyllabusTBL extends Model {
     {
         return new Select().from(SyllabusTBL.class).where("teamID = ?",teamID).where("subjectID = ?",subjectID).execute();
     }
+    public static List<SyllabusTBL> getSyllabusChapter(String teamID, String subjectID,String chapterId)
+    {
+        return new Select().from(SyllabusTBL.class).where("teamID = ?",teamID).where("subjectID = ?",subjectID).where("chapterId = ?",chapterId).execute();
+    }
+
     public static void deleteAll(String teamID, String subjectID) {
         new Delete().from(SyllabusTBL.class).where("teamID = ?",teamID).where("subjectID = ?",subjectID).execute();
     }

@@ -7,7 +7,30 @@
         android:layout_height="match_parent"
         tools:context=".fragments.SyllabusListFragment">
 
+
+        <FrameLayout
+            android:id="@+id/llChapterAll"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/padding_10dp"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/spChapter"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:src="@drawable/icon_down_white"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:layout_gravity="right|center"
+                android:layout_height="25dp"/>
+        </FrameLayout>
+
+
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@id/llChapterAll"
             android:id="@+id/rvSyllabus"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

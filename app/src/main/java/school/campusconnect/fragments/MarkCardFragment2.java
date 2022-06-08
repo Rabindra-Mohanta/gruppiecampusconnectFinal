@@ -318,9 +318,12 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
                         holder.llMarkCard.setVisibility(View.GONE);
                         holder.img_tree.setImageResource(R.drawable.arrow_up);
                         item.isEdit = false;
+
                         if (item.subjectMarksDetails != null) {
                             int totalObt = 0;
+
                             for (int i = 0; i < item.subjectMarksDetails.size(); i++) {
+
                                 if (!TextUtils.isEmpty(item.subjectMarksDetails.get(i).obtainedMarks)) {
                                     totalObt += Integer.parseInt(item.subjectMarksDetails.get(i).obtainedMarks);
                                 }
@@ -448,6 +451,7 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
             }
 
             if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
+
                 holder.etObtain.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {

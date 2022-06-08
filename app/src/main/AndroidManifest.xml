@@ -57,13 +57,31 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.UpdateTopicActivity"></activity>
-        <activity android:name=".activities.AddChapterPlanActivity" />
-        <activity android:name=".activities.ApplyLeaveActivity" />
-        <activity android:name=".activities.StaffClassListActivity" />
-        <activity android:name=".activities.EditTopicActivity" />
-        <activity android:name=".activities.ZoomCallActivity" />
-        <activity android:name=".activities.VideoCallingActivity" />
+
+        <activity android:name=".activities.UpdateTopicActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activities.ApplyLeaveActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activities.StaffClassListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activities.EditTopicActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activities.ZoomCallActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activities.VideoCallingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activities.SearchUserActivity"
             android:exported="false"
