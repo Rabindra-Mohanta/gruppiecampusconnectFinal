@@ -155,7 +155,7 @@ public class BoothListFragment2 extends BaseFragment implements LeafManager.OnCo
             return;
         }
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         //progressBar.setVisibility(View.VISIBLE);
         leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
     }

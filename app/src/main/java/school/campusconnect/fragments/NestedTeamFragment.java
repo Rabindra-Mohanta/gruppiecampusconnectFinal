@@ -62,7 +62,7 @@ public class NestedTeamFragment extends BaseFragment implements LeafManager.OnCo
     }
 
     private void getNestedTeam() {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         leafManager.getNestedTeams(this,groupId,team_id,user_id);
     }
 

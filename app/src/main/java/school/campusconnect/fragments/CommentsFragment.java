@@ -228,7 +228,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
         switch (type) {
             case "groupPostComment":
             case "group": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
                 mManager.getGroupComment(this, groupId + "", postId + "", currentPage);
@@ -236,7 +236,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             }
             case "teamPostComment":
             case "team": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
                 mManager.getTeamComment(this, groupId + "", teamId + "", postId + "", currentPage);
@@ -244,7 +244,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             }
             case "individualPostComment":
             case "personal": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
                 mManager.getPersonalComment(this, groupId, postId, selectedUserId,currentPage);
@@ -258,7 +258,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
         switch (type) {
             case "groupPostComment":
             case "group": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -272,7 +272,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             }
             case "teamPostComment":
             case "team": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -286,7 +286,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             }
             case "individualPostComment":
             case "personal": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -335,7 +335,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
         switch (type) {
             case "group": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -346,7 +346,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             }
             case "team": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -357,7 +357,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             }
             case "personal": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -374,7 +374,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             case "groupPostComment":
             case "group": {
                 // showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -385,7 +385,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             case "teamPostComment":
             case "team": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -396,7 +396,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
             case "individualPostComment":
             case "personal": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -561,7 +561,7 @@ public class CommentsFragment extends BaseFragment implements LeafManager.OnAddU
     @Override
     public void onLikeClick(GroupCommentItem item, int pos) {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(mBinding.progressBar);
+        showLoadingBar(mBinding.progressBar,false);
         this.position = pos;
         if (type.equals("group") || type.equalsIgnoreCase("groupPostComment"))
             mManager.likeUnlikeGroupComment(this, groupId + "", postId + "", item.id);

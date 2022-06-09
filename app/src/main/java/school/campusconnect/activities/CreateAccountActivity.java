@@ -154,7 +154,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
                         public void onClick(DialogInterface dialog, int which) {
                             // showLoadingDialog();
                             if(progressBar!=null)
-                                showLoadingBar(progressBar);
+                                showLoadingBar(progressBar,false);
                                 //progressBar.setVisibility(View.VISIBLE);
                             LeafManager manager=new LeafManager();
                             manager.deleteGroup(CreateAccountActivity.this,groupItem.getGroupId()+"");
@@ -220,7 +220,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
                 if (isConnectionAvailable()) {
                     if (isValid()) {
                         if(progressBar!=null)
-                            showLoadingBar(progressBar);
+                            showLoadingBar(progressBar,false);
                         //progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
 

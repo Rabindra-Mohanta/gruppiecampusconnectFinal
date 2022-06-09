@@ -157,7 +157,7 @@ public class AddClassStudentActivity extends BaseActivity {
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_student), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                  //   progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteClassStudent(AddClassStudentActivity.this, GroupDashboardActivityNew.groupId, team_id,studentData.getUserId());
                 }
@@ -273,7 +273,7 @@ public class AddClassStudentActivity extends BaseActivity {
 
                         addStudentReq.phone = null;
                         AppLog.e(TAG, "send data : " + new Gson().toJson(addStudentReq));
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         //   progressBar.setVisibility(View.VISIBLE);
                         leafManager.editClassStudent(this, group_id, team_id,studentData.getUserId(), addStudentReq);
                     }
@@ -281,7 +281,7 @@ public class AddClassStudentActivity extends BaseActivity {
                         addStudentReq.phone = etPhone.getText().toString();
                         addStudentReq.image=imageFragment.getmProfileImage();
                         AppLog.e(TAG, "send data : " + addStudentReq);
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         //   progressBar.setVisibility(View.VISIBLE);
                         leafManager.addClassStudent(this, group_id, team_id, addStudentReq);
                     }
@@ -382,7 +382,7 @@ public class AddClassStudentActivity extends BaseActivity {
                 String[] str = getResources().getStringArray(R.array.array_country_values);
                 addStudentReq.countryCode = str[currentCountry - 1];
                 addStudentReq.phone = etPhone.getText().toString();
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 //progressBar.setVisibility(View.VISIBLE);
                 leafManager.editClassStudentPhone(this, group_id,studentData.getUserId(), addStudentReq);
                /* Toast.makeText(this, "Edit Student successfully", Toast.LENGTH_SHORT).show();

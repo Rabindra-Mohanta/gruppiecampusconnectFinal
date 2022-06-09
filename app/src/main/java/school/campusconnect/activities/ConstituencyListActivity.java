@@ -170,7 +170,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
 
     private void getConstituencyList() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             leafManager.getConstituencyList(this);
@@ -356,7 +356,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
 
         if (item.groupCount == 1) {
             LeafManager manager = new LeafManager();
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
             manager.getGroupDetail(this, item.getGroupId());
         } else {

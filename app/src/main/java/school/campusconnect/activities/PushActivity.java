@@ -147,7 +147,7 @@ public class PushActivity extends BaseActivity implements
 
         getData();
 
-        showLoadingBar(progressBar2);
+        showLoadingBar(progressBar2,false);
        // progressBar2.setVisibility(View.VISIBLE);
         mAdapter2 = new ShareGroupAdapter(new ArrayList<ShareGroupItemList>(), "personal", 0);
         //new TaskForFriends().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -379,7 +379,7 @@ public class PushActivity extends BaseActivity implements
                 break;
 
             case R.id.relative_group:
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
             //    progressBar.setVisibility(View.VISIBLE);
                 addPost("group", mGroupId, String.valueOf(mGroupId));
                 break;
@@ -396,14 +396,14 @@ public class PushActivity extends BaseActivity implements
         if (indiShow) {
             if (!mAdapter2.getSelectedgroups().equals("")) {
               //  progressBar2.setVisibility(View.VISIBLE);
-                showLoadingBar(progressBar2);
+                showLoadingBar(progressBar2,false);
                 addPost("personal", mGroupId, mAdapter2.getSelectedgroups());
             } else {
                 Toast.makeText(this, getResources().getString(R.string.toast_select_friend_first), Toast.LENGTH_SHORT).show();
             }
         } else {
             if (!mAdapter.getSelectedgroups().equals("")) {
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 //    progressBar.setVisibility(View.VISIBLE);
                 addPost("team", mGroupId, mAdapter.getSelectedgroups());
             } else {

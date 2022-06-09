@@ -290,7 +290,7 @@ ActivityAddSyllabusBinding binding;
 
                         request.setTopicData(list);
                         Log.e(TAG,"req is Update "+new Gson().toJson(request));
-                        showLoadingBar(binding.progressBar);
+                        showLoadingBar(binding.progressBar,false);
                         manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,chapterID,request);
                     }
                     else
@@ -363,7 +363,7 @@ ActivityAddSyllabusBinding binding;
 
                         Log.e(TAG,"send Request "+new Gson().toJson(req));
 
-                        showLoadingBar(binding.progressBar);
+                        showLoadingBar(binding.progressBar,false);
                         manager.addSyllabus(this,GroupDashboardActivityNew.groupId,teamId,subjectId,req);
                     }
 

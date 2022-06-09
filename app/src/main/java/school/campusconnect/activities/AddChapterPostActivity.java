@@ -414,7 +414,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     }
     private void getChapters() {
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
@@ -725,7 +725,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                 //  progressBar.setVisibility(View.VISIBLE);
               //  btnShare.setEnabled(false);
 

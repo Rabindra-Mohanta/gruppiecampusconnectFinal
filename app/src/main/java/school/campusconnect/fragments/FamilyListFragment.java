@@ -61,7 +61,7 @@ public class FamilyListFragment extends BaseFragment implements LeafManager.OnCo
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
 
         return view;
     }

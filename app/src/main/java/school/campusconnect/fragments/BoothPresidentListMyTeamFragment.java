@@ -189,7 +189,7 @@ public class BoothPresidentListMyTeamFragment extends BaseFragment implements Le
         if (!isConnectionAvailable()) {
             return;
         }
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
        // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
 

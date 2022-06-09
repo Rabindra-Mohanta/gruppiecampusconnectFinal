@@ -320,13 +320,13 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 LeafManager leafManager = new LeafManager();
-                                showLoadingBar(progressBar);
+                                showLoadingBar(progressBar,false);
                                 //progressBar.setVisibility(View.VISIBLE);
                                 leafManager.createOfflineTest(AddOfflineTestActivity.this, groupId, teamId, request);
                             }
                         });
                     } else {
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         //progressBar.setVisibility(View.VISIBLE);
                         leafManager.createOfflineTest(this, groupId, teamId, request);
                     }

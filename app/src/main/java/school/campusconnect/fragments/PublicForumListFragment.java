@@ -346,7 +346,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
             return;
         }
      //   progressBar.setVisibility(View.VISIBLE);
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         LeafManager leafManager = new LeafManager();
 
         if(mGroupItem.canPost){

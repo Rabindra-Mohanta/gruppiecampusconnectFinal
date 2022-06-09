@@ -358,7 +358,7 @@ public static final String TAG = "SyllabusDetailsActivity";
             req.setActualEndDate(actualfrom);
 
             Log.e(TAG,"req is Update"+new Gson().toJson(req));
-            showLoadingBar(binding.progressBar);
+            showLoadingBar(binding.progressBar,false);
             manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamID,subjectID,topicId,req);
         }
         else
@@ -415,7 +415,7 @@ public static final String TAG = "SyllabusDetailsActivity";
             request.setTopicData(list);
             Log.e(TAG,"req is Not Update"+new Gson().toJson(request));
 
-            showLoadingBar(binding.progressBar);
+            showLoadingBar(binding.progressBar,false);
             manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamID,subjectID,data.getChapterId(),request);
         }
 

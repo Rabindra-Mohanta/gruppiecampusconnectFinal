@@ -126,7 +126,7 @@ public class MarksheetActivity extends BaseActivity {
         init_();
 
         AppLog.e(TAG, "getStudents : ");
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getStudents(this, GroupDashboardActivityNew.groupId, teamId);
     }
@@ -373,7 +373,7 @@ public class MarksheetActivity extends BaseActivity {
         hide_keyboard();
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                // progressBar.setVisibility(View.VISIBLE);
             upLoadImageOnCloud(addMarkSheetReq);
         } else {

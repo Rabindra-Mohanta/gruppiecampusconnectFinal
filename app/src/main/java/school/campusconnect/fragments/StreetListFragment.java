@@ -127,7 +127,7 @@ public class StreetListFragment extends BaseFragment implements LeafManager.OnCo
         {
             if (isConnectionAvailable())
             {
-                showLoadingBar(binding.progressBar);
+                showLoadingBar(binding.progressBar,false);
             //    binding.progressBar.setVisibility(View.VISIBLE);
                 manager.getWorkerStreetList(this, GroupDashboardActivityNew.groupId,teamId,"masterList");
             }

@@ -311,7 +311,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         AppLog.e(TAG , "data item list size : "+dataItemList.size() + " , apieVent  :"+apiEvent);
         String lastId = null;
         if (dataItemList.size() != 0) {
-            showLoadingBar(mBinding.progressBar);
+            showLoadingBar(mBinding.progressBar,false);
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 PostItem postItem = new PostItem();
@@ -439,7 +439,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
     private void getData(boolean isInBackground) {
         AppLog.e(TAG, "getData called");
         if (!isInBackground) {
-            showLoadingBar(mBinding.progressBar);
+            showLoadingBar(mBinding.progressBar,false);
             mIsLoading = true;
         }
 
@@ -688,7 +688,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
     @Override
     public void onFavClick(PostItem item, int pos) {
-        showLoadingBar(mBinding.progressBar);
+        showLoadingBar(mBinding.progressBar,false);
         position = pos;
         int fav = 0;
         if (item.isFavourited) {
@@ -740,7 +740,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
         if (!liked) {
             liked = true;
             this.position = position;
-            showLoadingBar(mBinding.progressBar);
+            showLoadingBar(mBinding.progressBar,false);
             manager.setLikes(this, mGroupId + "", item.id);
 
 
@@ -1217,7 +1217,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar);
+            showLoadingBar(mBinding.progressBar,false);
             LeafManager manager = new LeafManager();
             manager.deletePost(this, mGroupId + "", currentItem.id, "group");
             new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1267,13 +1267,13 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
     private void getReportData() {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(dialogProgressBar);
+        showLoadingBar(dialogProgressBar,false);
         mManager.getReportList(this);
     }
 
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(mBinding.progressBar);
+        showLoadingBar(mBinding.progressBar,false);
         mManager.reportPost(this, mGroupId + "", currentItem.id, report_id);
     }
 

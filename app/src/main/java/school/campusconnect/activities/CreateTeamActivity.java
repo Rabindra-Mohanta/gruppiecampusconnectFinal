@@ -104,7 +104,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_team), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     //progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteTeam(CreateTeamActivity.this, GroupDashboardActivityNew.groupId, myTeamData.teamId);
                 }
@@ -160,7 +160,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
                             request.image=imageFragment.getmProfileImage();
                         }
                         AppLog.e(TAG,"request :"+request);
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                    //     progressBar.setVisibility(View.VISIBLE);
                         leafManager.editTeam(this, GroupDashboardActivityNew.groupId,myTeamData.teamId, request);
                     }
@@ -169,7 +169,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
                         CreateTeamRequest request = new CreateTeamRequest();
                         request.name = etTeamName.getText().toString();
                         request.image = imageFragment.getmProfileImage();
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         //     progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG,"request :"+request);
                         leafManager.addTeam(this, GroupDashboardActivityNew.groupId, request);

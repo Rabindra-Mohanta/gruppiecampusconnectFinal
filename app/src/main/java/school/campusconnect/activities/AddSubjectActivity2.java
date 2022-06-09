@@ -84,7 +84,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         init();
 
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
     }
@@ -113,7 +113,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_subject), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                   //  progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteSubjectStaff(AddSubjectActivity2.this, GroupDashboardActivityNew.groupId,team_id, subjectData.getSubjectId());
                 }
@@ -162,7 +162,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                         AddSubjectStaffReq request = new AddSubjectStaffReq();
                         request.setSubjectName(etName.getText().toString());
                         request.setStaffId(adapter.getSelectedList());
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                        // progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.updateSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,subjectData.getSubjectId(), request);
@@ -170,7 +170,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                         AddSubjectStaffReq request = new AddSubjectStaffReq();
                         request.setSubjectName(etName.getText().toString());
                         request.setStaffId(adapter.getSelectedList());
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         //progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.addSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id, request);

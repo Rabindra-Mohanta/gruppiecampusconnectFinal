@@ -97,7 +97,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                 changePasswordRequest.newPasswordFirst = layout_password.getText().toString();
                 changePasswordRequest.newPasswordSecond = layout_password_conf.getText().toString();
 
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                // progressBar.setVisibility(View.VISIBLE);
                 hide_keyboard();
                 manager.changePassword(this, changePasswordRequest);

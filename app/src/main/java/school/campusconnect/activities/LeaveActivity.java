@@ -81,7 +81,7 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
         AppLog.e(TAG, "group_id : " + group_id);
         AppLog.e(TAG, "team_id : " + team_id);
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
         leafManager.leaveForm(this, group_id, team_id);
     }
@@ -95,7 +95,7 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
             }
 
             leaveReq = new LeaveReq(etReason.getText().toString());
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
             leafManager.leaveRequest(this, group_id, team_id, leaveReq,kidsAdapter.getSelectedKids());
         }

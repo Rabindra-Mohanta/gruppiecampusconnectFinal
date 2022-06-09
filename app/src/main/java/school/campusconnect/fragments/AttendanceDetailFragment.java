@@ -122,7 +122,7 @@ public class AttendanceDetailFragment extends BaseFragment implements LeafManage
 
         tvMonth.setText(MixOperations.getMonth(calendar.getTime()).toUpperCase());
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
 
        // progressBar.setVisibility(View.VISIBLE);
       //  leafManager.getAttendanceDetail(this, GroupDashboardActivityNew.groupId, teamId,userId,rollNo, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));

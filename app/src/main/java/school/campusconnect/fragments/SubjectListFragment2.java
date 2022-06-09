@@ -54,7 +54,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
         team_id=getArguments().getString("team_id");
         className=getArguments().getString("className");
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
        // progressBar.setVisibility(View.VISIBLE);
 
         return view;

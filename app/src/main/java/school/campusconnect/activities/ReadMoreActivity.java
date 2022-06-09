@@ -482,7 +482,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         this.userId = userId;
 
         if (progressBar != null)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
          //   progressBar.setVisibility(View.VISIBLE);
 
         if (type.equalsIgnoreCase("groupPost") || type.equalsIgnoreCase("groupPostComment")) {
@@ -707,7 +707,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     public void onClick(DialogInterface dialog, int which) {
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
             //    progressBar.setVisibility(View.VISIBLE);
             if (type.equals("team")) {
                 manager.deleteTeamPost(ReadMoreActivity.this, mGroupId + "", mTeamId + "", item.id);
@@ -1026,7 +1026,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     }
 
     public void onFavClick(PostItem item, int pos) {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
      //   progressBar.setVisibility(View.VISIBLE);
         int fav = 0;
         if (item.isFavourited) {
@@ -1080,7 +1080,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
 
         if (!liked) {
             liked = true;
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //   progressBar.setVisibility(View.VISIBLE);
             if (type.equals("group") || type.equals("favourite"))
                 manager.setLikes(this, mGroupId + "", item.id);
@@ -1253,7 +1253,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     private void getReportData() {
         LeafManager mManager = new LeafManager();
         //showLoadingDialog();
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         //   progressBar.setVisibility(View.VISIBLE);
         mManager.getReportList(this);
     }
@@ -1261,7 +1261,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
         //showLoadingDialog();
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         //   progressBar.setVisibility(View.VISIBLE);
         mManager.reportPost(this, mGroupId + "", item.id, report_id);
     }

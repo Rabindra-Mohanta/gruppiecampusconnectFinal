@@ -68,7 +68,7 @@ public class TeamUsersActivity extends BaseActivity {
 
         teamId = getIntent().getStringExtra("team_id");
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
     //    progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this,GroupDashboardActivityNew.groupId,teamId,false);
     }
@@ -225,7 +225,7 @@ public class TeamUsersActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                // progressBar.setVisibility(View.VISIBLE);
                 leafManager.changeTeamAdmin(TeamUsersActivity.this,GroupDashboardActivityNew.groupId,teamId,leadItem.getId());
             }

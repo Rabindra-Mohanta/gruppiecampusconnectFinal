@@ -107,7 +107,7 @@ public class AdminStudentFeesActivity extends BaseActivity {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
-                            showLoadingBar(progressBar);
+                            showLoadingBar(progressBar,false);
                           //  progressBar.setVisibility(View.VISIBLE);
                             leafManager.approveOrHoldFees(AdminStudentFeesActivity.this, groupId, team_id, user_id, resData.paymentId, "approve");
                         }
@@ -130,7 +130,7 @@ public class AdminStudentFeesActivity extends BaseActivity {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
-                            showLoadingBar(progressBar);
+                            showLoadingBar(progressBar,false);
                             //  progressBar.setVisibility(View.VISIBLE);
                             leafManager.approveOrHoldFees(AdminStudentFeesActivity.this, groupId, team_id, user_id, resData.paymentId, "notApprove");
                         }
@@ -153,7 +153,7 @@ public class AdminStudentFeesActivity extends BaseActivity {
                         @Override
                         public void okPositiveClick(DialogInterface dialog) {
                             LeafManager leafManager = new LeafManager();
-                            showLoadingBar(progressBar);
+                            showLoadingBar(progressBar,false);
                             //  progressBar.setVisibility(View.VISIBLE);
                             leafManager.approveOrHoldFees(AdminStudentFeesActivity.this, groupId, team_id, user_id, resData.paymentId, "hold");
                         }

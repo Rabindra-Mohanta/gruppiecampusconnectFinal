@@ -512,7 +512,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
     public void getAssignment(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestPaper(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId, "");
@@ -992,7 +992,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
         SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_assignment), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 //progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.deleteTestPaperStudent(TestStudentActivity.this, group_id, team_id, subject_id, TestStudentActivity.this.item.testExamId, item.studentTestExamId);
@@ -1028,7 +1028,7 @@ public class TestStudentActivity extends BaseActivity implements LeafManager.OnA
 
         AppLog.e(TAG , "initializeZoom Called");
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
     //    progressBar.setVisibility(View.VISIBLE);
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 

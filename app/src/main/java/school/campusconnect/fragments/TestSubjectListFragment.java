@@ -118,7 +118,7 @@ public class TestSubjectListFragment extends BaseFragment implements LeafManager
 
     private void callAPi(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
         // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id, "");

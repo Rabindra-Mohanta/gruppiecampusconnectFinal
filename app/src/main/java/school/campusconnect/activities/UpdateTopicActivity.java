@@ -144,7 +144,7 @@ public class UpdateTopicActivity extends BaseActivity implements LeafManager.OnC
 
                     Log.e(TAG,"req is "+new Gson().toJson(req));
 
-                    showLoadingBar(binding.progressBar);
+                    showLoadingBar(binding.progressBar,false);
                     manager.changeStatusPlan(UpdateTopicActivity.this,GroupDashboardActivityNew.groupId,data.getTeamId(),data.getSubjectId(),data.getChapterId(),req);
                 }
             }

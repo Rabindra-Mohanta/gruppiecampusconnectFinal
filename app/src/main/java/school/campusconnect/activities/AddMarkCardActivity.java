@@ -89,7 +89,7 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
 
         init();
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
    //     progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTeamSubjects(this, groupId, teamId);
@@ -241,7 +241,7 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
                     request.subjects.add(hashMap);
                     request.duration = etFrom.getText().toString() + " to " + etTo.getText().toString();
 
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                     AppLog.e(TAG, "request :" + request);
                     leafManager.createMarkCard(this, GroupDashboardActivityNew.groupId, teamId, request);

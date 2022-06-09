@@ -128,7 +128,7 @@ public class LikeListFragment extends BaseFragment implements LikeAdapter.OnLead
     }
 
     private void getData() {
-        showLoadingBar(mBinding.progressBar);
+        showLoadingBar(mBinding.progressBar,false);
         mIsLoading = true;
         if(type.equals("group"))
             mManager.likeList(this, groupId+"", postId+"", currentPage);

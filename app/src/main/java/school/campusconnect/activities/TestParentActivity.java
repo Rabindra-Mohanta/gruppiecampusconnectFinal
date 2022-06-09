@@ -273,7 +273,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
                     return;
                 }
                 if (!TextUtils.isEmpty(et_msg.getText().toString())) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
               //      progressBar.setVisibility(View.VISIBLE);
                     LeafManager leafManager = new LeafManager();
                     leafManager.sendMsgToNotSubmittedStudents(TestParentActivity.this, group_id, getStudentIds(), new SendMsgToStudentReq(et_msg.getText().toString()));
@@ -571,7 +571,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isConnectionAvailable()) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                  //   progressBar.setVisibility(View.VISIBLE);
                     LeafManager manager = new LeafManager();
                     manager.deleteTestExam(TestParentActivity.this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId);
@@ -599,7 +599,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         } else {
             filter = "notSubmitted";
         }
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestPaper(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.testExamId, filter);
@@ -1030,7 +1030,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     private void notVerifyAssignmentFromActResult(boolean isVerify, String comments, ArrayList<String> _finalUrl) {
 
         if (isVerify) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             ReassignReq reassignReq = new ReassignReq(comments);
@@ -1046,7 +1046,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
         SMBDialogUtils.showSMBDialogOKCancel(this, msg, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 // progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 ReassignReq reassignReq = new ReassignReq("");
@@ -1078,7 +1078,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
 
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         // progressBar.setVisibility(View.VISIBLE);
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
@@ -1529,7 +1529,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     public void startLiveTest()
     {
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         //progressBar.setVisibility(View.VISIBLE);
 
         sendNotificationProctoring(true);
@@ -1539,7 +1539,7 @@ public class TestParentActivity extends BaseActivity implements LeafManager.OnAd
     }
 
     public void stopLiveTest() {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         //progressBar.setVisibility(View.VISIBLE);
 
         sendNotificationProctoring(false);

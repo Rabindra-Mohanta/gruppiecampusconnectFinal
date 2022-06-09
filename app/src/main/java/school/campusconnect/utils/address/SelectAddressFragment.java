@@ -443,7 +443,7 @@ public class SelectAddressFragment extends BaseFragment implements OnMapReadyCal
         findAddress = new FindAddress(loc.latitude, loc.longitude, getContext(), this);
         findAddress.execute();
 
-        showLoadingBar(binding.progressBar);
+        showLoadingBar(binding.progressBar,false);
         //binding.progressBar.setVisibility(View.VISIBLE);
 
     }

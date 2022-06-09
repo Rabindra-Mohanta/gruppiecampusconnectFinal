@@ -68,7 +68,7 @@ public class ReadUnreadUserFragment extends BaseFragment implements LeafManager.
     }
 
     private void getUsers() {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         leafManager.getReadUnreadUser(this,groupId,teamId,postId);
     }
 

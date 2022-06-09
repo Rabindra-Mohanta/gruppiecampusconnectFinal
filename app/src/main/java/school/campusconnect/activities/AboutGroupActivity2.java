@@ -150,7 +150,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 //progressBar.setVisibility(View.VISIBLE);
             manager.getGroupDetail(this, id);
         } else {
@@ -332,7 +332,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     private void removeImage() {
         if (progressBar != null)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
         manager.deleteGroupPic(this, id + "");
     }
@@ -534,7 +534,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         if (LeafPreference.getInstance(this).getBoolean(LeafPreference.ISGROUPUPDATED)) {
             if (isConnectionAvailable()) {
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                //     progressBar.setVisibility(View.VISIBLE);
                 manager.getGroupDetail(this, id);
             } else {
@@ -718,7 +718,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
             request.subCategory = item.subCategory;
             Log.e(TAG, "Request Post Data :" + request);
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 //progressBar.setVisibility(View.VISIBLE);
             manager.editGroup(AboutGroupActivity2.this, request, id);
         }
@@ -758,7 +758,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
             case LeafManager.API_ID_EDIT_GROUP:
                 Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                 if (isConnectionAvailable()) {
                     manager.getGroupDetail(this, id + "");
@@ -771,7 +771,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
                 //  showLoadingDialog();
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                 if (isConnectionAvailable()) {
                     manager.getGroupDetail(this, id + "");

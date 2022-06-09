@@ -131,7 +131,7 @@ public class MarkSheetListFragment extends BaseFragment implements LeafManager.O
             }
         });
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getMarkCardList(this, mGroupId, teamId);
@@ -145,7 +145,7 @@ public class MarkSheetListFragment extends BaseFragment implements LeafManager.O
     {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             mIsLoading = true;
             manager.MarkSheetListResponse(this, mGroupId+"",teamId,mark_card_id,userId,rollNo, currentPage);
         }
@@ -271,7 +271,7 @@ public class MarkSheetListFragment extends BaseFragment implements LeafManager.O
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             LeafManager manager = new LeafManager();
             manager.deleteMarkCart(this, mGroupId+"",teamId,currentItem.marksCardId,userId,rollNo);
 

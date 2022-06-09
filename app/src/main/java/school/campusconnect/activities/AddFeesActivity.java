@@ -263,7 +263,7 @@ public class AddFeesActivity extends BaseActivity implements LeafManager.OnAddUp
                     }
 
                     if(validateFees()){
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                     //    progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + feesReq);
                         leafManager.createFees(this, GroupDashboardActivityNew.groupId, teamId, feesReq);

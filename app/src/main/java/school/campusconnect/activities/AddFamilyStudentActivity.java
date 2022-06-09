@@ -234,7 +234,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
                 if (position != 0)
                 {
                     isCasteClickable = true;
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                     leafManager.getCaste(AddFamilyStudentActivity.this,etReligion.getSelectedItem().toString());
                 }
@@ -275,7 +275,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
                     dialog.dismiss();
 
                     list.remove(pos);
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                  //   progressBar.setVisibility(View.VISIBLE);
                     FamilyMemberResponse req = new FamilyMemberResponse();
                     req.setData(list);
@@ -304,7 +304,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
             isFirstTimeCaste = false;
             isFirstTimeSubCaste = false;
             isCasteClickable = true;
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //   progressBar.setVisibility(View.VISIBLE);
             leafManager.getReligion(this);
 
@@ -394,7 +394,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
             imageFragment.setInitialLatterImage(item.name);
         }
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         //   progressBar.setVisibility(View.VISIBLE);
         leafManager.getReligion(this);
     }
@@ -538,7 +538,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
 
                     item.image = imageFragment.getmProfileImage();
 
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     //   progressBar.setVisibility(View.VISIBLE);
                     FamilyMemberResponse req = new FamilyMemberResponse();
                     req.setData(list);
@@ -682,7 +682,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
 
                 if (casteId != null)
                 {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     //   progressBar.setVisibility(View.VISIBLE);
                     leafManager.getSubCaste(this,casteId);
                 }
@@ -780,7 +780,7 @@ public class AddFamilyStudentActivity extends BaseActivity implements SearchCast
 
         if (casteId != null)
         {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //   progressBar.setVisibility(View.VISIBLE);
             leafManager.getSubCaste(this,casteId);
         }

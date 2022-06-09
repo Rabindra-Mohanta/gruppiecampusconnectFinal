@@ -59,7 +59,7 @@ public class PeopleFragment extends BaseFragment implements LeafManager.OnCommun
 
 
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         //progressBar.setVisibility(View.VISIBLE);
 
         Bundle bundle=getArguments();
@@ -71,13 +71,13 @@ public class PeopleFragment extends BaseFragment implements LeafManager.OnCommun
 
         if(!isNest)
         {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
             leafManager.getMyPeople(this,GroupDashboardActivityNew.groupId);
         }
         else
         {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
             leafManager.getNestPeople(this,GroupDashboardActivityNew.groupId,userId);
         }

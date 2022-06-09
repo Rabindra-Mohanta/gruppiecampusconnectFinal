@@ -177,7 +177,7 @@ public class EditPostActivity extends BaseActivity implements View.OnClickListen
             //  showLoadingDialog();
             if (progressBar != null)
 
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
             //  progressBar.setVisibility(View.VISIBLE);
 
             LeafManager manager = new LeafManager();

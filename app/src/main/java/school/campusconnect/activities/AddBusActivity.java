@@ -172,7 +172,7 @@ public class AddBusActivity extends BaseActivity implements LeafManager.OnAddUpd
                         request.image = imageFragment.getmProfileImage();
                         String[] str = getResources().getStringArray(R.array.array_country_values);
                         request.countryCode = str[currentCountry - 1];
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                      //   progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.addBus(this, GroupDashboardActivityNew.groupId, request);

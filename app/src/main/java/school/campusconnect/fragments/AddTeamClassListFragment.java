@@ -60,7 +60,7 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
 
         return view;

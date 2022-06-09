@@ -119,7 +119,7 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
 
     private void getTaluksList() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
          //   progressBar.setVisibility(View.VISIBLE);
             LeafManager leafManager = new LeafManager();
             leafManager.getTaluks(this);

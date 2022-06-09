@@ -291,7 +291,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     private void loginApi() {
         btnNext.setEnabled(false);
         if (progressBar != null)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,true);
          //   progressBar.setVisibility(View.VISIBLE);
 
         if (RememberPref.getInstance(this).contains(RememberPref.REMEMBER_USERNAME)) {

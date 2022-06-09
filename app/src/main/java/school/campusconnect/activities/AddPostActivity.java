@@ -708,7 +708,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
             if (isValid(true)) {
                 if (progressBar != null)
 
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                 btnShare.setEnabled(false);
                 btnShare.setTextColor(getResources().getColor(R.color.grey));
@@ -1301,14 +1301,14 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
                 break;
             case R.id.switch_reply:
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                   //  progressBar.setVisibility(View.VISIBLE);
                 manager.allowPersonalReply(this, group_id + "", friend_id);
                 break;
 
             case R.id.switch_comment:
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                   //  progressBar.setVisibility(View.VISIBLE);
                 manager.allowPersonalComment(this, group_id + "", friend_id);
                 break;

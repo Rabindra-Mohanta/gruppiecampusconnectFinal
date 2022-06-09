@@ -158,7 +158,7 @@ public class AuthorizedUserFragment extends BaseFragment implements LeafManager.
 
     private void getData() {
         //mAdapter.clear();
-        showLoadingBar(mBinding.progressBar2);
+        showLoadingBar(mBinding.progressBar2,false);
         mIsLoading = true;
         manager.getAuthorizedList(this, mGroupId+"", currentPage);
     }
@@ -282,7 +282,7 @@ public class AuthorizedUserFragment extends BaseFragment implements LeafManager.
 
     /*@Override
     public void onFavClick(TeamListItemModel item, int pos) {
-       *//* showLoadingBar(mBinding.progressBar);
+       *//* showLoadingBar(mBinding.progressBar,false);
         position = pos;
         int fav = 0;
         if (item.isFavourited) {
@@ -297,7 +297,7 @@ public class AuthorizedUserFragment extends BaseFragment implements LeafManager.
     @Override
     public void onLikeClick(TeamListItemModel item, int position) {
 
-       *//* showLoadingBar(mBinding.progressBar);
+       *//* showLoadingBar(mBinding.progressBar,false);
         this.position = position;
         int fav = 0;
         if (item.isLiked) {
@@ -317,7 +317,7 @@ public class AuthorizedUserFragment extends BaseFragment implements LeafManager.
 
         if(isConnectionAvailable())
         {
-            showLoadingBar(mBinding.progressBar2);
+            showLoadingBar(mBinding.progressBar2,false);
 
             LeafManager manager = new LeafManager();
             manager.deleteTeamPost(this, mGroupId+"", team_id+"", currentItem.id);
@@ -365,7 +365,7 @@ public class AuthorizedUserFragment extends BaseFragment implements LeafManager.
     @Override
     public void unAuthorize(AuthorizedUserModel item) {
         //showLoadingDialog(getString(R.string.please_wait));
-        showLoadingBar(mBinding.progressBar2);
+        showLoadingBar(mBinding.progressBar2,false);
         manager.notAllowPost(this, mGroupId+"", item.id);
     }
 

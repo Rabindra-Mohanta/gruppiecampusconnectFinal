@@ -141,7 +141,7 @@ public class WorkerListFragment extends BaseFragment implements LeafManager.OnCo
         {
             if(isConnectionAvailable())
             {
-                showLoadingBar(binding.progressBar);
+                showLoadingBar(binding.progressBar,false);
              //   binding.progressBar.setVisibility(View.VISIBLE);
                 manager.getWorkerList(this,GroupDashboardActivityNew.groupId,teamID,committeeID);
             }

@@ -399,13 +399,13 @@ public class TicketsActivity extends BaseActivity implements TicketsAdapter.OnCl
         AppLog.e(TAG, "onException " + msg);
     }
     private void getUpdateTicketListApi() {
-        showLoadingBar(binding.progressBar);
+        showLoadingBar(binding.progressBar,false);
       //  binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.getTicketsUpdateEvent(this,GroupDashboardActivityNew.groupId,Role,Option);
     }
 
     private void getTicketListApi() {
-        showLoadingBar(binding.progressBar);
+        showLoadingBar(binding.progressBar,false);
      //   binding.progressBar.setVisibility(View.VISIBLE);
         mIsLoading = true;
         leafManager.getTickets(this,GroupDashboardActivityNew.groupId,Role,Option, String.valueOf(currentPage));

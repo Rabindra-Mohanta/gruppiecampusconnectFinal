@@ -283,7 +283,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
         gotGPS = false;
         handler = new Handler();
 
-        showLoadingBar(binding.progressBar);
+        showLoadingBar(binding.progressBar,false);
        // binding.progressBar.setVisibility(View.VISIBLE);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -454,7 +454,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
                 resultIssue = res.getData();
                 AppLog.e(TAG, "ClassResponse " + new Gson().toJson(resultIssue));
                 bindIssue();
-                showLoadingBar(binding.progressBar);
+                showLoadingBar(binding.progressBar,false);
                 // binding.progressBar.setVisibility(View.VISIBLE);
                 searchIssueFragmentDialog.setData(res.getData());
                 leafManager.getSubBooth(this,GroupDashboardActivityNew.groupId);
@@ -744,7 +744,7 @@ public class AddTicketActivity extends BaseActivity implements View.OnClickListe
             if (isValid(true)) {
 
                 if (binding.progressBar != null)
-                    showLoadingBar(binding.progressBar);
+                    showLoadingBar(binding.progressBar,false);
                 // binding.progressBar.setVisibility(View.VISIBLE);
 
                 mainRequest = new AddTicketRequest();

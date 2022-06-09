@@ -53,7 +53,7 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         //progressBar.setVisibility(View.VISIBLE);
 
         return view;

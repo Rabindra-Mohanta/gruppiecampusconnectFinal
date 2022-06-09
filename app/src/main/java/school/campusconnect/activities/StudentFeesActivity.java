@@ -130,7 +130,7 @@ public class StudentFeesActivity extends BaseActivity {
 
     private void getStudentFeesDetail() {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
        //progressBar.setVisibility(View.VISIBLE);
         leafManager.getStudentFees(this, groupId, team_id, user_id);
     }

@@ -224,7 +224,7 @@ public class MarkCardReadMoreActivity extends BaseActivity implements DialogInte
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             //manager.deleteMarkCart(this, mGroupId+"",teamId,userId,rollNo,currentItem.marksCardId);

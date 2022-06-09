@@ -38,10 +38,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -50,8 +52,11 @@ import butterknife.OnClick;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.LeadItem;
+import school.campusconnect.datamodel.LeadResponse;
 import school.campusconnect.datamodel.booths.BoothMemberReq;
 import school.campusconnect.datamodel.committee.committeeResponse;
+import school.campusconnect.datamodel.lead.LeadDataTBL;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.datamodel.test_exam.TestOfflineSubjectMark;
 import school.campusconnect.fragments.DatePickerFragment;
@@ -91,8 +96,8 @@ public class AddBoothStudentActivity extends BaseActivity {
     String group_id, team_id, category;
     committeeResponse.committeeData committeeData;
     ContactsAdapter adapter;
-    ArrayList<String> mobileList;
-
+    ArrayList<String> mobileList = new ArrayList<>();
+    private ArrayList<LeadItem> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +105,7 @@ public class AddBoothStudentActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle(getResources().getString(R.string.title_add_) + getResources().getString(R.string.title_booth_member));
+        setTitle(getResources().getString(R.string.title_add_)+" "+ getResources().getString(R.string.title_booth_member));
         init();
     }
    /* @Override
@@ -137,6 +142,8 @@ public class AddBoothStudentActivity extends BaseActivity {
 */
 
     private void init() {
+
+
         leafManager = new LeafManager();
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
@@ -144,10 +151,59 @@ public class AddBoothStudentActivity extends BaseActivity {
         Log.e(TAG,"category "+category);
         committeeData = new Gson().fromJson(getIntent().getStringExtra("committee_data"), committeeResponse.committeeData.class);
         Log.e(TAG,"committee Data: "+new Gson().toJson(committeeData));
-        mobileList = getIntent().getStringArrayListExtra("mobileList");
+     //   mobileList = getIntent().getStringArrayListExtra("mobileList");
         adapter = new ContactsAdapter();
         rvSubjects.setAdapter(adapter);
 
+        Log.e(TAG,"mobileList "+mobileList.size());
+
+        List<LeadDataTBL> leadDataTBL = LeadDataTBL.getLeadData(group_id,team_id);
+
+        Log.e(TAG,"leadDataTBLList"+leadDataTBL.size());
+
+        if (leadDataTBL.size() == 0)
+        {
+            if (isConnectionAvailable()) {
+                showLoadingBar(progressBar,true);
+                leafManager.getTeamMember(this, group_id + "", team_id + "",false);
+            } else {
+                showNoNetworkMsg();
+            }
+        }
+        else
+        {
+            if (leadDataTBL.size() > 0)
+            {
+                list = new ArrayList<>();
+                for (int i = 0;i<leadDataTBL.size();i++)
+                {
+                    LeadItem leadItem = new LeadItem();
+                    leadItem.id = leadDataTBL.get(i).id;
+                    leadItem.voterId = leadDataTBL.get(i).voterId;
+                    leadItem.roleOnConstituency = leadDataTBL.get(i).roleOnConstituency;
+                    leadItem.phone = leadDataTBL.get(i).phone;
+                    leadItem.name = leadDataTBL.get(i).name;
+                    leadItem.image = leadDataTBL.get(i).image;
+                    leadItem.gender = leadDataTBL.get(i).gender;
+                    leadItem.dob = leadDataTBL.get(i).dob;
+                    leadItem.bloodGroup = leadDataTBL.get(i).bloodGroup;
+                    leadItem.allowedToAddUser = leadDataTBL.get(i).allowedToAddUser;
+                    leadItem.allowedToAddTeamPostComment = leadDataTBL.get(i).allowedToAddTeamPostComment;
+                    leadItem.allowedToAddTeamPost = leadDataTBL.get(i).allowedToAddTeamPost;
+                    leadItem.aadharNumber = leadDataTBL.get(i).aadharNumber;
+                    leadItem.pushTokens = new Gson().fromJson(leadDataTBL.get(i).pushToken,new TypeToken<ArrayList<LeadItem.pushTokenData>>() {}.getType());
+                    leadItem.isLive = leadDataTBL.get(i).isLive;
+
+                    list.add(leadItem);
+                }
+            }
+
+            for (int i = 0;i<list.size();i++)
+            {
+                if (list.get(i).phone != null && !list.get(i).phone.isEmpty())
+                    mobileList.add(list.get(i).phone);
+            }
+        }
         imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,6 +240,7 @@ public class AddBoothStudentActivity extends BaseActivity {
             Intent intent = new Intent(this,SelectContactActivity.class);
             intent.putExtra("mobileList",mobileList);
             startActivityForResult(intent,119);
+
     }
 
     @Override
@@ -264,7 +321,7 @@ public class AddBoothStudentActivity extends BaseActivity {
                         req.dafaultCommittee = committeeData.getDefaultCommittee();
                         req.committeeId = committeeData.getCommitteeId();
                     }
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                 //    progressBar.setVisibility(View.VISIBLE);
                     leafManager.addBoothsMember(this, group_id, team_id, category, req);
                 }else {
@@ -277,18 +334,30 @@ public class AddBoothStudentActivity extends BaseActivity {
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
+
         if (progressBar != null)
             hideLoadingBar();
            // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
-            case LeafManager.API_ADD_BOOTH_MEMEBER:
 
+            case LeafManager.API_ADD_BOOTH_MEMEBER:
                 hide_keyboard();
 
                 LeafPreference.getInstance(AddBoothStudentActivity.this).setBoolean(LeafPreference.ADD_FRIEND, true);
                 Toast.makeText(this, getResources().getString(R.string.toast_add_member_successfully), Toast.LENGTH_SHORT).show();
                 finish();
+                break;
+
+            case LeafManager.API_ID_LEAD_LIST:
+                LeadResponse res = (LeadResponse) response;
+                list.addAll(res.getResults());
+
+                for (int i = 0;i<list.size();i++)
+                {
+                    if (list.get(i).phone != null && !list.get(i).phone.isEmpty())
+                        mobileList.add(list.get(i).phone);
+                }
                 break;
         }
     }

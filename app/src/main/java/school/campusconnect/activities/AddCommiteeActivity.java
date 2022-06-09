@@ -89,7 +89,7 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
                     AddCommitteeReq req = new AddCommitteeReq();
                     req.setCommitteeName(binding.etName.getText().toString());
 
-                    showLoadingBar(binding.progressBar);
+                    showLoadingBar(binding.progressBar,false);
                    // binding.progressBar.setVisibility(View.VISIBLE);
 
                     if (binding.btnAddCommittee.getText().toString().equalsIgnoreCase("Add"))
@@ -186,7 +186,7 @@ public class AddCommiteeActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (isConnectionAvailable()) {
-                            showLoadingBar(binding.progressBar);
+                            showLoadingBar(binding.progressBar,false);
                             //binding.progressBar.setVisibility(View.VISIBLE);
                             LeafManager manager = new LeafManager();
                             manager.removeCommittee(AddCommiteeActivity.this, GroupDashboardActivityNew.groupId,TeamID,committeeID);

@@ -77,7 +77,7 @@ public class EditAttendanceActivity extends BaseActivity {
             }
             if (attendanceData == null)
                 return true;
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
             leafManager.removeAttendance(this, groupId, teamId, attendanceData.id);
             return true;
@@ -113,7 +113,7 @@ public class EditAttendanceActivity extends BaseActivity {
             editReq.studentName = edtName.getText().toString();
 
             AppLog.e(TAG,"EditAttendanceReq :"+new Gson().toJson(editReq));
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
             leafManager.editAttendance(this, groupId, teamId, attendanceData.id, editReq);
         }

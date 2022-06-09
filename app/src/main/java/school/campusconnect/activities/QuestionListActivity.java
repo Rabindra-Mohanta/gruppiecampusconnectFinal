@@ -301,7 +301,7 @@ public class QuestionListActivity extends BaseActivity implements View.OnClickLi
                     if (isValid()) {
                        // showLoadingDialog();
                         if(progressBar!=null)
-                            showLoadingBar(progressBar);
+                            showLoadingBar(progressBar,false);
                //         progressBar.setVisibility(View.VISIBLE);
 
 //                        if (!edtVideo.editText.getText().toString().equals("")) {

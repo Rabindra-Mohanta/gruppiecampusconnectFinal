@@ -89,7 +89,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
 
         return view;

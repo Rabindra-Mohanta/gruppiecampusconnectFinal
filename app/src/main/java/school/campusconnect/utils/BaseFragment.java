@@ -23,6 +23,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import school.campusconnect.BuildConfig;
@@ -86,7 +87,7 @@ public class BaseFragment extends Fragment {
 
     private ProgressDialog mProgressDialog;
     private View mProgressBar;
-
+    public boolean isHide = false;
     public void showLoadingDialog(String msg) {
         if(getActivity()!=null)
         {
@@ -138,23 +139,57 @@ public class BaseFragment extends Fragment {
         }
     }*/
 
-    public void showLoadingBar(View v) {
-       AppLog.e("PBAR showLoadingBar", "called");
-//        if (mProgressBar == null) {
-        // mProgressBar.setVisibility(View.VISIBLE);
-       // mProgressBar = v;
+    public void showLoadingBar(ProgressBar v, boolean isShow) {
+        AppLog.e("PBAR showLoadingBar", "called");
+
+        isHide = isShow;
+
+        if (isShow)
+        {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (mProgressBar != null)
+                    {
+                        hideLoadingBar();
+                    }
+                    if (mProgressBar == null)
+                    {
+                        mProgressBar = v;
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+
+
+            //        if (mProgressBar == null) {
+            // mProgressBar.setVisibility(View.VISIBLE);
+            // mProgressBar = v;
 //        } else {
-      //  mProgressBar.setVisibility(View.VISIBLE);
+            //  mProgressBar.setVisibility(View.VISIBLE);
 //        }
+        }
+
     }
 
     public void hideLoadingBar() {
-       AppLog.e("PBAR hideLoadingBar", "called");
-       /* if (mProgressBar == null) {
-        } else {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mProgressBar = null;
-        }*/
+
+        if (isHide)
+        {
+            if (mProgressBar == null) {
+            } else {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mProgressBar = null;
+            }
+        }
+        AppLog.e("PBAR hideLoadingBar", "called");
+
     }
 
     public void hideLoadingDialog() {

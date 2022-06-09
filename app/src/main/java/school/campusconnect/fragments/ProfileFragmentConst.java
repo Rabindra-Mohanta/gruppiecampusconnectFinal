@@ -308,7 +308,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                 if (position != 0)
                 {
                     isCasteClickable = true;
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     leafManager.getCaste(ProfileFragmentConst.this,etReligion.getSelectedItem().toString());
                 }
                 else
@@ -366,7 +366,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
           //  progressBar.setVisibility(View.VISIBLE);
 
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
 
             Log.e(TAG,"profile image "+imageFragment.getmProfileImage());
             Log.e(TAG,"profile name "+ etName.getText().toString());
@@ -600,7 +600,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
             if (casteId != null)
             {
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 leafManager.getSubCaste(this,casteId);
             }
 
@@ -700,7 +700,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
     public void profileApiCall()
     {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         LeafManager leafManager = new LeafManager();
         leafManager.getProfileDetails(this);
     }
@@ -799,7 +799,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         }
 
         imageFragment.setEditEnabled(isEdit);
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         leafManager.getReligion(this);
     }
 
@@ -834,7 +834,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
         if (casteId != null)
         {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             leafManager.getSubCaste(ProfileFragmentConst.this,casteId);
         }
     }

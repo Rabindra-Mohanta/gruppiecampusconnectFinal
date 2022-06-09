@@ -340,7 +340,7 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
     private void removeImage() {
         // showLoadingDialog();
         if (progressBar != null)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
         manager.deleteGroupPic(this, id+"");
     }
@@ -680,7 +680,7 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
                         //showLoadingDialog();
                        AppLog.e(TAG, "Request Post Data :" + request);
                         if (progressBar != null)
-                            showLoadingBar(progressBar);
+                            showLoadingBar(progressBar,false);
                         //progressBar.setVisibility(View.VISIBLE);
                         manager.editGroup(AboutPublicGroupActivity.this, request, id+"");
                     }
@@ -776,7 +776,7 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
         } else if (apiId == LeafManager.API_ID_EDIT_GROUP) {
             Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 //progressBar.setVisibility(View.VISIBLE);
             if (isConnectionAvailable()) {
                 manager.getGroupDetail(this, id+"");
@@ -788,7 +788,7 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
             Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
             //  showLoadingDialog();
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
               //  progressBar.setVisibility(View.VISIBLE);
             if (isConnectionAvailable()) {
                 manager.getGroupDetail(this, id+"");

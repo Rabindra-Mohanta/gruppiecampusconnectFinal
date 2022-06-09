@@ -218,7 +218,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,true);
             //    progressBar.setVisibility(View.VISIBLE);
             btnLogin.setTextColor(getResources().getColor(R.color.grey));
             btnLogin.setEnabled(false);
@@ -297,7 +297,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,true);
                 //progressBar.setVisibility(View.VISIBLE);
             btnLogin.setTextColor(getResources().getColor(R.color.grey));
             btnLogin.setEnabled(false);
@@ -382,7 +382,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             hide_keyboard();
             //showLoadingDialog();
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,true);
                 //progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             ForgotPasswordRequest request = new ForgotPasswordRequest();

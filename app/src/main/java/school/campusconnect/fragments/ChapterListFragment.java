@@ -148,7 +148,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     public void getChapters(boolean isLoading) {
         if (isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
@@ -310,7 +310,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                      //   progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
                         manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
@@ -330,7 +330,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             });
         } else {
             if (isConnectionAvailable()) {
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 //   progressBar.setVisibility(View.VISIBLE);
                 LeafManager manager = new LeafManager();
                 manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
@@ -358,7 +358,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isConnectionAvailable()) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     //   progressBar.setVisibility(View.VISIBLE);
                     LeafManager manager = new LeafManager();
                     manager.deleteChapter(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId);
@@ -403,7 +403,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //   progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteTopic(this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, currentItem.topicId);

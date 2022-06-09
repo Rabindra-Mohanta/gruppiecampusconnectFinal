@@ -101,7 +101,7 @@ public class AddBusStudentActivity extends BaseActivity {
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_student), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteBusStudent(AddBusStudentActivity.this, GroupDashboardActivityNew.groupId, team_id,studentData.getUserId());
                 }
@@ -166,7 +166,7 @@ public class AddBusStudentActivity extends BaseActivity {
                         addStudentReq.phone = etPhone.getText().toString();
                         addStudentReq.image=imageFragment.getmProfileImage();
                         AppLog.e(TAG, "send data : " + addStudentReq);
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         //progressBar.setVisibility(View.VISIBLE);
                         leafManager.addBusStudent(this, group_id, team_id, addStudentReq);
                     }

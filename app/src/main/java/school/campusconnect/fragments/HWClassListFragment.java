@@ -272,7 +272,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
     private void apiCall(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(binding.progressBar);
+            showLoadingBar(binding.progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {
@@ -411,7 +411,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         if (type.equalsIgnoreCase("Syllabus Tracker") && role.equalsIgnoreCase("teacher"))
         {
             LeafManager leafManager = new LeafManager();
-            showLoadingBar(binding.progressBar);
+            showLoadingBar(binding.progressBar,false);
             leafManager.getTodaySyllabusPlanList(this,GroupDashboardActivityNew.groupId,date);
             leafManager.getStaffAnalysis(this,GroupDashboardActivityNew.groupId,staffID);
         }

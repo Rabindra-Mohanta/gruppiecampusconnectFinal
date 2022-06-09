@@ -137,7 +137,7 @@ public class AuthorizedUserActivity extends BaseActivity implements LeafManager.
     private void getSearchData(String search) {
       //  showLoadingDialog();
         if(progressBar!=null)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
        // progressBar.setVisibility(View.VISIBLE);
         LeafManager manager = new LeafManager();
         manager.getAuthorizedListFromSearch(this, groupId+"", search);

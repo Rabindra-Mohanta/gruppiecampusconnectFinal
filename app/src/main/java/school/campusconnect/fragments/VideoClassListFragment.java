@@ -301,7 +301,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void getLiveClassEventApi() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
         //    progressBar.setVisibility(View.VISIBLE);
             leafManager.getLiveClassEvents(this, GroupDashboardActivityNew.groupId);
         }
@@ -310,7 +310,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void calApi(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
         //    progressBar.setVisibility(View.VISIBLE);
         leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
     }
@@ -847,7 +847,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     public void startMeetingFromActivity() {
         if (!videoClassClicked) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
             Log.e(TAG, "onTreeClick  : " + videoClassClicked);
             videoClassClicked = true;
@@ -875,7 +875,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
         if ("booth".equalsIgnoreCase(category) ||"boothVideo".equalsIgnoreCase(category) || "constituency".equalsIgnoreCase(category)) {
            // progressBar.setVisibility(View.VISIBLE);
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
         }else {
             getSubjectList(classData.getId());
@@ -892,7 +892,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     private void initializeZoom(String zoomKey, String zoomSecret, String zoomMail, String zoomPassword, String meetingId, String zoomName, String className, boolean startOrJoin) {
 
         // progressBar.setVisibility(View.VISIBLE);
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
         zoomSDK.initialize(getActivity(), zoomKey, zoomSecret, new ZoomSDKInitializeListener() {
@@ -2048,7 +2048,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     StopMeetingReq stopMeetingReq = new StopMeetingReq(item.meetingIdOnLive, subjectAdapter.getSelected());
                     AppLog.e(TAG, "stopMeetingReq : " + stopMeetingReq);
 
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
 
                     leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), stopMeetingReq);
@@ -2061,7 +2061,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 // progressBar.setVisibility(View.VISIBLE);
                 leafManager.endLiveClass(VideoClassListFragment.this, GroupDashboardActivityNew.groupId, item.getId(), new StopMeetingReq(item.meetingIdOnLive));
             }
@@ -2132,7 +2132,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void getSubjectList(String teamId) {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         // progressBar.setVisibility(View.VISIBLE);
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
     }

@@ -96,7 +96,7 @@ public class AddIssueActivity extends BaseActivity implements LeafManager.OnAddU
                     request.issue = etName.getText().toString();
                     request.jurisdiction = etJurisdiction.getText().toString();
                     request.dueDays = etDate.getText().toString();
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                     AppLog.e(TAG, "request :" + request);
                     leafManager.addIssue(this, GroupDashboardActivityNew.groupId, request);

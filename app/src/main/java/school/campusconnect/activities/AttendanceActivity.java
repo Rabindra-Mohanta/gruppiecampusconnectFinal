@@ -264,7 +264,7 @@ public class AttendanceActivity extends BaseActivity implements AttendanceAdapte
             showNoNetworkMsg();
             return;
         }
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
        // progressBar.setVisibility(View.VISIBLE);
 
 
@@ -318,7 +318,7 @@ public class AttendanceActivity extends BaseActivity implements AttendanceAdapte
             showNoNetworkMsg();
             return;
         }
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
         leafManager.importStudent(this, groupId, teamId);
     }
@@ -371,7 +371,7 @@ public class AttendanceActivity extends BaseActivity implements AttendanceAdapte
             showNoNetworkMsg();
             return;
         }
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
     //    progressBar.setVisibility(View.VISIBLE);
         leafManager.getAttendance(this, groupId, teamId);
     }

@@ -270,7 +270,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     //progressBar.setVisibility(View.VISIBLE);
               //  btnShare.setEnabled(false);
 

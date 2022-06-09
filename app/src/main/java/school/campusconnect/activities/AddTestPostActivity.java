@@ -436,7 +436,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
             //        progressBar.setVisibility(View.VISIBLE);
             //    btnShare.setEnabled(false);
 

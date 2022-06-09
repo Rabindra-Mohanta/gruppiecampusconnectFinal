@@ -75,7 +75,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     }
 
     private void getList() {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTTNew(this,GroupDashboardActivityNew.groupId,team_id);
@@ -323,7 +323,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 LeafManager leafManager=new LeafManager();
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 // progressBar.setVisibility(View.VISIBLE);
                 leafManager.deleteTTNewByDay(TimeTableListFragment2.this,GroupDashboardActivityNew.groupId,team_id,item.day);
             }
@@ -341,7 +341,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     LeafManager leafManager=new LeafManager();
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     // progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteTTNew(TimeTableListFragment2.this,GroupDashboardActivityNew.groupId,team_id);
                 }
@@ -371,7 +371,7 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
 
             holder.txt_period.setText(item.getPeriod());
             holder.txt_time.setText(item.getStartTime()+" - "+item.getEndTime());
-            holder.txt_subject_staff.setText(item.getTeacherName());
+            holder.txt_subject_staff.setText(item.getSubjectName() +"( "+item.getTeacherName()+" )");
 
           /*  holder.txt_subject.setText(item.getSubjectName());
             holder.txt_staff.setText(item.getTeacherName());*/

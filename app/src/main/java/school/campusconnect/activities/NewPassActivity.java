@@ -108,7 +108,7 @@ public class NewPassActivity extends BaseActivity {
                 newPassReq.password = layout_password.getText().toString();
                 newPassReq.confirmPassword = layout_password_conf.getText().toString();
 
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
              //   progressBar.setVisibility(View.VISIBLE);
                 manager.newPass(this, newPassReq);
             } else {

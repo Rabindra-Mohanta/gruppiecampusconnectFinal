@@ -552,7 +552,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
                 progressDialog.dismiss();
                 AppLog.e(TAG, "mainRequest :" + mainRequest);
           //      progressBar.setVisibility(View.VISIBLE);
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 leafManager.addEBook(this, GroupDashboardActivityNew.groupId, mainRequest);
             } else {
                 pdfPos = 0;

@@ -81,6 +81,7 @@ import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
 import school.campusconnect.utils.AppLog;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -91,6 +92,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -128,13 +130,13 @@ import school.campusconnect.views.SMBDialogUtils;
 public abstract class BaseActivity extends AppCompatActivity implements LeafManager.OnCommunicationListener {
 
     private Dialog mProgressDialog;
-    private ProgressDialog mProgressBar;
+    private ProgressBar mProgressBar;
     private int hot_number = 0;
     private TextView tv_noti;// = null;
     private TextView tv_select;// = null;
     private Menu menu;
     public final static int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 9;
-
+    public boolean isHide = false;
     public synchronized void showLoadingDialog() {
         try {
             if (mProgressDialog == null) {
@@ -155,23 +157,57 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
     }
 
-    public void showLoadingBar(View v) {
+    public void showLoadingBar(ProgressBar v, boolean isShow) {
         AppLog.e("PBAR showLoadingBar", "called");
-//        if (mProgressBar == null) {
-        // mProgressBar.setVisibility(View.VISIBLE);
-        // mProgressBar = v;
+
+        isHide = isShow;
+
+        if (isShow)
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (mProgressBar != null)
+                    {
+                        hideLoadingBar();
+                    }
+                    if (mProgressBar == null)
+                    {
+                        mProgressBar = v;
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+
+
+            //        if (mProgressBar == null) {
+            // mProgressBar.setVisibility(View.VISIBLE);
+            // mProgressBar = v;
 //        } else {
-        //  mProgressBar.setVisibility(View.VISIBLE);
+            //  mProgressBar.setVisibility(View.VISIBLE);
 //        }
+        }
+
     }
 
     public void hideLoadingBar() {
+
+        if (isHide)
+        {
+               if (mProgressBar == null) {
+                } else {
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mProgressBar = null;
+                }
+        }
         AppLog.e("PBAR hideLoadingBar", "called");
-       /* if (mProgressBar == null) {
-        } else {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mProgressBar = null;
-        }*/
+
     }
     public void showKeyboard(View view)
     {

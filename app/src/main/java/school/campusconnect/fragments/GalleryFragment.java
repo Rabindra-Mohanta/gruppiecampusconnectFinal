@@ -221,7 +221,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             mIsLoading = true;
             manager.getGalleryPost(this, mGroupId+"", currentPage);
         }
@@ -711,7 +711,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             LeafManager manager = new LeafManager();
             manager.deleteGalleryPost(this, mGroupId+"",currentItem.getAlbumId());
 

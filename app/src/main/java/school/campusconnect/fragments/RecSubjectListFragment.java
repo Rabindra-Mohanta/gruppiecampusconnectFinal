@@ -56,7 +56,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
         className=getArguments().getString("title");
         path=getArguments().getString("path");
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
 
         return view;

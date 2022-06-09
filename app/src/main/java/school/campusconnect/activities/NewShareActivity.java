@@ -117,7 +117,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
     }
 
     private void getData() {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
         leafManager.myTeamList(this, mGroupId + "");
     }
@@ -309,7 +309,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
 
             //    progressBar.setVisibility(View.VISIBLE);
                 AddPostRequest request = new AddPostRequest();

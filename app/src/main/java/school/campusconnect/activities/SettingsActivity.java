@@ -69,7 +69,7 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
 
     private void getSettingData() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
             manager.getSettingsData(this, groupId);
         } else {
@@ -83,26 +83,26 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
 
             case R.id.switch_post_que:
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                 //progressBar.setVisibility(View.VISIBLE);
                 manager.allowPostQue(this, groupId + "");
                 break;
 
             case R.id.switch_share:
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                 // progressBar.setVisibility(View.VISIBLE);
                 manager.allowShare(this, groupId + "");
                 break;
             case R.id.switch_everyone:
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                 // progressBar.setVisibility(View.VISIBLE);
                 manager.allowPostToAll(this, groupId + "");
                 break;
             case R.id.switch_change_admin:
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                 manager.allowChangeAdmin(this, groupId + "");
                 break;

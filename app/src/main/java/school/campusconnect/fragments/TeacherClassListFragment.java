@@ -141,7 +141,7 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
 
     private void apiCall(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if("admin".equals(role)){

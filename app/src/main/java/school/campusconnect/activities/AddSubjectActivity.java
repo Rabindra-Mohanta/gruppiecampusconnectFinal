@@ -87,7 +87,7 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_subject), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteSubjects(AddSubjectActivity.this, GroupDashboardActivityNew.groupId, subjectData.getSubjectId());
                 }
@@ -138,7 +138,7 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
                         SubjectResponse.SubjectData request = new SubjectResponse.SubjectData();
                         request.name = etName.getText().toString();
                         request.subjects = adapter.getList();
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         // progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.editSubject(this, GroupDashboardActivityNew.groupId, subjectData.subjectId, request);
@@ -146,7 +146,7 @@ public class AddSubjectActivity extends BaseActivity implements LeafManager.OnAd
                         SubjectResponse.SubjectData request = new SubjectResponse.SubjectData();
                         request.name = etName.getText().toString();
                         request.subjects = adapter.getList();
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         // progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.addSubject(this, GroupDashboardActivityNew.groupId, request);

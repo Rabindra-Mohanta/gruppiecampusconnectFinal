@@ -144,7 +144,7 @@ public class ShareGroupTeamListFragment extends BaseFragment implements LeafMana
 
     private void getData() {
         //mAdapter.clear();
-        showLoadingBar(mBinding.progressBar);
+        showLoadingBar(mBinding.progressBar,false);
         mIsLoading = true;
         manager.getGroupTeamListShare(this, currentPage);
 

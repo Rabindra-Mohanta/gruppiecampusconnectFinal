@@ -78,7 +78,7 @@ public class RemoveBannerActivity extends BaseActivity implements LeafManager.On
                 req.setBannerFileType("image");
 
                 AppLog.e(TAG, "send data : " + new Gson().toJson(req));
-                showLoadingBar(binding.progressBar);
+                showLoadingBar(binding.progressBar,false);
                 //  progressBar.setVisibility(View.VISIBLE);
              //   binding.progressBar.setVisibility(View.VISIBLE);
                 manager.addBannerList(RemoveBannerActivity.this,GroupDashboardActivityNew.groupId,req);

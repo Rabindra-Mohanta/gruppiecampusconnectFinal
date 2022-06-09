@@ -178,7 +178,7 @@ public class NotificationListFragment extends BaseFragment implements LeafManage
     {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
         //    progressBar.setVisibility(View.VISIBLE);
             mIsLoading = true;
             leafManager.getNotificationList(this,GroupDashboardActivityNew.groupId,String.valueOf(currentPage));

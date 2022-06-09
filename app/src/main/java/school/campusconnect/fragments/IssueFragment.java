@@ -68,7 +68,7 @@ public class IssueFragment extends BaseFragment implements LeafManager.OnCommuni
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         init();
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
    //     progressBar.setVisibility(View.VISIBLE);
 
         return view;

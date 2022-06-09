@@ -1282,4 +1282,5 @@
     <string name="total_end_delay">Total End Delay</string>
     <string name="total_com_on_time">Total Completed On-Time</string>
     <string name="lbl_add_image">Add Image</string>
+    <string name="toast_file_download">File is Download In : </string>
 </resources>

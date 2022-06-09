@@ -57,31 +57,33 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-
-        <activity android:name=".activities.UpdateTopicActivity"
+        <activity android:name=".utils.MultipleImageSwipeActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
-
-        <activity android:name=".activities.ApplyLeaveActivity"
+        <activity
+            android:name=".activities.UpdateTopicActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activities.StaffClassListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ApplyLeaveActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activities.EditTopicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.StaffClassListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activities.ZoomCallActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EditTopicActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activities.VideoCallingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ZoomCallActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.VideoCallingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SearchUserActivity"
             android:exported="false"

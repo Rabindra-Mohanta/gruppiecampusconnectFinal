@@ -328,7 +328,7 @@ public class Fragment_GruppieContacts extends BaseFragment implements LeafManage
         if (isConnectionAvailable()) {
             if (selected_ids.size() != 0) {
 //                if (canAdd()) {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager manager = new LeafManager();
 //            manager.addFriendToGroup(Fragment_GruppieContacts.this, groupId, fId, getActivity());
                 manager.addMultipleFriendToGroup(Fragment_GruppieContacts.this, groupId+"", getSelectedIds(), getActivity());
@@ -541,7 +541,7 @@ public class Fragment_GruppieContacts extends BaseFragment implements LeafManage
     public void onAddFriendToGroup(String fId) {
         friendId = fId;
         if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar);
+            showLoadingBar(mBinding.progressBar,false);
             LeafManager manager = new LeafManager();
 //            manager.addFriendToGroup(Fragment_GruppieContacts.this, groupId, fId, getActivity());
 //            manager.addMultipleFriendToGroup(Fragment_GruppieContacts.this, groupId, fId, getActivity());

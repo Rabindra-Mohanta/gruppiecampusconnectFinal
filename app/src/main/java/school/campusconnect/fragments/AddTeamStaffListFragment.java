@@ -79,7 +79,7 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     @Override
     public void onStart() {
         super.onStart();
-       showLoadingBar(progressBar);
+       showLoadingBar(progressBar,false);
        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this, groupId+"", teamId+"",false);
 
@@ -128,7 +128,7 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     public void onClick(View view) {
         if (adapter != null && adapter.getSelectedCount() > 0) {
             LeafManager leafManager = new LeafManager();
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
          //   progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {

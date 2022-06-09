@@ -136,7 +136,7 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_cordinate), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                 //    progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteUser(AddEditCoordinateMemberActivity.this, GroupDashboardActivityNew.groupId, studentData.id);
                 }
@@ -147,7 +147,7 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
         if(item.getItemId() == R.id.menuAllowAddMember){
             AppLog.e(TAG,"menuAllowAddMember");
             menu.findItem(R.id.menuAllowAddMember).setChecked(!menu.findItem(R.id.menuAllowAddMember).isChecked());
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //    progressBar.setVisibility(View.VISIBLE);
             leafManager.allowAddOtherMember(AddEditCoordinateMemberActivity.this, GroupDashboardActivityNew.groupId,team_id,studentData.id);
             return true;
@@ -155,7 +155,7 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
         if(item.getItemId() == R.id.menuAllowPost){
             AppLog.e(TAG,"menuAllowPost");
             menu.findItem(R.id.menuAllowPost).setChecked(!menu.findItem(R.id.menuAllowPost).isChecked());
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //    progressBar.setVisibility(View.VISIBLE);
             leafManager.allowTeamPost(AddEditCoordinateMemberActivity.this, GroupDashboardActivityNew.groupId,team_id,studentData.id);
             return true;
@@ -163,7 +163,7 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
         if(item.getItemId() == R.id.menuAllowCommnet){
             AppLog.e(TAG,"menuAllowCommnet");
             menu.findItem(R.id.menuAllowCommnet).setChecked(!menu.findItem(R.id.menuAllowCommnet).isChecked());
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //    progressBar.setVisibility(View.VISIBLE);
             leafManager.allowTeamPostComment(AddEditCoordinateMemberActivity.this, GroupDashboardActivityNew.groupId,team_id,studentData.id);
             return true;
@@ -282,7 +282,7 @@ public class AddEditCoordinateMemberActivity extends BaseActivity implements Lea
 
                     AppLog.e(TAG, "send data : " + studentData);
 
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     //    progressBar.setVisibility(View.VISIBLE);
                     if(isEdit){
                         leafManager.updateBoothsMember(this, group_id, team_id, studentData.id, studentData);

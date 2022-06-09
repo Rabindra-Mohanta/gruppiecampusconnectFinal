@@ -48,7 +48,7 @@ public class MarkCardListFragment extends BaseFragment implements LeafManager.On
 
         init();
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
      //   progressBar.setVisibility(View.VISIBLE);
 
         return view;

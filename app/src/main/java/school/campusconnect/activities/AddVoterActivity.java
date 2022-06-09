@@ -161,7 +161,7 @@ public class AddVoterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void callDeleteApi() {
-        showLoadingBar(binding.progressBar);
+        showLoadingBar(binding.progressBar,false);
         manager.deleteVoterMaster(this, GroupDashboardActivityNew.groupId, team_id, voterData.voterId);
     }
 
@@ -384,7 +384,7 @@ public class AddVoterActivity extends BaseActivity implements View.OnClickListen
 
 
                         AppLog.e(TAG, "send data : " + new Gson().toJson(req));
-                        showLoadingBar(binding.progressBar);
+                        showLoadingBar(binding.progressBar,false);
                         // binding.progressBar.setVisibility(View.VISIBLE);
                         manager.addVoterMasterList(this, GroupDashboardActivityNew.groupId, team_id, req);
                     }

@@ -480,7 +480,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
             return;
         }
     //    binding.progressBar.setVisibility(View.VISIBLE);
-        showLoadingBar(binding.progressBar);
+        showLoadingBar(binding.progressBar,false);
         manager.myTeamListV2(this, GroupDashboardActivityNew.groupId);
     }
     @Override
@@ -1356,7 +1356,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         if (!isConnectionAvailable()) {
             return;
         }
-        showLoadingBar(binding.progressBarBanner);
+        showLoadingBar(binding.progressBarBanner,false);
     //    binding.progressBarBanner.setVisibility(View.VISIBLE);
         manager.getBannerList(this,GroupDashboardActivityNew.groupId);
     }

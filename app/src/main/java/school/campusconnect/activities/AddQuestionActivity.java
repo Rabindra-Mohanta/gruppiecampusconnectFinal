@@ -273,7 +273,7 @@ public class AddQuestionActivity extends BaseActivity implements LeafManager.OnA
             if (isValid()) {
               //  showLoadingDialog();
 
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
                 //progressBar.setVisibility(View.VISIBLE);
 
 //                        if (!edtVideo.editText.getText().toString().equals("")) {

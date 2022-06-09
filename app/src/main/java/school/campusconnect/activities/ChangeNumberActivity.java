@@ -187,7 +187,7 @@ public class ChangeNumberActivity extends BaseActivity implements LeafManager.On
                     if (isValid()) {
                         //  showLoadingDialog();
                         if(progressBar!=null)
-                            showLoadingBar(progressBar);
+                            showLoadingBar(progressBar,false);
                       //      progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
                         ChangeNumberRequest request = new ChangeNumberRequest();

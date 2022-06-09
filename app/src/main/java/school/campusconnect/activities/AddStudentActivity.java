@@ -90,7 +90,7 @@ public class AddStudentActivity extends BaseActivity {
                     addStudentReq.countryCode = str[currentCountry - 1];
                     AppLog.e(TAG, "send data : " + addStudentReq);
 
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     //progressBar.setVisibility(View.VISIBLE);
                     leafManager.addStudent(this, group_id, team_id, addStudentReq);
                 }

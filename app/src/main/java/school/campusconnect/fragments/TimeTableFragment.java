@@ -164,7 +164,7 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
     {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             mIsLoading = true;
             manager.getTimeTablePost(this, mGroupId+"", currentPage);
         }
@@ -292,7 +292,7 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             LeafManager manager = new LeafManager();
             manager.deleteTimeTablePost(this, mGroupId+"",currentItem.timeTableId);
 

@@ -115,7 +115,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
                 SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_book), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                     //    progressBar.setVisibility(View.VISIBLE);
                         LeafManager leafManager = new LeafManager();
                         leafManager.deleteEBook(EBookPdfFragment.this, GroupDashboardActivityNew.groupId, data.getBooksId());

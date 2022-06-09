@@ -105,7 +105,7 @@ public class Fragment_PhoneContacts extends BaseFragment implements MyContactLis
         if(isConnectionAvailable())
         {
             LeafManager manager=new LeafManager();
-            showLoadingBar(mBinding.progressBar2);
+            showLoadingBar(mBinding.progressBar2,false);
             manager.getTeamMember(this, groupId+"", teamId+"",false);
         }
         else
@@ -206,7 +206,7 @@ public class Fragment_PhoneContacts extends BaseFragment implements MyContactLis
             if(!GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_SCHOOL) && !GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_CONSTITUENCY))
                 dialog.show();
             else
-                showLoadingBar(mBinding.progressBar2);
+                showLoadingBar(mBinding.progressBar2,false);
 
             list.clear();
             contactNames.clear();
@@ -295,7 +295,7 @@ public class Fragment_PhoneContacts extends BaseFragment implements MyContactLis
         protected void onPreExecute() {
             super.onPreExecute();
             list.clear();
-            showLoadingBar(mBinding.progressBar2);
+            showLoadingBar(mBinding.progressBar2,false);
         }
 
         @Override
@@ -575,7 +575,7 @@ public class Fragment_PhoneContacts extends BaseFragment implements MyContactLis
                     data = getSelectedIdsForShare();
                 }
                 LeafManager mManager = new LeafManager();
-                showLoadingBar(mBinding.progressBar2);
+                showLoadingBar(mBinding.progressBar2,false);
                 mManager.inviteMultipleFriends(this, groupId + "", selected_names, isFromTeam, teamId);
                 cleverTapInviteFriend(selected_names);
                 AppLog.e("MULTI_ADD", "data is " + data);

@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.LeadItem;
 import school.campusconnect.datamodel.PhoneContactsItems;
 import school.campusconnect.datamodel.issue.IssueListResponse;
 import school.campusconnect.datamodel.staff.StaffResponse;
@@ -67,6 +69,8 @@ public class SelectContactActivity extends BaseActivity {
     private ArrayList<String> mobileList;
     private StaffAdapter adapter;
 
+    ArrayList<LeadItem> listMember = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,13 @@ public class SelectContactActivity extends BaseActivity {
         rvClass.setLayoutManager(new LinearLayoutManager(this));
         mobileList = getIntent().getStringArrayListExtra("mobileList");
 
+
+
+        for (int i= 0;i<mobileList.size();i++)
+        {
+            Log.e(TAG,"List Member Size "+mobileList.get(i));
+
+        }
         databaseHandler = new DatabaseHandler(this);
 
         adapter=new StaffAdapter();
@@ -175,7 +186,7 @@ public class SelectContactActivity extends BaseActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             list.clear();
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
         }
 

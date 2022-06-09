@@ -188,7 +188,7 @@ public class CalendarActivity extends BaseActivity {
                     AddEventReq addEventReq=new AddEventReq();
                     addEventReq.setText(etTitle.getText().toString());
                     addEventReq.setType(rbtEvent.isChecked()?"event":"holiday");
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                     leafManager.addEvent(CalendarActivity.this,GroupDashboardActivityNew.groupId,addEventReq,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
                     dialog.dismiss();
@@ -380,14 +380,14 @@ public class CalendarActivity extends BaseActivity {
 
     private void getEventInMonth(){
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         // progressBar.setVisibility(View.VISIBLE);
         leafManager.getEventList(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
     }
     private void getEventInDay(){
 
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
         // progressBar.setVisibility(View.VISIBLE);
         leafManager.getEventInDay(this,GroupDashboardActivityNew.groupId,selected.get(Calendar.DAY_OF_MONTH),selected.get(Calendar.MONTH)+1,selected.get(Calendar.YEAR));
 
@@ -512,7 +512,7 @@ public class CalendarActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                //   progressBar.setVisibility(View.VISIBLE);
-                  showLoadingBar(progressBar);
+                  showLoadingBar(progressBar,false);
                   leafManager.deleteEvent(CalendarActivity.this,GroupDashboardActivityNew.groupId,eventInDayData.getEventId());
             }
         });

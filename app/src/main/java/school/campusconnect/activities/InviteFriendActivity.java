@@ -187,7 +187,7 @@ public class InviteFriendActivity extends BaseActivity implements View.OnClickLi
             if (isConnectionAvailable()) {
                 if (isValid()) {
                     if (progressBar != null)
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                      //   progressBar.setVisibility(View.VISIBLE);
                      request = new AddLeadRequest();
                     request.name = edtLeadName.editText.getText().toString();

@@ -97,7 +97,7 @@ public class GroupListFragment extends BaseFragment implements GroupAdapter.OnGr
                     getData();
                    AppLog.e("Data", "DataFromAPI");
                 } else {
-                  showLoadingBar(mBinding.progressBar);
+                  showLoadingBar(mBinding.progressBar,false);
                     for (int i = 0; i < dataItemList.size(); i++) {
                         if (!dataItemList.get(i).id.equals(Constants.VIVID_GROUP_ID)) {
                             groupLocalDataItem = new GroupItem();
@@ -123,7 +123,7 @@ public class GroupListFragment extends BaseFragment implements GroupAdapter.OnGr
                    AppLog.e("Data", "DataFromLocal");
                 }
             } else {
-               showLoadingBar(mBinding.progressBar);
+               showLoadingBar(mBinding.progressBar,false);
                 for (int i = 0; i < dataItemList.size(); i++) {
                     if (!dataItemList.get(i).id.equals(Constants.VIVID_GROUP_ID)) {
                         groupLocalDataItem = new GroupItem();
@@ -214,7 +214,7 @@ public class GroupListFragment extends BaseFragment implements GroupAdapter.OnGr
     private void getData() {
         if(isConnectionAvailable())
         {
-            showLoadingBar(mBinding.progressBar);
+            showLoadingBar(mBinding.progressBar,false);
             mManager.getGroupList(this);
         }
         else {
@@ -371,7 +371,7 @@ public class GroupListFragment extends BaseFragment implements GroupAdapter.OnGr
        /* if(isConnectionAvailable() && getActivity()!=null)
         {
 
-            showLoadingBar(mBinding.progressBar);
+            showLoadingBar(mBinding.progressBar,false);
             mManager.getAllContactsList(GroupListFragment.this*//*, 1*//*);
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISALLCONTACTSAVED, true);
         }

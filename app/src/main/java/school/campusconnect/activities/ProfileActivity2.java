@@ -111,7 +111,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         initviews();
 
         if(progressBar!=null)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
 
         LeafManager manager = new LeafManager();
@@ -212,7 +212,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
     public void callUpdateApi() {
         if (isValid()) {
             if(progressBar!=null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
             //progressBar.setVisibility(View.VISIBLE);
 
             LeafManager manager = new LeafManager();

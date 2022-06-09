@@ -136,7 +136,7 @@ public class AllUserListActivity extends BaseActivity implements LeafManager.OnC
         {
            // showLoadingDialog();
             if(progressBar!=null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
            // progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.getAllUsersListBySearch(this, groupId+"", search);

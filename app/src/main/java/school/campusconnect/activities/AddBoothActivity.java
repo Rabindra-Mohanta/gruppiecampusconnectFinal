@@ -132,7 +132,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_dialog_delete_class), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                   //  progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteTeam(AddBoothActivity.this, GroupDashboardActivityNew.groupId, classData.teamId);
                 }
@@ -260,7 +260,7 @@ public class AddBoothActivity extends BaseActivity implements LeafManager.OnAddU
                         request.boothAddress = etBoothAddress.getText().toString();
                         request.aboutBooth = etAboutBooth.getText().toString();
 
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                     //    progressBar.setVisibility(View.VISIBLE);
 
                         AppLog.e(TAG, "request :" + request);

@@ -502,7 +502,7 @@ public class AddEBookActivity2 extends BaseActivity implements LeafManager.OnAdd
 
         progressDialog.dismiss();
         AppLog.e(TAG, "addEbookReq2 :" + addEbookReq2);
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
         leafManager.addEBook2(this, group_id, team_id, addEbookReq2);
     }

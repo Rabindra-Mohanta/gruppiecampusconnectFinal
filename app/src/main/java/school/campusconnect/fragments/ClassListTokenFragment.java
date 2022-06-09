@@ -54,7 +54,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
        // progressBar.setVisibility(View.VISIBLE);
 
         return view;
@@ -221,7 +221,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
         SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), getResources().getString(R.string.smb_add_jitsi_token), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
              //   progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.addJitiToken(ClassListTokenFragment.this, GroupDashboardActivityNew.groupId, classData.getId());

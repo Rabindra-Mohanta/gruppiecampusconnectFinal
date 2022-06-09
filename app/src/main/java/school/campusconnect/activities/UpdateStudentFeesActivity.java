@@ -318,7 +318,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
                     }
 
                     if (validateFees()) {
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                //         progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + updateStudentFees);
                         leafManager.addStudentPaidFees(this, GroupDashboardActivityNew.groupId, teamId, studentFees.studentDbId, updateStudentFees);

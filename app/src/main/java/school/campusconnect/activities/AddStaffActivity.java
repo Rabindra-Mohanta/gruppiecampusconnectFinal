@@ -162,7 +162,7 @@ public class AddStaffActivity extends BaseActivity {
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_staff), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                    // progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteStaff(AddStaffActivity.this, GroupDashboardActivityNew.groupId, studentData.getUserId());
                 }
@@ -174,7 +174,7 @@ public class AddStaffActivity extends BaseActivity {
             SMBDialogUtils.showSMBDialogOKCancel(this, isPost ? getResources().getString(R.string.smb_remove_from_admin) : getResources().getString(R.string.dialog_are_you_want_to_make_admin), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,false);
                     // progressBar.setVisibility(View.VISIBLE);
                     if (isPost) {
                         leafManager.notAllowPost(AddStaffActivity.this, group_id + "", studentData.userId + "");
@@ -308,14 +308,14 @@ public class AddStaffActivity extends BaseActivity {
                         }
                         addStudentReq.phone = null;
                         AppLog.e(TAG, "send data update : " + new Gson().toJson(addStudentReq));
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         // progressBar.setVisibility(View.VISIBLE);
                         leafManager.editStaff(this, group_id, studentData.getUserId(), addStudentReq);
                     } else {
                         addStudentReq.phone = etPhone.getText().toString();
                         addStudentReq.image = imageFragment.getmProfileImage();
                         AppLog.e(TAG, "send data : " + new Gson().toJson(addStudentReq));
-                        showLoadingBar(progressBar);
+                        showLoadingBar(progressBar,false);
                         // progressBar.setVisibility(View.VISIBLE);
                         leafManager.addStaff(this, group_id, addStudentReq);
                     }
@@ -407,7 +407,7 @@ public class AddStaffActivity extends BaseActivity {
                 String[] str = getResources().getStringArray(R.array.array_country_values);
                 req.countryCode = str[currentCountry - 1];
                 req.phone = etPhone.getText().toString();
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,false);
              //   progressBar.setVisibility(View.VISIBLE);
                 leafManager.editStaffPhone(this, group_id, studentData.getUserId(), req);
                 break;

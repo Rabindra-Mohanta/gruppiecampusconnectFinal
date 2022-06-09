@@ -100,7 +100,7 @@ public class PaidFeesFragment extends BaseFragment implements LeafManager.OnComm
         } else {
             filter = "approved";
         }
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,false);
      //   progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getPaidStudentList(this, GroupDashboardActivityNew.groupId,filter,selectedClassId);

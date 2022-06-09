@@ -207,21 +207,21 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
     private void getData() {
         switch (type) {
             case "group": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
                 mManager.getGroupReply(this, groupId+"", postId+"", commentId+"", currentPage);
                 break;
             }
             case "team": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
                 mManager.getTeamReply(this, groupId+"", teamId+"", postId+"", commentId+"", currentPage);
                 break;
             }
             case "personal": {
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
                 mManager.getPersonalReply(this, groupId, postId, commentId,selectedUserId, currentPage);
@@ -234,7 +234,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
         switch (type) {
             case "group": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -246,7 +246,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
             }
             case "team": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -258,7 +258,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
             }
             case "personal": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -432,7 +432,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
     @Override
     public void onLikeClick(GroupCommentItem item, int pos) {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(mBinding.progressBar);
+        showLoadingBar(mBinding.progressBar,false);
         this.position = pos;
 
         if (type.equals("group"))
@@ -544,7 +544,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
         switch (type) {
             case "group": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -555,7 +555,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
             }
             case "team": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -566,7 +566,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
             }
             case "personal": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -582,7 +582,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
         switch (type) {
             case "group": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -591,7 +591,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
             }
             case "team": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 
@@ -600,7 +600,7 @@ public class ReplyFragment extends BaseFragment implements LeafManager.OnAddUpda
             }
             case "personal": {
                 //showLoadingDialog("Please wait...");
-                showLoadingBar(mBinding.progressBar);
+                showLoadingBar(mBinding.progressBar,false);
                 LeafManager mManager = new LeafManager();
                 mIsLoading = true;
 

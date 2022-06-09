@@ -165,7 +165,7 @@ public class ShareGroupListFragment extends BaseFragment implements LeafManager.
 
     private void getData() {
         //mAdapter.clear();
-        showLoadingBar(mBinding.progressBar);
+        showLoadingBar(mBinding.progressBar,false);
         mIsLoading = true;
         if (isTeam)
             manager.getSelectTeamListShare(this, selected_group_id, currentPage);
@@ -175,7 +175,7 @@ public class ShareGroupListFragment extends BaseFragment implements LeafManager.
     }
 
     private void shareData() {
-        showLoadingBar(mBinding.progressBar);
+        showLoadingBar(mBinding.progressBar,false);
         mIsLoading = true;
         if (GroupDashboardActivityNew.share_type.equals("group")) {
             if (isTeam)
