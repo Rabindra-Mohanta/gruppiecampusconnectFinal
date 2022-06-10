@@ -73,7 +73,7 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
 
         if (data.getFileName() != null && data.getFileName().size()>0)
         {
-            Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.binding.imgTicket,
+            Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(holder.binding.imgTicket,
                     new Callback() {
                         @Override
                         public void onSuccess() {
@@ -83,7 +83,7 @@ public class TicketsAdapter extends RecyclerView.Adapter<TicketsAdapter.ViewHold
                         @Override
                         public void onError() {
 
-                            Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).fit().centerCrop().into(holder.binding.imgTicket, new Callback() {
+                            Picasso.with(mContext).load(Constants.decodeUrlToBase64(data.getFileName().get(0).toString())).placeholder(R.drawable.placeholder_image).into(holder.binding.imgTicket, new Callback() {
                                 @Override
                                 public void onSuccess() {
 

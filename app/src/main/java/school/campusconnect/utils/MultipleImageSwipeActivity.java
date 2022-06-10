@@ -1,5 +1,6 @@
 package school.campusconnect.utils;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
@@ -11,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,8 +20,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
@@ -34,25 +39,28 @@ import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.AddGalleryPostActivity;
 import school.campusconnect.activities.BaseActivity;
+import school.campusconnect.activities.FullScreenActivity;
 import school.campusconnect.adapters.MultiImageAdapter;
 import school.campusconnect.adapters.TeamListAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityMultipleImageSwipeBinding;
 import school.campusconnect.databinding.ItemPagerBinding;
+import school.campusconnect.views.TouchImageView;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class MultipleImageSwipeActivity extends BaseActivity {
 
    ActivityMultipleImageSwipeBinding binding;
-
+    public static String TAG = "MultipleImageSwipeActivity";
     ArrayList<String> listImages;
-
+    ImageAdapter adapter;
 
 
     private String album_id = "",type = "";
     private boolean isEdit = false;
 
+    private int currentPage =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +74,8 @@ public class MultipleImageSwipeActivity extends BaseActivity {
 
         Log.e("FullScreenMultiActivity","isEdit"+isEdit+"\n type"+type+"\nalbum id"+album_id);
 
-
+        adapter = new ImageAdapter(this,listImages);
+        binding.viewPager.setAdapter(adapter);
 
         for (String s : listImages) {
             Log.e("Images", s);
@@ -76,7 +85,7 @@ public class MultipleImageSwipeActivity extends BaseActivity {
         binding.iconBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                finish();
             }
         });
 
@@ -98,6 +107,16 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                 intent.putExtra("album_id", album_id);
                 intent.putExtra("type", type);
                 startActivity(intent);
+            }
+        });
+
+        binding.iconRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.e(TAG,"current page"+currentPage);
+                adapter.rotateImage(currentPage);
+
             }
         });
 
@@ -162,9 +181,25 @@ public class MultipleImageSwipeActivity extends BaseActivity {
             }
         });
 
-        ImageAdapter adapter = new ImageAdapter(this,listImages);
-        binding.viewPager.setAdapter(adapter);
 
+        binding.viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                 currentPage = position;
+                 adapter.rotateAllImage(currentPage);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -176,37 +211,78 @@ public class MultipleImageSwipeActivity extends BaseActivity {
     public class ImageAdapter extends PagerAdapter {
         Context context;
         ArrayList<String> listImages;
+        ArrayList<TouchImageView> imageViews = new ArrayList<>();
         LayoutInflater mLayoutInflater;
         AmazoneImageDownload asyncTask;
         String imagePreviewUrl;
-        ItemPagerBinding itemView;
+        private int currentPage;
         ImageAdapter(Context context,ArrayList<String> listImages){
             this.listImages = listImages;
             this.context=context;
             imagePreviewUrl = LeafPreference.getInstance(context).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
-            mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         @Override
         public int getCount() {
             return listImages.size();
         }
 
+        public void addView(TouchImageView imageView,int position)
+        {
+            imageViews.add(imageView);
+        }
+
+
+        public void rotateImage(int position)
+        {
+
+            float r = imageViews.get(position).getRotation();
+            r = r+90;
+            if(r>360){
+                r=90;
+            }
+            imageViews.get(position).setRotation(r);
+        }
+
+        public void rotateAllImage(int position)
+        {
+            for (int b = 0;b<imageViews.size();b++)
+            {
+                if (position != b)
+                {
+                    imageViews.get(b).setRotation(0);
+                }
+            }
+        }
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return super.getItemPosition(object);
+        }
+
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view.equals(object);
+            return view == ((RelativeLayout) object);
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
-            itemView = DataBindingUtil.inflate(mLayoutInflater,R.layout.item_pager,container,false);
+            mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View viewLayout = mLayoutInflater.inflate(R.layout.item_pager, container, false);
 
-            container.addView(itemView.getRoot());
+            FrameLayout llProgress = (FrameLayout) viewLayout.findViewById(R.id.llProgress);
+            ImageView ivDownload = (ImageView) viewLayout.findViewById(R.id.ivDownload);
+            TouchImageView ivImage = (TouchImageView) viewLayout.findViewById(R.id.ivImage);
+            ProgressBar progressBar = (ProgressBar) viewLayout.findViewById(R.id.progressBar);
+            ImageView imgCancel = (ImageView) viewLayout.findViewById(R.id.imgCancel);
+         /*   ImageView iconShareExternal = (ImageView) viewLayout.findViewById(R.id.iconShareExternal);
+            ImageView iconBack = (ImageView) viewLayout.findViewById(R.id.iconBack);
+            ImageView iconAdd = (ImageView) viewLayout.findViewById(R.id.iconAdd);
+            ImageView iconRotate = (ImageView) viewLayout.findViewById(R.id.iconRotate);*/
 
             if(AmazoneImageDownload.isImageDownloaded(listImages.get(position))){
-                itemView.llProgress.setVisibility(View.GONE);
-                itemView.ivDownload.setVisibility(View.GONE);
-                Picasso.with(context).load(AmazoneImageDownload.getDownloadPath(listImages.get(position))).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(itemView.ivImage, new Callback() {
+                llProgress.setVisibility(View.GONE);
+                ivDownload.setVisibility(View.GONE);
+                Picasso.with(context).load(AmazoneImageDownload.getDownloadPath(listImages.get(position))).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -223,7 +299,7 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                 {
                     String path = Constants.decodeUrlToBase64(listImages.get(position));
                     String newStr = path.substring(path.indexOf("/images")+1);
-                    Picasso.with(context).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(itemView.ivImage, new Callback() {
+                    Picasso.with(context).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
                         @Override
                         public void onSuccess() {
 
@@ -234,25 +310,23 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                             Log.e("Picasso", "Error : ");
                         }
                     });
-                    itemView.ivDownload.setVisibility(View.VISIBLE);
+                    ivDownload.setVisibility(View.VISIBLE);
                 }
             }
 
-
-
-            itemView.ivDownload.setOnClickListener(new View.OnClickListener() {
+            ivDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemView.ivDownload.setVisibility(View.GONE);
-                    itemView.llProgress.setVisibility(View.VISIBLE);
-                    itemView.progressBar.setVisibility(View.VISIBLE);
+                    ivDownload.setVisibility(View.GONE);
+                    llProgress.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     asyncTask = AmazoneImageDownload.download(context, listImages.get(position), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                         @Override
                         public void onDownload(File file) {
-                            itemView.llProgress.setVisibility(View.GONE);
-                            itemView.progressBar.setVisibility(View.GONE);
+                            llProgress.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
 
-                            Picasso.with(context).load(file).placeholder(R.drawable.placeholder_image).fit().into(itemView.ivImage, new Callback() {
+                            Picasso.with(context).load(file).placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
                                 @Override
                                 public void onSuccess() {
 
@@ -270,8 +344,8 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                             ((Activity)context).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    itemView.llProgress.setVisibility(View.GONE);
-                                    itemView.progressBar.setVisibility(View.GONE);
+                                    llProgress.setVisibility(View.GONE);
+                                    progressBar.setVisibility(View.GONE);
 
 
                                 }
@@ -284,9 +358,9 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                                 @Override
                                 public void run() {
                                     if(progress>0){
-                                        itemView.progressBar.setVisibility(View.GONE);
+                                        progressBar.setVisibility(View.GONE);
                                     }
-                                    itemView.progressBar.setProgress(progress);
+                                    progressBar.setProgress(progress);
                                 }
                             });
                         }
@@ -296,19 +370,32 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                  }
             });
 
-            itemView.imgCancel.setOnClickListener(new View.OnClickListener() {
+            imgCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     asyncTask.cancel(true);
                 }
             });
 
-            return itemView;
+            addView(ivImage,position);
+
+
+            ivImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent i = new Intent(getApplicationContext(), FullScreenActivity.class);
+                    i.putExtra("image", listImages.get(position));
+                    startActivity(i);
+                }
+            });
+            container.addView(viewLayout);
+            return viewLayout;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((LinearLayout)object);
+            ((ViewPager) container).removeView((RelativeLayout) object);
         }
     }
 }

@@ -22,8 +22,17 @@
                 android:layout_width="?attr/actionBarSize"
                 android:padding="@dimen/padding_15dp"
                 android:src="@drawable/ic_add_post_new"
-                android:layout_toLeftOf="@id/iconShareExternal"
+                android:layout_toLeftOf="@id/iconRotate"
                 android:layout_height="?attr/actionBarSize" />
+
+
+            <ImageView
+                android:id="@+id/iconRotate"
+                android:layout_width="50dp"
+                android:padding="@dimen/padding_10dp"
+                android:layout_toLeftOf="@id/iconShareExternal"
+                android:src="@drawable/icon_rorate_right"
+                android:layout_height="50dp" />
 
             <ImageView
                 android:id="@+id/iconShareExternal"
