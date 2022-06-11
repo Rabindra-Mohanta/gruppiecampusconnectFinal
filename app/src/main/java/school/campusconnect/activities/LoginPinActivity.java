@@ -86,6 +86,57 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
             if (LeafPreference.getInstance(this).getBoolean(LeafPreference.FINGERPRINT))
             {
                 binding.llFingerPrint.setVisibility(View.VISIBLE);
+
+                if (checkBiometricSupport())
+                {
+                    BiometricPrompt biometricPrompt = null;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        biometricPrompt = new BiometricPrompt.Builder(LoginPinActivity.this)
+                                .setTitle("Finger Print")
+                                .setDescription("This app uses biometric authentication to protect your data.")
+                                .setNegativeButton(getResources().getString(R.string.lbl_cancel), getMainExecutor(),
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Log.e(TAG,"CancellationSignal Click");
+                                            }
+                                        })
+                                .build();
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        biometricPrompt.authenticate(getCancellationSignal(), getMainExecutor(), new BiometricPrompt.AuthenticationCallback() {
+                            @Override
+                            public void onAuthenticationError(int errorCode, CharSequence errString) {
+                                super.onAuthenticationError(errorCode, errString);
+                                Toast.makeText(getApplicationContext(),errString,Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,"onAuthenticationError "+errString);
+
+                            }
+
+                            @Override
+                            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+                                super.onAuthenticationHelp(helpCode, helpString);
+                                Toast.makeText(getApplicationContext(),helpString,Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,"onAuthenticationHelp "+helpString);
+                            }
+
+                            @Override
+                            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                                super.onAuthenticationSucceeded(result);
+                                Log.e(TAG,"onAuthenticationSucceeded ");
+                                gotoHomeScreenThroughSplash();
+                            }
+
+                            @Override
+                            public void onAuthenticationFailed() {
+                                super.onAuthenticationFailed();
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.error),Toast.LENGTH_SHORT).show();
+                                Log.e(TAG,"onAuthenticationFailed ");
+                            }
+                        });
+                    }
+                }
+
             }
             else
             {
@@ -191,13 +242,13 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
         binding.btnAddFingerPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (checkBiometricSupport())
+
                 {
                     BiometricPrompt biometricPrompt = null;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         biometricPrompt = new BiometricPrompt.Builder(LoginPinActivity.this)
-                                .setTitle("Set FingerPrint")
+                                .setTitle("Finger Print")
                                 .setDescription("This app uses biometric authentication to protect your data.")
                                 .setNegativeButton(getResources().getString(R.string.lbl_cancel), getMainExecutor(),
                                         new DialogInterface.OnClickListener() {
@@ -241,6 +292,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                         });
                     }
                 }
+
             }
         });
     }
