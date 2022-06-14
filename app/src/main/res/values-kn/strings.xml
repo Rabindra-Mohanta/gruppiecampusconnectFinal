@@ -1283,4 +1283,6 @@
     <string name="total_com_on_time">Total Completed On-Time</string>
     <string name="lbl_add_image">Add Image</string>
     <string name="toast_file_download">File is Download In : </string>
+
+    <string name="menu_staff_attendance">Staff Attendance</string>
 </resources>

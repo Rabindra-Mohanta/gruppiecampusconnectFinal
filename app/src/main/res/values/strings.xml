@@ -876,6 +876,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="menu_sync_contact">Sync Contacts</string>
     <string name="menu_zoom_meeting">Zoom Meeting</string>
     <string name="menu_close">Close</string>
+    <string name="menu_staff_attendance">Staff Attendance</string>
     <string name="menu_leave_team">Leave Team</string>
     <string name="menu_edit_team">Edit Team</string>
     <string name="menu_add_team">Add Team</string>

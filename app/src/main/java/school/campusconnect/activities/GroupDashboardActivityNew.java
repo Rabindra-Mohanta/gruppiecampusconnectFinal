@@ -2393,7 +2393,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("type", group.type);
             intent.putExtra("role", group.role);
             startActivity(intent);
-        } else if (group.type.equals("Test")) {
+        }
+        else if (group.type.equals("Test")) {
             LeafPreference.getInstance(this).remove(groupId + "_TEST_EXAM_NOTI_COUNT");
             Intent intent;
             if ("admin".equalsIgnoreCase(group.role)) {

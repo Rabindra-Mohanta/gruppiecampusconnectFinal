@@ -3,6 +3,8 @@ package school.campusconnect.activities;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -40,21 +42,25 @@ public class TeacherClassActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
-/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_class,menu);
+        getMenuInflater().inflate(R.menu.menu_staff_attendance,menu);
+
+        if (getIntent().getExtras().getString("role") != null && getIntent().getExtras().getString("role").equalsIgnoreCase("admin"))
+        {
+            menu.findItem(R.id.menuStaffAttendance).setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_add_class:
-                startActivity(new Intent(this,AddClassActivity.class));
+            case R.id.menuStaffAttendance:
+
                 return true;
              default:
                  return super.onOptionsItemSelected(item);
         }
-    }*/
+    }
 }
