@@ -1,5 +1,6 @@
 package school.campusconnect.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
@@ -31,7 +32,6 @@ public class TeacherClassActivity extends BaseActivity {
         setBackEnabled(true);
         setTitle(getResources().getString(R.string.lbl_select_class));
 
-
         TeacherClassListFragment classListFragment=new TeacherClassListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
@@ -57,7 +57,7 @@ public class TeacherClassActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menuStaffAttendance:
-
+                startActivity(new Intent(getApplicationContext(),StaffAttendanceActivity.class));
                 return true;
              default:
                  return super.onOptionsItemSelected(item);

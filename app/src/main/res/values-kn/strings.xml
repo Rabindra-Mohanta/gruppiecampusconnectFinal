@@ -1285,4 +1285,5 @@
     <string name="toast_file_download">File is Download In : </string>
 
     <string name="menu_staff_attendance">Staff Attendance</string>
+    <string name="lbl_session">Session</string>
 </resources>

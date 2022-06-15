@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.http.Url;
+import school.campusconnect.activities.StaffAttendanceActivity;
 import school.campusconnect.datamodel.ConstituencyRes;
 import school.campusconnect.datamodel.CoursePostResponse;
 import school.campusconnect.datamodel.LeaveReq;
@@ -44,6 +45,10 @@ import school.campusconnect.datamodel.profileCaste.CasteResponse;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.searchUser.SearchUserModel;
+import school.campusconnect.datamodel.staff.ApprovalStaffAttendanceRes;
+import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
+import school.campusconnect.datamodel.staff.StaffAttendanceRes;
+import school.campusconnect.datamodel.staff.TakeAttendanceReq;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
@@ -2024,7 +2029,24 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<StaffAnalysisRes> getAnalysisOfStaff(@Path("group_id") String group_id, @Query("staffId") String staffId);
 
+    @GET("api/v1/groups/{group_id}/staff/attendance/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StaffAttendanceRes> getStaffAttendance(@Path("group_id") String group_id,@Query("day") int day, @Query("month") int month, @Query("year") int year);
 
 
+/*
+    @GET("api/v1/groups/{group_id}/staff/attendance/get/approval?")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ApprovalStaffAttendanceRes> getApprovalStaffAttendance(@Path("group_id") String group_id, @Query("day") String day, @Query("month") String month, @Query("year") String year);
+*/
+
+
+    @POST("api/v1/groups/{group_id}/staff/attendance/take")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> takeStaffAttendance(@Path("group_id") String group_id,@Body TakeAttendanceReq req);
+
+    @PUT("api/v1/groups/{group_id}//attendance/staff/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> changeStaffAttendance(@Path("group_id") String group_id,@Body ChangeStaffAttendanceReq req);
 
 }

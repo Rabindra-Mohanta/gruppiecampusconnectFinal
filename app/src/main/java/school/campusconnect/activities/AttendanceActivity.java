@@ -402,6 +402,7 @@ public class AttendanceActivity extends BaseActivity implements AttendanceAdapte
 
 
         boolean[] isEdit = {true};
+
         Dialog dialogEdit = new Dialog(AttendanceActivity.this, R.style.AppDialog);
         dialogEdit.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogEdit.setContentView(R.layout.dialog_edit_attendance);

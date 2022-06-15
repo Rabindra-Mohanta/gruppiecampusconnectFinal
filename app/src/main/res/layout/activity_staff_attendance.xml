@@ -18,27 +18,90 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-
-        <LinearLayout
-            android:id="@+id/llTitle"
-            android:layout_below="@id/topbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding_15dp"
-                android:text="@string/name"
-                android:paddingLeft="@dimen/padding_10dp"
-                style="@style/LabelNormal"
-                android:textColor="@color/black"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
         <RelativeLayout
-            android:id="@+id/rvAttendance"
-            android:layout_below="@id/llTitle"
+            android:layout_margin="@dimen/padding_5dp"
+            android:layout_marginBottom="@dimen/padding_10dp"
+            android:layout_above="@+id/btnSubmit"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_below="@id/topbar"
+            android:background="@drawable/border_bg"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/llTitle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_button_height"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvSubject"
+                    style="@style/LabelNormal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:textAllCaps="true"
+                    android:text="@string/name" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/padding_10dp"
+                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:background="@color/black" />
+                <TextView
+                    android:id="@+id/tvMax"
+                    style="@style/LabelNormal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:text="M" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/padding_10dp"
+                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:background="@color/black" />
+                <TextView
+                    android:id="@+id/tvMin"
+                    style="@style/LabelNormal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:text="A" />
+
+            </LinearLayout>
+            <View
+                android:id="@+id/view"
+                android:layout_below="@id/llTitle"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAttendance"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                tools:listitem="@layout/item_staff_attendance"
+                android:layout_below="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="120dp"
+            android:text="@string/lbl_submit"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/add_post_button_bg"
+            android:layout_marginBottom="@dimen/padding_5dp"
+            android:layout_marginTop="@dimen/padding_5dp"
+            android:layout_height="40dp" />
 
         <TextView
             android:id="@+id/txtEmpty"
@@ -50,5 +113,14 @@
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             style="@style/LabelEmptyText" />
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
     </RelativeLayout>
 </layout>
