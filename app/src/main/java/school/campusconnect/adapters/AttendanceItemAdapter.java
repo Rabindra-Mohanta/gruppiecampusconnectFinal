@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,10 +68,17 @@ public class AttendanceItemAdapter extends RecyclerView.Adapter<AttendanceItemAd
             @Override
             public void onClick(View v) {
 
-                if (!data.attendance.equalsIgnoreCase("leave"))
-                {
-                    click.add(data,user,studentName);
-                }
+                click.add(data,user,studentName);
+
+            }
+        });
+
+        holder.edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                click.add(data,user,studentName);
+
             }
         });
     }
@@ -88,6 +96,9 @@ public class AttendanceItemAdapter extends RecyclerView.Adapter<AttendanceItemAd
 
         @Bind(R.id.tvAttendance)
         TextView tvAttendance;
+
+        @Bind(R.id.edit)
+        ImageView edit;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

@@ -19,6 +19,7 @@ import school.campusconnect.datamodel.attendance_report.ApplyLeaveReq;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.attendance_report.AttendenceEditRequest;
+import school.campusconnect.datamodel.attendance_report.LeaveRes;
 import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
@@ -2048,5 +2049,10 @@ public interface LeafService {
     @PUT("api/v1/groups/{group_id}//attendance/staff/edit")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> changeStaffAttendance(@Path("group_id") String group_id,@Body ChangeStaffAttendanceReq req);
+
+
+    @GET("api/v1/groups/{group_id}/teams/{teams_id}/get/leaves/applied")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<LeaveRes> getLeave(@Path("group_id") String group_id, @Path("teams_id") String teams_id, @Query("userId") String userId, @Query("date") String date, @Query("year") int year);
 
 }

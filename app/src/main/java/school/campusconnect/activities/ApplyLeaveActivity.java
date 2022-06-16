@@ -26,6 +26,7 @@ import school.campusconnect.R;
 import school.campusconnect.databinding.ActivityApplyLeaveBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.attendance_report.ApplyLeaveReq;
+import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 
@@ -98,38 +99,30 @@ public class ApplyLeaveActivity extends BaseActivity implements LeafManager.OnCo
         binding.etFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                DatePickerDialog fragment = new DatePickerDialog(ApplyLeaveActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerFragment fragment = DatePickerFragment.newInstance();
+                fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    public void onDateSelected(Calendar c) {
                         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        binding.etFromDate.setText(format.format(calendar.getTime()));
+                        binding.etFromDate.setText(format.format(c.getTime()));
                     }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                //fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
+                });
+                fragment.show(getSupportFragmentManager(), "datepicker");
             }
         });
 
         binding.etToDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                DatePickerDialog fragment = new DatePickerDialog(ApplyLeaveActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerFragment fragment = DatePickerFragment.newInstance();
+                fragment.setOnDateSelectListener(new DatePickerFragment.OnDateSelectListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    public void onDateSelected(Calendar c) {
                         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        binding.etToDate.setText(format.format(calendar.getTime()));
+                        binding.etToDate.setText(format.format(c.getTime()));
                     }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                //fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
+                });
+                fragment.show(getSupportFragmentManager(), "datepicker");
             }
         });
 

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.activities.ChatActivity;
+import school.campusconnect.activities.StaffListActivity;
 import school.campusconnect.utils.AppLog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -76,7 +77,7 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_notification).setVisible(false);
         menu.findItem(R.id.action_friend_list).setVisible(false);
-        if("teacher".equals(((ChatActivity)getActivity()).role) || "admin".equals(((ChatActivity)getActivity()).role)){
+        if("admin".equals(((ChatActivity)getActivity()).role)){
             menu.findItem(R.id.menu_add_chat).setVisible(true);
         }
     }
@@ -88,6 +89,9 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
             default:
                 return super.onOptionsItemSelected(item);
             case R.id.menu_add_chat:
+
+           //    startActivity(new Intent(getContext(), StaffListActivity.class));
+
                 Intent intent2 = new Intent(getActivity(), LeadsListActivity.class);
                 intent2.putExtra("id",  GroupDashboardActivityNew.groupId);
                 intent2.putExtra("apiCall", false);

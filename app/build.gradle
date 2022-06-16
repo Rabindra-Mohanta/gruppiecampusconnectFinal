@@ -229,11 +229,11 @@ android {
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
-                 /*  ndk {
+                   ndk {
                        // Specifies the ABI configurations of your native
                        // libraries Gradle should build and package with your APK.
                        abiFilters 'armeabi-v7a','armeabi-v8a'//
-                   }*/
+                   }
             }
     buildTypes {
         release {

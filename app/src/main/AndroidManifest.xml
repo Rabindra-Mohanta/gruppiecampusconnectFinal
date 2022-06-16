@@ -57,7 +57,11 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.StaffAttendanceActivity"></activity>
+
+        <activity android:name=".activities.StudentActivity"></activity>
+        <activity android:name=".activities.AllStaffListActivity" />
+        <activity android:name=".activities.StaffListActivity" />
+        <activity android:name=".activities.StaffAttendanceActivity" />
         <activity
             android:name=".utils.MultipleImageSwipeActivity"
             android:exported="false"

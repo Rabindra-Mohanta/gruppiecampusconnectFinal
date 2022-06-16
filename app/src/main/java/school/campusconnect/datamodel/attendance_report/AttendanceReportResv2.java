@@ -92,7 +92,7 @@ public class AttendanceReportResv2 extends BaseResponse {
 
         @SerializedName("attendance")
         @Expose
-        private Boolean attendance;
+        private String attendance;
 
         public String getTime() {
             return time;
@@ -126,11 +126,11 @@ public class AttendanceReportResv2 extends BaseResponse {
             this.date = date;
         }
 
-        public Boolean getAttendance() {
+        public String getAttendance() {
             return attendance;
         }
 
-        public void setAttendance(Boolean attendance) {
+        public void setAttendance(String attendance) {
             this.attendance = attendance;
         }
     }

@@ -125,6 +125,7 @@
     <string name="msg_unable_get_camera_image">Unable to get Camera image. Please try again.</string>
     <string name="msg_no_reply">No reply found.</string>
     <string name="msg_no_comments">No comments found.</string>
+    <string name="msg_no_report">No Report found.</string>
     <string name="msg_no_leads">No friends found.</string>
     <string name="msg_leads"></string>
     <string name="msg_no_likes">No likes found.</string>

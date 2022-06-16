@@ -20,6 +20,7 @@ import school.campusconnect.datamodel.attendance_report.ApplyLeaveReq;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
 import school.campusconnect.datamodel.attendance_report.AttendenceEditRequest;
+import school.campusconnect.datamodel.attendance_report.LeaveRes;
 import school.campusconnect.datamodel.banner.BannerAddReq;
 import school.campusconnect.datamodel.banner.BannerRes;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
@@ -546,6 +547,8 @@ public class LeafManager {
    // public static final int API_APPROVAL_STAFF_ATTENDACNCE =  348;
     public static final int API_TAKE_STAFF_ATTENDACNCE =  344;
     public static final int API_CHNAGE_STAFF_ATTENDACNCE =  349;
+
+    public static final int API_GET_LEAVE_ATTENDACNCE =  363;
     public LeafManager() {
 
     }
@@ -13266,6 +13269,44 @@ public class LeafManager {
         }.getType();
 
         wrapper.execute(API_CHNAGE_STAFF_ATTENDACNCE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnCommunicationListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
+
+
+    public void getLeave(OnCommunicationListener listListener, String group_id, String team_id,String user_id,String date,int year) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<LeaveRes> model = service.getLeave(group_id,team_id,user_id,date,year);
+        ResponseWrapper<LeaveRes> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnCommunicationListener>>() {
+        }.getType();
+
+        wrapper.execute(API_GET_LEAVE_ATTENDACNCE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {

@@ -30,6 +30,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codekidlabs.storagechooser.StorageChooser;
+
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -295,7 +297,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
         tvMonth.setText(getMonth(Month).toUpperCase());
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar,true);
         LeafManager leafManager = new LeafManager();
         leafManager.getAttendanceReportOffline(this,GroupDashboardActivityNew.groupId,selectedTeamId,Month,calendar.get(Calendar.YEAR),StartDate,EndDate);
        /* progressBar.setVisibility(View.VISIBLE);
@@ -416,7 +418,8 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
         if(getActivity()==null)
             return;
 
@@ -457,12 +460,12 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
     }
 
     public class ReportStudentAdapter extends RecyclerView.Adapter<ReportStudentAdapter.ViewHolder>
@@ -603,7 +606,19 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
                     if (i>=2)
                     {
-                        valueTV.setText(list.get(position-1).getAttendanceReport().get(i-2).getAttendance()?"P":"A");
+                        if (list.get(position-1).getAttendanceReport().get(i-2).getAttendance().equalsIgnoreCase("present"))
+                        {
+                            valueTV.setText("P");
+                        }
+                        else if (list.get(position-1).getAttendanceReport().get(i-2).getAttendance().equalsIgnoreCase("absent"))
+                        {
+                            valueTV.setText("A");
+                        }
+                        else
+                        {
+                            valueTV.setText("L");
+                        }
+                     /*   valueTV.setText(list.get(position-1).getAttendanceReport().get(i-2).getAttendance().equalsIgnoreCase("presemy")?"P":"A");*/
                         valueTV.setMinLines(2);
                         valueTV.setLayoutParams(new LinearLayout.LayoutParams(mContext.getResources().getDimensionPixelSize(R.dimen.padding_120dp), LinearLayout.LayoutParams.WRAP_CONTENT));
                     }
@@ -666,7 +681,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
+                    txtEmpty.setText(getResources().getString(R.string.msg_no_report));
                 }else {
                     txtEmpty.setText("");
                 }
@@ -675,7 +690,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             }
             else
             {
-                txtEmpty.setText(getResources().getString(R.string.msg_no_data_found));
+                txtEmpty.setText(getResources().getString(R.string.msg_no_report));
                 return 0;
             }
         }
@@ -730,6 +745,119 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
             return;
         }
 
+        StorageChooser chooser = new StorageChooser.Builder()
+                .withActivity(getActivity())
+                .withFragmentManager(getActivity().getFragmentManager())
+                .withMemoryBar(false)
+                .setType(StorageChooser.DIRECTORY_CHOOSER)
+                .disableMultiSelect()
+                .setDialogTitle("Select Folder")
+                .showFoldersInGrid(true)
+                .allowCustomPath(true)
+                .build();
+
+        chooser.show();
+
+        chooser.setOnSelectListener(
+                new StorageChooser.OnSelectListener() {
+                                        @Override
+                                        public void onSelect(String path)
+                                        {
+
+                                            File mainFolder = new File(path, LeafApplication.getInstance().getResources().getString(R.string.app_name));
+
+                                            if (!mainFolder.exists()) {
+                                                mainFolder.mkdir();
+                                            }
+                                            File csvFolder = new File(mainFolder,"Excel");
+                                            if (!csvFolder.exists()) {
+                                                csvFolder.mkdir();
+                                            }
+
+                                            File file = new File(csvFolder, classNameExcel+"_"+tvMonth.getText().toString() + ".xls");
+
+
+                                            try {
+                                                showLoadingBar(progressBar,true);
+                                                if (!file.exists()) {
+                                                    file.createNewFile();
+                                                }
+                                                HSSFWorkbook workbook = new HSSFWorkbook();
+                                                HSSFSheet firstSheet = workbook.createSheet(classNameExcel+"_"+tvMonth.getText().toString());
+
+
+                                                HSSFRow rowA = firstSheet.createRow(0);
+                                                rowA.createCell(0).setCellValue("Roll No");
+                                                rowA.createCell(1).setCellValue("Name");
+
+
+
+
+                                                for (int i = 0; i < attendanceReportListv2.get(0).getAttendanceReport().size()+2; i++) {
+
+                                                    if (i>=2)
+                                                    {
+                                                        rowA.createCell(i).setCellValue(attendanceReportListv2.get(0).getAttendanceReport().get(i-2).getDate()+"\n( "+attendanceReportListv2.get(0).getAttendanceReport().get(i-2).getSubjectName()+" )");
+                                                    }
+                                                }
+
+
+                                                for (int j = 0; j < attendanceReportListv2.size(); j++) {
+
+                                                    Log.e(TAG,"attendanceReportListv2 pos "+j);
+
+                                                    HSSFRow rowData = firstSheet.createRow(j + 1);
+                                                    rowData.createCell(0).setCellValue(attendanceReportListv2.get(j).getRollNumber());
+                                                    rowData.createCell(1).setCellValue(attendanceReportListv2.get(j).getStudentName());
+
+                                                    for (int i = 0; i < attendanceReportListv2.get(j).getAttendanceReport().size(); i++) {
+
+                                                        Log.e(TAG,"attendanceReportListv2 value "+ attendanceReportListv2.get(j).getAttendanceReport().get(i).getAttendance());
+
+                                                        if (attendanceReportListv2.get(j).getAttendanceReport().get(i).getAttendance().equalsIgnoreCase("present"))
+                                                        {
+
+                                                            rowData.createCell(i+2).setCellValue("P");
+                                                        }
+                                                        else if (attendanceReportListv2.get(j).getAttendanceReport().get(i).getAttendance().equalsIgnoreCase("absent"))
+                                                        {
+
+                                                            rowData.createCell(i+2).setCellValue("A");
+                                                        }
+                                                        else
+                                                        {
+                                                            rowData.createCell(i+2).setCellValue("L");
+                                                        }
+
+                                                    }
+                                                }
+
+
+                                                FileOutputStream fos = null;
+                                                try {
+                                                    fos = new FileOutputStream(file);
+                                                    workbook.write(fos);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                } finally {
+                                                    if (fos != null) {
+                                                        try {
+                                                            fos.flush();
+                                                            fos.close();
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }
+                                                hideLoadingBar();
+                                                Toast.makeText(getContext(),getResources().getString(R.string.toast_file_download)+file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+
+       /*
         File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
@@ -737,56 +865,9 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
         File csvFolder = new File(mainFolder,"Excel");
         if (!csvFolder.exists()) {
             csvFolder.mkdir();
-        }
-        File file = new File(csvFolder, classNameExcel+"_"+tvMonth.getText().toString() + ".xls");
-
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            HSSFWorkbook workbook = new HSSFWorkbook();
-            HSSFSheet firstSheet = workbook.createSheet(classNameExcel+"_"+tvMonth.getText().toString());
-
-            HSSFRow rowA = firstSheet.createRow(0);
-            rowA.createCell(0).setCellValue("Roll No");
-            rowA.createCell(1).setCellValue("Name");
-            rowA.createCell(2).setCellValue("Morning Attendance");
-            rowA.createCell(3).setCellValue("Evening Attendance");
+        }*/
 
 
-            if (attendanceReportList != null)
-            {
-                for(int i=0;i<attendanceReportList.size();i++){
-
-                    AttendanceReportRes.AttendanceReportData item = attendanceReportList.get(i);
-                    HSSFRow rowData = firstSheet.createRow(i + 1);
-                    rowData.createCell(0).setCellValue(item.getRollNumber());
-                    rowData.createCell(1).setCellValue(item.getStudentName());
-                    rowData.createCell(2).setCellValue(item.getMorningPresentCount()+"("+item.getTotalMorningAttendance()+")");
-                    rowData.createCell(3).setCellValue(item.getAfternoonPresentCount()+"("+item.getTotalAfternoonAttendance()+")");
-
-                }
-            }
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file);
-                workbook.write(fos);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (fos != null) {
-                    try {
-                        fos.flush();
-                        fos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            shareFile(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void shareFile(File file) {
