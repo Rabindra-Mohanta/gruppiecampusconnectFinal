@@ -218,9 +218,13 @@ public static final String TAG = "StaffAttendanceActivity";
                         if (data.getAttendance().get(i).getAttendance().equalsIgnoreCase("present"))
                         {
                             holder.binding.chMorning.setChecked(true);
+                            holder.binding.chMorning.setEnabled(false);
+                            holder.binding.llMorning.setVisibility(View.VISIBLE);
                         }
                         else{
                             holder.binding.chMorning.setChecked(false);
+                            holder.binding.chMorning.setEnabled(true);
+                            holder.binding.llMorning.setVisibility(View.GONE);
                         }
                     }
 
@@ -229,27 +233,32 @@ public static final String TAG = "StaffAttendanceActivity";
                         if (data.getAttendance().get(i).getAttendance().equalsIgnoreCase("present"))
                         {
                             holder.binding.chAfterNoon.setChecked(true);
+                            holder.binding.chAfterNoon.setChecked(false);
+                            holder.binding.llAfterNoon.setVisibility(View.VISIBLE);
                         }
                         else{
                             holder.binding.chAfterNoon.setChecked(false);
+                            holder.binding.chAfterNoon.setEnabled(true);
+                            holder.binding.llAfterNoon.setVisibility(View.GONE);
                         }
                     }
                 }
 
-                holder.binding.chAfterNoon.setClickable(false);
-                holder.binding.chMorning.setEnabled(false);
+             /*   holder.binding.chAfterNoon.setClickable(false);
+                holder.binding.chMorning.setEnabled(false);*/
             }
             else
             {
-                holder.binding.chAfterNoon.setEnabled(true);
+              /*  holder.binding.chAfterNoon.setEnabled(true);
                 holder.binding.chMorning.setEnabled(true);
                 holder.binding.chMorning.setChecked(false);
-                holder.binding.chMorning.setChecked(false);
+                holder.binding.chMorning.setChecked(false);*/
             }
 
             holder.binding.chMorning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                     if (isChecked)
                     {
                         morningAttendance.add(data.getUserId());

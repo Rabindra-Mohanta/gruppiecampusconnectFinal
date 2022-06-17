@@ -1075,10 +1075,15 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     JSONObject dataObj = new JSONObject();
                     dataObj.put("groupId", GroupDashboardActivityNew.groupId);
                     dataObj.put("createdById", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("createdByImage", LeafPreference.getInstance(getActivity()).getString(LeafPreference.PROFILE_IMAGE_NEW));
                     dataObj.put("createdByName", name);
                     dataObj.put("teamId", item.getId());
                     dataObj.put("title", title);
                     dataObj.put("Notification_type", isStart ? "videoStart" : "videoEnd");
+                    dataObj.put("iSNotificationSilent",isStart ? true : false);
+                    /*used wrong paramter name to redirect Live class list*/
+                    dataObj.put("className",isStart? getArguments().getString("title"):null);
+                    dataObj.put("zoomName",isStart? getArguments().getString("category"):null);
                     dataObj.put("body", message);
                     dataObj.put("roomName", roomName);
                     object.put("data", dataObj);

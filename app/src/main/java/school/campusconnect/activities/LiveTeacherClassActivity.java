@@ -6,29 +6,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.Manifest;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -38,21 +26,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import school.campusconnect.R;
-import school.campusconnect.database.LeafPreference;
+import school.campusconnect.service.IncomingLiveClassService;
 import school.campusconnect.service.IncomingVideoCallService;
-import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
-import school.campusconnect.utils.MixOperations;
 import school.campusconnect.utils.UploadCircleImageFragment;
-import school.campusconnect.utils.youtube.MainActivity;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.Callback {
-    public static final String TAG = "VideoCallingActivity";
-    String meetingID, zoomName, className,createdId,password;
-    String image, name;
+public class LiveTeacherClassActivity extends BaseActivity implements SurfaceHolder.Callback {
+    public static final String TAG = "LiveTeacherClassActivity";
+
+    String image, name,teamId,title,category;
     Button accept, decline;
     TextView tvCallerName;
     UploadCircleImageFragment imageFragment;
@@ -66,13 +51,10 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
 
     private String[] neededPermissions = new String[]{CAMERA, WRITE_EXTERNAL_STORAGE};
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_calling);
-
+        setContentView(R.layout.activity_live_teacher_class);
         accept = findViewById(R.id.btnStart);
         decline = findViewById(R.id.btnStop);
         tvCallerName = findViewById(R.id.tvCallerName);
@@ -81,19 +63,16 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();
         getSupportFragmentManager().executePendingTransactions();
 
-        meetingID = getIntent().getStringExtra("meetingID");
-        zoomName = getIntent().getStringExtra("zoomName");
+
         image = getIntent().getStringExtra("image");
-
-        password = getIntent().getStringExtra("password");
+        teamId = getIntent().getStringExtra("teamId");
         name = getIntent().getStringExtra("name");
-        createdId = getIntent().getStringExtra("createdID");
-
-        className = getIntent().getStringExtra("className");
+        title = getIntent().getStringExtra("title");
+        category = getIntent().getStringExtra("category");
 
         tvCallerName.setText(name);
 
-        Log.e(TAG, "meetingID " + meetingID + "\nzoomName" + zoomName + "\nclassName" + className);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
@@ -107,19 +86,20 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
             @Override
             public void onClick(View v) {
                 finish();
-                Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+
+                Intent intents = new Intent(getApplicationContext(), VideoClassActivity.class);
+                intents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intents.putExtra("title", title);
+                intents.putExtra("category",category);
+                startActivity(intents);
+
+             /*   Intent intent = new Intent("MEETING_START");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("className", className);
-                intent.putExtra("createdID",createdId);
-                intent.putExtra("password",password);
-                intent.putExtra("meetingID", meetingID);
-                intent.putExtra("zoomName", zoomName);
-                intent.putExtra("image", image);
-                intent.putExtra("name", name);
-                intent.setAction(Constants.ACCPET_ACTION_SCREEN);
-                startService(intent);
-
-
+                intent.putExtra("teamId", teamId);
+                intent.putExtra("createdByName", name);
+                intent.setAction("MEETING_START");
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+*/
             }
         });
 
@@ -127,12 +107,8 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
             @Override
             public void onClick(View v) {
                 finish();
-                Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+                Intent intent = new Intent(getApplicationContext(), IncomingLiveClassService.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("className", className);
-                intent.putExtra("createdID",createdId);
-                intent.putExtra("meetingID", meetingID);
-                intent.putExtra("zoomName", zoomName);
                 intent.setAction(Constants.DECLINE_ACTION_SCREEN);
                 startService(intent);
             }
@@ -211,7 +187,7 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
     }
 
     private void requestPermissions(String[] permissions) {
-        ActivityCompat.requestPermissions(VideoCallingActivity.this, permissions, REQUEST_CODE);
+        ActivityCompat.requestPermissions(LiveTeacherClassActivity.this, permissions, REQUEST_CODE);
     }
 
     @Override
@@ -303,7 +279,5 @@ public class VideoCallingActivity extends BaseActivity implements SurfaceHolder.
             camera = null;
         }
     }
-
-
 
 }

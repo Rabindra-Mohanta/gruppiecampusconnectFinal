@@ -2051,7 +2051,7 @@ public interface LeafService {
     Call<BaseResponse> changeStaffAttendance(@Path("group_id") String group_id,@Body ChangeStaffAttendanceReq req);
 
 
-    @GET("api/v1/groups/{group_id}/teams/{teams_id}/get/leaves/applied")
+    @GET("api/v1/groups/{group_id}/team/{teams_id}/get/leaves/applied")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<LeaveRes> getLeave(@Path("group_id") String group_id, @Path("teams_id") String teams_id, @Query("userId") String userId, @Query("date") String date, @Query("year") int year);
 

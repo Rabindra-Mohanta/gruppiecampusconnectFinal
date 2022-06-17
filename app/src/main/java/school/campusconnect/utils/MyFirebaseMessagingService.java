@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.activeandroid.ActiveAndroid;
@@ -52,6 +54,7 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VideoCallingActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.firebase.SendNotificationModel;
+import school.campusconnect.service.IncomingLiveClassService;
 import school.campusconnect.service.IncomingVideoCallService;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -126,13 +129,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     break;
 
                     case "videoStart": {
-                        Intent intent = new Intent("MEETING_START");
+                        leafPreference.setString(data.teamId + "_liveclass", new Gson().toJson(data));
+                        AppLog.e(TAG , "onMessageReceived : videoStart "+new Gson().toJson(data));
+                        startStudentService(data.teamId, data.createdByName,data.createdByImage,data.body,data.className,data.zoomName);
+                     /*   Intent intent = new Intent("MEETING_START");
                         intent.putExtra("teamId", data.teamId);
                         intent.putExtra("createdByName", data.createdByName);
                         intent.setAction("MEETING_START");
-                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-                        leafPreference.setString(data.teamId + "_liveclass", new Gson().toJson(data));
-                        AppLog.e(TAG , "onMessageReceived : videoStart "+new Gson().toJson(data));
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);*/
+
                     }
                     break;
 
@@ -224,10 +229,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                             leafPreference.setInt(data.teamId + "_post", leafPreference.getInt(data.teamId + "_post") + 1);
 
+                            Intent intent = new Intent("UPDATE_TEAM");
+                            intent.setAction("UPDATE_TEAM");
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
                         }
                         else if ("group".equalsIgnoreCase(data.postType)) {
+
+                            Log.e(TAG,"intent get action UPDATE_GROUP");
+
                             leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
+                            Intent intent = new Intent("UPDATE_GROUP");
+                            intent.setAction("UPDATE_GROUP");
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                         }
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
                         Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
@@ -273,8 +287,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     case "DELETE_POST": {
                         if ("team".equalsIgnoreCase(data.postType)) {
                             leafPreference.setBoolean(data.teamId + "_post_delete", true);
+                            Intent intent = new Intent("UPDATE_TEAM");
+                            intent.setAction("UPDATE_TEAM");
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
                         } else if ("group".equalsIgnoreCase(data.postType)) {
                             leafPreference.setBoolean(data.groupId + "_post_delete", true);
+                            Intent intent = new Intent("UPDATE_GROUP");
+                            intent.setAction("UPDATE_GROUP");
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                         }
                     }
                     break;
@@ -364,6 +385,49 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.putExtra("image",image);
             intent.setAction(Constants.STARTFOREGROUND_ACTION);
             startForegroundService(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+            intent.putExtra("msg",s);
+            intent.putExtra("password",password);
+            intent.putExtra("meetingID",meetingId);
+            intent.putExtra("zoomName",zoomName);
+            intent.putExtra("className",className);
+            intent.putExtra("name",name);
+            intent.putExtra("createdID",id);
+            intent.putExtra("image",image);
+            intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            ContextCompat.startForegroundService(getApplicationContext(),intent);
+        }
+    }
+
+
+    public void startStudentService(String teamId,String createdName,String createdImage,String msg,String title,String category) {
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent intent = new Intent(getApplicationContext(), IncomingLiveClassService.class);
+            intent.putExtra("msg",msg);
+            intent.putExtra("createdImage",createdImage);
+            intent.putExtra("createdName",createdName);
+            intent.putExtra("teamId",teamId);
+            intent.putExtra("title",title);
+            intent.putExtra("category",category);
+            intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startForegroundService(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(getApplicationContext(), IncomingLiveClassService.class);
+            intent.putExtra("msg",msg);
+            intent.putExtra("createdImage",createdImage);
+            intent.putExtra("createdName",createdName);
+            intent.putExtra("teamId",teamId);
+            intent.putExtra("title",title);
+            intent.putExtra("category",category);
+            intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            ContextCompat.startForegroundService(getApplicationContext(),intent);
         }
     }
 

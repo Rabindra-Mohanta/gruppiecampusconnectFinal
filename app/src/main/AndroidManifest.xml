@@ -57,8 +57,8 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-
-        <activity android:name=".activities.StudentActivity"></activity>
+        <activity android:name=".activities.LiveTeacherClassActivity"></activity>
+        <activity android:name=".activities.StudentActivity" />
         <activity android:name=".activities.AllStaffListActivity" />
         <activity android:name=".activities.StaffListActivity" />
         <activity android:name=".activities.StaffAttendanceActivity" />
@@ -97,6 +97,11 @@
 
         <service
             android:name=".service.IncomingVideoCallService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".service.IncomingLiveClassService"
             android:enabled="true"
             android:exported="true" />
 

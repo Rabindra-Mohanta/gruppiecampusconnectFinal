@@ -245,6 +245,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
                 item.gender = "female";
             }
 
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE_NEW,imageFragment.getmProfileImage());
             if (imageFragment.isImageChanged && TextUtils.isEmpty(imageFragment.getmProfileImage())) {
                 manager.deleteProPic(this);
                 manager.updateProfileDetails(this, item);
@@ -289,6 +290,8 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         txtProgress.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
 
+        LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE_NEW,profileImage);
+
         if (item.gender != null && !item.gender.isEmpty()) {
             if (item.gender.equalsIgnoreCase("Male")) {
                 gender = 1;
@@ -318,7 +321,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
                 item = res.data;
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, res.data.name);
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
-
+                LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE_NEW,res.data.image);
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.EMAIL, res.data.email);
                AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);

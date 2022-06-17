@@ -29,6 +29,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -890,6 +891,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onStart() {
         super.onStart();
         mAdapter2.notifyDataSetChanged();
+
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateReceiver, new IntentFilter("UPDATE_TEAM"));
+        }
         getContext().registerReceiver(updateReceiver,new IntentFilter("postadded"));
     }
 
@@ -897,6 +902,12 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         @Override
         public void onReceive(Context context, Intent intent) {
             if("postadded".equalsIgnoreCase(intent.getAction())){
+                PostTeamDataItem.deleteTeamPosts(team_id,type);
+                AppLog.e(TAG," onPostExecute isNewEvent");
+                callApi(true);
+            }
+
+            if("UPDATE_TEAM".equalsIgnoreCase(intent.getAction())){
                 PostTeamDataItem.deleteTeamPosts(team_id,type);
                 AppLog.e(TAG," onPostExecute isNewEvent");
                 callApi(true);

@@ -2,12 +2,15 @@
 package school.campusconnect.fragments;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.IntentFilter;
 import android.icu.text.Transliterator;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,11 +18,13 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.PostTeamDataItem;
 import school.campusconnect.firebase.SendNotificationGlobal;
 import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.utils.AmazoneDownload;
@@ -273,7 +278,25 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public void onStart() {
         super.onStart();
         mAdapter.notifyDataSetChanged();
+
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateReceiver, new IntentFilter("UPDATE_GROUP"));
+        }
     }
+
+    BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Log.e(TAG,"intent get action "+intent.getAction());
+
+            if("UPDATE_GROUP".equalsIgnoreCase(intent.getAction())){
+                mAdapter.clear();
+                currentPage = 1;
+                getData(true);
+            }
+        }
+    };
 
     @Override
     public void onDestroy() {

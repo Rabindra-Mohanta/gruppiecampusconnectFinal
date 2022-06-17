@@ -35,7 +35,6 @@ public class ResponseWrapper<T> {
                 AppLog.e("ResponseWrapperCode", "code is " + response.code());
 
 
-
                 switch (response.code()) {
                     case 200:
                     case 201:

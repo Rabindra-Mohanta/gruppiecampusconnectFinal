@@ -36,16 +36,17 @@
 
 
                     <LinearLayout
-                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:layout_marginTop="@dimen/padding_10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:weightSum="2"
-                        android:orientation="horizontal">
+
+                        android:orientation="vertical">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:orientation="horizontal"
                             android:layout_gravity="center"
+                            android:weightSum="2"
                             android:layout_weight="1">
 
                             <TextView
@@ -54,29 +55,31 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/lbl_from_date"
                                 android:textAllCaps="true"
-
+                                android:layout_weight="1"
                                 android:textSize="@dimen/text_size_16sp"
                                 android:textColor="@color/black" />
 
                             <TextView
                                 android:id="@+id/tvFromDate"
-                                android:layout_marginTop="@dimen/padding_5dp"
                                 style="@style/LabelNormal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/lbl_from_date"
+                                android:gravity="right"
                                 android:textAllCaps="true"
-
+                                android:layout_weight="1"
                                 android:textSize="@dimen/text_size_16sp"
-                                android:textColor="@color/colorPrimary" />
+                                android:textColor="@color/grey" />
 
 
                         </LinearLayout>
 
                         <LinearLayout
+                            android:layout_marginTop="@dimen/padding_10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:weightSum="2"
+                            android:orientation="horizontal"
                             android:layout_gravity="center"
                             android:layout_weight="1">
 
@@ -86,26 +89,28 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/lbl_to_date"
                                 android:textAllCaps="true"
+                                android:layout_weight="1"
 
                                 android:textSize="@dimen/text_size_16sp"
                                 android:textColor="@color/black" />
 
                             <TextView
                                 android:id="@+id/tvToDate"
-                                android:layout_marginTop="@dimen/padding_5dp"
                                 style="@style/LabelNormal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/lbl_to_date"
+                                android:layout_weight="1"
+                                android:gravity="right"
                                 android:textAllCaps="true"
                                 android:textSize="@dimen/text_size_16sp"
-                                android:textColor="@color/colorPrimary" />
+                                android:textColor="@color/grey" />
 
 
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
-                        android:layout_marginTop="@dimen/padding_10dp"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

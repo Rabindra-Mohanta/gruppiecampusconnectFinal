@@ -456,18 +456,13 @@ dependencies {
     /*range bar*/
     implementation 'com.github.Jay-Goo:RangeSeekBar:2.0.4'
 
-
     implementation 'com.ss.bannerslider:bannerslider:2.0.0'
 
     implementation 'com.google.mlkit:translate:17.0.0'
-
     //bio metric fingerprint use
     implementation "androidx.biometric:biometric:1.1.0"
-
     //graph
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
-
     //file picker
     implementation 'com.github.noelchew:storage-chooser:2.0.4.4a'
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
@@ -31,6 +32,7 @@ import school.campusconnect.activities.AttendanceActivity;
 import school.campusconnect.activities.AttendancePareSchool;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.MarksheetActivity;
+import school.campusconnect.activities.StaffAttendanceActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.TeamCountTBL;
@@ -53,6 +55,10 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
     boolean isForAttendance;
+
+
+    @Bind(R.id.allStaff)
+    CardView allStaff;
     String role="";
 
     @Override
@@ -91,6 +97,18 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
 
         AppLog.e(TAG, "TeacherClassListFragment");
 
+
+        if (role != null && role.equalsIgnoreCase("admin"))
+        {
+            allStaff.setVisibility(View.VISIBLE);
+        }
+
+        allStaff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), StaffAttendanceActivity.class));
+            }
+        });
     }
 
     private void getDataLocally() {

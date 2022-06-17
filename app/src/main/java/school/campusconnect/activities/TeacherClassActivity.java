@@ -46,10 +46,10 @@ public class TeacherClassActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_staff_attendance,menu);
 
-        if (getIntent().getExtras().getString("role") != null && getIntent().getExtras().getString("role").equalsIgnoreCase("admin"))
+        /*if (getIntent().getExtras().getString("role") != null && getIntent().getExtras().getString("role").equalsIgnoreCase("admin"))
         {
             menu.findItem(R.id.menuStaffAttendance).setVisible(true);
-        }
+        }*/
         return super.onCreateOptionsMenu(menu);
     }
 
