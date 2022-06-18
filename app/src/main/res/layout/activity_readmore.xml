@@ -49,9 +49,9 @@
                         android:id="@+id/img_lead_default"
                         android:layout_width="@dimen/list_image_size"
                         android:layout_height="@dimen/list_image_size"
-                        android:visibility="invisible"
+                        android:layout_alignParentStart="true"
                         android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:visibility="invisible" />
 
 
                     <LinearLayout

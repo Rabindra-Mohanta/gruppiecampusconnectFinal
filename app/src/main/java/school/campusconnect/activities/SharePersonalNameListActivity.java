@@ -178,7 +178,7 @@ public class SharePersonalNameListActivity extends BaseActivity implements LeafM
     private void getSearchData(String search) {
        // showLoadingDialog();
         if(progressBar!=null)
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
        // progressBar.setVisibility(View.VISIBLE);
         LeafManager manager = new LeafManager();
 //        if (myTeamList)

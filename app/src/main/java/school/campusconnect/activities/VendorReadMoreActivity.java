@@ -263,7 +263,7 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
          //   progressBar.setVisibility(View.VISIBLE);
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
             LeafManager manager = new LeafManager();
             manager.deleteVendorPost(this, GroupDashboardActivityNew.groupId+"",currentItem.vendorId);
         } else {

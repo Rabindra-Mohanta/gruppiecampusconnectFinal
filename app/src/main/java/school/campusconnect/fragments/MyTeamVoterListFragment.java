@@ -191,7 +191,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             return;
         }
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         // progressBar.setVisibility(View.VISIBLE);
         leafManager.getBoothVoterList(this, GroupDashboardActivityNew.groupId,boothID);
     }

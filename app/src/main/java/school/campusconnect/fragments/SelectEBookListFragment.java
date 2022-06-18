@@ -53,7 +53,7 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
             team_id = getArguments().getString("team_id");
         }
 
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         // progressBar.setVisibility(View.VISIBLE);
 
         return view;
@@ -168,7 +168,7 @@ public class SelectEBookListFragment extends BaseFragment implements LeafManager
     }
 
     private void onTreeClick(EBooksResponse.EBookData classData) {
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.updateEBookInClass(this,group_id,team_id,classData.getBooksId());

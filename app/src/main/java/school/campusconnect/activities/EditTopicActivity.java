@@ -116,7 +116,7 @@ public class EditTopicActivity extends BaseActivity implements LeafManager.OnCom
                     req.setTopicData(adapter.getList());
 
                     Log.e(TAG,"req "+new Gson().toJson(req));
-                    showLoadingBar(binding.progressBar,false);
+                    showLoadingBar(binding.progressBar);
                     manager.EditSyllabus(EditTopicActivity.this,GroupDashboardActivityNew.groupId,teamID,subjectID,data.getChapterId(),req);
                 }
 

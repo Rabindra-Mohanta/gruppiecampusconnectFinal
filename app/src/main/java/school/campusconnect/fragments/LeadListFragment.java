@@ -54,7 +54,6 @@ import android.widget.Toast;
 import com.activeandroid.ActiveAndroid;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.baoyz.widget.PullRefreshLayout;
-import com.codekidlabs.storagechooser.StorageChooser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
@@ -79,10 +78,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.TimeZone;
 
 import school.campusconnect.R;
@@ -347,31 +344,10 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         return super.onOptionsItemSelected(item);
 
     }
-    public boolean hasPermission(String[] permissions) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED)
-                    return false;
-            }
-        }
-        return true;
-    }
 
     private boolean checkPermissionForWriteExternal() {
-
-        if(hasPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}))
-        {
-            AppLog.e("External" + "permission", "checkpermission , granted");
-            return true;
-        }
-        else
-        {
-            Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
-            return false;
-        }
-       /* int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (result == PackageManager.PERMISSION_GRANTED) {
             AppLog.e("External" + "permission", "checkpermission , granted");
             return true;
@@ -383,7 +359,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 21);
             }
             return false;
-        }*/
+        }
     }
 
     public void exportDataToCSV() {
@@ -392,101 +368,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             return;
         }
 
-        StorageChooser chooser = new StorageChooser.Builder()
-                .withActivity(getActivity())
-                .withFragmentManager(getActivity().getFragmentManager())
-                .withMemoryBar(false)
-                .setType(StorageChooser.DIRECTORY_CHOOSER)
-                .disableMultiSelect()
-                .setDialogTitle("Select Folder")
-                .showFoldersInGrid(true)
-                .allowCustomPath(true)
-                .build();
-
-        chooser.show();
-
-        chooser.setOnSelectListener(new StorageChooser.OnSelectListener() {
-            @Override
-            public void onSelect(String path) {
-                Log.e(TAG,"ON SELECT PATH"+ path);
-
-                File mainFolder = new File(path, LeafApplication.getInstance().getResources().getString(R.string.app_name));
-
-                if (!mainFolder.exists()) {
-                    mainFolder.mkdir();
-                }
-                File csvFolder = new File(mainFolder,"Excel");
-                if (!csvFolder.exists()) {
-                    csvFolder.mkdir();
-                }
-
-
-                File file = new File(csvFolder, getArguments().getString("team_name")+"_"+getResources().getString(R.string.lbl_members) + System.currentTimeMillis()+new Random().nextInt()+".xls");
-
-                try {
-                    if (!file.exists()) {
-                        file.createNewFile();
-                    }
-
-                    HSSFWorkbook workbook = new HSSFWorkbook();
-                    HSSFSheet firstSheet = workbook.createSheet(getArguments().getString("team_name")+"_"+getResources().getString(R.string.lbl_members));
-
-                    HSSFRow rowA = firstSheet.createRow(0);
-                    rowA.createCell(0).setCellValue("Name");
-                    rowA.createCell(1).setCellValue("Voter Id");
-                    rowA.createCell(2).setCellValue("Email");
-                    rowA.createCell(3).setCellValue("Phone Number");
-                    rowA.createCell(4).setCellValue("Education");
-                    rowA.createCell(5).setCellValue("Profession");
-                    rowA.createCell(6).setCellValue("DOB");
-                    rowA.createCell(7).setCellValue("Gender");
-                    rowA.createCell(8).setCellValue("Blood Group");
-
-
-                    if (list != null)
-                    {
-                        for(int i=0;i<list.size();i++){
-
-                            LeadItem item = list.get(i);
-                            HSSFRow rowData = firstSheet.createRow(i + 1);
-                            rowData.createCell(0).setCellValue(item.name);
-                            rowData.createCell(1).setCellValue(item.voterId);
-                            rowData.createCell(2).setCellValue(item.email);
-                            rowData.createCell(3).setCellValue(item.phone);
-                            rowData.createCell(4).setCellValue(item.qualification);
-                            rowA.createCell(5).setCellValue(item.occupation);
-                            rowA.createCell(6).setCellValue(item.dob);
-                            rowA.createCell(7).setCellValue(item.gender);
-                            rowA.createCell(8).setCellValue(item.bloodGroup);
-
-                        }
-                    }
-                    FileOutputStream fos = null;
-                    try {
-                        fos = new FileOutputStream(file);
-                        workbook.write(fos);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (fos != null) {
-                            try {
-                                fos.flush();
-                                fos.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    //shareFile(file);
-
-                    Toast.makeText(getContext(),getResources().getString(R.string.toast_file_download)+file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-   /*     File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }
@@ -553,7 +435,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             shareFile(file);
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private void shareFile(File file) {
@@ -600,7 +482,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
         if (call)
         {
             if (isConnectionAvailable()) {
-                showLoadingBar(mBinding.progressBar,false);
+                showLoadingBar(mBinding.progressBar);
                 mIsLoading = true;
 
                 mManager.getTeamMember(this, groupId + "", teamId + "",itemClick);
@@ -704,7 +586,6 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             Bundle b = new Bundle();
             b.putParcelable(LeadDetailActivity.EXTRA_LEAD_ITEM, item);
             intent.putExtras(b);
-            intent.putExtra("id", item.getId());
             intent.putExtra("post", item.getIsPost());
             intent.putExtra("allowedToAddUser", item.allowedToAddUser);
             intent.putExtra("allowedToAddTeamPost", item.allowedToAddTeamPost);

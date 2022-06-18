@@ -336,7 +336,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
             @Override
             public void onClick(View v) {
                 final Calendar calendar = Calendar.getInstance();
-                TimePickerDialog fragment = new TimePickerDialog(AddTestPostActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog fragment = new TimePickerDialog(AddTestPostActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar,new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -352,7 +352,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
             @Override
             public void onClick(View v) {
                 final Calendar calendar = Calendar.getInstance();
-                TimePickerDialog fragment = new TimePickerDialog(AddTestPostActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog fragment = new TimePickerDialog(AddTestPostActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar,new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -436,7 +436,7 @@ public class AddTestPostActivity extends BaseActivity implements LeafManager.OnA
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    showLoadingBar(progressBar,false);
+                    showLoadingBar(progressBar);
             //        progressBar.setVisibility(View.VISIBLE);
             //    btnShare.setEnabled(false);
 

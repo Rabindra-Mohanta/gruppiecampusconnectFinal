@@ -193,7 +193,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         AppLog.e(TAG,"ListSize "+ String.valueOf(dataItemList.size()));
 
         if (dataItemList.size() != 0) {
-            showLoadingBar(progressBar2,false);
+            showLoadingBar(progressBar2);
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 PostItem postItem = new PostItem();
@@ -316,7 +316,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     private void getData(String friend_id, boolean isBackground) {
         if (isBackground) {
-            showLoadingBar(progressBar2,false);
+            showLoadingBar(progressBar2);
             mIsLoading2 = true;
         }
         manager.getPersonalChat(this, mGroupId + "", friend_id + "", currentPage2);
@@ -508,7 +508,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         if (!liked) {
             liked = true;
             this.position = position;
-            showLoadingBar(progressBar2,false);
+            showLoadingBar(progressBar2);
             manager.setPersonalLike(this, mGroupId+"", item.id);
         }
     }
@@ -628,7 +628,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         AppLog.e("PersonalPostFrag", "DIalog Ok Clicked ");
-        showLoadingBar(progressBar2,false);
+        showLoadingBar(progressBar2);
         LeafManager manager = new LeafManager();
         manager.deletePersonalPostChat(this, mGroupId + "", selectedFriend + "", currentItem.id);
     }

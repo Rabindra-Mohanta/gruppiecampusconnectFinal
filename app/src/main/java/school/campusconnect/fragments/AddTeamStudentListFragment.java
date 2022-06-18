@@ -49,9 +49,11 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
 
-    @Bind(R.id.tvCount)
-    public TextView tvCount;
+    //@Bind(R.id.tvCount)
+    //public TextView tvCount;
 
+    @Bind(R.id.btn_update_add)
+    public TextView updateButton;
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
@@ -85,7 +87,7 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     @Override
     public void onStart() {
         super.onStart();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
       //  progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this, groupId+"", teamId+"",false);
 
@@ -137,8 +139,20 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     public void onClick(View view) {
         if (adapter != null && adapter.getSelectedCount() > 0) {
             LeafManager leafManager = new LeafManager();
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
           //  progressBar.setVisibility(View.VISIBLE);
+            leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
+        } else {
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick({R.id.btn_update_add})
+    public void btnOnClick(View view) {
+        if (adapter != null && adapter.getSelectedCount() > 0) {
+            LeafManager leafManager = new LeafManager();
+            showLoadingBar(progressBar);
+            //  progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
@@ -309,12 +323,18 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
         }
     }
 
+    private String textValue = null;
+
     private void addRemovedStaff() {
         int cnt = adapter.getSelectedCount();
         if (cnt > 0) {
-            tvCount.setText(cnt + "");
+            if (textValue == null){
+                textValue = updateButton.getText().toString();
+            }
+            updateButton.setText(textValue+ " ("+ cnt +")");
+           // tvCount.setText(cnt + "");
         } else {
-            tvCount.setText("");
+            //tvCount.setText("");
         }
     }
 }

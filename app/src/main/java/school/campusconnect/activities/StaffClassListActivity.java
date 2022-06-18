@@ -227,7 +227,7 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
     @Override
     protected void onStart() {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar);
         leafManager.getClassesOfStaff(this,GroupDashboardActivityNew.groupId,staffID);
         leafManager.getTodaySyllabusPlanList(this,GroupDashboardActivityNew.groupId,date);
         leafManager.getStaffAnalysis(this,GroupDashboardActivityNew.groupId,staffID);

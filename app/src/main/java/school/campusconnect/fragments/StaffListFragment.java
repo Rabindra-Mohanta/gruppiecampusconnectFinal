@@ -84,7 +84,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
 
         isAdmin = getArguments().getBoolean("isAdmin");
 
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         // progressBar.setVisibility(View.VISIBLE);
 
         init();

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -77,7 +79,10 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
             if(AmazoneImageDownload.isImageDownloaded(item)){
                 holder.llProgress.setVisibility(View.GONE);
                 holder.imgDownload.setVisibility(View.GONE);
-                Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item)).placeholder(R.drawable.placeholder_image).into(holder.ivImage, new Callback() {
+                Glide.with(mContext).load(AmazoneImageDownload.getDownloadPath(item)).diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true).placeholder(R.drawable.placeholder_image).into(holder.ivImage);
+
+                /*Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item)).fit().placeholder(R.drawable.placeholder_image).into(holder.ivImage, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -87,14 +92,16 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                     public void onError() {
                         Log.e("Picasso", "Error : ");
                     }
-                });
+                });*/
             }
             else
             {
                 {
                     String path = Constants.decodeUrlToBase64(item);
                     String newStr = path.substring(path.indexOf("/images")+1);
-                    Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(holder.ivImage, new Callback() {
+                    Glide.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true).placeholder(R.drawable.placeholder_image).into(holder.ivImage);
+                    /*Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(holder.ivImage, new Callback() {
                         @Override
                         public void onSuccess() {
 
@@ -104,7 +111,7 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                         public void onError() {
                             Log.e("Picasso", "Error : ");
                         }
-                    });
+                    });*/
                     holder.imgDownload.setVisibility(View.VISIBLE);
                     holder.imgDownload.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -118,7 +125,7 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                                     holder.llProgress.setVisibility(View.GONE);
                                     holder.progressBar.setVisibility(View.GONE);
                                     holder. progressBar1.setVisibility(View.GONE);
-                                    Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(holder.ivImage, new Callback() {
+                                    Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(holder.ivImage, new Callback() {
                                         @Override
                                         public void onSuccess() {
 

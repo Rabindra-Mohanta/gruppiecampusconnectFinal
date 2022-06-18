@@ -178,7 +178,7 @@ public static String TAG = "MyTeamSubBoothFragment";
         }
         LeafManager leafManager = new LeafManager();
 
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         //progressBar.setVisibility(View.VISIBLE);
         leafManager.getMyTeamSubBooth(this,GroupDashboardActivityNew.groupId);
     }

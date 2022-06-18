@@ -136,7 +136,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
         init();
 
     }
-
+    String oldValue = "";
     private void init() {
 
         ButterKnife.bind(this);
@@ -151,6 +151,57 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
         tvTitle.setText(getIntent().getStringExtra("title"));
         setTitle("");
 
+        etMinMarks.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                oldValue = s.toString();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String inputMarkStr = etMinMarks.getText().toString();
+                if (!inputMarkStr.isEmpty()) {
+                    if (etMaxMarks.getText().toString().isEmpty()) {
+                        Toast.makeText(AddOfflineTestActivity.this, "Enter Max Marks before Entering Min Marks", Toast.LENGTH_SHORT).show();
+                        etMinMarks.setText("");
+                        return;
+                    }else if (Float.parseFloat(inputMarkStr) > Float.parseFloat(etMaxMarks.getText().toString())) {
+                        etMinMarks.setText(oldValue);
+                        if (oldValue.length() > 0) {
+                            etMinMarks.setSelection(oldValue.length() - 1);
+                        }
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+
+        spSubject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position == 0)
+                {
+                    llDate.setVisibility(View.GONE);
+                    llMark.setVisibility(View.GONE);
+                }
+                else
+                {
+                    llDate.setVisibility(View.VISIBLE);
+                    llMark.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         if (isEdit) {
             btnCreateClass.setText(getResources().getString(R.string.lbl_update));
@@ -245,6 +296,12 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                         llDate.setVisibility(View.GONE);
                         llMark.setVisibility(View.GONE);
                         adapter.add(t1);
+                        etDate.setText("");
+                        etEndTime.setText("");
+                        etStartTime.setText("");
+                        etMaxMarks.setText("");
+                        etMinMarks.setText("");
+                        spSubject.setSelection(0);
                         hide_keyboard(view);
                     }
 

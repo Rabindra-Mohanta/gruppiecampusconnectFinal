@@ -124,7 +124,7 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    /*public void showLoadingDialog() {
+    public void showLoadingDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getActivity());
             mProgressDialog.setMessage(getString(R.string.please_wait));
@@ -137,7 +137,18 @@ public class BaseFragment extends Fragment {
                 mProgressDialog.show();
             }
         }
-    }*/
+    }
+
+    public void showLoadingBar(View v) {
+  //      showLoadingDialog();
+        AppLog.e("PBAR showLoadingBar", "called");
+//        if (mProgressBar == null) {
+        // mProgressBar.setVisibility(View.VISIBLE);
+       // mProgressBar = v;
+//        } else {
+      //  mProgressBar.setVisibility(View.VISIBLE);
+//        }
+    }
 
     public void showLoadingBar(ProgressBar v, boolean isShow) {
         AppLog.e("PBAR showLoadingBar", "called");
@@ -191,6 +202,28 @@ public class BaseFragment extends Fragment {
         AppLog.e("PBAR hideLoadingBar", "called");
 
     }
+
+
+    public void showLoadingBar(View v,boolean isLoading) {
+      //  showLoadingDialog();
+        AppLog.e("PBAR showLoadingBar", "called");
+//        if (mProgressBar == null) {
+        // mProgressBar.setVisibility(View.VISIBLE);
+        // mProgressBar = v;
+//        } else {
+        //  mProgressBar.setVisibility(View.VISIBLE);
+//        }
+    }
+
+ /*   public void hideLoadingBar() {
+        hideLoadingDialog();
+       AppLog.e("PBAR hideLoadingBar", "called");
+       *//* if (mProgressBar == null) {
+        } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar = null;
+        }*//*
+    }*/
 
     public void hideLoadingDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {

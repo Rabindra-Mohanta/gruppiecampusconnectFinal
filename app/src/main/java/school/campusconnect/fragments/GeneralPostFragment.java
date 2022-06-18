@@ -326,7 +326,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId + "");
         String lastId = null;
         if (dataItemList.size() != 0) {
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 PostItem postItem = new PostItem();
@@ -362,6 +362,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 postItem.type = dataItemList.get(i).type;
                 PostList.add(postItem);
             }
+            mBinding.progressBar.setVisibility(View.GONE);
             hideLoadingBar();
             AppLog.e(TAG, "DataFromLocal");
             mAdapter.notifyDataSetChanged();
@@ -413,7 +414,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         Log.e(TAG,"type"+type);
 
         mBinding.setSize(1);
-        mBinding.setMessage(R.string.msg_no_post);
+        mBinding.progressBar.setVisibility(View.VISIBLE);
+        //mBinding.setMessage(R.string.msg_no_post);
         mGroupId = getArguments().getString("id");
 
         mBinding.llBlankView.setOnClickListener(this);
@@ -446,7 +448,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     private void getData(boolean isInBackground) {
         AppLog.e(TAG, "getData called");
         if (!isInBackground) {
-            showLoadingBar(mBinding.progressBar,false);
+            mBinding.progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(mBinding.progressBar);
             mIsLoading = true;
         }
 
@@ -456,6 +459,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+        mBinding.progressBar.setVisibility(View.GONE);
         hideLoadingBar();
         switch (apiId) {
             case LeafManager.API_ID_GENERAL_POST:
@@ -605,6 +609,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
+        mBinding.progressBar.setVisibility(View.GONE);
+        Toast.makeText(getActivity(), getResources().getString(R.string.txt_failed_to_load), Toast.LENGTH_SHORT).show();
         hideLoadingBar();
         mIsLoading = false;
         currentPage = currentPage - 1;
@@ -626,6 +632,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
+
+        mBinding.progressBar.setVisibility(View.GONE);
         hideLoadingBar();
 
         mIsLoading = false;
@@ -654,6 +662,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onException(int apiId, String msg) {
+        mBinding.progressBar.setVisibility(View.GONE);
+        Toast.makeText(getActivity(), getResources().getString(R.string.txt_failed_to_load), Toast.LENGTH_SHORT).show();
         hideLoadingBar();
         mIsLoading = false;
         currentPage = currentPage - 1;
@@ -667,7 +677,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFavClick(PostItem item, int pos) {
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         position = pos;
         int fav = 0;
         if (item.isFavourited) {
@@ -719,7 +729,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         if (!liked) {
             liked = true;
             this.position = position;
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             manager.setLikes(this, mGroupId + "", item.id);
 
 
@@ -1180,7 +1190,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             LeafManager manager = new LeafManager();
             manager.deletePost(this, mGroupId + "", currentItem.id, "group");
             new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1230,13 +1240,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     private void getReportData() {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(dialogProgressBar,false);
+        showLoadingBar(dialogProgressBar);
         mManager.getReportList(this);
     }
 
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         mManager.reportPost(this, mGroupId + "", currentItem.id, report_id);
     }
 

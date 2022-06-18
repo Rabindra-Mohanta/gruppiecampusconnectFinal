@@ -288,7 +288,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         if (!isConnectionAvailable()) {
             return;
         }
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar);
        // binding.progressBar.setVisibility(View.VISIBLE);
         manager.myTeamListV2(this, GroupDashboardActivityNew.groupId);
     }

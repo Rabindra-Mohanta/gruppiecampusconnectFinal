@@ -114,7 +114,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
 
     private void apiCall(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
         //    progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {

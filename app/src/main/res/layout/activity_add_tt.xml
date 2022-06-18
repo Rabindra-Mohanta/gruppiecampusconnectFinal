@@ -123,11 +123,11 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvTimeTable"
-                            tools:listitem="@layout/item_add_time_table"
                             android:layout_width="match_parent"
-                            tools:itemCount="3"
+                            android:layout_height="wrap_content"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            android:layout_height="wrap_content"/>
+                            tools:itemCount="3"
+                            tools:listitem="@layout/item_add_time_table" />
 
                         <androidx.cardview.widget.CardView
                             android:layout_marginTop="@dimen/padding_5dp"

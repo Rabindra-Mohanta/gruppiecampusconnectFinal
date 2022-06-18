@@ -106,6 +106,12 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
                 e.printStackTrace();
             }
         }
+        holder.audio_layout.setVisibility(View.GONE);
+        holder.llLeftAudioView.setVisibility(View.GONE);
+        if(item.fileType.equals("audio")){
+            holder.audio_layout.setVisibility(View.VISIBLE);
+            holder.llLeftAudioView.setVisibility(View.VISIBLE);
+        }
         holder.txtName.setText(dispName);
         holder.txtDate.setText(MixOperations.getFormattedDate(item.updatedAt, Constants.DATE_FORMAT));
         holder.txtLike.setText(Constants.coolFormat(item.likes, 0));
@@ -471,6 +477,12 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
         AsymmetricRecyclerView recyclerView;
         @Bind(R.id.imgDownloadPdf)
         ImageView imgDownloadPdf;
+
+        @Bind(R.id.llLeftAudioView)
+        LinearLayout llLeftAudioView;
+
+        @Bind(R.id.audio_layout)
+        LinearLayout audio_layout;
 
         public ImageViewHolder(View itemView) {
             super(itemView);

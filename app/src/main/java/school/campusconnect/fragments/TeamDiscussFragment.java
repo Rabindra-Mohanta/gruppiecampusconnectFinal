@@ -62,7 +62,7 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
       //  progressBar.setVisibility(View.VISIBLE);
         leafManager.myTeamListNew(this,GroupDashboardActivityNew.groupId);
     }

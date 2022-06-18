@@ -218,7 +218,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     private void boothListApiCall() {
 
        // progressBar.setVisibility(View.VISIBLE);
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         LeafManager leafManager = new LeafManager();
         leafManager.getBoothTeams(this,GroupDashboardActivityNew.groupId,team_id);
     }

@@ -51,7 +51,7 @@ public class EBookListFragment extends BaseFragment implements LeafManager.OnCom
             IsFromHome = getArguments().getBoolean("IsFromHome");
         }
 
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
       //  progressBar.setVisibility(View.VISIBLE);
 
         return view;

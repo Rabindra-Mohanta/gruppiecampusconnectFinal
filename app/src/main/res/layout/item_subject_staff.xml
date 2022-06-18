@@ -78,7 +78,7 @@
                     android:layout_toLeftOf="@+id/llRight">
 
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -95,6 +95,7 @@
                             android:gravity="center_vertical"
                             android:singleLine="true"
                             android:text="@string/name"
+                            android:layout_toLeftOf="@id/rl_status"
                             android:textColor="@color/colorTextDark"
                             style="@style/LabelNormal" />
 
@@ -103,11 +104,37 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-
                             android:visibility="visible"
+                            android:layout_toLeftOf="@id/rl_status"
+                            android:layout_below="@id/txt_name"
                             android:textColor="@color/colorTextNormal"
                             style="@style/LabelSmall" />
-                    </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rl_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true">
+
+                            <Button
+                                android:id="@+id/btn_assign"
+                                android:layout_width="wrap_content"
+                                android:layout_height="35dp"
+                                android:textAllCaps="false"
+                                android:visibility="gone"
+                                android:background="@drawable/border_bg_grey"
+                                android:text="@string/lbl_register_subject_assign"/>
+
+                            <ImageView
+                                android:id="@+id/iv_assigned"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:visibility="gone"
+                                android:src="@drawable/approve"/>
+
+                        </RelativeLayout>
+                    </RelativeLayout>
                 </RelativeLayout>
 
             </RelativeLayout>

@@ -220,7 +220,7 @@ private String groupId = null , groupCount = null ,Role = null,Token = null,Pin 
         //  binding.progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_JOIN_GROUP) {
             AppLog.e("UserExist->", "join group api response");
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar);
             // binding.progressBar.setVisibility(View.VISIBLE);
 
             AppLog.e("UserExist->", "getGroupDetail api called");

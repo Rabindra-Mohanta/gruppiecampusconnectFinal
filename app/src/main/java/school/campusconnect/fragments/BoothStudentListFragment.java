@@ -248,7 +248,7 @@ public class BoothStudentListFragment extends BaseFragment implements LeafManage
 
     private void getData()
     {
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
     //    progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getBoothMember(this, GroupDashboardActivityNew.groupId, classData.teamId,committeeData.getCommitteeId());

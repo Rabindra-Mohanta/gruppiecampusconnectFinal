@@ -153,7 +153,7 @@ public class PublicGroupJoinFragment extends BaseFragment implements LeafManager
 
     private void getData() {
         //mAdapter.clear();
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         mIsLoading = true;
         manager.joinList(this, mGroupId+"");
 
@@ -161,7 +161,7 @@ public class PublicGroupJoinFragment extends BaseFragment implements LeafManager
 
     private void joinGroup() {
         //mAdapter.clear();
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         mIsLoading = true;
         manager.joinGroup(this, mGroupId+"", getSelectedIds());
 //       AppLog.e("TAG", "check ids " + getSelectedIds());
@@ -170,7 +170,7 @@ public class PublicGroupJoinFragment extends BaseFragment implements LeafManager
 
     private void joinGroupDirect() {
         //mAdapter.clear();
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         mIsLoading = true;
         manager.joinGroupDirect(this, mGroupId+"");
 //       AppLog.e("TAG", "check ids " + getSelectedIds());

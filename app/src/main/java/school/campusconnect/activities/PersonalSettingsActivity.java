@@ -51,7 +51,7 @@ public class PersonalSettingsActivity extends BaseActivity {
     private void getSettingData() {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
            // progressBar.setVisibility(View.VISIBLE);
             manager.getPersonalSettingsData(this,groupId,userId);
         }
@@ -66,14 +66,14 @@ public class PersonalSettingsActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.switch_reply:
                 if(progressBar!=null)
-                    showLoadingBar(progressBar,false);
+                    showLoadingBar(progressBar);
                 // progressBar.setVisibility(View.VISIBLE);
                 manager.allowPersonalReply(this, groupId+"",userId);
                 break;
 
             case R.id.switch_comment:
                 if(progressBar!=null)
-                    showLoadingBar(progressBar,false);
+                    showLoadingBar(progressBar);
                 // progressBar.setVisibility(View.VISIBLE);
                 manager.allowPersonalComment(this, groupId+"",userId);
                 break;

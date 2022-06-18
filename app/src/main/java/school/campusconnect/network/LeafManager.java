@@ -16,6 +16,10 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.register.BoardsData;
+import school.campusconnect.datamodel.register.CampusMediumData;
+import school.campusconnect.datamodel.register.ClassesListData;
+import school.campusconnect.datamodel.register.TypeOfCampusData;
 import school.campusconnect.datamodel.attendance_report.ApplyLeaveReq;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
@@ -46,6 +50,7 @@ import school.campusconnect.datamodel.masterList.WorkerListResponse;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
+import school.campusconnect.datamodel.register.UniversitiesData;
 import school.campusconnect.datamodel.searchUser.SearchUserModel;
 import school.campusconnect.datamodel.staff.ApprovalStaffAttendanceRes;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
@@ -155,6 +160,7 @@ import school.campusconnect.utils.AppLog;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.vivid.gruppie.model.RegisterRequestData;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -543,6 +549,14 @@ public class LeafManager {
     public static final int API_APPLY_FOR_LEAVE =  356;
     public static final int API_TODAY_DATE_WISE_SYLLBUS_PLAN =  353;
     public static final int API_STAFF_ANALYSIS =  347;
+
+    public static final int API_ID_TYPE_OF_CAMPUS = 358;
+    public static final int API_ID_GET_BOARDS_LIST = 359;
+    public static final int API_ID_GET_UNIVERSITY_LIST = 360;
+    public static final int API_ID_GET_CAMPUS_MEDIUM = 361;
+    public static final int API_ID_GET_CLASSES_LIST = 362;
+    public static final int API_ID_DO_REGISTER = 357;
+
     public static final int API_STAFF_ATTENDACNCE =  352;
    // public static final int API_APPROVAL_STAFF_ATTENDACNCE =  348;
     public static final int API_TAKE_STAFF_ATTENDACNCE =  344;
@@ -562,7 +576,11 @@ public class LeafManager {
         final Call<LoginResponse> model;
 
         if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
-            model = service.login(request, BuildConfig.APP_ID, BuildConfig.AppName, request.deviceToken, request.deviceType);
+            if (BuildConfig.AppName.equals("Gruppie Campus")){
+                model = service.login(request, BuildConfig.APP_ID, request.deviceToken, request.deviceType);
+            } else {
+                model = service.login(request, BuildConfig.APP_ID, BuildConfig.AppName, request.deviceToken, request.deviceType);
+            }
         } else if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
             model = service.loginConstituency(request, BuildConfig.AppName, request.deviceToken, request.deviceType);
         } else {
@@ -13329,6 +13347,219 @@ public class LeafManager {
                 }
             }
         }, serviceErrorType);
+
+    }
+
+
+    /* Registration Form APIs */
+
+    public void getTypeOfCampus(OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<TypeOfCampusData> model;
+
+        model = service.getTypeOfCampus();
+
+        ResponseWrapper<TypeOfCampusData> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ID_TYPE_OF_CAMPUS, new ResponseWrapper.ResponseHandler<TypeOfCampusData, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, TypeOfCampusData response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void getBoardsListForCampus(String campusType, OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BoardsData> model;
+
+        model = service.getBoardsListForCampus(campusType);
+
+        ResponseWrapper<BoardsData> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ID_GET_BOARDS_LIST, new ResponseWrapper.ResponseHandler<BoardsData, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BoardsData response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void getUniversitiesListForBoard(String board, OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<UniversitiesData> model;
+
+        model = service.getUniversitiesForBoard(board);
+
+        ResponseWrapper<UniversitiesData> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ID_GET_UNIVERSITY_LIST, new ResponseWrapper.ResponseHandler<UniversitiesData, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, UniversitiesData response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void getCampusMedium(OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<CampusMediumData> model;
+
+        model = service.getCampusMedium();
+
+        ResponseWrapper<CampusMediumData> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ID_GET_CAMPUS_MEDIUM, new ResponseWrapper.ResponseHandler<CampusMediumData, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, CampusMediumData response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void getClassesList(String subCategory, String board, OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<ClassesListData> model;
+
+        model = service.getClassesList(board, subCategory);
+
+        ResponseWrapper<ClassesListData> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ID_GET_CLASSES_LIST, new ResponseWrapper.ResponseHandler<ClassesListData, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, ClassesListData response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void doRegister(String userId, RegisterRequestData registerRequest, OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<ClassesListData> model;
+
+        model = service.doRegister(userId, registerRequest);
+
+        ResponseWrapper<ClassesListData> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ID_DO_REGISTER, new ResponseWrapper.ResponseHandler<ClassesListData, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, ClassesListData response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
 
     }
 

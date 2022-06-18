@@ -155,7 +155,7 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
 
     private void calApi(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
             //progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);

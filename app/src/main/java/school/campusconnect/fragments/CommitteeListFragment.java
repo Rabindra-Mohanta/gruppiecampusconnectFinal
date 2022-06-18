@@ -191,7 +191,7 @@ int teamMemberCount = -1;
 
 
     private void getCommittee() {
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar);
       //  binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.getCommittee(this, GroupDashboardActivityNew.groupId,TeamID);
     }
@@ -372,7 +372,7 @@ int teamMemberCount = -1;
         startActivity(intent);
     }
     private void onDeleteClick(committeeResponse.committeeData committeeData) {
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar);
       //  binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.removeCommittee(this,GroupDashboardActivityNew.groupId,TeamID,committeeData.getCommitteeId());
     }

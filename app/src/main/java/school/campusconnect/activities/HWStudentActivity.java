@@ -407,7 +407,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
 
     public void getAssignment(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
             //progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getAssignment(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.assignmentId, "");
@@ -835,7 +835,7 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_assignment), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 //progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.deleteAssignmentStudent(HWStudentActivity.this, group_id, team_id, subject_id, HWStudentActivity.this.item.assignmentId, item.studentAssignmentId);

@@ -112,6 +112,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     private boolean show = false;
     private boolean fromLogin;
     private ArrayList<String> listKey;
+    private Boolean validateUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +126,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
             fromLogin = intent.getBooleanExtra("fromLogin", false);
+            validateUser = intent.getBooleanExtra("userFlag",false);
         }
 
         AppLog.e("fromLogin", "is " + fromLogin);
@@ -218,7 +220,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                showLoadingBar(progressBar,true);
+                showLoadingBar(progressBar);
             //    progressBar.setVisibility(View.VISIBLE);
             btnLogin.setTextColor(getResources().getColor(R.color.grey));
             btnLogin.setEnabled(false);
@@ -297,7 +299,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                showLoadingBar(progressBar,true);
+                showLoadingBar(progressBar);
                 //progressBar.setVisibility(View.VISIBLE);
             btnLogin.setTextColor(getResources().getColor(R.color.grey));
             btnLogin.setEnabled(false);
@@ -382,7 +384,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             hide_keyboard();
             //showLoadingDialog();
             if (progressBar != null)
-                showLoadingBar(progressBar,true);
+                showLoadingBar(progressBar);
                 //progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             ForgotPasswordRequest request = new ForgotPasswordRequest();
@@ -581,10 +583,13 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (otpVerifyRes.data != null && otpVerifyRes.data.otpVerified) {
                 Intent intent = new Intent(this, NewPassActivity.class);
                 intent.putExtra("otp", edtPassword.getText().toString());
+                intent.putExtra("userFlag", validateUser);
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(userExistActivity, getResources().getString(R.string.toast_invalid_otp), Toast.LENGTH_SHORT).show();
+                edtPassword.setError(getResources().getString(R.string.toast_invalid_otp));
+                edtPassword.requestFocus();
+                //Toast.makeText(userExistActivity, getResources().getString(R.string.toast_invalid_otp), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -654,7 +659,9 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             manager.getGroupDetail(this, BuildConfig.APP_ID);
 
         } else {
-            Toast.makeText(this, getResources().getString(R.string.toast_invalid_otp_password), Toast.LENGTH_LONG).show();
+            edtPassword.setError(getResources().getString(R.string.toast_invalid_otp_password));
+            edtPassword.requestFocus();
+            //Toast.makeText(this, getResources().getString(R.string.toast_invalid_otp_password), Toast.LENGTH_LONG).show();
         }
     }
 

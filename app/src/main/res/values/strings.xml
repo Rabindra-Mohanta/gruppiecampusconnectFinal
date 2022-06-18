@@ -326,7 +326,7 @@
     <string name="to_teams">To Teams</string>
     <string name="to_team">TO TEAMS</string>
     <string name="to_friends">To Friends</string>
-    <string name="register">register</string>
+    <string name="register">Register</string>
     <!--<string name="txt_terms">I Agree To <a href="https://www.gruppie.in"> Gruppie\'s Terms And Conditions </a> And Privacy Policy</string>-->
     <string name="copyright">© Vivid Innovations Private Limited</string>
     <string name="lbl_designation">Designation</string>
@@ -573,6 +573,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_class_register_student">Class/Student Register</string>
     <string name="lbl_register_student">Student Register</string>
     <string name="lbl_register_subject">Subject Register</string>
+    <string name="lbl_register_subject_assign">Assign</string>
     <string name="lbl_student_id">Student Id</string>
     <string name="lbl_admition_number">Admission Number</string>
     <string name="lbl_section">Section</string>
@@ -1100,7 +1101,6 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_otp_send_to">OTP has been sent to </string>
     <string name="toast_no_data_found">No data found.</string>
     <string name="toast_change_plan">Change Plan Successfully...</string>
-    <string name="toast_file_download">File is Download In : </string>
     <string name="toast_set_status_plan">Status Plan Set Successfully...</string>
 
 
@@ -1136,12 +1136,14 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_make_as_admin">Make as admin</string>
     <string name="txt_no_staff">No Staff found.</string>
     <string name="txt_select_start_time">Select Start Time</string>
-    <string name="txt_to"> to </string>
+    <string name="txt_to">" to "</string>
     <string name="txt_select_end_time">Select End Time</string>
     <string name="txt_select_language">Select Language</string>
     <string name="txt_constituency_not_found">...</string><!--No Constituency found.-->
     <string name="txt_last_submission_date">Last Submission Date : </string>
     <string name="txt_comment">Comment</string>
+    <string name="txt_empty_data">No Data Found</string>
+    <string name="txt_failed_to_load">Could not load data. Please try again later.</string>
     <string name="txt_no_booth_found">...</string><!--No Booths found-->
     <string name="txt_no_voter_found">...</string><!--No Voters found-->
     <string name="txt_no_subject_found">...</string><!--No Subject found-->
@@ -1306,5 +1308,10 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
         <item>29min</item>
         <item>30min</item>
     </string-array>
+
+    <string name="txt_contact_backend">Please contact sales@gruppie.in to enable live class</string>
+    <string name="no_notes_found">No notes found</string>
+
+
 
 </resources>

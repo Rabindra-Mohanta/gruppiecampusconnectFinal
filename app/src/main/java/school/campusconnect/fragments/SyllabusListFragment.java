@@ -251,7 +251,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
     {
         if (isConnectionAvailable())
         {
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar);
             manager.getSyllabus(this, GroupDashboardActivityNew.groupId,teamId,subjectId);
         }
         else
@@ -688,7 +688,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             req.setActualEndDate(actualfrom);
 
             Log.e(TAG,"req is Update"+new Gson().toJson(req));
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar);
             manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,topicId,req);
         }
         else
@@ -745,7 +745,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             request.setTopicData(list);
             Log.e(TAG,"req is Not Update"+new Gson().toJson(request));
 
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar);
             manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,chapterID,request);
         }
 

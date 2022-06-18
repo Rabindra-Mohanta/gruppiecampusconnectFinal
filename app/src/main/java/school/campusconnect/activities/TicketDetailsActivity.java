@@ -240,7 +240,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    showLoadingBar(ProgressBar,false);
+                    showLoadingBar(ProgressBar);
                    // ProgressBar.setVisibility(View.VISIBLE);
                     manager.deleteTicket(TicketDetailsActivity.this, GroupDashboardActivityNew.groupId,taskData.getIssuePostId());
                 }
@@ -714,7 +714,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
-                        showLoadingBar(ProgressBar,false);
+                        showLoadingBar(ProgressBar);
                         //ProgressBar.setVisibility(View.VISIBLE);
 
                         if (Role.equalsIgnoreCase("isAdmin"))
@@ -760,7 +760,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void okPositiveClick(DialogInterface dialog) {
                         dialog.dismiss();
-                        showLoadingBar(ProgressBar,false);
+                        showLoadingBar(ProgressBar);
                         //ProgressBar.setVisibility(View.VISIBLE);
                         if (Role.equalsIgnoreCase("isAdmin"))
                         {
@@ -893,13 +893,13 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
     {
         AddCommentTaskDetailsReq req = new AddCommentTaskDetailsReq();
         req.setText(etComment.getText().toString());
-        showLoadingBar(ProgressBar,false);
+        showLoadingBar(ProgressBar);
         //ProgressBar.setVisibility(View.VISIBLE);
         manager.setAddCommentTaskDetails(this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId(),req);
     }
     private void getComment()
     {
-        showLoadingBar(ProgressBar,false);
+        showLoadingBar(ProgressBar);
         //ProgressBar.setVisibility(View.VISIBLE);
         manager.getCommentTaskDetails(this,GroupDashboardActivityNew.groupId,taskData.getIssuePostId());
     }

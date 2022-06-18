@@ -184,7 +184,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                 if(AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())){
                     llProgress.setVisibility(View.GONE);
                     imgDownload.setVisibility(View.GONE);
-                    Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                    Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath())).fit().placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
                         @Override
                         public void onSuccess() {
 
@@ -223,7 +223,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                                     llProgress.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
                                     progressBar1.setVisibility(View.GONE);
-                                    Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                                    Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
                                         @Override
                                         public void onSuccess() {
 

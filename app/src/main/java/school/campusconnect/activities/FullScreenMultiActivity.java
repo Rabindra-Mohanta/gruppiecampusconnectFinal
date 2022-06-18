@@ -28,7 +28,6 @@ import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
-import school.campusconnect.utils.MultipleImageSwipeActivity;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
@@ -178,17 +177,9 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
 
     @Override
     public void onImageClick(String imagePath) {
-      /*  Intent i = new Intent(this, FullScreenActivity.class);
+        Intent i = new Intent(this, FullScreenActivity.class);
         i.putExtra("image", imagePath);
         startActivity(i);
-*/
-
-        Intent i = new Intent(this, MultipleImageSwipeActivity.class);
-        i.putStringArrayListExtra("image_list", listImages);
-        i.putExtra("album_id", album_id);
-        i.putExtra("type", type);
-        i.putExtra("edit",isEdit);
-        this.startActivity(i);
     }
 
     @Override

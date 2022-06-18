@@ -62,7 +62,7 @@ public class TimeTabelClassListFragment extends BaseFragment implements LeafMana
     @Override
     public void onStart() {
         super.onStart();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
        // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getClasses(this,GroupDashboardActivityNew.groupId);

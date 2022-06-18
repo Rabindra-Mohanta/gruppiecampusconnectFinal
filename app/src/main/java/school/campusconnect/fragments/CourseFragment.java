@@ -215,7 +215,7 @@ public class CourseFragment extends BaseFragment implements LeafManager.OnCommun
 
                 LeafPreference.getInstance(getContext()).setBoolean(mGroupId + "_course_delete", false);
 
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 mIsLoading = true;
                 manager.getCourses(this, mGroupId+"");
 
@@ -225,7 +225,7 @@ public class CourseFragment extends BaseFragment implements LeafManager.OnCommun
         {
             if(isConnectionAvailable())
             {
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 mIsLoading = true;
                 manager.getCourses(this, mGroupId+"");
             }
@@ -242,7 +242,7 @@ public class CourseFragment extends BaseFragment implements LeafManager.OnCommun
 
             if(isConnectionAvailable())
             {
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 mIsLoading = true;
                 manager.getCourses(this, mGroupId+"");
                 leafPreference.remove(mGroupId+"_coursepush");
@@ -392,7 +392,7 @@ public class CourseFragment extends BaseFragment implements LeafManager.OnCommun
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
             LeafManager manager = new LeafManager();
             manager.deleteCourse(this, mGroupId+"",currentItem.courseId);
 

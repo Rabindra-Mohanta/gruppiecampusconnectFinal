@@ -143,7 +143,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
     }
 
     private void getGroupList() {
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
       //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getGroups(this, from, talukName, category, categoryName);
@@ -383,7 +383,7 @@ public class HomeFragment extends BaseFragment implements LeafManager.OnCommunic
 
         if ("constituency".equalsIgnoreCase(category)) {
             LeafManager manager = new LeafManager();
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
          //   progressBar.setVisibility(View.VISIBLE);
             manager.getGroupDetail(this, groupItem.getGroupId());
         } else {

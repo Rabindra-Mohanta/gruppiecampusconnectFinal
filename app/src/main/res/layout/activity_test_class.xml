@@ -96,15 +96,16 @@
         android:id="@+id/fragment_container"
         android:layout_below="@id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/txtEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        style="@style/LabelEmptyText" />
+        <TextView
+            android:id="@+id/txtEmpty"
+            style="@style/LabelEmptyText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+    </FrameLayout>
+
 </RelativeLayout>

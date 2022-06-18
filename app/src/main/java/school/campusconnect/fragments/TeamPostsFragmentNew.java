@@ -208,7 +208,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             if (teamData.isTeamAdmin) {
                 //menu.findItem(R.id.action_settings).setVisible(true);
                 menu.findItem(R.id.menu_edit_team).setVisible(true);
-                menu.findItem(R.id.menu_change_admin).setVisible(true);
+                //menu.findItem(R.id.menu_change_admin).setVisible(true);
                 menu.findItem(R.id.menu_archive_team).setVisible(true);
                 if (GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL) || GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_CONSTITUENCY))
                     menu.findItem(R.id.menu_add_time_table).setVisible(true);
@@ -430,7 +430,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_leave_team), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showLoadingBar(mBinding.progressBar2,false);
+                        showLoadingBar(mBinding.progressBar2);
                         LeafManager manager = new LeafManager();
                         manager.leaveTeam(TeamPostsFragmentNew.this, mGroupId, team_id);
                     }
@@ -441,7 +441,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        showLoadingBar(mBinding.progressBar2,false);
+                        showLoadingBar(mBinding.progressBar2);
                         LeafManager manager = new LeafManager();
                         manager.archiveTeam(TeamPostsFragmentNew.this, mGroupId, team_id);
                     }
@@ -793,7 +793,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type,currentPage2);
         AppLog.e(TAG, "local list size is " + dataItemList.size());
         String lastId = null;
-        showLoadingBar(mBinding.progressBar2,false);
+        showLoadingBar(mBinding.progressBar2);
         if (dataItemList.size() != 0) {
 
             for (int i = 0; i < dataItemList.size(); i++) {
@@ -1546,7 +1546,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     private void getData2(String team_id, boolean isInBackground) {
         if (!isInBackground) {
-            showLoadingBar(mBinding.progressBar2,false);
+            showLoadingBar(mBinding.progressBar2);
             mIsLoading = true;
         }
         manager.teamPostGetApi(this, mGroupId + "", team_id + "", getActivity(), currentPage2);
@@ -1559,7 +1559,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
 
         if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar2,false);
+            showLoadingBar(mBinding.progressBar2);
 
             LeafManager manager = new LeafManager();
             manager.deleteTeamPost(this, mGroupId + "", team_id + "", currentItem.id);
@@ -1571,7 +1571,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     @Override
     public void onFavClick(TeamPostGetData item, int pos) {
-        showLoadingBar(mBinding.progressBar2,false);
+        showLoadingBar(mBinding.progressBar2);
         position = pos;
         manager.setFav(this, mGroupId + "", item.id);
 
@@ -1584,7 +1584,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             this.position = pos;
 
             //calling api in background
-        //    showLoadingBar(mBinding.progressBar2,false);
+        //    showLoadingBar(mBinding.progressBar2);
       //      manager.setTeamLike(this, mGroupId + "", team_id, item.id);
 
             LeafManager leafManager = new LeafManager();
@@ -2516,13 +2516,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     private void getReportData() {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(dialogProgressBar,false);
+        showLoadingBar(dialogProgressBar);
         mManager.getReportList(this);
     }
 
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(mBinding.progressBar2,false);
+        showLoadingBar(mBinding.progressBar2);
         mManager.reportPost(this, mGroupId + "", currentItem.id, report_id);
     }
 

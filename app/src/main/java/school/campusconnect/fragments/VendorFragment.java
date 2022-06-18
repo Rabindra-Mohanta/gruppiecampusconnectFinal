@@ -231,7 +231,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
                 LeafPreference.getInstance(getContext()).setBoolean(mGroupId + "_vendor_delete", false);
 
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 mIsLoading = true;
                 manager.getVendorPost(this, mGroupId+"", currentPage);
 
@@ -241,7 +241,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
         {
             if(isConnectionAvailable())
             {
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 mIsLoading = true;
                 manager.getVendorPost(this, mGroupId+"", currentPage);
             }
@@ -258,7 +258,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
             if(isConnectionAvailable())
             {
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 mIsLoading = true;
                 manager.getVendorPost(this, mGroupId+"", currentPage);
                 leafPreference.remove(mGroupId+"_vendorpush");
@@ -404,7 +404,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
             LeafManager manager = new LeafManager();
             manager.deleteVendorPost(this, mGroupId+"",currentItem.vendorId);
 

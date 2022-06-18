@@ -163,7 +163,21 @@ public class MarkSheetAdapter extends RecyclerView.Adapter<MarkSheetAdapter.View
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        item.setValue(s.toString());
+                        String maxMarksInput = viewHolder.etMarksMax.getText().toString();
+                        String inputMarks = s.toString();
+                        Float inputMarksFloat = Float.valueOf(inputMarks);
+                        if (!maxMarksInput.isEmpty()) {
+                            Float maxMarksFloat = Float.valueOf(maxMarksInput);
+                            if (maxMarksFloat > inputMarksFloat) {
+                                item.setValue(s.toString());
+                                viewHolder.etMarks.setText(s.toString());
+                            } else {
+                                viewHolder.etMarks.setText(item.getValue().toString());
+                            }
+                        } else {
+                            item.setValue(s.toString());
+                            viewHolder.etMarks.setText(s.toString());
+                        }
                     }
 
                     @Override

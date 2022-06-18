@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import school.campusconnect.activities.GroupDashboardActivityNew;
-import school.campusconnect.database.LeafPreference;
 import school.campusconnect.utils.AppLog;
 
 import android.util.Log;
@@ -192,12 +191,6 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
         }
 
 
-        if (item.id.equalsIgnoreCase(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID)))
-        {
-            holder.imgStartMeeting.setVisibility(View.GONE);
-            holder.call.setVisibility(View.GONE);
-            holder.chat.setVisibility(View.GONE);
-        }
 
     }
 
@@ -238,12 +231,11 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
         @Bind(R.id.img_chat)
         ImageView chat;
         @Bind(R.id.img_tree)
-        ImageView tree;
 
-        @Bind(R.id.imgCall)
         ImageView call;
+        @Bind(R.id.imgCall)
 
-
+        ImageView tree;
         @Bind(R.id.line)
         View line;
         @Bind(R.id.relative)

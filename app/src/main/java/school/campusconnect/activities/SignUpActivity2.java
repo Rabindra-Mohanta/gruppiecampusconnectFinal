@@ -46,6 +46,7 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
     String pNumber;
     String countryCode;
     String countryName = "";
+    private Boolean validateUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
         if (intent.getExtras() != null) {
             countryCode = intent.getExtras().getString("countryCode", "IN");
             countryName = intent.getExtras().getString("Country", "");
+            validateUser = intent.getBooleanExtra("userFlag",false);
         }
 
         if (countryName.equalsIgnoreCase("India")) {
@@ -105,7 +107,7 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
 
             if (isValid()) {
                 if (progressBar != null)
-                    showLoadingBar(progressBar,true);
+                    showLoadingBar(progressBar);
              //       progressBar.setVisibility(View.VISIBLE);
                 LeafManager manager = new LeafManager();
                 SignUpRequest request = new SignUpRequest();
@@ -133,6 +135,7 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
         //   progressBar.setVisibility(View.GONE);
 
         Intent i = new Intent(this, UserExistActivity.class);
+        i.putExtra("userFlag",validateUser);
         startActivity(i);
         finish();
 

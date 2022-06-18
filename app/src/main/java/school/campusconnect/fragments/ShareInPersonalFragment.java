@@ -142,7 +142,7 @@ public class ShareInPersonalFragment extends BaseFragment implements LeafManager
 
     private void getData() {
         //mAdapter.clear();
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         mIsLoading = true;
 //        manager.getGroupListShare(this);
         manager.getGroupTeamListShare(this, currentPage);

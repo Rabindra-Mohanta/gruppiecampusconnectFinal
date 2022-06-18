@@ -126,7 +126,7 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void getMarkCardList() {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
        // progressBar.setVisibility(View.VISIBLE);
         if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
             leafManager.getMarkCard2List(this, GroupDashboardActivityNew.groupId, team_id, selectedTest.offlineTestExamId);
@@ -138,7 +138,7 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void getSubjectList() {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         // progressBar.setVisibility(View.VISIBLE);
 
         leafManager.getOfflineTestList(this, GroupDashboardActivityNew.groupId, team_id);
@@ -400,13 +400,15 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void addMarksApi(MarkCardResponse2.MarkCardStudent item) {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
        // progressBar.setVisibility(View.VISIBLE);
         AddMarksReq req = new AddMarksReq();
         req.subjectMarksDetails = item.subjectMarksDetails;
         leafManager.addObtainMark(this, GroupDashboardActivityNew.groupId, team_id, item.offlineTestExamId, item.userId, req);
     }
 
+
+    String oldValue = "";
 
     public class MarksAdapter extends RecyclerView.Adapter<MarksAdapter.ViewHolder> {
         List<MarkCardResponse2.SubjectMarkData> list;
@@ -451,29 +453,38 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
             }
 
             if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
-
-                holder.etObtain.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if (!holder.etObtain.getText().toString().trim().isEmpty()) {
-                            item.obtainedMarks = holder.etObtain.getText().toString();
-                        }
-                    }
-                });
             }else {
                 holder.etObtain.setEnabled(false);
             }
 
+            holder.etObtain.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    oldValue = s.toString();
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String inputMarkStr = holder.etObtain.getText().toString();
+                    if (!inputMarkStr.equalsIgnoreCase(oldValue)){
+                        if (!inputMarkStr.trim().isEmpty()) {
+                            if (Float.parseFloat(inputMarkStr) <= Float.parseFloat(item.maxMarks)) {
+                                item.obtainedMarks = inputMarkStr;
+                            } else {
+                                item.obtainedMarks = oldValue;
+                                holder.etObtain.setText(oldValue);
+                                if (oldValue.length() > 0) {
+                                    holder.etObtain.setSelection(oldValue.length() - 1);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
 
         }
 

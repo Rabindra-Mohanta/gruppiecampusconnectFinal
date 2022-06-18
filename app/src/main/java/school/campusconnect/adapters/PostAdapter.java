@@ -24,7 +24,7 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.BuildConfig;
-import school.campusconnect.datamodel.teamdiscussion.TeamPostGetData;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.utils.AmazoneAudioDownload;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneImageDownload;
@@ -202,9 +202,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
     @Override
     public void onBindViewHolder(final ImageViewHolder holder, final int position) {
         final PostItem item = list.get(position);
-
-
-
         AppLog.e("PostAdapter", "item[" + position + "] : " + item);
         String dispName = item.createdBy;
         if (count != 0) {
@@ -221,7 +218,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
         holder.txtDate.setText(MixOperations.getFormattedDate(item.createdAt, Constants.DATE_FORMAT));
         holder.txtLike.setText(Constants.coolFormat(item.likes, 0));
         holder.txt_comments.setText(Constants.coolFormat(item.comments, 0) + "");
-
         if (item.isLiked) {
             Picasso.with(mContext).load(R.drawable.icon_post_liked).into(holder.ivLike);
         } else {
@@ -277,9 +273,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 {
                     ChildAdapter adapter;
                     if (item.fileName.size() == 3) {
-                        adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
+                        adapter = new ChildAdapter(list.get(position).createdById,2, item.fileName.size(), mContext, item.fileName);
                     } else {
-                        adapter = new ChildAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
+                        adapter = new ChildAdapter(list.get(position).createdById,Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
                     }
                     holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                     holder.recyclerView.setVisibility(View.VISIBLE);
@@ -332,8 +328,49 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (!AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
+                        if(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID).equals(list.get(position).createdById)){
+
+                            AmazoneImageDownload.download(mContext, list.get(position).fileName.get(0), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                                @Override
+                                public void onDownload(File file) {
+
+                                    Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(holder.imgDownloadPdf, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                            Log.e(TAG,"Picasso Error : ");
+                                            holder.imgDownloadPdf.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void error(String msg) {
+                                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            holder.imgDownloadPdf.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void progressUpdate(int progress, int max) {
+                                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     } else {
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);
                     }
@@ -632,8 +669,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             holder.linExternalPush.setVisibility(View.VISIBLE);
             if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
             {
-                holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
-                holder.viewDeleteVideo.setVisibility(View.VISIBLE);
+                holder.txt_drop_deletevideo.setVisibility(View.GONE);
+                holder.viewDeleteVideo.setVisibility(View.GONE);
             }
             else
             {

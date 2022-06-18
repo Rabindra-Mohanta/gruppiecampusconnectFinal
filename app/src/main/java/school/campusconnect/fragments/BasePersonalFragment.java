@@ -60,7 +60,7 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     private void getPersonalList() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
             manager.getPersonalContacts(this, GroupDashboardActivityNew.groupId);
         } else {
             showNoNetworkMsg();

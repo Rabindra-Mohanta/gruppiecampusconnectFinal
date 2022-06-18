@@ -182,14 +182,14 @@ public class SharePersonalNameListFragment extends BaseFragment implements LeafM
         manager.getPersonalNameListShare(this, selected_group_id, currentPage);
 //        else
 //            manager.getGroupListShare(this);*/
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         hideLoadingBar();
         new TaskForFriends().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
     private void shareData() {
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         mIsLoading = true;
         if (GroupDashboardActivityNew.share_type.equals("group")) {
             if (isTeam)

@@ -83,7 +83,7 @@ public class TeamSettingsActivity extends BaseActivity {
 
     private void getSettingData() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
           //  progressBar.setVisibility(View.VISIBLE);
             manager.getTeamSettingsData(this, groupId, teamId);
         } else {
@@ -100,20 +100,20 @@ public class TeamSettingsActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.switch_post_all:
                 if (progressBar != null)
-                    showLoadingBar(progressBar,false);
+                    showLoadingBar(progressBar);
                   //  progressBar.setVisibility(View.VISIBLE);
                 manager.allowTeamPostAll(this, groupId + "", teamId);
                 break;
 
             case R.id.switch_comment_all:
                 if (progressBar != null)
-                    showLoadingBar(progressBar,false);
+                    showLoadingBar(progressBar);
                    // progressBar.setVisibility(View.VISIBLE);
                 manager.allowTeamCommentAll(this, groupId + "", teamId);
                 break;
             case R.id.switch_allow_addMember:
                 if (progressBar != null)
-                    showLoadingBar(progressBar,false);
+                    showLoadingBar(progressBar);
                   //  progressBar.setVisibility(View.VISIBLE);
                 Log.e("TeamSetting",switch_allow_addMember.isChecked()+"");
                     manager.allowUsersToAddTeamMember(this, groupId + "", teamId,switch_allow_addMember.isChecked());
@@ -123,7 +123,7 @@ public class TeamSettingsActivity extends BaseActivity {
                 {
                     if (!switch_attendance.isChecked()) {
                         if (progressBar != null)
-                            showLoadingBar(progressBar,false);
+                            showLoadingBar(progressBar);
                         //    progressBar.setVisibility(View.VISIBLE);
                         manager.enableDisableGps(this, groupId + "", teamId);
                     } else {
@@ -134,7 +134,7 @@ public class TeamSettingsActivity extends BaseActivity {
                 else
                 {
                     if (progressBar != null)
-                        showLoadingBar(progressBar,false);
+                        showLoadingBar(progressBar);
                         //progressBar.setVisibility(View.VISIBLE);
                     manager.enableDisableGps(this, groupId + "", teamId);
                 }
@@ -146,7 +146,7 @@ public class TeamSettingsActivity extends BaseActivity {
                 {
                     if (!switch_enable_gps.isChecked()) {
                         if (progressBar != null)
-                            showLoadingBar(progressBar,false);
+                            showLoadingBar(progressBar);
                            // progressBar.setVisibility(View.VISIBLE);
                         manager.enableDisableAttendance(this, groupId + "", teamId);
                     } else {
@@ -157,7 +157,7 @@ public class TeamSettingsActivity extends BaseActivity {
                 else
                 {
                     if (progressBar != null)
-                        showLoadingBar(progressBar,false);
+                        showLoadingBar(progressBar);
                       //  progressBar.setVisibility(View.VISIBLE);
                     manager.enableDisableAttendance(this, groupId + "", teamId);
                 }

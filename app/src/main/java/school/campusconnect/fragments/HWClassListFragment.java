@@ -272,7 +272,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
     private void apiCall(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar);
            // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {
@@ -411,7 +411,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         if (type.equalsIgnoreCase("Syllabus Tracker") && role.equalsIgnoreCase("teacher"))
         {
             LeafManager leafManager = new LeafManager();
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar);
             leafManager.getTodaySyllabusPlanList(this,GroupDashboardActivityNew.groupId,date);
             leafManager.getStaffAnalysis(this,GroupDashboardActivityNew.groupId,staffID);
         }
@@ -586,7 +586,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
+                    binding.txtEmpty.setText(getResources().getString(R.string.no_notes_found));
                 } else {
                     binding.txtEmpty.setText("");
                 }

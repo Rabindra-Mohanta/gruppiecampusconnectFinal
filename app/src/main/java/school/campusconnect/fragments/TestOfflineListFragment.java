@@ -94,7 +94,7 @@ public class TestOfflineListFragment extends BaseFragment implements LeafManager
 
     private void callAPi(boolean isLoading) {
         if (isLoading)
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
         // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getOfflineTestList(this, GroupDashboardActivityNew.groupId, team_id);

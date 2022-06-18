@@ -166,11 +166,11 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
                 {
                     binding.lblError.setText("");
                 }
-                if (otp.length() == 4)
+                /*if (otp.length() == 4)
                 {
                     hide_keyboard();
                     HomeScreen();
-                }
+                }*/
             }
         });
 
@@ -317,10 +317,6 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
 
     private boolean checkBiometricSupportNewScreen() {
 
-        if (BuildConfig.AppCategory.equalsIgnoreCase("CAMPUS"))
-        {
-            return false;
-        }
         BiometricManager biometricManager = BiometricManager.from(getApplicationContext());
         Log.e(TAG,"code "+biometricManager.canAuthenticate());
 
@@ -605,7 +601,7 @@ public class LoginPinActivity extends BaseActivity implements LeafManager.OnComm
       //  binding.progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_JOIN_GROUP) {
             AppLog.e("UserExist->", "join group api response");
-            showLoadingBar(binding.progressBar,true);
+            showLoadingBar(binding.progressBar);
            // binding.progressBar.setVisibility(View.VISIBLE);
             AppLog.e("UserExist->", "getGroupDetail api called");
             manager.getGroupDetail(this, BuildConfig.APP_ID);

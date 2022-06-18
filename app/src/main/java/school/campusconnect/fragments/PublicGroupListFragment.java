@@ -141,7 +141,7 @@ public class PublicGroupListFragment extends BaseFragment implements PublicGroup
 
     private void getData() {
         if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             mManager.getPublicGroupList(this);
         } else {
             showNoNetworkMsg();

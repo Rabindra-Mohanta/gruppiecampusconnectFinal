@@ -152,7 +152,7 @@ public class VoterListFragment extends BaseFragment implements LeafManager.OnCom
         {
             if (isConnectionAvailable())
             {
-                showLoadingBar(binding.progressBar,false);
+                showLoadingBar(binding.progressBar);
             //    binding.progressBar.setVisibility(View.VISIBLE);
                 manager.voterMasterList(this, GroupDashboardActivityNew.groupId,team_id);
             }

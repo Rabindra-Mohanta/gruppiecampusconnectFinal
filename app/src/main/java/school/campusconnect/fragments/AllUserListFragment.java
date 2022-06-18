@@ -129,7 +129,7 @@ public class AllUserListFragment extends BaseFragment implements LeafManager.OnC
         List<AllContactModel> userIdList = AllContactModel.getAll(groupId+"");
 
         if (userIdList.size() != 0) {
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             new TaskForAllUsers().execute();
         } else
             getData();
@@ -162,7 +162,7 @@ public class AllUserListFragment extends BaseFragment implements LeafManager.OnC
         if(isConnectionAvailable())
         {
             toUpdate = false;
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             mIsLoading = true;
             mManager.getAllUsersList(this, groupId+"", currentPage);
         }

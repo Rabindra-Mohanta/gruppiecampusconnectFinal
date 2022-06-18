@@ -53,7 +53,7 @@ public class ClassListFragment extends BaseFragment implements LeafManager.OnCom
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
     //    progressBar.setVisibility(View.VISIBLE);
 
         return view;

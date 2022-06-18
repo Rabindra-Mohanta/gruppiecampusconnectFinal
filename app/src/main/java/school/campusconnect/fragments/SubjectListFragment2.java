@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,8 +39,8 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
-    @Bind(R.id.txtEmpty)
-    public TextView txtEmpty;
+    @Bind(R.id.tvNoData)
+    public TextView tvNoData;
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
@@ -54,8 +57,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
         team_id=getArguments().getString("team_id");
         className=getArguments().getString("className");
 
-        showLoadingBar(progressBar,false);
-       // progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -69,8 +71,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
-     //   progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         SubjectStaffResponse res = (SubjectStaffResponse) response;
         List<SubjectStaffResponse.SubjectData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -80,14 +81,14 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        //   progressBar.setVisibility(View.GONE);
+        tvNoData.setText(getResources().getString(R.string.txt_failed_to_load));
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        //   progressBar.setVisibility(View.GONE);
+        tvNoData.setText(getResources().getString(R.string.txt_failed_to_load));
+        progressBar.setVisibility(View.GONE);
     }
 
     public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder>
@@ -110,7 +111,21 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final SubjectStaffResponse.SubjectData item = list.get(position);
             holder.txt_name.setText(item.getName());
-            holder.txt_count.setText(item.getStaffNameFormatted());
+            String staffName = item.getStaffNameFormatted();
+
+            if (staffName == null || staffName.trim().isEmpty()) {
+                holder.txt_count.setText("");
+                holder.txt_count.setVisibility(View.GONE);
+                holder.iv_assigned.setVisibility(View.GONE);
+                holder.btn_assign.setVisibility(View.VISIBLE);
+                holder.btn_assign.setOnClickListener(v -> onTreeClick(list.get(position)));
+            } else {
+                holder.txt_count.setText(staffName.trim());
+                holder.txt_count.setVisibility(View.VISIBLE);
+                holder.iv_assigned.setVisibility(View.VISIBLE);
+                holder.btn_assign.setVisibility(View.INVISIBLE);
+                holder.btn_assign.setOnClickListener(v -> {});
+            }
         }
 
         @Override
@@ -119,18 +134,18 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
-
+                    tvNoData.setText(getResources().getString(R.string.txt_empty_data));
                 }
                 else {
-                    txtEmpty.setText("");
+                    tvNoData.setText("");
                 }
-
+                progressBar.setVisibility(View.GONE);
                 return list.size();
             }
             else
             {
-                txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
+                tvNoData.setText(getResources().getString(R.string.txt_empty_data));
+                progressBar.setVisibility(View.GONE);
                 return 0;
             }
 
@@ -143,8 +158,15 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
 
             @Bind(R.id.txt_count)
             TextView txt_count;
+
+            @Bind(R.id.btn_assign)
+            Button btn_assign;
+
             @Bind(R.id.img_tree)
             ImageView img_tree;
+
+            @Bind(R.id.iv_assigned)
+            ImageView iv_assigned;
 
 
             public ViewHolder(View itemView) {

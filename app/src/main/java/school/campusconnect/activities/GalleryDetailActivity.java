@@ -257,7 +257,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
            // progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteGalleryPost(this, GroupDashboardActivityNew.groupId + "", item.getAlbumId());
@@ -363,7 +363,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {
-                        showLoadingBar(progressBar,false);
+                        showLoadingBar(progressBar);
                        // progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
                         manager.deleteGalleryFile(GalleryDetailActivity.this, GroupDashboardActivityNew.groupId + "", item.getAlbumId(), itemImage.getImagePath());

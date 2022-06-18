@@ -162,7 +162,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
 
     public void getTestExam(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
         //    progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTestExamList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
@@ -171,7 +171,7 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
     public void getTestLiveEvents() {
 
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
     //    progressBar.setVisibility(View.VISIBLE);
         leafManager.getTestLiveEvents(this, GroupDashboardActivityNew.groupId);
     }

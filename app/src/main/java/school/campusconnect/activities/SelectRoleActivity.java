@@ -50,7 +50,7 @@ public class SelectRoleActivity extends BaseActivity implements LeafManager.OnCo
         intent = new Intent(this, TicketsActivity.class);
         leafManager = new LeafManager();
 
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar);
         //binding.progressBar.setVisibility(View.VISIBLE);
 
         leafManager.getGroupDetail(this, GroupDashboardActivityNew.groupId);

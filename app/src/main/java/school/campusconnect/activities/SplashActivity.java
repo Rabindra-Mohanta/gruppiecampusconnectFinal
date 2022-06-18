@@ -355,10 +355,17 @@ public class SplashActivity extends AppCompatActivity {
         }
         else
         {
-            Intent login = new Intent(this, LoginPinActivity.class);
-            login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(login);
-            finish();
+            if (LeafPreference.getInstance(this).getInt(LeafPreference.GROUP_COUNT) > 0) {
+                Intent login = new Intent(this, LoginPinActivity.class);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(login);
+                finish();
+            } else {
+                Intent login = new Intent(this, RegisterInstituteActivity.class);
+                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(login);
+                finish();
+            }
         }
 
        /* if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {

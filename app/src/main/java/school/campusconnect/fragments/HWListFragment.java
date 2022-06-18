@@ -154,7 +154,7 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
     public void getChapters(boolean isLoading) {
         if(isLoading)
            // progressBar.setVisibility(View.VISIBLE);
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
         LeafManager leafManager = new LeafManager();
         leafManager.getHwList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }

@@ -60,7 +60,7 @@ public class BoothCoordinateListFragment extends BaseFragment implements LeafMan
         init();
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         //progressBar.setVisibility(View.VISIBLE);
 
         return view;

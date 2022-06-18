@@ -147,7 +147,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     SharedPreferences prefs;
     LeafManager manager = new LeafManager();
     boolean isPost, isAdmin;
-    String type,id;
+    String type;
     private String teamId;
     private boolean allowedToAddUser;
     private boolean allowedToAddTeamPost;
@@ -181,7 +181,6 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         allowedToAddTeamPostComment = getIntent().getBooleanExtra("allowedToAddTeamPostComment", false);
         type = getIntent().getExtras().getString("type");
         teamId = getIntent().getStringExtra("team_id");
-        id= getIntent().getStringExtra("id");
 
         binding.txtName.setText(mLeadItem.getName());
         binding.txtPhone.setText(mLeadItem.getPhone());
@@ -305,19 +304,19 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         switch (view.getId()) {
             case R.id.switchAllowPost:
                 if (binding.progressBar != null)
-                    showLoadingBar(binding.progressBar,false);
+                    showLoadingBar(binding.progressBar);
                   //  binding.progressBar.setVisibility(View.VISIBLE);
                     manager.allowTeamPost(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
             case R.id.switchAllowAddUser:
                 if (binding.progressBar != null)
-                    showLoadingBar(binding.progressBar,false);
+                    showLoadingBar(binding.progressBar);
                    // binding.progressBar.setVisibility(View.VISIBLE);
                     manager.allowAddOtherMember(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
             case R.id.switchAllowComment:
                 if (binding.progressBar != null)
-                    showLoadingBar(binding.progressBar,false);
+                    showLoadingBar(binding.progressBar);
                    // binding.progressBar.setVisibility(View.VISIBLE);
                     manager.allowTeamPostComment(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
@@ -373,12 +372,6 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
             MenuItem item2 = menu.findItem(R.id.nav_delete);
             item2.setVisible(false);
         }
-
-        if (id.equalsIgnoreCase(LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_ID)))
-        {
-            MenuItem item2 = menu.findItem(R.id.nav_delete);
-            item2.setVisible(false);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -399,7 +392,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
             mFriendId = mLeadItem.getId();
             //  showLoadingDialog();
             if (binding.progressBar != null)
-                showLoadingBar(binding.progressBar,false);
+                showLoadingBar(binding.progressBar);
                // binding.progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.removeTeamUser(this, mGroupId + "", teamId, mLeadItem.getId());

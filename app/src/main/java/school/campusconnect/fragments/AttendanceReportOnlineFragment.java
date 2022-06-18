@@ -111,7 +111,7 @@ public class AttendanceReportOnlineFragment extends BaseFragment implements Leaf
 
     private void getAttendanceReport(MonthData item) {
         selectedMonthYear = item.dispName+"_"+Calendar.getInstance().get(Calendar.YEAR);
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         //progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getAttendanceReportOnline(this, GroupDashboardActivityNew.groupId, team_id, item.month, Calendar.getInstance().get(Calendar.YEAR));

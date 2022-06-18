@@ -1,31 +1,21 @@
 package school.campusconnect.activities;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,8 +23,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-
-import org.apache.poi.sl.usermodel.Line;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,12 +38,9 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
-import school.campusconnect.datamodel.test_exam.OfflineTestReq;
 import school.campusconnect.datamodel.test_exam.OfflineTestRes;
 import school.campusconnect.datamodel.test_exam.TestOfflineSubjectMark;
-import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
-import school.campusconnect.utils.AppLog;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class EditOfflineTestActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
@@ -249,25 +234,17 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
                 fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
                 fragment.setTitle(R.string.lbl_ResultDate);*/
 
-                final Calendar calendar = Calendar.getInstance();
-                DatePickerDialog fragment = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                        etResultDate.setText(format.format(calendar.getTime()));
-                    }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-                fragment.show();
+                pickDate(
+                        Calendar.getInstance().getTimeInMillis(),
+                        cal -> {
+                            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                            etResultDate.setText(format.format(cal.getTime()));
+                        });
                 break;
             }
         }
 
     }
-
 
     public boolean isValid() {
         boolean valid = true;
@@ -361,6 +338,14 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
             holder.etMinMarks.setText(list.get(i).minMarks);
             holder.etStartTime.setText(list.get(i).startTime);
             holder.etEndTime.setText(list.get(i).endTime);
+            if(list.get(i).viewIsVisible){
+                list.get(i).viewIsVisible = false;
+                holder.llMain.setVisibility(View.VISIBLE);
+                holder.imgDelete.setImageResource(R.drawable.arrow_up);
+            }else{
+                holder.llMain.setVisibility(View.GONE);
+                holder.imgDelete.setImageResource(R.drawable.arrow_down);
+            }
 
             holder.imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -368,7 +353,9 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
                     if(holder.llMain.getVisibility()==View.VISIBLE){
                         holder.llMain.setVisibility(View.GONE);
                         holder.imgDelete.setImageResource(R.drawable.arrow_down);
+                        list.get(i).viewIsVisible = false;
                     }else {
+                        list.get(i).viewIsVisible = true;
                         holder.llMain.setVisibility(View.VISIBLE);
                         holder.imgDelete.setImageResource(R.drawable.arrow_up);
                     }

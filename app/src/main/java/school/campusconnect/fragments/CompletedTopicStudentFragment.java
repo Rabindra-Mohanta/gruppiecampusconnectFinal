@@ -85,7 +85,7 @@ public class CompletedTopicStudentFragment extends BaseFragment implements LeafM
     }
 
     private void getUsers() {
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         leafManager.getStudents(this, GroupDashboardActivityNew.groupId, team_id);
     }
 

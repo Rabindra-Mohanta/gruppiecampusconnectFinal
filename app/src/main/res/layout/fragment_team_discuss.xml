@@ -83,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/progressBarZoom"
@@ -93,12 +93,23 @@
         android:visibility="gone" />
 
     <TextView
+        android:id="@+id/tvNoData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_centerInParent="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_below="@id/progressBar"/>
+
+    <TextView
         android:id="@+id/txtEmpty"
+        style="@style/LabelEmptyText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        style="@style/LabelEmptyText"/>
+        android:paddingEnd="16dp" />
 </RelativeLayout>

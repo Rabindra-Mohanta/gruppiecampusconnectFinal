@@ -63,6 +63,7 @@ public class NewPassActivity extends BaseActivity {
     private boolean show;
     private boolean show2;
     private LeafManager manager;
+    private Boolean validateUser = false;
 
 
     @Override
@@ -82,6 +83,10 @@ public class NewPassActivity extends BaseActivity {
                 createNewPass();
             }
         });
+        Intent intent = getIntent();
+        if (intent.getExtras() != null) {
+            validateUser = intent.getBooleanExtra("userFlag",false);
+        }
 
         layout_password_conf.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -108,7 +113,7 @@ public class NewPassActivity extends BaseActivity {
                 newPassReq.password = layout_password.getText().toString();
                 newPassReq.confirmPassword = layout_password_conf.getText().toString();
 
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
              //   progressBar.setVisibility(View.VISIBLE);
                 manager.newPass(this, newPassReq);
             } else {
@@ -156,6 +161,16 @@ public class NewPassActivity extends BaseActivity {
             AppLog.e("LOGIN", "image is " + response1.image);
 
             hide_keyboard();
+
+            if (validateUser) {
+                LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
+                LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.GROUP_ID, response1.groupId);
+                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
+
+                Intent register = new Intent(this, RegisterInstituteActivity.class);
+                startActivity(register);
+                return;
+            }
 
             Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

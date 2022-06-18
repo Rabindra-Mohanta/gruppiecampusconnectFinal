@@ -5,6 +5,9 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -20,6 +23,8 @@ public class BusActivity extends BaseActivity {
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
+   /* @Bind(R.id.plus_button)
+    public ImageView plusButton;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +40,12 @@ public class BusActivity extends BaseActivity {
         BusListFragment classListFragment=new BusListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
-
+       /* plusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BusActivity.this,AddBusActivity.class));
+            }
+        });*/
     }
 
     @Override

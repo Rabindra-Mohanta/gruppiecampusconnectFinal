@@ -297,14 +297,14 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
                 final Calendar calendar = Calendar.getInstance();
 
-                TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Material_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar,new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-                        openEndTimeDialog(format.format(calendar.getTime()));
+                        openEndTimeDialog(format.format(calendar.getTime()), null);
 
                         // holder.et_time.setText(format.format(calendar.getTime()));
                     }
@@ -475,7 +475,11 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
             holder.et_subject.setText(item.getSubjectName());
 
-            holder.et_staff.setText(item.getTeacherName());
+            if (item.getTeacherName() == null || item.getTeacherName().isEmpty()) {
+                holder.et_staff.setVisibility(View.GONE);
+            } else {
+                holder.et_staff.setText(item.getTeacherName());
+            }
 
         /*    holder.spSubject.setAdapter(new ArrayAdapter<String>(AddTimeTable2.this, R.layout.item_spinner_new, R.id.tvItem, new String[]{item.getSubjectName()}));
 
@@ -592,11 +596,11 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         return false;
     }
 
-    private void openEndTimeDialog(String startDate) {
+    private void openEndTimeDialog(String startDate, SubStaffTTReq existingPeriod) {
 
         final Calendar calendar = Calendar.getInstance();
 
-        TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Material_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar,new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
@@ -612,13 +616,28 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                         start_time_new = startDate;
                         end_time_new = format.format(calendar.getTime());
                         etTimeAddNew.setText(start_time_new+getResources().getString(R.string.txt_to)+end_time_new);
-
+                        String selectedDay = day;
+                        String selectedPeriod = period;
+                        if (existingPeriod != null) {
+                            selectedDay = existingPeriod.getDay();
+                            selectedPeriod = existingPeriod.getPeriod();
+                        }
+                        retrieveAvailableStaff(
+                                new SubStaffTTReq(selectedDay, selectedPeriod, start_time_new, end_time_new));
                     }
                     else
                     {
                         start_time_edit = startDate;
                         end_time_edit = format.format(calendar.getTime());
                         et_time.setText(start_time_edit+getResources().getString(R.string.txt_to)+end_time_edit);
+                        String selectedDay = day;
+                        String selectedPeriod = period;
+                        if (existingPeriod != null) {
+                            selectedDay = existingPeriod.getDay();
+                            selectedPeriod = existingPeriod.getPeriod();
+                        }
+                        retrieveAvailableStaff(
+                                new SubStaffTTReq(selectedDay, selectedPeriod, start_time_edit, end_time_edit));
                     }
                 }
                 else
@@ -632,7 +651,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                     {
                         et_time.setText("");
                     }
-                    openEndTimeDialog(startDate);
+                    openEndTimeDialog(startDate, null);
                     Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_end_time_after_start_time),Toast.LENGTH_SHORT).show();
                 }
             }
@@ -667,6 +686,10 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         fragment.show();
     }
 
+    private void retrieveAvailableStaff(SubStaffTTReq subStaffTTReq) {
+        getSubjectStaff(subStaffTTReq);
+    }
+
 
     EditText et_period_dialog;
 
@@ -680,10 +703,14 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         final Dialog dialog = new Dialog(this, R.style.AppDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.edit_tt_dialog);
+
         et_period_dialog = dialog.findViewById(R.id.et_period);
+        et_period_dialog.setText(item.getPeriod());
+        et_period_dialog.setEnabled(false);
+
         et_time = dialog.findViewById(R.id.et_time);
         et_time.setText(item.getStartTime()+getResources().getString(R.string.txt_to)+item.getEndTime());
-        et_period_dialog.setText(item.getPeriod());
+
         spSubject_dialog = dialog.findViewById(R.id.spSubject);
         spStaff_dialog = dialog.findViewById(R.id.spStaff);
 
@@ -696,14 +723,16 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
                 final Calendar calendar = Calendar.getInstance();
 
-                TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Material_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog fragment = new TimePickerDialog(AddTimeTable2.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar,new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-                        openEndTimeDialog(format.format(calendar.getTime()));
+                        openEndTimeDialog(format.format(calendar.getTime()), new SubStaffTTReq(
+                                day, item.getPeriod(), null, null
+                        ));
 
                         // holder.et_time.setText(format.format(calendar.getTime()));
                     }
@@ -733,7 +762,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
 
                 Log.e(TAG,"Last Index of Period Item"+periodLast);
 
-                if (periodList.size() > 0)
+                /*if (periodList.size() > 0)
                 {
                     for (int i = 0;i<periodList.size();i++)
                     {
@@ -743,13 +772,13 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                             return;
                         }
                     }
-                }
+                }*/
 
-                if (periodLast.equalsIgnoreCase(et_period_dialog.getText().toString().toLowerCase().trim()))
+               /* if (periodLast.equalsIgnoreCase(et_period_dialog.getText().toString().toLowerCase().trim()))
                 {
                     Toast.makeText(AddTimeTable2.this, getResources().getString(R.string.toast_period_value_already_used), Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
 
                 if (et_time.getText().toString().isEmpty())
                 {

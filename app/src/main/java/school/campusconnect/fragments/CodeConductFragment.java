@@ -224,7 +224,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
                 LeafPreference.getInstance(getContext()).setBoolean(mGroupId + "_rule_delete", false);
 
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 mIsLoading = true;
                 manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
 
@@ -232,7 +232,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             //initFirebase();
         } else {
             if (isConnectionAvailable()) {
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                 mIsLoading = true;
                 manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
             } else {
@@ -246,7 +246,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
     private void getDataFromAPI() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
             mIsLoading = true;
             manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
         } else {
@@ -385,7 +385,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
             LeafManager manager = new LeafManager();
             manager.deleteCodeConduct(this, mGroupId + "", currentItem.cocId);
 

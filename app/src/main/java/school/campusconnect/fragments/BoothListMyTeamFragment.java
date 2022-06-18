@@ -268,7 +268,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             return;
         }
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
     }

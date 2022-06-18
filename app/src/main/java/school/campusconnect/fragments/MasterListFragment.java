@@ -137,7 +137,7 @@ public class MasterListFragment extends BaseFragment implements LeafManager.OnCo
         {
             if(isConnectionAvailable())
             {
-                showLoadingBar(binding.progressBar,false);
+                showLoadingBar(binding.progressBar);
              //   binding.progressBar.setVisibility(View.VISIBLE);
                 manager.getMasterBoothList(this,GroupDashboardActivityNew.groupId,"masterList");
             }

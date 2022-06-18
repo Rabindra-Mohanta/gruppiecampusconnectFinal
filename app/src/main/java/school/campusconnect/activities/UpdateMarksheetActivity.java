@@ -132,7 +132,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
         init_();
 
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         //   progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getMarkCardList(this, groupId, teamId);
@@ -165,7 +165,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
                     AppLog.e(TAG, "getStudents : ");
                     list.clear();
                     adapter.notifyDataSetChanged();
-                    showLoadingBar(progressBar,false);
+                    showLoadingBar(progressBar);
                     //   progressBar.setVisibility(View.VISIBLE);
                     leafManager.getMarkCardStudents(UpdateMarksheetActivity.this, GroupDashboardActivityNew.groupId, teamId, mark_card_id);
                 }
@@ -496,7 +496,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
                 if (isAllMark(subjectMarks)) {
                     dialog.dismiss();
                     AppLog.e(TAG, "Request : " + uploadMarkRequest);
-                    showLoadingBar(progressBar,false);
+                    showLoadingBar(progressBar);
                   //  progressBar.setVisibility(View.VISIBLE);
                     leafManager.addMarksheet(UpdateMarksheetActivity.this, groupId, teamId, mark_card_id, studentData.getStudentId(), studentData.getRollNumber(), uploadMarkRequest);
                 } else {
@@ -525,7 +525,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
         hide_keyboard();
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
                // progressBar.setVisibility(View.VISIBLE);
             upLoadImageOnCloud(addMarkSheetReq);
         } else {

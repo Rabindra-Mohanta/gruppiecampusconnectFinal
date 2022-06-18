@@ -216,7 +216,7 @@ public class LeadsListActivity extends BaseActivity implements LeafManager.OnCom
         if(isConnectionAvailable())
         {
             if(progressBar!=null)
-                showLoadingBar(progressBar,false);
+                showLoadingBar(progressBar);
           //  progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.getLeadsListBySearch_new(this, groupId+"", teamId+"", search);

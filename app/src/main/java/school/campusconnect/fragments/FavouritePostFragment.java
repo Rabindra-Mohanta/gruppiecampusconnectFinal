@@ -187,7 +187,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     }
 
     private void getData() {
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         mIsLoading = true;
         manager.getFavPosts(this, mGroupId+"", currentPage);
     }
@@ -322,7 +322,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onFavClick(PostItem item, int pos) {
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         position = pos;
 
         manager.setFav(this, mGroupId+"", item.postIdForBookmark);
@@ -331,7 +331,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     @Override
     public void onLikeClick(PostItem item, int position) {
 
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
             this.position = position;
 
             manager.setLikes(this, mGroupId+"", item.postIdForBookmark);
@@ -723,7 +723,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             LeafManager manager = new LeafManager();
             manager.deletePost(this, mGroupId+"", currentItem.postIdForBookmark, "group");
 
@@ -773,13 +773,13 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
 
     private void getReportData() {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(dialogProgressBar,false);
+        showLoadingBar(dialogProgressBar);
         mManager.getReportList(this);
     }
 
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(mBinding.progressBar,false);
+        showLoadingBar(mBinding.progressBar);
         mManager.reportPost(this, mGroupId+"",  currentItem.postIdForBookmark, report_id);
     }
 

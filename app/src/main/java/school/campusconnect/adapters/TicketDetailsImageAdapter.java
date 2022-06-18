@@ -147,7 +147,7 @@ public class TicketDetailsImageAdapter extends AGVRecyclerViewAdapter<TicketDeta
 
             Log.e("MULTI_BIND", "image " + position + "is " + Constants.decodeUrlToBase64(item.get(position).getImagePath()));
 
-            Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(mImageView,
+            Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(mImageView,
                     new Callback() {
                         @Override
                         public void onSuccess() {
@@ -157,7 +157,7 @@ public class TicketDetailsImageAdapter extends AGVRecyclerViewAdapter<TicketDeta
                         @Override
                         public void onError() {
 
-                            Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                            Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).fit().centerCrop().into(mImageView, new Callback() {
                                 @Override
                                 public void onSuccess() {
 

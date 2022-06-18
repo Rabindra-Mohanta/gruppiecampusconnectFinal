@@ -481,6 +481,7 @@
     <string name="lbl_class_register_student">ವರ್ಗ/ವಿದ್ಯಾರ್ಥಿ ನೋಂದಣಿ</string>
     <string name="lbl_register_student">ವಿದ್ಯಾರ್ಥಿ ನೋಂದಣಿ</string>
     <string name="lbl_register_subject">ವಿಷಯ ನೋಂದಣಿ</string>
+    <string name="lbl_register_subject_assign">ನಿಯೋಜಿಸಿ</string>
     <string name="lbl_student_id">ವಿದ್ಯಾರ್ಥಿಯ ಐಡಿ</string>
     <string name="lbl_admition_number">ಪ್ರವೇಶ ಸಂಖ್ಯೆ</string>
     <string name="lbl_section">ವಿಭಾಗ</string>
@@ -1283,7 +1284,4 @@
     <string name="total_com_on_time">Total Completed On-Time</string>
     <string name="lbl_add_image">Add Image</string>
     <string name="toast_file_download">File is Download In : </string>
-
-    <string name="menu_staff_attendance">Staff Attendance</string>
-    <string name="lbl_session">Session</string>
 </resources>

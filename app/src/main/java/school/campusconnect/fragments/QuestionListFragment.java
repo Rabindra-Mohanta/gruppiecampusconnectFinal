@@ -179,7 +179,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
     }
 
     private void getData2() {
-        showLoadingBar(mBinding.progressBar2,false);
+        showLoadingBar(mBinding.progressBar2);
         mIsLoading = true;
         manager.getQuestions(this, mGroupId+"", currentPage2);
     }
@@ -411,7 +411,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
        AppLog.e("PersonalPostFrag", "DIalog Ok Clicked ");
-        showLoadingBar(mBinding.progressBar2,false);
+        showLoadingBar(mBinding.progressBar2);
         LeafManager manager = new LeafManager();
         manager.deleteQue(this, mGroupId+"", currentItem.id);
     }

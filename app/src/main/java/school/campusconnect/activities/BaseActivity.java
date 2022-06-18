@@ -79,9 +79,9 @@ import school.campusconnect.datamodel.syllabus.SyllabusTBL;
 import school.campusconnect.datamodel.ticket.TicketTBL;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
 import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
+import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.utils.AppLog;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -130,6 +130,7 @@ import school.campusconnect.views.SMBDialogUtils;
 public abstract class BaseActivity extends AppCompatActivity implements LeafManager.OnCommunicationListener {
 
     private Dialog mProgressDialog;
+
     private ProgressBar mProgressBar;
 
     private ProgressDialog mProgressBarDialog;
@@ -214,56 +215,34 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     public void showLoadingBar(View v) {
      //   showLoadingDialogText();
         AppLog.e("PBAR showLoadingBar", "called");
-
-        isHide = isShow;
-
-        if (isShow)
-        {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    if (mProgressBar != null)
-                    {
-                        hideLoadingBar();
-                    }
-                    if (mProgressBar == null)
-                    {
-                        mProgressBar = v;
-                        mProgressBar.setVisibility(View.VISIBLE);
-                    }
-                    else
-                    {
-                        mProgressBar.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-
-
-
-            //        if (mProgressBar == null) {
-            // mProgressBar.setVisibility(View.VISIBLE);
-            // mProgressBar = v;
+//        if (mProgressBar == null) {
+        // mProgressBar.setVisibility(View.VISIBLE);
+        // mProgressBar = v;
 //        } else {
-            //  mProgressBar.setVisibility(View.VISIBLE);
+        //  mProgressBar.setVisibility(View.VISIBLE);
 //        }
-        }
-
     }
 
-    public void hideLoadingBar() {
+ /*   public void showLoadingBar(View v,boolean isLoading) {
+        showLoadingDialogText();
+        AppLog.e("PBAR showLoadingBar", "called");
+//        if (mProgressBar == null) {
+        // mProgressBar.setVisibility(View.VISIBLE);
+        // mProgressBar = v;
+//        } else {
+        //  mProgressBar.setVisibility(View.VISIBLE);
+//        }
+    }*/
 
-        if (isHide)
-        {
-               if (mProgressBar == null) {
-                } else {
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                    mProgressBar = null;
-                }
-        }
+ /*   public void hideLoadingBar() {
+        hideLoadingDialogText();
         AppLog.e("PBAR hideLoadingBar", "called");
-
-    }
+       *//* if (mProgressBar == null) {
+        } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar = null;
+        }*//*
+    }*/
     public void showKeyboard(View view)
     {
         InputMethodManager inputMethodManager =
@@ -275,12 +254,12 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
     public synchronized void showLoadingDialogText() {
 
-      /*  try {
-            if (mProgressBar == null) {
-                mProgressBar = new ProgressDialog(this);
-                mProgressBar.setMessage("Initializing...");
-                mProgressBar.setCancelable(false);
-                mProgressBar.show();
+        /*try {
+            if (mProgressBarDialog == null) {
+                mProgressBarDialog = new ProgressDialog(this);
+                mProgressBarDialog.setMessage("Initializing...");
+                mProgressBarDialog.setCancelable(false);
+                mProgressBarDialog.show();
             } else {
                 if (!mProgressBarDialog.isShowing()) {
                     mProgressBarDialog.show();
@@ -293,10 +272,10 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
     }
     public synchronized void hideLoadingDialogText() {
-      /*  if (mProgressBar != null && mProgressBar.isShowing()) {
-            mProgressBar.hide();
-            mProgressBar.cancel();
-            mProgressBar = null;
+       /* if (mProgressBarDialog != null && mProgressBarDialog.isShowing()) {
+            mProgressBarDialog.hide();
+            mProgressBarDialog.cancel();
+            mProgressBarDialog = null;
         }*/
     }
 
@@ -1594,5 +1573,14 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), requestCode);
+    }
+
+    void pickDate(long minDate, DatePickerFragment.OnDateSelectListener callback) {
+        DatePickerFragment customDatePicker = DatePickerFragment.newInstance();
+        customDatePicker.setOnDateSelectListener(callback);
+        if (minDate > 0) {
+            customDatePicker.setMinimum(minDate);
+        }
+        customDatePicker.show(this.getSupportFragmentManager(), "datepicker");
     }
 }

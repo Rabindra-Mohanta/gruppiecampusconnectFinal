@@ -112,7 +112,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
         if (isConnectionAvailable())
         {
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar);
            // binding.progressBar.setVisibility(View.VISIBLE);
             manager.getVoterProfile(this,GroupDashboardActivityNew.groupId,userID);
         }
@@ -191,7 +191,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
     private void makeAppAdmin() {
 
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar);
     //    binding.progressBar.setVisibility(View.VISIBLE);
         manager.makeAppAdmin(this,GroupDashboardActivityNew.groupId,userID);
 
@@ -312,7 +312,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                 if (position != 0)
                 {
                     isCasteClickable = true;
-                    showLoadingBar(binding.progressBar,false);
+                    showLoadingBar(binding.progressBar);
                    // binding.progressBar.setVisibility(View.VISIBLE);
                     manager.getCaste(VoterProfileActivity.this,binding.etReligion.getSelectedItem().toString());
                 }
@@ -459,7 +459,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
         Log.e(TAG,"request"+ new Gson().toJson(item));
 
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar);
         // binding.progressBar.setVisibility(View.VISIBLE);
         manager.updateProfileVoter(VoterProfileActivity.this,GroupDashboardActivityNew.groupId,userID, item);
 
@@ -584,7 +584,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
             if (casteId != null)
             {
-                showLoadingBar(binding.progressBar,false);
+                showLoadingBar(binding.progressBar);
           //      binding.progressBar.setVisibility(View.VISIBLE);
                 manager.getSubCaste(VoterProfileActivity.this,casteId);
             }
@@ -757,7 +757,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
             imageFragment.setInitialLatterImage(data.name);
         }
 
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar);
        // binding.progressBar.setVisibility(View.VISIBLE);
         manager.getReligion(this);
 
@@ -839,7 +839,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
 
         if (casteId != null)
         {
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar);
        //     binding.progressBar.setVisibility(View.VISIBLE);
             manager.getSubCaste(this,casteId);
         }

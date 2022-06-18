@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -56,11 +58,60 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
     private int mDisplay = 0;
     private int mTotal = 0;
     private Context context;
+    private String userToken = "";
   //  private boolean isBirthday = false;
     //Bitmap BirthdayTempleteBitmap,MlaBitmap,UserBitmap;
     boolean showDownloadButton = true;
 
     String imagePreviewUrl = "";
+    public ChildAdapter(String userToken,int mDisplay, int mTotal, Context context, ArrayList<String> allImageList) {
+        this.allImageList = allImageList;
+        this.mDisplay = mDisplay;
+        this.mTotal = mTotal;
+        this.context = context;
+        this.userToken = userToken;
+        for (String s : allImageList) {
+            Log.e(TAG,"Images"+ s);
+        }
+
+        items = new ArrayList<>();
+
+        // ArrayList<ItemImage> tempData=new ArrayList<>();
+        for (int i = 0; i < allImageList.size(); i++) {
+            ItemImage itemImage = new ItemImage(allImageList.get(i));
+            int colSpan1;
+            int rowSpan1;
+
+            if (allImageList.size() == 1) {
+                colSpan1 = 2;
+                rowSpan1 = 2;
+            } else {
+                colSpan1 = 1;
+                rowSpan1 = 1;
+            }
+
+            if (colSpan1 == 2 && !isCol2Avail)
+                isCol2Avail = true;
+            else if (colSpan1 == 2 && isCol2Avail)
+                colSpan1 = 1;
+
+            itemImage.setColumnSpan(colSpan1);
+            itemImage.setRowSpan(rowSpan1);
+            itemImage.setPosition(currentOffset + i);
+            items.add(itemImage);
+
+          /*  int size = Constants.MAX_IMAGE_NUM;
+            if (tempData.size() < size)
+                size = tempData.size();
+            for (int j = 0; j < size; j++) {
+                items.add(tempData.get(j));
+            }*/
+        }
+
+
+        imagePreviewUrl = LeafPreference.getInstance(context).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
+    }
+
     public ChildAdapter(int mDisplay, int mTotal, Context context, ArrayList<String> allImageList) {
         this.allImageList = allImageList;
         this.mDisplay = mDisplay;
@@ -231,24 +282,13 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
         public void bind(final List<ItemImage> item, final int position, int mDisplay, int mTotal, final Context mContext) {
 
             Log.e(TAG, "bind image " + position + "is " + Constants.decodeUrlToBase64(item.get(position).getImagePath()));
-
             if(AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())){
                 llProgress.setVisibility(View.GONE);
                 imgDownload.setVisibility(View.GONE);
 
                 Log.e(TAG, "AmazoneImageDownload image "  + AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath()).getAbsolutePath());
-
-                Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError() {
-                        Log.e(TAG,"Picasso Error : ");
-                    }
-                });
+                Glide.with(mContext).load(AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath())).diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true).placeholder(R.drawable.placeholder_image).into(mImageView);
             }
             else {
 
@@ -336,6 +376,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                     }
                 });
                 imgDownload.setVisibility(View.VISIBLE);
+
                 imgDownload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -348,7 +389,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                                 llProgress.setVisibility(View.GONE);
                                 progressBar.setVisibility(View.GONE);
                                 progressBar1.setVisibility(View.GONE);
-                                Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                                Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
                                     @Override
                                     public void onSuccess() {
 
@@ -429,7 +470,60 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                     }
                 }
             });
+            if (userToken != null && item.get(position).getImagePath() != null && item.get(position).getImagePath().length() > 0) {
+                if (!AmazoneDownload.isPdfDownloaded(item.get(position).getImagePath())) {
+                    if(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID).equals(userToken)){
+                        imgDownload.setVisibility(View.GONE);
+                        llProgress.setVisibility(View.VISIBLE);
+                        progressBar1.setVisibility(View.VISIBLE);
+                        asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                            @Override
+                            public void onDownload(File file) {
+                                llProgress.setVisibility(View.GONE);
+                                progressBar.setVisibility(View.GONE);
+                                progressBar1.setVisibility(View.GONE);
+                                Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
 
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        Log.e(TAG,"Picasso Error : ");
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void error(String msg) {
+                                ((Activity)mContext).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        llProgress.setVisibility(View.GONE);
+                                        progressBar.setVisibility(View.GONE);
+                                        progressBar1.setVisibility(View.GONE);
+                                        Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void progressUpdate(int progress, int max) {
+                                ((Activity)mContext).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(progress>0){
+                                            progressBar1.setVisibility(View.GONE);
+                                        }
+                                        progressBar.setProgress(progress);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            }
             // textView.setText(String.valueOf(item.getPosition()));
         }
     }

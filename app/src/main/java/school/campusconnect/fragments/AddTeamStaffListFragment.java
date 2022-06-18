@@ -51,6 +51,9 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     @Bind(R.id.tvCount)
     public TextView tvCount;
 
+    @Bind(R.id.btn_update_add)
+    public TextView updateButton;
+
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
@@ -79,7 +82,7 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     @Override
     public void onStart() {
         super.onStart();
-       showLoadingBar(progressBar,false);
+       showLoadingBar(progressBar);
        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this, groupId+"", teamId+"",false);
 
@@ -128,7 +131,7 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     public void onClick(View view) {
         if (adapter != null && adapter.getSelectedCount() > 0) {
             LeafManager leafManager = new LeafManager();
-            showLoadingBar(progressBar,false);
+            showLoadingBar(progressBar);
          //   progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {
@@ -303,12 +306,30 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
         }
     }
 
+    private String textValue = null;
+
+    @OnClick({R.id.btn_update_add})
+    public void btnOnClick(View view) {
+        if (adapter != null && adapter.getSelectedCount() > 0) {
+            LeafManager leafManager = new LeafManager();
+            showLoadingBar(progressBar);
+            //  progressBar.setVisibility(View.VISIBLE);
+            leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
+        } else {
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void addRemovedStaff() {
         int cnt = adapter.getSelectedCount();
         if (cnt > 0) {
-            tvCount.setText(cnt + "");
+            if (textValue == null){
+                textValue = updateButton.getText().toString();
+            }
+            updateButton.setText(textValue+ " ("+ cnt +")");
+            // tvCount.setText(cnt + "");
         } else {
-            tvCount.setText("");
+            //tvCount.setText("");
         }
     }
 }

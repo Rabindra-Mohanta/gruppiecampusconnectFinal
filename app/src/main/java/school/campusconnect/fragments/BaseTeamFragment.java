@@ -369,7 +369,7 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
         if (!isConnectionAvailable()) {
             return;
         }
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         manager.myTeamList(this, GroupDashboardActivityNew.groupId);
     }
 

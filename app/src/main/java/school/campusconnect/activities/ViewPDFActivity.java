@@ -147,6 +147,12 @@ public class ViewPDFActivity extends BaseActivity {
         });
     }
 
+    public void startDownload(){
+        llBeforeDownload.setVisibility(View.GONE);
+        llAfterDownload.setVisibility(View.VISIBLE);
+        download(pdf);
+    }
+
     private void inits() {
 
         final Intent intent = getIntent();

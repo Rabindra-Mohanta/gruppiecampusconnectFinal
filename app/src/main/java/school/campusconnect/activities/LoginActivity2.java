@@ -291,7 +291,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     private void loginApi() {
         btnNext.setEnabled(false);
         if (progressBar != null)
-            showLoadingBar(progressBar,true);
+            showLoadingBar(progressBar);
          //   progressBar.setVisibility(View.VISIBLE);
 
         if (RememberPref.getInstance(this).contains(RememberPref.REMEMBER_USERNAME)) {
@@ -426,9 +426,11 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
 
             AppLog.e("TAG", "Response is : " + new Gson().toJson(response));
 
+            Boolean validateUser = false;
             if (!res.data.isAllowedToAccessApp) {
-                Toast.makeText(loginActivity2, getResources().getString(R.string.toast_you_are_not_authorized), Toast.LENGTH_SHORT).show();
-                return;
+                //Toast.makeText(loginActivity2, getResources().getString(R.string.toast_you_are_not_authorized), Toast.LENGTH_SHORT).show();
+                //return;
+                validateUser = true;
             }
 
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.countryCode, res.data.countryCode);
@@ -442,7 +444,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
                 startActivity(i);
 
             } else {
-                startActivity(new Intent(this, SignUpActivity2.class).putExtra("Country", countryName).putExtra("countryCode", countryCode));
+                startActivity(new Intent(this, SignUpActivity2.class).putExtra("userFlag",validateUser).putExtra("Country", countryName).putExtra("countryCode", countryCode));
                 AppLog.e("TAG", "SignUpActivity2 Launched");
             }
         }

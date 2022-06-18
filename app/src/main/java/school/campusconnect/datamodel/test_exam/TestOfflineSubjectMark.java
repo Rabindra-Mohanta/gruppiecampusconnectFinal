@@ -31,4 +31,6 @@ public class TestOfflineSubjectMark implements Serializable {
     @Expose
     public  String minMarks;
 
+    public boolean viewIsVisible = true;
+
 }

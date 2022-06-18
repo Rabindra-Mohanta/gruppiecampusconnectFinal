@@ -89,11 +89,9 @@ import net.frederico.showtipsview.ShowTipsBuilder;
 import net.frederico.showtipsview.ShowTipsView;
 import net.frederico.showtipsview.ShowTipsViewInterface;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1455,11 +1453,15 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
+            case R.id.rlMore:
+                rlMore.setVisibility(View.GONE);
+                tabLayout.getTabAt(0).select();
+                return;
 
 
         }
-        rlMore.setVisibility(View.GONE);
-        tabLayout.getTabAt(0).select();
+        rlMore.setVisibility(View.VISIBLE);
+        tabLayout.getTabAt(1).select();
     }
 
     private void createTabIcons() {
@@ -2848,14 +2850,12 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         LeafPreference leafPreference = LeafPreference.getInstance(GroupDashboardActivityNew.this);
         if (!leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase("")) {
-
-            ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {}.getType());
+            ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {
+            }.getType());
             AppLog.e(TAG, "list before : " + list);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, -7);
             String sevendayDate = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
-
-
 
             AppLog.e(TAG, "DeleteOldSaveVideos called with sevendaydate is : " + sevendayDate);
 
@@ -2864,24 +2864,9 @@ public class GroupDashboardActivityNew extends BaseActivity
             for (Iterator<VideoOfflineObject> iterator = list.iterator(); iterator.hasNext(); ) {
                 VideoOfflineObject offlineObject = iterator.next();
 
-                try {
-
-                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(offlineObject.getVideo_date());
-
-
-                    if (calendar.getTimeInMillis() > date.getTime())
-                    {
-                        MixOperations.deleteVideoFile(offlineObject.video_filepath);
-                        iterator.remove();
-                        i++;
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-
-
-
+                MixOperations.deleteVideoFile(offlineObject.video_filepath);
+                iterator.remove();
+                i++;
 
                 if (i > 20) { /// Adding this condition to avoid too many deletion on main thread.
                     break;

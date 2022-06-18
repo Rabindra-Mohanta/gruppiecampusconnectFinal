@@ -1,6 +1,7 @@
 
 package school.campusconnect.network;
 
+import com.vivid.gruppie.model.RegisterRequestData;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
@@ -15,6 +16,10 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.register.BoardsData;
+import school.campusconnect.datamodel.register.CampusMediumData;
+import school.campusconnect.datamodel.register.ClassesListData;
+import school.campusconnect.datamodel.register.TypeOfCampusData;
 import school.campusconnect.datamodel.attendance_report.ApplyLeaveReq;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
@@ -45,6 +50,7 @@ import school.campusconnect.datamodel.masterList.WorkerListResponse;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
+import school.campusconnect.datamodel.register.UniversitiesData;
 import school.campusconnect.datamodel.searchUser.SearchUserModel;
 import school.campusconnect.datamodel.staff.ApprovalStaffAttendanceRes;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
@@ -223,6 +229,10 @@ public interface LeafService {
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> login(@Body LoginRequest request, @Query("category") String category, @Query("appName") String appName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+
+    @POST("/api/v1/login/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> login(@Body LoginRequest request, @Query("category") String category, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
@@ -2041,6 +2051,31 @@ public interface LeafService {
     Call<ApprovalStaffAttendanceRes> getApprovalStaffAttendance(@Path("group_id") String group_id, @Query("day") String day, @Query("month") String month, @Query("year") String year);
 */
 
+    // Registration API
+
+    @GET("api/v1/get/type/of/campus")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TypeOfCampusData> getTypeOfCampus();
+
+    @GET("api/v1/get/board/db")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoardsData> getBoardsListForCampus(@Query("campusType") String campusType);
+
+    @GET("api/v1/get/university/from/db")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<UniversitiesData> getUniversitiesForBoard(@Query("board") String board);
+
+    @GET("api/v1/get/medium/from/db")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<CampusMediumData> getCampusMedium();
+
+    @GET("api/v1/get/board/class/list/school")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassesListData> getClassesList(@Query("board") String board, @Query("subCategory") String subCategory);
+
+    @POST("api/v1/user/{user_id}/new/register")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassesListData> doRegister(@Path("user_id") String userId, @Body RegisterRequestData req);
 
     @POST("api/v1/groups/{group_id}/staff/attendance/take")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

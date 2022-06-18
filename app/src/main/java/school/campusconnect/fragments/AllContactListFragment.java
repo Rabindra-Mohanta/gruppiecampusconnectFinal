@@ -131,7 +131,7 @@ public class AllContactListFragment extends BaseFragment implements LeafManager.
         List<GruppieContactsModel> dblist = GruppieContactsModel.getAll();
 
         if (dblist.size() != 0) {
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             new TaskForAllContacts().execute();
 //            callApi();
         } else
@@ -188,7 +188,7 @@ public class AllContactListFragment extends BaseFragment implements LeafManager.
 
     private void getData() {
         if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar,false);
+            showLoadingBar(mBinding.progressBar);
             mIsLoading = true;
             mManager.getAllContactsList(this/*, currentPage*/);
         } else {
@@ -198,7 +198,7 @@ public class AllContactListFragment extends BaseFragment implements LeafManager.
     }
 
     private void getUpdatedData() {
-//        showLoadingBar(mBinding.progressBar,false);
+//        showLoadingBar(mBinding.progressBar);
 //        mIsLoading = true;
         mManager.updateContactsList(this, getFriendIds());
 //        getFriendIds();

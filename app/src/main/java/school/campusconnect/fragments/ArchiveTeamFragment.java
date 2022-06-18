@@ -57,7 +57,7 @@ public class ArchiveTeamFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getArchiveList() {
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         leafManager.getArchiveTeams(this,groupId);
     }
 
@@ -117,7 +117,7 @@ public class ArchiveTeamFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onRestoreClick(int position) {
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar);
         leafManager.restoreArchiveTeam(this,groupId,listTeams.get(position).teamId);
     }
 }
