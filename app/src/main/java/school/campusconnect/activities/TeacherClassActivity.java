@@ -44,7 +44,7 @@ public class TeacherClassActivity extends BaseActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_staff_attendance,menu);
+       // getMenuInflater().inflate(R.menu.menu_staff_attendance,menu);
 
         /*if (getIntent().getExtras().getString("role") != null && getIntent().getExtras().getString("role").equalsIgnoreCase("admin"))
         {
@@ -53,7 +53,7 @@ public class TeacherClassActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menuStaffAttendance:
@@ -62,5 +62,5 @@ public class TeacherClassActivity extends BaseActivity {
              default:
                  return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 }

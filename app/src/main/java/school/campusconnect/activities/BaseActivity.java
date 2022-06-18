@@ -131,6 +131,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
     private Dialog mProgressDialog;
     private ProgressBar mProgressBar;
+
+    private ProgressDialog mProgressBarDialog;
     private int hot_number = 0;
     private TextView tv_noti;// = null;
     private TextView tv_select;// = null;
@@ -200,6 +202,59 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
         if (isHide)
         {
+            if (mProgressBar == null) {
+            } else {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mProgressBar = null;
+            }
+        }
+        AppLog.e("PBAR hideLoadingBar", "called");
+
+    }
+    public void showLoadingBar(View v) {
+     //   showLoadingDialogText();
+        AppLog.e("PBAR showLoadingBar", "called");
+
+        isHide = isShow;
+
+        if (isShow)
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (mProgressBar != null)
+                    {
+                        hideLoadingBar();
+                    }
+                    if (mProgressBar == null)
+                    {
+                        mProgressBar = v;
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+
+
+            //        if (mProgressBar == null) {
+            // mProgressBar.setVisibility(View.VISIBLE);
+            // mProgressBar = v;
+//        } else {
+            //  mProgressBar.setVisibility(View.VISIBLE);
+//        }
+        }
+
+    }
+
+    public void hideLoadingBar() {
+
+        if (isHide)
+        {
                if (mProgressBar == null) {
                 } else {
                     mProgressBar.setVisibility(View.INVISIBLE);
@@ -227,8 +282,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
                 mProgressBar.setCancelable(false);
                 mProgressBar.show();
             } else {
-                if (!mProgressBar.isShowing()) {
-                    mProgressBar.show();
+                if (!mProgressBarDialog.isShowing()) {
+                    mProgressBarDialog.show();
                 }
             }
         }catch (Exception e)

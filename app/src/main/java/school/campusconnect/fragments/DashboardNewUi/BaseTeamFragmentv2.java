@@ -675,7 +675,6 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
             notificationList.clear();
 
 
-
             for (int i=0;i<notificationTableList.size();i++)
             {
                 NotificationListRes.NotificationListData notificationListData = new NotificationListRes.NotificationListData();

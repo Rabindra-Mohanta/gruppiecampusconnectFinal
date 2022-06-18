@@ -265,7 +265,10 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if ("admin".equalsIgnoreCase(role))
+        {
+            menu.findItem(R.id.menu_add_post).setIcon(R.drawable.posticon);
             menu.findItem(R.id.menu_add_post).setVisible(true);
+        }
         else
             menu.findItem(R.id.menu_add_post).setVisible(false);
 

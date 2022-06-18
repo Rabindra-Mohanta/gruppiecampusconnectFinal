@@ -52,7 +52,6 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-
     <EditText
         android:layout_below="@id/allStaff"
         android:id="@+id/edtSearch"

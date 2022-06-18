@@ -466,6 +466,21 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
             hide_keyboard();
 
+            if (BuildConfig.AppCategory.equalsIgnoreCase("CAMPUS"))
+            {
+                if (response1.groupCount == 0) {
+                    LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
+                    LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.GROUP_ID, response1.groupId);
+                    LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
+
+                    Intent register = new Intent(this, RegisterInstituteActivity.class);
+                    startActivity(register);
+                    finish();
+                    return;
+                }
+            }
+
+
             Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             i.putExtra("Role",response1.role);

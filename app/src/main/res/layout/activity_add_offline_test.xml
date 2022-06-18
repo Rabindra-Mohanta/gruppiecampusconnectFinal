@@ -105,7 +105,7 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginEnd="@dimen/padding_5dp"
-                                        android:layout_weight="1"
+                                        android:layout_weight="0.6"
                                         android:orientation="vertical">
 
                                         <TextView
@@ -154,6 +154,8 @@
                                 </LinearLayout>
 
                                 <LinearLayout
+                                    android:visibility="gone"
+                                    android:id="@+id/llDate"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
@@ -210,6 +212,8 @@
 
                                 </LinearLayout>
                                 <LinearLayout
+                                    android:id="@+id/llMark"
+                                    android:visibility="gone"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 

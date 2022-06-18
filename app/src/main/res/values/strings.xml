@@ -927,7 +927,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="title_submit_answer_paper">Submit Answer Paper</string>
     <string name="title_add_chapter_plan">Add Chapter Plan</string>
 
-
+    <string name="toast_file_download">File is Download In : </string>
     <string name="toast_enter_name">Please Enter Name</string>
     <string name="toast_enter_phone">Please Enter Phone</string>
     <string name="toast_valid_phone">Please Enter Valid Phone Number</string>

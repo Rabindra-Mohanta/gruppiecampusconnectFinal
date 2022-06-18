@@ -46,7 +46,7 @@ public class SubjectActivity2 extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_class,menu);
+        getMenuInflater().inflate(R.menu.menu_add_subject_v2,menu);
         menu.findItem(R.id.menu_add_class).setTitle(getResources().getString(R.string.lbl_add_subject));
         return super.onCreateOptionsMenu(menu);
     }

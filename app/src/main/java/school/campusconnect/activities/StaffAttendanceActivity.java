@@ -233,7 +233,7 @@ public static final String TAG = "StaffAttendanceActivity";
                         if (data.getAttendance().get(i).getAttendance().equalsIgnoreCase("present"))
                         {
                             holder.binding.chAfterNoon.setChecked(true);
-                            holder.binding.chAfterNoon.setChecked(false);
+                            holder.binding.chAfterNoon.setEnabled(false);
                             holder.binding.llAfterNoon.setVisibility(View.VISIBLE);
                         }
                         else{

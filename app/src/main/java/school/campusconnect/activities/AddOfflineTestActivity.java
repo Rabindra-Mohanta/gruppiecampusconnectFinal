@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -101,6 +102,11 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
+    @Bind(R.id.llDate)
+    public LinearLayout llDate;
+
+    @Bind(R.id.llMark)
+    public LinearLayout llMark;
 
     @Bind(R.id.iconBack)
     public ImageView iconBack;
@@ -152,9 +158,10 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             subjectList = new Gson().fromJson(getIntent().getStringExtra("subjectList"), new TypeToken<ArrayList<SubjectStaffResponse.SubjectData>>() {
             }.getType());
 
-            String strSubject[] = new String[subjectList.size()];
+            String strSubject[] = new String[subjectList.size()+1];
+            strSubject[0] = getResources().getString(R.string.lbl_select_subject);
             for (int i = 0; i < subjectList.size(); i++) {
-                strSubject[i] = subjectList.get(i).name;
+                strSubject[i+1] = subjectList.get(i).name;
             }
             ArrayAdapter<String> spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white, R.id.tvItem, strSubject);
             spSubject.setAdapter(spSubAdapter);
@@ -175,6 +182,10 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                 }
             }
             spSubject.setSelection(index);
+
+            llDate.setVisibility(View.VISIBLE);
+            llMark.setVisibility(View.VISIBLE);
+
             etStartTime.setText(lastItem.startTime);
             etEndTime.setText(lastItem.endTime);
             etMinMarks.setText(lastItem.minMarks);
@@ -211,7 +222,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             public void onClick(View view) {
                 if (TextUtils.isEmpty(etDate.getText().toString().trim())) {
                     Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_select_date), Toast.LENGTH_SHORT).show();
-                } else if (spSubject.getSelectedItemPosition() == -1) {
+                } else if (spSubject.getSelectedItemPosition() == 0) {
                     Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_subject), Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(etStartTime.getText().toString().trim())) {
                     Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_start_time), Toast.LENGTH_SHORT).show();
@@ -231,6 +242,8 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                     t1.startTime = etStartTime.getText().toString();
                     t1.endTime = etEndTime.getText().toString();
                     if (adapter != null) {
+                        llDate.setVisibility(View.GONE);
+                        llMark.setVisibility(View.GONE);
                         adapter.add(t1);
                         hide_keyboard(view);
                     }
@@ -260,7 +273,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                             Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_start_time), Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        if (spSubject.getSelectedItemPosition() == -1) {
+                        if (spSubject.getSelectedItemPosition() == 0) {
                             Toast.makeText(AddOfflineTestActivity.this, getResources().getString(R.string.toast_please_select_subject), Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -450,9 +463,10 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             case LeafManager.API_SUBJECT_STAFF:
                 SubjectStaffResponse res = (SubjectStaffResponse) response;
                 subjectList = res.getData();
-                String strSubject[] = new String[subjectList.size()];
+                String strSubject[] = new String[subjectList.size()+1];
+                strSubject[0] = getResources().getString(R.string.lbl_select_subject);
                 for (int i = 0; i < subjectList.size(); i++) {
-                    strSubject[i] = subjectList.get(i).name;
+                    strSubject[i+1] = subjectList.get(i).name;
                 }
                 ArrayAdapter<String> spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white, R.id.tvItem, strSubject);
                 spSubject.setAdapter(spSubAdapter);
