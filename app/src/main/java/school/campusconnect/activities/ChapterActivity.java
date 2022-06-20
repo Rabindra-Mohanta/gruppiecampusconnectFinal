@@ -64,6 +64,7 @@ public class ChapterActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
         canPost = getIntent().getBooleanExtra("canPost",false);
         team_id = getIntent().getStringExtra("team_id");
         subject_id = getIntent().getStringExtra("subject_id");
@@ -95,13 +96,26 @@ public class ChapterActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_add_post) {
+
             Intent intent = new Intent(this,AddChapterPostActivity.class);
             intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
             intent.putExtra("team_id",team_id);
             intent.putExtra("subject_id",subject_id);
             intent.putExtra("subject_name",subject_name);
+            intent.putExtra("isDelete",true);
+
+            if (((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getChapterList() == 0)
+            {
+                intent.putExtra("isDelete",false);
+            }
+            else
+            {
+                intent.putExtra("isDelete",true);
+                intent.putExtra("chapter_id",((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getChapterID());
+            }
             intent.putExtra("path",path);
             startActivity(intent);
+
             return true;
         }
         if (item.getItemId() == R.id.menu_delete_chapter) {

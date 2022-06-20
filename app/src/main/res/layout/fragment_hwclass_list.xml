@@ -326,7 +326,8 @@
                     android:layout_height="@dimen/login_button_height" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:layout_marginHorizontal="-15dp"
                     android:id="@+id/rvClass"
                     android:layout_below="@id/spFilter"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

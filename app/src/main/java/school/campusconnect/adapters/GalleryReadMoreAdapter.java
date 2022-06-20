@@ -180,7 +180,6 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                 }
             }else {
 
-
                 if(AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())){
                     llProgress.setVisibility(View.GONE);
                     imgDownload.setVisibility(View.GONE);

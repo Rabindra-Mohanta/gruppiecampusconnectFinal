@@ -23,8 +23,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -95,6 +98,7 @@ import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.chapter.ChapterRes;
+import school.campusconnect.fragments.ChapterListFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
@@ -249,6 +253,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     String subject_id;
     String subject_name;
 
+    String chapterId;
+    boolean canDelete;
     public Uri imageCaptureFile;
 
     private Boolean isGalleryMultiple = false;
@@ -412,6 +418,43 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             });
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        if (canDelete) {
+            getMenuInflater().inflate(R.menu.menu_chapter, menu);
+            menu.findItem(R.id.menu_add_post).setVisible(false);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.menu_delete_chapter) {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_chapter), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (isConnectionAvailable()) {
+                        showLoadingBar(progressBar);
+                        //   progressBar.setVisibility(View.VISIBLE);
+                        LeafManager manager = new LeafManager();
+                        manager.deleteChapter(AddChapterPostActivity.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterId);
+                    } else {
+                        showNoNetworkMsg();
+                    }
+                }
+            });
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void getChapters() {
 
         showLoadingBar(progressBar,false);
@@ -703,12 +746,34 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             subject_id = getIntent().getStringExtra("subject_id");
             subject_name = getIntent().getStringExtra("subject_name");
             sharePath = getIntent().getStringExtra("path");
+            canDelete = getIntent().getBooleanExtra("isDelete",false);
+            chapterId = getIntent().getStringExtra("chapter_id");
+        }
+
+        if (!canDelete)
+        {
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0,0,0,0);
+            btnShare.setLayoutParams(layoutParams);
+            addOrRemoveProperty(btnShare,RelativeLayout.ALIGN_PARENT_RIGHT,true);
 
         }
         rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new UploadImageAdapter(listImages, this);
         rvImages.setAdapter(imageAdapter);
     }
+
+    private void addOrRemoveProperty(View view, int property, boolean flag){
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        if(flag){
+            layoutParams.addRule(property);
+        }else {
+            layoutParams.removeRule(property);
+        }
+        view.setLayoutParams(layoutParams);
+    }
+
+
 
     private void shareButtonEnableDisable() {
   //      btnShare.setEnabled(isValid(false));
@@ -1258,6 +1323,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 AppLog.e(TAG, "ChapterRes " + chapterList);
                 bindChapter();
                 break;
+
+            case LeafManager.API_CHAPTER_REMOVE:
+                    LeafPreference.getInstance(this).setBoolean("is_chapter_added", true);
+                    finish();
+                    break;
         }
 
     }

@@ -65,6 +65,8 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
 
     String role;
 
+    ArrayList<ClassResponse.ClassData> resultClass = new ArrayList<>();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,29 +108,29 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
     }
 
     private void getDataLocally() {
-        List<LiveClassListTBL> list = LiveClassListTBL.getAll(GroupDashboardActivityNew.groupId);
-        if (list.size() != 0) {
-            ArrayList<VideoClassResponse.ClassData> result = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++) {
-                LiveClassListTBL currentItem = list.get(i);
-                VideoClassResponse.ClassData item = new VideoClassResponse.ClassData();
-                item.zoomPassword = currentItem.zoomPassword;
-                item.zoomName = new Gson().fromJson(currentItem.zoomName, new TypeToken<ArrayList<String>>() {
-                }.getType());
-                item.zoomMail = currentItem.zoomMail;
-                item.zoomSecret = currentItem.zoomSecret;
-                item.zoomMeetingPassword = currentItem.zoomMeetingPassword;
-                item.zoomKey = currentItem.zoomKey;
-                item.id = currentItem.teamId;
-                item.className = currentItem.name;
-                item.jitsiToken = currentItem.jitsiToken;
-                item.groupId = currentItem.groupId;
-                item.canPost = currentItem.canPost;
-                result.add(item);
-            }
-            rvClass.setAdapter(new ClassesAdapter(result));
 
-            TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("LIVE", GroupDashboardActivityNew.groupId);
+        List<ClassListTBL> list = ClassListTBL.getAll(GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+
+            for (int i = 0; i < list.size(); i++) {
+                ClassListTBL currentItem = list.get(i);
+                ClassResponse.ClassData item = new ClassResponse.ClassData();
+                item.id = currentItem.teamId;
+                item.teacherName = currentItem.teacherName;
+                item.phone = currentItem.phone;
+                item.members = currentItem.members;
+                item.countryCode = currentItem.countryCode;
+                item.className = currentItem.name;
+                item.classImage = currentItem.image;
+                item.category = currentItem.category;
+                item.jitsiToken = currentItem.jitsiToken;
+                item.userId = currentItem.userId;
+                item.rollNumber = currentItem.rollNumber;
+                resultClass.add(item);
+            }
+            rvClass.setAdapter(new ClassesAdapter(resultClass));
+
+            TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
             if (dashboardCount != null) {
                 boolean apiCall = false;
                 if (dashboardCount.lastApiCalled != 0) {
@@ -136,7 +138,6 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
                         apiCall = true;
                     }
                 }
-
                 if (dashboardCount.oldCount != dashboardCount.count) {
                     dashboardCount.oldCount = dashboardCount.count;
                     dashboardCount.save();
@@ -153,12 +154,19 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
     }
 
 
+
     private void calApi(boolean isLoading) {
         if(isLoading)
             showLoadingBar(progressBar);
             //progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
+        if ("teacher".equalsIgnoreCase(role)) {
+            leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
+        }else if ("parent".equalsIgnoreCase(role)) {
+            leafManager.getParentKidsNew(this, GroupDashboardActivityNew.groupId);
+        } else {
+            leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
+        }
     }
 
     @Override
@@ -169,8 +177,24 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         hideLoadingBar();
+
+
+        ClassResponse res = (ClassResponse) response;
+        resultClass.clear();
+        resultClass = res.getData();
+        AppLog.e(TAG, "ClassResponse " + new Gson().toJson(resultClass));
+        rvClass.setAdapter(new ClassesAdapter(resultClass));
+
+        TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
+        if(dashboardCount!=null){
+            dashboardCount.lastApiCalled = System.currentTimeMillis();
+            dashboardCount.save();
+        }
+
+        saveToDB(resultClass);
+
        // progressBar.setVisibility(View.GONE);
-        VideoClassResponse res = (VideoClassResponse) response;
+        /*VideoClassResponse res = (VideoClassResponse) response;
         List<VideoClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
         LeafPreference.getInstance(getActivity()).setString("video_class_group_id_" + GroupDashboardActivityNew.groupId, new Gson().toJson(result));
@@ -180,30 +204,29 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
         if(dashboardCount!=null){
             dashboardCount.lastApiCalled = System.currentTimeMillis();
             dashboardCount.save();
-        }
+        }*/
 
-        saveToDB(result);
+       // saveToDB(result);
     }
 
-    private void saveToDB(List<VideoClassResponse.ClassData> result) {
+    private void saveToDB(List<ClassResponse.ClassData> result) {
         if (result == null)
             return;
 
-        LiveClassListTBL.deleteAll(GroupDashboardActivityNew.groupId);
+        ClassListTBL.deleteAll(GroupDashboardActivityNew.groupId);
         for (int i = 0; i < result.size(); i++) {
-            VideoClassResponse.ClassData currentItem = result.get(i);
-            LiveClassListTBL item = new LiveClassListTBL();
-            item.zoomPassword = currentItem.zoomPassword;
-            item.zoomName = new Gson().toJson(currentItem.zoomName);
-            item.zoomMail = currentItem.zoomMail;
-            item.zoomSecret = currentItem.zoomSecret;
-            item.zoomMeetingPassword = currentItem.zoomMeetingPassword;
-            item.zoomKey = currentItem.zoomKey;
+            ClassResponse.ClassData currentItem = result.get(i);
+            ClassListTBL item = new ClassListTBL();
             item.teamId = currentItem.id;
+            item.teacherName = currentItem.teacherName;
+            item.phone = currentItem.phone;
+            item.members = currentItem.members;
+            item.countryCode = currentItem.countryCode;
             item.name = currentItem.className;
+            item.image = currentItem.classImage;
+            item.category = currentItem.category;
             item.jitsiToken = currentItem.jitsiToken;
-            item.groupId = currentItem.groupId;
-            item.canPost = currentItem.canPost;
+            item.groupId = GroupDashboardActivityNew.groupId;
             item.save();
         }
     }
@@ -222,10 +245,10 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
 
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder> {
-        List<VideoClassResponse.ClassData> list;
+        List<ClassResponse.ClassData> list;
         private Context mContext;
 
-        public ClassesAdapter(List<VideoClassResponse.ClassData> list) {
+        public ClassesAdapter(List<ClassResponse.ClassData> list) {
             this.list = list;
         }
 
@@ -238,7 +261,7 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            final VideoClassResponse.ClassData item = list.get(position);
+            final ClassResponse.ClassData item = list.get(position);
 
             if (!TextUtils.isEmpty(item.getImage())) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getImage())).resize(50, 50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
@@ -327,7 +350,7 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
         }
     }
 
-    private void onTreeClick(VideoClassResponse.ClassData classData) {
+    private void onTreeClick(ClassResponse.ClassData classData) {
             Intent intent = new Intent(getContext(), TestClassSubjectActivity.class);
             intent.putExtra("team_id", classData.getId());
             intent.putExtra("title", classData.className);

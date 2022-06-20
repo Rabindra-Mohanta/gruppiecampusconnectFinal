@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Environment;
 import android.text.Editable;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -78,6 +80,9 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
     @Bind(R.id.etSearch)
     public EditText etSearch;
 
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout refreshLayout;
+
     ClassResponse.ClassData classData;
     private String mGroupId;
     private String teamId;
@@ -108,6 +113,9 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
 
 
     private void init() {
+
+        refreshLayout.setEnabled(false);
+
         if (getArguments() != null) {
             classData = new Gson().fromJson(getArguments().getString("class_data"), ClassResponse.ClassData.class);
             AppLog.e(TAG, "classData : " + classData);

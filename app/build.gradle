@@ -60,13 +60,13 @@ android {
                 buildConfigField("String", "APP_ID",  '"constituency"')*/
 
 
-               /*applicationId "sudhakar.gruppie"
-               versionCode 3
-               versionName "3.0"
-               resValue "string", "app_name", '"SUDHAKAR LAL(JDS)"'
-               buildConfigField("String", "AppName", '"SUDHAKAR LAL(JDS)"')
-               buildConfigField("String", "AppCategory", '"constituency"')
-               buildConfigField("String", "APP_ID",  '"constituency"')*/
+               /* applicationId "sudhakar.gruppie"
+                versionCode 4
+                versionName "3.1"
+                resValue "string", "app_name", '"SUDHAKAR LAL(JDS)"'
+                buildConfigField("String", "AppName", '"SUDHAKAR LAL(JDS)"')
+                buildConfigField("String", "AppCategory", '"constituency"')
+                buildConfigField("String", "APP_ID",  '"constituency"')*/
 
                 /// KITTUR MLA App...
             /*    applicationId "kittur.gruppie"

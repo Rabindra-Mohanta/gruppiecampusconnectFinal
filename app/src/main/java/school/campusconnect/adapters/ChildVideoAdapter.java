@@ -1,28 +1,45 @@
 package school.campusconnect.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import school.campusconnect.Assymetric.AGVRecyclerViewAdapter;
 import school.campusconnect.Assymetric.AsymmetricItem;
 import school.campusconnect.Assymetric.multiimages.ItemImage;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.activities.FullScreenVideoMultiActivity;
+import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.VideoPlayActivity;
+import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.VideoOfflineObject;
+import school.campusconnect.utils.AmazoneHelper;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 
 public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.ViewHolder> {
@@ -127,6 +144,11 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
         private final ImageView img_play;
         private final TextView textView;
         private final ArrayList<String> allImageList;
+        private final ImageView imgCancel;
+        private final ProgressBar progressBar;
+        private final FrameLayout llProgress;
+        private final ProgressBar progressBar1;
+        AmazoneVideoDownload asyncTask;
         public ViewHolder(ViewGroup parent, int viewType, List<ItemImage> items, ArrayList<String> allImageList) {
             super(LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.adapter_video_item, parent, false));
@@ -139,6 +161,10 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
             textView = (TextView) itemView.findViewById(R.id.tvCount);
             imgDownloadVideo = (ImageView) itemView.findViewById(R.id.imgDownloadVideo);
             img_play = (ImageView) itemView.findViewById(R.id.img_play);
+            imgCancel = (ImageView) itemView.findViewById(R.id.imgCancel);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+            progressBar1 = (ProgressBar) itemView.findViewById(R.id.progressBar1);
+            llProgress = (FrameLayout) itemView.findViewById(R.id.llProgress);
         }
 
         public void bind(final List<ItemImage> item, final int position, int mDisplay, int mTotal, final Context mContext) {
@@ -150,9 +176,26 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
 
             }
             if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.get(position).getImagePath())){
+
+                Log.e("ChildVideo","Downloaded"+position);
                 img_play.setVisibility(View.VISIBLE);
                 imgDownloadVideo.setVisibility(View.GONE);
             }else {
+
+                if (!TextUtils.isEmpty(item.get(position).getImagePath())) {
+                    String url = Constants.decodeUrlToBase64(item.get(position).getImagePath());
+                    String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    File file;
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
+                    } else {
+                        file = new File(getDirForMedia(""), key);
+                    }
+                    Log.e("ChildVideo","Downloaded Not "+position +"Path "+file.getAbsolutePath());
+                }
+
+
                 img_play.setVisibility(View.GONE);
                 imgDownloadVideo.setVisibility(View.VISIBLE);
             }
@@ -171,6 +214,58 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
                 mImageView.setAlpha(255);
                 textView.setVisibility(View.INVISIBLE);
             }
+
+            imgDownloadVideo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imgDownloadVideo.setVisibility(View.GONE);
+                    llProgress.setVisibility(View.VISIBLE);
+                    progressBar1.setVisibility(View.VISIBLE);
+                    asyncTask = AmazoneVideoDownload.download(context, item.get(position).getImagePath(), new AmazoneVideoDownload.AmazoneDownloadSingleListener() {
+                        @Override
+                        public void onDownload(File file) {
+                            llProgress.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
+                            progressBar1.setVisibility(View.GONE);
+                            img_play.setVisibility(View.VISIBLE);
+                            imgDownloadVideo.setVisibility(View.GONE);
+
+                            AppLog.e(GroupDashboardActivityNew.class.getName(), "filename saved in preference : "+item.get(position).getImagePath());
+
+                            try {
+                                saveVideoNameOffline(item.get(position).getImagePath() , file.getPath());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void error(String msg) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void progressUpdate(int progress, int max) {
+                            if(progress>0){
+                                progressBar1.setVisibility(View.GONE);
+                            }
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setProgress(progress);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
 
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -193,8 +288,62 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
                 }
             });
 
+            imgCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imgDownloadVideo.setVisibility(View.VISIBLE);
+                    llProgress.setVisibility(View.GONE);
+                    progressBar1.setVisibility(View.GONE);
+                    asyncTask.cancel(true);
+                }
+            });
+
             // textView.setText(String.valueOf(item.getPosition()));
         }
+    }
+
+    private static File getDirForMedia(String folder) {
+        File mainFolder = LeafApplication.getInstance().AppFilesPath();
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+
+        if (TextUtils.isEmpty(folder)) {
+            return mainFolder;
+        } else {
+            File file = new File(mainFolder, folder);
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            return file;
+        }
+    }
+
+    public void saveVideoNameOffline(String fileName, String filePath)
+    {
+        VideoOfflineObject offlineObject = new VideoOfflineObject();
+        offlineObject.setVideo_filename(fileName);
+        offlineObject.setVideo_filepath(filePath);
+        offlineObject.setVideo_date(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+        LeafPreference preference = LeafPreference.getInstance(context);
+
+        if(!preference.getString(LeafPreference.OFFLINE_VIDEONAMES).equalsIgnoreCase(""))
+        {
+            ArrayList<VideoOfflineObject> offlineObjects = new Gson().fromJson(preference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {
+            }.getType());
+
+            offlineObjects.add(offlineObject);
+            preference.setString(LeafPreference.OFFLINE_VIDEONAMES , new Gson().toJson(offlineObjects));
+
+        }
+        else
+        {
+            ArrayList<VideoOfflineObject> offlineObjects = new ArrayList<>();
+            offlineObjects.add(offlineObject);
+            preference.setString(LeafPreference.OFFLINE_VIDEONAMES , new Gson().toJson(offlineObjects));
+        }
+
     }
 }
 

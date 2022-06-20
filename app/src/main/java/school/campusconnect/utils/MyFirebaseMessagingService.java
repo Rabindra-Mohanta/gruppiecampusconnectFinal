@@ -180,6 +180,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                     break;
 
+                    case "OFFLINE_TEST_EXAM":
+                    {
+                        leafPreference.setInt(data.groupId + "_TEST_EXAM_NOTI_COUNT", leafPreference.getInt(data.groupId + "_TEST_EXAM_NOTI_COUNT") + 1);
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                    }
+                    break;
+
                     case "NOTES_VIDEO":{
                         leafPreference.setInt(data.groupId + "_NOTES_VIDEO_NOTI_COUNT", leafPreference.getInt(data.groupId + "_NOTES_VIDEO_NOTI_COUNT") + 1);
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);

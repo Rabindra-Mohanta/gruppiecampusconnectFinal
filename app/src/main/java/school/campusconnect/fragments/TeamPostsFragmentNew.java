@@ -255,7 +255,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         menu.findItem(R.id.menu_add_time_table).setVisible(false);
 
 
-        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        if (true)
         {
             if (type.equalsIgnoreCase("team"))
             {
@@ -1124,7 +1124,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             @Override
             public void onSuccess(int apiId, BaseResponse response) {
 
-                AppLog.e(TAG, "onSuccess : " + response.status);
+                AppLog.e(TAG, "onSuccess : " + response);
+
                 TeamPostEventModelRes res = (TeamPostEventModelRes) response;
 
                 if(getActivity() != null)
@@ -1383,7 +1384,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             AppLog.e(TAG,"type"+type);
 
 
-            if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+            if (true)
             {
                 if (getArguments().getBoolean("isFromMain"))
                 {

@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -143,6 +144,22 @@ public class StudentActivity extends BaseActivity {
             holder.txt_count.setVisibility(View.GONE);
             holder.img_chat.setVisibility(View.VISIBLE);
             holder.img_tree.setVisibility(View.GONE);
+
+            holder.img_chat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
+                    //  AppLog.e(TAG, "onSMSClick group_id " + groupId);
+                    intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                    intent.putExtra("friend_id", item.getUserId());
+                    intent.putExtra("friend_name", item.getName());
+                    intent.putExtra("type", "personal");
+                    intent.putExtra("team_id", item.getTeamId());
+                    intent.putExtra("from_chat", true);
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override

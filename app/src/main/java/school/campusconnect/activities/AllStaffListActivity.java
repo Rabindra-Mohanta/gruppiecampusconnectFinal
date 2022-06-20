@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.staff.StaffResponse;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
@@ -146,7 +148,15 @@ public class AllStaffListActivity extends BaseActivity {
             holder.img_chat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                   /* Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
+                  //  AppLog.e(TAG, "onSMSClick group_id " + groupId);
+                    intent.putExtra("id", GroupDashboardActivityNew.groupId);
+                    intent.putExtra("friend_id", item.getStaffId());
+                    intent.putExtra("friend_name", item.getName());
+                    intent.putExtra("type", "personal");
+                    intent.putExtra("team_id", teamId);
+                    intent.putExtra("from_chat", true);
+                    startActivity(intent);*/
                 }
             });
         }

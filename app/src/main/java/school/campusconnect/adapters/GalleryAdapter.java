@@ -192,6 +192,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             holder.txt_drop_delete.setVisibility(View.GONE);
             holder.iv_delete.setVisibility(View.GONE);
             if (item.fileName != null && item.fileName.size() > 0) {
+
                 if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
                 {
                     holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);

@@ -39,7 +39,7 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
     this.context = context;
     }
 
-    public static AmazoneVideoDownload download(Activity activity, String file, AmazoneDownloadSingleListener listener) {
+    public static AmazoneVideoDownload download(Context activity, String file, AmazoneDownloadSingleListener listener) {
         AmazoneVideoDownload asynchTask = new AmazoneVideoDownload(activity, file, listener);
         asynchTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
         return asynchTask;

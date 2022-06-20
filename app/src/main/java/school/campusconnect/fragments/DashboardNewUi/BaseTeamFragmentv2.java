@@ -61,6 +61,7 @@ import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.notificationList.NotificationListRes;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
@@ -797,6 +798,53 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
         Intent i = new Intent(getContext(), ReadMoreActivity.class);
         Bundle bundle = new Bundle();
+
+
+        if ("notesVideosPost".equals(item.getType())) {
+            List<BaseTeamTableV2> teamList = BaseTeamTableV2.getTeamList(item.getGroupId());
+
+            ArrayList<BaseTeamv2Response.TeamListData> teamListData = new ArrayList<>();
+            for (int j = 0; j < teamList.size(); j++)
+            {
+                BaseTeamv2Response.TeamListData myTeamData= new BaseTeamv2Response.TeamListData();
+                myTeamData.MyTeamData= new Gson().fromJson(teamList.get(j).featureIcons, new TypeToken<ArrayList<MyTeamData>>() {}.getType());
+                teamListData.add(myTeamData);
+
+
+                for (int b = 0;b<myTeamData.getFeaturedIconData().size();b++)
+                {
+                    if (myTeamData.getFeaturedIconData().get(b).type.equalsIgnoreCase("Recorded Class"))
+                    {
+                        onGroupClick(myTeamData.MyTeamData.get(b));
+                        return;
+                    }
+                }
+            }
+        }
+
+
+
+        if ("homeWorkPost".equals(item.getType())) {
+            List<BaseTeamTableV2> teamList = BaseTeamTableV2.getTeamList(item.getGroupId());
+
+            ArrayList<BaseTeamv2Response.TeamListData> teamListData = new ArrayList<>();
+            for (int j = 0; j < teamList.size(); j++)
+            {
+                BaseTeamv2Response.TeamListData myTeamData= new BaseTeamv2Response.TeamListData();
+                myTeamData.MyTeamData= new Gson().fromJson(teamList.get(j).featureIcons, new TypeToken<ArrayList<MyTeamData>>() {}.getType());
+                teamListData.add(myTeamData);
+
+
+                for (int b = 0;b<myTeamData.getFeaturedIconData().size();b++)
+                {
+                    if (myTeamData.getFeaturedIconData().get(b).type.equalsIgnoreCase("Home Work"))
+                    {
+                        onGroupClick(myTeamData.MyTeamData.get(b));
+                        return;
+                    }
+                }
+            }
+        }
 
         if("schoolCalendar".equals(item.getType())){
             startActivity(new Intent(getContext(), CalendarActivity.class).putExtra("date",item.getInsertedAt()));

@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Environment;
 import android.text.Editable;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -72,6 +74,9 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
     @Bind(R.id.etSearch)
     public EditText etSearch;
 
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout refreshLayout;
+
     boolean isAdmin;
     private ArrayList<StaffResponse.StaffData> result;
 
@@ -85,6 +90,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
         isAdmin = getArguments().getBoolean("isAdmin");
 
         showLoadingBar(progressBar);
+
         // progressBar.setVisibility(View.VISIBLE);
 
         init();
@@ -100,6 +106,9 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
     }
 
     private void init() {
+
+        refreshLayout.setEnabled(false);
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

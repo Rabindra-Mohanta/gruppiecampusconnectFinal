@@ -27,6 +27,7 @@
                android:layout_centerVertical="true"
                 android:background="@android:color/transparent"
                 android:text="@string/lbl_share"
+                android:layout_marginRight="@dimen/padding_40dp"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:layout_height="wrap_content" />

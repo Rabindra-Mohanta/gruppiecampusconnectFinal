@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -166,11 +167,12 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             getChapters(true);
             LeafPreference.getInstance(getActivity()).setBoolean("is_topic_added", false);
         }
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onStop() {
@@ -343,7 +345,15 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 showLoadingBar(progressBar);
                 //   progressBar.setVisibility(View.VISIBLE);
                 LeafManager manager = new LeafManager();
-                manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
+
+                Log.e(TAG,"chapterList Size"+chapterList.size());
+
+                Log.e(TAG,"spChapter Pos"+spChapter.getSelectedItemPosition());
+
+                if (chapterList.get(spChapter.getSelectedItemPosition()).chapterId != null)
+                {
+                    manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
+                }
             } else {
                 showNoNetworkMsg();
                 item.topicCompleted = !item.topicCompleted;
@@ -363,6 +373,21 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
         startActivity(intent);
     }
 
+    public String getChapterID() {
+        return  chapterList.get(spChapter.getSelectedItemPosition()).chapterId;
+    }
+
+    public int getChapterList() {
+
+        if (chapterList == null)
+        {
+            return 0;
+        }
+        else {
+            return  chapterList.size();
+        }
+
+    }
     public void onDeleteChapterClick() {
         SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_chapter), new DialogInterface.OnClickListener() {
             @Override
@@ -371,7 +396,11 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                     showLoadingBar(progressBar);
                     //   progressBar.setVisibility(View.VISIBLE);
                     LeafManager manager = new LeafManager();
-                    manager.deleteChapter(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId);
+
+                    if (chapterList.size() != 0)
+                    {
+                        manager.deleteChapter(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId);
+                    }
                 } else {
                     showNoNetworkMsg();
                 }

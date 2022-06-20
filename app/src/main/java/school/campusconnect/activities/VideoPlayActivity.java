@@ -148,6 +148,8 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
             @Override
             public void onClick(View v) {
                 asyncTask.cancel(true);
+                beforeDownload.setVisibility(View.VISIBLE);
+                afterDownload.setVisibility(View.GONE);
                 finish();
             }
         });

@@ -168,7 +168,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     String category="";
 
 
-    CountDownTimer countDownTimer = new CountDownTimer(1*60000,1000) {
+    CountDownTimer countDownTimer = new CountDownTimer(30*60000,1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             Log.e(TAG,"onTick"+millisUntilFinished);
@@ -453,6 +453,13 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             AppLog.e(TAG, "ClassResponse " + result);
             classesAdapter.setList(result);
 
+
+            if (result.size() == 0) {
+                 txtEmpty.setText(getResources().getString(R.string.txt_contact_backend));
+            } else {
+                 txtEmpty.setText("");
+            }
+
             TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("LIVE", GroupDashboardActivityNew.groupId);
             if (dashboardCount != null) {
                 dashboardCount.lastApiCalled = System.currentTimeMillis();
@@ -568,15 +575,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         List<VideoClassResponse.ClassData> list;
         private Context mContext;
 
-        public ClassesAdapter(List<VideoClassResponse.ClassData> list) {
-            this.list = list;
-        }
-
-
-        public ClassesAdapter() {
-            list = new ArrayList<>();
-        }
-
         public void setList(List<VideoClassResponse.ClassData> list) {
             this.list = list;
             notifyDataSetChanged();
@@ -675,7 +673,9 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                 @Override
                 public void onClick(View v) {
                     VideoClassListFragment.this.item = list.get(position);
-                    dialogMeetingConfirmation();
+                  //  dialogMeetingConfirmation();
+
+                    stopMeeting(item);
                 }
             });
 
@@ -720,14 +720,14 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText(getResources().getString(R.string.txt_contact_backend));
+                   // txtEmpty.setText(getResources().getString(R.string.txt_contact_backend));
                 } else {
-                    txtEmpty.setText("");
+                   // txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText(getResources().getString(R.string.txt_contact_backend));
+            //    txtEmpty.setText(getResources().getString(R.string.txt_contact_backend));
                 return 0;
             }
 
@@ -1608,13 +1608,16 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
                     }
                     else
                     {
-                        dialogMeetingConfirmation();
+
+                        stopMeeting(item);
+                        //dialogMeetingConfirmation();
                     }
 
                 }
                 else
                 {
-                    dialogMeetingConfirmation();
+                    stopMeeting(item);
+                  //  dialogMeetingConfirmation();
 
                   /*  if (isFirstTime)
                     {
