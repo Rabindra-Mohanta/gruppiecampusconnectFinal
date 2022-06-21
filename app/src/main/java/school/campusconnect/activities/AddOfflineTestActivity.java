@@ -311,10 +311,6 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                         llMark.setVisibility(View.GONE);
                         adapter.add(t1);
                         etDate.setText("");
-                        etEndTime.setText("");
-                        etStartTime.setText("");
-                        etMaxMarks.setText("");
-                        etMinMarks.setText("");
                         spSubject.setSelection(0);
                         hide_keyboard(view);
                     }
@@ -453,7 +449,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             case R.id.etStartTime: {
                 Calendar calendar = Calendar.getInstance();
 
-                TimePickerDialog fragment1 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog fragment1 = new TimePickerDialog(this,  android.R.style.Theme_Holo_Light_Dialog_NoActionBar,new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -467,7 +463,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             }
             case R.id.etEndTime: {
                 Calendar calendar = Calendar.getInstance();
-                TimePickerDialog fragment1 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog fragment1 = new TimePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);

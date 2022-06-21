@@ -5,14 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.clevertap.android.sdk.CleverTapAPI
+import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException
+import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.vivid.gruppie.R
 import com.vivid.gruppie.interfaces.RegisterCallback
 import com.vivid.gruppie.model.ClassInputData
@@ -21,22 +27,28 @@ import com.vivid.gruppie.model.RegisterRequestData
 import com.vivid.gruppie.model.UniversityItem
 import com.vivid.gruppie.view.RegisterClassSectionAdapter
 import com.vivid.gruppie.view.RegisterUniversityAdapter
+import school.campusconnect.activities.Home
 import school.campusconnect.activities.LoginPinActivity
 import school.campusconnect.database.LeafPreference
 import school.campusconnect.datamodel.BaseResponse
+import school.campusconnect.datamodel.LoginRequest
+import school.campusconnect.datamodel.LoginResponse
 import school.campusconnect.datamodel.register.*
 import school.campusconnect.network.LeafManager
 import school.campusconnect.network.LeafManager.OnCommunicationListener
+import school.campusconnect.utils.AppLog
 import school.campusconnect.utils.BaseFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
+open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
 
+    var b = null
     //region Lifecycle
-
+    var isLogout: Boolean = false
+    var cleverTap: CleverTapAPI? = null
     var leafManager = LeafManager()
 
     val mListCategories = ArrayList<String>()
@@ -61,11 +73,22 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
     val sectionsMap = HashMap<String, Int>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.register_institute, container, false)
         setupUI(view)
+      //  isLogout = arguments?.getBoolean("isDashboard",false)!!
         return view
+    }
+
+
+    companion object {
+
+        fun newInstance(bundle: Bundle?): RegisterInstituteFragment {
+            val fragment = RegisterInstituteFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,6 +100,8 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
 
     override fun onStart() {
         super.onStart()
+
+
         apiGetCategories()
         apiGetCampusMedium()
         /*val universityItem1 = UniversityItem(name = "Karnataka State Board", image = "https://gruppiemedia.sgp1.cdn.digitaloceanspaces.com/university.jpeg")
@@ -97,6 +122,7 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
     lateinit var ivStep1: ImageView
     lateinit var tvStep1: TextView
     lateinit var clStep1: ScrollView
+    lateinit var progressBar : ProgressBar
     lateinit var btnNext1: Button
 
     lateinit var ivStep2: ImageView
@@ -125,6 +151,7 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         clStep1 = view.findViewById(R.id.slStep1)
         btnNext1 = view.findViewById(R.id.btnNext1)
 
+        progressBar = view.findViewById(R.id.progressBar)
         ivStep2 = view.findViewById(R.id.ivStep2)
         tvStep2 = view.findViewById(R.id.tvStep2)
         clStep2 = view.findViewById(R.id.slStep2)
@@ -145,6 +172,9 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
 
         rvUniversities = view.findViewById(R.id.rvUniversities)
         rvClasses = view.findViewById(R.id.rvClasses)
+
+        isLogout = arguments!!.getBoolean("isDashboard", false)
+        AppLog.e("RegisterInstituteFragment", "isLogout " + isLogout)
     }
 
     private fun isStep1Completed(): Boolean {
@@ -177,6 +207,8 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
     }
 
     private fun showStep1() {
+
+
         clStep1.visibility = View.VISIBLE
         clStep2.visibility = View.GONE
         clStep3.visibility = View.GONE
@@ -347,8 +379,8 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
             }
         }
 
-        rvUniversities.adapter = RegisterUniversityAdapter(mListUniversities, object:
-            RegisterCallback {
+        rvUniversities.adapter = RegisterUniversityAdapter(mListUniversities, object :
+                RegisterCallback {
             override fun onUniversityClicked(universityName: String) {
                 selectedUniversity = universityName
                 showStep3()
@@ -384,7 +416,7 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
             }
         }
 
-        rvClasses.adapter = RegisterClassSectionAdapter(mListClasses, object: RegisterCallback {
+        rvClasses.adapter = RegisterClassSectionAdapter(mListClasses, object : RegisterCallback {
             override fun onUniversityClicked(universityName: String) {}
             override fun onCheckBoxChanged(typeID: String, isSelected: Boolean) {
                 if (isSelected) {
@@ -405,12 +437,15 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
     }
 
     private fun apiDoRegister(userId: String, registerRequest: RegisterRequestData) {
+        showLoadingBar(progressBar,true)
+        Log.e("REgister","req "+Gson().toJson(registerRequest))
         leafManager.doRegister(userId, registerRequest, this)
     }
 
     //endregion API Request
 
     private fun setupActions(activity: Activity) {
+
         showStep1()
 
         mListBoards.clear()
@@ -418,7 +453,7 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         val boardAdapter: ArrayAdapter<String> = ArrayAdapter<String>(activity, R.layout.spinner_text_with_border, mListBoards)
         spBoard.adapter = boardAdapter
 
-        etName.addTextChangedListener(object: TextWatcher {
+        etName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -472,11 +507,11 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         val year = SimpleDateFormat("yyyy", Locale.ENGLISH).format(Calendar.getInstance().time)
         val thisYear = Integer.parseInt(year)
         strYear.add("- select -")
-        strYear.add("${(thisYear+0)} - ${(thisYear+1)}")
-        strYear.add("${(thisYear+1)} - ${(thisYear+2)}")
-        strYear.add("${(thisYear+2)} - ${(thisYear+3)}")
-        strYear.add("${(thisYear+3)} - ${(thisYear+4)}")
-        strYear.add("${(thisYear+4)} - ${(thisYear+5)}")
+        strYear.add("${(thisYear + 0)} - ${(thisYear + 1)}")
+        strYear.add("${(thisYear + 1)} - ${(thisYear + 2)}")
+        strYear.add("${(thisYear + 2)} - ${(thisYear + 3)}")
+        strYear.add("${(thisYear + 3)} - ${(thisYear + 4)}")
+        strYear.add("${(thisYear + 4)} - ${(thisYear + 5)}")
         val yearAdapter: ArrayAdapter<String> = ArrayAdapter<String>(activity, R.layout.spinner_text_with_border, strYear)
         spYear.adapter = yearAdapter
 
@@ -526,14 +561,14 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
                         }
 
                         val registerRequest = RegisterRequestData(
-                            name = etName.text.toString(), subCategory = category, board = board,
-                            university = university, medium = selectedMedium,
-                            classTypeId = classTypes, classSection = sections, academicStartYear = mStartYear,
-                            academicEndYear = mEndYear
+                                name = etName.text.toString(), subCategory = category, board = board,
+                                university = university, medium = selectedMedium,
+                                classTypeId = classTypes, classSection = sections, academicStartYear = mStartYear,
+                                academicEndYear = mEndYear
                         )
                         apiDoRegister(
-                            LeafPreference.getInstance(requireActivity()).getString(LeafPreference.LOGIN_ID),
-                            registerRequest
+                                LeafPreference.getInstance(requireActivity()).getString(LeafPreference.LOGIN_ID),
+                                registerRequest
                         )
                     }
                 }
@@ -543,24 +578,117 @@ class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
 
     private fun onRegistrationSuccess() {
         activity?.let {
-            val i = Intent(it, LoginPinActivity::class.java)
-            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
-            i.putExtra("Role",
-                LeafPreference.getInstance(requireActivity()).getString(LeafPreference.ROLE))
-            i.putExtra("token",
-                LeafPreference.getInstance(requireActivity()).getString(LeafPreference.TOKEN))
-            i.putExtra("groupCount",
-                LeafPreference.getInstance(requireActivity()).getInt(LeafPreference.GROUP_COUNT).toString())
-            i.putExtra("groupID",
-                LeafPreference.getInstance(requireActivity()).getString(LeafPreference.GROUP_ID))
+            if (isLogout)
+            {
 
-            it.startActivity(i)
-            it.finish()
+                val skip_pin = LeafPreference.getInstance(activity).getString(LeafPreference.SKIP_PIN)
+                val fingerPrint = LeafPreference.getInstance(activity).getBoolean(LeafPreference.FINGERPRINT)
+                val pin = LeafPreference.getInstance(activity).getString(LeafPreference.PIN)
+
+                val request = Gson().fromJson<LoginRequest>(LeafPreference.getInstance(context).getString(LeafPreference.LOGIN_REQ), object : TypeToken<LoginRequest?>() {}.type)
+
+                AppLog.e("RegisterInstitute", "request : " + Gson().toJson(request))
+
+                val manager = LeafManager()
+
+                showLoadingDialog(getString(school.campusconnect.R.string.please_wait))
+
+                manager.doLogin(object : OnCommunicationListener {
+                    override fun onSuccess(apiId: Int, response: BaseResponse) {
+                        hideLoadingDialog()
+
+                        logoutForNewSchool()
+
+                        val response1 = response as LoginResponse
+                        LeafPreference.getInstance(activity).setString(LeafPreference.SKIP_PIN, skip_pin)
+                        LeafPreference.getInstance(activity).setBoolean(LeafPreference.FINGERPRINT, fingerPrint)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.PIN, pin)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.TOKEN, response1.token)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.GROUP_ID, response1.groupId)
+                        LeafPreference.getInstance(activity).setInt(LeafPreference.GROUP_COUNT, response1.groupCount)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.LOGIN_ID, response1.userId)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.ROLE, response1.role)
+                        // LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
+                        LeafPreference.getInstance(activity).setString(LeafPreference.NAME, response1.name)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.NUM, response1.phone)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.PROFILE_IMAGE_NEW, response1.image)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.PROFILE_NAME, response1.name)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.PROFILE_VOTERID, response1.voterId)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.CALLING_CODE, response1.counryTelephoneCode)
+                        LeafPreference.getInstance(activity).setString(LeafPreference.COUNTRY_CODE, response1.countryAlpha2Code)
+                        addCleverTapProfile(response1)
+
+
+                        val login = Intent(activity, Home::class.java)
+                        login.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(login)
+                    }
+
+                    override fun onFailure(apiId: Int, msg: String) {
+                        Toast.makeText(activity, msg + "", Toast.LENGTH_SHORT).show()
+                        hideLoadingDialog()
+                    }
+
+                    override fun onException(apiId: Int, msg: String) {
+                        Toast.makeText(activity, msg + "", Toast.LENGTH_SHORT).show()
+                        hideLoadingDialog()
+                    }
+                }, request)
+                logoutForNewSchool()
+            }
+            else
+            {
+                val i = Intent(it, LoginPinActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                i.putExtra("Role",
+                        LeafPreference.getInstance(requireActivity()).getString(LeafPreference.ROLE))
+                i.putExtra("token",
+                        LeafPreference.getInstance(requireActivity()).getString(LeafPreference.TOKEN))
+                i.putExtra("groupCount",
+                        LeafPreference.getInstance(requireActivity()).getInt(LeafPreference.GROUP_COUNT).toString())
+                i.putExtra("groupID",
+                        LeafPreference.getInstance(requireActivity()).getString(LeafPreference.GROUP_ID))
+
+                it.startActivity(i)
+                it.finish()
+            }
+
         }
     }
 
     private fun closeKeyboard() {
 
+    }
+    open fun initObjects() {
+        try {
+            cleverTap = CleverTapAPI.getInstance(activity)
+            AppLog.e(TAG, "Success to found cleverTap objects=>")
+        } catch (e: CleverTapMetaDataNotFoundException) {
+            AppLog.e(TAG, "CleverTapMetaDataNotFoundException=>$e")
+            // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
+        } catch (e: CleverTapPermissionsNotSatisfied) {
+            AppLog.e(TAG, "CleverTapPermissionsNotSatisfied=>$e")
+            // thrown if you haven’t requested the required permissions in your AndroidManifest.xml
+        }
+    }
+
+    open fun addCleverTapProfile(loginResponse: LoginResponse) {
+        initObjects()
+        val profileUpdate = java.util.HashMap<String, Any>()
+        profileUpdate["Identity"] = loginResponse.userId // String or phone
+        profileUpdate["Name"] = loginResponse.name // String
+        profileUpdate["Phone"] = loginResponse.phone
+        profileUpdate["Photo"] = loginResponse.image // Phone (with the countryCode code, starting with +)
+        if (cleverTap != null) {
+            cleverTap!!.profile.push(profileUpdate)
+            AppLog.e(TAG, "CleverTap profile added.")
+            profileUpdate.remove("Photo")
+            cleverTap!!.event.push("Login", profileUpdate)
+            AppLog.e(TAG, "CleverTap Login added.")
+        } else {
+            AppLog.e(TAG, "CleverTap Profile & login not added.")
+        }
     }
 }

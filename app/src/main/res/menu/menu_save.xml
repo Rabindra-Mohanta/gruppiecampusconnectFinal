@@ -175,7 +175,9 @@
         android:visible="false"
         android:title="@string/action_change_pwd"/>
 
-
+    <item android:id="@+id/menu_add_school"
+        android:visible="false"
+        android:title="@string/action_add_school"/>
 
     <item android:id="@+id/menu_set_wallpaper"
         android:visible="false"

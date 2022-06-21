@@ -290,4 +290,9 @@
         <item name="android:colorAccent" tools:targetApi="lollipop">@color/white</item>
     </style>
 
+    <style name="ProgressPrimary" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorPrimary</item>
+    </style>
+
 </resources>

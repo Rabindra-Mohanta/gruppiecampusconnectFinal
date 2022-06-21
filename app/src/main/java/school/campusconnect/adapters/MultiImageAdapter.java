@@ -171,6 +171,9 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                     holder.imgCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            holder.imgDownload.setVisibility(View.VISIBLE);
+                            holder.llProgress.setVisibility(View.GONE);
+                            holder.progressBar1.setVisibility(View.GONE);
                             holder.asyncTask.cancel(true);
                         }
                     });

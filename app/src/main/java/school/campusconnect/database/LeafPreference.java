@@ -75,6 +75,8 @@ public class LeafPreference {
     public static final String TOTAL_PAGE_NOTIFICATION = "totalpagenotification";
     public static final String VIDEO_CALL_START_TIME = "videocallstarttime";
 
+public static final String LOGIN_REQ = "loginreq";
+
     private LeafPreference(Context context) {
         sPref = context.getSharedPreferences("nnr.electionleaf", Context.MODE_PRIVATE);
         sEditor = sPref.edit();

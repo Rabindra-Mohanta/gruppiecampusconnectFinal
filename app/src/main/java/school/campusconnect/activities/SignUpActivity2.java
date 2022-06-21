@@ -107,7 +107,7 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnAddUp
 
             if (isValid()) {
                 if (progressBar != null)
-                    showLoadingBar(progressBar);
+                    showLoadingBar(progressBar,true);
              //       progressBar.setVisibility(View.VISIBLE);
                 LeafManager manager = new LeafManager();
                 SignUpRequest request = new SignUpRequest();

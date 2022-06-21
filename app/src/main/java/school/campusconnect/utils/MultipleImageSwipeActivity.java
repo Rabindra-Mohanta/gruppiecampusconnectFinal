@@ -373,6 +373,9 @@ public class MultipleImageSwipeActivity extends BaseActivity {
             imgCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ivDownload.setVisibility(View.VISIBLE);
+                    llProgress.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     asyncTask.cancel(true);
                 }
             });

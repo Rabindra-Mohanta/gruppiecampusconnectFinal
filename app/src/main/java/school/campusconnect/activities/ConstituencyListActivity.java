@@ -375,6 +375,7 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
         menu.findItem(R.id.menu_change_pass).setVisible(true);
         menu.findItem(R.id.menu_set_wallpaper).setVisible(true);
 
+
         if (LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.SKIP_PIN).equalsIgnoreCase("yes"))
         {
             menu.findItem(R.id.menu_change_pin).setVisible(false);
@@ -438,6 +439,8 @@ public class ConstituencyListActivity extends BaseActivity implements LeafManage
                 logout();
                 finish();
                 return true;
+
+
             case R.id.menu_change_pass:
                 Intent intent = new Intent(this, ChangePasswordActivity.class);
                 startActivity(intent);

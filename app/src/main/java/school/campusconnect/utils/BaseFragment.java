@@ -10,10 +10,15 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
+import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,12 +31,17 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.Home;
 import school.campusconnect.activities.LoginActivity2;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.database.RememberPref;
+import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ChapterTBL;
 import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.EBookClassItem;
@@ -40,6 +50,8 @@ import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.GroupDataItem;
 import school.campusconnect.datamodel.HwItem;
 import school.campusconnect.datamodel.LiveClassListTBL;
+import school.campusconnect.datamodel.LoginRequest;
+import school.campusconnect.datamodel.LoginResponse;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostTeamDataItem;
 import school.campusconnect.datamodel.StudAssignementItem;
@@ -80,11 +92,15 @@ import school.campusconnect.datamodel.notificationList.NotificationTable;
 import school.campusconnect.datamodel.personalchat.PersonalContactsModel;
 import school.campusconnect.datamodel.profile.ProfileTBL;
 import school.campusconnect.datamodel.syllabus.SyllabusTBL;
+import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.ticket.TicketTBL;
+import school.campusconnect.network.LeafManager;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class BaseFragment extends Fragment {
 
+    public static final String TAG = "BaseFragment";
+    CleverTapAPI cleverTap;
     private ProgressDialog mProgressDialog;
     private View mProgressBar;
     public boolean isHide = false;
@@ -106,6 +122,8 @@ public class BaseFragment extends Fragment {
         }
 
     }
+
+
 
     public void showProgressLoadingDialog(String msg, int maxCount) {
         mProgressDialog = new ProgressDialog(getActivity());
@@ -313,10 +331,11 @@ public class BaseFragment extends Fragment {
         return isValid;
     }
 
+
+
     public void logout() {
         if(getActivity()!=null)
         {
-
             if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
             {
                 unsubcribe();
@@ -417,6 +436,89 @@ public class BaseFragment extends Fragment {
         Intent intent = new Intent(getActivity(), LoginActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public void logoutForNewSchool() {
+
+        if(getActivity()!=null)
+        {
+            AppLog.e("Logout", "onSuccessCalled");
+            LeafPreference.getInstance(getActivity()).clearData();
+            RememberPref.getInstance(getActivity()).clearData();
+            AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getActivity()).getString(LeafPreference.GCM_TOKEN));
+            GroupDataItem.deleteAll();
+            PostDataItem.deleteAllPosts();
+//            NotificationModel.deleteAll();
+            BaseTeamTable.deleteAll();
+            BaseTeamTableV2.deleteAll();
+            MasterBoothListTBL.deleteAll();
+            SyllabusTBL.deleteAll();
+            WorkerListTBL.deleteAll();
+            StreetListTBL.deleteAll();
+            BoothsTBL.deleteAll();
+            MemberTeamTBL.deleteAll();
+            ProfileTBL.deleteAll();
+            PublicFormBoothTBL.deleteAll();
+            TicketTBL.deleteAll();
+            DayEventTBL.deleteAllEvent();
+            MonthEventTBL.deleteAllEvent();
+            NotificationTable.deleteAll();
+            AllNotificationTable.deleteAll();
+            AdminFeedTable.deleteAll();
+            EventSubBoothTBL.deleteAll();
+            VoterListTBL.deleteAll();
+            BannerTBL.deleteAll();
+            PostTeamDataItem.deleteAllPosts();
+            PersonalContactsModel.deleteAll();
+            GruppieContactsModel.deleteAll();
+            CommitteeTBL.deleteMember();
+            TeamEventDataTBL.deleteTeamEvent();
+            LeadDataTBL.deleteAll();
+
+//        GruppieContactAddressModel.deleteAll();
+            BoothPostEventTBL.deleteAll();
+            GruppieContactGroupIdModel.deleteAll();
+            GalleryTable.deleteGallery();
+
+            new DatabaseHandler(getActivity()).deleteAll();
+
+            HwItem.deleteAll();
+            TestExamTBL.deleteAll();
+            SubBoothWorkerEventTBL.deleteAll();
+            MyBoothEventTBL.deleteAll();
+            ChapterTBL.deleteAll();
+            EventTBL.deleteAll();
+            ClassListTBL.deleteAll();
+            LiveClassListTBL.deleteAll();
+            TeamCountTBL.deleteAll();
+            SubjectCountTBL.deleteAll();
+            HomeTeamDataTBL.deleteAll();
+            StudAssignementItem.deleteAll();
+            StudTestPaperItem.deleteAll();
+            SubjectItem.deleteAll();
+            EBookItem.deleteAll();
+            EBookClassItem.deleteAll();
+            MyTeamVotersTBL.deleteAll();
+            BoothPresidentTBL.deleteAll();
+            MyTeamSubBoothTBL.deleteAll();
+
+
+            getActivity().getSharedPreferences("pref_noti_count", Context.MODE_PRIVATE).edit().clear().commit();
+
+
+        }
+
     }
 
 }

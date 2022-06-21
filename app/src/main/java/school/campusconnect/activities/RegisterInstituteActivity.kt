@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import school.campusconnect.R
 import school.campusconnect.fragments.RegisterInstituteFragment
+import school.campusconnect.utils.AppLog
 
 class RegisterInstituteActivity : BaseActivity() {
 
@@ -16,8 +17,10 @@ class RegisterInstituteActivity : BaseActivity() {
         setBackEnabled(true)
         setTitle(resources.getString(R.string.register))
 
-        val registerFragment = RegisterInstituteFragment()
+
+        val registerFragment = RegisterInstituteFragment.newInstance(intent.extras)
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, registerFragment)
             .commit()
+        //registerFragment.isLogout = intent.getBooleanExtra("isDashboard",false);
     }
 }

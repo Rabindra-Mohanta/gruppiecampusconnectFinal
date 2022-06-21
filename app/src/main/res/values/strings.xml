@@ -5,6 +5,7 @@
     <string name="action_notify_all">MESSAGE ALL</string>
     <string name="action_mail_all">EMAIL ALL</string>
     <string name="action_change_pwd">Change Password</string>
+    <string name="action_add_school">Add School</string>
     <string name="action_change_pin">Change Pin</string>
     <string name="action_change_nu">Change Number</string>
     <string name="action_set_wallpaper">Set Wallpaper</string>
@@ -1102,6 +1103,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_no_data_found">No data found.</string>
     <string name="toast_change_plan">Change Plan Successfully...</string>
     <string name="toast_set_status_plan">Status Plan Set Successfully...</string>
+    <string name="toast_please_select_chapter">Please Select Chapter</string>
 
 
     <string name="txt_enter_old_pin">Enter Old Pin...</string>

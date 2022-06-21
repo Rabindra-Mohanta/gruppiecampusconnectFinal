@@ -137,10 +137,12 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity2.this, ChangeLanguageActivity.class);
+            /*    Intent intent = new Intent(LoginActivity2.this, ChangeLanguageActivity.class);
                 intent.putExtra("isSplash",true);
                 intent.putExtra("enableBack",true);
-                startActivity(intent);
+                startActivity(intent);*/
+
+                onBackPressed();
             }
         });
         edtCountry.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +293,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     private void loginApi() {
         btnNext.setEnabled(false);
         if (progressBar != null)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,true);
          //   progressBar.setVisibility(View.VISIBLE);
 
         if (RememberPref.getInstance(this).contains(RememberPref.REMEMBER_USERNAME)) {

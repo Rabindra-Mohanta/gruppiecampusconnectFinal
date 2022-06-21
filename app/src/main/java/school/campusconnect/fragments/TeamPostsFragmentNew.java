@@ -2090,7 +2090,6 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
 
-
         AmazoneImageDownload.download(getActivity(), item.bdayUserImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
             @Override
             public void onDownload(File file) {

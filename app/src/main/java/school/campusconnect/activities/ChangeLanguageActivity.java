@@ -139,7 +139,7 @@ public class ChangeLanguageActivity extends BaseActivity {
         {
             Bundle b = new Bundle();
             b.putBoolean("enableBack",true);
-            gotoActivity(LoginActivity2.class,b,true);
+            gotoActivity(LoginActivity2.class,b,false);
         }
         else if (isDashboard)
         {

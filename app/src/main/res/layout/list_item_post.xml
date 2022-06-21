@@ -136,7 +136,7 @@
 
 
                 <LinearLayout
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:id="@+id/llLeftAudioView"
                     android:layout_width="@dimen/pdf_download_icon_size"
                     android:layout_margin="@dimen/padding_15dp"
@@ -203,8 +203,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/audio_layout"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

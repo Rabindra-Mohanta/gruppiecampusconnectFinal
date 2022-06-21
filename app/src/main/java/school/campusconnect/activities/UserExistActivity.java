@@ -220,7 +220,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,true);
             //    progressBar.setVisibility(View.VISIBLE);
             btnLogin.setTextColor(getResources().getColor(R.color.grey));
             btnLogin.setEnabled(false);
@@ -299,7 +299,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,true);
                 //progressBar.setVisibility(View.VISIBLE);
             btnLogin.setTextColor(getResources().getColor(R.color.grey));
             btnLogin.setEnabled(false);
@@ -322,6 +322,10 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             request.deviceToken = LeafPreference.getInstance(UserExistActivity.this).getString(LeafPreference.GCM_TOKEN);
             request.password = edtPassword/*.editText*/.getText().toString();
             AppLog.e("Login..", "data is " + new Gson().toJson(request));
+
+
+            LeafPreference.getInstance(this).setString(LeafPreference.LOGIN_REQ,new Gson().toJson(request));
+
             manager.doLogin(this, request);
 
         } else {
@@ -384,7 +388,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             hide_keyboard();
             //showLoadingDialog();
             if (progressBar != null)
-                showLoadingBar(progressBar);
+                showLoadingBar(progressBar,true);
                 //progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             ForgotPasswordRequest request = new ForgotPasswordRequest();

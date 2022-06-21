@@ -190,6 +190,10 @@
         android:visible="false"
         android:title="@string/action_change_pwd"/>
 
+    <item android:id="@+id/menu_add_school"
+        android:visible="false"
+        android:title="@string/action_add_school"/>
+
     <item android:id="@+id/menu_change_mobile"
         android:visible="false"
         android:title="@string/action_change_nu"/>

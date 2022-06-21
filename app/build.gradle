@@ -76,6 +76,7 @@ android {
                 buildConfigField("String", "AppName", '"Kittur"')
                 buildConfigField("String", "AppCategory", '"constituency"')
                 buildConfigField("String", "APP_ID",  '"constituency"')*/
+
                 /*applicationId "kreis.gruppie"
                 versionCode 3
                 versionName "1.2"
@@ -109,7 +110,6 @@ android {
                 resValue "string", "app_name", '"ABM ASK"'
                 buildConfigField("String", "AppName", '"ABM ASK"')
                 buildConfigField("String", "AppCategory", '"SINGLE"')
-
                 buildConfigField("String", "APP_ID",  '"60a9e3aaa0ccf76a8e5c2235"')*/
 
                 // [ 3. RPES JSPS ]

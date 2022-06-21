@@ -50,6 +50,7 @@ import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.NotificationListActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ReadMoreActivity;
+import school.campusconnect.activities.RegisterInstituteActivity;
 import school.campusconnect.adapters.FeedAdapter;
 import school.campusconnect.adapters.SchoolFeedAdapater;
 import school.campusconnect.adapters.TeamListAdapterNewV2;
@@ -125,6 +126,19 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("CAMPUS"))
+        {
+            if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+                menu.findItem(R.id.menu_add_school).setVisible(false);
+            }
+            else {
+                menu.findItem(R.id.menu_add_school).setVisible(true);
+            }
+
+
+        }
 
         if (GroupDashboardActivityNew.allowedToAddUser)
             menu.findItem(R.id.menu_add_team).setVisible(true);
@@ -203,6 +217,14 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
             case R.id.menu_add_team:
                 addTeam();
                 return true;
+
+            case R.id.menu_add_school:
+                Intent register = new Intent(getActivity(), RegisterInstituteActivity.class);
+                register.putExtra("isDashboard",true);
+                startActivity(register);
+                return true;
+
+
             case R.id.menu_change_pass:
                 Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
                 startActivity(intent);
@@ -481,8 +503,10 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 List<NotificationListRes.NotificationListData> results = res1.getData();
 
 
+
                 if(results.size()>0)
                 {
+                    binding.llFeed.setVisibility(View.VISIBLE);
                     notificationList.clear();
 
 
@@ -526,6 +550,10 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                         dashboardCountv2.save();
                     }
 
+                }
+                else
+                {
+                    binding.llFeed.setVisibility(View.GONE);
                 }
                 break;
 
@@ -738,9 +766,9 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         }
     }
     public void checkAndRefreshNotification(boolean apiCall) {
-        AppLog.e(TAG, "---- Refresh Team -----"+apiCall);
+        AppLog.e(TAG, "---- checkAndRefreshNotification -----"+apiCall);
         if (apiCall) {
-            AppLog.e(TAG, "---- Refresh Team -----");
+            AppLog.e(TAG, "---- checkAndRefreshNotification -----");
             notificationApiCall();
         }
     }

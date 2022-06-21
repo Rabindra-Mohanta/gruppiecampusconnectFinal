@@ -1,7 +1,9 @@
 package school.campusconnect.datamodel;
 
 
-public class LoginRequest {
+import java.io.Serializable;
+
+public class LoginRequest implements Serializable {
 
     public UserName userName;
     public String password;

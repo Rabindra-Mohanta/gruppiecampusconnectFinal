@@ -435,6 +435,9 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                 imgCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        imgDownload.setVisibility(View.VISIBLE);
+                        llProgress.setVisibility(View.GONE);
+                        progressBar1.setVisibility(View.GONE);
                         asyncTask.cancel(true);
                     }
                 });

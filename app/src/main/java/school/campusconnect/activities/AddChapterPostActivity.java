@@ -435,19 +435,28 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.menu_delete_chapter) {
-            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_chapter), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (isConnectionAvailable()) {
-                        showLoadingBar(progressBar);
-                        //   progressBar.setVisibility(View.VISIBLE);
-                        LeafManager manager = new LeafManager();
-                        manager.deleteChapter(AddChapterPostActivity.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterId);
-                    } else {
-                        showNoNetworkMsg();
+
+            if (imgAddChapter.getVisibility() == View.VISIBLE)
+            {
+                SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_chapter), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (isConnectionAvailable()) {
+                            showLoadingBar(progressBar);
+                            //   progressBar.setVisibility(View.VISIBLE);
+                            LeafManager manager = new LeafManager();
+                            manager.deleteChapter(AddChapterPostActivity.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapter_id);
+                        } else {
+                            showNoNetworkMsg();
+                        }
                     }
-                }
-            });
+                });
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_please_select_chapter),Toast.LENGTH_SHORT).show();
+            }
+
             return true;
         }
 
@@ -711,7 +720,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     }
 
     private void init() {
-
 
 
         progressDialog = new ProgressDialog(this);

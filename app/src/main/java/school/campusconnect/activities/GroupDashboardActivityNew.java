@@ -40,6 +40,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.LiveClassListTBL;
+import school.campusconnect.datamodel.LoginRequest;
 import school.campusconnect.datamodel.SubjectCountTBL;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
@@ -924,6 +925,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             if (currFrag instanceof BaseTeamFragmentv2) {
                 boolean apiCall = false;
                 boolean apiCallNotification = false;
+
                 if (dashboardCount.lastApiCalled != 0) {
                     if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
                         apiCall = true;
@@ -1061,14 +1063,12 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     private void showLogoutPopup() {
-
         SMBDialogUtils.showSMBDialogOK(GroupDashboardActivityNew.this, getResources().getString(R.string.smb_dialog_permission_change), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 logoutWithoutEvents();
             }
         });
-
     }
 
     public boolean hasPermission(String[] permissions) {
@@ -1175,6 +1175,11 @@ public class GroupDashboardActivityNew extends BaseActivity
     }
 
     private void init() {
+
+
+        LoginRequest request = new Gson().fromJson(LeafPreference.getInstance(this).getString(LeafPreference.LOGIN_REQ), new TypeToken<LoginRequest>() {}.getType());
+
+        AppLog.e(TAG, "request : " + new Gson().toJson(request));
 
         mGroupItem = new Gson().fromJson(LeafPreference.getInstance(this).getString(Constants.GROUP_DATA), GroupItem.class);
         AppLog.e(TAG, "mGroupItem : " + new Gson().toJson(mGroupItem));
@@ -2857,7 +2862,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             ArrayList<VideoOfflineObject> list = new Gson().fromJson(leafPreference.getString(LeafPreference.OFFLINE_VIDEONAMES), new TypeToken<ArrayList<VideoOfflineObject>>() {}.getType());
             AppLog.e(TAG, "list before : " + list);
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, -7);
+            calendar.add(Calendar.DAY_OF_YEAR, -30);
             String sevendayDate = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
 
 
@@ -2896,6 +2901,5 @@ public class GroupDashboardActivityNew extends BaseActivity
             leafPreference.setString(LeafPreference.OFFLINE_VIDEONAMES, new Gson().toJson(list));
         }
     }
-
-
+    
 }

@@ -2,6 +2,7 @@ package school.campusconnect.activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.fragments.HomeFragment;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.views.SMBDialogUtils;
@@ -108,10 +110,24 @@ public class Home extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
+
         if (!TextUtils.isEmpty(from)) {
             menu.findItem(R.id.menu_logout).setVisible(false);
             menu.findItem(R.id.menu_change_pin).setVisible(false);
-
+        }
+        else
+        {
+            menu.findItem(R.id.menu_change_pass).setVisible(true);
+            menu.findItem(R.id.menu_add_school).setVisible(true);
+            
+            if (LeafPreference.getInstance(this).getString(LeafPreference.SKIP_PIN).equalsIgnoreCase("yes"))
+            {
+                menu.findItem(R.id.menu_change_pin).setVisible(false);
+            }
+            else
+            {
+                menu.findItem(R.id.menu_change_pin).setVisible(true);
+            }
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -123,9 +139,27 @@ public class Home extends BaseActivity {
                 logout();
                 finish();
                 return true;
+
+            case R.id.menu_add_school:
+                Intent register = new Intent(this, RegisterInstituteActivity.class);
+                register.putExtra("isDashboard",true);
+                startActivity(register);
+                return true;
+
             case R.id.menu_search:
                 homeFragment.showHideSearch();
                 return true;
+
+            case R.id.menu_change_pass:
+                Intent intent = new Intent(this, ChangePasswordActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.menu_change_pin:
+                Intent intentpin= new Intent(this, ChangePinActivity.class);
+                startActivity(intentpin);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -88,6 +88,7 @@ public class ChapterActivity extends BaseActivity {
 
         if (canPost) {
             getMenuInflater().inflate(R.menu.menu_chapter, menu);
+            menu.findItem(R.id.menu_delete_chapter).setVisible(false);
         }
 
         return true;
@@ -95,6 +96,7 @@ public class ChapterActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         if (item.getItemId() == R.id.menu_add_post) {
 
             Intent intent = new Intent(this,AddChapterPostActivity.class);
