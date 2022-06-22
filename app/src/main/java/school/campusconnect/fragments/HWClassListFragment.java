@@ -272,7 +272,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
     private void apiCall(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(binding.progressBar);
+            showLoadingBar(binding.progressBar,true);
            // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {

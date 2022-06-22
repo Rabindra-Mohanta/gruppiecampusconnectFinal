@@ -310,7 +310,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
 
     private void calApi(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,true);
         //    progressBar.setVisibility(View.VISIBLE);
         leafManager.getVideoClasses(this, GroupDashboardActivityNew.groupId);
     }
@@ -2140,7 +2140,7 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     }
 
     private void getSubjectList(String teamId) {
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,true);
         // progressBar.setVisibility(View.VISIBLE);
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "");
     }
@@ -2150,7 +2150,6 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
     {
         countDownTimer.start();
     }
-
     private void endTimer()
     {
         isAutomatically = false;

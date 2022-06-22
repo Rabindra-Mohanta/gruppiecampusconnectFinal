@@ -499,6 +499,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             dashboardCount.count = teamCount.dashboardTeamCount;
             dashboardCount.groupId = groupId;
 
+            dashboardCount.save();
+
             if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
             {
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("BANNER_API",res.data.get(0).bannerPostEventAt);
@@ -562,7 +564,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 }*/
             }
 
-            dashboardCount.save();
+
 
             ArrayList<UpdateDataEventRes.SubjectCountList> subCountList = res.data.get(0).subjectCountList;
             for (int i = 0; i < subCountList.size(); i++) {
@@ -919,23 +921,26 @@ public class GroupDashboardActivityNew extends BaseActivity
                 showLogoutPopup();
             }
 
-
             Fragment currFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
             if (currFrag instanceof BaseTeamFragmentv2) {
                 boolean apiCall = false;
                 boolean apiCallNotification = false;
 
-                if (dashboardCount.lastApiCalled != 0) {
-                    if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
-                        apiCall = true;
-                    }
+                if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
+                    apiCall = true;
+                }
+
+             /*   if (dashboardCount.lastApiCalled != 0) {
+
                 }
 
                 if (dashboardCount.lastApiCalledNotification != 0) {
-                    if (MixOperations.isNewEvent(dashboardCount.lastNotificationAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalledNotification)) {
-                        apiCallNotification = true;
-                    }
+
+                }*/
+
+                if (MixOperations.isNewEvent(dashboardCount.lastNotificationAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalledNotification)) {
+                    apiCallNotification = true;
                 }
 
                 if (dashboardCount.oldCount != dashboardCount.count) {

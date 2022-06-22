@@ -75,6 +75,7 @@ ActivityAddSyllabusBinding binding;
     }
 
     private void inits() {
+
         topicAdapter = new TopicAdapter();
         binding.rvTopic.setAdapter(topicAdapter);
 
@@ -310,20 +311,21 @@ ActivityAddSyllabusBinding binding;
 
                         arrayList.add(modelData);
 
-                        /*if (topicAdapter.getList().size() > 0)
+                        if (topicAdapter.getList().size() > 0)
                         {
-                            SyllabusModelReq.TopicModelData data2 = new SyllabusModelReq.TopicModelData();
+                            /*SyllabusModelReq.TopicModelData data2 = new SyllabusModelReq.TopicModelData();
                             data2.setTopicName(binding.etTopicName.getText().toString());
                             data2.setToDate(binding.etToDate.getText().toString());
                             data2.setFromDate(binding.etFromDate.getText().toString());
 
-                            arrayList.add(data2);
+                            arrayList.add(data2);*/
 
                             for (int i =0;i<topicAdapter.getList().size();i++)
                             {
-                                if (topicAdapter.getList().get(i).getTopicName().isEmpty())
+                                Log.e(TAG,"topicAdapter data pos"+ i +" data "+topicAdapter.getList().get(i).getTopicName());
+                                if (topicAdapter.getList().get(i).getTopicName() == null || topicAdapter.getList().get(i).getTopicName().isEmpty())
                                 {
-                                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_add_topic_name),Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_add_topic_name)+ i,Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                             }
@@ -337,12 +339,6 @@ ActivityAddSyllabusBinding binding;
                                 arrayList.add(data1);
                             }
                         }
-                        else
-                        {
-                            SyllabusModelReq.TopicModelData modelData = new SyllabusModelReq.TopicModelData();
-                            modelData.setTopicName(binding.etTopicName.getText().toString());
-                            arrayList.add(modelData);
-                        }*/
 
                         data.setTopicsList(arrayList);
                         syllabusModelData.add(data);
@@ -384,7 +380,8 @@ ActivityAddSyllabusBinding binding;
                 binding.ImgRemoveChapter.setVisibility(View.VISIBLE);
                 binding.etcName.setVisibility(View.VISIBLE);
                 binding.etTopicName.setVisibility(View.VISIBLE);
-
+                binding.imgAdd.setVisibility(View.VISIBLE);
+                binding.rvTopic.setVisibility(View.VISIBLE);
                 chapterID = null;
                 selectedTopicData.clear();
                 TopicId = null;
@@ -398,7 +395,8 @@ ActivityAddSyllabusBinding binding;
                 binding.etTopicName.getText().clear();
                 binding.etToDate.getText().clear();
                 binding.etFromDate.getText().clear();
-
+                binding.imgAdd.setVisibility(View.GONE);
+                binding.rvTopic.setVisibility(View.GONE);
                 binding.etTopicName.setVisibility(View.GONE);
 
                 binding.etcName.getText().clear();
@@ -465,8 +463,11 @@ ActivityAddSyllabusBinding binding;
     }
     private void addTopic() {
 
+
         if (!binding.etTopicName.getText().toString().isEmpty())
         {
+            Log.e(TAG,"topicAdapter" + topicAdapter.getList().size());
+
             if (topicAdapter.getList().size() > 0 && topicAdapter.getList().get(topicAdapter.getList().size()-1).getTopicName().isEmpty())
             {
                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_add_topic_name),Toast.LENGTH_SHORT).show();
@@ -520,8 +521,12 @@ ActivityAddSyllabusBinding binding;
 
                 @Override
                 public void afterTextChanged(Editable s) {
+
+                    Log.e(TAG,"Position");
                     SyllabusModelReq.TopicModelData item = new SyllabusModelReq.TopicModelData();
                     item.setTopicName(s.toString());
+                    item.setFromDate(holder.etFromDate.getText().toString());
+                    item.setToDate(holder.etToDate.getText().toString());
                     list.set(position, item);
                 }
             });
@@ -539,7 +544,9 @@ ActivityAddSyllabusBinding binding;
                             holder.etFromDate.setText(format.format(c.getTime()));
 
                             SyllabusModelReq.TopicModelData item = new SyllabusModelReq.TopicModelData();
+                            item.setTopicName(holder.etName.getText().toString());
                             item.setFromDate(format.format(c.getTime()));
+                            item.setToDate(holder.etToDate.getText().toString());
                             list.set(position, item);
                         }
                     });
@@ -561,7 +568,9 @@ ActivityAddSyllabusBinding binding;
                             holder.etToDate.setText(format.format(c.getTime()));
 
                             SyllabusModelReq.TopicModelData item = new SyllabusModelReq.TopicModelData();
+                            item.setTopicName(holder.etName.getText().toString());
                             item.setToDate(format.format(c.getTime()));
+                            item.setFromDate(holder.etFromDate.getText().toString());
                             list.set(position, item);
                         }
                     });

@@ -2,6 +2,7 @@ package com.vivid.gruppie.view
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,8 +34,14 @@ class RegisterClassSectionAdapter(
     }
 }
 
-class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBinding)
-    : RecyclerView.ViewHolder(binding.root) {
+class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBinding) : RecyclerView.ViewHolder(binding.root) {
+
+    var et1 : Int = 0
+    var et2 : Int = 0
+    var et3 : Int = 0
+    var et4 : Int = 0
+    var et5 : Int = 0
+
 
     fun bindTo(item: ClassItem, callback: RegisterCallback) {
         binding.cbSectionName.text = item.type
@@ -42,11 +49,15 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
         binding.cbSectionName.setOnCheckedChangeListener { button, isChecked ->
             item.classTypeId?.let {
                 if (!isChecked) {
-                    binding.etSections1.setText("")
-                    binding.etSections2.setText("")
-                    binding.etSections3.setText("")
-                    binding.etSections4.setText("")
-                    binding.etSections5.setText("")
+                    binding.etSections1Data.setText("0")
+                    binding.etSections2Data.setText("0")
+                    binding.etSections3Data.setText("0")
+                    binding.etSections4Data.setText("0")
+                    binding.etSections4Data.setText("0")
+
+               //     binding.etSections3.setText("")
+                /*    binding.etSections4.setText("")
+                    binding.etSections5.setText("")*/
                 }
                 callback.onCheckBoxChanged(it, isChecked)
             }
@@ -117,6 +128,7 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
             }
         }
 
+        /*
         binding.etSections1.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -145,12 +157,16 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
             }
         })
 
-        binding.etSections3.addTextChangedListener(object : TextWatcher {
+        binding.etSections3Data.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {
+
+
                 val text = binding.tvClassName3.text.toString()
-                val inputCount = binding.etSections3.text.toString()
+                val inputCount = binding.etSections3Data.text.toString()
+
+                Log.e("RegisterClass","MSg $inputCount")
                 if (!inputCount.isNullOrEmpty()) {
                     callback.onCountChanged(text , inputCount.toInt())
                 } else {
@@ -185,7 +201,140 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
                     callback.onCountChanged(text, 0)
                 }
             }
-        })
+        })*/
+
+
+        binding.imgMin1.visibility = View.GONE
+        binding.imgMin2.visibility = View.GONE
+        binding.imgMin3.visibility = View.GONE
+        binding.imgMin4.visibility = View.GONE
+        binding.imgMin5.visibility = View.GONE
+
+
+        binding.imgMin1.setOnClickListener{
+
+            et1 -= 1;
+            binding.etSections1Data.setText(et1.toString())
+            if (et1 == 0)
+            {
+                binding.imgMin1.visibility = View.GONE
+            }
+
+            val text = binding.tvClassName1.text.toString()
+            callback.onCountChanged(text, et1)
+        }
+
+        binding.imgMax1.setOnClickListener{
+
+            binding.imgMin1.visibility = View.VISIBLE
+            et1 += 1;
+            binding.etSections1Data.setText(et1.toString())
+
+            val text = binding.tvClassName1.text.toString()
+            callback.onCountChanged(text, et1)
+        }
+
+
+
+        binding.imgMin2.setOnClickListener{
+
+            et2 -= 1;
+            binding.etSections2Data.setText(et2.toString())
+            if (et2 == 0)
+            {
+                binding.imgMin2.visibility = View.GONE
+            }
+
+            val text = binding.tvClassName2.text.toString()
+            callback.onCountChanged(text, et2)
+
+        }
+
+        binding.imgMax2.setOnClickListener{
+
+            binding.imgMin2.visibility = View.VISIBLE
+            et2 += 1;
+            binding.etSections2Data.setText(et2.toString())
+
+            val text = binding.tvClassName2.text.toString()
+            callback.onCountChanged(text, et2)
+
+        }
+
+
+
+        binding.imgMin3.setOnClickListener{
+
+            et3 -= 1;
+            binding.etSections3Data.setText(et3.toString())
+            if (et3 == 0)
+            {
+                binding.imgMin3.visibility = View.GONE
+            }
+
+            val text = binding.tvClassName3.text.toString()
+            callback.onCountChanged(text, et3)
+        }
+
+        binding.imgMax3.setOnClickListener{
+
+            binding.imgMin3.visibility = View.VISIBLE
+            et3 += 1;
+            binding.etSections3Data.setText(et3.toString())
+
+            val text = binding.tvClassName3.text.toString()
+            callback.onCountChanged(text, et3)
+        }
+
+
+        binding.imgMin4.setOnClickListener{
+
+            et4 -= 1;
+            binding.etSections4Data.setText(et4.toString())
+            if (et4 == 0)
+            {
+                binding.imgMin4.visibility = View.GONE
+            }
+
+            val text = binding.tvClassName4.text.toString()
+            callback.onCountChanged(text, et4)
+        }
+
+        binding.imgMax4.setOnClickListener{
+
+            binding.imgMin4.visibility = View.VISIBLE
+            et4 += 1;
+            binding.etSections4Data.setText(et4.toString())
+
+            val text = binding.tvClassName4.text.toString()
+            callback.onCountChanged(text, et4)
+        }
+
+        binding.imgMin5.setOnClickListener{
+
+            et5 -= 1;
+            binding.etSections5Data.setText(et5.toString())
+            if (et5 == 0)
+            {
+                binding.imgMin5.visibility = View.GONE
+            }
+
+            val text = binding.tvClassName5.text.toString()
+            callback.onCountChanged(text, et5)
+        }
+
+        binding.imgMax5.setOnClickListener{
+
+            binding.imgMin5.visibility = View.VISIBLE
+            et5 += 1;
+            binding.etSections5Data.setText(et5.toString())
+
+            val text = binding.tvClassName5.text.toString()
+            callback.onCountChanged(text, et5)
+        }
+
+
+
 
         itemView.setOnClickListener {
 

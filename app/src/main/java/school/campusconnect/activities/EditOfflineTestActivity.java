@@ -87,7 +87,7 @@ public class EditOfflineTestActivity extends BaseActivity implements LeafManager
         init();
 
         showData();
-
+        showLoadingBar(progressBar,true);
         LeafManager leafManager = new LeafManager();
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "more");
     }

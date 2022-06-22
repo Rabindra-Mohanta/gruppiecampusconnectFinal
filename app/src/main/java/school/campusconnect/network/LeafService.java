@@ -586,7 +586,6 @@ public interface LeafService {
     Call<ClassResponse> getClasses(@Path("group_id") String group_id);
 
 
-
     @GET("/api/v1/groups/{group_id}/class/video/conference")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<VideoClassResponse> getVideoClasses(@Path("group_id") String group_id);

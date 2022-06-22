@@ -87,7 +87,7 @@ public class AddClassActivity extends BaseActivity implements LeafManager.OnAddU
         init();
 
         setImageFragment();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar,true);
       //  progressBar.setVisibility(View.VISIBLE);
         leafManager.getSubjects(this, GroupDashboardActivityNew.groupId);
     }

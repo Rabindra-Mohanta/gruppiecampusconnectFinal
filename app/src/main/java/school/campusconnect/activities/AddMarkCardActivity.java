@@ -89,7 +89,7 @@ public class AddMarkCardActivity extends BaseActivity implements LeafManager.OnA
 
         init();
 
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar,true);
    //     progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTeamSubjects(this, groupId, teamId);

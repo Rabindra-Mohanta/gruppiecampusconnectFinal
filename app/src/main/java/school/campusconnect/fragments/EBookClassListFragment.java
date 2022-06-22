@@ -105,7 +105,7 @@ public class EBookClassListFragment extends BaseFragment implements LeafManager.
     private void getClassList() {
         LeafManager leafManager = new LeafManager();
         //progressBar.setVisibility(View.VISIBLE);
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,true);
         leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
     }
 

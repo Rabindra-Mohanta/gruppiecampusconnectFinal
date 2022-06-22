@@ -113,7 +113,7 @@ public class ChapterActivity extends BaseActivity {
             else
             {
                 intent.putExtra("isDelete",true);
-                intent.putExtra("chapter_id",((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getChapterID());
+              //  intent.putExtra("chapter_id",((ChapterListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getChapterID());
             }
             intent.putExtra("path",path);
             startActivity(intent);

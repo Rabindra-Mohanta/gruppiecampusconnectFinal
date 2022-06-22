@@ -338,6 +338,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_marginTop="@dimen/padding_20dp"
                     android:id="@+id/rvStaff"
+                    android:layout_marginHorizontal="-15dp"
                     android:layout_below="@id/spFilter"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="vertical"

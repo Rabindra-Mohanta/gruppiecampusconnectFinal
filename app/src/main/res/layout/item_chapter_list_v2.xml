@@ -38,7 +38,7 @@
                     android:layout_marginLeft="@dimen/padding_15dp"
                     android:layout_gravity="center"
                     android:textColor="@color/colorTextDark"
-                    style="@style/LabelNormal" />
+                    style="@style/LabelHeader1" />
 
             </LinearLayout>
 

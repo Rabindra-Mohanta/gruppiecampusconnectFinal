@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/border_black"
         android:gravity="center"
-        android:minWidth="75dp"
+        android:minWidth="150dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:text="No. of\nSections"
@@ -80,24 +80,60 @@
         app:layout_constraintRight_toLeftOf="@id/etSections1"
         app:layout_constraintTop_toBottomOf="@id/tvTitleClassName" />
 
-    <EditText
+
+
+
+    <RelativeLayout
         android:id="@+id/etSections1"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:background="@drawable/border_black"
-        android:gravity="center"
-        android:hint="Enter"
-        android:inputType="number"
-        android:lines="1"
-        android:maxLength="2"
-        android:minWidth="75dp"
-        android:paddingTop="8dp"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tvClassName1"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvClassName1" />
+        android:minWidth="150dp"
+        android:background="@drawable/border_black"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/tvClassName1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/imgMin1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_remove_app_v2"
+                android:padding="5dp"/>
+
+            <TextView
+                android:id="@+id/etSections1Data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0"
+                android:lines="1"
+                android:background="@null"
+                android:layout_marginHorizontal="10dp"
+                android:maxLength="2"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                />
+
+            <ImageView
+                android:id="@+id/imgMax1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_add"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/tvClassName2"
@@ -118,8 +154,59 @@
         app:layout_constraintRight_toLeftOf="@id/etSections2"
         app:layout_constraintTop_toBottomOf="@id/tvClassName1" />
 
-    <EditText
+
+    <RelativeLayout
         android:id="@+id/etSections2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/tvClassName2"
+        app:layout_constraintRight_toRightOf="parent"
+        android:minWidth="150dp"
+        android:background="@drawable/border_black"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/tvClassName2">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/imgMin2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_remove_app_v2"
+                android:padding="5dp"/>
+
+            <TextView
+                android:id="@+id/etSections2Data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0"
+                android:lines="1"
+                android:background="@null"
+                android:layout_marginHorizontal="10dp"
+                android:maxLength="2"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                />
+
+            <ImageView
+                android:id="@+id/imgMax2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_add"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+   <!-- <EditText
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:background="@drawable/border_black"
@@ -128,14 +215,14 @@
         android:inputType="number"
         android:lines="1"
         android:maxLength="2"
-        android:minWidth="75dp"
+        android:minWidth="150dp"
         android:paddingTop="8dp"
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tvClassName2"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvClassName2" />
+        app:layout_constraintTop_toTopOf="@id/tvClassName2" />-->
 
     <TextView
         android:id="@+id/tvClassName3"
@@ -156,24 +243,59 @@
         app:layout_constraintRight_toLeftOf="@id/etSections3"
         app:layout_constraintTop_toBottomOf="@id/tvClassName2" />
 
-    <EditText
+
+    <RelativeLayout
         android:id="@+id/etSections3"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:background="@drawable/border_black"
-        android:gravity="center"
-        android:hint="Enter"
-        android:inputType="number"
-        android:lines="1"
-        android:maxLength="2"
-        android:minWidth="75dp"
-        android:paddingTop="8dp"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tvClassName3"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvClassName3" />
+        android:minWidth="150dp"
+        android:background="@drawable/border_black"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/tvClassName3">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/imgMin3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_remove_app_v2"
+                android:padding="5dp"/>
+
+            <TextView
+                android:id="@+id/etSections3Data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0"
+                android:lines="1"
+                android:background="@null"
+                android:layout_marginHorizontal="10dp"
+                android:maxLength="2"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                />
+
+            <ImageView
+                android:id="@+id/imgMax3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_add"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
 
     <TextView
         android:id="@+id/tvClassName4"
@@ -194,7 +316,61 @@
         app:layout_constraintRight_toLeftOf="@id/etSections4"
         app:layout_constraintTop_toBottomOf="@id/tvClassName3" />
 
-    <EditText
+
+    <RelativeLayout
+        android:id="@+id/etSections4"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/tvClassName4"
+        app:layout_constraintRight_toRightOf="parent"
+        android:minWidth="150dp"
+        android:background="@drawable/border_black"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/tvClassName4">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/imgMin4"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_remove_app_v2"
+                android:padding="5dp"/>
+
+            <TextView
+                android:id="@+id/etSections4Data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0"
+                android:lines="1"
+                android:background="@null"
+                android:layout_marginHorizontal="10dp"
+                android:maxLength="2"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                />
+
+            <ImageView
+                android:id="@+id/imgMax4"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_add"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+    <!--<EditText
         android:id="@+id/etSections4"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -204,14 +380,14 @@
         android:inputType="number"
         android:lines="1"
         android:maxLength="2"
-        android:minWidth="75dp"
+        android:minWidth="150dp"
         android:paddingTop="8dp"
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tvClassName4"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvClassName4" />
+        app:layout_constraintTop_toTopOf="@id/tvClassName4" />-->
 
     <TextView
         android:id="@+id/tvClassName5"
@@ -232,8 +408,61 @@
         app:layout_constraintRight_toLeftOf="@id/etSections5"
         app:layout_constraintTop_toBottomOf="@id/tvClassName4" />
 
-    <EditText
+
+    <RelativeLayout
         android:id="@+id/etSections5"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/tvClassName5"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvClassName5"
+        android:minWidth="150dp"
+        android:background="@drawable/border_black"
+        android:visibility="gone"
+>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/imgMin5"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_remove_app_v2"
+                android:padding="5dp"/>
+
+            <TextView
+                android:id="@+id/etSections5Data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0"
+                android:lines="1"
+                android:background="@null"
+                android:layout_marginHorizontal="10dp"
+                android:maxLength="2"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                />
+
+            <ImageView
+                android:id="@+id/imgMax5"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_add"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+   <!-- <EditText
+
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:background="@drawable/border_black"
@@ -242,7 +471,7 @@
         android:inputType="number"
         android:lines="1"
         android:maxLength="2"
-        android:minWidth="75dp"
+        android:minWidth="150dp"
         android:paddingTop="8dp"
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
@@ -250,5 +479,5 @@
         app:layout_constraintBottom_toBottomOf="@id/tvClassName5"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvClassName5" />
-
+-->
 </androidx.constraintlayout.widget.ConstraintLayout>

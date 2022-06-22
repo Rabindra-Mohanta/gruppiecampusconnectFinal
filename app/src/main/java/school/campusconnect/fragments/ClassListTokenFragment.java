@@ -54,7 +54,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,true);
        // progressBar.setVisibility(View.VISIBLE);
 
         return view;

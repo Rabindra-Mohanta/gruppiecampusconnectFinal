@@ -149,7 +149,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     public void getChapters(boolean isLoading) {
         if (isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,true);
            // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
@@ -374,6 +374,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     public String getChapterID() {
+
         return  chapterList.get(spChapter.getSelectedItemPosition()).chapterId;
     }
 

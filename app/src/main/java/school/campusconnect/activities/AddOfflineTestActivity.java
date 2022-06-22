@@ -261,6 +261,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             }
 
         } else {
+            showLoadingBar(progressBar,true);
             LeafManager leafManager = new LeafManager();
             leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, teamId, "more");
         }

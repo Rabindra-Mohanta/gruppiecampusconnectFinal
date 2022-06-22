@@ -59,8 +59,8 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
         View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+        showLoadingBar(progressBar,true);
 
-        showLoadingBar(progressBar);
       //  progressBar.setVisibility(View.VISIBLE);
 
         return view;
@@ -70,6 +70,7 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
+
         leafManager.getClasses(this,GroupDashboardActivityNew.groupId);
 
         if(getActivity()!=null){

@@ -112,6 +112,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
         }
         else
         {
+            getLocallyAll();
             binding.llChapterAll.setVisibility(View.GONE);
         }
 

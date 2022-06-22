@@ -84,7 +84,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         init();
 
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar,false);
+        showLoadingBar(progressBar,true);
        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
     }

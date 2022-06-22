@@ -133,7 +133,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
 
     private void callAPi(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,true);
         //    progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id, "");

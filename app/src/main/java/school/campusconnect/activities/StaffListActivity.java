@@ -120,7 +120,7 @@ public class StaffListActivity extends BaseActivity implements LeafManager.OnCom
     private void apiCall(boolean isLoading) {
         if(isLoading)
         {
-            showLoadingBar(binding.progressBar,false);
+            showLoadingBar(binding.progressBar,true);
             LeafManager leafManager = new LeafManager();
             leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
         }

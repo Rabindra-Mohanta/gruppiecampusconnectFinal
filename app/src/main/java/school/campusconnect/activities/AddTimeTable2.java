@@ -123,7 +123,8 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
     private void getSubjectStaff(SubStaffTTReq subStaffTTReq) {
         Log.e(TAG,"SubStaffTTReq"+new Gson().toJson(subStaffTTReq));
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+
+        showLoadingBar(progressBar,true);
         leafManager.getSubjectStaffTT(this, GroupDashboardActivityNew.groupId, team_id, subStaffTTReq);
     }
 

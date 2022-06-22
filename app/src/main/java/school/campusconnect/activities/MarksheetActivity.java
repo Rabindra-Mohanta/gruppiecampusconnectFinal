@@ -126,7 +126,7 @@ public class MarksheetActivity extends BaseActivity {
         init_();
 
         AppLog.e(TAG, "getStudents : ");
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,true);
        // progressBar.setVisibility(View.VISIBLE);
         leafManager.getStudents(this, GroupDashboardActivityNew.groupId, teamId);
     }

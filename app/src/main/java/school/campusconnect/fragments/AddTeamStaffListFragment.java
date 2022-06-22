@@ -102,6 +102,7 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
             {
                 teamList.add(result.get(i).id);
             }
+            showLoadingBar(progressBar,true);
             leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
         }
         else if (apiId == LeafManager.API_STAFF_STUDENT_TEAM) {

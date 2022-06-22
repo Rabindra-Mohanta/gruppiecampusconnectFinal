@@ -98,7 +98,7 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,true);
        // progressBar.setVisibility(View.VISIBLE);
 
         return view;

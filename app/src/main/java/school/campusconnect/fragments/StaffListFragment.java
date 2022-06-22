@@ -89,7 +89,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
 
         isAdmin = getArguments().getBoolean("isAdmin");
 
-        showLoadingBar(progressBar);
+        showLoadingBar(progressBar,true);
 
         // progressBar.setVisibility(View.VISIBLE);
 
@@ -143,6 +143,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
     public void onStart() {
         super.onStart();
         etSearch.setText("");
+
         LeafManager leafManager = new LeafManager();
         leafManager.getStaff(this,GroupDashboardActivityNew.groupId);
     }

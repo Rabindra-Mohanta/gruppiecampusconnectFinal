@@ -56,7 +56,7 @@ public class AllStaffListActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-        showLoadingBar(binding.progressBar,false);
+        showLoadingBar(binding.progressBar,true);
         LeafManager leafManager = new LeafManager();
         leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
     }

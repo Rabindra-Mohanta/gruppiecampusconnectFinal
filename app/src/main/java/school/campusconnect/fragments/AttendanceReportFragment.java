@@ -137,6 +137,7 @@ public class AttendanceReportFragment extends BaseFragment implements LeafManage
 
         if(TextUtils.isEmpty(selectedTeamId)){
             LeafManager leafManager = new LeafManager();
+            showLoadingBar(progressBar,true);
             leafManager.getClasses(this,GroupDashboardActivityNew.groupId);
         }else {
             llClass.setVisibility(View.GONE);

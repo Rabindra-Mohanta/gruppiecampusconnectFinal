@@ -47,6 +47,7 @@ public class StudentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_student);
 
+        showLoadingBar(binding.progressBar,true);
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
@@ -58,6 +59,7 @@ public class StudentActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
+
 
         LeafManager leafManager = new LeafManager();
         leafManager.getStudents(this, GroupDashboardActivityNew.groupId,id);

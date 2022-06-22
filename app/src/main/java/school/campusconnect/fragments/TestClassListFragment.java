@@ -157,7 +157,7 @@ public class TestClassListFragment extends BaseFragment implements LeafManager.O
 
     private void calApi(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
+            showLoadingBar(progressBar,true);
             //progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {
