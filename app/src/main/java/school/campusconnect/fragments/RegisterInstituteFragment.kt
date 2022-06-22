@@ -173,8 +173,12 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         rvUniversities = view.findViewById(R.id.rvUniversities)
         rvClasses = view.findViewById(R.id.rvClasses)
 
-        isLogout = arguments!!.getBoolean("isDashboard", false)
-        AppLog.e("RegisterInstituteFragment", "isLogout " + isLogout)
+        if(arguments != null)
+        {
+            isLogout = arguments!!.getBoolean("isDashboard", false)
+            AppLog.e("RegisterInstituteFragment", "isLogout " + isLogout)
+        }
+
     }
 
     private fun isStep1Completed(): Boolean {
