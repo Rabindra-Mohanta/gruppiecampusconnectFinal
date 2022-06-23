@@ -73,6 +73,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
     private String team_id;
     StaffAdapter adapter;
     boolean isEdit;
+    boolean isAssign;
     private SubjectStaffResponse.SubjectData subjectData;
     private ArrayList<String> selectedStaffIds = new ArrayList<>();
 
@@ -134,6 +135,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         if (bundle != null) {
             team_id = bundle.getString("team_id");
             isEdit = bundle.getBoolean("is_edit");
+            isAssign = bundle.getBoolean("isAssign");
             if (isEdit) {
                 setTitle(getResources().getString(R.string.lbl_update_subject)+" - ("+getIntent().getStringExtra("className")+")");
                 subjectData = new Gson().fromJson(bundle.getString("data"), SubjectStaffResponse.SubjectData.class);
@@ -159,14 +161,31 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                         return;
                     }
                     if (isEdit) {
-                        AddSubjectStaffReq request = new AddSubjectStaffReq();
-                        request.setSubjectName(etName.getText().toString());
-                        request.setStaffId(adapter.getSelectedList());
-                        showLoadingBar(progressBar,false);
-                       // progressBar.setVisibility(View.VISIBLE);
-                        AppLog.e(TAG, "request :" + request);
-                        leafManager.updateSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,subjectData.getSubjectId(), request);
-                    } else {
+                        if (isAssign)
+                        {
+                            AddSubjectStaffReq request = new AddSubjectStaffReq();
+                            request.setSubjectName(etName.getText().toString());
+                            request.setStaffId(adapter.getSelectedList());
+                            request.setSubjectId(subjectData.subjectId);
+
+                            showLoadingBar(progressBar,false);
+                            // progressBar.setVisibility(View.VISIBLE);
+                            AppLog.e(TAG, "request :" + request);
+                            leafManager.assignTeacher(this, GroupDashboardActivityNew.groupId, team_id, request);
+                        }
+                        else
+                        {
+                            AddSubjectStaffReq request = new AddSubjectStaffReq();
+                            request.setSubjectName(etName.getText().toString());
+                            request.setStaffId(adapter.getSelectedList());
+                            showLoadingBar(progressBar,false);
+                            // progressBar.setVisibility(View.VISIBLE);
+                            AppLog.e(TAG, "request :" + request);
+                            leafManager.updateSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,subjectData.getSubjectId(), request);
+                        }
+                    }
+                    else
+                    {
                         AddSubjectStaffReq request = new AddSubjectStaffReq();
                         request.setSubjectName(etName.getText().toString());
                         request.setStaffId(adapter.getSelectedList());
@@ -202,6 +221,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
             case LeafManager.API_ADD_SUBJECT_STAFF:
             case LeafManager.API_UPDATE_SUBJECT_STAFF:
             case LeafManager.API_DELETE_SUBJECT_STAFF:
+            case LeafManager.API_ASSIGN_TEACHER:
                 finish();
                 break;
             case LeafManager.API_STAFF:

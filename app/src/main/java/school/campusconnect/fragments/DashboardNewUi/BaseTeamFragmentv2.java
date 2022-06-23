@@ -504,46 +504,66 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 NotificationListRes res1 = (NotificationListRes) response;
                 List<NotificationListRes.NotificationListData> results = res1.getData();
 
-
+                NotificationTable.deleteNotification(GroupDashboardActivityNew.groupId);
 
                 if(results.size()>0)
                 {
                     binding.llFeed.setVisibility(View.VISIBLE);
                     notificationList.clear();
 
+                    if (results.size()>10)
+                    {
+                        for (int i = 0; i < 10; i++) {
 
-                    for (int i = 0; i < results.size(); i++) {
+                            NotificationTable notificationTable = new NotificationTable();
 
-                        NotificationTable notificationTable = new NotificationTable();
-                        NotificationListRes.NotificationListData notificationListData= results.get(i);
-                        notificationTable.teamId = notificationListData.getTeamId();
-                        notificationTable.groupId = notificationListData.getGroupId();
-                        notificationTable.userId = notificationListData.getUserId();
-                        notificationTable.type = notificationListData.getType();
-                        notificationTable.showComment = notificationListData.getShowComment();
-                        notificationTable.postId = notificationListData.getPostId();
-                        notificationTable.message = notificationListData.getMessage();
-                        notificationTable.insertedAt = notificationListData.getInsertedAt();
-                        notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
-                        notificationTable.createdByName = notificationListData.getCreatedByName();
-                        notificationTable.createdByImage = notificationListData.getCreatedByImage();
-                        notificationTable.createdById = notificationListData.getCreatedById();
-                        notificationTable.readedComment = "true";
+                            NotificationListRes.NotificationListData notificationListData= results.get(i);
 
-                        if (!LeafPreference.getInstance(getContext()).getString("FEED_API").isEmpty())
-                        {
-                            notificationTable._now = LeafPreference.getInstance(getContext()).getString("FEED_API");
+                            notificationTable.teamId = notificationListData.getTeamId();
+                            notificationTable.groupId = notificationListData.getGroupId();
+                            notificationTable.userId = notificationListData.getUserId();
+                            notificationTable.type = notificationListData.getType();
+                            notificationTable.showComment = notificationListData.getShowComment();
+                            notificationTable.postId = notificationListData.getPostId();
+                            notificationTable.message = notificationListData.getMessage();
+                            notificationTable.insertedAt = notificationListData.getInsertedAt();
+                            notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+                            notificationTable.createdByName = notificationListData.getCreatedByName();
+                            notificationTable.createdByImage = notificationListData.getCreatedByImage();
+                            notificationTable.createdById = notificationListData.getCreatedById();
+                            notificationTable.readedComment = "true";
+                            notificationTable._now = String.valueOf(System.currentTimeMillis());
+
+                            notificationTable.save();
                         }
-                        else
-                        {
-                            notificationTable._now = DateTimeHelper.getCurrentTime();
+                    }
+                    else {
+                        for (int i = 0; i < results.size(); i++) {
+
+                            NotificationTable notificationTable = new NotificationTable();
+
+                            NotificationListRes.NotificationListData notificationListData = results.get(i);
+
+                            notificationTable.teamId = notificationListData.getTeamId();
+                            notificationTable.groupId = notificationListData.getGroupId();
+                            notificationTable.userId = notificationListData.getUserId();
+                            notificationTable.type = notificationListData.getType();
+                            notificationTable.showComment = notificationListData.getShowComment();
+                            notificationTable.postId = notificationListData.getPostId();
+                            notificationTable.message = notificationListData.getMessage();
+                            notificationTable.insertedAt = notificationListData.getInsertedAt();
+                            notificationTable.createdByPhone = notificationListData.getCreatedByPhone();
+                            notificationTable.createdByName = notificationListData.getCreatedByName();
+                            notificationTable.createdByImage = notificationListData.getCreatedByImage();
+                            notificationTable.createdById = notificationListData.getCreatedById();
+                            notificationTable.readedComment = "true";
+                            notificationTable._now = String.valueOf(System.currentTimeMillis());
+                            notificationTable.save();
+
                         }
-
-
-
-                        notificationTable.save();
 
                     }
+
                     getNotification();
 
                     TeamCountTBL dashboardCountv2 = TeamCountTBL.getByTypeAndGroup("DASHBOARD", GroupDashboardActivityNew.groupId);

@@ -563,6 +563,8 @@ public class LeafManager {
     public static final int API_CHNAGE_STAFF_ATTENDACNCE =  349;
 
     public static final int API_GET_LEAVE_ATTENDACNCE =  363;
+
+    public static final int API_ASSIGN_TEACHER = 366;
     public LeafManager() {
 
     }
@@ -13541,6 +13543,43 @@ public class LeafManager {
         wrapper.execute(API_ID_DO_REGISTER, new ResponseWrapper.ResponseHandler<ClassesListData, ErrorResponse>() {
             @Override
             public void handle200(int apiId, ClassesListData response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+
+
+
+
+    public void assignTeacher(OnCommunicationListener listListener,String groupId, String teamID, AddSubjectStaffReq req) {
+
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.assignSubject(groupId,teamID,req);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ASSIGN_TEACHER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {
                     mOnCommunicationListener.onSuccess(apiId, response);
                 }

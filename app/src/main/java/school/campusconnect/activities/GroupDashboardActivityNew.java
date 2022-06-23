@@ -437,8 +437,6 @@ public class GroupDashboardActivityNew extends BaseActivity
             }
 
 
-
-
             UpdateDataEventRes.TeamListCount teamCount = res.data.get(0).teamsListCount;
             TeamCountTBL groupCount = TeamCountTBL.getByTypeAndGroup("GROUP", groupId);
             if (groupCount == null) {
@@ -923,7 +921,8 @@ public class GroupDashboardActivityNew extends BaseActivity
 
             Fragment currFrag = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-            if (currFrag instanceof BaseTeamFragmentv2) {
+            if (currFrag instanceof BaseTeamFragmentv2)
+            {
                 boolean apiCall = false;
                 boolean apiCallNotification = false;
 
@@ -939,9 +938,20 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                 }*/
 
-                if (MixOperations.isNewEvent(dashboardCount.lastNotificationAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalledNotification)) {
-                    apiCallNotification = true;
+                List<NotificationTable> notificationTableList = NotificationTable.getAllNotificationList(groupId,1);
+
+                Log.e(TAG,"notificationTableList"+notificationTableList.size());
+
+                if (notificationTableList.size() > 0)
+                {
+                    Log.e(TAG,"dashboardCount.lastNotificationAt "+dashboardCount.lastNotificationAt);
+                    Log.e(TAG,"notificationTableList.lastNotificationAt "+Long.parseLong(notificationTableList.get(notificationTableList.size()-1)._now));
+
+                    if (MixOperations.isNewEvent(dashboardCount.lastNotificationAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Long.parseLong(notificationTableList.get(notificationTableList.size()-1)._now))) {
+                        apiCallNotification = true;
+                    }
                 }
+
 
                 if (dashboardCount.oldCount != dashboardCount.count) {
                     dashboardCount.oldCount = dashboardCount.count;
@@ -953,8 +963,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                 ((BaseTeamFragmentv2) currFrag).checkAndRefreshNotification(apiCallNotification);
 
             }
-
-            if (currFrag instanceof BaseTeamFragmentv3) {
+            if (currFrag instanceof BaseTeamFragmentv3)
+            {
 
                         /*if (dashboardCount.lastApiCalled != 0) {
                             if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {

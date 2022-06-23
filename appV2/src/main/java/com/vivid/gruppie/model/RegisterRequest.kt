@@ -1,6 +1,7 @@
 package com.vivid.gruppie.model
 
 data class RegisterRequestData(
+        val appName : String,
     val name: String,
     val subCategory: String,
     val board: String,

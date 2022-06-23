@@ -119,7 +119,7 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
                 holder.txt_count.setVisibility(View.GONE);
                 holder.iv_assigned.setVisibility(View.GONE);
                 holder.btn_assign.setVisibility(View.VISIBLE);
-                holder.btn_assign.setOnClickListener(v -> onTreeClick(list.get(position)));
+                holder.btn_assign.setOnClickListener(v -> onTreeClick(list.get(position),true));
             } else {
                 holder.txt_count.setText(staffName.trim());
                 holder.txt_count.setVisibility(View.VISIBLE);
@@ -177,13 +177,13 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
+                        onTreeClick(list.get(getAdapterPosition()),false);
                     }
                 });
                 img_tree.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
+                        onTreeClick(list.get(getAdapterPosition()),false);
                     }
                 });
 
@@ -191,9 +191,10 @@ public class SubjectListFragment2 extends BaseFragment implements LeafManager.On
         }
     }
 
-    private void onTreeClick(SubjectStaffResponse.SubjectData classData) {
+    private void onTreeClick(SubjectStaffResponse.SubjectData classData,boolean isAssign) {
         Intent intent = new Intent(getActivity(), AddSubjectActivity2.class);
         intent.putExtra("team_id",team_id);
+        intent.putExtra("isAssign",isAssign);
         intent.putExtra("className",className);
         intent.putExtra("is_edit",true);
         intent.putExtra("data",new Gson().toJson(classData));

@@ -297,16 +297,41 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
        // binding.progressBar.setVisibility(View.VISIBLE);
        // manager.getReligion(this);
 
+        binding.switchAllowPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoadingBar(binding.progressBar);
+                //  binding.progressBar.setVisibility(View.VISIBLE);
+                manager.allowTeamPost(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+            }
+        });
+
+        binding.switchAllowAddUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoadingBar(binding.progressBar);
+                //  binding.progressBar.setVisibility(View.VISIBLE);
+                manager.allowAddOtherMember(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+            }
+        });
+
+        binding.switchAllowComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoadingBar(binding.progressBar);
+                //  binding.progressBar.setVisibility(View.VISIBLE);
+                manager.allowTeamPostComment(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+            }
+        });
+
     }
 
-    @OnClick({R.id.switchAllowAddUser, R.id.switchAllowPost, R.id.switchAllowComment})
+  /*  @OnClick({R.id.switchAllowAddUser, R.id.switchAllowPost, R.id.switchAllowComment})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.switchAllowPost:
                 if (binding.progressBar != null)
-                    showLoadingBar(binding.progressBar);
-                  //  binding.progressBar.setVisibility(View.VISIBLE);
-                    manager.allowTeamPost(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+
                 break;
             case R.id.switchAllowAddUser:
                 if (binding.progressBar != null)
@@ -322,7 +347,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
                 break;
 
         }
-    }
+    }*/
 
     private void cleverTapAllowPost(boolean isAllow) {
         if (isConnectionAvailable()) {

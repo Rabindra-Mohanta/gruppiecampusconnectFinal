@@ -323,7 +323,6 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             request.password = edtPassword/*.editText*/.getText().toString();
             AppLog.e("Login..", "data is " + new Gson().toJson(request));
 
-
             LeafPreference.getInstance(this).setString(LeafPreference.LOGIN_REQ,new Gson().toJson(request));
 
             manager.doLogin(this, request);

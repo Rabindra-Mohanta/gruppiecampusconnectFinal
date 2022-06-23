@@ -18,7 +18,6 @@ import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.vivid.gruppie.R
 import com.vivid.gruppie.interfaces.RegisterCallback
 import com.vivid.gruppie.model.ClassInputData
@@ -27,11 +26,10 @@ import com.vivid.gruppie.model.RegisterRequestData
 import com.vivid.gruppie.model.UniversityItem
 import com.vivid.gruppie.view.RegisterClassSectionAdapter
 import com.vivid.gruppie.view.RegisterUniversityAdapter
-import school.campusconnect.activities.Home
+import school.campusconnect.BuildConfig
 import school.campusconnect.activities.LoginPinActivity
 import school.campusconnect.database.LeafPreference
 import school.campusconnect.datamodel.BaseResponse
-import school.campusconnect.datamodel.LoginRequest
 import school.campusconnect.datamodel.LoginResponse
 import school.campusconnect.datamodel.register.*
 import school.campusconnect.network.LeafManager
@@ -40,8 +38,6 @@ import school.campusconnect.utils.AppLog
 import school.campusconnect.utils.BaseFragment
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
 
@@ -441,6 +437,7 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
     }
 
     private fun apiDoRegister(userId: String, registerRequest: RegisterRequestData) {
+
         showLoadingBar(progressBar,true)
         Log.e("REgister","req "+Gson().toJson(registerRequest))
         leafManager.doRegister(userId, registerRequest, this)
@@ -565,7 +562,7 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
                         }
 
                         val registerRequest = RegisterRequestData(
-                                name = etName.text.toString(), subCategory = category, board = board,
+                                appName = BuildConfig.AppName, name = etName.text.toString(), subCategory = category, board = board,
                                 university = university, medium = selectedMedium,
                                 classTypeId = classTypes, classSection = sections, academicStartYear = mStartYear,
                                 academicEndYear = mEndYear
@@ -581,18 +578,24 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
     }
 
     private fun onRegistrationSuccess() {
+
+
         activity?.let {
 
             if (isLogout)
             {
 
-                val skip_pin = LeafPreference.getInstance(activity).getString(LeafPreference.SKIP_PIN)
+                LeafPreference.getInstance(activity).setBoolean("group_list_refresh", true)
+                activity?.finish()
+
+               /* val skip_pin = LeafPreference.getInstance(activity).getString(LeafPreference.SKIP_PIN)
                 val fingerPrint = LeafPreference.getInstance(activity).getBoolean(LeafPreference.FINGERPRINT)
                 val pin = LeafPreference.getInstance(activity).getString(LeafPreference.PIN)
 
                 val request = Gson().fromJson<LoginRequest>(LeafPreference.getInstance(context).getString(LeafPreference.LOGIN_REQ), object : TypeToken<LoginRequest?>() {}.type)
 
                 AppLog.e("RegisterInstitute", "request : " + Gson().toJson(request))
+
 
                 val manager = LeafManager()
 
@@ -639,13 +642,21 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
                         hideLoadingDialog()
                     }
                 }, request)
-                logoutForNewSchool()
+                logoutForNewSchool()*/
             }
             else
             {
+
+                var value = LeafPreference.getInstance(requireActivity()).getInt(LeafPreference.GROUP_COUNT)+1;
+                LeafPreference.getInstance(activity).setInt(LeafPreference.GROUP_COUNT, value)
+
+                AppLog.e(TAG,"Role "+LeafPreference.getInstance(requireActivity()).getString(LeafPreference.ROLE))
+                AppLog.e(TAG,"token "+LeafPreference.getInstance(requireActivity()).getString(LeafPreference.TOKEN))
+                AppLog.e(TAG,"groupCount "+value)
+                AppLog.e(TAG,"groupID "+LeafPreference.getInstance(requireActivity()).getString(LeafPreference.GROUP_ID))
+
                 val i = Intent(it, LoginPinActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
                 i.putExtra("Role",
                         LeafPreference.getInstance(requireActivity()).getString(LeafPreference.ROLE))
                 i.putExtra("token",
