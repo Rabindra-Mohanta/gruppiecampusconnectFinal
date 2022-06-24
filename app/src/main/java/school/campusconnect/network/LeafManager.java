@@ -16,6 +16,8 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.classs.AddClassReq;
+import school.campusconnect.datamodel.classs.ClassResV2;
 import school.campusconnect.datamodel.register.BoardsData;
 import school.campusconnect.datamodel.register.CampusMediumData;
 import school.campusconnect.datamodel.register.ClassesListData;
@@ -563,8 +565,9 @@ public class LeafManager {
     public static final int API_CHNAGE_STAFF_ATTENDACNCE =  349;
 
     public static final int API_GET_LEAVE_ATTENDACNCE =  363;
-
+    public static final int API_ADD_CLASS_V2 = 364;
     public static final int API_ASSIGN_TEACHER = 366;
+    public static final int API_GET_CLASS_LIST_V2 = 365;
     public LeafManager() {
 
     }
@@ -13602,6 +13605,74 @@ public class LeafManager {
 
     }
 
+
+
+    public void getClassListV2(OnCommunicationListener listListener,String groupId) {
+
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<ClassResV2> model = service.getClassesListV2(groupId);
+        ResponseWrapper<ClassResV2> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_GET_CLASS_LIST_V2, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+
+    public void addClassListV2(OnCommunicationListener listListener,String groupId, AddClassReq req) {
+
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addClass(groupId,req);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ADD_CLASS_V2, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
 
     public interface OnCommunicationListener {
         void onSuccess(int apiId, BaseResponse response);

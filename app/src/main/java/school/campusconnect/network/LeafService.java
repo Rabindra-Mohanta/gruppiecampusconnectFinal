@@ -16,6 +16,8 @@ import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.classs.AddClassReq;
+import school.campusconnect.datamodel.classs.ClassResV2;
 import school.campusconnect.datamodel.register.BoardsData;
 import school.campusconnect.datamodel.register.CampusMediumData;
 import school.campusconnect.datamodel.register.ClassesListData;
@@ -2092,5 +2094,16 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> assignSubject(@Path("group_id") String group_id, @Path("teams_id") String teams_id,@Body AddSubjectStaffReq req);
 
+    // Registration API END
+
+
+    @GET("api/v1/groups/{group_id}/get/class/list")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassResV2> getClassesListV2(@Path("group_id") String groupId);
+
+
+    @POST("api/v1/groups/{group_id}/add/classes")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addClass(@Path("group_id") String groupId,@Body AddClassReq req);
 
 }

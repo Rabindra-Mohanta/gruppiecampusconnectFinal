@@ -42,6 +42,8 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.UploadImageFragment;
 import school.campusconnect.views.SMBDialogUtils;
 
+
+/*DONT USED ADD NEW (ADD CLASS v2)*/
 public class AddClassActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
 
     private static final String TAG = "CreateTeamActivity";

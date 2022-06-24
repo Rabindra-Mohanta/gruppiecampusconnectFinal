@@ -57,11 +57,26 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.LiveTeacherClassActivity"></activity>
-        <activity android:name=".activities.StudentActivity" />
-        <activity android:name=".activities.AllStaffListActivity" />
-        <activity android:name=".activities.StaffListActivity" />
-        <activity android:name=".activities.StaffAttendanceActivity" />
+        <activity
+            android:name=".activities.AddClassV2Activity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activities.LiveTeacherClassActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.StudentActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AllStaffListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.StaffListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.StaffAttendanceActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".utils.MultipleImageSwipeActivity"
             android:exported="false"
@@ -99,7 +114,6 @@
             android:name=".service.IncomingVideoCallService"
             android:enabled="true"
             android:exported="true" />
-
         <service
             android:name=".service.IncomingLiveClassService"
             android:enabled="true"
@@ -957,10 +971,10 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".activities.RegisterInstituteActivity"
+        <activity
+            android:name=".activities.RegisterInstituteActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

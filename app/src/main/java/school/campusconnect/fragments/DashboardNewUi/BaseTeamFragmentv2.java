@@ -127,6 +127,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
+        Log.e(TAG,"GroupCount " +LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT));
 
         if (BuildConfig.AppCategory.equalsIgnoreCase("CAMPUS"))
         {
@@ -134,7 +135,6 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 menu.findItem(R.id.menu_add_school).setVisible(false);
             }
             else {
-
                 if (GroupDashboardActivityNew.isAdmin)
                 {
                     menu.findItem(R.id.menu_add_school).setVisible(true);

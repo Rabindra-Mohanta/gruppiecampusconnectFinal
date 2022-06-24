@@ -1200,6 +1200,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="dialog_new_version_available">New version is available. download new version from play store</string>
     <string name="dialog_update_available">Update available!</string>
     <string name="dialog_are_you_sure_you_want_to_approve">Are you sure you want to approve?</string>
+    <string name="dialog_are_you_sure_you_want_to_add_class">Are you sure you want to Add Class?</string>
     <string name="dialog_are_you_sure_you_want_to_not_approve">Are you sure you want to Not approve?</string>
     <string name="dialog_are_you_sure_you_want_to_hold">Are you sure you want to hold?</string>
     <string name="dialog_are_you_want_to_delete">Are you sure you want to delete?</string>
@@ -1313,7 +1314,6 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
 
     <string name="txt_contact_backend">Please contact sales@gruppie.in to enable live class</string>
     <string name="no_notes_found">No notes found</string>
-
 
 
 </resources>
