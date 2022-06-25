@@ -58,6 +58,8 @@ import school.campusconnect.datamodel.staff.ApprovalStaffAttendanceRes;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
 import school.campusconnect.datamodel.staff.StaffAttendanceRes;
 import school.campusconnect.datamodel.staff.TakeAttendanceReq;
+import school.campusconnect.datamodel.student.AddMultipleStaffReq;
+import school.campusconnect.datamodel.student.AddMultipleStudentReq;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
@@ -568,6 +570,10 @@ public class LeafManager {
     public static final int API_ADD_CLASS_V2 = 364;
     public static final int API_ASSIGN_TEACHER = 366;
     public static final int API_GET_CLASS_LIST_V2 = 365;
+
+    public static final int API_ADD_STUDENT_MULTIPLE = 367;
+    public static final int API_ADD_STAFF_MULTIPLE = 368;
+
     public LeafManager() {
 
     }
@@ -13650,6 +13656,73 @@ public class LeafManager {
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_ADD_CLASS_V2, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+
+    public void addMultipleStudent(OnCommunicationListener listListener,String groupId,String teamId, AddMultipleStudentReq req) {
+
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addMultipleStudent(groupId,teamId,req);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ADD_STUDENT_MULTIPLE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }
+
+    public void addMultipleStaff(OnCommunicationListener listListener, String groupId, AddMultipleStaffReq req) {
+
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addMultipleStaff(groupId,req);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_ADD_STAFF_MULTIPLE, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
             @Override
             public void handle200(int apiId, BaseResponse response) {
                 if (mOnCommunicationListener != null) {

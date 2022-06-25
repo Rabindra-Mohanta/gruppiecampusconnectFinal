@@ -227,8 +227,13 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
                 startActivity(intent);
                 return true;
             case R.id.menu_logout:
-                logout();
-                getActivity().finish();
+                SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), getResources().getString(R.string.smb_logout), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                        getActivity().finish();
+                    }
+                });
                 return true;
             case R.id.menu_set_wallpaper:
                 if (checkPermissionForWriteExternal()) {

@@ -288,6 +288,8 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
     }
 
     private void editStudent(StudentRes.StudentData studentData) {
+
+
         Intent intent = new Intent(getActivity(), AddClassStudentActivity.class);
         intent.putExtra("group_id", mGroupId);
         intent.putExtra("team_id", teamId);
@@ -295,6 +297,8 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         intent.putExtra("isEdit", true);
         intent.putExtra("student_data", new Gson().toJson(studentData));
         startActivity(intent);
+
+
     }
 
     private boolean checkPermissionForWriteExternal() {

@@ -12,8 +12,7 @@ import school.campusconnect.R;
 public class SMBDialogUtils {
 
     public static void showSMBSingleChoiceDialog(Activity activity, int titleId, int itemsId, int selectedId, DialogInterface.OnClickListener listener) {
-        final SMBAlterDialog dialog =
-                new SMBAlterDialog(activity);
+        final SMBAlterDialog dialog = new SMBAlterDialog(activity);
         dialog.setTitle(titleId);
         dialog.setSingleChoiceItems(itemsId, selectedId, null);
         dialog.setPositiveButtonClickListener(listener);

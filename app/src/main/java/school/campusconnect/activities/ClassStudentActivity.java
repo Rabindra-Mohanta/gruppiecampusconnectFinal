@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.school.AddClassStudentV2Activity;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.fragments.ClassStudentListFragment;
 
@@ -76,10 +77,16 @@ public class ClassStudentActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_class_student: {
-                Intent intent = new Intent(this, AddClassStudentActivity.class);
+
+                Intent intent = new Intent(this, AddClassStudentV2Activity.class);
                 intent.putExtra("group_id", mGroupId);
                 intent.putExtra("team_id", teamId);
                 startActivity(intent);
+
+               /* Intent intent = new Intent(this, AddClassStudentActivity.class);
+                intent.putExtra("group_id", mGroupId);
+                intent.putExtra("team_id", teamId);
+                startActivity(intent);*/
                 return true;
             }
             case R.id.menu_search:

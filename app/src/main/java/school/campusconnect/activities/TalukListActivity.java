@@ -302,8 +302,16 @@ public class TalukListActivity extends BaseActivity implements LeafManager.OnCom
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_logout:
-                logout();
-                finish();
+
+                SMBDialogUtils.showSMBDialogConfirmCancel(this, getResources().getString(R.string.smb_logout), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                        finish();
+                    }
+                });
+
+
                 return true;
 
             case R.id.menu_change_pin:

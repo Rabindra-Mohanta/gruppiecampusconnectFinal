@@ -3,6 +3,7 @@ package school.campusconnect.fragments.DashboardNewUi;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -71,6 +72,7 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.DateTimeHelper;
+import school.campusconnect.views.SMBDialogUtils;
 
 import static school.campusconnect.utils.Constants.INTERVAL_EVENTAPI;
 
@@ -238,8 +240,16 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
                 return true;
 
             case R.id.menu_logout:
-                logout();
-                getActivity().finish();
+
+                SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), getResources().getString(R.string.smb_logout), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                        getActivity().finish();
+                    }
+                });
+
+
                 return true;
 
 

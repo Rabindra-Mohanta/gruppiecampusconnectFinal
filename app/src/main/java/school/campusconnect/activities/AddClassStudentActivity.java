@@ -131,7 +131,6 @@ public class AddClassStudentActivity extends BaseActivity {
         String[] str = getResources().getStringArray(R.array.array_country);
         etCountry.setText(str[0]);
 
-
         setImageFragment();
     }
     @Override
@@ -379,12 +378,35 @@ public class AddClassStudentActivity extends BaseActivity {
                 break;
             case LeafManager.API_EDIT_STUDENTS:
                 StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
-                String[] str = getResources().getStringArray(R.array.array_country_values);
-                addStudentReq.countryCode = str[currentCountry - 1];
-                addStudentReq.phone = etPhone.getText().toString();
-                showLoadingBar(progressBar,false);
-                //progressBar.setVisibility(View.VISIBLE);
-                leafManager.editClassStudentPhone(this, group_id,studentData.getUserId(), addStudentReq);
+
+                String phone = "";
+
+                if (!etPhone.getText().toString().contains("+91"))
+                {
+                    phone = "+91"+etPhone.getText().toString();
+                }
+                else
+                {
+                    phone = etPhone.getText().toString();
+                }
+
+                Log.e(TAG,"phone "+phone);
+
+                if (!studentData.getPhone().toString().equalsIgnoreCase(phone))
+                {
+                    String[] str = getResources().getStringArray(R.array.array_country_values);
+                    addStudentReq.countryCode = str[currentCountry - 1];
+                    addStudentReq.phone = etPhone.getText().toString();
+                    showLoadingBar(progressBar,false);
+                    //progressBar.setVisibility(View.VISIBLE);
+                    leafManager.editClassStudentPhone(this, group_id,studentData.getUserId(), addStudentReq);
+                }
+                else
+                {
+                    Toast.makeText(this, getResources().getString(R.string.toast_edit_student_sucess), Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
                /* Toast.makeText(this, "Edit Student successfully", Toast.LENGTH_SHORT).show();
                 finish();*/
                 break;

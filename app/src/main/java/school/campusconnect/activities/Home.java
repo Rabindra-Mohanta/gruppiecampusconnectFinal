@@ -20,7 +20,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.fragments.ClassListTokenFragment;
 import school.campusconnect.fragments.HomeFragment;
+import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -136,8 +138,16 @@ public class Home extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_logout:
-                logout();
-                finish();
+
+
+                SMBDialogUtils.showSMBDialogConfirmCancel(this, getResources().getString(R.string.smb_logout), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                        finish();
+                    }
+                });
+
                 return true;
 
             case R.id.menu_add_school:

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.school.AddStaffV2Activity;
 import school.campusconnect.fragments.ClassStudentListFragment;
 import school.campusconnect.fragments.StaffListFragment;
 
@@ -55,7 +56,7 @@ public class StaffActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_add_staff:
-                Intent intent = new Intent(this, AddStaffActivity.class);
+                Intent intent = new Intent(this, AddStaffV2Activity.class);
                 intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
                 startActivity(intent);
                 return true;

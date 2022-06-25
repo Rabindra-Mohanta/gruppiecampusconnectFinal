@@ -738,7 +738,6 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     public void logout() {
 
 
-
         if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
         {
             unsubcribe();

@@ -6,6 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.PeopleActivity">
 
+
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topbar"
         android:layout_width="match_parent"
@@ -15,6 +17,12 @@
         <include layout="@layout/layout_toolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+
+
+
+
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardAll"
         android:layout_width="wrap_content"
@@ -28,6 +36,18 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/imgAddStudent"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/padding_30dp"
+                android:src="@drawable/posticon"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:text="@string/lbl_select_all"
@@ -42,6 +62,8 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+
 
 
     <FrameLayout

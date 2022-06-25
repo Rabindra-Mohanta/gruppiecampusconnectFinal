@@ -58,6 +58,8 @@ import school.campusconnect.datamodel.staff.ApprovalStaffAttendanceRes;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
 import school.campusconnect.datamodel.staff.StaffAttendanceRes;
 import school.campusconnect.datamodel.staff.TakeAttendanceReq;
+import school.campusconnect.datamodel.student.AddMultipleStaffReq;
+import school.campusconnect.datamodel.student.AddMultipleStudentReq;
 import school.campusconnect.datamodel.subjects.AbsentStudentReq;
 import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
@@ -2105,5 +2107,16 @@ public interface LeafService {
     @POST("api/v1/groups/{group_id}/add/classes")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addClass(@Path("group_id") String groupId,@Body AddClassReq req);
+
+
+    @POST("api/v1/groups/{group_id}/team/{team_id}/multiple/student/register")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addMultipleStudent(@Path("group_id") String groupId,@Path("team_id") String team_id,@Body AddMultipleStudentReq req);
+
+    @POST("api/v1/groups/{group_id}/multiple/staff/register")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addMultipleStaff(@Path("group_id") String groupId,@Body AddMultipleStaffReq req);
+
+
 
 }

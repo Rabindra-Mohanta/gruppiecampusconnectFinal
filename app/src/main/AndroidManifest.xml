@@ -58,25 +58,38 @@
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".activities.AddClassV2Activity"
+            android:name=".activities.school.AddClassStudentV2Activity"
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.LiveTeacherClassActivity"
+        <activity
+            android:name=".activities.school.AddStaffV2Activity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.StudentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddClassV2Activity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.AllStaffListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.LiveTeacherClassActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.StaffListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.StudentActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.StaffAttendanceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AllStaffListActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.StaffListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.StaffAttendanceActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".utils.MultipleImageSwipeActivity"
             android:exported="false"

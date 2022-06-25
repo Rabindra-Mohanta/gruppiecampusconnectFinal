@@ -1286,5 +1286,10 @@
     <string name="toast_file_download">File is Download In : </string>
 
     <string name="toast_please_select_chapter">Please Select Chapter</string>
+    <string name="msg_no_report">No Report found.</string>
     <string name="dialog_are_you_sure_you_want_to_add_class">Are you sure you want to Add Class?</string>
+    <string name="lbl_session">Session</string>
+
+    <string name="smb_logout">Are you sure you want to Logout ?</string>
+
 </resources>

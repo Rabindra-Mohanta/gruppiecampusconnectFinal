@@ -360,8 +360,13 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
                 return true;
 
             case R.id.menu_logout:
-                logout();
-                getActivity().finish();
+                SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), getResources().getString(R.string.smb_logout), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                        getActivity().finish();
+                    }
+                });
                 return true;
 
 
