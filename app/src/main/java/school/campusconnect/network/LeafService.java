@@ -1236,9 +1236,9 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> editStaffPhone(@Path("group_id") String group_id, @Path("user_id") String user_id, @Body StaffResponse.StaffData staffData);
 
-    @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/edit")
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/edit/profile")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> editClassStudent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("user_id") String user_id, @Body StudentRes.StudentData addStudentReq);
+    Call<BaseResponse> editClassStudent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("user_id") String user_id,@Query("gruppieRollNumber") String gruppieRollNumber, @Body StudentRes.StudentData addStudentReq);
 
     @PUT("/api/v1/groups/{group_id}/student/{user_id}/phone/edit")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

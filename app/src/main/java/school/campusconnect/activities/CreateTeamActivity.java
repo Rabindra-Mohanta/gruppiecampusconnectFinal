@@ -147,7 +147,6 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
                         showNoNetworkMsg();
                         return;
                     }
-
                     if(isEdit)
                     {
                         CreateTeamRequest request = new CreateTeamRequest();

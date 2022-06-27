@@ -378,7 +378,7 @@ public class LeafManager {
     public static final int API_ADD_CLASSES = 154;
     public static final int API_STUDENTS = 155;
     public static final int API_ADD_ClASS_STUDENTS = 156;
-    public static final int API_EDIT_STUDENTS = 157;
+    public static final int API_EDIT_STUDENTS = 370; // changes in 27.6.22
     public static final int API_DELETE_STUDENTS = 158;
     public static final int API_ATTENDANCE_REPORT = 159;
 
@@ -7495,11 +7495,11 @@ public class LeafManager {
         }, ErrorResponse.class);
     }
 
-    public void editClassStudent(OnCommunicationListener listener, String groupId, String teamId, String userId, StudentRes.StudentData addStudentReq) {
+    public void editClassStudent(OnCommunicationListener listener, String groupId, String teamId, String userId,String grpRollNo, StudentRes.StudentData addStudentReq) {
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BaseResponse> model = service.editClassStudent(groupId, teamId, userId, addStudentReq);
+        final Call<BaseResponse> model = service.editClassStudent(groupId, teamId, userId, grpRollNo,addStudentReq);
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_EDIT_STUDENTS, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {

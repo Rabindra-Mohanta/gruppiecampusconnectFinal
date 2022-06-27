@@ -644,6 +644,16 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
                 holder.binding.btnDone.setVisibility(View.GONE);
                 holder.binding.imgEdit.setVisibility(View.GONE);
             }
+
+            if (role != null && role.equalsIgnoreCase("teacher"))
+            {
+                holder.binding.etFromDate.setEnabled(true);
+                holder.binding.etToDate.setEnabled(true);
+                holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
+                holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
+
+                holder.binding.btnDone.setVisibility(View.VISIBLE);
+            }
         }
 
 

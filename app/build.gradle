@@ -37,13 +37,13 @@ android {
 
 
                 // [ 1. Gruppie Campus ]
-                applicationId "school.campusconnect"
+             /*   applicationId "school.campusconnect"
                 versionCode 13
                 versionName "1.4"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
 
               /*  applicationId "mahantesh.gruppie"
@@ -63,13 +63,13 @@ android {
                 buildConfigField("String", "APP_ID",  '"school"')*/
 
                 // [1. Gruppie Campus constituency]
-       /*         applicationId "gcm.gruppie"
+                applicationId "gcm.gruppie"
                 versionCode 1
                 versionName "1.0"
                 resValue "string", "app_name", '"GCM"'
                 buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                 buildConfigField("String", "AppCategory", '"constituency"')
-                buildConfigField("String", "APP_ID",  '"constituency"')*/
+                buildConfigField("String", "APP_ID",  '"constituency"')
 
 
                /* applicationId "sudhakar.gruppie"
@@ -261,7 +261,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "BASE_URL", '"https://gcc.gruppie.in/"' // SCHOOL APP
+         //   buildConfigField "String", "BASE_URL", '"https://gcc.gruppie.in/"' // SCHOOL APP
 
 
         //  buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL

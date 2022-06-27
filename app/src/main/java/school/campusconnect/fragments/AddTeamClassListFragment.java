@@ -86,6 +86,14 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
         List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
 
+        if (result.size() == 0)
+        {
+            ((AddTeamStudentActivity) getActivity()).chkAll.setVisibility(View.GONE);
+        }
+        else
+        {
+            ((AddTeamStudentActivity) getActivity()).chkAll.setVisibility(View.VISIBLE);
+        }
         rvClass.setAdapter(new ClassesAdapter(result));
     }
 

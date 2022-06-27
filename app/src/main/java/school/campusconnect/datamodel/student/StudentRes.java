@@ -101,6 +101,135 @@ public class StudentRes extends BaseResponse {
         @Expose
         public String countryCode;
 
+        @SerializedName("userDownloadedApp")
+        @Expose
+        public Boolean userDownloadedApp;
+
+        @SerializedName("gruppieRollNumber")
+        @Expose
+        public String gruppieRollNumber;
+
+        @SerializedName("studentRegId")
+        @Expose
+        public String studentRegId;
+
+        @SerializedName("disability")
+        @Expose
+        private String disability;
+
+        @SerializedName("motherOccupation")
+        @Expose
+        private String motherOccupation;
+
+        @SerializedName("motherEducation")
+        @Expose
+        private String motherEducation;
+
+        @SerializedName("fatherOccupation")
+        @Expose
+        private String fatherOccupation;
+
+        @SerializedName("fatherEducation")
+        @Expose
+        private String fatherEducation;
+
+        @SerializedName("nationality")
+        @Expose
+        private String nationality;
+
+        @SerializedName("category")
+        @Expose
+        private String category;
+
+
+        public String getStudentDbId() {
+            return studentDbId;
+        }
+
+        public void setStudentDbId(String studentDbId) {
+            this.studentDbId = studentDbId;
+        }
+
+        public Boolean getUserDownloadedApp() {
+            return userDownloadedApp;
+        }
+
+        public void setUserDownloadedApp(Boolean userDownloadedApp) {
+            this.userDownloadedApp = userDownloadedApp;
+        }
+
+        public String getGruppieRollNumber() {
+            return gruppieRollNumber;
+        }
+
+        public void setGruppieRollNumber(String gruppieRollNumber) {
+            this.gruppieRollNumber = gruppieRollNumber;
+        }
+
+        public String getStudentRegId() {
+            return studentRegId;
+        }
+
+        public void setStudentRegId(String studentRegId) {
+            this.studentRegId = studentRegId;
+        }
+
+        public String getDisability() {
+            return disability;
+        }
+
+        public void setDisability(String disability) {
+            this.disability = disability;
+        }
+
+        public String getMotherOccupation() {
+            return motherOccupation;
+        }
+
+        public void setMotherOccupation(String motherOccupation) {
+            this.motherOccupation = motherOccupation;
+        }
+
+        public String getMotherEducation() {
+            return motherEducation;
+        }
+
+        public void setMotherEducation(String motherEducation) {
+            this.motherEducation = motherEducation;
+        }
+
+        public String getFatherOccupation() {
+            return fatherOccupation;
+        }
+
+        public void setFatherOccupation(String fatherOccupation) {
+            this.fatherOccupation = fatherOccupation;
+        }
+
+        public String getFatherEducation() {
+            return fatherEducation;
+        }
+
+        public void setFatherEducation(String fatherEducation) {
+            this.fatherEducation = fatherEducation;
+        }
+
+        public String getNationality() {
+            return nationality;
+        }
+
+        public void setNationality(String nationality) {
+            this.nationality = nationality;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
+
         public String get_class() {
             return _class;
         }

@@ -2880,8 +2880,6 @@ public class GroupDashboardActivityNew extends BaseActivity
             calendar.add(Calendar.DAY_OF_YEAR, -30);
             String sevendayDate = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
 
-
-
             AppLog.e(TAG, "DeleteOldSaveVideos called with sevendaydate is : " + sevendayDate);
 
             int i = 0;

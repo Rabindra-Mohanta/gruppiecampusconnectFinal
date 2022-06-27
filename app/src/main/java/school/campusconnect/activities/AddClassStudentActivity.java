@@ -102,6 +102,26 @@ public class AddClassStudentActivity extends BaseActivity {
     public TextView labelPhone;
 
 
+    @Bind(R.id.etNationlity)
+    public EditText etNationlity;
+
+    @Bind(R.id.etFatherOccupation)
+    public EditText etFatherOccupation;
+
+    @Bind(R.id.etFatherEducation)
+    public EditText etFatherEducation;
+
+    @Bind(R.id.etmotherOccupation)
+    public EditText etmotherOccupation;
+
+    @Bind(R.id.etmotherEducation)
+    public EditText etmotherEducation;
+
+    @Bind(R.id.etCategory)
+    public EditText etCategory;
+
+    @Bind(R.id.etDisability)
+    public Spinner etDisability;
 
     private int currentCountry;
 
@@ -109,7 +129,7 @@ public class AddClassStudentActivity extends BaseActivity {
 
     private UploadImageFragment imageFragment;
 
-    String group_id, team_id;
+    String group_id, team_id,userId,gruppieRollNoNumber;
     private boolean isEdit=false;
 
     StudentRes.StudentData studentData;
@@ -177,11 +197,20 @@ public class AddClassStudentActivity extends BaseActivity {
         ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
         etBlood.setAdapter(bloodGrpAdapter);
 
+        String[] disabilityArray = getResources().getStringArray(R.array.disability);
+        ArrayAdapter<String> disabilityAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, disabilityArray);
+        etDisability.setAdapter(disabilityAdapter);
+
         if(isEdit){
+
             studentData = new Gson().fromJson(getIntent().getStringExtra("student_data"), StudentRes.StudentData.class);
+
+            userId = studentData.getUserId();
+            gruppieRollNoNumber = studentData.getGruppieRollNumber();
 
             Log.e(TAG,"student Data"+new Gson().toJson(studentData));
             etName.setText(studentData.name);
+
             etPhone.setText(studentData.phone);
             etAadhar.setText(studentData.aadharNumber);
             etReligion.setText(studentData.religion);
@@ -199,11 +228,26 @@ public class AddClassStudentActivity extends BaseActivity {
             etmotherNumber.setText(studentData.motherNumber);
             etEmail.setText(studentData.email);
             etAddress.setText(studentData.address);
+
+            etmotherEducation.setText(studentData.getMotherEducation());
+            etmotherOccupation.setText(studentData.getMotherOccupation());
+            etFatherEducation.setText(studentData.getFatherEducation());
+            etFatherOccupation.setText(studentData.getFatherOccupation());
+            etCategory.setText(studentData.getCategory());
+            etNationlity.setText(studentData.getNationality());
+
             etPhone.setEnabled(true);
 
             for (int i = 0; i < bloodGrpArray.length; i++) {
                 if (bloodGrpArray[i].equals(studentData.bloodGroup)) {
                     etBlood.setSelection(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < disabilityArray.length; i++) {
+                if (disabilityArray[i].equals(studentData.getDisability())) {
+                    etDisability.setSelection(i);
                     break;
                 }
             }
@@ -260,6 +304,25 @@ public class AddClassStudentActivity extends BaseActivity {
                     addStudentReq.motherNumber= etmotherNumber.getText().toString();
                     addStudentReq.email= etEmail.getText().toString();
                     addStudentReq.address= etAddress.getText().toString();
+                    addStudentReq.setCategory(etCategory.getText().toString());
+
+                    if (etBlood.getSelectedItemPosition() != 0)
+                    {
+                        addStudentReq.bloodGroup = etBlood.getSelectedItem().toString();
+                    }
+
+                    if (etDisability.getSelectedItemPosition() != 0)
+                    {
+                        addStudentReq.setDisability(etDisability.getSelectedItem().toString());
+                    }
+
+                    addStudentReq.setFatherEducation(etFatherEducation.getText().toString());
+                    addStudentReq.setFatherOccupation(etFatherOccupation.getText().toString());
+                    addStudentReq.setMotherEducation(etmotherEducation.getText().toString());
+                    addStudentReq.setMotherOccupation(etmotherOccupation.getText().toString());
+                    addStudentReq.setNationality(etNationlity.getText().toString().toUpperCase());
+                    addStudentReq.setUserId(studentData.getUserId());
+                    addStudentReq.setGruppieRollNumber(studentData.getGruppieRollNumber());
 
                     if(isEdit){
                         if (imageFragment.isImageChanged && TextUtils.isEmpty(imageFragment.getmProfileImage())) {
@@ -274,7 +337,7 @@ public class AddClassStudentActivity extends BaseActivity {
                         AppLog.e(TAG, "send data : " + new Gson().toJson(addStudentReq));
                         showLoadingBar(progressBar,false);
                         //   progressBar.setVisibility(View.VISIBLE);
-                        leafManager.editClassStudent(this, group_id, team_id,studentData.getUserId(), addStudentReq);
+                        leafManager.editClassStudent(this, group_id, team_id,studentData.getUserId(),gruppieRollNoNumber, addStudentReq);
                     }
                     else {
                         addStudentReq.phone = etPhone.getText().toString();

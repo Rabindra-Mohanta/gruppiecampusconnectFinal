@@ -173,6 +173,14 @@
         android:visible="false"
         android:title="@string/menu_add_team"/>
 
+    <item android:id="@+id/menu_add_class"
+        android:visible="false"
+        android:title="@string/lbl_add_class"/>
+
+    <item android:id="@+id/menu_add_group"
+        android:visible="false"
+        android:title="@string/lbl_add_group"/>
+
 
     <item android:id="@+id/menu_change_pin"
         android:visible="false"

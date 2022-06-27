@@ -24,6 +24,7 @@ public class AddTeamStudentActivity extends BaseActivity {
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
+    public CheckBox chkAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class AddTeamStudentActivity extends BaseActivity {
             findViewById(R.id.imgAddStudent).setVisibility(View.GONE);
         }
 
-        CheckBox chkAll = findViewById(R.id.chkAll);
+        chkAll = findViewById(R.id.chkAll);
         chkAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -28,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddTeamStaffActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
@@ -121,6 +122,15 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
                 if(teamList.contains(dt.getUserId())){
                     it.remove();
                 }
+            }
+
+            if (result.size() == 0)
+            {
+                ((AddTeamStaffActivity) getActivity()).chkAll.setVisibility(View.GONE);
+            }
+            else
+            {
+                ((AddTeamStaffActivity) getActivity()).chkAll.setVisibility(View.VISIBLE);
             }
             adapter = new AddTeamStaffAdapter(result);
             rvClass.setAdapter(adapter);

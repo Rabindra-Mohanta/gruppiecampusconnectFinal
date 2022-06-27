@@ -148,15 +148,15 @@ public class AllStaffListActivity extends BaseActivity {
             holder.img_chat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   /* Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
                   //  AppLog.e(TAG, "onSMSClick group_id " + groupId);
                     intent.putExtra("id", GroupDashboardActivityNew.groupId);
                     intent.putExtra("friend_id", item.getStaffId());
                     intent.putExtra("friend_name", item.getName());
                     intent.putExtra("type", "personal");
-                    intent.putExtra("team_id", teamId);
+                 //   intent.putExtra("team_id", teamId);
                     intent.putExtra("from_chat", true);
-                    startActivity(intent);*/
+                    startActivity(intent);
                 }
             });
         }

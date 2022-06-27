@@ -240,6 +240,17 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
 
             holder.txt_name.setText(item.getName());
             holder.txt_count.setText(item.getClass_());
+            
+            if (item.userDownloadedApp)
+            {
+                holder.img_download.setVisibility(View.VISIBLE);
+                holder.line.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.img_download.setVisibility(View.GONE);
+                holder.line.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -266,12 +277,17 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
             @Bind(R.id.img_lead_default)
             ImageView img_lead_default;
 
+            @Bind(R.id.img_download)
+            ImageView img_download;
+
+            @Bind(R.id.line)
+            View line;
+
             @Bind(R.id.txt_name)
             TextView txt_name;
 
             @Bind(R.id.txt_count)
             TextView txt_count;
-
 
             public ViewHolder(View itemView) {
                 super(itemView);

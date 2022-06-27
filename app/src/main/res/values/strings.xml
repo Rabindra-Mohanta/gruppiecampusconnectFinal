@@ -555,6 +555,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_class_name">Class</string>
     <string name="lbl_addharCard">Aadhaar Card</string>
     <string name="lbl_add_class">Add Class</string>
+    <string name="lbl_add_group">Add Group</string>
 
     <string name="lbl_add_tikit">Add Ticket</string>
     <string name="lbl_tikit">Tickets</string>
@@ -584,6 +585,12 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_motherName">Mother\'s Name</string>
     <string name="lbl_fatherNumber">Contact Number - Father</string>
     <string name="lbl_motherNumber">Contact Number - Mother</string>
+    <string name="lbl_motherOccupation">Mother Occupation</string>
+    <string name="lbl_fatherOccupation">Father Occupation</string>
+    <string name="lbl_disability">Disability</string>
+    <string name="lbl_motherEducation">Mother Education</string>
+    <string name="lbl_fatherEducation">Father Education</string>
+    <string name="lbl_nationality">Nationality</string>
     <string name="lbl_attendance_report">Attendance Report</string>
     <string name="lbl_event">Event</string>
     <string name="lbl_holiday">Holiday</string>
@@ -1256,6 +1263,13 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="smb_no_file_download">Please Download All Files...</string>
 
     <string name="smb_logout">Are you sure you want to Logout ?</string>
+
+
+    <string-array name="disability">
+        <item>Select Disability</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
 
 
     <string-array name="publc_private_array">

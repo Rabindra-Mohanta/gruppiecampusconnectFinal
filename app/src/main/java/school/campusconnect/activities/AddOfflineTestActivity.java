@@ -137,7 +137,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
     String teamId;
     private ArrayList<SubjectStaffResponse.SubjectData> subjectList;
     SubjectMarkAdapter adapter;
-
+    ArrayAdapter<String> spSubAdapter;
     boolean isEdit = false;
 
     OfflineTestRes.ScheduleTestData data;
@@ -217,6 +217,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             }
         });
 
+
         if (isEdit) {
             btnCreateClass.setText(getResources().getString(R.string.lbl_update));
             data = new Gson().fromJson(getIntent().getStringExtra("data"), OfflineTestRes.ScheduleTestData.class);
@@ -228,7 +229,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
             for (int i = 0; i < subjectList.size(); i++) {
                 strSubject[i+1] = subjectList.get(i).name;
             }
-            ArrayAdapter<String> spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white, R.id.tvItem, strSubject);
+            spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white, R.id.tvItem, strSubject);
             spSubject.setAdapter(spSubAdapter);
 
             adapter = new SubjectMarkAdapter();
@@ -302,7 +303,18 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                     TestOfflineSubjectMark t1 = new TestOfflineSubjectMark();
                     t1.date = etDate.getText().toString();
                     t1.subjectName = spSubject.getSelectedItem().toString();
-                    t1.subjectId = subjectList.get(spSubject.getSelectedItemPosition()).subjectId;
+
+
+                    Log.e(TAG,"subjectList"+subjectList.size());
+                    Log.e(TAG,"subjectId "+spSubject.getSelectedItemPosition());
+
+                    Log.e(TAG,"new Gson "+new Gson().toJson(subjectList));
+
+                    Log.e(TAG,"subjectId" +subjectList.get(spSubject.getSelectedItemPosition()-1).subjectId);
+
+                    t1.subjectId = subjectList.get(spSubject.getSelectedItemPosition()-1).subjectId;
+
+
                     t1.maxMarks = etMaxMarks.getText().toString();
                     t1.minMarks = etMinMarks.getText().toString();
                     t1.startTime = etStartTime.getText().toString();
@@ -312,7 +324,8 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                         llMark.setVisibility(View.GONE);
                         adapter.add(t1);
                         etDate.setText("");
-                        spSubject.setSelection(0);
+                        spSubject.setAdapter(spSubAdapter);
+
                         hide_keyboard(view);
                     }
 
@@ -536,7 +549,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                 for (int i = 0; i < subjectList.size(); i++) {
                     strSubject[i+1] = subjectList.get(i).name;
                 }
-                ArrayAdapter<String> spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white, R.id.tvItem, strSubject);
+                spSubAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner_white, R.id.tvItem, strSubject);
                 spSubject.setAdapter(spSubAdapter);
 
                 adapter = new SubjectMarkAdapter();
@@ -650,6 +663,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                 @Override
                 public void onClick(View v) {
                     Calendar calendar = Calendar.getInstance();
+
                     TimePickerDialog fragment1 = new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -797,10 +811,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
 
     private class SendNotification extends AsyncTask<String, String, String> {
 
-
         private String server_response;
-
-
 
         @Override
         protected String doInBackground(String... strings) {

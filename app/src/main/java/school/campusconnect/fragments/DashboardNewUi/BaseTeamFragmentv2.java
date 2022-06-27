@@ -42,6 +42,7 @@ import java.util.Random;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddClassV2Activity;
 import school.campusconnect.activities.CalendarActivity;
 import school.campusconnect.activities.ChangePasswordActivity;
 import school.campusconnect.activities.ChangePinActivity;
@@ -131,18 +132,24 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
 
         Log.e(TAG,"GroupCount " +LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT));
 
-        if (BuildConfig.AppCategory.equalsIgnoreCase("CAMPUS"))
+
+
+        if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
+            menu.findItem(R.id.menu_add_school).setVisible(false);
+        }
+        else
         {
-            if (LeafPreference.getInstance(getContext()).getInt(LeafPreference.GROUP_COUNT) > 1) {
-                menu.findItem(R.id.menu_add_school).setVisible(false);
-            }
-            else {
-                if (GroupDashboardActivityNew.isAdmin)
-                {
-                    menu.findItem(R.id.menu_add_school).setVisible(true);
-                }
+            if (GroupDashboardActivityNew.isAdmin)
+            {
+                menu.findItem(R.id.menu_add_school).setVisible(true);
             }
         }
+        if (GroupDashboardActivityNew.isAdmin)
+        {
+            menu.findItem(R.id.menu_add_group).setVisible(true);
+        }
+
+        menu.findItem(R.id.menu_add_class).setVisible(true);
 
         if (GroupDashboardActivityNew.allowedToAddUser)
             menu.findItem(R.id.menu_add_team).setVisible(true);
@@ -218,6 +225,16 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
+
+            case R.id.menu_add_class:
+                startActivity(new Intent(getContext(), AddClassV2Activity.class));
+                return true;
+
+            case R.id.menu_add_group:
+                startActivity(new Intent(getActivity(), CreateTeamActivity.class));
+                return true;
+
             case R.id.menu_add_team:
                 addTeam();
                 return true;

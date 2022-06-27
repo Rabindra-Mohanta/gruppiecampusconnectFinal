@@ -647,8 +647,8 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             } else {
                 manager.addGalleryPost(this, group_id, mainRequest);
             }
-
         } else {
+
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
 
             TransferObserver observer;
