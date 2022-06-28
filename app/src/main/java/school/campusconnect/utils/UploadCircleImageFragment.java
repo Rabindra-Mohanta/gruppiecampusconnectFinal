@@ -93,7 +93,6 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
             else if(getActivity() instanceof ProfileConstituencyActivity)
                 ((ProfileConstituencyActivity) getActivity()).callUpdateApi();
 
-
         getDefaultImageView().setVisibility(View.VISIBLE);
 
         if (!isGroupOrProfile)

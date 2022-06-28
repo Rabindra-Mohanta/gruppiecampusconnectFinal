@@ -33,6 +33,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <androidx.cardview.widget.CardView
                 android:visibility="gone"
                 android:id="@+id/allStaff"
@@ -83,8 +84,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_below="@id/allStaff"
                 android:id="@+id/rvTeams"
+                android:nestedScrollingEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
         </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -31,14 +33,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.profileCaste.CasteResponse;
+import school.campusconnect.datamodel.profileCaste.ReligionResponse;
+import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.fragments.DatePickerFragment;
+import school.campusconnect.fragments.SearchCastFragmentDialog;
+import school.campusconnect.fragments.SearchSubCasteDialogFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.UploadImageFragment;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class AddClassStudentActivity extends BaseActivity {
+public class AddClassStudentActivity extends BaseActivity implements SearchCastFragmentDialog.SelectListener,SearchSubCasteDialogFragment.SelectListener{
     private static final String TAG = "AddStudentActivity";
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -55,16 +62,18 @@ public class AddClassStudentActivity extends BaseActivity {
     @Bind(R.id.btnAdd)
     public Button btnAdd;
 
-
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
     @Bind(R.id.etRollNo)
     public EditText etRollNo;
+
     @Bind(R.id.etStudentId)
     public EditText etStudentId;
+
     @Bind(R.id.etAdmissionNumber)
     public EditText etAdmissionNumber;
+
     @Bind(R.id.etClass)
     public EditText etClass;
     @Bind(R.id.etsection)
@@ -73,11 +82,7 @@ public class AddClassStudentActivity extends BaseActivity {
     @Bind(R.id.etAadhar)
     public EditText etAadhar;
 
-    @Bind(R.id.etReligion)
-    public EditText etReligion;
 
-    @Bind(R.id.etCast)
-    public EditText etCast;
 
     @Bind(R.id.etBlood)
     public Spinner etBlood;
@@ -114,6 +119,12 @@ public class AddClassStudentActivity extends BaseActivity {
     @Bind(R.id.etmotherOccupation)
     public EditText etmotherOccupation;
 
+    @Bind(R.id.etGender)
+    public Spinner etGender;
+
+    @Bind(R.id.etFamilyIncome)
+    public EditText etFamilyIncome;
+
     @Bind(R.id.etmotherEducation)
     public EditText etmotherEducation;
 
@@ -122,6 +133,15 @@ public class AddClassStudentActivity extends BaseActivity {
 
     @Bind(R.id.etDisability)
     public Spinner etDisability;
+
+    @Bind(R.id.etCaste)
+    public TextView etCaste;
+
+    @Bind(R.id.etSubCaste)
+    public TextView etSubCaste;
+
+    @Bind(R.id.etReligion)
+    public Spinner etReligion;
 
     private int currentCountry;
 
@@ -135,6 +155,30 @@ public class AddClassStudentActivity extends BaseActivity {
     StudentRes.StudentData studentData;
 
     boolean submitted = false;
+
+
+
+    ArrayAdapter<String> religionAdapter;
+    ArrayList<String> religionList = new ArrayList<>();
+    ArrayList<String> casteList = new ArrayList<>();
+    ArrayList<String> subCasteList = new ArrayList<>();
+    ArrayList<CasteResponse.CasteData> casteDataList = new ArrayList<>();
+
+    boolean isFirstTimeReligion = true;
+    boolean isFirstTimeCaste = true;
+    boolean isFirstTimeSubCaste = true;
+
+    String casteId = null;
+
+    String religion = null;
+    String caste = null;
+    String subcaste = null;
+
+
+    SearchCastFragmentDialog searchCastFragmentDialog;
+    SearchSubCasteDialogFragment searchSubCasteDialogFragment;
+    public boolean isCasteClickable = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +194,7 @@ public class AddClassStudentActivity extends BaseActivity {
         currentCountry = 1;
         String[] str = getResources().getStringArray(R.array.array_country);
         etCountry.setText(str[0]);
+
 
         setImageFragment();
     }
@@ -193,6 +238,10 @@ public class AddClassStudentActivity extends BaseActivity {
         team_id = getIntent().getStringExtra("team_id");
         isEdit = getIntent().getBooleanExtra("isEdit",false);
 
+        String[] genderArray = getResources().getStringArray(R.array.gender_array);
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, genderArray);
+        etGender.setAdapter(genderAdapter);
+
         String[] bloodGrpArray = getResources().getStringArray(R.array.blood_group);
         ArrayAdapter<String> bloodGrpAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, bloodGrpArray);
         etBlood.setAdapter(bloodGrpAdapter);
@@ -200,6 +249,13 @@ public class AddClassStudentActivity extends BaseActivity {
         String[] disabilityArray = getResources().getStringArray(R.array.disability);
         ArrayAdapter<String> disabilityAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, disabilityArray);
         etDisability.setAdapter(disabilityAdapter);
+
+
+        searchCastFragmentDialog = SearchCastFragmentDialog.newInstance();
+        searchCastFragmentDialog.setListener(this);
+
+        searchSubCasteDialogFragment = SearchSubCasteDialogFragment.newInstance();
+        searchSubCasteDialogFragment.setListener(this);
 
         if(isEdit){
 
@@ -213,15 +269,23 @@ public class AddClassStudentActivity extends BaseActivity {
 
             etPhone.setText(studentData.phone);
             etAadhar.setText(studentData.aadharNumber);
-            etReligion.setText(studentData.religion);
-            etCast.setText(studentData.caste);
-            etStudentId.setText(studentData.studentId);
+            //etReligion.setText(studentData.religion);
+          //  etCast.setText(studentData.caste);
+
+
+            religion = studentData.religion;
+            caste = studentData.caste;
+            subcaste = studentData.getSubCaste();
+
+            etStudentId.setText(studentData.getSatsNo());
+
             etAdmissionNumber.setText(studentData.admissionNumber);
             etRollNo.setText(studentData.rollNumber);
             etClass.setText(studentData._class);
             etsection.setText(studentData.section);
             etdob.setText(studentData.dob);
             etdoj.setText(studentData.doj);
+            etFamilyIncome.setText(studentData.getFamilyIncome());
             etfatherName.setText(studentData.fatherName);
             etmotherName.setText(studentData.motherName);
             etfatherNumber.setText(studentData.fatherNumber);
@@ -245,13 +309,94 @@ public class AddClassStudentActivity extends BaseActivity {
                 }
             }
 
+            for (int i = 0; i < genderArray.length; i++) {
+                if (genderArray[i].equals(studentData.gender)) {
+                    etGender.setSelection(i);
+                    break;
+                }
+            }
+
             for (int i = 0; i < disabilityArray.length; i++) {
                 if (disabilityArray[i].equals(studentData.getDisability())) {
                     etDisability.setSelection(i);
                     break;
                 }
             }
+
+            leafManager.getReligion(this);
         }
+
+
+        etReligion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position != 0)
+                {
+                    isCasteClickable = true;
+                    showLoadingBar(progressBar,true);
+                    leafManager.getCaste(AddClassStudentActivity.this,etReligion.getSelectedItem().toString());
+                }
+                else
+                {
+                    isCasteClickable = false;
+                    etCaste.setText("");
+                    etSubCaste.setText("");
+                    etCategory.setText("");
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        etCaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isCasteClickable)
+                {
+                    searchCastFragmentDialog.show(getSupportFragmentManager(),"");
+                }
+            }
+        });
+
+        etSubCaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isCasteClickable)
+                {
+                    searchSubCasteDialogFragment.show(getSupportFragmentManager(),"");
+                }
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onSelected(CasteResponse.CasteData casteData) {
+
+        etCaste.setText(casteData.getCasteName());
+        etCategory.setText(casteData.getCategoryName());
+
+        casteId = casteData.getCasteId();
+
+        if (casteId != null)
+        {
+            showLoadingBar(progressBar,true);
+            leafManager.getSubCaste(this,casteId);
+        }
+    }
+
+    @Override
+    public void onSelected(SubCasteResponse.SubCasteData casteData) {
+
+        etSubCaste.setText(casteData.getSubCasteName());
 
     }
 
@@ -280,7 +425,7 @@ public class AddClassStudentActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btnAdd:
 
-                if (isValid() && !submitted )
+                if (isValid() && !submitted)
                 {
                     submitted = true;
                     StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
@@ -293,18 +438,20 @@ public class AddClassStudentActivity extends BaseActivity {
                     addStudentReq.rollNumber = etRollNo.getText().toString();
                     addStudentReq._class = etClass.getText().toString();
                     addStudentReq.aadharNumber = etAadhar.getText().toString();
-                    addStudentReq.religion = etReligion.getText().toString();
-                    addStudentReq.caste = etCast.getText().toString();
+                    addStudentReq.religion = etReligion.getSelectedItem().toString();
+                    addStudentReq.caste = etCaste.getText().toString();
+                    addStudentReq.gender = etGender.getSelectedItem().toString();
                     addStudentReq.section = etsection.getText().toString();
                     addStudentReq.dob = etdob.getText().toString();
                     addStudentReq.doj = etdoj.getText().toString();
+                    addStudentReq.satsNo = etStudentId.getText().toString();
                     addStudentReq.fatherName = etfatherName.getText().toString();
                     addStudentReq.motherName= etmotherName.getText().toString();
                     addStudentReq.fatherNumber= etfatherNumber.getText().toString();
                     addStudentReq.motherNumber= etmotherNumber.getText().toString();
                     addStudentReq.email= etEmail.getText().toString();
                     addStudentReq.address= etAddress.getText().toString();
-                    addStudentReq.setCategory(etCategory.getText().toString());
+
 
                     if (etBlood.getSelectedItemPosition() != 0)
                     {
@@ -316,6 +463,9 @@ public class AddClassStudentActivity extends BaseActivity {
                         addStudentReq.setDisability(etDisability.getSelectedItem().toString());
                     }
 
+                    addStudentReq.setCategory(etCategory.getText().toString());
+                    addStudentReq.setSubCaste(etSubCaste.getText().toString());
+                    addStudentReq.setFamilyIncome(etFamilyIncome.getText().toString());
                     addStudentReq.setFatherEducation(etFatherEducation.getText().toString());
                     addStudentReq.setFatherOccupation(etFatherOccupation.getText().toString());
                     addStudentReq.setMotherEducation(etmotherEducation.getText().toString());
@@ -435,6 +585,153 @@ public class AddClassStudentActivity extends BaseActivity {
         //    progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
+
+
+            case LeafManager.API_RELIGION_GET:
+
+            {
+                ReligionResponse res = (ReligionResponse) response;
+
+                AppLog.e(TAG, "ReligionResponse" + res);
+
+                religionList.clear();
+                religionList.add(0,"select religion");
+                religionList.addAll(res.getReligionData().get(0).getReligionList());
+
+                if (res.getReligionData().size() > 0)
+                {
+                    religionAdapter = new ArrayAdapter<String>(this, R.layout.item_spinner, R.id.tvItem, religionList);
+                    etReligion.setAdapter(religionAdapter);
+                    etReligion.setEnabled(true);
+                }
+                if (isFirstTimeReligion)
+                {
+                    isFirstTimeReligion = false;
+                    etReligion.setEnabled(true);
+
+                    if (religion != null)
+                    {
+                        etReligion.setSelection(religionAdapter.getPosition(religion));
+                    }
+                    else
+                    {
+                        etReligion.setSelection(religionAdapter.getPosition("select religion"));
+                    }
+                }
+
+                break;
+            }
+
+            case LeafManager.API_CASTE_GET:
+            {
+                CasteResponse res = (CasteResponse) response;
+
+                AppLog.e(TAG, "CasteResponse" + res);
+
+           /* casteDataList.clear();
+            casteDataList.addAll(res.getCasteData());*/
+
+                casteDataList.clear();
+                casteDataList.addAll(res.getCasteData());
+                casteList.clear();
+
+                for (int i=0;i<res.getCasteData().size();i++)
+                {
+                    casteList.add(res.getCasteData().get(i).getCasteName());
+                }
+
+                if (casteList.size() > 0)
+                {
+                    if (isFirstTimeCaste)
+                    {
+                        if (caste != null)
+                        {
+                            etCaste.setText(caste);
+                        }
+                        else
+                        {
+                            etCaste.setText(res.getCasteData().get(0).getCasteName());
+                        }
+                        for (int i=0;i<casteDataList.size();i++)
+                        {
+                            if (etCaste.getText().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
+                            {
+                                casteId = casteDataList.get(i).getCasteId();
+                                etCategory.setText(casteDataList.get(i).getCategoryName());
+                            }
+                        }
+
+                        etCaste.setTextColor(getResources().getColor(R.color.white));
+                        etCaste.setEnabled(true);
+
+                        isFirstTimeCaste = false;
+
+                    }
+                    else
+                    {
+                        casteId = res.getCasteData().get(0).getCasteId();
+                        etCaste.setText(res.getCasteData().get(0).getCasteName());
+                        etCategory.setText(res.getCasteData().get(0).getCategoryName());
+                    }
+                }
+
+                if (casteId != null)
+                {
+                    showLoadingBar(progressBar,true);
+                    leafManager.getSubCaste(this,casteId);
+                }
+
+                searchCastFragmentDialog.setData(res.getCasteData());
+
+                break;
+            }
+
+            case LeafManager.API_SUB_CASTE_GET:
+            {
+                SubCasteResponse res = (SubCasteResponse) response;
+
+                AppLog.e(TAG, "SubCasteResponse" + res);
+
+                casteId = null;
+
+                subCasteList.clear();
+
+                for (int i=0;i<res.getSubCasteData().size();i++)
+                {
+                    subCasteList.add(res.getSubCasteData().get(i).getSubCasteName());
+                }
+
+
+                if (subCasteList.size() > 0)
+                {
+
+                    if (isFirstTimeSubCaste)
+                    {
+                        etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+
+                        if (subcaste != null)
+                        {
+                            etSubCaste.setText(subcaste);
+                        }
+                        else
+                        {
+                            etSubCaste.setText(res.getSubCasteData().get(0).getSubCasteName());
+                        }
+
+                        isFirstTimeSubCaste = false;
+                        etSubCaste.setTextColor(getResources().getColor(R.color.white));
+                        etSubCaste.setEnabled(true);
+                    }
+                    else
+                    {
+                        etSubCaste.setText(res.getSubCasteData().get(0).getSubCasteName());
+                    }
+
+                }
+                searchSubCasteDialogFragment.setData(res.getSubCasteData());
+                break;
+            }
+
             case LeafManager.API_ADD_ClASS_STUDENTS:
                 Toast.makeText(this, getResources().getString(R.string.toast_add_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();

@@ -578,6 +578,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_register_subject">Subject Register</string>
     <string name="lbl_register_subject_assign">Assign</string>
     <string name="lbl_student_id">Student Id</string>
+    <string name="lbl_sats_no">SATS NUMBER</string>
     <string name="lbl_admition_number">Admission Number</string>
     <string name="lbl_section">Section</string>
     <string name="lbl_doj">Date Of Join</string>
@@ -801,7 +802,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_my_profile">MY INFO</string>
     <string name="lbl_info">INFO</string>
     <string name="lbl_end">END</string>
-
+    <string name="lbl_family_income">Family Income</string>
     <string name="lbl_family">FAMILY INFO</string>
     <string name="lbl_save">Save</string>
     <string name="lbl_RegisterIssue">Issue/TaskForce Register</string>

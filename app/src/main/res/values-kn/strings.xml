@@ -1301,5 +1301,7 @@
 
     <string name="lbl_nationality">Nationality</string>
     <string name="lbl_disability">Disability</string>
+    <string name="lbl_family_income">Family Income</string>
+    <string name="lbl_sats_no">SATS NUMBER</string>
 
 </resources>

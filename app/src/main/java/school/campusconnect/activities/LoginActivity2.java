@@ -437,6 +437,9 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
 
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.countryCode, res.data.countryCode);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.phoneNumber, res.data.phone);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.ACCESS_KEY, res.data.accessKey);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.SECRET_KEY, res.data.secretKey);
+
 
             if (res.data.isUserExist) {
 

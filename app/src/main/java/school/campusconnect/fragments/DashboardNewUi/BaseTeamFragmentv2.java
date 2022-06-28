@@ -147,9 +147,8 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         if (GroupDashboardActivityNew.isAdmin)
         {
             menu.findItem(R.id.menu_add_group).setVisible(true);
+            menu.findItem(R.id.menu_add_class).setVisible(true);
         }
-
-        menu.findItem(R.id.menu_add_class).setVisible(true);
 
         if (GroupDashboardActivityNew.allowedToAddUser)
             menu.findItem(R.id.menu_add_team).setVisible(true);

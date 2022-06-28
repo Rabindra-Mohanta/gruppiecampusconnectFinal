@@ -58,10 +58,12 @@
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
         <activity
+            android:name=".activities.SignupImageActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.school.AddClassStudentV2Activity"
             android:exported="false"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.school.AddStaffV2Activity"
             android:exported="false"

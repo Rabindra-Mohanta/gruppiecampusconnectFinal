@@ -26,6 +26,15 @@ public class StudentRes extends BaseResponse {
         @SerializedName("teamId")
         @Expose
         private String teamId;
+
+        @SerializedName("gender")
+        @Expose
+        public String gender;
+
+        @SerializedName("familyIncome")
+        @Expose
+        private String familyIncome;
+
         @SerializedName("studentId")
         @Expose
         public String studentId;
@@ -93,6 +102,14 @@ public class StudentRes extends BaseResponse {
         @Expose
         public String caste;
 
+        @SerializedName("subCaste")
+        @Expose
+        private String subCaste;
+
+        @SerializedName("satsNo")
+        @Expose
+        public String satsNo;
+
         @SerializedName("bloodGroup")
         @Expose
         public String bloodGroup;
@@ -141,6 +158,37 @@ public class StudentRes extends BaseResponse {
         @Expose
         private String category;
 
+        public String getFamilyIncome() {
+            return familyIncome;
+        }
+
+        public void setFamilyIncome(String familyIncome) {
+            this.familyIncome = familyIncome;
+        }
+
+        public String getSubCaste() {
+            return subCaste;
+        }
+
+        public void setSubCaste(String subCaste) {
+            this.subCaste = subCaste;
+        }
+
+        public String getGender() {
+            return gender;
+        }
+
+        public void setGender(String gender) {
+            this.gender = gender;
+        }
+
+        public String getSatsNo() {
+            return satsNo;
+        }
+
+        public void setSatsNo(String satsNo) {
+            this.satsNo = satsNo;
+        }
 
         public String getStudentDbId() {
             return studentDbId;

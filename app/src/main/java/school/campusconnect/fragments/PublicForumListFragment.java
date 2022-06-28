@@ -92,15 +92,17 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
 
+        Log.e(TAG,"onCreateView");
+
         _init();
-
-        checkBoothType();
-
+        
         return view;
     }
 
     private void checkBoothType() {
 
+        Log.e(TAG,"checkBoothType"+mGroupItem.canPost);
+                
         if(mGroupItem.canPost){
             getDataBoothLocally();
         }else {
@@ -112,10 +114,14 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
     private void callEventApi() {
 
+      
+
         LeafManager leafManager = new LeafManager();
         leafManager.getMyBoothEvent(new LeafManager.OnCommunicationListener() {
             @Override
             public void onSuccess(int apiId, BaseResponse response) {
+
+                Log.e(TAG,"onSuccess");
 
                 MyBoothEventRes res1 = (MyBoothEventRes) response;
                 new EventAsync(res1).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -145,12 +151,18 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
         myTeamDataList.clear();
 
+
         if (boothListTBl != null && boothListTBl.size() > 0)
         {
+
             ArrayList<MyTeamData> resultData = new ArrayList<>();
 
             for (int i=0;i<boothListTBl.size();i++)
             {
+
+
+                Log.e(TAG,"getDataBoothLocally" +i);
+
                 BoothsTBL boothList = boothListTBl.get(i);
 
                 MyTeamData myTeamData = new MyTeamData();
@@ -334,6 +346,11 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
     @Override
     public void onStart() {
         super.onStart();
+
+        checkBoothType();
+
+        Log.e(TAG,"onStart");
+
         if (getActivity() != null) {
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(GroupDashboardActivityNew.group_name);
             ((GroupDashboardActivityNew) getActivity()).tv_Desc.setVisibility(View.GONE);
@@ -341,7 +358,9 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
     }
 
     private void boothListApiCall() {
-
+        
+        Log.e(TAG,"boothListApiCall");
+        
         if (!isConnectionAvailable()) {
             return;
         }
@@ -350,8 +369,10 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         LeafManager leafManager = new LeafManager();
 
         if(mGroupItem.canPost){
+            Log.e(TAG,"getBooths");
             leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
         }else {
+            Log.e(TAG,"getMyBooths");
             leafManager.getMyBooths(this,GroupDashboardActivityNew.groupId);
         }
     }
@@ -360,6 +381,7 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
     public void onSuccess(int apiId, BaseResponse response) {
      //   progressBar.setVisibility(View.GONE);
 
+        Log.e(TAG,"onSuccess");
         hideLoadingBar();
         BoothResponse res = (BoothResponse) response;
         List<MyTeamData> result = res.getData();
@@ -539,9 +561,10 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             final MyTeamData item = list.get(position);
 
+            Log.e(TAG,"onBindViewHolder"+position);
 
             if (!TextUtils.isEmpty(item.image)) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.image)).resize(50,50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
@@ -600,6 +623,9 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
         }
 
         public void add(List<MyTeamData> list) {
+
+            Log.e(TAG,"add Call");
+
             this.list = list;
             notifyDataSetChanged();
         }
@@ -671,7 +697,6 @@ public class PublicForumListFragment extends BaseFragment implements LeafManager
 
         @Override
         protected Void doInBackground(Void... voids) {
-
 
             Log.e(TAG,"lastUpdatedSubBoothTeamTime  "+res1.data.get(0).lastUpdatedMyBoothTeamTime);
 

@@ -1821,12 +1821,14 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         if (mGroupItem.canPost || (mGroupItem.isBoothPresident && mGroupItem.boothCount > 1)) {
 
+            Log.e(TAG,"publicForumClick if");
             PublicForumListFragment classListFragment = new PublicForumListFragment();
             classListFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
         }
         else
         {
+            Log.e(TAG,"publicForumClick else");
             onBoothTeams(mGroupItem.boothName, mGroupItem.boothId,"normal", false);
         }
     }

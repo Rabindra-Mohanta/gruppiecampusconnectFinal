@@ -358,6 +358,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
              */
 
             observer.setTransferListener(new UploadListener());
+
             Log.e("UPLOADTEST", "observer started");
         } catch (IOException e) {
             e.printStackTrace();

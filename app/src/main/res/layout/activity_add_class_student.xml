@@ -61,8 +61,8 @@
                 android:paddingLeft="@dimen/padding_10dp"
                 android:text="@string/lbl_country"
                 android:textAllCaps="true"
-                android:visibility="visible"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:visibility="visible" />
 
             <EditText
                 android:id="@+id/etCountry"
@@ -73,7 +73,6 @@
                 android:focusable="false"
                 android:inputType="text"
                 android:visibility="visible" />
-
 
 
             <TextView
@@ -91,9 +90,9 @@
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
-                android:textAllCaps="true"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textAllCaps="true" />
 
 
             <TextView
@@ -121,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_15dp"
                 android:paddingLeft="@dimen/padding_10dp"
-                android:text="@string/lbl_student_id"
+                android:text="@string/lbl_sats_no"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimary" />
 
@@ -141,8 +140,7 @@
                 android:paddingLeft="@dimen/padding_10dp"
                 android:text="@string/lbl_admition_number"
                 android:textAllCaps="true"
-                android:textColor="@color/colorPrimary"
-                />
+                android:textColor="@color/colorPrimary" />
 
 
             <EditText
@@ -232,6 +230,42 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_15dp"
                 android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_gender"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <Spinner
+                android:id="@+id/etGender"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp" />
+
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_family_income"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/etFamilyIncome"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:inputType="number" />
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
                 android:text="@string/lbl_dob"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimary" />
@@ -240,9 +274,9 @@
                 android:id="@+id/etdob"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
-                android:focusable="false"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
+                android:focusable="false"
                 android:inputType="text" />
 
             <TextView
@@ -258,10 +292,10 @@
             <EditText
                 android:id="@+id/etdoj"
                 style="@style/RegEditText"
-                android:focusable="false"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
+                android:focusable="false"
                 android:inputType="text" />
 
             <TextView
@@ -375,7 +409,6 @@
                 android:inputType="text" />
 
 
-
             <TextView
                 style="@style/LabelNormal"
                 android:layout_width="match_parent"
@@ -469,14 +502,14 @@
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:inputType="number"
-                android:maxLines="1"/>
+                android:maxLines="1" />
 
 
             <TextView
                 style="@style/LabelNormal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_20dp"
+                android:layout_marginTop="@dimen/padding_15dp"
                 android:paddingLeft="@dimen/padding_10dp"
                 android:text="@string/lbl_disability"
                 android:textAllCaps="true"
@@ -489,7 +522,7 @@
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp" />
 
-            <TextView
+          <!--  <TextView
                 style="@style/LabelNormal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -500,16 +533,88 @@
                 android:textColor="@color/colorPrimary" />
 
 
-
             <EditText
                 android:id="@+id/etReligion"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:maxLines="1"/>
+                android:maxLines="1" />
+-->
+
 
             <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:textAllCaps="true"
+                android:text="@string/lbl_religion"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <Spinner
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:id="@+id/etReligion"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                />
+
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:text="@string/lbl_caste"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_14sp" />
+
+
+            <TextView
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:id="@+id/etCaste"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:clickable="true"
+                android:focusable="false"
+                android:paddingLeft="@dimen/padding_20dp"
+                android:text=""
+                android:textColor="@color/white" />
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:text="@string/lbl_sub_caste"
+                android:textAllCaps="true"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_14sp" />
+
+
+            <TextView
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:id="@+id/etSubCaste"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+
+                android:clickable="true"
+                android:focusable="false"
+                android:paddingLeft="@dimen/padding_20dp"
+                android:text=""
+                android:textColor="@color/white" />
+
+
+
+           <!-- <TextView
                 style="@style/LabelNormal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -525,7 +630,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:maxLines="1"/>
+                android:maxLines="1" />-->
 
             <TextView
                 style="@style/LabelNormal"
@@ -540,12 +645,11 @@
             <EditText
                 android:id="@+id/etCategory"
                 style="@style/RegEditText"
+                android:focusable="false"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:maxLines="1"/>
-
-
+                android:maxLines="1" />
 
 
             <Button
