@@ -140,7 +140,6 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
         LeafManager leafManager = new LeafManager();
         showLoadingBar(progressBar);
         // progressBar.setVisibility(View.VISIBLE);
-
         leafManager.getOfflineTestList(this, GroupDashboardActivityNew.groupId, team_id);
     }
 
@@ -191,6 +190,9 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
                 break;
             }
+            case LeafManager.API_ADD_OBT_MARK:
+               // getSubjectList();
+                break;
         }
 
     }
@@ -287,17 +289,20 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
 
 
-            MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
-            holder.rvMarkCard.setAdapter(marksAdapter);
-            marksAdapter.addItem(item.isEdit);
+
+            //marksAdapter.addItem(item.isEdit);
 
             if (item.isEdit)
             {
+                MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
+                holder.rvMarkCard.setAdapter(marksAdapter);
                 marksAdapter.addItem(item.isEdit);
                 holder.btnAdd.setText(getResources().getString(R.string.lbl_save));
             }
             else
             {
+                MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
+                holder.rvMarkCard.setAdapter(marksAdapter);
                 marksAdapter.addItem(item.isEdit);
                 holder.btnAdd.setText(getResources().getString(R.string.lbl_edit));
             }
@@ -310,6 +315,8 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
                     if (!item.isEdit)
                     {
                         item.isEdit = true;
+                        MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
+                        holder.rvMarkCard.setAdapter(marksAdapter);
                         marksAdapter.addItem(item.isEdit);
                         holder.btnAdd.setText(getResources().getString(R.string.lbl_save));
                     }

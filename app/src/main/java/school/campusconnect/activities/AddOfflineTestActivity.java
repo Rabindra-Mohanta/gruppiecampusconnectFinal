@@ -393,7 +393,7 @@ public class AddOfflineTestActivity extends BaseActivity implements LeafManager.
                         t1 = new TestOfflineSubjectMark();
                         t1.date = etDate.getText().toString();
                         t1.subjectName = spSubject.getSelectedItem().toString();
-                        t1.subjectId = subjectList.get(spSubject.getSelectedItemPosition()).subjectId;
+                        t1.subjectId = subjectList.get(spSubject.getSelectedItemPosition()-1).subjectId;
                         t1.maxMarks = etMaxMarks.getText().toString();
                         t1.minMarks = etMinMarks.getText().toString();
                         t1.startTime = etStartTime.getText().toString();
