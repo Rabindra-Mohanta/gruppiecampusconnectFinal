@@ -471,7 +471,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
             hide_keyboard();
 
-            if (BuildConfig.AppCategory.equalsIgnoreCase("CAMPUS"))
+            if (BuildConfig.AppCategory.equalsIgnoreCase("CAMPUS") && BuildConfig.AppName.equalsIgnoreCase("GC2"))
             {
                 if (response1.groupCount == 0) {
                     LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);

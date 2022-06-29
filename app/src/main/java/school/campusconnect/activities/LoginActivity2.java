@@ -430,9 +430,19 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
 
             Boolean validateUser = false;
             if (!res.data.isAllowedToAccessApp) {
-                //Toast.makeText(loginActivity2, getResources().getString(R.string.toast_you_are_not_authorized), Toast.LENGTH_SHORT).show();
+
+                if (BuildConfig.AppName.equalsIgnoreCase("GC2"))
+                {
+                    validateUser = true;
+                }
+                else
+                {
+                    Toast.makeText(loginActivity2, getResources().getString(R.string.toast_you_are_not_authorized), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            //    Toast.makeText(loginActivity2, getResources().getString(R.string.toast_you_are_not_authorized), Toast.LENGTH_SHORT).show();
                 //return;
-                validateUser = true;
+                //validateUser = true;
             }
 
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.countryCode, res.data.countryCode);
@@ -449,8 +459,18 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
                 startActivity(i);
 
             } else {
+
                 startActivity(new Intent(this, SignUpActivity2.class).putExtra("userFlag",validateUser).putExtra("Country", countryName).putExtra("countryCode", countryCode));
                 AppLog.e("TAG", "SignUpActivity2 Launched");
+               /* if (BuildConfig.AppName.equalsIgnoreCase("GC2"))
+                {
+
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"You Are Not Authorized",Toast.LENGTH_SHORT).show();
+                }
+               */
             }
         }
         btnNext.setEnabled(true);

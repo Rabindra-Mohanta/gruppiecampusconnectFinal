@@ -289,43 +289,44 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
             return false;
         }
 
-        if (TextUtils.isEmpty(etEducation.getText().toString()))
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
         {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_education),Toast.LENGTH_SHORT).show();
-            return false;
+            if (TextUtils.isEmpty(etEducation.getText().toString()))
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_education),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (TextUtils.isEmpty(etDesig.getText().toString()))
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_desiganation),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (TextUtils.isEmpty(etdob.getText().toString()))
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_dob),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (religion == null || TextUtils.isEmpty(religion))
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_religion),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (TextUtils.isEmpty(etCaste.getText().toString()))
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_caste),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (TextUtils.isEmpty(etSubCaste.getText().toString()))
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_sub_caste),Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
-
-        if (TextUtils.isEmpty(etDesig.getText().toString()))
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_desiganation),Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(etdob.getText().toString()))
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_dob),Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (religion == null || TextUtils.isEmpty(religion))
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_religion),Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(etCaste.getText().toString()))
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_caste),Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (TextUtils.isEmpty(etSubCaste.getText().toString()))
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_sub_caste),Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-
 
         return true;
     }

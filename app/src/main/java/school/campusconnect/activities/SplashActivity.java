@@ -362,7 +362,7 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             } else {
 
-                if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                if (("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && BuildConfig.AppName.equalsIgnoreCase("GC2"))) {
                     Intent login = new Intent(this, RegisterInstituteActivity.class);
                     login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(login);

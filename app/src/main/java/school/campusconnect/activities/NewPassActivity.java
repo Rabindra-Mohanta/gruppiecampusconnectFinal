@@ -163,7 +163,7 @@ public class NewPassActivity extends BaseActivity {
             hide_keyboard();
 
 
-            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && BuildConfig.AppName.equalsIgnoreCase("GC2")) {
                 if (validateUser) {
                     LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
                     LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.GROUP_ID, response1.groupId);
@@ -180,9 +180,7 @@ public class NewPassActivity extends BaseActivity {
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             i.putExtra("Role",response1.role);
             i.putExtra("token",response1.token);
-
             AppLog.e("groupCount", "id is " + response1.groupCount);
-
             i.putExtra("groupCount",String.valueOf(response1.groupCount));
             i.putExtra("groupID",response1.groupId);
             startActivity(i);
