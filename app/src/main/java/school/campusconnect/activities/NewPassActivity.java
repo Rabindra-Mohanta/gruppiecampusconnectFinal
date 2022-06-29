@@ -162,15 +162,19 @@ public class NewPassActivity extends BaseActivity {
 
             hide_keyboard();
 
-            if (validateUser) {
-                LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
-                LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.GROUP_ID, response1.groupId);
-                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
 
-                Intent register = new Intent(this, RegisterInstituteActivity.class);
-                startActivity(register);
-                return;
+            if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                if (validateUser) {
+                    LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
+                    LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.GROUP_ID, response1.groupId);
+                    LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
+
+                    Intent register = new Intent(this, RegisterInstituteActivity.class);
+                    startActivity(register);
+                    return;
+                }
             }
+
 
             Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

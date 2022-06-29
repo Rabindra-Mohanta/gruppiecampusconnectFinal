@@ -4,9 +4,11 @@ import android.app.Application;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.storage.StorageManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.multidex.MultiDex;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -22,6 +24,7 @@ import com.instacart.library.truetime.TrueTimeRx;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import school.campusconnect.network.LeafApiClient;
 import school.campusconnect.utils.TypeFaceUtil;
@@ -176,6 +179,54 @@ public class LeafApplication extends Application  {
 
     }*/
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void isSizeAvailable()
+    {
+        long NUM_BYTES_NEEDED_FOR_MY_APP = 1024 * 1024 * 10L;
+        StorageManager storageManager =  getApplicationContext().getSystemService(StorageManager.class);
+        UUID appSpecificInternalDirUuid = null;
+        UUID appSpecificInternalDirUuidFileDir = null;
+        UUID appSpecificInternalDirUuidExternalDir = null;
+
+        try {
+            appSpecificInternalDirUuid = storageManager.getUuidForPath(getCacheDir());
+
+            appSpecificInternalDirUuidFileDir = storageManager.getUuidForPath(getFilesDir());
+
+            appSpecificInternalDirUuidExternalDir = storageManager.getUuidForPath(getExternalFilesDir(null));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        long availableBytes = 0;
+        long availableBytesFileDir = 0;
+        long availableBytesExternalDir = 0;
+
+        try {
+            availableBytes = storageManager.getAllocatableBytes(appSpecificInternalDirUuid);
+            availableBytesFileDir = storageManager.getAllocatableBytes(appSpecificInternalDirUuidFileDir);
+            availableBytesExternalDir = storageManager.getAllocatableBytes(appSpecificInternalDirUuidExternalDir);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.e(TAG,"availableBytes"+availableBytes);
+        Log.e(TAG,"availableBytesFileDir"+availableBytesFileDir);
+        Log.e(TAG,"availableBytesExternalDir"+availableBytesExternalDir);
+
+        if (availableBytes >= NUM_BYTES_NEEDED_FOR_MY_APP)
+        {
+            try {
+                storageManager.allocateBytes(appSpecificInternalDirUuid, NUM_BYTES_NEEDED_FOR_MY_APP);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            // To request that the user remove all app cache files instead, set    // "action" to ACTION_CLEAR_APP_CACHE.    Intent storageIntent = new Intent();    storageIntent.setAction(ACTION_MANAGE_STORAGE);
+          }
+    }
     public File AppFilesPath(){
         File mainFolder;
 

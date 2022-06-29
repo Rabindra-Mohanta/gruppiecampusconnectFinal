@@ -56,9 +56,9 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
     public ProgressBar progressBar;
     boolean isForAttendance;
 
-
     @Bind(R.id.allStaff)
     CardView allStaff;
+
     String role="";
 
     @Override
@@ -100,7 +100,7 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
 
         if (role != null && role.equalsIgnoreCase("admin"))
         {
-            allStaff.setVisibility(View.VISIBLE);
+            allStaff.setVisibility(View.GONE);
         }
 
         allStaff.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +116,14 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
         List<ClassListTBL> list = ClassListTBL.getAll(GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
             ArrayList<ClassResponse.ClassData> result = new ArrayList<>();
+
+            if (role != null && role.equalsIgnoreCase("admin"))
+            {
+                ClassResponse.ClassData item1 = new ClassResponse.ClassData();
+                item1.className = getResources().getString(R.string.menu_staff_filter);
+                result.add(item1);
+            }
+
             for (int i = 0; i < list.size(); i++) {
                 ClassListTBL currentItem = list.get(i);
                 ClassResponse.ClassData item = new ClassResponse.ClassData();
@@ -132,6 +140,9 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
                 item.rollNumber = currentItem.rollNumber;
                 result.add(item);
             }
+
+
+
             rvClass.setAdapter(new ClassesAdapter(result));
 
             TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
@@ -181,9 +192,21 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
       //  progressBar.setVisibility(View.GONE);
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
+
+        List<ClassResponse.ClassData> result1 = new ArrayList<>();
+
+        if (role != null && role.equalsIgnoreCase("admin"))
+        {
+            ClassResponse.ClassData item1 = new ClassResponse.ClassData();
+            item1.className = getResources().getString(R.string.menu_staff_filter);
+            result1.add(item1);
+        }
+
+        result1.addAll(result);
+
         AppLog.e(TAG, "ClassResponse " + result);
 
-        rvClass.setAdapter(new ClassesAdapter(result));
+        rvClass.setAdapter(new ClassesAdapter(result1));
 
         TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
         if(dashboardCount!=null){
@@ -331,7 +354,16 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onTreeClick(list.get(getAdapterPosition()));
+
+                        if (getAdapterPosition() == 0)
+                        {
+                            startActivity(new Intent(getActivity(), StaffAttendanceActivity.class));
+                        }
+                        else
+                        {
+                            onTreeClick(list.get(getAdapterPosition()));
+                        }
+
                     }
                 });
 

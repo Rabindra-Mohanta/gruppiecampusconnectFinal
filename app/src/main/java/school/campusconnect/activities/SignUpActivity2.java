@@ -15,6 +15,7 @@ import school.campusconnect.fragments.SearchCastFragmentDialog;
 import school.campusconnect.fragments.SearchSubCasteDialogFragment;
 import school.campusconnect.utils.AppLog;
 
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -222,12 +223,14 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
 
                 if (position != 0)
                 {
+                    religion = etReligion.getSelectedItem().toString();
                     isCasteClickable = true;
                     showLoadingBar(progressBar);
                     leafManager.getCaste(SignUpActivity2.this,etReligion.getSelectedItem().toString());
                 }
                 else
                 {
+                    religion = null;
                     isCasteClickable = false;
                     etCaste.setText("");
                     etSubCaste.setText("");
@@ -280,10 +283,49 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
 
     public boolean isValid() {
 
-
-        if (!isValueValid(edtName)) {// || !isValueValid(edtEmail/*.editText*/)) {
+        if (TextUtils.isEmpty(edtName.getText().toString()))
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        if (TextUtils.isEmpty(etEducation.getText().toString()))
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_education),Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(etDesig.getText().toString()))
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_desiganation),Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(etdob.getText().toString()))
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_dob),Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (religion == null || TextUtils.isEmpty(religion))
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_religion),Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(etCaste.getText().toString()))
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_caste),Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(etSubCaste.getText().toString()))
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_sub_caste),Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+
 
         return true;
     }
@@ -541,11 +583,6 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
 
             btnNext.setEnabled(true);
         }
-
-
-
-
-
 
     }
 

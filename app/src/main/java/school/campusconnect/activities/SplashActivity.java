@@ -361,10 +361,21 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(login);
                 finish();
             } else {
-                Intent login = new Intent(this, RegisterInstituteActivity.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(login);
-                finish();
+
+                if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                    Intent login = new Intent(this, RegisterInstituteActivity.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                }
+                else
+                {
+                    Intent login = new Intent(this, LoginPinActivity.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                }
+
             }
         }
 

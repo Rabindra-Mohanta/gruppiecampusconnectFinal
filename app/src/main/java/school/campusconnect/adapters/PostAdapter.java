@@ -267,7 +267,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             holder.imgLead_default.setImageDrawable(drawable);
         }
 
-        if (!TextUtils.isEmpty(item.fileType) && !item.type.equalsIgnoreCase("birthdaypost")) {
+        if (!TextUtils.isEmpty(item.fileType) && !item.type.equalsIgnoreCase("birthdaypost"))
+        {
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null)
                 {
@@ -391,7 +392,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.recyclerView.setVisibility(View.GONE);
             }
         }
-
         else if(item.type.equalsIgnoreCase("birthdaypost"))
         {
                 if (item.fileName != null) {

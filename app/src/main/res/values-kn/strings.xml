@@ -1303,5 +1303,11 @@
     <string name="lbl_disability">Disability</string>
     <string name="lbl_family_income">Family Income</string>
     <string name="lbl_sats_no">SATS NUMBER</string>
+    <string name="toast_enter_desiganation">Please Enter Profession</string>
+    <string name="toast_enter_education">Please Enter Education</string>
+    <string name="toast_enter_dob">Please Enter Date of Birth</string>
+    <string name="toast_select_religion">Please Select Religion</string>
+    <string name="toast_select_caste">Please Select Caste</string>
+    <string name="toast_select_sub_caste">Please Select Sub Caste</string>
 
 </resources>

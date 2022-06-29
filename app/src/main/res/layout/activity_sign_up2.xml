@@ -80,36 +80,36 @@
                     android:textSize="@dimen/text_size_14sp" />
 
                 <EditText
-                    android:layout_marginTop="@dimen/padding_5dp"
                     android:id="@+id/etEducation"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
                     android:layout_marginRight="@dimen/padding_30dp"
                     android:inputType="text"
                     android:maxLines="1"
                     android:textSize="@dimen/text_size_16sp" />
 
                 <TextView
-                    android:layout_marginTop="@dimen/padding_10dp"
                     style="@style/LabelNormal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
                     android:layout_marginRight="@dimen/padding_30dp"
-                    android:text="@string/lbl_designation"
+                    android:text="@string/lbl_profession"
                     android:textColor="@color/colorTextWhite"
                     android:textSize="@dimen/text_size_14sp" />
 
                 <EditText
 
-                    android:layout_marginTop="@dimen/padding_5dp"
                     android:id="@+id/etDesig"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
                     android:layout_marginRight="@dimen/padding_30dp"
                     android:inputType="text"
                     android:maxLines="1"
@@ -128,12 +128,12 @@
                     android:textSize="@dimen/text_size_14sp" />
 
                 <EditText
-                    android:layout_marginTop="@dimen/padding_5dp"
                     android:id="@+id/etdob"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
                     android:layout_marginRight="@dimen/padding_30dp"
                     android:focusable="false"
                     android:inputType="text"
@@ -153,12 +153,12 @@
                     android:textSize="@dimen/text_size_14sp" />
 
                 <Spinner
-                    android:layout_marginTop="@dimen/padding_5dp"
                     android:id="@+id/etReligion"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height"
                     android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
                     android:layout_marginRight="@dimen/padding_30dp" />
 
 
@@ -175,12 +175,12 @@
 
 
                 <TextView
-                    android:layout_marginTop="@dimen/padding_5dp"
                     android:id="@+id/etCaste"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height"
                     android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
                     android:layout_marginRight="@dimen/padding_30dp"
                     android:clickable="true"
                     android:focusable="false"
@@ -201,12 +201,12 @@
 
 
                 <TextView
-                    android:layout_marginTop="@dimen/padding_5dp"
                     android:id="@+id/etSubCaste"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height"
                     android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
                     android:layout_marginRight="@dimen/padding_30dp"
                     android:clickable="true"
                     android:focusable="false"
@@ -216,6 +216,7 @@
 
 
                 <TextView
+                    android:visibility="gone"
                     style="@style/LabelNormal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -228,12 +229,13 @@
 
 
                 <EditText
-                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:visibility="gone"
                     android:id="@+id/etCategory"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_button_height"
                     android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
                     android:layout_marginRight="@dimen/padding_30dp"
                     android:clickable="false"
                     android:focusable="false"

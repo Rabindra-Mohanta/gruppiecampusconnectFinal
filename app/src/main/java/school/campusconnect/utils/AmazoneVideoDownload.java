@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.text.TextUtils;
@@ -101,6 +102,11 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
     protected String doInBackground(Void... voids) {
         try {
             if (!TextUtils.isEmpty(url)) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    LeafApplication.getInstance().isSizeAvailable();
+                }
+
                 url = Constants.decodeUrlToBase64(url);
                 String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
                 Log.e(TAG, "download key :" + key);

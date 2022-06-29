@@ -485,7 +485,6 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
                 }
             }
 
-
             Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             i.putExtra("Role",response1.role);
