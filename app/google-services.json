@@ -52,42 +52,6 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:a973ccc53b1b8a37",
-        "android_client_info": {
-          "package_name": "adarshvidyalaya.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "school.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:337951586049:android:8c3761f568b2928a340d00",
         "android_client_info": {
           "package_name": "akanksha.gruppie"
@@ -370,14 +334,6 @@
         }
       },
       "oauth_client": [
-        {
-          "client_id": "337951586049-oarotsiujsqhmdbkgf9cndc8bgv38e6u.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "hes_kadur.gruppie",
-            "certificate_hash": "b94aef263cfe39be647789523aefde03e7ad70c7"
-          }
-        },
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
@@ -910,6 +866,42 @@
             "certificate_hash": "3e178d4b2b70931e164d01f27f4f39e42c510c24"
           }
         },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:9c006d7b0ee1f7db340d00",
+        "android_client_info": {
+          "package_name": "philomena.gruppie"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3

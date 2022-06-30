@@ -38,11 +38,11 @@
                 android:layout_weight="0.3"
                 android:gravity="center"
                 android:layout_height="wrap_content">
+
                 <CheckBox
                     android:id="@+id/chMorning"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
                 <ImageView
                     android:id="@+id/llMorning"
