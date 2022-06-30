@@ -61,7 +61,8 @@ public class FamilyListFragment extends BaseFragment implements LeafManager.OnCo
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
+       // showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -80,7 +81,9 @@ public class FamilyListFragment extends BaseFragment implements LeafManager.OnCo
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        hideLoadingBar();
+      //  hideLoadingBar();
+
+        progressBar.setVisibility(View.GONE);
         FamilyMemberResponse res = (FamilyMemberResponse) response;
         list = res.getData();
         AppLog.e(TAG, "StudentRes " + list);
@@ -90,12 +93,17 @@ public class FamilyListFragment extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //  hideLoadingBar();
+        txtEmpty.setText("something went wrong please try again");
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //  hideLoadingBar();
+        txtEmpty.setText("something went wrong please try again");
+
+        progressBar.setVisibility(View.GONE);
     }
 
     public ArrayList<FamilyMemberResponse.FamilyMemberData> getList() {

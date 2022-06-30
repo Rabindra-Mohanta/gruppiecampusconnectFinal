@@ -60,7 +60,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     private void getPersonalList() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+           // showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             manager.getPersonalContacts(this, GroupDashboardActivityNew.groupId);
         } else {
             showNoNetworkMsg();
@@ -119,7 +120,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         switch (apiId)
         {
             case LeafManager.API_PERSONAL_CONTACTS:
@@ -187,7 +189,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         if (getActivity() != null) {
 
@@ -213,7 +216,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         if (getActivity() != null)
             Toast.makeText(getActivity(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }

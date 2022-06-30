@@ -153,7 +153,7 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
 
     public void getChapters(boolean isLoading) {
         if(isLoading)
-           // progressBar.setVisibility(View.VISIBLE);
+            // progressBar.setVisibility(View.VISIBLE);
             showLoadingBar(progressBar);
         LeafManager leafManager = new LeafManager();
         leafManager.getHwList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
@@ -215,13 +215,13 @@ public class HWListFragment extends BaseFragment implements LeafManager.OnCommun
     @Override
     public void onFailure(int apiId, String msg) {
         hideLoadingBar();
-      //  progressBar.setVisibility(View.GONE);
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
         hideLoadingBar();
-     //   progressBar.setVisibility(View.GONE);
+        //   progressBar.setVisibility(View.GONE);
     }
 
     public class HwAdapter extends RecyclerView.Adapter<HwAdapter.ViewHolder> {

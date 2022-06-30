@@ -51,12 +51,12 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 
 public class SyllabusListFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
-public static final String TAG = "SyllabusListFragment";
-FragmentSyllabusListBinding binding;
-LeafManager manager;
-String teamId,subjectId,role;
-SyllabusAdapter adapter;
-ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>();
+    public static final String TAG = "SyllabusListFragment";
+    FragmentSyllabusListBinding binding;
+    LeafManager manager;
+    String teamId,subjectId,role;
+    SyllabusAdapter adapter;
+    ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>();
 
     ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataSpinnerList = new ArrayList<>();
 
@@ -83,7 +83,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
 
         bindChapter();
 
-   //     getLocallyAll();
+        //     getLocallyAll();
 
     }
 
@@ -353,7 +353,7 @@ ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>(
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-             //       onTreeClick(data);
+                    //       onTreeClick(data);
                 }
             });
           /*  holder.img_tree.setOnClickListener(new View.OnClickListener() {

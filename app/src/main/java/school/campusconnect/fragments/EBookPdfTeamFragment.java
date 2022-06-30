@@ -196,14 +196,17 @@ public class EBookPdfTeamFragment extends BaseFragment implements LeafManager.On
         }
     }
 
+
     @Override
     public void onFailure(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+        txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
     }
 
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
+        txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder> {

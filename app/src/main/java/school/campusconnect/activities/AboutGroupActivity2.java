@@ -151,7 +151,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         if (isConnectionAvailable()) {
             if (progressBar != null)
                 showLoadingBar(progressBar,false);
-                //progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
             manager.getGroupDetail(this, id);
         } else {
             showNoNetworkMsg();
@@ -333,7 +333,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
     private void removeImage() {
         if (progressBar != null)
             showLoadingBar(progressBar,false);
-            //progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         manager.deleteGroupPic(this, id + "");
     }
 
@@ -535,7 +535,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
             if (isConnectionAvailable()) {
                 if (progressBar != null)
                     showLoadingBar(progressBar,false);
-               //     progressBar.setVisibility(View.VISIBLE);
+                //     progressBar.setVisibility(View.VISIBLE);
                 manager.getGroupDetail(this, id);
             } else {
                 showNoNetworkMsg();
@@ -719,7 +719,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
             Log.e(TAG, "Request Post Data :" + request);
             if (progressBar != null)
                 showLoadingBar(progressBar,false);
-                //progressBar.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.VISIBLE);
             manager.editGroup(AboutGroupActivity2.this, request, id);
         }
     }
@@ -730,7 +730,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         // hideLoadingDialog();
         if (progressBar != null)
             hideLoadingBar();
-         //   progressBar.setVisibility(View.GONE);
+        //   progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ID_LEAVE_GROUP: {
                 LeaveResponse res = (LeaveResponse) response;
@@ -759,7 +759,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
                 if (progressBar != null)
                     showLoadingBar(progressBar,false);
-                   // progressBar.setVisibility(View.VISIBLE);
+                // progressBar.setVisibility(View.VISIBLE);
                 if (isConnectionAvailable()) {
                     manager.getGroupDetail(this, id + "");
                 } else {
@@ -772,7 +772,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 //  showLoadingDialog();
                 if (progressBar != null)
                     showLoadingBar(progressBar,false);
-                   // progressBar.setVisibility(View.VISIBLE);
+                // progressBar.setVisibility(View.VISIBLE);
                 if (isConnectionAvailable()) {
                     manager.getGroupDetail(this, id + "");
                 } else {
@@ -884,7 +884,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         // hideLoadingDialog();
         if (progressBar != null)
             hideLoadingBar();
-           // progressBar.setVisibility(View.GONE);
+        // progressBar.setVisibility(View.GONE);
         //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -899,7 +899,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         // hideLoadingDialog();
         if (progressBar != null)
             hideLoadingBar();
-           // progressBar.setVisibility(View.GONE);
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

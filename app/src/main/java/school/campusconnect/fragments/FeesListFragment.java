@@ -1,4 +1,4 @@
-package school.campusconnect.fragments;
+              package school.campusconnect.fragments;
 
 import android.Manifest;
 import android.content.Context;
@@ -89,8 +89,8 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
-      //  progressBar.setVisibility(View.VISIBLE);
+        //showLoadingBar(progressBar);
+       progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -114,8 +114,8 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         StudentFeesRes res = (StudentFeesRes) response;
         list = res.getData();
@@ -135,14 +135,19 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
+
+
+        
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
 

@@ -221,7 +221,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             mIsLoading = true;
             manager.getGalleryPost(this, mGroupId+"", currentPage);
         }
@@ -281,12 +282,24 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_GALLERY_POST:
                 GalleryPostRes res = (GalleryPostRes) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
+               if  (res.data.size()==0)
+
+            {
+                txtEmpty.setVisibility(View.VISIBLE);
+            }
+
+                else
+            {
+                txtEmpty.setVisibility(View.GONE);
+            }
+
 
                 if (currentPage == 1) {
               //      PostDataItem.deleteGeneralPosts(mGroupId+"");
@@ -404,7 +417,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -427,7 +441,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -711,7 +726,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteGalleryPost(this, mGroupId+"",currentItem.getAlbumId());
 

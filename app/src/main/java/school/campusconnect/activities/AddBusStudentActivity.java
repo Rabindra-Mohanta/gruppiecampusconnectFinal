@@ -102,7 +102,7 @@ public class AddBusStudentActivity extends BaseActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     showLoadingBar(progressBar,false);
-                   // progressBar.setVisibility(View.VISIBLE);
+                    // progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteBusStudent(AddBusStudentActivity.this, GroupDashboardActivityNew.groupId, team_id,studentData.getUserId());
                 }
             });
@@ -222,7 +222,7 @@ public class AddBusStudentActivity extends BaseActivity {
         super.onSuccess(apiId, response);
         if (progressBar != null)
             hideLoadingBar();
-           // progressBar.setVisibility(View.GONE);
+        // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_BUS_STUDENTS_ADD:

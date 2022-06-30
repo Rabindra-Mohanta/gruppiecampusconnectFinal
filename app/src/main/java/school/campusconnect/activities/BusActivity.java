@@ -66,8 +66,8 @@ public class BusActivity extends BaseActivity {
             case R.id.menu_add_class:
                 startActivity(new Intent(this,AddBusActivity.class));
                 return true;
-             default:
-                 return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class ArchiveTeamFragment extends BaseFragment implements LeafManager.OnC
 
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
+    @Bind(R.id.txtEmpty)
+    TextView txtEmpty;
 
     View view;
 
@@ -57,7 +60,8 @@ public class ArchiveTeamFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getArchiveList() {
-        showLoadingBar(progressBar);
+        //showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         leafManager.getArchiveTeams(this,groupId);
     }
 
@@ -72,13 +76,19 @@ public class ArchiveTeamFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+
         switch (apiId)
         {
             case LeafManager.API_ID_ARCHIVE_TEAM:
                 MyTeamsResponse res = (MyTeamsResponse) response;
                 listTeams.clear();
                 listTeams.addAll(res.getResults());
+                if(listTeams.size()==0)
+                {
+                    txtEmpty.setVisibility(View.VISIBLE);
+                }
                 archiveTeamAdapter.notifyDataSetChanged();
                 AppLog.e(TAG, "API_ID_GET_ARCHIVE_TEAM res : " + res);
                 break;
@@ -90,7 +100,10 @@ public class ArchiveTeamFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        txtEmpty.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setVisibility(View.VISIBLE);
         if(getActivity()==null)
             return;
         if (msg.contains("401:Unauthorized")) {
@@ -104,7 +117,9 @@ public class ArchiveTeamFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setVisibility(View.VISIBLE);
         if(getActivity()==null)
             return;
         Toast.makeText(getActivity(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
@@ -117,7 +132,8 @@ public class ArchiveTeamFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onRestoreClick(int position) {
-        showLoadingBar(progressBar);
+        //showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         leafManager.restoreArchiveTeam(this,groupId,listTeams.get(position).teamId);
     }
 }

@@ -60,6 +60,7 @@ public class FeesClassActivity extends BaseActivity {
 
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
+
         setBackEnabled(true);
         setTitle(getIntent().getStringExtra("title"));
 

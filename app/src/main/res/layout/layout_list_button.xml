@@ -62,9 +62,11 @@
             android:visibility="gone" />
 
         <TextView
+            android:visibility="gone"
+            android:text="No data found"
             android:id="@+id/txtEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
             android:paddingEnd="16dp"

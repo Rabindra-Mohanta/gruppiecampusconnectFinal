@@ -165,7 +165,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
                 if (!mIsLoading && totalPages > currentPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0
-                            ) {
+                    ) {
                         currentPage = currentPage + 1;
                         AppLog.e(TAG, "onScrollCalled " + currentPage);
                         getData();
@@ -178,6 +178,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 if (isConnectionAvailable()) {
                     currentPage = 1;
                     getData();
@@ -193,7 +194,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
     private void getData()
     {
-
+        //showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         String re = LeafPreference.getInstance(getActivity()).getString( GroupDashboardActivityNew.groupId+"_vendor");
 
         if (re != null && !TextUtils.isEmpty(re))
@@ -215,7 +217,12 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
             }
 
             if(listData.size()==0)
+
+            {
+                progressBar.setVisibility(View.GONE);
                 txtEmpty.setVisibility(View.VISIBLE);
+            }
+
             else
                 txtEmpty.setVisibility(View.GONE);
 
@@ -231,7 +238,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
                 LeafPreference.getInstance(getContext()).setBoolean(mGroupId + "_vendor_delete", false);
 
-                showLoadingBar(progressBar);
+                //showLoadingBar(progressBar);
+                //  progressBar.setVisibility(View.VISIBLE);
                 mIsLoading = true;
                 manager.getVendorPost(this, mGroupId+"", currentPage);
 
@@ -241,7 +249,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
         {
             if(isConnectionAvailable())
             {
-                showLoadingBar(progressBar);
+                //showLoadingBar(progressBar);
+                progressBar.setVisibility(View.VISIBLE);
                 mIsLoading = true;
                 manager.getVendorPost(this, mGroupId+"", currentPage);
             }
@@ -256,17 +265,18 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     private void getDataFromAPI()
     {
 
-            if(isConnectionAvailable())
-            {
-                showLoadingBar(progressBar);
-                mIsLoading = true;
-                manager.getVendorPost(this, mGroupId+"", currentPage);
-                leafPreference.remove(mGroupId+"_vendorpush");
-            }
-            else
-            {
-                showNoNetworkMsg();
-            }
+        if(isConnectionAvailable())
+        {
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
+            mIsLoading = true;
+            manager.getVendorPost(this, mGroupId+"", currentPage);
+            leafPreference.remove(mGroupId+"_vendorpush");
+        }
+        else
+        {
+            showNoNetworkMsg();
+        }
 
 
     }
@@ -322,7 +332,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //   hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_VENDOR_POST:
@@ -345,7 +356,12 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
                 leafPreference.remove(mGroupId+"_vendorpush");
 
                 if(listData.size()==0)
+
+                {
+                    progressBar.setVisibility(View.GONE);
                     txtEmpty.setVisibility(View.VISIBLE);
+                }
+
                 else
                     txtEmpty.setVisibility(View.GONE);
 
@@ -367,7 +383,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //   hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -390,7 +407,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //   hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -404,7 +422,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteVendorPost(this, mGroupId+"",currentItem.vendorId);
 

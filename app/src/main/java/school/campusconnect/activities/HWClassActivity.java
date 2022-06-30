@@ -31,6 +31,8 @@ public class HWClassActivity extends BaseActivity {
 
     @Bind(R.id.imgHome)
     public ImageView imgHome;
+    @Bind(R.id.txtEmpty)
+    TextView txtEmpty;
 
     private StaffFragmentDialog staffFragmentDialog;
     @Override

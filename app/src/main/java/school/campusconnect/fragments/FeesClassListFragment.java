@@ -114,8 +114,8 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
 
     private void apiCall(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar,true);
-        //    progressBar.setVisibility(View.VISIBLE);
+            //showLoadingBar(progressBar,true);
+          progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {
             leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
@@ -128,8 +128,8 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -170,14 +170,16 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>

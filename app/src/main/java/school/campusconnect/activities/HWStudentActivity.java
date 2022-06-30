@@ -407,8 +407,8 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
 
     public void getAssignment(boolean isLoading) {
         if(isLoading)
-            showLoadingBar(progressBar);
-            //progressBar.setVisibility(View.VISIBLE);
+           // showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getAssignment(this, GroupDashboardActivityNew.groupId, team_id, subject_id, item.assignmentId, "");
     }
@@ -425,8 +425,8 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
-        hideLoadingBar();
-       // progressBar.setVisibility(View.GONE);
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ASSIGNMENT_LIST:
                 AssignmentRes assignmentRes = (AssignmentRes) response;
@@ -493,8 +493,8 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         if (progressBar != null)
-            hideLoadingBar();
-        //   progressBar.setVisibility(View.GONE);
+            // hideLoadingBar();
+            progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -835,8 +835,8 @@ public class HWStudentActivity extends BaseActivity implements LeafManager.OnAdd
         SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_assignment), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                showLoadingBar(progressBar);
-                //progressBar.setVisibility(View.VISIBLE);
+                // showLoadingBar(progressBar);
+                progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.deleteAssignmentStudent(HWStudentActivity.this, group_id, team_id, subject_id, HWStudentActivity.this.item.assignmentId, item.studentAssignmentId);
             }

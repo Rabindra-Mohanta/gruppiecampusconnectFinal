@@ -118,6 +118,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void init() {
+        binding.progressBar.setVisibility(View.VISIBLE);
 
         AppLog.e(TAG, "HWClassListFragment");
       /*  swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
@@ -132,7 +133,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             }
         });*/
 
-    //    binding.rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //    binding.rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         role = getArguments().getString("role");
         Log.e(TAG,"role"+role);
@@ -178,9 +179,10 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         binding.spFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                       binding.progressBar.setVisibility(View.VISIBLE);
                 if (position == 0)
                 {
+                    binding.progressBar.setVisibility(View.GONE);
                     binding.rvStaff.setVisibility(View.GONE);
                     binding.rvClass.setVisibility(View.VISIBLE);
 
@@ -195,12 +197,15 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
                 }
                 else
                 {
+
+                    binding.progressBar.setVisibility(View.VISIBLE);
                     binding.rvStaff.setVisibility(View.VISIBLE);
                     binding.rvClass.setVisibility(View.GONE);
 
                     if (staffData.size() > 0)
                     {
                         binding.rvStaff.setAdapter(new StaffAdapter(staffData));
+                        binding.progressBar.setVisibility(View.GONE);
                     }
                     else
                     {
@@ -219,6 +224,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void getDataLocally() {
+        binding.progressBar.setVisibility(View.GONE);
 
         List<ClassListTBL> list = ClassListTBL.getAll(GroupDashboardActivityNew.groupId);
         if (list.size() != 0) {
@@ -269,11 +275,13 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     {
         LeafManager leafManager = new LeafManager();
         leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
+
+
     }
     private void apiCall(boolean isLoading) {
-        if(isLoading)
-            showLoadingBar(binding.progressBar,true);
-           // progressBar.setVisibility(View.VISIBLE);
+
+           // showLoadingBar(binding.progressBar,true);
+        binding. progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         if ("teacher".equalsIgnoreCase(role)) {
             leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
@@ -411,7 +419,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         if (type.equalsIgnoreCase("Syllabus Tracker") && role.equalsIgnoreCase("teacher"))
         {
             LeafManager leafManager = new LeafManager();
-            showLoadingBar(binding.progressBar);
+            // showLoadingBar(binding.progressBar,true);
+            binding. progressBar.setVisibility(View.VISIBLE);
             leafManager.getTodaySyllabusPlanList(this,GroupDashboardActivityNew.groupId,date);
             leafManager.getStaffAnalysis(this,GroupDashboardActivityNew.groupId,staffID);
         }
@@ -440,8 +449,8 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
-        //    progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.API_TODAY_DATE_WISE_SYLLBUS_PLAN)
         {
@@ -512,14 +521,16 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+       // hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
         //    progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
         //    progressBar.setVisibility(View.GONE);
     }

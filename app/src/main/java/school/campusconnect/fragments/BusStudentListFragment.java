@@ -61,8 +61,8 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        showLoadingBar(progressBar);
-      //  progressBar.setVisibility(View.VISIBLE);
+        // showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -87,8 +87,8 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
-       // progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         BusStudentRes res = (BusStudentRes) response;
         List<BusStudentRes.StudentData> result = res.getData();
         AppLog.e(TAG, "StudentRes " + result);
@@ -98,14 +98,16 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        // progressBar.setVisibility(View.GONE);
+        //  hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        // progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
     public class BusStudentAdapter extends RecyclerView.Adapter<BusStudentAdapter.ViewHolder>
@@ -172,7 +174,7 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 }else {
                     txtEmpty.setText("");
                 }
@@ -181,7 +183,7 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
+                txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 return 0;
             }
 

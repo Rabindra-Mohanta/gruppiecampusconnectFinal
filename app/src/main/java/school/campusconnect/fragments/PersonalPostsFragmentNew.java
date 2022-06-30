@@ -117,6 +117,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -193,7 +194,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         AppLog.e(TAG,"ListSize "+ String.valueOf(dataItemList.size()));
 
         if (dataItemList.size() != 0) {
-            showLoadingBar(progressBar2);
+            //showLoadingBar(progressBar2);
+            progressBar2.setVisibility(View.VISIBLE);
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 PostItem postItem = new PostItem();
@@ -224,7 +226,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
                 PostList.add(postItem);
             }
-            hideLoadingBar();
+            //hideLoadingBar();
+            progressBar2.setVisibility(View.GONE);
             AppLog.e(TAG, "DataFromLocal");
             mAdapter2.notifyDataSetChanged();
 
@@ -306,7 +309,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         swipeRefreshLayout2 = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout2);
 
         progressBar2 = (ProgressBar) view.findViewById(R.id.progressBar2);
-
+        progressBar2.setVisibility(View.VISIBLE);
         recyclerView2.setLayoutManager(layoutManager);
 
         mAdapter2 = new PersonalPostAdapter(PostList, this, "personal",databaseHandler, count,selectedFriend,personalData.allowPostComment);
@@ -316,7 +319,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     private void getData(String friend_id, boolean isBackground) {
         if (isBackground) {
-            showLoadingBar(progressBar2);
+            //showLoadingBar(progressBar2);
+            progressBar2.setVisibility(View.VISIBLE);
             mIsLoading2 = true;
         }
         manager.getPersonalChat(this, mGroupId + "", friend_id + "", currentPage2);
@@ -329,7 +333,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar2.setVisibility(View.GONE);;
         if (getActivity() != null)
             ((BaseActivity) getActivity()).hideLoadingDialog();
 
@@ -444,7 +449,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar2.setVisibility(View.GONE);
         mIsLoading2 = false;
         liked = false;
 
@@ -468,7 +474,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar2.setVisibility(View.GONE);
         mIsLoading2 = false;
         liked = false;
         currentPage2 = currentPage2 - 1;
@@ -490,7 +497,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar2.setVisibility(View.GONE);
         mIsLoading2 = false;
         liked = false;
         currentPage2 = currentPage2 - 1;
@@ -508,7 +516,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         if (!liked) {
             liked = true;
             this.position = position;
-            showLoadingBar(progressBar2);
+            //showLoadingBar(progressBar2);
+            progressBar2.setVisibility(View.VISIBLE);
             manager.setPersonalLike(this, mGroupId+"", item.id);
         }
     }
@@ -628,7 +637,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         AppLog.e("PersonalPostFrag", "DIalog Ok Clicked ");
-        showLoadingBar(progressBar2);
+        //showLoadingBar(progressBar2);
+        progressBar2.setVisibility(View.VISIBLE);
         LeafManager manager = new LeafManager();
         manager.deletePersonalPostChat(this, mGroupId + "", selectedFriend + "", currentItem.id);
     }
