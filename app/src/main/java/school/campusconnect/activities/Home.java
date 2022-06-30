@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.fragments.ClassListTokenFragment;
@@ -120,7 +121,10 @@ public class Home extends BaseActivity {
         else
         {
             menu.findItem(R.id.menu_change_pass).setVisible(true);
-            menu.findItem(R.id.menu_add_school).setVisible(true);
+
+            if (("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory) && BuildConfig.AppName.equalsIgnoreCase("GC2"))) {
+                menu.findItem(R.id.menu_add_school).setVisible(true);
+            }
             
             if (LeafPreference.getInstance(this).getString(LeafPreference.SKIP_PIN).equalsIgnoreCase("yes"))
             {

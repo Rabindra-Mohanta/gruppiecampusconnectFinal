@@ -139,8 +139,7 @@ public class BaseTeamFragmentv2 extends BaseFragment implements LeafManager.OnCo
         }
         else
         {
-            if (GroupDashboardActivityNew.isAdmin)
-            {
+            if (BuildConfig.AppName.equalsIgnoreCase("GC2")) {
                 menu.findItem(R.id.menu_add_school).setVisible(true);
             }
         }
