@@ -147,7 +147,7 @@ public class HWSubjectListFragment extends BaseFragment implements LeafManager.O
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         hideLoadingBar();
-      //  progressBar.setVisibility(View.GONE);
+        //  progressBar.setVisibility(View.GONE);
         SubjectStaffResponse res = (SubjectStaffResponse) response;
         List<SubjectStaffResponse.SubjectData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));

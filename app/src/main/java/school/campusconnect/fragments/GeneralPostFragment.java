@@ -196,6 +196,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         ActiveAndroid.initialize(getActivity());
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_button, container, false);
         mBinding.setSize(1);
+
         init();
 
         getGroupPostLocaly();
@@ -465,6 +466,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             case LeafManager.API_ID_GENERAL_POST:
                 PostResponse res = (PostResponse) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.getResults()));
+                if(res.totalNumberOfPages==0)
+                {
+                    mBinding.txtEmpty.setVisibility(View.VISIBLE);
+                }
 
                 if (currentPage == 1) {
                     PostDataItem.deleteGeneralPosts(mGroupId + "");
@@ -481,6 +486,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 mAdapter.notifyDataSetChanged();
 
                 totalPages = res.totalNumberOfPages;
+                if(totalPages==0)
+                {
+                    mBinding.txtEmpty.setVisibility(View.VISIBLE);
+                }
                 mIsLoading = false;
 
                 savePostData(res.getResults());

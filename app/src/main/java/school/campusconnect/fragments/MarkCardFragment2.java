@@ -126,8 +126,8 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void getMarkCardList() {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
-       // progressBar.setVisibility(View.VISIBLE);
+        //showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
             leafManager.getMarkCard2List(this, GroupDashboardActivityNew.groupId, team_id, selectedTest.offlineTestExamId);
         } else {
@@ -138,8 +138,9 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void getSubjectList() {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
-        // progressBar.setVisibility(View.VISIBLE);
+        // showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         leafManager.getOfflineTestList(this, GroupDashboardActivityNew.groupId, team_id);
     }
 
@@ -153,12 +154,17 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
         if (getActivity() == null)
             return;
 
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+        //  hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+
         switch (apiId) {
             case LeafManager.API_OFFLINE_TEST_LIST: {
                 OfflineTestRes res = (OfflineTestRes) response;
                 offLineTestList = res.data;
+                if(offLineTestList.size()==0)
+                {
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
+                }
                 String strSubject[] = new String[offLineTestList.size()];
                 for (int i = 0; i < offLineTestList.size(); i++) {
                     strSubject[i] = offLineTestList.get(i).title;
@@ -170,6 +176,12 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
             case LeafManager.API_MARK_CARD_LIST_2: {
                 MarkCardResponse2 resMarks = (MarkCardResponse2) response;
                 //resMarks.data
+
+
+                if(resMarks.data.size()==0)
+                {
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
+                }
                 if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
                     rvClass.setAdapter(new ClassesAdapter(resMarks.data));
                     rvClass.setVisibility(View.VISIBLE);
@@ -190,23 +202,23 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
                 break;
             }
-            case LeafManager.API_ADD_OBT_MARK:
-               // getSubjectList();
-                break;
         }
 
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
+
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder> {
@@ -289,20 +301,17 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
 
 
-
-            //marksAdapter.addItem(item.isEdit);
+            MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
+            holder.rvMarkCard.setAdapter(marksAdapter);
+            marksAdapter.addItem(item.isEdit);
 
             if (item.isEdit)
             {
-                MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
-                holder.rvMarkCard.setAdapter(marksAdapter);
                 marksAdapter.addItem(item.isEdit);
                 holder.btnAdd.setText(getResources().getString(R.string.lbl_save));
             }
             else
             {
-                MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
-                holder.rvMarkCard.setAdapter(marksAdapter);
                 marksAdapter.addItem(item.isEdit);
                 holder.btnAdd.setText(getResources().getString(R.string.lbl_edit));
             }
@@ -315,8 +324,6 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
                     if (!item.isEdit)
                     {
                         item.isEdit = true;
-                        MarksAdapter marksAdapter = new MarksAdapter(item.subjectMarksDetails);
-                        holder.rvMarkCard.setAdapter(marksAdapter);
                         marksAdapter.addItem(item.isEdit);
                         holder.btnAdd.setText(getResources().getString(R.string.lbl_save));
                     }
@@ -407,8 +414,8 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
     private void addMarksApi(MarkCardResponse2.MarkCardStudent item) {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
-       // progressBar.setVisibility(View.VISIBLE);
+        // showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         AddMarksReq req = new AddMarksReq();
         req.subjectMarksDetails = item.subjectMarksDetails;
         leafManager.addObtainMark(this, GroupDashboardActivityNew.groupId, team_id, item.offlineTestExamId, item.userId, req);

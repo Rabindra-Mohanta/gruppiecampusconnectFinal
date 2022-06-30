@@ -131,7 +131,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     private static final String TAG = "TeamPostsFragmentNew";
     private LayoutListTeamsBinding mBinding;
-    private
+
     TeamListAdapter mAdapter2;
     LeafManager manager = new LeafManager();
     String mGroupId = "";
@@ -519,8 +519,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_teams, container, false);
 
-        mBinding.setSize(0);
-        mBinding.setMessage(R.string.msg_no_post);
+        mBinding.setSize(1);
+        mBinding.setMessage(R.string.msg_no_data_found);
 
         ActiveAndroid.initialize(getActivity());
 
@@ -581,7 +581,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         } else {
             mBinding.setSize(0);
             hideLoadingBar();
-           // mBinding.progressBar2.setVisibility(View.GONE);
+
+            // mBinding.progressBar2.setVisibility(View.GONE);
         }
     }
 
@@ -630,7 +631,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         if (!isFromMain)
             return;
 
-     //   if (teamData.teamType.equalsIgnoreCase(Constants.TEAM_TYPE_CREATED) && teamData.enableGps) // remove this 9-3-22 (client change)
+        //   if (teamData.teamType.equalsIgnoreCase(Constants.TEAM_TYPE_CREATED) && teamData.enableGps) // remove this 9-3-22 (client change)
 
         if (teamData.enableGps)
         {
@@ -871,7 +872,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         });
         mBinding.swipeRefreshLayout2.setEnabled(false);
 
-    //    mBinding.swipeRefreshLayout2.setEnabled(false);
+        //    mBinding.swipeRefreshLayout2.setEnabled(false);
        /* mBinding.swipeRefreshLayout2.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -1129,6 +1130,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 TeamPostEventModelRes res = (TeamPostEventModelRes) response;
 
                 if(getActivity() != null)
+
                 {
                     if (getActivity().getClass().getSimpleName().equalsIgnoreCase("GroupDashboardActivityNew"))
                     {
@@ -1141,11 +1143,15 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             @Override
             public void onFailure(int apiId, String msg) {
                 AppLog.e(TAG, "onFailure : " + msg);
+
+
             }
 
             @Override
             public void onException(int apiId, String msg) {
                 AppLog.e(TAG, "onException : " + msg);
+
+
             }
         }, GroupDashboardActivityNew.groupId,team_id);
     }
@@ -1168,7 +1174,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
             if (GroupDashboardActivityNew.mGroupItem.canPost)
             {
-                 if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
+                if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
                     manager.getBooths(this, GroupDashboardActivityNew.groupId,"");
                 } else {
                     manager.myTeamList(this, GroupDashboardActivityNew.groupId);
@@ -1331,7 +1337,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             {
                 ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(teamData.name);
             }
-          //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText("Members : " + teamData.members);
+            //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText("Members : " + teamData.members);
         }
     }
 
@@ -1591,8 +1597,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             this.position = pos;
 
             //calling api in background
-        //    showLoadingBar(mBinding.progressBar2);
-      //      manager.setTeamLike(this, mGroupId + "", team_id, item.id);
+            //    showLoadingBar(mBinding.progressBar2);
+            //      manager.setTeamLike(this, mGroupId + "", team_id, item.id);
 
             LeafManager leafManager = new LeafManager();
             leafManager.setTeamLike(new LeafManager.OnCommunicationListener() {

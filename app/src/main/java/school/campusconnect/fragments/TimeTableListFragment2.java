@@ -75,16 +75,16 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
     }
 
     private void getList() {
-        showLoadingBar(progressBar);
-        // progressBar.setVisibility(View.VISIBLE);
+       // showLoadingBar(progressBar);
+         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getTTNew(this,GroupDashboardActivityNew.groupId,team_id);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         switch (apiId){
             case LeafManager.API_TT_REMOVE_DAY:
                 getList();
@@ -162,14 +162,16 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        //progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
 
@@ -323,8 +325,8 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 LeafManager leafManager=new LeafManager();
-                showLoadingBar(progressBar);
-                // progressBar.setVisibility(View.VISIBLE);
+                //showLoadingBar(progressBar);
+                 progressBar.setVisibility(View.VISIBLE);
                 leafManager.deleteTTNewByDay(TimeTableListFragment2.this,GroupDashboardActivityNew.groupId,team_id,item.day);
             }
         });
@@ -341,8 +343,8 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     LeafManager leafManager=new LeafManager();
-                    showLoadingBar(progressBar);
-                    // progressBar.setVisibility(View.VISIBLE);
+                   // showLoadingBar(progressBar);
+                     progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteTTNew(TimeTableListFragment2.this,GroupDashboardActivityNew.groupId,team_id);
                 }
             });

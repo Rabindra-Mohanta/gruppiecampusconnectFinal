@@ -227,7 +227,8 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
     @Override
     protected void onStart() {
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(binding.progressBar);
+        //showLoadingBar(binding.progressBar);
+        binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.getClassesOfStaff(this,GroupDashboardActivityNew.groupId,staffID);
         leafManager.getTodaySyllabusPlanList(this,GroupDashboardActivityNew.groupId,date);
         leafManager.getStaffAnalysis(this,GroupDashboardActivityNew.groupId,staffID);
@@ -237,7 +238,8 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        hideLoadingBar();
+      //  hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.API_CLASS_OF_STAFF)
         {
@@ -279,14 +281,16 @@ public class StaffClassListActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //  hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onFailure(apiId, msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //  hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onException(apiId, msg);
     }

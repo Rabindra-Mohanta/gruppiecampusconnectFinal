@@ -164,7 +164,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
     {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             mIsLoading = true;
             manager.getTimeTablePost(this, mGroupId+"", currentPage);
         }
@@ -216,7 +217,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_TIMETABLE_POST:
@@ -254,7 +256,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -277,7 +280,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -292,7 +296,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteTimeTablePost(this, mGroupId+"",currentItem.timeTableId);
 

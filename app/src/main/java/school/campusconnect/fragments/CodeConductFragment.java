@@ -184,6 +184,9 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
     private void getData() {
 
+        progressBar.setVisibility(View.VISIBLE);
+
+
         String re = LeafPreference.getInstance(getActivity()).getString(GroupDashboardActivityNew.groupId + "_coc");
 
         if (re != null && !TextUtils.isEmpty(re)) {
@@ -193,7 +196,7 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
             if (currentPage == 1) {
-            //    PostDataItem.deleteGeneralPosts(mGroupId + "");
+                //    PostDataItem.deleteGeneralPosts(mGroupId + "");
                 listData.clear();
 
                 listData.addAll(res.data);
@@ -205,7 +208,11 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             }
 
             if (listData.size() == 0)
+            {
+                progressBar.setVisibility(View.GONE);
                 txtEmpty.setVisibility(View.VISIBLE);
+            }
+
             else
                 txtEmpty.setVisibility(View.GONE);
 
@@ -224,7 +231,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
                 LeafPreference.getInstance(getContext()).setBoolean(mGroupId + "_rule_delete", false);
 
-                showLoadingBar(progressBar);
+                //showLoadingBar(progressBar);
+                //progressBar.setVisibility(View.VISIBLE);
                 mIsLoading = true;
                 manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
 
@@ -232,7 +240,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
             //initFirebase();
         } else {
             if (isConnectionAvailable()) {
-                showLoadingBar(progressBar);
+                //showLoadingBar(progressBar);
+                progressBar.setVisibility(View.VISIBLE);
                 mIsLoading = true;
                 manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
             } else {
@@ -246,7 +255,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
     private void getDataFromAPI() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             mIsLoading = true;
             manager.getCodeOfConductPost(this, mGroupId + "", currentPage);
         } else {
@@ -303,7 +313,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_CODE_CONDUCT_POST:
@@ -325,7 +336,10 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
                 }
 
                 if (listData.size() == 0)
+                {
+                    progressBar.setVisibility(View.GONE);
                     txtEmpty.setVisibility(View.VISIBLE);
+                }
                 else
                     txtEmpty.setVisibility(View.GONE);
 
@@ -348,7 +362,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -371,7 +386,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -385,7 +401,8 @@ public class CodeConductFragment extends BaseFragment implements LeafManager.OnC
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteCodeConduct(this, mGroupId + "", currentItem.cocId);
 

@@ -76,8 +76,8 @@ public class BusStudentActivity extends BaseActivity {
                 intent.putExtra("team_id",teamId);
                 startActivity(intent);
                 return true;
-             default:
-                 return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
