@@ -1,11 +1,15 @@
 package school.campusconnect.utils;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -70,6 +74,59 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
         return null;
     }
 
+   /* public static boolean isPdfDownloaded(Context context,String url) {
+        try {
+
+            if (!TextUtils.isEmpty(url)) {
+                url = Constants.decodeUrlToBase64(url);
+                String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                String fileName;
+                if (key.contains("/")) {
+                    String[] splitStr = key.split("/");
+
+                    fileName =  splitStr[1];
+                    //  file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
+                } else {
+                    fileName = key;
+                    // file = new File(getDirForMedia(""), key);
+                }
+
+                Log.e(TAG,"File Name"+fileName);
+                Uri collection = null;
+
+                collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+                String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DISPLAY_NAME,
+                        MediaStore.MediaColumns.RELATIVE_PATH};
+                String QUERY = MediaStore.Files.FileColumns.RELATIVE_PATH + " like ? and " +
+                        MediaStore.Files.FileColumns.DISPLAY_NAME + " like ?";
+
+                ContentResolver mContentResolver = context.getContentResolver();
+                Cursor cursor = mContentResolver.query(collection, PROJECTION, QUERY , new String[]{  Environment.DIRECTORY_DOCUMENTS+"/"+LeafApplication.getInstance().getResources().getString(R.string.app_name) , fileName}, null);
+
+                if (cursor != null) {
+
+                    Log.e(TAG, "cursor != null");
+
+                    Log.e(TAG, "Url"+collection);
+
+                    Log.e(TAG, "cursor count"+cursor.getCount());
+
+
+                    if (cursor.getCount() > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            AppLog.e(TAG,"Exception "+e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+*/
+
     public static boolean isPdfDownloaded(String url) {
         try {
             if (!TextUtils.isEmpty(url)) {
@@ -89,6 +146,8 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
         }
         return false;
     }
+
+
 
     public static void removeVideo(Context context, String fileName) {
         try {
@@ -160,6 +219,22 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                     input = connection.getInputStream();
                     output = new FileOutputStream(file);
 
+                   /* if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, file.getName());
+                        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+                        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS+"/"+LeafApplication.getInstance().getResources().getString(R.string.app_name));
+
+                        ContentResolver resolver = mContext.getContentResolver();
+                        Uri uriPath = resolver.insert(MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),contentValues);
+
+                        AppLog.e(TAG,"UrI SAVed PATH"+uriPath);
+
+                        output = resolver.openOutputStream(uriPath);
+
+                    }*/
+
                     byte data[] = new byte[4096];
                     long total = 0;
                     int count;
@@ -178,6 +253,7 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                         output.write(data, 0, count);
                     }
                 } catch (IOException e) {
+                    Log.e(TAG, "Exception : " + e.toString()+" "+url);
                     e.printStackTrace();
                 } finally {
                     try {
@@ -196,7 +272,7 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
 
 
         } catch (Exception e) {
-            Log.e(TAG, "Exception : " + e.toString());
+            Log.e(TAG, "Exception : " + e.toString()+" "+url);
             return e.getMessage();
         }
 

@@ -331,7 +331,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 if (item.fileName != null && item.fileName.size() > 0) {
                     if (!AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
-                        if(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID).equals(list.get(position).createdById)){
+                        /*    if(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID).equals(list.get(position).createdById)){
 
                             AmazoneImageDownload.download(mContext, list.get(position).fileName.get(0), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                                 @Override
@@ -371,7 +371,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                                     });
                                 }
                             });
-                        }
+                        }*/
                     } else {
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);
                     }

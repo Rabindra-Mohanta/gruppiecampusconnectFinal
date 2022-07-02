@@ -282,12 +282,12 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
         public void bind(final List<ItemImage> item, final int position, int mDisplay, int mTotal, final Context mContext) {
 
             Log.e(TAG, "bind image " + position + "is " + Constants.decodeUrlToBase64(item.get(position).getImagePath()));
-            if(AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())){
+            if(AmazoneImageDownload.isImageDownloaded(context,item.get(position).getImagePath())){
                 llProgress.setVisibility(View.GONE);
                 imgDownload.setVisibility(View.GONE);
 
-                Log.e(TAG, "AmazoneImageDownload image "  + AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath()).getAbsolutePath());
-                Glide.with(mContext).load(AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath())).diskCacheStrategy(DiskCacheStrategy.NONE)
+                Log.e(TAG, "AmazoneImageDownload image "  + AmazoneImageDownload.getDownloadPath(context,item.get(position).getImagePath()));
+                Glide.with(mContext).load(AmazoneImageDownload.getDownloadPath(context,item.get(position).getImagePath())).diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true).placeholder(R.drawable.placeholder_image).into(mImageView);
             }
             else {
