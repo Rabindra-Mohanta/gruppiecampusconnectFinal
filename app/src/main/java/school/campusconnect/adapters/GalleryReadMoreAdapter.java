@@ -274,6 +274,61 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                             asyncTask.cancel(true);
                         }
                     });
+
+
+
+                    if (!AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())) {
+
+                        imgDownload.setVisibility(View.GONE);
+                        llProgress.setVisibility(View.VISIBLE);
+                        progressBar1.setVisibility(View.VISIBLE);
+
+                        asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                            @Override
+                            public void onDownload(File file) {
+                                llProgress.setVisibility(View.GONE);
+                                progressBar.setVisibility(View.GONE);
+                                progressBar1.setVisibility(View.GONE);
+                                Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void error(String msg) {
+                                ((Activity)mContext).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        llProgress.setVisibility(View.GONE);
+                                        progressBar.setVisibility(View.GONE);
+                                        progressBar1.setVisibility(View.GONE);
+                                        Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void progressUpdate(int progress, int max) {
+                                ((Activity)mContext).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(progress>0){
+                                            progressBar1.setVisibility(View.GONE);
+                                        }
+                                        progressBar.setProgress(progress);
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }
               /*  Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
                     @Override

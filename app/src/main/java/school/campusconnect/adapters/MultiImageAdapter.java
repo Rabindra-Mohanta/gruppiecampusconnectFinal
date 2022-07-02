@@ -179,6 +179,63 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                     });
                 }
             }
+
+
+            if (item != null) {
+
+                if (!AmazoneImageDownload.isImageDownloaded(item)) {
+
+                    holder.imgDownload.setVisibility(View.GONE);
+                    holder.llProgress.setVisibility(View.VISIBLE);
+                    holder.progressBar1.setVisibility(View.VISIBLE);
+
+                    holder.asyncTask = AmazoneImageDownload.download(mContext, item, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                        @Override
+                        public void onDownload(File file) {
+                            holder.llProgress.setVisibility(View.GONE);
+                            holder.progressBar.setVisibility(View.GONE);
+                            holder.progressBar1.setVisibility(View.GONE);
+                            Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(holder.ivImage, new Callback() {
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void error(String msg) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    holder.llProgress.setVisibility(View.GONE);
+                                    holder.progressBar.setVisibility(View.GONE);
+                                    holder.progressBar1.setVisibility(View.GONE);
+                                    Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void progressUpdate(int progress, int max) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(progress>0){
+                                        holder.progressBar1.setVisibility(View.GONE);
+                                    }
+                                    holder.progressBar.setProgress(progress);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
         }
 
     }

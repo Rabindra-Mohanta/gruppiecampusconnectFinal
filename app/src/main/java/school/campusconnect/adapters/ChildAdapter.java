@@ -473,12 +473,14 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                     }
                 }
             });
-            if (userToken != null && item.get(position).getImagePath() != null && item.get(position).getImagePath().length() > 0) {
-                if (!AmazoneDownload.isPdfDownloaded(item.get(position).getImagePath())) {
-                    if(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID).equals(userToken)){
+
+            if (item.get(position).getImagePath() != null && item.get(position).getImagePath().length() > 0) {
+                if (!AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())) {
+
                         imgDownload.setVisibility(View.GONE);
                         llProgress.setVisibility(View.VISIBLE);
                         progressBar1.setVisibility(View.VISIBLE);
+
                         asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                             @Override
                             public void onDownload(File file) {
@@ -524,7 +526,6 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                                 });
                             }
                         });
-                    }
                 }
             }
             // textView.setText(String.valueOf(item.getPosition()));

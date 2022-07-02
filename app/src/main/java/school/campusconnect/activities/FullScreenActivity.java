@@ -143,6 +143,8 @@ public class FullScreenActivity extends BaseActivity {
         }
         else
         {
+
+
             {
                 String path = Constants.decodeUrlToBase64(image);
                 String newStr = path.substring(path.indexOf("/images")+1);
@@ -161,6 +163,8 @@ public class FullScreenActivity extends BaseActivity {
 
 
             }
+
+            downloadImage();
         }
 
 
