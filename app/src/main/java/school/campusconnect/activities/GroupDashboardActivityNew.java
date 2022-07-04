@@ -492,6 +492,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 dashboardCount.typeOfTeam = "DASHBOARD";
                 dashboardCount.oldCount = teamCount.dashboardTeamCount;
             }
+
             dashboardCount.lastNotificationAt = teamCount.lastNotificationAt;
             dashboardCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
             dashboardCount.count = teamCount.dashboardTeamCount;

@@ -50,8 +50,7 @@ public class MixOperations {
             date = inputFormat.parse(dt);
 
             Date now = Calendar.getInstance().getTime();
-           AppLog.e(TAG,"Now =>"+now.toString());
-           AppLog.e(TAG,"Date =>"+date.toString());
+
 
             long diff = now.getTime() - date.getTime();
             long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
@@ -109,13 +108,10 @@ public class MixOperations {
     }
     public static boolean isNewEvent(String eventAt, String inputPattern,long now)
     {
-
-
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
             inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             long eventAtMillisec = inputFormat.parse(eventAt).getTime();
-
 
             if(now<eventAtMillisec){
                 return true;
@@ -130,8 +126,7 @@ public class MixOperations {
 
     public static boolean isNewEvent(String eventAt, String inputPattern,String now)
     {
-        Log.e(TAG,"eventAt"+eventAt);
-        Log.e(TAG,"now"+now);
+
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
             inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -154,8 +149,7 @@ public class MixOperations {
     public static boolean isNewEventUpdate(String eventAt, String inputPattern,String now)
     {
 
-        Log.e(TAG,"eventAt "+eventAt);
-        Log.e(TAG,"now "+now);
+
 
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
@@ -163,8 +157,7 @@ public class MixOperations {
             long eventAtMillisec = inputFormat.parse(eventAt).getTime()/100;
             long nowMillis = inputFormat.parse(now).getTime()/100;
 
-            Log.e(TAG,"eventAtMillisec "+eventAtMillisec);
-            Log.e(TAG,"nowMillis "+nowMillis);
+
 
             if(nowMillis != eventAtMillisec)
             {
@@ -211,21 +204,21 @@ public class MixOperations {
     public static void deleteVideoFile(String filepath)
     {
 
-        AppLog.e(TAG , "deleteVideoFile called : "+filepath );
+
         if(filepath ==null)
         {
             return;
         }
 
         File file = new File(filepath);
-        AppLog.e(TAG, "file exists ? " +file.exists()+" , filepath : "+filepath);
+
 
         if (file.exists())
         {
             file.delete();
             // contentResolver.delete(filesUri, where, selectionArgs);
         }
-        AppLog.e(TAG, "file deleted ? " +!file.exists());
+
 
     }
 }

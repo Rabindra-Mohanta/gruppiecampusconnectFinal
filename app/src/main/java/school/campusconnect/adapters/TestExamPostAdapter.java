@@ -117,7 +117,7 @@ public class TestExamPostAdapter extends RecyclerView.Adapter<TestExamPostAdapte
 
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -149,7 +149,7 @@ public class TestExamPostAdapter extends RecyclerView.Adapter<TestExamPostAdapte
         if (canEdit) {
             holder.llMore.setVisibility(View.VISIBLE);
             if (item.fileName != null && item.fileName.size() > 0) {
-                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.fileName.get(0)))
                 {
                     holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
                     holder.viewDeleteVideo.setVisibility(View.VISIBLE);
@@ -159,7 +159,7 @@ public class TestExamPostAdapter extends RecyclerView.Adapter<TestExamPostAdapte
         } else {
             holder.llMore.setVisibility(View.GONE);
             if (item.fileName != null && item.fileName.size() > 0) {
-                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.fileName.get(0)))
                 {
                     holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
                     holder.viewDeleteVideo.setVisibility(View.VISIBLE);

@@ -492,7 +492,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
                 {
                     if (taskData.getFileType().equals(Constants.FILE_TYPE_AUDIO))
                     {
-                        if (AmazoneAudioDownload.isAudioDownloaded(taskData.getFileName().get(0))) {
+                        if (AmazoneAudioDownload.isAudioDownloaded(getApplicationContext(),taskData.getFileName().get(0))) {
                             imgDownloadAudio.setVisibility(View.GONE);
                             imgPlayAudio.setVisibility(View.VISIBLE);
                         } else {
@@ -810,7 +810,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
         if (isConnectionAvailable()) {
             asyncTask = AmazoneAudioDownload.download(this,taskData.getFileName().get(0) , new AmazoneAudioDownload.AmazoneDownloadSingleListener() {
                 @Override
-                public void onDownload(File file) {
+                public void onDownload(Uri file) {
                   llProgress.setVisibility(View.GONE);
                   imgPlayAudio.setVisibility(View.VISIBLE);
                 }
@@ -845,7 +845,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             {
                 mediaPlayer.stop();
                 mediaPlayer.reset();
-                mediaPlayer.setDataSource(Constants.decodeUrlToBase64(taskData.getFileName().get(0)));
+                mediaPlayer.setDataSource(AmazoneAudioDownload.getDownloadPath(getApplicationContext(),taskData.getFileName().get(0)).toString());
                 mediaPlayer.prepare();
                 mediaPlayer.start();
                 imgPlayAudio.setVisibility(View.GONE);
@@ -855,7 +855,7 @@ public class TicketDetailsActivity extends BaseActivity implements View.OnClickL
             }
             else
             {
-                mediaPlayer.setDataSource(Constants.decodeUrlToBase64(taskData.getFileName().get(0)));
+                mediaPlayer.setDataSource(AmazoneAudioDownload.getDownloadPath(getApplicationContext(),taskData.getFileName().get(0)).toString());
                 mediaPlayer.prepare();
                 mediaPlayer.start();
 

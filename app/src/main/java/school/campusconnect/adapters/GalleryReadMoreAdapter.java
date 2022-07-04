@@ -3,6 +3,8 @@ package school.campusconnect.adapters;
 import android.app.Activity;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,7 +173,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                 if(thumbnailImages!=null && thumbnailImages.size()>position){
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(thumbnailImages.get(position))).placeholder(R.drawable.video_place_holder).into(mImageView);
                 }
-                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.get(position).getImagePath())){
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.get(position).getImagePath())){
                     img_play.setVisibility(View.VISIBLE);
                     imgDownloadVideo.setVisibility(View.GONE);
                 }else {
@@ -180,10 +182,10 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                 }
             }else {
 
-                if(AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())){
+                if(AmazoneImageDownload.isImageDownloaded(context,item.get(position).getImagePath())){
                     llProgress.setVisibility(View.GONE);
                     imgDownload.setVisibility(View.GONE);
-                    Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item.get(position).getImagePath())).fit().placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                    Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(mContext,item.get(position).getImagePath())).fit().placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
                         @Override
                         public void onSuccess() {
 
@@ -218,7 +220,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                             progressBar1.setVisibility(View.VISIBLE);
                             asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                                 @Override
-                                public void onDownload(File file) {
+                                public void onDownload(Uri file) {
                                     llProgress.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
                                     progressBar1.setVisibility(View.GONE);
@@ -277,7 +279,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
 
 
 
-                    if (!AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())) {
+                    if (!AmazoneImageDownload.isImageDownloaded(context,item.get(position).getImagePath())) {
 
                         imgDownload.setVisibility(View.GONE);
                         llProgress.setVisibility(View.VISIBLE);
@@ -285,7 +287,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
 
                         asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                             @Override
-                            public void onDownload(File file) {
+                            public void onDownload(Uri file) {
                                 llProgress.setVisibility(View.GONE);
                                 progressBar.setVisibility(View.GONE);
                                 progressBar1.setVisibility(View.GONE);

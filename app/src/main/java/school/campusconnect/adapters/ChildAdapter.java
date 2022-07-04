@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -385,7 +386,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                         progressBar1.setVisibility(View.VISIBLE);
                         asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                             @Override
-                            public void onDownload(File file) {
+                            public void onDownload(Uri file) {
                                 llProgress.setVisibility(View.GONE);
                                 progressBar.setVisibility(View.GONE);
                                 progressBar1.setVisibility(View.GONE);
@@ -475,7 +476,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
             });
 
             if (item.get(position).getImagePath() != null && item.get(position).getImagePath().length() > 0) {
-                if (!AmazoneImageDownload.isImageDownloaded(item.get(position).getImagePath())) {
+                if (!AmazoneImageDownload.isImageDownloaded(context,item.get(position).getImagePath())) {
 
                         imgDownload.setVisibility(View.GONE);
                         llProgress.setVisibility(View.VISIBLE);
@@ -483,7 +484,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
 
                         asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                             @Override
-                            public void onDownload(File file) {
+                            public void onDownload(Uri file) {
                                 llProgress.setVisibility(View.GONE);
                                 progressBar.setVisibility(View.GONE);
                                 progressBar1.setVisibility(View.GONE);

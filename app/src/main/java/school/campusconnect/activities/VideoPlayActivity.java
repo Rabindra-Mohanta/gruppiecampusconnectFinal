@@ -76,7 +76,7 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
         progressBar1.setVisibility(View.VISIBLE);
         llProgress.setVisibility(View.VISIBLE);
 
-        if (new AmazoneVideoDownload(this).isVideoDownloaded(getIntent().getStringExtra("video")))
+        if (new AmazoneVideoDownload(this).isVideoDownloaded(getApplicationContext(),getIntent().getStringExtra("video")))
         {
             beforeDownload.setVisibility(View.GONE);
             afterDownload.setVisibility(View.VISIBLE);
@@ -107,7 +107,7 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
 
                 boolean isDownloaded = true;
 
-                if (!AmazoneVideoDownload.isVideoDownloaded((getIntent().getStringExtra("video"))))
+                if (!AmazoneVideoDownload.isVideoDownloaded(getApplicationContext(),getIntent().getStringExtra("video")))
                 {
                     isDownloaded = false;
                 }
@@ -115,11 +115,11 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
-                    files.add(AmazoneVideoDownload.getDownloadPath(getIntent().getStringExtra("video")));
+                    files.add(AmazoneVideoDownload.getDownloadPath(getApplicationContext(),getIntent().getStringExtra("video")));
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                    /*ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -130,11 +130,11 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
                         }
 
                     }
-
+*/
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("*/*");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -160,19 +160,22 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
     {
         asyncTask = AmazoneVideoDownload.download(this, getIntent().getStringExtra("video"), new AmazoneVideoDownload.AmazoneDownloadSingleListener() {
             @Override
-            public void onDownload(File file) {
+            public void onDownload(Uri file) {
                 llProgress.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
                 progressBar1.setVisibility(View.GONE);
 
-                AppLog.e(TAG, "filename : "+file.getAbsolutePath());
+                AppLog.e(TAG, "filename : "+file);
 
-                playerView.setVideoPath(file.getPath());
+                if (file != null)
+                {
+                    playerView.setVideoPath(file.toString());
+                }
 
                 AppLog.e(GroupDashboardActivityNew.class.getName(), "filename saved in preference : "+getIntent().getStringExtra("video"));
 
                 try {
-                    saveVideoNameOffline(getIntent().getStringExtra("video") , file.getPath());
+                    saveVideoNameOffline(getIntent().getStringExtra("video") , file.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

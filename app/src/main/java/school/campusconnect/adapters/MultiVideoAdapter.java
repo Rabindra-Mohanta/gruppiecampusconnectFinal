@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,7 +68,7 @@ public class MultiVideoAdapter extends RecyclerView.Adapter<MultiVideoAdapter.Im
         if(thumbnailImages!=null && thumbnailImages.size()>position){
             Picasso.with(mContext).load(Constants.decodeUrlToBase64(thumbnailImages.get(position))).placeholder(R.drawable.video_place_holder).into(holder.ivImage);
         }
-        if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item)){
+        if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item)){
             holder.img_play.setVisibility(View.VISIBLE);
             holder.imgDownloadVideo.setVisibility(View.GONE);
         }else {
@@ -84,7 +86,7 @@ public class MultiVideoAdapter extends RecyclerView.Adapter<MultiVideoAdapter.Im
 
                 asyncTask = AmazoneVideoDownload.download(mContext, item, new AmazoneVideoDownload.AmazoneDownloadSingleListener() {
                     @Override
-                    public void onDownload(File file) {
+                    public void onDownload(Uri file) {
                         holder.llProgress.setVisibility(View.GONE);
                         holder.progressBar.setVisibility(View.GONE);
                         holder.progressBar1.setVisibility(View.GONE);
@@ -94,7 +96,7 @@ public class MultiVideoAdapter extends RecyclerView.Adapter<MultiVideoAdapter.Im
                         AppLog.e(GroupDashboardActivityNew.class.getName(), "filename saved in preference : "+item);
 
                         try {
-                            saveVideoNameOffline(item , file.getPath());
+                            saveVideoNameOffline(item , file.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

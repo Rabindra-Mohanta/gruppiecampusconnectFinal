@@ -35,6 +35,7 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
     private AmazoneDownloadSingleListener listenerSignle;
     String url;
     File file;
+    Uri uri;
     Context context;
     private PowerManager.WakeLock mWakeLock;
 
@@ -120,7 +121,8 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }else
+        }
+        else
         {
             try {
                 if (!TextUtils.isEmpty(url)) {
@@ -280,6 +282,8 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 } else {
                     file = new File(getDirForMedia(""), key);
                 }
+
+
                 if (!file.exists()) {
                     InputStream input = null;
                     OutputStream output = null;
@@ -314,7 +318,10 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                               ContentResolver resolver = context.getContentResolver();
                               Uri uriPath = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
                               output = resolver.openOutputStream(uriPath);
+
+                              AppLog.e(TAG,"URL IMAGE SAVE "+uriPath);
                           }
+
 
                         byte data[] = new byte[4096];
                         long total = 0;
@@ -373,7 +380,7 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
         if (aVoid == null) {
             if (listenerSignle != null) {
 
-                listenerSignle.onDownload(file);
+                listenerSignle.onDownload(getDownloadPath(context,url));
             }
         } else {
             if (file != null) {
@@ -422,7 +429,7 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
     }
 
     public interface AmazoneDownloadSingleListener {
-        void onDownload(File file);
+        void onDownload(Uri file);
 
         void error(String msg);
 

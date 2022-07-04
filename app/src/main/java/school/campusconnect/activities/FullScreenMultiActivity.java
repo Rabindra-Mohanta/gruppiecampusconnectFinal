@@ -120,7 +120,7 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
 
                     for (int i = 0;i<listImages.size();i++)
                     {
-                        if (!AmazoneImageDownload.isImageDownloaded((listImages.get(i))))
+                        if (!AmazoneImageDownload.isImageDownloaded(getApplicationContext(),listImages.get(i)))
                         {
                             isDownloaded = false;
                         }
@@ -132,16 +132,16 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
                 {
                     if (isDownloaded)
                     {
-                        ArrayList<File> files =new ArrayList<>();
+                        ArrayList<Uri> files =new ArrayList<>();
 
                         for (int i = 0;i<listImages.size();i++)
                         {
 
-                            files.add(AmazoneImageDownload.getDownloadPath(listImages.get(i)));
+                            files.add(AmazoneImageDownload.getDownloadPath(getApplicationContext(),listImages.get(i)));
 
                         }
 
-                        ArrayList<Uri> uris = new ArrayList<>();
+                       /* ArrayList<Uri> uris = new ArrayList<>();
 
                         for(File file: files){
 
@@ -151,13 +151,13 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
                                 uris.add(Uri.fromFile(file));
                             }
 
-                        }
+                        }*/
 
 
                         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                         intent.setType("*/*");
                         intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                         startActivity(Intent.createChooser(intent, "Share File"));
                     }
                     else

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -305,7 +306,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.recyclerView.setVisibility(View.GONE);
 
-                if (AmazoneAudioDownload.isAudioDownloaded(item.fileName.get(0)))
+                if (AmazoneAudioDownload.isAudioDownloaded(mContext,item.fileName.get(0)))
                 {
                     holder.imgPlayAudio.setVisibility(View.VISIBLE);
                     holder.imgDownloadAudio.setVisibility(View.GONE);
@@ -329,7 +330,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (!AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (!AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                         /*    if(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID).equals(list.get(position).createdById)){
 
@@ -410,7 +411,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.imgPhoto.setVisibility(View.GONE);
                 holder.llAudio.setVisibility(View.GONE);
 
-                if(!AmazoneImageDownload.isImageDownloaded(item.fileName.get(0)))
+                if(!AmazoneImageDownload.isImageDownloaded(mContext,item.fileName.get(0)))
                     listener.callBirthdayPostCreation(item , position);
 
         }
@@ -448,7 +449,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
 
                         mediaPlayer.stop();
                         mediaPlayer.reset();
-                        mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
+                        mediaPlayer.setDataSource(AmazoneAudioDownload.getDownloadPath(mContext,item.fileName.get(0)).toString());
                         mediaPlayer.prepare();
                         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
@@ -483,7 +484,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                             mediaPlayer.reset();
                         }
 
-                        mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
+                        mediaPlayer.setDataSource(AmazoneAudioDownload.getDownloadPath(mContext,item.fileName.get(0)).toString());
                         mediaPlayer.prepare();
                         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
@@ -667,7 +668,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
 
         if (item.fileName != null && item.fileName.size() > 0) {
             holder.linExternalPush.setVisibility(View.VISIBLE);
-            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.fileName.get(0)))
             {
                 holder.txt_drop_deletevideo.setVisibility(View.GONE);
                 holder.viewDeleteVideo.setVisibility(View.GONE);
@@ -724,7 +725,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
         if (isConnectionAvailable()) {
             asyncTask = AmazoneAudioDownload.download(mContext, s, new AmazoneAudioDownload.AmazoneDownloadSingleListener() {
                 @Override
-                public void onDownload(File file) {
+                public void onDownload(Uri file) {
                     notifyItemChanged(holder.getAdapterPosition());
                 }
 

@@ -310,7 +310,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
 
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(getApplicationContext(),item.fileName.get(0))) {
                         imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -600,7 +600,7 @@ public class HWParentActivity extends BaseActivity implements LeafManager.OnAddU
 
                     }
                     if (item.fileName != null && item.fileName.size() > 0) {
-                        if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                        if (AmazoneDownload.isPdfDownloaded(getApplicationContext(),item.fileName.get(0))) {
                             holder.imgDownloadPdf.setVisibility(View.GONE);
                         } else {
                             holder.imgDownloadPdf.setVisibility(View.VISIBLE);

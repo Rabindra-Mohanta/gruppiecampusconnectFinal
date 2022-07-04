@@ -251,13 +251,22 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             if (dashboardCount != null) {
                 boolean apiCall = false;
                 if (dashboardCount.lastApiCalled != 0) {
+
+                    Log.e(TAG,"lastInsertedTeamTime "+dashboardCount.lastInsertedTeamTime);
+                    Log.e(TAG,"lastApiCalled "+dashboardCount.lastApiCalled);
                     if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
                         apiCall = true;
+
+                        Log.e(TAG,"isNewEvent "+apiCall);
+
                     }
                 }
                 if (dashboardCount.oldCount != dashboardCount.count) {
                     dashboardCount.oldCount = dashboardCount.count;
                     dashboardCount.save();
+
+                    Log.e(TAG,"oldCount "+apiCall);
+
                     apiCall = true;
                 }
 

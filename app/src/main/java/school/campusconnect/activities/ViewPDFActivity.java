@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +20,7 @@ import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,7 +34,12 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import school.campusconnect.R;
@@ -49,7 +56,6 @@ public class ViewPDFActivity extends BaseActivity {
     private String title = "";
     private String pdf = "";
     private String thumbnailPath = null;
-    ProgressBar progressBar;
     PDFView pdfView;
     TextView tvCurrentPage;
     FloatingActionButton fabButton;
@@ -62,6 +68,10 @@ public class ViewPDFActivity extends BaseActivity {
     ImageView iconShareExternal;
     ImageView thumbnail;
     AmazoneDownload asyncTask;
+
+    View llProgress;
+    ProgressBar progressBar;
+    ProgressBar progressBar1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +86,10 @@ public class ViewPDFActivity extends BaseActivity {
         thumbnail = (ImageView) findViewById(R.id.thumbnail);
         llAfterDownload = (RelativeLayout) findViewById(R.id.llAfterDownload);
         llBeforeDownload = (RelativeLayout) findViewById(R.id.llBeforeDownload);
+
+        llProgress = findViewById(R.id.llProgress);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar1 = findViewById(R.id.progressBar1);
 
         itemData = new ArrayList<>();
 
@@ -109,7 +123,7 @@ public class ViewPDFActivity extends BaseActivity {
             public void onClick(View v) {
                 boolean isDownloaded = true;
 
-                if (!AmazoneDownload.isPdfDownloaded(pdf))
+                if (!AmazoneDownload.isPdfDownloaded(getApplicationContext(),pdf))
                 {
                     isDownloaded = false;
                 }
@@ -117,11 +131,11 @@ public class ViewPDFActivity extends BaseActivity {
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
-                    files.add(AmazoneDownload.getDownloadPath(pdf));
+                    files.add(AmazoneDownload.getDownloadPath(getApplicationContext(),pdf));
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -131,12 +145,12 @@ public class ViewPDFActivity extends BaseActivity {
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("*/*");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -163,6 +177,7 @@ public class ViewPDFActivity extends BaseActivity {
 
 
 
+
            /* if (checkPermissionForWriteExternal()) {
                 download(pdf);
             } else {
@@ -170,11 +185,15 @@ public class ViewPDFActivity extends BaseActivity {
             }*/
         }
 
-        if (AmazoneDownload.isPdfDownloaded(pdf))
+        if (AmazoneDownload.isPdfDownloaded(getApplicationContext(),pdf))
         {
             llAfterDownload.setVisibility(View.VISIBLE);
             llBeforeDownload.setVisibility(View.GONE);
-            download(pdf);
+            llProgress.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            progressBar1.setVisibility(View.GONE);
+            showPdf(AmazoneDownload.getDownloadPath(getApplicationContext(),pdf));
+            //download(pdf);
         }
         else
         {
@@ -219,14 +238,12 @@ public class ViewPDFActivity extends BaseActivity {
     }
 
     private void download(String pdf) {
-        View llProgress = findViewById(R.id.llProgress);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
-        ProgressBar progressBar1 = findViewById(R.id.progressBar1);
         progressBar1.setVisibility(View.VISIBLE);
         llProgress.setVisibility(View.VISIBLE);
+
         asyncTask = AmazoneDownload.download(this,pdf, new AmazoneDownload.AmazoneDownloadSingleListener() {
             @Override
-            public void onDownload(File file) {
+            public void onDownload(Uri file) {
                 llProgress.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
                 progressBar1.setVisibility(View.GONE);
@@ -279,6 +296,24 @@ public class ViewPDFActivity extends BaseActivity {
             }
         };
         pdfView.fromFile(file)
+                .autoSpacing(true)
+                .onPageChange(listener)
+                .load();
+    }
+
+    private void showPdf(Uri file) {
+        OnPageChangeListener listener= new OnPageChangeListener() {
+            @Override
+            public void onPageChanged(int page, int pageCount) {
+                tvCurrentPage.setText((page+1)+"/"+pageCount);
+                ViewPDFActivity.this.currentPage = page;
+                ViewPDFActivity.this.totalCount = pageCount;
+            }
+        };
+
+        AppLog.e("PDF","file url "+file);
+
+        pdfView.fromUri(file)
                 .autoSpacing(true)
                 .onPageChange(listener)
                 .load();
