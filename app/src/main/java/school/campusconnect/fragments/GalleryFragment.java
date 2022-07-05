@@ -125,7 +125,6 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
             totalPages = Integer.parseInt(LeafPreference.getInstance(getContext()).getString("GalleryTotalPage"));
         }
 
-
         scrollListener();
 
         checkEvent();
@@ -140,7 +139,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
         if (GalleryTable.getLastPost().size() > 0)
         {
-            Log.e(TAG,"updatedAt"+GalleryTable.getLastPost().get(0).updatedAt);
+            Log.e(TAG,"updatedAt "+GalleryTable.getLastPost().get(0).updatedAt);
+            Log.e(TAG,"isNewEventUpdate "+LeafPreference.getInstance(getContext()).getString("GALLERY_POST"));
             if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("GALLERY_POST"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",GalleryTable.getLastPost().get(0)._now)) {
                 GalleryTable.deleteGallery();
                 getData();

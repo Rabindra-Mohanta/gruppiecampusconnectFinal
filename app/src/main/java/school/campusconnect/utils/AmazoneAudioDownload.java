@@ -262,7 +262,9 @@ public class AmazoneAudioDownload extends AsyncTask<Void,Integer,String> {
                 } else {
                     file = new File(getDirForMedia(""), key);
                 }
-                if (!file.exists()) {
+
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                     InputStream input = null;
                     OutputStream output = null;
                     HttpURLConnection connection = null;
@@ -287,18 +289,15 @@ public class AmazoneAudioDownload extends AsyncTask<Void,Integer,String> {
                         input = connection.getInputStream();
                         output = new FileOutputStream(file);
 
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                            ContentValues contentValues = new ContentValues();
-                            contentValues.put(MediaStore.Audio.AudioColumns.DISPLAY_NAME, file.getName());
-                            contentValues.put(MediaStore.Audio.AudioColumns.MIME_TYPE, "audio/*");
-                            contentValues.put(MediaStore.Audio.Media.RELATIVE_PATH, Environment.DIRECTORY_MUSIC+"/"+LeafApplication.getInstance().getResources().getString(R.string.app_name));
-                            ContentResolver resolver = context.getContentResolver();
-                            Uri uriPath = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,contentValues);
-                            output = resolver.openOutputStream(uriPath);
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(MediaStore.Audio.AudioColumns.DISPLAY_NAME, file.getName());
+                        contentValues.put(MediaStore.Audio.AudioColumns.MIME_TYPE, "audio/*");
+                        contentValues.put(MediaStore.Audio.Media.RELATIVE_PATH, Environment.DIRECTORY_MUSIC+"/"+LeafApplication.getInstance().getResources().getString(R.string.app_name));
+                        ContentResolver resolver = context.getContentResolver();
+                        Uri uriPath = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,contentValues);
+                        output = resolver.openOutputStream(uriPath);
 
-                            AppLog.e(TAG,"URL AUDIO SAVE "+uriPath);
-                        }
-
+                        AppLog.e(TAG,"URL AUDIO SAVE "+uriPath);
 
                         byte data[] = new byte[4096];
                         long total = 0;
@@ -332,6 +331,68 @@ public class AmazoneAudioDownload extends AsyncTask<Void,Integer,String> {
                             connection.disconnect();
                     }
                 }
+                else
+                {
+                    if (!file.exists()) {
+                        InputStream input = null;
+                        OutputStream output = null;
+                        HttpURLConnection connection = null;
+                        try {
+                            URL u = new URL(url);
+                            connection = (HttpURLConnection) u.openConnection();
+                            connection.connect();
+
+                            // expect HTTP 200 OK, so we don't mistakenly save error report
+                            // instead of the file
+                            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                                return "Server returned HTTP " + connection.getResponseCode()
+                                        + " " + connection.getResponseMessage();
+                            }
+
+
+                            // this will be useful to display download percentage
+                            // might be -1: server did not report the length
+                            int fileLength = connection.getContentLength();
+
+                            // download the file
+                            input = connection.getInputStream();
+                            output = new FileOutputStream(file);
+
+
+                            byte data[] = new byte[4096];
+                            long total = 0;
+                            int count;
+                            while ((count = input.read(data)) != -1) {
+                                // allow canceling with back button
+                                if (isCancelled()) {
+                                    input.close();
+                                    return "Cancel Download";
+                                }
+                                total += count;
+                                // publishing the progress....
+                                if (fileLength > 0) // only if total length is known
+                                    publishProgress((int) (total * 100 / fileLength));
+                                output.write(data, 0, count);
+                            }
+                        } catch (Exception e) {
+                            AppLog.e(TAG,"Exception"+e.getMessage());
+                            return e.getMessage();
+                        } finally {
+                            try {
+                                if (output != null)
+                                    output.close();
+                                if (input != null)
+                                    input.close();
+                            } catch (IOException ignored) {
+                                AppLog.e(TAG,"Exception"+ignored.getMessage());
+                            }
+
+                            if (connection != null)
+                                connection.disconnect();
+                        }
+                    }
+                }
+
             }
         } catch (Exception e) {
             Log.e(TAG, "Exception : " + e.toString());

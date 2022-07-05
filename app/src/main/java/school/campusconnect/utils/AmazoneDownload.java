@@ -307,7 +307,8 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
             } else {
                 file = new File(getDirForMedia(""), key);
             }
-            if (!file.exists()) {
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                 InputStream input = null;
                 OutputStream output = null;
                 HttpURLConnection connection = null;
@@ -332,21 +333,17 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                     output = new FileOutputStream(file);
 
 
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, file.getName());
+                    contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+                    contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS+"/"+LeafApplication.getInstance().getResources().getString(R.string.app_name));
 
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, file.getName());
-                        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
-                        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS+"/"+LeafApplication.getInstance().getResources().getString(R.string.app_name));
+                    ContentResolver resolver = mContext.getContentResolver();
+                    Uri uriPath = resolver.insert(MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL),contentValues);
 
-                        ContentResolver resolver = mContext.getContentResolver();
-                        Uri uriPath = resolver.insert(MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL),contentValues);
+                    AppLog.e(TAG,"UrI SAVed PATH"+uriPath);
 
-                        AppLog.e(TAG,"UrI SAVed PATH"+uriPath);
-
-                        output = resolver.openOutputStream(uriPath);
-
-                    }
+                    output = resolver.openOutputStream(uriPath);
 
                     byte data[] = new byte[4096];
                     long total = 0;
@@ -381,6 +378,70 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                         connection.disconnect();
                 }
             }
+            else
+            {
+                if (!file.exists()) {
+                    InputStream input = null;
+                    OutputStream output = null;
+                    HttpURLConnection connection = null;
+                    try {
+                        URL u = new URL(url);
+                        connection = (HttpURLConnection) u.openConnection();
+                        connection.connect();
+
+                        // expect HTTP 200 OK, so we don't mistakenly save error report
+                        // instead of the file
+                        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                            return "Server returned HTTP " + connection.getResponseCode()
+                                    + " " + connection.getResponseMessage();
+                        }
+
+                        // this will be useful to display download percentage
+                        // might be -1: server did not report the length
+                        int fileLength = connection.getContentLength();
+
+                        // download the file
+                        input = connection.getInputStream();
+                        output = new FileOutputStream(file);
+
+
+
+
+                        byte data[] = new byte[4096];
+                        long total = 0;
+                        int count;
+                        while ((count = input.read(data)) != -1) {
+                            // allow canceling with back button
+                            if (isCancelled()) {
+                                input.close();
+                                AppLog.e(TAG, "Is Cancelled:::::: ");
+                                file.delete();
+                                return "Cancel Download";
+                            }
+                            total += count;
+                            // publishing the progress....
+                            if (fileLength > 0) // only if total length is known
+                                publishProgress((int) (total * 100 / fileLength));
+                            output.write(data, 0, count);
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "Exception : " + e.toString()+" "+url);
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if (output != null)
+                                output.close();
+                            if (input != null)
+                                input.close();
+                        } catch (IOException ignored) {
+                        }
+
+                        if (connection != null)
+                            connection.disconnect();
+                    }
+                }
+            }
+
 
 
 

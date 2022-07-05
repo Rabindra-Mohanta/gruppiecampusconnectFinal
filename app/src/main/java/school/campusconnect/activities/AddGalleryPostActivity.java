@@ -376,8 +376,12 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 //                    compressVideo(request, 0);
 //                    new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     startService();
-                } else if (listImages.size() > 0) {
+
+                }
+                else if (listImages.size() > 0) {
                     request.fileType = Constants.FILE_TYPE_IMAGE;
+                    progressDialog.setMessage("Uploading Image...");
+                    progressDialog.show();
                     uploadToAmazone(request);
                 } /*else {
                     Log.e(TAG, "send data " + new Gson().toJson(request));
@@ -677,8 +681,15 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                         float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
                         int percentDone = (int) percentDonef;
+
                         if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                            progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                            progressDialog.setMessage("Uploading Video " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        } else if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        }else if (Constants.FILE_TYPE_AUDIO.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Audio " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
                         }
                         AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
                                 + " bytesTotal: " + bytesTotal + " " + percentDone + "%");

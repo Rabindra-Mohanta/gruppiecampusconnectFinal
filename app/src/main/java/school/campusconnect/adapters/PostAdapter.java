@@ -398,6 +398,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 if (item.fileName != null) {
 
                     ChildAdapter adapter;
+
                     if (item.fileName.size() == 3) {
                         adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
                     } else {
