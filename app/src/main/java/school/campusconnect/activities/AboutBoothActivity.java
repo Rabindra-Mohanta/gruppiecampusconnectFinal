@@ -1,12 +1,7 @@
 package school.campusconnect.activities;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
-
 import android.os.Bundle;
-import android.util.Log;
-
 import com.google.gson.Gson;
 
 import butterknife.Bind;
@@ -15,7 +10,6 @@ import school.campusconnect.R;
 import school.campusconnect.databinding.ActivityAboutBoothBinding;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.utils.AppLog;
-import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.UploadCircleImageFragment;
 
 public class AboutBoothActivity extends BaseActivity {

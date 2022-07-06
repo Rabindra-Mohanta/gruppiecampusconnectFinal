@@ -169,6 +169,7 @@ public class UploadImageFragment extends BaseUploadImageFragment implements View
             } else {
                 setImageFromString(url);
             }
+
             imgPlus.setVisibility(View.GONE);
             //imgPlusLayout.setVisibility(View.GONE);
         } else {

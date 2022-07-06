@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <data>
+
+        <variable
+            name="myStudent"
+            type="school.campusconnect.AddClassViewModel" />
+    </data>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.BasicInfoFragment">
+
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/picLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_15dp">
+
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_name"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:text="@={myStudent.studentDataMutableLiveData.name}"
+                android:id="@+id/etName"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:inputType="textPersonName|textCapWords" />
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_country"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:visibility="visible" />
+
+            <EditText
+               android:text="India"
+                android:id="@+id/etCountry"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:focusable="false"
+                android:inputType="text"
+                android:visibility="visible" />
+
+
+            <TextView
+                android:id="@+id/labelPhone"
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_phone"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+
+                android:text="@={myStudent.studentDataMutableLiveData.phone}"
+                android:id="@+id/etPhone"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:inputType="phone" />
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_sats_no"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:text="@={myStudent.studentDataMutableLiveData.satsNo}"
+                android:id="@+id/etSatsNo"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:inputType="text" />
+
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_admition_number"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+
+            <EditText
+                android:text="@={myStudent.studentDataMutableLiveData.admissionNumber}"
+                android:id="@+id/etAdmissionNumber"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:inputType="text" />
+
+
+
+
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_roll_number"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:text="@={myStudent.studentDataMutableLiveData.rollNumber}"
+                android:id="@+id/etRollNo"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:inputType="text" />
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_dob"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:text="@={myStudent.studentDataMutableLiveData.dob}"
+                android:id="@+id/etdob"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:focusable="false"
+                android:inputType="text" />
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_doj"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:text="@={myStudent.studentDataMutableLiveData.doj}"
+                android:id="@+id/etdoj"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:focusable="false"
+                android:inputType="text" />
+
+
+            <!--            this is logic for using  image in liveData-->
+            <!--            so plz dont touch it this is because in image we cant setLiveData-->
+
+
+            <TextView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@={myStudent.studentDataMutableLiveData.image}"
+                android:visibility="gone" />
+
+
+            <Button
+                android:id="@+id/btnUpdate"
+                style="@style/AddPostButton"
+                android:layout_width="@dimen/login_button_width"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_20dp"
+                android:text="@string/lbl_update" />
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
+
+
+</layout>

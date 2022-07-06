@@ -27,23 +27,23 @@ android {
 
                 // [COPY]
 
-          /*      applicationId "school.campusconnect"
+                applicationId "school.campusconnect"
                 versionCode 13
                 versionName "1.4"
                 resValue "string", "app_name", '"GC2"'
                 buildConfigField("String", "AppName", '"GC2"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')*/
+                buildConfigField("String", "APP_ID",  '"school"')
 
 
                 // [ 1. Gruppie Campus ]
-                applicationId "school.campusconnect"
+           /*     applicationId "school.campusconnect"
                 versionCode 13
                 versionName "1.4"
                 resValue "string", "app_name", '"Gruppie Campus"'
                 buildConfigField("String", "AppName", '"Gruppie Campus"')
                 buildConfigField("String", "AppCategory", '"CAMPUS"')
-                buildConfigField("String", "APP_ID",  '"school"')
+                buildConfigField("String", "APP_ID",  '"school"')*/
 
 
               /*  applicationId "mahantesh.gruppie"
@@ -365,6 +365,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     annotationProcessor 'com.jakewharton:butterknife:7.0.1'
     implementation 'com.jakewharton:butterknife:7.0.1'
+//    implementation 'com.jakewharton:butterknife:10.2.3'
+//    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -492,7 +494,13 @@ dependencies {
     //graph
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     //file picker
+
     implementation 'com.github.noelchew:storage-chooser:2.0.4.4a'
+    // live data and ViewModel
+    def lifecycle_version = "2.2.0"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
 }
 apply plugin: 'com.google.gms.google-services'

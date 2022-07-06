@@ -903,3 +903,6 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }
+
+
+

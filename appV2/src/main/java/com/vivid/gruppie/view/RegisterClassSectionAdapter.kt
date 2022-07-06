@@ -1,8 +1,6 @@
 package com.vivid.gruppie.view
 
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +16,7 @@ import java.util.ArrayList
 
 class RegisterClassSectionAdapter(
     val items: ArrayList<ClassItem>, val callback: RegisterCallback
-    ) : RecyclerView.Adapter<RegisterClassSectionViewHolder>() {
+) : RecyclerView.Adapter<RegisterClassSectionViewHolder>() {
 
     override fun getItemCount() = items.size
 
@@ -55,9 +53,9 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
                     binding.etSections4Data.setText("0")
                     binding.etSections4Data.setText("0")
 
-               //     binding.etSections3.setText("")
-                /*    binding.etSections4.setText("")
-                    binding.etSections5.setText("")*/
+                    //     binding.etSections3.setText("")
+                    /*    binding.etSections4.setText("")
+                        binding.etSections5.setText("")*/
                 }
                 callback.onCheckBoxChanged(it, isChecked)
             }
@@ -142,7 +140,6 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
                 }
             }
         })
-
         binding.etSections2.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -156,16 +153,12 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
                 }
             }
         })
-
         binding.etSections3Data.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {
-
-
                 val text = binding.tvClassName3.text.toString()
                 val inputCount = binding.etSections3Data.text.toString()
-
                 Log.e("RegisterClass","MSg $inputCount")
                 if (!inputCount.isNullOrEmpty()) {
                     callback.onCountChanged(text , inputCount.toInt())
@@ -174,7 +167,6 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
                 }
             }
         })
-
         binding.etSections4.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -188,7 +180,6 @@ class RegisterClassSectionViewHolder(private val binding: RegListItemClassesBind
                 }
             }
         })
-
         binding.etSections5.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
