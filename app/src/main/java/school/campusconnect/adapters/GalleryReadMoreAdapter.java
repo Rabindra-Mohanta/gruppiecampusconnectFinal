@@ -15,7 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -27,7 +30,9 @@ import school.campusconnect.Assymetric.AsymmetricItem;
 import school.campusconnect.Assymetric.multiimages.ItemImage;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
 import school.campusconnect.datamodel.gallery.GalleryPostRes;
+import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.Constants;
@@ -182,25 +187,26 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                 }
             }else {
 
-                if(AmazoneImageDownload.isImageDownloaded(context,item.get(position).getImagePath())){
-                    llProgress.setVisibility(View.GONE);
-                    imgDownload.setVisibility(View.GONE);
-                    Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(mContext,item.get(position).getImagePath())).fit().placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
 
-                        }
+                String key =  Constants.decodeUrlToBase64(item.get(position).getImagePath()).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                String Filepath;
 
-                        @Override
-                        public void onError() {
-                            Log.e("Picasso", "Error : ");
-                        }
-                    });
+                if (key.contains("/")) {
+                    String[] splitStr = key.split("/");
+                    Filepath = splitStr[1];
+                } else {
+                    Filepath = key;
                 }
-                else {
-                    String path = Constants.decodeUrlToBase64(item.get(position).getImagePath());
-                    String newStr = path.substring(path.indexOf("/images")+1);
-                    Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+
+                if (ImagePathTBL.getLastInserted(Filepath).size() > 0)
+                {
+                    String uri = ImagePathTBL.getLastInserted(Filepath).get(0).url;
+
+
+
+                    Picasso picasso = Picasso.with(context);
+
+                    picasso.load(new File(uri)).placeholder(R.drawable.placeholder_image).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageView, new Callback() {
                         @Override
                         public void onSuccess() {
 
@@ -208,16 +214,164 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
 
                         @Override
                         public void onError() {
-                            Log.e("Picasso", "Error : ");
+
+
+
+                            if (!AmazoneImageDownload.isImageDownloaded(context,item.get(position).getImagePath()))
+                            {
+                                asyncTask = AmazoneImageDownload.download(context, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                                    @Override
+                                    public void onDownload(Uri file) {
+                                        llProgress.setVisibility(View.GONE);
+                                        progressBar.setVisibility(View.GONE);
+                                        progressBar1.setVisibility(View.GONE);
+
+
+                                        Glide.with(context).load(file).placeholder(R.drawable.placeholder_image).into(mImageView);
+                                    }
+
+                                    @Override
+                                    public void error(String msg) {
+
+                                        ((Activity)mContext).runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                llProgress.setVisibility(View.GONE);
+                                                progressBar.setVisibility(View.GONE);
+                                                progressBar1.setVisibility(View.GONE);
+                                                Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void progressUpdate(int progress, int max) {
+                                        ((Activity)mContext).runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if(progress>0){
+                                                    progressBar1.setVisibility(View.GONE);
+                                                }
+                                                progressBar.setProgress(progress);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                Glide.with(context).load(AmazoneImageDownload.getDownloadPath(context,item.get(position).getImagePath())).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .placeholder(R.drawable.placeholder_image).into(mImageView);
+                            }
                         }
                     });
-                    imgDownload.setVisibility(View.VISIBLE);
-                    imgDownload.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+
+                }
+                else
+                {
+                    if(AmazoneImageDownload.isImageDownloaded(context,item.get(position).getImagePath())){
+                        llProgress.setVisibility(View.GONE);
+                        imgDownload.setVisibility(View.GONE);
+                        Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(mContext,item.get(position).getImagePath())).fit().placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+                                Log.e("Picasso", "Error : ");
+                            }
+                        });
+                    }
+                    else {
+                        String path = Constants.decodeUrlToBase64(item.get(position).getImagePath());
+                        String newStr = path.substring(path.indexOf("/images")+1);
+                        Picasso.with(mContext).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+                                Log.e("Picasso", "Error : ");
+                            }
+                        });
+                        imgDownload.setVisibility(View.VISIBLE);
+                        imgDownload.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imgDownload.setVisibility(View.GONE);
+                                llProgress.setVisibility(View.VISIBLE);
+                                progressBar1.setVisibility(View.VISIBLE);
+                                asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                                    @Override
+                                    public void onDownload(Uri file) {
+                                        llProgress.setVisibility(View.GONE);
+                                        progressBar.setVisibility(View.GONE);
+                                        progressBar1.setVisibility(View.GONE);
+                                        Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                Log.e("Picasso", "Error : ");
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void error(String msg) {
+                                        ((Activity)mContext).runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                llProgress.setVisibility(View.GONE);
+                                                progressBar.setVisibility(View.GONE);
+                                                progressBar1.setVisibility(View.GONE);
+                                                Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void progressUpdate(int progress, int max) {
+                                        ((Activity)mContext).runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if(progress>0){
+                                                    progressBar1.setVisibility(View.GONE);
+                                                }
+                                                progressBar.setProgress(progress);
+                                            }
+                                        });
+                                    }
+                                });
+
+
+                            }
+                        });
+                        imgCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imgDownload.setVisibility(View.VISIBLE);
+                                llProgress.setVisibility(View.GONE);
+                                progressBar1.setVisibility(View.GONE);
+                                asyncTask.cancel(true);
+                            }
+                        });
+
+
+
+
+
                             imgDownload.setVisibility(View.GONE);
                             llProgress.setVisibility(View.VISIBLE);
                             progressBar1.setVisibility(View.VISIBLE);
+
                             asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                                 @Override
                                 public void onDownload(Uri file) {
@@ -232,7 +386,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
 
                                         @Override
                                         public void onError() {
-                                            Log.e("Picasso", "Error : ");
+
                                         }
                                     });
                                 }
@@ -263,86 +417,10 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                                     });
                                 }
                             });
-
-
-                        }
-                    });
-                    imgCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            imgDownload.setVisibility(View.VISIBLE);
-                            llProgress.setVisibility(View.GONE);
-                            progressBar1.setVisibility(View.GONE);
-                            asyncTask.cancel(true);
-                        }
-                    });
-
-
-
-                    if (!AmazoneImageDownload.isImageDownloaded(context,item.get(position).getImagePath())) {
-
-                        imgDownload.setVisibility(View.GONE);
-                        llProgress.setVisibility(View.VISIBLE);
-                        progressBar1.setVisibility(View.VISIBLE);
-
-                        asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
-                            @Override
-                            public void onDownload(Uri file) {
-                                llProgress.setVisibility(View.GONE);
-                                progressBar.setVisibility(View.GONE);
-                                progressBar1.setVisibility(View.GONE);
-                                Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
-                                    @Override
-                                    public void onSuccess() {
-
-                                    }
-
-                                    @Override
-                                    public void onError() {
-
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void error(String msg) {
-                                ((Activity)mContext).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        llProgress.setVisibility(View.GONE);
-                                        progressBar.setVisibility(View.GONE);
-                                        progressBar1.setVisibility(View.GONE);
-                                        Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void progressUpdate(int progress, int max) {
-                                ((Activity)mContext).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(progress>0){
-                                            progressBar1.setVisibility(View.GONE);
-                                        }
-                                        progressBar.setProgress(progress);
-                                    }
-                                });
-                            }
-                        });
                     }
                 }
-              /*  Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.get(position).getImagePath())).placeholder(R.drawable.placeholder_image).into(mImageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
 
-                    }
 
-                    @Override
-                    public void onError() {
-                        Log.e("Picasso", "Error : ");
-                    }
-                });*/
             }
 
 

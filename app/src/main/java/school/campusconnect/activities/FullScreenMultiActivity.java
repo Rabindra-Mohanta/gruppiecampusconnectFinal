@@ -23,7 +23,9 @@ import butterknife.ButterKnife;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.adapters.MultiImageAdapter;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
@@ -113,35 +115,60 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
             @Override
             public void onClick(View v) {
 
+
+
+
                 boolean isDownloaded = true;
 
                 if (listImages.size()> 0)
                 {
 
+
                     for (int i = 0;i<listImages.size();i++)
                     {
-                        if (!AmazoneImageDownload.isImageDownloaded(getApplicationContext(),listImages.get(i)))
+
+                        String key =  Constants.decodeUrlToBase64(listImages.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
+
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
                         {
                             isDownloaded = false;
                         }
-                    }
-                }
 
+                    }
+
+                }
 
                 if (listImages != null && listImages.size() > 0)
                 {
                     if (isDownloaded)
                     {
-                        ArrayList<Uri> files =new ArrayList<>();
+                        ArrayList<File> files =new ArrayList<>();
 
                         for (int i = 0;i<listImages.size();i++)
                         {
+                            String key =  Constants.decodeUrlToBase64(listImages.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                            String Filepath;
 
-                            files.add(AmazoneImageDownload.getDownloadPath(getApplicationContext(),listImages.get(i)));
+                            if (key.contains("/")) {
+                                String[] splitStr = key.split("/");
+                                Filepath = splitStr[1];
+                            } else {
+                                Filepath = key;
+                            }
+
+                            files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
 
                         }
 
-                       /* ArrayList<Uri> uris = new ArrayList<>();
+                        ArrayList<Uri> uris = new ArrayList<>();
 
                         for(File file: files){
 
@@ -151,13 +178,12 @@ public class FullScreenMultiActivity extends BaseActivity implements MultiImageA
                                 uris.add(Uri.fromFile(file));
                             }
 
-                        }*/
-
+                        }
 
                         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                         intent.setType("*/*");
                         intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                         startActivity(Intent.createChooser(intent, "Share File"));
                     }
                     else

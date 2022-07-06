@@ -80,7 +80,14 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
         {
             beforeDownload.setVisibility(View.GONE);
             afterDownload.setVisibility(View.VISIBLE);
-            startProcess();
+
+            llProgress.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            progressBar1.setVisibility(View.GONE);
+
+            playerView.setVideoPath(new AmazoneVideoDownload(this).getDownloadPath(getApplicationContext(),getIntent().getStringExtra("video")).toString());
+
+           // startProcess();
         }
         else
         {
@@ -88,7 +95,6 @@ public class VideoPlayActivity extends AppCompatActivity implements OnPreparedLi
             afterDownload.setVisibility(View.GONE);
             thumbnailPath = getIntent().getStringExtra("thumbnail");
             Log.e(TAG,"thumbnailPath"+thumbnailPath);
-
             Glide.with(this).load(Constants.decodeUrlToBase64(thumbnailPath)).into(thumbnail);
         }
 

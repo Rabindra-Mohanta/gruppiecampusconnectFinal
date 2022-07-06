@@ -17,6 +17,8 @@ import androidx.core.content.FileProvider;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
+import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AppLog;
 
@@ -29,7 +31,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -86,7 +91,8 @@ public class FullScreenActivity extends BaseActivity {
 
     String imagePreviewUrl = "";
     AmazoneImageDownload asyncTask;
-
+    String key;
+    String Filepath;
     private String album_id = "",type = "";
     private boolean isEdit = false;
     @Override
@@ -126,10 +132,27 @@ public class FullScreenActivity extends BaseActivity {
         imagePreviewUrl = LeafPreference.getInstance(this).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
       //  Picasso.with(this).load(image).into(ivImage);
 
-        if(AmazoneImageDownload.isImageDownloaded(getApplicationContext(),image)){
-            llProgress.setVisibility(View.GONE);
-            ivDownload.setVisibility(View.GONE);
-            Picasso.with(this).load(AmazoneImageDownload.getDownloadPath(getApplicationContext(),image)).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
+
+        key =  Constants.decodeUrlToBase64(image).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+
+
+        if (key.contains("/")) {
+            String[] splitStr = key.split("/");
+            Filepath = splitStr[1];
+        } else {
+            Filepath = key;
+        }
+        Log.e(TAG, "IMAGE PATH TBL SIZE " + Filepath );
+
+        if (ImagePathTBL.getLastInserted(Filepath).size() > 0)
+        {
+            String uri = ImagePathTBL.getLastInserted(Filepath).get(0).url;
+
+            Log.e(TAG, "IMAGE PATH " + uri );
+
+            Picasso picasso = Picasso.with(getApplicationContext());
+
+            picasso.load(new File(uri)).placeholder(R.drawable.placeholder_image).memoryPolicy(MemoryPolicy.NO_CACHE).into(ivImage, new Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -137,18 +160,27 @@ public class FullScreenActivity extends BaseActivity {
 
                 @Override
                 public void onError() {
-                    Log.e("Picasso", "Error : ");
+
+                    Log.e(TAG, " Picasso Error : ");
+
+                    if (!AmazoneImageDownload.isImageDownloaded(getApplicationContext(),image))
+                    {
+                        downloadImage();
+                    }
+                    else
+                    {
+                        Glide.with(getApplicationContext()).load(AmazoneImageDownload.getDownloadPath(getApplicationContext(),image)).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .placeholder(R.drawable.placeholder_image).into(ivImage);
+                    }
                 }
             });
         }
         else
         {
-
-
-            {
-                String path = Constants.decodeUrlToBase64(image);
-                String newStr = path.substring(path.indexOf("/images")+1);
-                Picasso.with(this).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
+            if(AmazoneImageDownload.isImageDownloaded(getApplicationContext(),image)){
+                llProgress.setVisibility(View.GONE);
+                ivDownload.setVisibility(View.GONE);
+                Picasso.with(this).load(AmazoneImageDownload.getDownloadPath(getApplicationContext(),image)).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -159,12 +191,31 @@ public class FullScreenActivity extends BaseActivity {
                         Log.e("Picasso", "Error : ");
                     }
                 });
-                ivDownload.setVisibility(View.VISIBLE);
-
-
             }
+            else
+            {
 
-            downloadImage();
+                {
+                    String path = Constants.decodeUrlToBase64(image);
+                    String newStr = path.substring(path.indexOf("/images")+1);
+                    Picasso.with(this).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.e("Picasso", "Error : ");
+                        }
+                    });
+                    ivDownload.setVisibility(View.VISIBLE);
+
+
+                }
+
+                downloadImage();
+            }
         }
 
 
@@ -179,18 +230,46 @@ public class FullScreenActivity extends BaseActivity {
         iconShareExternal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isDownloaded = true;
 
-                if (!AmazoneImageDownload.isImageDownloaded(getApplicationContext(),image))
+
+                if (ImagePathTBL.getLastInserted(Filepath).size() > 0)
                 {
-                    isDownloaded = false;
+                    ArrayList<File> files =new ArrayList<>();
+
+                    files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("*/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
                 }
-
-                if (isDownloaded)
+                else
                 {
-                    ArrayList<Uri> files =new ArrayList<>();
+                    boolean isDownloaded = true;
 
-                    files.add(AmazoneImageDownload.getDownloadPath(getApplicationContext(),image));
+                    if (!AmazoneImageDownload.isImageDownloaded(getApplicationContext(),image))
+                    {
+                        isDownloaded = false;
+                    }
+
+                    if (isDownloaded)
+                    {
+                        ArrayList<Uri> files =new ArrayList<>();
+
+                        files.add(AmazoneImageDownload.getDownloadPath(getApplicationContext(),image));
 
                 /*    ArrayList<Uri> uris = new ArrayList<>();
 
@@ -204,18 +283,17 @@ public class FullScreenActivity extends BaseActivity {
 
                     }*/
 
-                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                    intent.setType("*/*");
-                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
-                    startActivity(Intent.createChooser(intent, "Share File"));
+                        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                        intent.setType("*/*");
+                        intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                        startActivity(Intent.createChooser(intent, "Share File"));
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
-                }
-
-
             }
 
         });
@@ -258,6 +336,7 @@ public class FullScreenActivity extends BaseActivity {
         ivDownload.setVisibility(View.GONE);
         llProgress.setVisibility(View.VISIBLE);
         progressBar1.setVisibility(View.VISIBLE);
+
         asyncTask = AmazoneImageDownload.download(getApplicationContext(), image, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
             @Override
             public void onDownload(Uri file) {
