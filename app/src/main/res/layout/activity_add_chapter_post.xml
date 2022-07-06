@@ -532,7 +532,6 @@
 
     <Button
         android:id="@+id/btnCancel"
-        android:visibility="gone"
         style="@style/AddPostButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -541,7 +540,8 @@
         android:layout_marginTop="@dimen/padding_20dp"
         android:layout_marginEnd="@dimen/padding_20dp"
         android:layout_marginBottom="@dimen/padding_20dp"
-        android:text="@string/places_cancel" />
+        android:text="@string/places_cancel"
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progressBar"
