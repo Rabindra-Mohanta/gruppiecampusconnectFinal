@@ -492,12 +492,15 @@ public class GroupDashboardActivityNew extends BaseActivity
                 dashboardCount.typeOfTeam = "DASHBOARD";
                 dashboardCount.oldCount = teamCount.dashboardTeamCount;
             }
+
             dashboardCount.lastNotificationAt = teamCount.lastNotificationAt;
             dashboardCount.lastInsertedTeamTime = teamCount.lastInsertedTeamTime;
             dashboardCount.count = teamCount.dashboardTeamCount;
             dashboardCount.groupId = groupId;
 
             dashboardCount.save();
+
+
 
             if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
             {
@@ -507,10 +510,9 @@ public class GroupDashboardActivityNew extends BaseActivity
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("MY_TEAM_UPDATE",res.data.get(0).lastUpdatedTeamTime);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("MY_TEAM_INSERT",res.data.get(0).lastInsertedTeamTime);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("BOOTH_INSERT",res.data.get(0).lastInsertedBoothTeamTime);
-                LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("GALLERY_POST",res.data.get(0).galleryPostEventAt);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("ANNOUNCEMENT_POST",res.data.get(0).announcementPostEventAt);
                 LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("CALENDAR_POST",res.data.get(0).calendarEventAt);
-
+                LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("GALLERY_POST",res.data.get(0).galleryPostEventAt);
               /*  if (HomeTeamDataTBL.getAll().size() > 0)
                 {
                     HomeTeamDataTBL.deleteAll();
@@ -560,8 +562,10 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                     }
                 }*/
+            }else
+            {
+                LeafPreference.getInstance(GroupDashboardActivityNew.this).setString("GALLERY_POST",res.data.get(0).teamsListCount.galleryPostEventAt);
             }
-
 
 
             ArrayList<UpdateDataEventRes.SubjectCountList> subCountList = res.data.get(0).subjectCountList;
@@ -2493,6 +2497,9 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }*/
         else if (group.type.equals("Gallery")) {
+
+            LeafPreference.getInstance(this).remove(groupId + "_gallerypost");
+
             startActivity(new Intent(this, GalleryActivity.class));
         } else if (group.type.equalsIgnoreCase("Calendar")) {
             startActivity(new Intent(this, CalendarActivity.class));

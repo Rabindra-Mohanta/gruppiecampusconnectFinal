@@ -193,7 +193,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
 
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(getContext(),item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);

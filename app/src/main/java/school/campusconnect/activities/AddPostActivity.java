@@ -204,7 +204,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     @Bind(R.id.tvAudioTimer)
     TextView tvTimer;
 
-    MediaPlayer mediaPlayer  = new MediaPlayer();
+
 
     TextView btn_ok;
     TextView btn_cancel;
@@ -257,6 +257,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
     private Boolean isPause = false;
 
 
+    MediaPlayer mediaPlayer  = new MediaPlayer();
     private Handler mHandler = new Handler();
     TeamListAdapter.ImageViewHolder mholder;
 

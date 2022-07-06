@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -413,11 +415,17 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
     }
 
     private void addMarksApi(MarkCardResponse2.MarkCardStudent item) {
+
+
+
         LeafManager leafManager = new LeafManager();
         // showLoadingBar(progressBar);
         progressBar.setVisibility(View.VISIBLE);
         AddMarksReq req = new AddMarksReq();
         req.subjectMarksDetails = item.subjectMarksDetails;
+
+        Log.e(TAG,"Add Marks REQ "+new Gson().toJson(req));
+
         leafManager.addObtainMark(this, GroupDashboardActivityNew.groupId, team_id, item.offlineTestExamId, item.userId, req);
     }
 
@@ -480,6 +488,9 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     String inputMarkStr = holder.etObtain.getText().toString();
+
+                    Log.e(TAG,"onTextChanged old Value"+oldValue +"\nNew Value"+inputMarkStr);
+
                     if (!inputMarkStr.equalsIgnoreCase(oldValue)){
                         if (!inputMarkStr.trim().isEmpty()) {
                             if (Float.parseFloat(inputMarkStr) <= Float.parseFloat(item.maxMarks)) {
@@ -491,6 +502,9 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
                                     holder.etObtain.setSelection(oldValue.length() - 1);
                                 }
                             }
+                        }else
+                        {
+                            item.obtainedMarks = null;
                         }
                     }
                 }

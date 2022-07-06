@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -175,7 +176,7 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(thumbnailImages.get(position))).placeholder(R.drawable.video_place_holder).into(mImageView);
 
             }
-            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.get(position).getImagePath())){
+            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.get(position).getImagePath())){
 
                 Log.e("ChildVideo","Downloaded"+position);
                 img_play.setVisibility(View.VISIBLE);
@@ -223,7 +224,7 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
                     progressBar1.setVisibility(View.VISIBLE);
                     asyncTask = AmazoneVideoDownload.download(context, item.get(position).getImagePath(), new AmazoneVideoDownload.AmazoneDownloadSingleListener() {
                         @Override
-                        public void onDownload(File file) {
+                        public void onDownload(Uri file) {
                             llProgress.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
                             progressBar1.setVisibility(View.GONE);
@@ -233,7 +234,7 @@ public class ChildVideoAdapter extends AGVRecyclerViewAdapter<ChildVideoAdapter.
                             AppLog.e(GroupDashboardActivityNew.class.getName(), "filename saved in preference : "+item.get(position).getImagePath());
 
                             try {
-                                saveVideoNameOffline(item.get(position).getImagePath() , file.getPath());
+                                saveVideoNameOffline(item.get(position).getImagePath() , file.toString());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

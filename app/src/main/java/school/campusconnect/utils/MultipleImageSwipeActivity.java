@@ -131,7 +131,7 @@ public class MultipleImageSwipeActivity extends BaseActivity {
 
                     for (int i = 0;i<listImages.size();i++)
                     {
-                        if (!AmazoneImageDownload.isImageDownloaded((listImages.get(i))))
+                        if (!AmazoneImageDownload.isImageDownloaded(getApplicationContext(),listImages.get(i)))
                         {
                             isDownloaded = false;
                         }
@@ -143,16 +143,16 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                 {
                     if (isDownloaded)
                     {
-                        ArrayList<File> files =new ArrayList<>();
+                        ArrayList<Uri> files =new ArrayList<>();
 
                         for (int i = 0;i<listImages.size();i++)
                         {
 
-                            files.add(AmazoneImageDownload.getDownloadPath(listImages.get(i)));
+                            files.add(AmazoneImageDownload.getDownloadPath(getApplicationContext(),listImages.get(i)));
 
                         }
 
-                        ArrayList<Uri> uris = new ArrayList<>();
+                       /* ArrayList<Uri> uris = new ArrayList<>();
 
                         for(File file: files){
 
@@ -162,13 +162,13 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                                 uris.add(Uri.fromFile(file));
                             }
 
-                        }
+                        }*/
 
 
                         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                         intent.setType("*/*");
                         intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                         startActivity(Intent.createChooser(intent, "Share File"));
                     }
                     else
@@ -279,10 +279,10 @@ public class MultipleImageSwipeActivity extends BaseActivity {
             ImageView iconAdd = (ImageView) viewLayout.findViewById(R.id.iconAdd);
             ImageView iconRotate = (ImageView) viewLayout.findViewById(R.id.iconRotate);*/
 
-            if(AmazoneImageDownload.isImageDownloaded(listImages.get(position))){
+            if(AmazoneImageDownload.isImageDownloaded(getApplicationContext(),listImages.get(position))){
                 llProgress.setVisibility(View.GONE);
                 ivDownload.setVisibility(View.GONE);
-                Picasso.with(context).load(AmazoneImageDownload.getDownloadPath(listImages.get(position))).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
+                Picasso.with(context).load(AmazoneImageDownload.getDownloadPath(getApplicationContext(),listImages.get(position))).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -322,7 +322,7 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     asyncTask = AmazoneImageDownload.download(context, listImages.get(position), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                         @Override
-                        public void onDownload(File file) {
+                        public void onDownload(Uri file) {
                             llProgress.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
 

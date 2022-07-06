@@ -67,6 +67,7 @@ import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -141,10 +142,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private int REQUEST_CODE_UPDATE_TEAM = 9;
     public boolean mIsLoading = false;
     public int totalPages2 = 1;
+    public int currentPage2 = 1;
     public int totalPagesBooth = 1;
     public int totalPagesMember = 1;
     public int totalPagesTeam = 1;
-    public int currentPage2 = 1;
+
     public static String team_id;// = 1;
     int count;// = 1;
     public TeamPostGetData currentItem;
@@ -1694,7 +1696,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             {
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    if (!AmazoneImageDownload.isImageDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -1702,16 +1704,16 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneImageDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -1723,12 +1725,12 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -1750,7 +1752,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneDownload.isPdfDownloaded((item.fileName.get(i))))
+                    if (!AmazoneDownload.isPdfDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -1758,16 +1760,16 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -1779,12 +1781,12 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("application/pdf");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -1811,7 +1813,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneVideoDownload.isVideoDownloaded((item.fileName.get(i))))
+                    if (!AmazoneVideoDownload.isVideoDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -1819,16 +1821,16 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneVideoDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                  /*  ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -1840,12 +1842,12 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("video/*");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -1866,7 +1868,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    if (!AmazoneImageDownload.isImageDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -1874,16 +1876,16 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneImageDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -1896,11 +1898,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         }
 
                     }
-
+*/
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -2104,7 +2106,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         AmazoneImageDownload.download(getActivity(), item.bdayUserImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
             @Override
-            public void onDownload(File file) {
+            public void onDownload(Uri file) {
 
                 if(getActivity() == null)
                 {
@@ -2115,7 +2117,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     return;
                 }
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                UserBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                try {
+                    UserBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
                 Log.e(TAG,"UserBitmap H "+ UserBitmap.getHeight());
                 Log.e(TAG,"UserBitmap W "+ UserBitmap.getWidth());
@@ -2136,7 +2144,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         AmazoneImageDownload.download(getActivity(), item.createdByImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
             @Override
-            public void onDownload(File file) {
+            public void onDownload(Uri file) {
 
                 if(getActivity() == null)
                 {
@@ -2147,7 +2155,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     return;
                 }
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                MlaBitMap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+                try {
+                    MlaBitMap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 Log.e(TAG,"UserBitmap H "+ MlaBitMap.getHeight());
                 Log.e(TAG,"UserBitmap W "+ MlaBitMap.getWidth());
@@ -2248,7 +2260,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
             AmazoneImageDownload.download(getActivity(), file, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                 @Override
-                public void onDownload(File file) {
+                public void onDownload(Uri file) {
 
                     if(getActivity() == null)
                     {
@@ -2261,7 +2273,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     }
 
                     BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                    BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+                    try {
+                        BirthdayTempleteBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), file);
+                    }catch (Exception e)
+                    {}
+
 
                     createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, UserName,file,mlaName);
                     birthdayPostCreationQueue.remove(Integer.valueOf(position));
@@ -2307,7 +2323,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         return output;
     }
 
-    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file,String mlaName) {
+    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, Uri file,String mlaName) {
 
         Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
 
@@ -2350,8 +2366,9 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
 
+        File file1 = new File(file.getPath());
         try {
-            FileOutputStream out = new FileOutputStream(file);
+            FileOutputStream out = new FileOutputStream(file1);
             out.write(bytes.toByteArray());
             out.close();
         } catch (IOException e) {
@@ -2359,7 +2376,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             Log.e(TAG,"IOException"+e.getMessage());
         }
 
-        return file;
+        return file1;
 
     }
 

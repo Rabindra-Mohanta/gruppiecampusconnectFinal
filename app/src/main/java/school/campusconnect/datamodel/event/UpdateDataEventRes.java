@@ -197,12 +197,18 @@ public class UpdateDataEventRes extends BaseResponse {
         @SerializedName("lastInsertedTeamTime")
         @Expose
         public String lastInsertedTeamTime;
+
+        @SerializedName("galleryPostEventAt")
+        @Expose
+        public String galleryPostEventAt;
+
         @SerializedName("getAllClassTeamCount")
         @Expose
         public int getAllClassTeamCount;
         @SerializedName("dashboardTeamCount")
         @Expose
         public int dashboardTeamCount;
+
         @SerializedName("schoolGroupCount")
         @Expose
         public int schoolGroupCount;

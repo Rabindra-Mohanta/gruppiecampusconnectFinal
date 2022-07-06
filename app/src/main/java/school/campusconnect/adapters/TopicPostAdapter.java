@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -230,7 +231,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.recyclerView.setVisibility(View.GONE);
 
-                if (AmazoneAudioDownload.isAudioDownloaded(item.fileName.get(0)))
+                if (AmazoneAudioDownload.isAudioDownloaded(mContext,item.fileName.get(0)))
                 {
                     holder.imgPlayAudio.setVisibility(View.VISIBLE);
                     holder.imgDownloadAudio.setVisibility(View.GONE);
@@ -256,7 +257,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
 
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -333,7 +334,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
 
                         mediaPlayer.stop();
                         mediaPlayer.reset();
-                        mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
+                        mediaPlayer.setDataSource(AmazoneAudioDownload.getDownloadPath(mContext,item.fileName.get(0)).toString());
                         mediaPlayer.prepare();
                         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
@@ -368,7 +369,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                             mediaPlayer.reset();
                         }
 
-                        mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
+                        mediaPlayer.setDataSource(AmazoneAudioDownload.getDownloadPath(mContext,item.fileName.get(0)).toString());
                         mediaPlayer.prepare();
                         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
@@ -486,7 +487,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
             holder.llMore.setVisibility(View.VISIBLE);
             holder.chkCompleted.setVisibility(View.GONE);
             if (item.fileName != null && item.fileName.size() > 0) {
-                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.fileName.get(0)))
                 {
                     holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
                     holder.viewDeleteVideo.setVisibility(View.VISIBLE);
@@ -505,7 +506,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
 
             holder.llMore.setVisibility(View.GONE);
             if (item.fileName != null && item.fileName.size() > 0) {
-                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.fileName.get(0)))
                 {
                     holder.llMore.setVisibility(View.VISIBLE);
                     holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
@@ -567,7 +568,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                     {
                         mediaPlayer.stop();
                         mediaPlayer.reset();
-                        mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
+                        mediaPlayer.setDataSource(AmazoneAudioDownload.getDownloadPath(mContext,item.fileName.get(0)).toString());
                         mediaPlayer.prepare();
                         mediaPlayer.start();
                         holder.imgPlayAudio.setVisibility(View.GONE);
@@ -577,7 +578,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                     }
                     else
                     {
-                        mediaPlayer.setDataSource(Constants.decodeUrlToBase64(item.fileName.get(0)));
+                        mediaPlayer.setDataSource(AmazoneAudioDownload.getDownloadPath(mContext,item.fileName.get(0)).toString());
                         mediaPlayer.prepare();
                         mediaPlayer.start();
 
@@ -686,7 +687,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
         if (isConnectionAvailable()) {
             asyncTask = AmazoneAudioDownload.download(mContext, s, new AmazoneAudioDownload.AmazoneDownloadSingleListener() {
                 @Override
-                public void onDownload(File file) {
+                public void onDownload(Uri file) {
                     notifyItemChanged(holder.getAdapterPosition());
                 }
 

@@ -78,7 +78,7 @@ public class FullScreenVideoMultiActivity extends BaseActivity implements MultiV
 
                     for (int i = 0;i<listImages.size();i++)
                     {
-                        if (!AmazoneVideoDownload.isVideoDownloaded((listImages.get(i))))
+                        if (!AmazoneVideoDownload.isVideoDownloaded(getApplicationContext(),listImages.get(i)))
                         {
                             isDownloaded = false;
                         }
@@ -90,16 +90,16 @@ public class FullScreenVideoMultiActivity extends BaseActivity implements MultiV
                 {
                     if (isDownloaded)
                     {
-                        ArrayList<File> files =new ArrayList<>();
+                        ArrayList<Uri> files =new ArrayList<>();
 
                         for (int i = 0;i<listImages.size();i++)
                         {
 
-                            files.add(AmazoneVideoDownload.getDownloadPath(listImages.get(i)));
+                            files.add(AmazoneVideoDownload.getDownloadPath(getApplicationContext(),listImages.get(i)));
 
                         }
 
-                        ArrayList<Uri> uris = new ArrayList<>();
+                        /*ArrayList<Uri> uris = new ArrayList<>();
 
                         for(File file: files){
 
@@ -109,13 +109,13 @@ public class FullScreenVideoMultiActivity extends BaseActivity implements MultiV
                                 uris.add(Uri.fromFile(file));
                             }
 
-                        }
+                        }*/
 
 
                         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                         intent.setType("*/*");
                         intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                         startActivity(Intent.createChooser(intent, "Share File"));
                     }
                     else

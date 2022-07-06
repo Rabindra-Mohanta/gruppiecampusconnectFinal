@@ -308,7 +308,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
                     Picasso.with(this).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(imgPhoto);
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(getApplicationContext(),item.fileName.get(0))) {
                         imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         imgDownloadPdf.setVisibility(View.VISIBLE);

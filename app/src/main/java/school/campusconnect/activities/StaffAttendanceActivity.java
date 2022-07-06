@@ -87,11 +87,10 @@ public static final String TAG = "StaffAttendanceActivity";
     }
 
     private void apiCall()
-    {  // showLoadingBar(binding.progressBar,false);
-        binding.progressBar.setVisibility(View.VISIBLE);
+    {
         adapter = new StaffAttendance();
         binding.rvAttendance.setAdapter(adapter);
-
+        showLoadingBar(binding.progressBar,false);
         leafManager.getStaffAttendance(this,GroupDashboardActivityNew.groupId,day,month,year);
 
     }
@@ -137,16 +136,11 @@ public static final String TAG = "StaffAttendanceActivity";
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-      //  hideLoadingBar();
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
 
         if (LeafManager.API_STAFF_ATTENDACNCE == apiId)
         {
             StaffAttendanceRes res = (StaffAttendanceRes) response;
-            if(res.getStaffAttendData().size()==0)
-            {
-                binding.txtEmpty.setVisibility(View.VISIBLE);
-            }
             binding.rvAttendance.setItemViewCacheSize(res.getStaffAttendData().size());
             adapter.add(res.getStaffAttendData());
         }
@@ -177,16 +171,14 @@ public static final String TAG = "StaffAttendanceActivity";
 
     @Override
     public void onFailure(int apiId, String msg) {
-        //  hideLoadingBar();
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onFailure(apiId, msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        //  hideLoadingBar();
-        binding.progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onException(apiId, msg);
     }
@@ -437,8 +429,7 @@ public static final String TAG = "StaffAttendanceActivity";
                 {
                     isEdit[0] = true;
 
-                   // showLoadingBar(binding.progressBar,false);
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(binding.progressBar,false);
                     ChangeStaffAttendanceReq req = new ChangeStaffAttendanceReq();
                     req.setDay(String.valueOf(day));
                     req.setMonth(String.valueOf(month));
@@ -517,8 +508,7 @@ public static final String TAG = "StaffAttendanceActivity";
                 {
                     isEdit[0] = true;
 
-                    // showLoadingBar(binding.progressBar,false);
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(binding.progressBar,false);
                     ChangeStaffAttendanceReq req = new ChangeStaffAttendanceReq();
                     req.setDay(String.valueOf(day));
                     req.setMonth(String.valueOf(month));

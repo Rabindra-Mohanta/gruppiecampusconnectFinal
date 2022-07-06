@@ -100,7 +100,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
 
                     }
                     if (item.fileName != null && item.fileName.size() > 0) {
-                        if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                        if (AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                             holder.imgDownloadPdf.setVisibility(View.GONE);
                         } else {
                             holder.imgDownloadPdf.setVisibility(View.VISIBLE);

@@ -126,10 +126,10 @@ public class FullScreenActivity extends BaseActivity {
         imagePreviewUrl = LeafPreference.getInstance(this).getString("PREVIEW_URL","https://ik.imagekit.io/mxfzvmvkayv/");
       //  Picasso.with(this).load(image).into(ivImage);
 
-        if(AmazoneImageDownload.isImageDownloaded(image)){
+        if(AmazoneImageDownload.isImageDownloaded(getApplicationContext(),image)){
             llProgress.setVisibility(View.GONE);
             ivDownload.setVisibility(View.GONE);
-            Picasso.with(this).load(AmazoneImageDownload.getDownloadPath(image)).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
+            Picasso.with(this).load(AmazoneImageDownload.getDownloadPath(getApplicationContext(),image)).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -143,6 +143,8 @@ public class FullScreenActivity extends BaseActivity {
         }
         else
         {
+
+
             {
                 String path = Constants.decodeUrlToBase64(image);
                 String newStr = path.substring(path.indexOf("/images")+1);
@@ -161,6 +163,8 @@ public class FullScreenActivity extends BaseActivity {
 
 
             }
+
+            downloadImage();
         }
 
 
@@ -177,18 +181,18 @@ public class FullScreenActivity extends BaseActivity {
             public void onClick(View v) {
                 boolean isDownloaded = true;
 
-                if (!AmazoneImageDownload.isImageDownloaded((image)))
+                if (!AmazoneImageDownload.isImageDownloaded(getApplicationContext(),image))
                 {
                     isDownloaded = false;
                 }
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
-                    files.add(AmazoneImageDownload.getDownloadPath(image));
+                    files.add(AmazoneImageDownload.getDownloadPath(getApplicationContext(),image));
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                /*    ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -198,12 +202,12 @@ public class FullScreenActivity extends BaseActivity {
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("*/*");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -256,10 +260,11 @@ public class FullScreenActivity extends BaseActivity {
         progressBar1.setVisibility(View.VISIBLE);
         asyncTask = AmazoneImageDownload.download(getApplicationContext(), image, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
             @Override
-            public void onDownload(File file) {
+            public void onDownload(Uri file) {
                 llProgress.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
                 progressBar1.setVisibility(View.GONE);
+
                 Picasso.with(getApplicationContext()).load(file).placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
                     @Override
                     public void onSuccess() {

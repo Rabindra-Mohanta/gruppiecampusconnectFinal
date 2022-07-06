@@ -125,7 +125,6 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
             totalPages = Integer.parseInt(LeafPreference.getInstance(getContext()).getString("GalleryTotalPage"));
         }
 
-
         scrollListener();
 
         checkEvent();
@@ -140,7 +139,8 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
         if (GalleryTable.getLastPost().size() > 0)
         {
-            Log.e(TAG,"updatedAt"+GalleryTable.getLastPost().get(0).updatedAt);
+            Log.e(TAG,"updatedAt "+GalleryTable.getLastPost().get(0).updatedAt);
+            Log.e(TAG,"isNewEventUpdate "+LeafPreference.getInstance(getContext()).getString("GALLERY_POST"));
             if (MixOperations.isNewEventUpdate(LeafPreference.getInstance(getContext()).getString("GALLERY_POST"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",GalleryTable.getLastPost().get(0)._now)) {
                 GalleryTable.deleteGallery();
                 getData();
@@ -492,7 +492,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
             {
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    if (!AmazoneImageDownload.isImageDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -500,16 +500,16 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneImageDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -521,12 +521,12 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -548,7 +548,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneDownload.isPdfDownloaded((item.fileName.get(i))))
+                    if (!AmazoneDownload.isPdfDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -556,16 +556,16 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -577,12 +577,12 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("application/pdf");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -609,7 +609,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneVideoDownload.isVideoDownloaded((item.fileName.get(i))))
+                    if (!AmazoneVideoDownload.isVideoDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -617,16 +617,16 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneVideoDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                    /*ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -638,12 +638,12 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("video/*");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -664,7 +664,7 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    if (!AmazoneImageDownload.isImageDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -672,16 +672,16 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneImageDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                  /*  ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -693,12 +693,12 @@ public class GalleryFragment extends BaseFragment implements LeafManager.OnCommu
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else

@@ -3,6 +3,8 @@ package school.campusconnect.adapters;
 import android.app.Activity;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,10 +78,10 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                     });*/
 
 
-            if(AmazoneImageDownload.isImageDownloaded(item)){
+            if(AmazoneImageDownload.isImageDownloaded(mContext,item)){
                 holder.llProgress.setVisibility(View.GONE);
                 holder.imgDownload.setVisibility(View.GONE);
-                Glide.with(mContext).load(AmazoneImageDownload.getDownloadPath(item)).diskCacheStrategy(DiskCacheStrategy.NONE)
+                Glide.with(mContext).load(AmazoneImageDownload.getDownloadPath(mContext,item)).diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true).placeholder(R.drawable.placeholder_image).into(holder.ivImage);
 
                 /*Picasso.with(mContext).load(AmazoneImageDownload.getDownloadPath(item)).fit().placeholder(R.drawable.placeholder_image).into(holder.ivImage, new Callback() {
@@ -121,7 +123,7 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                             holder.progressBar1.setVisibility(View.VISIBLE);
                             holder.asyncTask = AmazoneImageDownload.download(mContext, item, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                                 @Override
-                                public void onDownload(File file) {
+                                public void onDownload(Uri file) {
                                     holder.llProgress.setVisibility(View.GONE);
                                     holder.progressBar.setVisibility(View.GONE);
                                     holder. progressBar1.setVisibility(View.GONE);
@@ -175,6 +177,63 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                             holder.llProgress.setVisibility(View.GONE);
                             holder.progressBar1.setVisibility(View.GONE);
                             holder.asyncTask.cancel(true);
+                        }
+                    });
+                }
+            }
+
+
+            if (item != null) {
+
+                if (!AmazoneImageDownload.isImageDownloaded(mContext,item)) {
+
+                    holder.imgDownload.setVisibility(View.GONE);
+                    holder.llProgress.setVisibility(View.VISIBLE);
+                    holder.progressBar1.setVisibility(View.VISIBLE);
+
+                    holder.asyncTask = AmazoneImageDownload.download(mContext, item, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                        @Override
+                        public void onDownload(Uri file) {
+                            holder.llProgress.setVisibility(View.GONE);
+                            holder.progressBar.setVisibility(View.GONE);
+                            holder.progressBar1.setVisibility(View.GONE);
+                            Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(holder.ivImage, new Callback() {
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void error(String msg) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    holder.llProgress.setVisibility(View.GONE);
+                                    holder.progressBar.setVisibility(View.GONE);
+                                    holder.progressBar1.setVisibility(View.GONE);
+                                    Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void progressUpdate(int progress, int max) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(progress>0){
+                                        holder.progressBar1.setVisibility(View.GONE);
+                                    }
+                                    holder.progressBar.setProgress(progress);
+                                }
+                            });
                         }
                     });
                 }

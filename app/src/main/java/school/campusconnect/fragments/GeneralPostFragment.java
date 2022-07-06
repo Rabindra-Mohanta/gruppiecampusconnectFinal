@@ -948,7 +948,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             {
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    if (!AmazoneImageDownload.isImageDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -956,16 +956,16 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneImageDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -978,11 +978,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                         }
 
                     }
-
+*/
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -1004,7 +1004,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneDownload.isPdfDownloaded((item.fileName.get(i))))
+                    if (!AmazoneDownload.isPdfDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -1012,16 +1012,16 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -1033,12 +1033,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("application/pdf");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -1065,7 +1065,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneVideoDownload.isVideoDownloaded((item.fileName.get(i))))
+                    if (!AmazoneVideoDownload.isVideoDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -1073,16 +1073,16 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneVideoDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -1095,11 +1095,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                         }
 
                     }
-
+*/
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("video/*");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -1120,7 +1120,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneImageDownload.isImageDownloaded((item.fileName.get(i))))
+                    if (!AmazoneImageDownload.isImageDownloaded(getContext(),item.fileName.get(i)))
                     {
                         isDownloaded = false;
                     }
@@ -1128,16 +1128,16 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
                 if (isDownloaded)
                 {
-                    ArrayList<File> files =new ArrayList<>();
+                    ArrayList<Uri> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
                         AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
 
-                        files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        files.add(AmazoneImageDownload.getDownloadPath(getContext(),item.fileName.get(i)));
                     }
 
-                    ArrayList<Uri> uris = new ArrayList<>();
+                   /* ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
 
@@ -1149,12 +1149,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }
+                    }*/
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else

@@ -215,7 +215,7 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
 
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -340,7 +340,7 @@ public class PersonalPostAdapter extends RecyclerView.Adapter<PersonalPostAdapte
             holder.linComments.setVisibility(View.GONE);
 
         if (item.fileName != null && item.fileName.size() > 0) {
-            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(item.fileName.get(0)))
+            if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.fileName.get(0)))
             {
                 holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
                 holder.viewDeleteVideo.setVisibility(View.VISIBLE);

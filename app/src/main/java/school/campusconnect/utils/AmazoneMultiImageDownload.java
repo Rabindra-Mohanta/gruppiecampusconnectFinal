@@ -19,6 +19,13 @@ import java.util.ArrayList;
 
 import school.campusconnect.LeafApplication;
 
+
+/* NOTE  4/7/22  */
+
+/*NOT USED IF NEED TO USE CHANGE TO MEDIA STORAGE*/
+
+
+
 public class AmazoneMultiImageDownload extends AsyncTask<Void, Integer, String> {
     private static final String TAG = "AmzMultiImageDownload";
     private AmazoneDownloadMultiListener listenerMulti;

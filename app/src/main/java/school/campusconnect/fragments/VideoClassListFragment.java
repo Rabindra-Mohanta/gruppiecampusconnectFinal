@@ -275,6 +275,8 @@ public class VideoClassListFragment extends BaseFragment implements LeafManager.
             if (dashboardCount != null) {
                 boolean apiCall = false;
                 if (dashboardCount.lastApiCalled != 0) {
+
+
                     if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
                         apiCall = true;
                     }

@@ -231,7 +231,7 @@ public class LeafApplication extends Application  {
         File mainFolder;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mainFolder  = new File(getCacheDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+            mainFolder  = new File(getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         }
         else
         {
@@ -245,8 +245,8 @@ public class LeafApplication extends Application  {
     }
 
     public File AppFilesAudioPath(){
-        File mainFolder = new File( getCacheDir(),
-                IMAGE_DIRECTORY_NAME);
+        File mainFolder = new File( getFilesDir(),
+                LeafApplication.getInstance().getResources().getString(R.string.app_name));
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }
