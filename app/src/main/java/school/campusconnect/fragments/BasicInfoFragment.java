@@ -49,7 +49,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
 
     FragmentBasicInfoBinding basicInfoBinding;
     public static AddClassViewModel addClassViewModel;
-
+   public static String currentPhoneNo;
     private UploadImageFragment imageFragment;
 
     private String[] str;
@@ -101,6 +101,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
 
     private void init() {
         studentData = AddClassStudentActivity.studentData;
+        currentPhoneNo=studentData.phone;
         leafManager = new LeafManager();
         group_id = AddClassStudentActivity.group_id;
         team_id = AddClassStudentActivity.team_id;
@@ -118,6 +119,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
         basicInfoBinding.btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 updateData();
             }
         });
@@ -190,36 +192,6 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
         switch (apiId) {
 
             case LeafManager.API_EDIT_STUDENTS:
-
-                String phone = "";
-
-                if (!basicInfoBinding.etPhone.getText().toString().contains("+91")) {
-                    phone = "+91" + basicInfoBinding.etPhone.getText().toString();
-                } else {
-                    phone = basicInfoBinding.etPhone.getText().toString();
-                }
-
-                Log.e(TAG, "phone " + phone);
-
-                if (!studentData.getPhone().toString().equalsIgnoreCase(phone)) {
-
-                    StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
-                    String[] str = getResources().getStringArray(R.array.array_country_values);
-                    addStudentReq.countryCode = str[currentCountry - 1];
-                    addStudentReq.phone = basicInfoBinding.etPhone.getText().toString();
-
-                    //progressBar.setVisibility(View.VISIBLE);
-                    leafManager.editClassStudentPhone(this, group_id, studentData.getUserId(), addStudentReq);
-                } else {
-
-                    Toast.makeText(getContext(), getResources().getString(R.string.toast_edit_student_sucess), Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
-                }
-
-
-                break;
-
-            case LeafManager.API_UPDATE_PHONE_STUDENT:
                 Toast.makeText(getContext(), getResources().getString(R.string.toast_edit_student_sucess), Toast.LENGTH_SHORT).show();
                 getActivity().finish();
                 break;
@@ -251,6 +223,41 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
 
     private void updateData() {
         if (isValid()) {
+
+
+
+            String phone = "";
+
+            if (!addClassViewModel.studentDataMutableLiveData.getValue().getPhone().contains("+91")) {
+                phone = "+91" + addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
+            } else {
+                phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
+            }
+
+            Log.e(TAG, "phone " + phone);
+            Log.e(TAG, "studentData.getPhone() " + studentData.getPhone());
+            Log.e(TAG, "studentData.getPhone() " + currentPhoneNo);
+
+
+            if (currentPhoneNo.equals(phone)) {
+
+
+
+
+            } else {
+                StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
+                String[] str = getResources().getStringArray(R.array.array_country_values);
+                addStudentReq.countryCode = str[currentCountry - 1];
+                addStudentReq.phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
+
+                //progressBar.setVisibility(View.VISIBLE);
+                leafManager.editClassStudentPhone(this, group_id, studentData.getUserId(), addStudentReq);
+
+            }
+
+
+
+
 
 
             basicInfoBinding.image.setText(imageFragment.getmProfileImage());

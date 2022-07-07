@@ -115,7 +115,7 @@ public class AddClassStudentActivity extends BaseActivity implements  LeafManage
     }
 
 
-    private void setImageFragment() {
+    public void setImageFragment() {
 
 
         if (isEdit) {

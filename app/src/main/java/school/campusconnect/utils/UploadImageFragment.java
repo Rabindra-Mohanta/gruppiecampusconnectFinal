@@ -45,6 +45,7 @@ import java.util.Locale;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.utils.crop.Crop;
 
 public class UploadImageFragment extends BaseUploadImageFragment implements View.OnClickListener {

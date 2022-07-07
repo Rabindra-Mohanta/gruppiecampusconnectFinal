@@ -54,14 +54,14 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
 
     AddClassViewModel addClassViewModel;
     FragmentOtherInfoBinding otherInfoBinding;
-
+    String currentPhoneNo;
     String ReligionData;
     String CastData;
     String SubCastData;
     String CategoryData;
 
+    public int currentCountry;
 
-    private int currentCountry;
     String religion;
     String caste;
     String subcaste;
@@ -115,16 +115,22 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
         addClassViewModel.setData(BasicInfoFragment.addClassViewModel.studentDataMutableLiveData);
         otherInfoBinding.setLifecycleOwner(this);
         otherInfoBinding.setMyStudent(addClassViewModel);
+
+
+        currentCountry = 1;
+
+
         return otherInfoBinding.getRoot();
     }
 
     private void init() {
-
+        studentData = AddClassStudentActivity.studentData;
+        currentPhoneNo = studentData.phone;
 
         group_id = AddClassStudentActivity.group_id;
         team_id = AddClassStudentActivity.team_id;
         imageFragment = AddClassStudentActivity.imageFragment;
-        studentData = AddClassStudentActivity.studentData;
+
         leafManager = new LeafManager();
         searchCastFragmentDialog = SearchCastFragmentDialog.newInstance();
         searchCastFragmentDialog.setListener(this);
@@ -169,8 +175,6 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
                 break;
             }
         }
-
-
 
 
         otherInfoBinding.etBlood.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -273,7 +277,32 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
 
     private void UpdateData() {
 
-         otherInfoBinding.image.setText(imageFragment.getmProfileImage());
+
+        String phone = "";
+
+        if (!addClassViewModel.studentDataMutableLiveData.getValue().getPhone().contains("+91")) {
+            phone = "+91" + addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
+        } else {
+            phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
+        }
+
+
+        if (currentPhoneNo.equals(phone)) {
+
+
+        } else {
+            StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
+            String[] str = getResources().getStringArray(R.array.array_country_values);
+            addStudentReq.countryCode = str[currentCountry - 1];
+            addStudentReq.phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
+
+            //progressBar.setVisibility(View.VISIBLE);
+            leafManager.editClassStudentPhone(this, group_id, studentData.getUserId(), addStudentReq);
+
+        }
+
+
+        otherInfoBinding.image.setText(imageFragment.getmProfileImage());
         AppLog.e("other data", "other sending Data " + new Gson().toJson(addClassViewModel.studentDataMutableLiveData.getValue()));
 
         leafManager.editClassStudent(this, group_id, team_id, studentData.getUserId(), studentData.gruppieRollNumber, addClassViewModel.studentDataMutableLiveData.getValue());

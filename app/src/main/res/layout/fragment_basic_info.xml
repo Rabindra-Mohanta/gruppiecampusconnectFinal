@@ -16,11 +16,10 @@
     tools:context=".fragments.BasicInfoFragment">
 
 
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/picLayout">
+       >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,13 +40,13 @@
                 android:textColor="@color/colorPrimary" />
 
             <EditText
-                android:text="@={myStudent.studentDataMutableLiveData.name}"
                 android:id="@+id/etName"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:inputType="textPersonName|textCapWords" />
+                android:inputType="textPersonName|textCapWords"
+                android:text="@={myStudent.studentDataMutableLiveData.name}" />
 
             <TextView
                 style="@style/LabelNormal"
@@ -61,7 +60,6 @@
                 android:visibility="visible" />
 
             <EditText
-               android:text="India"
                 android:id="@+id/etCountry"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
@@ -69,6 +67,7 @@
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:focusable="false"
                 android:inputType="text"
+                android:text="India"
                 android:visibility="visible" />
 
 
@@ -85,13 +84,13 @@
 
             <EditText
 
-                android:text="@={myStudent.studentDataMutableLiveData.phone}"
                 android:id="@+id/etPhone"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:text="@={myStudent.studentDataMutableLiveData.phone}" />
 
             <TextView
                 style="@style/LabelNormal"
@@ -104,13 +103,13 @@
                 android:textColor="@color/colorPrimary" />
 
             <EditText
-                android:text="@={myStudent.studentDataMutableLiveData.satsNo}"
                 android:id="@+id/etSatsNo"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:inputType="text" />
+                android:inputType="text"
+                android:text="@={myStudent.studentDataMutableLiveData.satsNo}" />
 
 
             <TextView
@@ -125,15 +124,13 @@
 
 
             <EditText
-                android:text="@={myStudent.studentDataMutableLiveData.admissionNumber}"
                 android:id="@+id/etAdmissionNumber"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:inputType="text" />
-
-
+                android:inputType="text"
+                android:text="@={myStudent.studentDataMutableLiveData.admissionNumber}" />
 
 
             <TextView
@@ -147,13 +144,14 @@
                 android:textColor="@color/colorPrimary" />
 
             <EditText
-                android:text="@={myStudent.studentDataMutableLiveData.rollNumber}"
                 android:id="@+id/etRollNo"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
-                android:inputType="text" />
+                android:inputType="text"
+                android:text="@={myStudent.studentDataMutableLiveData.rollNumber}" />
+
             <TextView
                 style="@style/LabelNormal"
                 android:layout_width="match_parent"
@@ -165,14 +163,15 @@
                 android:textColor="@color/colorPrimary" />
 
             <EditText
-                android:text="@={myStudent.studentDataMutableLiveData.dob}"
                 android:id="@+id/etdob"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:focusable="false"
-                android:inputType="text" />
+                android:inputType="text"
+                android:text="@={myStudent.studentDataMutableLiveData.dob}" />
+
             <TextView
                 style="@style/LabelNormal"
                 android:layout_width="match_parent"
@@ -184,14 +183,14 @@
                 android:textColor="@color/colorPrimary" />
 
             <EditText
-                android:text="@={myStudent.studentDataMutableLiveData.doj}"
                 android:id="@+id/etdoj"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:focusable="false"
-                android:inputType="text" />
+                android:inputType="text"
+                android:text="@={myStudent.studentDataMutableLiveData.doj}" />
 
 
             <!--            this is logic for using  image in liveData-->
