@@ -169,6 +169,8 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         rvUniversities = view.findViewById(R.id.rvUniversities)
         rvClasses = view.findViewById(R.id.rvClasses)
 
+        etName.requestFocus()
+
         if(arguments != null)
         {
             isLogout = arguments!!.getBoolean("isDashboard", false)
