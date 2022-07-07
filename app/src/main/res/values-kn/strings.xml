@@ -465,8 +465,10 @@
     <string name="lbl_class_name">ವರ್ಗ</string>
     <string name="lbl_addharCard">ಆಧಾರ್ ಕಾರ್ಡ್</string>
     <string name="lbl_add_class">ವರ್ಗ ಸೇರಿಸಿ</string>
-
+    <string name="lbl_add_regular_class">Add Regular Class</string>
+    <string name="lbl_add_combined_class">Add Combined/Other Class</string>
     <string name="lbl_add_tikit">ಟಿಕೆಟ್ ತೆರೆಯಿರಿ</string>
+
     <string name="lbl_tikit">ಟಿಕೆಟ್‌ಗಳು</string>
     <string name="lbl_select_role">ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="lbl_tikit_details">ಟಿಕೆಟ್ ವಿವರಗಳು</string>

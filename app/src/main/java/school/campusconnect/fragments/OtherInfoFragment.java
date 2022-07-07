@@ -51,7 +51,7 @@ import school.campusconnect.utils.UploadImageFragment;
 
 public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCommunicationListener, SearchCastFragmentDialog.SelectListener, SearchSubCasteDialogFragment.SelectListener {
 
-
+    private boolean onceClick=true;
     AddClassViewModel addClassViewModel;
     FragmentOtherInfoBinding otherInfoBinding;
     String currentPhoneNo;
@@ -215,7 +215,11 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
         otherInfoBinding.btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateData();
+                if(onceClick)
+                {onceClick=false;
+                    UpdateData();
+                }
+
             }
         });
 
@@ -280,11 +284,9 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
 
         String phone = "";
 
-        if (!addClassViewModel.studentDataMutableLiveData.getValue().getPhone().contains("+91")) {
-            phone = "+91" + addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
-        } else {
+
             phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
-        }
+
 
 
         if (currentPhoneNo.equals(phone)) {

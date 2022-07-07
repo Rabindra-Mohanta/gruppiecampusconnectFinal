@@ -553,8 +553,11 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_no_user_found">...</string><!--No User Found-->
     <string name="lbl_classes">All Classes</string>
     <string name="lbl_class_name">Class</string>
+
     <string name="lbl_addharCard">Aadhaar Card</string>
+    <string name="lbl_add_regular_class">Add Regular Class</string>
     <string name="lbl_add_class">Add Class</string>
+    <string name="lbl_add_combined_class">Add Combined/Other Class</string>
     <string name="lbl_add_group">Add Group</string>
 
     <string name="lbl_add_tikit">Add Ticket</string>
@@ -889,7 +892,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="menu_sync_contact">Sync Contacts</string>
     <string name="menu_zoom_meeting">Zoom Meeting</string>
     <string name="menu_close">Close</string>
-    <string name="menu_staff_attendance">Staff Attendance</string>
+    <string name="menu_staff_attendance" translatable="false">Staff Attendance</string>
     <string name="menu_leave_team">Leave Team</string>
     <string name="menu_edit_team">Edit Team</string>
     <string name="menu_add_team">Add Team</string>

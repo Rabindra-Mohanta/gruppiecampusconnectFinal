@@ -37,6 +37,7 @@ public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCo
     public int currentCountry;
     LeafManager leafManager;
     String currentPhoneNo;
+    private boolean onceClick=true;
 
     private UploadImageFragment imageFragment;
 
@@ -90,7 +91,13 @@ public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCo
         familyInfoBinding.btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateData();
+
+
+                if(onceClick)
+                {onceClick=false;
+                    updateData();
+                }
+
             }
         });
 
@@ -102,11 +109,9 @@ public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCo
 
         String phone = "";
 
-        if (!addClassViewModel.studentDataMutableLiveData.getValue().getPhone().contains("+91")) {
-            phone = "+91" + addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
-        } else {
+
             phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
-        }
+
 
 
         if (currentPhoneNo.equals(phone)) {

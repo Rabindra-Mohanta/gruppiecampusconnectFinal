@@ -17,6 +17,7 @@ import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.classs.AddClassReq;
+import school.campusconnect.datamodel.classs.AddCombinedClass;
 import school.campusconnect.datamodel.classs.ClassResV2;
 import school.campusconnect.datamodel.register.BoardsData;
 import school.campusconnect.datamodel.register.CampusMediumData;
@@ -2097,7 +2098,13 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> assignSubject(@Path("group_id") String group_id, @Path("teams_id") String teams_id,@Body AddSubjectStaffReq req);
 
+
+
     // Registration API END
+    //AddCombinedClass
+    @POST("/api/v1/groups/{group_id}/class/add/extra")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> AddCombinedClass(@Path("group_id") String group_id,@Body AddCombinedClass req);
 
 
     @GET("api/v1/groups/{group_id}/get/class/list")
