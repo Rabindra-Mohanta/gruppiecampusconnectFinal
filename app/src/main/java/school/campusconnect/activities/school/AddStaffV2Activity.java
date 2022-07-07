@@ -1,5 +1,6 @@
 package school.campusconnect.activities.school;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
     public Toolbar mToolBar;
 
     private int currentCountry;
+    private boolean onceClick=true;
 
     LeafManager manager;
 
@@ -128,7 +130,14 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
         binding.btnAddStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiAddStaff();
+
+                if(onceClick)
+                { onceClick=false;
+                    ApiAddStaff();
+                }
+
+
+
             }
         });
     }
@@ -273,7 +282,7 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
             AddMultipleStudentReq.StudentData item = list.get(position);
 

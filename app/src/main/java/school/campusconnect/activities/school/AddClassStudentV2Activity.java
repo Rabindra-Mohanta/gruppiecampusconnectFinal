@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
     private static String TAG = "AddClassStudentV2Activity";
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
-
+    private boolean onceClick=true;
     private int currentCountry;
 
     LeafManager manager;
@@ -136,7 +137,14 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
         binding.btnAddStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiAddStudent();
+
+
+
+                if(onceClick)
+                { onceClick=false;
+                    ApiAddStudent();
+                }
+
             }
         });
     }
@@ -281,7 +289,7 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
             AddMultipleStudentReq.StudentData item = list.get(position);
 

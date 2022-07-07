@@ -901,8 +901,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public void onNameClick(PostItem item) {
         if (item.createdById.equals(LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID))) {
             AppLog.e("onNameClick", "else if called");
-            Intent intent = new Intent(getActivity(), ProfileActivity2.class);
-            startActivity(intent);
+//            Intent intent = new Intent(getActivity(), ProfileActivity2.class);
+//            startActivity(intent);
         } else {
             AppLog.e("onNameClick", "else called");
         }
