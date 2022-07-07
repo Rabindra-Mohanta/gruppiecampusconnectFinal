@@ -52,6 +52,7 @@ import school.campusconnect.activities.TeamSettingsActivity;
 import school.campusconnect.activities.TeamUsersActivity;
 import school.campusconnect.adapters.ReportAdapter;
 import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
 import school.campusconnect.datamodel.booths.BoothResponse;
 import school.campusconnect.datamodel.booths.BoothsTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
@@ -62,6 +63,7 @@ import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.firebase.SendNotificationGlobal;
 import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AmazoneVideoDownload;
@@ -1696,7 +1698,17 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             {
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneImageDownload.isImageDownloaded(getContext(),item.fileName.get(i)))
+                    String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    String Filepath;
+
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        Filepath = splitStr[1];
+                    } else {
+                        Filepath = key;
+                    }
+
+                    if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
                     {
                         isDownloaded = false;
                     }
@@ -1704,20 +1716,27 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 if (isDownloaded)
                 {
-                    ArrayList<Uri> files =new ArrayList<>();
+                    ArrayList<File> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
-                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+                        String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
 
-                        files.add(AmazoneImageDownload.getDownloadPath(getContext(),item.fileName.get(i)));
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
                     }
 
-                   /* ArrayList<Uri> uris = new ArrayList<>();
+                    ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
-
-                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
 
                         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                             uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
@@ -1725,12 +1744,12 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                             uris.add(Uri.fromFile(file));
                         }
 
-                    }*/
+                    }
 
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else
@@ -1865,10 +1884,19 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
             if (item.fileName.size()> 0)
             {
-
                 for (int i = 0;i<item.fileName.size();i++)
                 {
-                    if (!AmazoneImageDownload.isImageDownloaded(getContext(),item.fileName.get(i)))
+                    String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    String Filepath;
+
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        Filepath = splitStr[1];
+                    } else {
+                        Filepath = key;
+                    }
+
+                    if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
                     {
                         isDownloaded = false;
                     }
@@ -1876,20 +1904,27 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 if (isDownloaded)
                 {
-                    ArrayList<Uri> files =new ArrayList<>();
+                    ArrayList<File> files =new ArrayList<>();
 
                     for (int i = 0;i<item.fileName.size();i++)
                     {
-                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+                        String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
 
-                        files.add(AmazoneImageDownload.getDownloadPath(getContext(),item.fileName.get(i)));
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
                     }
 
-                   /* ArrayList<Uri> uris = new ArrayList<>();
+                    ArrayList<Uri> uris = new ArrayList<>();
 
                     for(File file: files){
-
-                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
 
                         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                             uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
@@ -1898,11 +1933,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         }
 
                     }
-*/
+
                     Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                     intent.setType("image/");
                     intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                     startActivity(Intent.createChooser(intent, "Share File"));
                 }
                 else

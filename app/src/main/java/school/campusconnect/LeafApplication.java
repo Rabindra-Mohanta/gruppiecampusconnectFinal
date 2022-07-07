@@ -235,7 +235,7 @@ public class LeafApplication extends Application  {
         }
         else
         {
-            mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+            mainFolder = new File(getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         }
 
         if (!mainFolder.exists()) {

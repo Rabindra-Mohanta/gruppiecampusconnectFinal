@@ -52,7 +52,6 @@ public class CropDialogActivity extends AppCompatActivity {
         {
             mediaFile = ImageUtil.getOutputMediaFile();
             cropImageFile = Uri.fromFile(mediaFile);
-
         }
 
         Glide.with(this).load(uri).into(binding.img);

@@ -27,7 +27,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -45,6 +48,7 @@ import school.campusconnect.adapters.TeamListAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityMultipleImageSwipeBinding;
 import school.campusconnect.databinding.ItemPagerBinding;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
 import school.campusconnect.views.TouchImageView;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
@@ -129,13 +133,27 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                 if (listImages.size()> 0)
                 {
 
+
                     for (int i = 0;i<listImages.size();i++)
                     {
-                        if (!AmazoneImageDownload.isImageDownloaded(getApplicationContext(),listImages.get(i)))
+
+                        String key =  Constants.decodeUrlToBase64(listImages.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
+
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
                         {
                             isDownloaded = false;
                         }
+
                     }
+
                 }
 
 
@@ -143,16 +161,25 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                 {
                     if (isDownloaded)
                     {
-                        ArrayList<Uri> files =new ArrayList<>();
+                        ArrayList<File> files =new ArrayList<>();
 
                         for (int i = 0;i<listImages.size();i++)
                         {
+                            String key =  Constants.decodeUrlToBase64(listImages.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                            String Filepath;
 
-                            files.add(AmazoneImageDownload.getDownloadPath(getApplicationContext(),listImages.get(i)));
+                            if (key.contains("/")) {
+                                String[] splitStr = key.split("/");
+                                Filepath = splitStr[1];
+                            } else {
+                                Filepath = key;
+                            }
+
+                            files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
 
                         }
 
-                       /* ArrayList<Uri> uris = new ArrayList<>();
+                        ArrayList<Uri> uris = new ArrayList<>();
 
                         for(File file: files){
 
@@ -162,13 +189,12 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                                 uris.add(Uri.fromFile(file));
                             }
 
-                        }*/
-
+                        }
 
                         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                         intent.setType("*/*");
                         intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                         startActivity(Intent.createChooser(intent, "Share File"));
                     }
                     else
@@ -279,10 +305,27 @@ public class MultipleImageSwipeActivity extends BaseActivity {
             ImageView iconAdd = (ImageView) viewLayout.findViewById(R.id.iconAdd);
             ImageView iconRotate = (ImageView) viewLayout.findViewById(R.id.iconRotate);*/
 
-            if(AmazoneImageDownload.isImageDownloaded(getApplicationContext(),listImages.get(position))){
-                llProgress.setVisibility(View.GONE);
-                ivDownload.setVisibility(View.GONE);
-                Picasso.with(context).load(AmazoneImageDownload.getDownloadPath(getApplicationContext(),listImages.get(position))).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
+
+            String key =  Constants.decodeUrlToBase64(listImages.get(position)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+            String Filepath;
+
+            if (key.contains("/")) {
+                String[] splitStr = key.split("/");
+                Filepath = splitStr[1];
+            } else {
+                Filepath = key;
+            }
+            Log.e(TAG, "IMAGE PATH TBL SIZE " + Filepath );
+
+            if (ImagePathTBL.getLastInserted(Filepath).size() > 0)
+            {
+                String uri = ImagePathTBL.getLastInserted(Filepath).get(0).url;
+
+                Log.e(TAG, "IMAGE PATH " + uri );
+
+                Picasso picasso = Picasso.with(context);
+
+                picasso.load(new File(uri)).placeholder(R.drawable.placeholder_image).memoryPolicy(MemoryPolicy.NO_CACHE).into(ivImage, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -290,16 +333,65 @@ public class MultipleImageSwipeActivity extends BaseActivity {
 
                     @Override
                     public void onError() {
-                        Log.e("Picasso", "Error : ");
+
+                        Log.e(TAG, " Picasso Error : ");
+
+                        if (!AmazoneImageDownload.isImageDownloaded(context,listImages.get(position)))
+                        {
+                            asyncTask = AmazoneImageDownload.download(context, listImages.get(position), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                                @Override
+                                public void onDownload(Uri file) {
+                                    llProgress.setVisibility(View.GONE);
+                                    progressBar.setVisibility(View.GONE);
+
+                                    Log.e(TAG,"in Piccaso image");
+
+                                    Glide.with(context).load(file).placeholder(R.drawable.placeholder_image).into(ivImage);
+                                }
+
+                                @Override
+                                public void error(String msg) {
+
+                                    ((Activity)context).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            llProgress.setVisibility(View.GONE);
+                                            progressBar.setVisibility(View.GONE);
+
+                                            Toast.makeText(context, msg + "", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void progressUpdate(int progress, int max) {
+                                    ((Activity)context).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(progress>0){
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+                                            progressBar.setProgress(progress);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        else
+                        {
+                            Glide.with(context).load(AmazoneImageDownload.getDownloadPath(context,listImages.get(position))).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .placeholder(R.drawable.placeholder_image).into(ivImage);
+                        }
                     }
                 });
+
             }
             else
             {
-                {
-                    String path = Constants.decodeUrlToBase64(listImages.get(position));
-                    String newStr = path.substring(path.indexOf("/images")+1);
-                    Picasso.with(context).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
+                if(AmazoneImageDownload.isImageDownloaded(getApplicationContext(),listImages.get(position))){
+                    llProgress.setVisibility(View.GONE);
+                    ivDownload.setVisibility(View.GONE);
+                    Picasso.with(context).load(AmazoneImageDownload.getDownloadPath(getApplicationContext(),listImages.get(position))).placeholder(R.drawable.placeholder_image).networkPolicy(NetworkPolicy.OFFLINE).into(ivImage, new Callback() {
                         @Override
                         public void onSuccess() {
 
@@ -310,9 +402,28 @@ public class MultipleImageSwipeActivity extends BaseActivity {
                             Log.e("Picasso", "Error : ");
                         }
                     });
-                    ivDownload.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    {
+                        String path = Constants.decodeUrlToBase64(listImages.get(position));
+                        String newStr = path.substring(path.indexOf("/images")+1);
+                        Picasso.with(context).load(imagePreviewUrl+newStr+"?tr=w-50").placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+                                Log.e("Picasso", "Error : ");
+                            }
+                        });
+                        ivDownload.setVisibility(View.VISIBLE);
+                    }
                 }
             }
+
 
             ivDownload.setOnClickListener(new View.OnClickListener() {
                 @Override

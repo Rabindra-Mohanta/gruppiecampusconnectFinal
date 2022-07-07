@@ -556,9 +556,11 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         } else {
             for (int i = 0; i < listImages.size(); i++) {
                 try {
+                  //  File file = new SiliCompressor(this).
                     File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
                     listImages.set(i, newFile.getAbsolutePath());
                 } catch (IOException e) {
+                    Log.e(TAG,"Compressor "+e.getMessage());
                     e.printStackTrace();
                 }
             }
