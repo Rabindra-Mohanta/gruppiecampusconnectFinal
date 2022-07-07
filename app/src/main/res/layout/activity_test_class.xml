@@ -73,23 +73,25 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/topbar"
         app:tabGravity="fill"
-        app:tabMode="fixed"
-        app:tabIndicatorHeight="2dp"
         app:tabIndicatorColor="@color/colorPrimary"
+        app:tabIndicatorHeight="2dp"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/colorPrimary"
         app:tabTextAppearance="?android:attr/textAppearanceSmall"
-        app:tabTextColor="@color/color_grey_icon"
-        android:layout_height="wrap_content">
+        app:tabTextColor="@color/color_grey_icon">
+
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
-            android:text="@string/lbl_offline"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_offline" />
+
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
-            android:text="@string/lbl_online"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_online" />
 
     </com.google.android.material.tabs.TabLayout>
     <FrameLayout

@@ -90,6 +90,7 @@
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:inputType="phone"
+                android:maxLength="10"
                 android:text="@={myStudent.studentDataMutableLiveData.phone}" />
 
             <TextView
