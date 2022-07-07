@@ -60,12 +60,12 @@
 
     <ImageView
         android:id="@+id/iconRotate"
-        android:layout_gravity="end"
         android:layout_width="50dp"
-        android:padding="@dimen/padding_10dp"
+        android:layout_height="50dp"
+        android:layout_gravity="end"
         android:layout_toLeftOf="@id/iconShareExternal"
-        android:src="@drawable/icon_rorate_right"
-        android:layout_height="50dp" />
+        android:padding="@dimen/padding_10dp"
+        android:src="@drawable/icon_rorate_right" />
 
     <ImageView
         android:id="@+id/iconShareExternal"

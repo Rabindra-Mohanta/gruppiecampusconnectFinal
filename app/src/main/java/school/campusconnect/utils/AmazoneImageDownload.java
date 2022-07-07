@@ -137,48 +137,20 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 if (!TextUtils.isEmpty(url)) {
                     url = Constants.decodeUrlToBase64(url);
                     String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
-                    String fileName;
+                    File file;
                     if (key.contains("/")) {
                         String[] splitStr = key.split("/");
-                        fileName = splitStr[1];
+                        file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
                     } else {
-                        fileName = key;
+                        file = new File(getDirForMedia(""), key);
                     }
-
-                    Log.e(TAG,"File isImageDownloaded Name"+fileName);
-                    Uri collection = null;
-
-                    collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                    String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DISPLAY_NAME,
-                            MediaStore.MediaColumns.RELATIVE_PATH};
-
-                    String QUERY = MediaStore.Files.FileColumns.DISPLAY_NAME + " like ?";
-
-                    ContentResolver mContentResolver = context.getContentResolver();
-
-                    Cursor cursor = mContentResolver.query(collection, PROJECTION, QUERY , new String[]{fileName}, null);
-
-                    if (cursor != null) {
-
-                        if (cursor.getCount() > 0) {
-                            Log.e(TAG,"IS Image Downloaded");
-                            return true;
-                        } else {
-                            Log.e(TAG,"IS Image Downloaded false");
-                            return false;
-                        }
-                    }
-                    Log.e(TAG,"IS Image 1 Downloaded false");
-                    return false;
-
-                 //   return file.exists();
+                    return file.exists();
                 }
             }catch (Exception e){
-                AppLog.e(TAG,"Exception "+e.getMessage());
                 e.printStackTrace();
             }
+            return false;
         }
-        return false;
     }
 
     public static File getDownloadPath(String url) {
@@ -585,7 +557,7 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
     }
 
     private static File getFile(){
-        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name)+"/image");
 
         if (!mainFolder.exists()) {
             mainFolder.mkdir();

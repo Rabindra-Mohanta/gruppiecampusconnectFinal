@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -405,6 +406,38 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                         output = new FileOutputStream(file);
 
 
+                        try {
+
+                            File saveImage = new File(getFile(),file.getName());
+                            try {
+                                OutputStream outputStream = new FileOutputStream(saveImage);
+                                byte data[] = new byte[4096];
+                                long total = 0;
+                                int count;
+                                while ((count = input.read(data)) != -1) {
+                                    // allow canceling with back button
+                                    if (isCancelled()) {
+                                        input.close();
+                                        return "Cancel Download";
+                                    }
+                                    total += count;
+                                    // publishing the progress....
+                                    if (fileLength > 0) // only if total length is known
+                                        outputStream.write(data, 0, count);
+
+                                }
+                                if (outputStream != null)
+                                    outputStream.close();
+
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }catch (Exception e)
+                        {
+                            AppLog.e(TAG,"Exception on Image Media SAve "+e.getMessage());
+                        }
 
 
                         byte data[] = new byte[4096];
@@ -466,6 +499,15 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
 
             }
         }
+    }
+
+    private static File getFile(){
+        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name)+"/document");
+
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        return mainFolder;
     }
 
     @Override

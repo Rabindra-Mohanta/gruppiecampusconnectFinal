@@ -83,15 +83,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
     PostItem item;
     int count;
     DatabaseHandler databaseHandler;
-
+    private Boolean isStart = false;
     AmazoneAudioDownload asyncTask;
     ImageViewHolder mholder;
 
 
+
     MediaPlayer mediaPlayer  = new MediaPlayer();
     private Handler mHandler = new Handler();
-
-    private Boolean isStart = false;
 
     Runnable myRunnable = new Runnable() {
         @Override
