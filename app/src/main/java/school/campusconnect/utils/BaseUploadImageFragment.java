@@ -189,7 +189,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            galleryIntent.putExtra(Intent.ACTION_GET_CONTENT, true);
         }
         if (getParentFragment() != null) {
             getParentFragment().startActivityForResult(galleryIntent, requestCode);
