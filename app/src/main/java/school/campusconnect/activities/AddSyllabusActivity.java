@@ -77,7 +77,7 @@ ActivityAddSyllabusBinding binding;
     private void inits() {
 
         topicAdapter = new TopicAdapter();
-        binding.rvTopic.setAdapter(topicAdapter);
+        //binding.rvTopic.setAdapter(topicAdapter);
 
         teamId = getIntent().getStringExtra("team_id");
         subjectId = getIntent().getStringExtra("subject_id");
@@ -87,7 +87,7 @@ ActivityAddSyllabusBinding binding;
     }
     private void setListner()
     {
-        binding.imgAdd.setOnClickListener(this);
+       // binding.imgAdd.setOnClickListener(this);
         binding.btnAdd.setOnClickListener(this);
         binding.imgAddChapter.setOnClickListener(this);
         binding.ImgRemoveChapter.setOnClickListener(this);
@@ -250,9 +250,9 @@ ActivityAddSyllabusBinding binding;
 
         switch (v.getId())
         {
-            case R.id.imgAdd:
-                addTopic();
-                break;
+//            case R.id.imgAdd:
+//                addTopic();
+//                break;
 
             case R.id.btnAdd:
                 hide_keyboard();
@@ -345,22 +345,22 @@ ActivityAddSyllabusBinding binding;
 
                         List<SyllabusTBL> list = SyllabusTBL.getSyllabus(teamId,subjectId);
 
-                        if (list.size() > 0)
-                        {
-                            for (int i = 0;i<list.size();i++)
-                            {
-                                SyllabusModelReq.SyllabusModelData modelData1 = new SyllabusModelReq.SyllabusModelData();
-                                modelData1.setChapterName(list.get(i).chapterName);
-                                modelData1.setTopicsList(new Gson().fromJson(list.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
-                                syllabusModelData.add(modelData1);
-                            }
-                        }
+//                        if (list.size() > 0)
+//                        {
+//                            for (int i = 0;i<list.size();i++)
+//                            {
+//                                SyllabusModelReq.SyllabusModelData modelData1 = new SyllabusModelReq.SyllabusModelData();
+//                                modelData1.setChapterName(list.get(i).chapterName);
+//                                modelData1.setTopicsList(new Gson().fromJson(list.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
+//                                syllabusModelData.add(modelData1);
+//                            }
+//                        }
                         req.setSyllabusModelData(syllabusModelData);
 
                         Log.e(TAG,"send Request "+new Gson().toJson(req));
 
                         showLoadingBar(binding.progressBar,false);
-                        manager.addSyllabus(this,GroupDashboardActivityNew.groupId,teamId,subjectId,req);
+                        manager.addSyllabus(this,GroupDashboardActivityNew.groupId,teamId,subjectId,binding.etcName.getText().toString());
                     }
 
                 }
@@ -380,8 +380,8 @@ ActivityAddSyllabusBinding binding;
                 binding.ImgRemoveChapter.setVisibility(View.VISIBLE);
                 binding.etcName.setVisibility(View.VISIBLE);
                 binding.etTopicName.setVisibility(View.VISIBLE);
-                binding.imgAdd.setVisibility(View.VISIBLE);
-                binding.rvTopic.setVisibility(View.VISIBLE);
+               // binding.imgAdd.setVisibility(View.VISIBLE);
+                //binding.rvTopic.setVisibility(View.VISIBLE);
                 chapterID = null;
                 selectedTopicData.clear();
                 TopicId = null;
@@ -395,8 +395,8 @@ ActivityAddSyllabusBinding binding;
                 binding.etTopicName.getText().clear();
                 binding.etToDate.getText().clear();
                 binding.etFromDate.getText().clear();
-                binding.imgAdd.setVisibility(View.GONE);
-                binding.rvTopic.setVisibility(View.GONE);
+                //binding.imgAdd.setVisibility(View.GONE);
+               // binding.rvTopic.setVisibility(View.GONE);
                 binding.etTopicName.setVisibility(View.GONE);
 
                 binding.etcName.getText().clear();

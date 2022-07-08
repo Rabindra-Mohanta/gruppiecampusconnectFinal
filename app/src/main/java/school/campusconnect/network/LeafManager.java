@@ -12736,7 +12736,7 @@ public class LeafManager {
         }, serviceErrorType);
     }
 
-    public void addSyllabus(OnCommunicationListener listener, String group_id, String team_id, String subject_id, SyllabusModelReq req)
+    public void addSyllabus(OnCommunicationListener listener, String group_id, String team_id, String subject_id, String req)
     {
         mOnCommunicationListener = listener;
 
