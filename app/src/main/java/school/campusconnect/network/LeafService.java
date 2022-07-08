@@ -1999,7 +1999,7 @@ public interface LeafService {
 
     @PUT("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body SyllabusModelReq req);
+    Call<BaseResponse> addSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body String req);
 
     @GET("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

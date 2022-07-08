@@ -1683,7 +1683,7 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            galleryIntent.putExtra(Intent.ACTION_GET_CONTENT, true);
         }
         startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), requestCode);
     }

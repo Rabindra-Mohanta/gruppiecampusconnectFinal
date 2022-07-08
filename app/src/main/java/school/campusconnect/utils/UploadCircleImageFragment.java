@@ -256,7 +256,8 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
                     Locale.getDefault()).format(new Date());
             outputFile = File.createTempFile("IMG_" + timeStamp, ".jpg", outputDir);
             Uri destination = Uri.fromFile(outputFile);
-            Crop.of(source, destination).withAspect(10, 10).start(getActivity(), code);
+            Crop.of(source, destination).withAspect(10, 10)
+                    .start(getActivity(), code);
             Log.e("beCrop", "try completed");
         } catch (IOException e) {
             e.printStackTrace();

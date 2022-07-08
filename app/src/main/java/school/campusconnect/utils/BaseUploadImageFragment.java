@@ -104,7 +104,9 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
         if (!TextUtils.isEmpty(url)) {
             _finalUrl = url;
 
-            Picasso.with(getContext()).load(Constants.decodeUrlToBase64(url)).memoryPolicy(MemoryPolicy.NO_CACHE)
+            Picasso.with(getContext())
+                    .load(Constants.decodeUrlToBase64(url))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE).into(getImageView(), new Callback() {
                 @Override
                 public void onSuccess() {
@@ -244,7 +246,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
                     myProfileImage = profileImage;
                     galleryAddPic(profileImage);
 
-//                    setImageToView(profileImage);
+//x                    setImageToView(profileImage);
 
 
                     Log.e("CROP_TRACK", "from profile setImageToView called " + profileImage.imageUrl);
