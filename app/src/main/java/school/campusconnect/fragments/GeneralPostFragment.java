@@ -328,6 +328,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
         List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId + "");
         String lastId = null;
+
+
         if (dataItemList.size() != 0) {
             showLoadingBar(mBinding.progressBar);
             for (int i = 0; i < dataItemList.size(); i++) {
@@ -468,6 +470,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             case LeafManager.API_ID_GENERAL_POST:
                 PostResponse res = (PostResponse) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.getResults()));
+
                 if(res.totalNumberOfPages==0)
                 {
                     mBinding.txtEmpty.setVisibility(View.VISIBLE);
@@ -488,6 +491,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 mAdapter.notifyDataSetChanged();
 
                 totalPages = res.totalNumberOfPages;
+
                 if(totalPages==0)
                 {
                     mBinding.txtEmpty.setVisibility(View.VISIBLE);

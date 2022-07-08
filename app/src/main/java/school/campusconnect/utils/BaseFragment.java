@@ -52,6 +52,7 @@ import school.campusconnect.datamodel.HwItem;
 import school.campusconnect.datamodel.LiveClassListTBL;
 import school.campusconnect.datamodel.LoginRequest;
 import school.campusconnect.datamodel.LoginResponse;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostTeamDataItem;
 import school.campusconnect.datamodel.StudAssignementItem;
@@ -347,6 +348,7 @@ public class BaseFragment extends Fragment {
            AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getActivity()).getString(LeafPreference.GCM_TOKEN));
             GroupDataItem.deleteAll();
             PostDataItem.deleteAllPosts();
+            ImagePathTBL.deleteAll();
 //            NotificationModel.deleteAll();
             BaseTeamTable.deleteAll();
             BaseTeamTableV2.deleteAll();
@@ -469,6 +471,7 @@ public class BaseFragment extends Fragment {
             BoothsTBL.deleteAll();
             MemberTeamTBL.deleteAll();
             ProfileTBL.deleteAll();
+            ImagePathTBL.deleteAll();
             PublicFormBoothTBL.deleteAll();
             TicketTBL.deleteAll();
             DayEventTBL.deleteAllEvent();

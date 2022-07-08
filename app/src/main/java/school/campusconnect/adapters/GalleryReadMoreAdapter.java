@@ -305,6 +305,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                                 imgDownload.setVisibility(View.GONE);
                                 llProgress.setVisibility(View.VISIBLE);
                                 progressBar1.setVisibility(View.VISIBLE);
+
                                 asyncTask = AmazoneImageDownload.download(mContext, item.get(position).getImagePath(), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
                                     @Override
                                     public void onDownload(Uri file) {
@@ -366,8 +367,7 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
 
 
 
-
-
+                        /*Auto download*/
                             imgDownload.setVisibility(View.GONE);
                             llProgress.setVisibility(View.VISIBLE);
                             progressBar1.setVisibility(View.VISIBLE);
@@ -378,17 +378,26 @@ public class GalleryReadMoreAdapter extends AGVRecyclerViewAdapter<GalleryReadMo
                                     llProgress.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
                                     progressBar1.setVisibility(View.GONE);
-                                    Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
-                                        @Override
-                                        public void onSuccess() {
 
-                                        }
 
-                                        @Override
-                                        public void onError() {
 
-                                        }
-                                    });
+                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                        Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                Log.e("Gallery Read More","auto download Picasso Error : ");
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Glide.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(mImageView);
+                                    }
                                 }
 
                                 @Override

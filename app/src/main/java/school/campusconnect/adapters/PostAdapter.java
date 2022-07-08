@@ -329,7 +329,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (!AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                         /*    if(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID).equals(list.get(position).createdById)){
 

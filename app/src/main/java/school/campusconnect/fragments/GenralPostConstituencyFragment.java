@@ -250,6 +250,9 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                 AppLog.e(TAG, "firstVisibleItemPosition " + firstVisibleItemPosition);
                 AppLog.e(TAG, "lastVisibleItemPosition " + lastVisibleItemPosition);
 */
+
+                AppLog.e(TAG, "mIsLoading " + mIsLoading + " totalPages "+totalPages + " currentPage "+currentPage);
+
                 if (!mIsLoading && totalPages > currentPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0)
@@ -296,6 +299,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
 
 
+        mIsLoading = true;
         boolean apiEvent = false;
 
 
@@ -311,7 +315,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
 
         List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId,currentPage);
 
-        AppLog.e(TAG , "data item list size : "+dataItemList.size() + " , apieVent  :"+apiEvent);
+        AppLog.e(TAG , "data item list size : "+dataItemList.size() + " , apieVent  :"+apiEvent + ",current page"+currentPage);
         String lastId = null;
         if (dataItemList.size() != 0) {
             showLoadingBar(mBinding.progressBar);
@@ -363,6 +367,7 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
             mBinding.setSize(0);
         }
 
+        mIsLoading = false;
         /*    if (isConnectionAvailable()) {
                 AppLog.e(TAG, "DataFromAPI BG");
                 getData(true);
@@ -473,7 +478,6 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                     PostDataItem.deleteGeneralPosts(mGroupId + "");
                     PostDataItem.deleteGeneralPostsBirthday(mGroupId);
                     PostList.clear();
-
                     PostList.addAll(res.getResults());
                     AppLog.e(TAG, "current page 1");
 
@@ -483,7 +487,6 @@ public class GenralPostConstituencyFragment extends BaseFragment implements Leaf
                 }
                 mBinding.setSize(mAdapter.getItemCount());
                 mAdapter.notifyDataSetChanged();
-
                 totalPages = res.totalNumberOfPages;
                 LeafPreference.getInstance(getContext()).setString("totalPageGeneralPostConstituency",String.valueOf(totalPages));
                 mIsLoading = false;

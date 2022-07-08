@@ -562,14 +562,14 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                 try {
                     InputStream is =  getContentResolver().openInputStream(Uri.parse(listImages.get(i)));
                     bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
-                    listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, "test"));
-
+                    listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, String.valueOf(i)));
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                     AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
+                    e.printStackTrace();
                 }
+
             }
-            AppLog.e(TAG, "Final PAth :: " + listImages.toString());
+            AppLog.e(TAG, "Final PAth :: " + new Gson().toJson(listImages));
             upLoadImageOnCloud(0);
         }
     }

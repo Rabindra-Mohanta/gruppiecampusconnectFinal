@@ -173,7 +173,6 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
             }
 
         }
-
         super.onViewDetachedFromWindow(holder);
     }
 

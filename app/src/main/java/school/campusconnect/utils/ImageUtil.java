@@ -445,11 +445,16 @@ public class ImageUtil {
 
         File cameraFile;
 
+        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss",
+                Locale.getDefault()).format(new Date());
+
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            cameraFile = new File( LeafApplication.getInstance().getCacheDir(), name + ".jpg");
+            cameraFile = new File( LeafApplication.getInstance().getCacheDir(),  File.separator
+                    + "Compressor_" +System.currentTimeMillis()+"_"+ timeStamp + ".jpg");
             path = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
         } else {
-            cameraFile =new File( LeafApplication.getInstance().getCacheDir(), name + ".jpg");
+            cameraFile =new File( LeafApplication.getInstance().getCacheDir(),  File.separator
+                    + "Compressor_" +System.currentTimeMillis()+"_" + timeStamp + ".jpg");
             path = Uri.fromFile(cameraFile);
         }
         OutputStream os;
@@ -462,6 +467,7 @@ public class ImageUtil {
             Log.e("TAG", "Error writing bitmap", e);
         }
 
+        Log.e("TAG", "resize Image "+path.toString());
         return path.toString();
     }
 

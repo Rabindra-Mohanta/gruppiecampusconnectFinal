@@ -344,17 +344,25 @@ public class FullScreenActivity extends BaseActivity {
                 progressBar.setVisibility(View.GONE);
                 progressBar1.setVisibility(View.GONE);
 
-                Picasso.with(getApplicationContext()).load(file).placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    Picasso.with(getApplicationContext()).load(file).placeholder(R.drawable.placeholder_image).into(ivImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError() {
-                        Log.e("Picasso", "Error : ");
-                    }
-                });
+                        @Override
+                        public void onError() {
+                            Log.e("Picasso", "Error : ");
+                        }
+                    });
+                }
+                else
+                {
+                    Glide.with(getApplicationContext()).load(file).placeholder(R.drawable.placeholder_image).into(ivImage);
+                }
+
+
             }
 
             @Override

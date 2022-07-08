@@ -493,7 +493,6 @@ public class MultipleImageSwipeActivity extends BaseActivity {
 
             addView(ivImage,position);
 
-
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
