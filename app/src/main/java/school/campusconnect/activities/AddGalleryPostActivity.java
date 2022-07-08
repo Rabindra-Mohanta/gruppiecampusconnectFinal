@@ -8,6 +8,8 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -61,6 +63,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -555,13 +558,15 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             }, Constants.FILE_TYPE_VIDEO);
         } else {
             for (int i = 0; i < listImages.size(); i++) {
+                Bitmap bitmap = null;
                 try {
-                  //  File file = new SiliCompressor(this).
-                    File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
-                    listImages.set(i, newFile.getAbsolutePath());
-                } catch (IOException e) {
-                    Log.e(TAG,"Compressor "+e.getMessage());
+                    InputStream is =  getContentResolver().openInputStream(Uri.parse(listImages.get(i)));
+                    bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                    listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, "test"));
+
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
                 }
             }
             AppLog.e(TAG, "Final PAth :: " + listImages.toString());
@@ -709,6 +714,8 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     }
                 });
             } catch (IOException e) {
+
+                AppLog.e(TAG,"IOException"+e.getMessage());
                 e.printStackTrace();
             }
 

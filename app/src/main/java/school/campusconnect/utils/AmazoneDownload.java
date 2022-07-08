@@ -35,6 +35,7 @@ import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
 import school.campusconnect.datamodel.VideoOfflineObject;
 
 public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
@@ -149,18 +150,31 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                     url = Constants.decodeUrlToBase64(url);
                     String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
                     File file;
+                    File file2;
+                    String fileName;
                     if (key.contains("/")) {
                         String[] splitStr = key.split("/");
+                        fileName = splitStr[1];
                         file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
                     } else {
+                        fileName = key;
                         file = new File(getDirForMedia(""), key);
                     }
 
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                        return  FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
-                    } else {
+                    file2 = new File(getFile(),fileName);
 
-                        return Uri.fromFile(file);
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                        ImagePathTBL imagePathTBL = new ImagePathTBL();
+                        imagePathTBL.fileName = fileName;
+                        imagePathTBL.url = file.getAbsolutePath();
+                        imagePathTBL.save();
+                        return  FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file2);
+                    } else {
+                        ImagePathTBL imagePathTBL = new ImagePathTBL();
+                        imagePathTBL.fileName = fileName;
+                        imagePathTBL.url = file.getAbsolutePath();
+                        imagePathTBL.save();
+                        return Uri.fromFile(file2);
                     }
                 }
             } catch (Exception e) {
@@ -226,9 +240,9 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
                     File file;
                     if (key.contains("/")) {
                         String[] splitStr = key.split("/");
-                        file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
+                        file = new File(getFile(), splitStr[1]);
                     } else {
-                        file = new File(getDirForMedia(""), key);
+                        file = new File(getFile(), key);
                     }
                     return file.exists();
                 }
@@ -502,7 +516,7 @@ public class AmazoneDownload extends AsyncTask<Void, Integer, String> {
     }
 
     private static File getFile(){
-        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name)+"/document");
+        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
 
         if (!mainFolder.exists()) {
             mainFolder.mkdir();

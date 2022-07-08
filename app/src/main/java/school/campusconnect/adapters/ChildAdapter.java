@@ -509,21 +509,29 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                             progressBar.setVisibility(View.GONE);
                             progressBar1.setVisibility(View.GONE);
 
-                            Glide.with(mContext).load(file).diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .placeholder(R.drawable.placeholder_image).into(mImageView);
+                           // Glide.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(mImageView);
+
+                            Log.e(TAG,"auto download Picasso Path : "+file);
+
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        Log.e(TAG,"auto download Picasso Error : ");
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                Glide.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(mImageView);
+                            }
 
 
-                           /* Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(mImageView, new Callback() {
-                                @Override
-                                public void onSuccess() {
-
-                                }
-
-                                @Override
-                                public void onError() {
-                                    Log.e(TAG,"auto download Picasso Error : ");
-                                }
-                            });*/
                         }
 
                         @Override

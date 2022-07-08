@@ -20,6 +20,7 @@ import android.webkit.MimeTypeMap;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,7 @@ import java.net.URL;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
 
 public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
     private static final String TAG = "AmazoneDownload";
@@ -129,18 +131,33 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
                     url = Constants.decodeUrlToBase64(url);
                     String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
                     File file;
+                    File file2;
+                    String fileName;
                     if (key.contains("/")) {
                         String[] splitStr = key.split("/");
+                        fileName = splitStr[1];
                         file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
                     } else {
+                        fileName = key;
                         file = new File(getDirForMedia(""), key);
                     }
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                        return  FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
-                    } else {
 
-                        return Uri.fromFile(file);
+                    file2 = new File(getFile(),fileName);
+
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                        ImagePathTBL imagePathTBL = new ImagePathTBL();
+                        imagePathTBL.fileName = fileName;
+                        imagePathTBL.url = file.getAbsolutePath();
+                        imagePathTBL.save();
+                        return  FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file2);
+                    } else {
+                        ImagePathTBL imagePathTBL = new ImagePathTBL();
+                        imagePathTBL.fileName = fileName;
+                        imagePathTBL.url = file.getAbsolutePath();
+                        imagePathTBL.save();
+                        return Uri.fromFile(file2);
                     }
+
 
                 }
             } catch (Exception e) {
@@ -151,6 +168,14 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
 
     }
 
+    private static File getFile(){
+        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+
+        if (!mainFolder.exists()) {
+            mainFolder.mkdir();
+        }
+        return mainFolder;
+    }
 
 
     public static File getDownloadPath(String url) {
@@ -227,9 +252,9 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
                     File file;
                     if (key.contains("/")) {
                         String[] splitStr = key.split("/");
-                        file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
+                        file = new File(getFile(), splitStr[1]);
                     } else {
-                        file = new File(getDirForMedia(""), key);
+                        file = new File(getFile(), key);
                     }
                     return file.exists();
                 }
@@ -383,6 +408,39 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
                             // download the file
                             input = connection.getInputStream();
                             output = new FileOutputStream(file);
+
+                            try {
+
+                                File saveVideo = new File(getFile(),file.getName());
+                                try {
+                                    OutputStream outputStream = new FileOutputStream(saveVideo);
+                                    byte data[] = new byte[4096];
+                                    long total = 0;
+                                    int count;
+                                    while ((count = input.read(data)) != -1) {
+                                        // allow canceling with back button
+                                        if (isCancelled()) {
+                                            input.close();
+                                            return "Cancel Download";
+                                        }
+                                        total += count;
+                                        // publishing the progress....
+                                        if (fileLength > 0) // only if total length is known
+                                            outputStream.write(data, 0, count);
+
+                                    }
+                                    if (outputStream != null)
+                                        outputStream.close();
+
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }catch (Exception e)
+                            {
+                                AppLog.e(TAG,"Exception on Image Media SAve "+e.getMessage());
+                            }
 
                             byte data[] = new byte[4096];
                             long total = 0;

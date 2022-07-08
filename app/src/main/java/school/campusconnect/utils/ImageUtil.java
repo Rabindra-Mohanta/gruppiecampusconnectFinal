@@ -20,6 +20,8 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -39,6 +41,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import id.zelory.compressor.Compressor;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 
 
@@ -424,6 +427,44 @@ public class ImageUtil {
     /**
      * returning image / video
      */
+
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
+        float ratio = Math.min(
+                (float) maxImageSize / realImage.getWidth(),
+                (float) maxImageSize / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+        return newBitmap;
+    }
+
+    public static String resizeImage(Context context, Bitmap bitmap, String name) {
+
+        Uri path;
+
+        File cameraFile;
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            cameraFile = new File( LeafApplication.getInstance().getCacheDir(), name + ".jpg");
+            path = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
+        } else {
+            cameraFile =new File( LeafApplication.getInstance().getCacheDir(), name + ".jpg");
+            path = Uri.fromFile(cameraFile);
+        }
+        OutputStream os;
+        try {
+            os = new FileOutputStream(cameraFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e("TAG", "Error writing bitmap", e);
+        }
+
+        return path.toString();
+    }
+
     public static File getOutputMediaFile() {
 
         // External sdcard location

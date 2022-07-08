@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -66,7 +67,9 @@ import com.google.gson.reflect.TypeToken;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -1806,11 +1809,15 @@ public class BaseTeamFragmentv3 extends BaseFragment implements LeafManager.OnCo
     private void uploadToAmazon() {
 
         for (int i = 0; i < imageSliderList.size(); i++) {
+            Bitmap bitmap = null;
             try {
-                File newFile = new Compressor(getContext()).setMaxWidth(1000).setQuality(90).compressToFile(new File(imageSliderList.get(i)));
-                imageSliderList.set(i, newFile.getAbsolutePath());
-            } catch (IOException e) {
+                InputStream is =  getContext().getContentResolver().openInputStream(Uri.parse(imageSliderList.get(i)));
+                bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                imageSliderList.set(i, ImageUtil.resizeImage(getContext(), bitmap, "test"));
+
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
             }
         }
         AppLog.e(TAG, "Final PAth :: " + imageSliderList.toString());

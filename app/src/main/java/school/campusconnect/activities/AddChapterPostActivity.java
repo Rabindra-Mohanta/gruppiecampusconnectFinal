@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -999,11 +1000,16 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         }
         else {
             for (int i = 0; i < listImages.size(); i++) {
+
+                Bitmap bitmap = null;
                 try {
-                    File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
-                    listImages.set(i, newFile.getAbsolutePath());
-                } catch (IOException e) {
+                    InputStream is =  getContentResolver().openInputStream(Uri.parse(listImages.get(i)));
+                    bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                    listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, "test"));
+
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
                 }
             }
             AppLog.e(TAG, "Final PAth :: " + listImages.toString());

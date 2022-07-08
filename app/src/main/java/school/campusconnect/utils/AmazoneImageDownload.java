@@ -140,9 +140,9 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                     File file;
                     if (key.contains("/")) {
                         String[] splitStr = key.split("/");
-                        file = new File(getDirForMedia(splitStr[0]), splitStr[1]);
+                        file = new File(getFile(), splitStr[1]);
                     } else {
-                        file = new File(getDirForMedia(""), key);
+                        file = new File(getFile(), key);
                     }
                     return file.exists();
                 }
@@ -276,18 +276,17 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                         fileName = key;
                         file = new File(getDirForMedia(""), key);
                     }
-
                     file2 = new File(getFile(),fileName);
 
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                         ImagePathTBL imagePathTBL = new ImagePathTBL();
-                        imagePathTBL.fileName = file.getName();
+                        imagePathTBL.fileName = fileName;
                         imagePathTBL.url = file.getAbsolutePath();
                         imagePathTBL.save();
                         return  FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file2);
                     } else {
                         ImagePathTBL imagePathTBL = new ImagePathTBL();
-                        imagePathTBL.fileName = url;
+                        imagePathTBL.fileName = fileName;
                         imagePathTBL.url = file.getAbsolutePath();
                         imagePathTBL.save();
                         return Uri.fromFile(file2);
@@ -455,8 +454,10 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                                         outputStream.close();
 
                                 } catch (FileNotFoundException e) {
+                                    AppLog.e(TAG,"FileNotFoundException"+e.getMessage());
                                     e.printStackTrace();
                                 } catch (IOException e) {
+                                    AppLog.e(TAG,"IOException"+e.getMessage());
                                     e.printStackTrace();
                                 }
                             }catch (Exception e)
@@ -557,7 +558,7 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
     }
 
     private static File getFile(){
-        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name)+"/image");
+        File mainFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), LeafApplication.getInstance().getResources().getString(R.string.app_name));
 
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
