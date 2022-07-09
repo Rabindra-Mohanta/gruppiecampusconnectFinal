@@ -509,6 +509,12 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                             progressBar.setVisibility(View.GONE);
                             progressBar1.setVisibility(View.GONE);
 
+                            if ( context instanceof Activity ) {
+                                Activity activity = (Activity)context;
+                                if ( activity.isFinishing() ){
+                                    return;
+                                }
+                            }
                            // Glide.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(mImageView);
 
                             Log.e(TAG,"auto download Picasso Path : "+file);
@@ -528,6 +534,8 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                             }
                             else
                             {
+
+
                                 Glide.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(mImageView);
                             }
 

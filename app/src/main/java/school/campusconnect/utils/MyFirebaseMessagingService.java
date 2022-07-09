@@ -92,31 +92,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             String loginId = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID);
 
+            AppLog.e(TAG, "loginId " + loginId.equals(data.createdById));
+            AppLog.e(TAG, "loginId " + loginId);
             if (!loginId.equals(data.createdById)) {
 
                 LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
 
+                AppLog.e(TAG, "switch Notification_type: " + data.Notification_type);
+
                 switch (data.Notification_type) {
+
 
                     case "videoCall": {
                         Intent intent = new Intent("MEETING_END");
                         intent.putExtra("teamId", data.teamId);
                         intent.putExtra("createdByName", data.createdByName);
                         intent.setAction("MEETING_END");
+                        break;
                     }
-                    break;
 
                     case "AcceptVideoCall": {
                         Intent intents= new Intent("call_accept");
                         sendBroadcast(intents);
+                        break;
                     }
-                    break;
+
 
                     case "RejectVideoCall": {
                         Intent intents= new Intent("call_decline");
                         sendBroadcast(intents);
+                        break;
                     }
-                    break;
+
 
                     case "videoEnd": {
                         Intent intent = new Intent("MEETING_END");
@@ -125,8 +132,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.setAction("MEETING_END");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                         leafPreference.remove(data.teamId + "_liveclass");
+                        break;
                     }
-                    break;
+
 
                     case "videoStart": {
                         leafPreference.setString(data.teamId + "_liveclass", new Gson().toJson(data));
@@ -137,18 +145,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.putExtra("createdByName", data.createdByName);
                         intent.setAction("MEETING_START");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);*/
-
+                        break;
                     }
-                    break;
+
 
                     case "videoResume": {
                         Intent intent = new Intent("MEETING_RESUME");
                         intent.putExtra("teamId", data.teamId);
                         intent.setAction("MEETING_RESUME");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
                     }
 
-                    break;
 
                     case "examStart": {
                         Intent intent = new Intent("PROCTORING_START");
@@ -156,9 +164,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.putExtra("action", "PROCTORING_START");
                         intent.setAction("PROCTORING_START");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
                     }
 
-                    break;
 
                     case "examEnd": {
                         Intent intent = new Intent("PROCTORING_END");
@@ -166,9 +174,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.putExtra("action", "PROCTORING_END");
                         intent.setAction("PROCTORING_END");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
                     }
 
-                    break;
 
                     case "PROCTORING_RESTART": {
                         Intent intent = new Intent("PROCTORING_RESTART");
@@ -176,9 +184,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         intent.putExtra("action", "PROCTORING_RESTART");
                         intent.setAction("PROCTORING_RESTART");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
                     }
-
-                    break;
 
                     case "OFFLINE_TEST_EXAM":
                     {
@@ -186,8 +193,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
                         Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
                     }
-                    break;
+
 
                     case "NOTES_VIDEO":{
                         leafPreference.setInt(data.groupId + "_NOTES_VIDEO_NOTI_COUNT", leafPreference.getInt(data.groupId + "_NOTES_VIDEO_NOTI_COUNT") + 1);
@@ -214,8 +222,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
                         Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
                     }
-                    break;
+
 
                     case "gallery": {
 
@@ -224,9 +233,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             leafPreference.setInt(data.groupId + "_gallerypost", leafPreference.getInt(data.groupId + "_gallerypost") + 1);
                             //leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
                         }
-
+                        break;
                     }
-                    break;
+
 
                     case "post": {
 
@@ -255,23 +264,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
                         Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
                     }
-                    break;
+
                     case "VendorAdd": {
                         AppLog.e(TAG, "vendorAdd type notifcation .,, preference saving started.");
                         leafPreference.setInt(data.groupId + "_vendorpush", leafPreference.getInt(data.groupId + "_vendorpush") + 1);
+                        break;
                     }
-                    break;
+
 
                     case "RuleAdd": {
                         leafPreference.setInt(data.groupId + "_cocpush", leafPreference.getInt(data.groupId + "_cocpush") + 1);
+                        break;
                     }
-                    break;
+
 
                     case "EBookAdd": {
                         leafPreference.setInt(data.teamId + "_ebookpush", leafPreference.getInt(data.teamId + "_ebookpush") + 1);
+                        break;
                     }
-                    break;
+
                     case "ASSIGNMENT_STATUS": {
                         leafPreference.setInt(data.teamId + "_ass_count_noti", leafPreference.getInt(data.teamId + "_ass_count_noti") + 1);
                     }

@@ -1610,6 +1610,7 @@ public class AddPostActivity extends BaseActivity implements LeafManager.OnAddUp
 
 
     private void startCamera(int requestCode) {
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File cameraFile;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
