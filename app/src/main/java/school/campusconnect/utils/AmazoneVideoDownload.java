@@ -34,7 +34,7 @@ import school.campusconnect.R;
 import school.campusconnect.datamodel.Media.ImagePathTBL;
 
 public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
-    private static final String TAG = "AmazoneDownload";
+    private static final String TAG = "AmazoneVideoDownload";
     private AmazoneDownloadSingleListener listenerSignle;
     String url;
     File file;
@@ -382,8 +382,16 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
                         if (connection != null)
                             connection.disconnect();
                     }
-                }else
+                }
+                else
                 {
+                    AppLog.e(TAG,"File Exist "+file.exists());
+
+                    if (file.exists())
+                    {
+                        file.delete();
+                    }
+
                     if (!file.exists()) {
                         InputStream input = null;
                         OutputStream output = null;
@@ -433,8 +441,10 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
                                         outputStream.close();
 
                                 } catch (FileNotFoundException e) {
+                                    AppLog.e(TAG,"File not found"+e.getMessage());
                                     e.printStackTrace();
                                 } catch (IOException e) {
+                                    AppLog.e(TAG,"IOException"+e.getMessage());
                                     e.printStackTrace();
                                 }
                             }catch (Exception e)
@@ -500,6 +510,7 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
         AppLog.e(TAG, "onPostExecute : ");
         if (aVoid == null) {
             AppLog.e(TAG, "onPostExecute  :" + file.getAbsolutePath());
+
             if (listenerSignle != null) {
 
                 listenerSignle.onDownload(getDownloadPath(context,url));

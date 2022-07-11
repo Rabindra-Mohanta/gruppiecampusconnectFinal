@@ -403,6 +403,12 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 }
                 else
                 {
+
+                    if (file.exists())
+                    {
+                        file.delete();
+                    }
+
                     if (!file.exists()) {
 
                         InputStream input = null;
