@@ -345,7 +345,7 @@ public class AmazoneVideoDownload extends AsyncTask<Void, Integer, String> {
 
                         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, file.getName());
                         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
-                        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH,Environment.DIRECTORY_PICTURES+"/"+ LeafApplication.getInstance().getResources().getString(R.string.app_name));
+                        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH,Environment.DIRECTORY_DCIM+"/"+ LeafApplication.getInstance().getResources().getString(R.string.app_name));
                         ContentResolver resolver = context.getContentResolver();
                         Uri uriPath = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,contentValues);
                         output = resolver.openOutputStream(uriPath);
