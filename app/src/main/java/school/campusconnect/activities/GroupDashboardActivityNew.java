@@ -199,6 +199,9 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.llBothRegister)
     LinearLayout llBothRegister;
 
+    @Bind(R.id.llBookmark)
+    LinearLayout llBookmark;
+
     @Bind(R.id.llBothCoordinateRegister)
     LinearLayout llBothCoordinateRegister;
 
@@ -1597,6 +1600,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             llStaffReg.setVisibility(View.GONE);
             llBusRegister.setVisibility(View.GONE);
             llAttendanceReport.setVisibility(View.GONE);
+            llBookmark.setVisibility(View.VISIBLE);
             tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
 
          /*   if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA"))
@@ -1625,6 +1629,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
             if (mGroupItem.isAdmin || mGroupItem.isPartyTaskForce || mGroupItem.isDepartmentTaskForce || mGroupItem.isBoothPresident || mGroupItem.isBoothMember) {
                 llArchiveTeam.setVisibility(View.VISIBLE);
+
             }
             else
             {
