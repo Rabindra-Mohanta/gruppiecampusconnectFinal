@@ -117,7 +117,7 @@ public class AddStudentActivity extends BaseActivity {
         return true;
     }
 
-    public class SMBDailogClickListener implements DialogInterface.OnClickListener {
+    public static class SMBDailogClickListener implements DialogInterface.OnClickListener {
         private int DIALOG_ID = -1;
 
         @Override
@@ -126,14 +126,7 @@ public class AddStudentActivity extends BaseActivity {
             ListView lw = ((AlertDialog) dialog).getListView();
 
 
-            switch (DIALOG_ID) {
 
-                case R.id.layout_country:
-                    etCountry.setText(lw.getAdapter().getItem(lw.getCheckedItemPosition()).toString());
-                    currentCountry = lw.getCheckedItemPosition() + 1;
-                    break;
-
-            }
         }
 
         public SMBDailogClickListener(int id) {

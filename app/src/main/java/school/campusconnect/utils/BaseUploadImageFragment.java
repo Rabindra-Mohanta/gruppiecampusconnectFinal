@@ -104,7 +104,9 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
         if (!TextUtils.isEmpty(url)) {
             _finalUrl = url;
 
-            Picasso.with(getContext()).load(Constants.decodeUrlToBase64(url)).memoryPolicy(MemoryPolicy.NO_CACHE)
+            Picasso.with(getContext())
+                    .load(Constants.decodeUrlToBase64(url))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE).into(getImageView(), new Callback() {
                 @Override
                 public void onSuccess() {
@@ -187,7 +189,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            galleryIntent.putExtra(Intent.ACTION_GET_CONTENT, true);
         }
         if (getParentFragment() != null) {
             getParentFragment().startActivityForResult(galleryIntent, requestCode);
@@ -244,7 +246,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
                     myProfileImage = profileImage;
                     galleryAddPic(profileImage);
 
-//                    setImageToView(profileImage);
+//x                    setImageToView(profileImage);
 
 
                     Log.e("CROP_TRACK", "from profile setImageToView called " + profileImage.imageUrl);

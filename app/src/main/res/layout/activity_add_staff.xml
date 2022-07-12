@@ -86,11 +86,13 @@
                 android:textColor="@color/colorPrimary" />
 
             <EditText
+
                 android:id="@+id/etPhone"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
+                android:maxLength="10"
                 android:inputType="phone" />
 
 

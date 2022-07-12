@@ -1,5 +1,6 @@
 package school.campusconnect.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -200,7 +201,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void onBindViewHolder(final ImageViewHolder holder, final int position) {
+    public void onBindViewHolder(final ImageViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final PostItem item = list.get(position);
         AppLog.e("PostAdapter", "item[" + position + "] : " + item);
         String dispName = item.createdBy;

@@ -12,11 +12,10 @@
             android:id="@+id/imgDelete"
             android:layout_width="@dimen/padding_40dp"
             android:layout_height="@dimen/padding_40dp"
-            android:tint="@android:color/holo_red_dark"
             android:layout_alignParentRight="true"
             android:padding="@dimen/padding_5dp"
             android:src="@drawable/ic_close"
-             />
+            app:tint="@android:color/holo_red_dark" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,6 +74,7 @@
                 android:textColor="@color/colorPrimary" />
 
             <EditText
+                android:maxLength="10"
                 android:id="@+id/etPhone"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"

@@ -84,30 +84,14 @@ public static final String TAG = "StaffAttendanceActivity";
 
             }
         });
-
-
-        binding.chMorning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                adapter.addAllMorning();
-            }
-        });
-
-
-        binding.chAfterNoon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                adapter.addAllAfterNoon();
-            }
-        });
     }
 
     private void apiCall()
-    {  // showLoadingBar(binding.progressBar,false);
-        binding.progressBar.setVisibility(View.VISIBLE);
+    {
         adapter = new StaffAttendance();
         binding.rvAttendance.setAdapter(adapter);
-
+        //showLoadingBar(binding.progressBar,false);
+        binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.getStaffAttendance(this,GroupDashboardActivityNew.groupId,day,month,year);
 
     }
@@ -153,31 +137,27 @@ public static final String TAG = "StaffAttendanceActivity";
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-      //  hideLoadingBar();
+        //hideLoadingBar();
         binding.progressBar.setVisibility(View.GONE);
 
         if (LeafManager.API_STAFF_ATTENDACNCE == apiId)
         {
             StaffAttendanceRes res = (StaffAttendanceRes) response;
+            binding.rvAttendance.setItemViewCacheSize(res.getStaffAttendData().size());
+            adapter.add(res.getStaffAttendData());
+
             if(res.getStaffAttendData().size()==0)
             {
                 binding.txtEmpty.setVisibility(View.VISIBLE);
-                binding.chAfterNoon.setVisibility(View.GONE);
-                binding.chMorning.setVisibility(View.GONE);
             }
             else
             {
-                binding.chAfterNoon.setVisibility(View.VISIBLE);
-                binding.chMorning.setVisibility(View.VISIBLE);
+                binding.txtEmpty.setVisibility(View.GONE);
             }
-            binding.rvAttendance.setItemViewCacheSize(res.getStaffAttendData().size());
-            adapter.add(res.getStaffAttendData());
         }
 
         if (LeafManager.API_TAKE_STAFF_ATTENDACNCE == apiId)
         {
-            binding.chMorning.setChecked(false);
-            binding.chAfterNoon.setChecked(false);
             apiCall();
            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_attendance_submit),Toast.LENGTH_SHORT).show();
         }
@@ -202,7 +182,7 @@ public static final String TAG = "StaffAttendanceActivity";
 
     @Override
     public void onFailure(int apiId, String msg) {
-        //  hideLoadingBar();
+        //hideLoadingBar();
         binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onFailure(apiId, msg);
@@ -210,7 +190,7 @@ public static final String TAG = "StaffAttendanceActivity";
 
     @Override
     public void onException(int apiId, String msg) {
-        //  hideLoadingBar();
+        //hideLoadingBar();
         binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onException(apiId, msg);
@@ -228,10 +208,6 @@ public static final String TAG = "StaffAttendanceActivity";
 
         ArrayList<String> morningAttendance = new ArrayList<>();
         ArrayList<String> afterNoonAttendance = new ArrayList<>();
-
-        private boolean isMorningAll = false;
-        private boolean isAfterNoonAll = false;
-
         @NonNull
         @Override
         public StaffAttendance.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -244,6 +220,7 @@ public static final String TAG = "StaffAttendanceActivity";
             StaffAttendanceRes.StaffAttendData data = staffAttendData.get(position);
 
            holder.binding.tvStaffName.setText(data.getName());
+
 
             if (data.getAttendance() != null && data.getAttendance().size() > 0)
             {
@@ -287,46 +264,10 @@ public static final String TAG = "StaffAttendanceActivity";
             {
 
 
-
-
               /*  holder.binding.chAfterNoon.setEnabled(true);
                 holder.binding.chMorning.setEnabled(true);
                 holder.binding.chMorning.setChecked(false);
                 holder.binding.chMorning.setChecked(false);*/
-            }
-
-            if (isMorningAll)
-            {
-                if (!holder.binding.chMorning.isChecked() && holder.binding.chMorning.isEnabled())
-                {
-                    morningAttendance.add(data.getUserId());
-                    holder.binding.chMorning.setChecked(true);
-                }
-            }else
-            {
-
-                if (holder.binding.chMorning.isChecked() && holder.binding.chMorning.isEnabled())
-                {
-                    morningAttendance.clear();
-                    holder.binding.chMorning.setChecked(false);
-                }
-            }
-
-            if (isAfterNoonAll)
-            {
-                if (!holder.binding.chAfterNoon.isChecked() && holder.binding.chAfterNoon.isEnabled())
-                {
-                    afterNoonAttendance.add(data.getUserId());
-                    holder.binding.chAfterNoon.setChecked(true);
-                }
-            }
-            else
-            {
-                if (holder.binding.chAfterNoon.isChecked() && holder.binding.chAfterNoon.isEnabled())
-                {
-                    afterNoonAttendance.clear();
-                    holder.binding.chAfterNoon.setChecked(false);
-                }
             }
 
             holder.binding.chMorning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -428,33 +369,6 @@ public static final String TAG = "StaffAttendanceActivity";
             notifyDataSetChanged();
         }
 
-        public void addAllMorning() {
-
-            if (isMorningAll)
-            {
-                isMorningAll = false;
-            }
-            else
-            {
-                isMorningAll = true;
-            }
-            notifyDataSetChanged();
-        }
-
-        public void addAllAfterNoon() {
-
-            if (isAfterNoonAll)
-            {
-                isAfterNoonAll = false;
-            }
-            else
-            {
-                isAfterNoonAll = true;
-            }
-            notifyDataSetChanged();
-        }
-
-
         public ArrayList<String> getMorningAttendance() {
            return morningAttendance;
         }
@@ -530,7 +444,7 @@ public static final String TAG = "StaffAttendanceActivity";
                 {
                     isEdit[0] = true;
 
-                   // showLoadingBar(binding.progressBar,false);
+                    //showLoadingBar(binding.progressBar,false);
                     binding.progressBar.setVisibility(View.VISIBLE);
                     ChangeStaffAttendanceReq req = new ChangeStaffAttendanceReq();
                     req.setDay(String.valueOf(day));
@@ -610,7 +524,7 @@ public static final String TAG = "StaffAttendanceActivity";
                 {
                     isEdit[0] = true;
 
-                    // showLoadingBar(binding.progressBar,false);
+                    //showLoadingBar(binding.progressBar,false);
                     binding.progressBar.setVisibility(View.VISIBLE);
                     ChangeStaffAttendanceReq req = new ChangeStaffAttendanceReq();
                     req.setDay(String.valueOf(day));

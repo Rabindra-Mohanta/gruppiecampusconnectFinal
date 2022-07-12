@@ -273,18 +273,18 @@
 
     <string name="hint_yttitle">ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಿ</string>
     <string name="hint_ytdesc">ವಿವರಣೆಯನ್ನು ನಮೂದಿಸಿ</string>
-    <string name="hint_edit_comment">ನಿಮ್ಮ ಕಾಮೆಂಟ್ ಎಡಿಟ್ ಮಾಡಿ...</string>
+    <string name="hint_edit_comment">ನಿಮ್ಮ ಕಾಮೆಂಟ್ ಎಡಿಟ್ ಮಾಡಿ</string>
     <string name="hint_address_line_1">ವಿಳಾಸ ಸಾಲು 1</string>
     <string name="hint_address_line_2">ವಿಳಾಸ ಸಾಲು 2</string>
 
     <string name="hint_search">ಸಂಪರ್ಕಗಳನ್ನು ಹುಡುಕಿ</string>
     <string name="hint_search_issue">ಹುಡುಕಾಟ ಸಮಸ್ಯೆ</string>
     <string name="hint_search_booth">ಹುಡುಕಾಟ ಬೂತ್</string>
-    <string name="hint_view_more">ಇನ್ನಷ್ಟು ವೀಕ್ಷಿಸಿ...</string>
-    <string name="hint_enter_your_question">ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ನಮೂದಿಸಿ...</string>
-    <string name="hint_issue_not_found">ಸಮಸ್ಯೆ ಕಂಡುಬಂದಿಲ್ಲ.......</string>
-    <string name="hint_caste_not_found">ಜಾತಿ ಕಾಣಲಿಲ್ಲ.......</string>
-    <string name="hint_sub_caste_not_found">ಉಪ ಜಾತಿ ಕಂಡುಬಂದಿಲ್ಲ.......</string>
+    <string name="hint_view_more">ಇನ್ನಷ್ಟು ವೀಕ್ಷಿಸಿ</string>
+    <string name="hint_enter_your_question">ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_issue_not_found">ಸಮಸ್ಯೆ ಕಂಡುಬಂದಿಲ್ಲ</string>
+    <string name="hint_caste_not_found">ಜಾತಿ ಕಾಣಲಿಲ್ಲ</string>
+    <string name="hint_sub_caste_not_found">ಉಪ ಜಾತಿ ಕಂಡುಬಂದಿಲ್ಲ</string>
 
     <string name="hint_search_address">ವಿಳಾಸವನ್ನು ಹುಡುಕಿ</string>
     <string name="action_register">ಹೊಸ ಬಳಕೆದಾರ ? ಸೈನ್ ಅಪ್ ಮಾಡಿ</string>
@@ -465,8 +465,10 @@
     <string name="lbl_class_name">ವರ್ಗ</string>
     <string name="lbl_addharCard">ಆಧಾರ್ ಕಾರ್ಡ್</string>
     <string name="lbl_add_class">ವರ್ಗ ಸೇರಿಸಿ</string>
-
+    <string name="lbl_add_regular_class">Add Regular Class</string>
+    <string name="lbl_add_combined_class">Add Combined/Other Class</string>
     <string name="lbl_add_tikit">ಟಿಕೆಟ್ ತೆರೆಯಿರಿ</string>
+
     <string name="lbl_tikit">ಟಿಕೆಟ್‌ಗಳು</string>
     <string name="lbl_select_role">ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="lbl_tikit_details">ಟಿಕೆಟ್ ವಿವರಗಳು</string>
@@ -584,6 +586,7 @@
     <string name="lbl_total_balance">ಒಟ್ಟು ಬ್ಯಾಲೆನ್ಸ್ ಮೊತ್ತ</string>
     <string name="lbl_total_amount_paid">ಪಾವತಿಸಿದ ಒಟ್ಟು ಮೊತ್ತ</string>
     <string name="lbl_enter_chapter_name">ಅಧ್ಯಾಯದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="lbl_enter_topic_name">Enter Topic name</string>
     <string name="lbl_completed">ಪೂರ್ಣಗೊಂಡಿದೆ</string>
     <string name="lbl_clear">ಸ್ಪಷ್ಟ</string>
     <string name="lbl_filter">ಫಿಲ್ಟರ್</string>
@@ -707,7 +710,7 @@
     <string name="lbl_day">ದಿನ</string>
     <string name="lbl_roll_No">ರೋಲ್ ನಂ</string>
     <string name="lbl_morning">ಬೆಳಗ್ಗೆ</string>
-    <string name="lbl_all_booth_member">ಎಲ್ಲಾ ಮತಗಟ್ಟೆ ಸದಸ್ಯರು...</string>
+    <string name="lbl_all_booth_member">ಎಲ್ಲಾ ಮತಗಟ್ಟೆ ಸದಸ್ಯರು</string>
     <string name="lbl_add_ticket">ಹೊಸ ಟಿಕೆಟ್</string>
     <string name="lbl_select_class_">ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="lbl_evening">ಸಂಜೆ</string>
@@ -834,7 +837,7 @@
     <string name="toast_delete_coordinate">ನಿರ್ದೇಶಾಂಕವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಿ</string>
     <string name="toast_mark_card_delete_successfully">ಕಾರ್ಡ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ</string>
     <string name="toast_input_some_query">ಮೊದಲು ಕೆಲವು ಪ್ರಶ್ನೆಗಳನ್ನು ನಮೂದಿಸಿ</string>
-    <string name="toast_ticket_add_successfully">ಟಿಕೆಟ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ...</string>
+    <string name="toast_ticket_add_successfully">ಟಿಕೆಟ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ</string>
     <string name="toast_select_team">ದಯವಿಟ್ಟು ತಂಡವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_add_issue">ದಯವಿಟ್ಟು ಸಮಸ್ಯೆಯನ್ನು ಸೇರಿಸಿ</string>
     <string name="toast_valid_issue">ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಸಮಸ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
@@ -842,7 +845,7 @@
     <string name="toast_select_location">ದಯವಿಟ್ಟು ಸ್ಥಳವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_audio_permission_needed">ಆಡಿಯೋ ಅನುಮತಿ ಅಗತ್ಯವಿದೆ. ದಯವಿಟ್ಟು ಹೆಚ್ಚುವರಿ ಕಾರ್ಯಕ್ಕಾಗಿ ಅಪ್ಲಿಕೇಶನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಅನುಮತಿಸಿ</string>
     <string name="toast_valid_youtube_link">ಮಾನ್ಯವಾದ YouTube ಲಿಂಕ್ ಅಲ್ಲ</string>
-    <string name="toast_change_pin">ಪಿನ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬದಲಿಸಿ...</string>
+    <string name="toast_change_pin">ಪಿನ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬದಲಿಸಿ</string>
     <string name="toast_select_friend_first">ದಯವಿಟ್ಟು ಮೊದಲು ಯಾವುದೇ ಸ್ನೇಹಿತರನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_error_comression">ಸಂಕೋಚನದಲ್ಲಿ ದೋಷ:</string>
     <string name="toast_select_staff">ಯಾವುದೇ ಸಿಬ್ಬಂದಿ ಸದಸ್ಯರನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
@@ -852,7 +855,7 @@
     <string name="toast_add_student_sucess">ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಿ</string>
     <string name="toast_edit_student_sucess">ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಂಪಾದಿಸಿ</string>
     <string name="toast_delete_student_sucess">ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಿ</string>
-    <string name="toast_stop_audio">ಆಡಿಯೋ ರೆಕಾರ್ಡಿಂಗ್ ನಿಲ್ಲಿಸಿ...</string>
+    <string name="toast_stop_audio">ಆಡಿಯೋ ರೆಕಾರ್ಡಿಂಗ್ ನಿಲ್ಲಿಸಿ</string>
     <string name="toast_enable_gps">ದಯವಿಟ್ಟು Gps ಅನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
     <string name="toast_add_to_group">ಗುಂಪಿಗೆ ಸೇರಿಸಲಾಗಿದೆ</string>
     <string name="toast_could_not_find_file">ಆಯ್ಕೆಮಾಡಿದ ಫೈಲ್‌ನ ಫೈಲ್‌ಪಾತ್ ಅನ್ನು ಕಂಡುಹಿಡಿಯಲಾಗಲಿಲ್ಲ</string>
@@ -872,10 +875,10 @@
     <string name="toast_user_deleted">ಬಳಕೆದಾರರನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
     <string name="toast_admin_changed">ನಿರ್ವಾಹಕರು ಬದಲಾಗಿದ್ದಾರೆ</string>
     <string name="toast_attendance_report_save_successfully">ಹಾಜರಾತಿ ವರದಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಿ</string>
-    <string name="toast_notification_not_found">ಅಧಿಸೂಚನೆ ಕಂಡುಬಂದಿಲ್ಲ...</string>
+    <string name="toast_notification_not_found">ಅಧಿಸೂಚನೆ ಕಂಡುಬಂದಿಲ್ಲ</string>
     <string name="toast_please_select_student">ದಯವಿಟ್ಟು ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_shared_successfully">ಯಶಸ್ವಿಯಾಗಿ ಹಂಚಲಾಗಿದೆ</string>
-    <string name="toast_select_any_group_first">ಮೊದಲು ಯಾವುದಾದರೂ ಗುಂಪನ್ನು ಆಯ್ಕೆಮಾಡಿ...</string>
+    <string name="toast_select_any_group_first">ಮೊದಲು ಯಾವುದಾದರೂ ಗುಂಪನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_you_can_not_leave_team">ನೀವು ತಂಡವನ್ನು ಬಿಡಲು ಸಾಧ್ಯವಿಲ್ಲ</string>
     <string name="toast_error_set_wallpaper">ಸೆಟ್ ವಾಲ್‌ಪೇಪರ್‌ನಲ್ಲಿ ದೋಷ</string>
     <string name="toast_update_successfully">ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ</string>
@@ -928,7 +931,7 @@
     <string name="toast_select_test_time">ದಯವಿಟ್ಟು ಪರೀಕ್ಷಾ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_select_test_date">ದಯವಿಟ್ಟು ಪರೀಕ್ಷಾ ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_enter_valid_email">ಮಾನ್ಯ ಇಮೇಲ್ ನಮೂದಿಸಿ</string>
-    <string name="toast_voter_add_successfully">ಮತದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ...</string>
+    <string name="toast_voter_add_successfully">ಮತದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ</string>
     <string name="toast_select_contact">ದಯವಿಟ್ಟು ಸಂಪರ್ಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_image_download">ಚಿತ್ರವನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ.</string>
     <string name="toast_mark_card_uploaded">ಮಾರ್ಕ್ಸ್ ಕಾರ್ಡ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ</string>
@@ -938,7 +941,7 @@
     <string name="toast_select_subject_and_staff">ದಯವಿಟ್ಟು ವಿಷಯ ಮತ್ತು ಸಿಬ್ಬಂದಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="toast_successfully_add_time_table">ಟೈಮ್ ಟೇಬಲ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ</string>
     <string name="toast_select_end_time_after_start_time">ಪ್ರಾರಂಭದ ಸಮಯದ ನಂತರ ಅಂತಿಮ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
-    <string name="toast_period_value_already_used">ಅವಧಿಯ ಮೌಲ್ಯವನ್ನು ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ...</string>
+    <string name="toast_period_value_already_used">ಅವಧಿಯ ಮೌಲ್ಯವನ್ನು ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ</string>
     <string name="toast_password_not_match">ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ.!</string>
     <string name="toast_device_not_supported">ಈ ಸಾಧನವು ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.</string>
     <string name="toast_location_data_not_available">ಸ್ಥಳ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ</string>
@@ -982,11 +985,11 @@
     <string name="toast_create_mark_card">ದಯವಿಟ್ಟು ಮಾರ್ಕ್ ಕಾರ್ಡ್ ರಚಿಸಿ</string>
     <string name="toast_otp_send_to">ಗೆ OTP ಕಳುಹಿಸಲಾಗಿದೆ</string>
 
-    <string name="txt_enter_old_pin">ಹಳೆಯ ಪಿನ್ ನಮೂದಿಸಿ...</string>
-    <string name="txt_old_pin_wrong">ಹಳೆಯ ಪಿನ್ ತಪ್ಪಾಗಿದೆ...</string>
-    <string name="txt_enter_new_pin">ಹೊಸ ಪಿನ್ ನಮೂದಿಸಿ...</string>
-    <string name="txt_confirm_pin_not_match">ಪಿನ್ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ ಎಂದು ಖಚಿತಪಡಿಸಿ...</string>
-    <string name="txt_enter_confirm_pin">ಪಿನ್ ಅನ್ನು ದೃಢೀಕರಿಸಿ ನಮೂದಿಸಿ...</string>
+    <string name="txt_enter_old_pin">ಹಳೆಯ ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="txt_old_pin_wrong">ಹಳೆಯ ಪಿನ್ ತಪ್ಪಾಗಿದೆ</string>
+    <string name="txt_enter_new_pin">ಹೊಸ ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="txt_confirm_pin_not_match">ಪಿನ್ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ ಎಂದು ಖಚಿತಪಡಿಸಿ</string>
+    <string name="txt_enter_confirm_pin">ಪಿನ್ ಅನ್ನು ದೃಢೀಕರಿಸಿ ನಮೂದಿಸಿ</string>
     <string name="txt_my_groups">ನನ್ನ ಗುಂಪುಗಳು</string>
     <string name="txt_public_groups">ಸಾರ್ವಜನಿಕ ಗುಂಪುಗಳು</string>
     <string name="txt_no_ebook_found">ಯಾವುದೇ ಇ-ಪುಸ್ತಕ ಕಂಡುಬಂದಿಲ್ಲ</string><!--ಯಾವುದೇ ಇ-ಪುಸ್ತಕ ಕಂಡುಬಂದಿಲ್ಲ-->
@@ -1022,9 +1025,9 @@
     <string name="txt_comment">ಕಾಮೆಂಟ್ ಮಾಡಿ</string>
     <string name="txt_no_assignment_found">ಯಾವುದೇ ನಿಯೋಜನೆ ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ನಿಯೋಜನೆ ಕಂಡುಬಂದಿಲ್ಲ.-->
     <string name="txt_pin">ಪಿನ್</string>
-    <string name="txt_confirm_pin_wrong">ಪಿನ್ ತಪ್ಪಾಗಿದೆ ಎಂದು ದೃಢೀಕರಿಸಿ...</string>
-    <string name="txt_enter_pin">ಪಿನ್ ನಮೂದಿಸಿ...</string>
-    <string name="txt_enter_valid_pin">ಮಾನ್ಯವಾದ ಪಿನ್ ನಮೂದಿಸಿ...</string>
+    <string name="txt_confirm_pin_wrong">ಪಿನ್ ತಪ್ಪಾಗಿದೆ ಎಂದು ದೃಢೀಕರಿಸಿ</string>
+    <string name="txt_enter_pin">ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="txt_enter_valid_pin">ಮಾನ್ಯವಾದ ಪಿನ್ ನಮೂದಿಸಿ</string>
     <string name="txt_basic_info">ಮೂಲ ಮಾಹಿತಿ</string>
     <string name="txt_other_info">ಇತರೆ ಮಾಹಿತಿ</string>
     <string name="txt_no_taluks_found">ಯಾವುದೇ ತಾಲೂಕುಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ತಾಲೂಕುಗಳು ಕಂಡುಬಂದಿಲ್ಲ.-->
@@ -1037,11 +1040,13 @@
 
     <string name="hint_search_voter">ಮತದಾರರನ್ನು ಹುಡುಕಿ</string>
     <string name="hint_search_booths">ಬೂತ್‌ಗಳನ್ನು ಹುಡುಕಿ</string>
-    <string name="hint_write_comment">ಅನಿಸಿಕೆಯನ್ನು ಬರೆಯಿರಿ...</string>
-    <string name="hint_write_post">ಪೋಸ್ಟ್ ಬರೆಯಿರಿ...</string>
-    <string name="hint_write_reply">ಉತ್ತರ ಬರೆಯಿರಿ...</string>
+    <string name="hint_write_comment">ಅನಿಸಿಕೆಯನ್ನು ಬರೆಯಿರಿ</string>
+    <string name="hint_write_post">ಪೋಸ್ಟ್ ಬರೆಯಿರಿ</string>
+    <string name="hint_write_reply">ಉತ್ತರ ಬರೆಯಿರಿ</string>
     <string name="hint_search_booth_team">ಹುಡುಕಾಟ ಬೂತ್ ತಂಡ</string>
     <string name="hint_search_sub_booth">ಉಪ ಬೂತ್ ಹುಡುಕಿ</string>
+
+
 
 
     <string name="dialog_new_version_available">ಹೊಸ ಆವೃತ್ತಿ ಲಭ್ಯವಿದೆ. ಪ್ಲೇ ಸ್ಟೋರ್‌ನಿಂದ ಹೊಸ ಆವೃತ್ತಿಯನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
@@ -1096,62 +1101,62 @@
     <string name="smb_attach_file">ಆಯ್ಕೆಮಾಡಿದ ಫೈಲ್ ಅನ್ನು ಲಗತ್ತಿಸುವುದೇ?</string>
     <string name="smb_change_team_admin">ತಂಡದ ನಿರ್ವಾಹಕರನ್ನು ಬದಲಾಯಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ</string>
 
-        <string-array name="publc_private_array">
-            <item>ಗುಂಪು ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</item>
-            <item>ಖಾಸಗಿ</item>
-            <item>ಸಾರ್ವಜನಿಕ</item>
-        </string-array>
+    <string-array name="publc_private_array">
+        <item>ಗುಂಪು ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</item>
+        <item>ಖಾಸಗಿ</item>
+        <item>ಸಾರ್ವಜನಿಕ</item>
+    </string-array>
 
-        <string-array name="blood_group">
-            <item>ಆಯ್ಕೆ ರಕ್ತದ ಗುಂಪು</item>
-            <item>ಎ+ </item>
-            <item>ಎ-</item>
-            <item>ಬಿ +</item>
-            <item>ಬಿ-</item>
-            <item>O+ </item>
-            <item>O-</item>
-            <item>AB+</item>
-            <item>AB-</item>
-        </string-array>
+    <string-array name="blood_group">
+        <item>ಆಯ್ಕೆ ರಕ್ತದ ಗುಂಪು</item>
+        <item>ಎ+ </item>
+        <item>ಎ-</item>
+        <item>ಬಿ +</item>
+        <item>ಬಿ-</item>
+        <item>O+ </item>
+        <item>O-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+    </string-array>
 
-        <string-array name="gender_array">
-            <item>ಲಿಂಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</item>
-            <item>ಪುರುಷ</item>
-            <item>ಸ್ತ್ರೀ</item>
-            <item>ಇತರೆ</item>
-        </string-array>
-        <string-array name="lastSubTime">
-            <item>1ನಿಮಿಷ</item>
-            <item>2ನಿಮಿಷ</item>
-            <item>3ನಿಮಿಷ</item>
-            <item>4ನಿಮಿಷ</item>
-            <item>5ನಿಮಿಷ</item>
-            <item>6ನಿಮಿಷ</item>
-            <item>7ನಿಮಿಷ</item>
-            <item>8ನಿಮಿಷ</item>
-            <item>9ನಿಮಿಷ</item>
-            <item>10ನಿಮಿಷ</item>
-            <item>11ನಿಮಿಷ</item>
-            <item>12ನಿಮಿಷ</item>
-            <item>13ನಿಮಿಷ</item>
-            <item>14ನಿಮಿಷ</item>
-            <item>15ನಿಮಿಷ</item>
-            <item>16ನಿಮಿಷ</item>
-            <item>17ನಿಮಿಷ</item>
-            <item>18ನಿಮಿಷ</item>
-            <item>19ನಿಮಿಷ</item>
-            <item>20ನಿಮಿಷ</item>
-            <item>21ನಿಮಿಷ</item>
-            <item>22ನಿಮಿಷ</item>
-            <item>23ನಿಮಿಷ</item>
-            <item>24ನಿಮಿಷ</item>
-            <item>25ನಿಮಿಷ</item>
-            <item>26ನಿಮಿಷ</item>
-            <item>27ನಿಮಿಷ</item>
-            <item>28ನಿಮಿಷ</item>
-            <item>29ನಿಮಿಷ</item>
-            <item>30ನಿಮಿಷ</item>
-        </string-array>
+    <string-array name="gender_array">
+        <item>ಲಿಂಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</item>
+        <item>ಪುರುಷ</item>
+        <item>ಸ್ತ್ರೀ</item>
+        <item>ಇತರೆ</item>
+    </string-array>
+    <string-array name="lastSubTime">
+        <item>1ನಿಮಿಷ</item>
+        <item>2ನಿಮಿಷ</item>
+        <item>3ನಿಮಿಷ</item>
+        <item>4ನಿಮಿಷ</item>
+        <item>5ನಿಮಿಷ</item>
+        <item>6ನಿಮಿಷ</item>
+        <item>7ನಿಮಿಷ</item>
+        <item>8ನಿಮಿಷ</item>
+        <item>9ನಿಮಿಷ</item>
+        <item>10ನಿಮಿಷ</item>
+        <item>11ನಿಮಿಷ</item>
+        <item>12ನಿಮಿಷ</item>
+        <item>13ನಿಮಿಷ</item>
+        <item>14ನಿಮಿಷ</item>
+        <item>15ನಿಮಿಷ</item>
+        <item>16ನಿಮಿಷ</item>
+        <item>17ನಿಮಿಷ</item>
+        <item>18ನಿಮಿಷ</item>
+        <item>19ನಿಮಿಷ</item>
+        <item>20ನಿಮಿಷ</item>
+        <item>21ನಿಮಿಷ</item>
+        <item>22ನಿಮಿಷ</item>
+        <item>23ನಿಮಿಷ</item>
+        <item>24ನಿಮಿಷ</item>
+        <item>25ನಿಮಿಷ</item>
+        <item>26ನಿಮಿಷ</item>
+        <item>27ನಿಮಿಷ</item>
+        <item>28ನಿಮಿಷ</item>
+        <item>29ನಿಮಿಷ</item>
+        <item>30ನಿಮಿಷ</item>
+    </string-array>
 
 
 
@@ -1251,17 +1256,17 @@
     <string name="txt_no_people_found">No People found.</string><!--No People found.-->
     <string name="txt_no_pdf_found">No Pdf Found.</string><!--No Pdf Found.-->
     <string name="txt_no_test_found">No Test found</string><!--No Test found-->
-    <string name="smb_no_file_attached">No File Attached...</string>
-    <string name="smb_no_file_download">Please Download All Files...</string>
+    <string name="smb_no_file_attached">No File Attached</string>
+    <string name="smb_no_file_download">Please Download All Files</string>
     <string name="lbl_add_syllabus">Add Syllabus</string>
     <string name="toast_add_topic_name">Please Add Topic Name</string>
-    <string name="txt_no_syllabus_found">...</string><!--No Syllabus found.-->
-    <string name="toast_syllabus_add_successfully">Syllabus Add SuccessFully...</string>
+    <string name="txt_no_syllabus_found">No Syllabus found</string><!--No Syllabus found.-->
+    <string name="toast_syllabus_add_successfully">Syllabus Add SuccessFully</string>
     <string name="lbl_from_date">From Date</string>
     <string name="lbl_to_date">To Date</string>
-    <string name="toast_voter_delete_successfully">Voter Delete SuccessFully...</string>
-    <string name="toast_change_plan">Change Plan Successfully...</string>
-    <string name="toast_set_status_plan">Status Plan Set Successfully...</string>
+    <string name="toast_voter_delete_successfully">Voter Delete SuccessFully</string>
+    <string name="toast_change_plan">Change Plan Successfully</string>
+    <string name="toast_set_status_plan">Status Plan Set Successfully</string>
     <string name="dialog_are_you_sure_you_want_to_change_attend">Are You Sure You Want to Change Attendance ? </string>
     <string name="title_add_chapter_plan">Add Chapter Plan</string>
     <string name="lbl_plan">Planed</string>
@@ -1284,7 +1289,7 @@
     <string name="total_com_on_time">Total Completed On-Time</string>
     <string name="lbl_add_image">Add Image</string>
     <string name="toast_file_download">File is Download In : </string>
-
+    <string name="action_add_school">Add School</string>
     <string name="toast_please_select_chapter">Please Select Chapter</string>
     <string name="msg_no_report">No Report found.</string>
     <string name="dialog_are_you_sure_you_want_to_add_class">Are you sure you want to Add Class?</string>
@@ -1298,7 +1303,10 @@
 
     <string name="lbl_motherEducation">Mother Education</string>
     <string name="lbl_fatherEducation">Father Education</string>
-
+    <string name="txt_contact_backend">Please contact sales@gruppie.in to enable live class</string>
+    <string name="no_notes_found">No notes found</string>
+    <string name="txt_empty_data">No Data Found</string>
+    <string name="txt_failed_to_load">Could not load data. Please try again later.</string>
     <string name="lbl_nationality">Nationality</string>
     <string name="lbl_disability">Disability</string>
     <string name="lbl_family_income">Family Income</string>

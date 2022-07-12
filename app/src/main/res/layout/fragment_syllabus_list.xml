@@ -30,13 +30,13 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@id/llChapterAll"
             android:id="@+id/rvSyllabus"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_below="@id/llChapterAll"
             android:orientation="vertical"
-            tools:listitem="@layout/item_issue"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_issue" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -46,14 +46,15 @@
             android:visibility="gone" />
 
         <TextView
+
             android:id="@+id/txtEmpty"
+            style="@style/LabelEmptyText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            style="@style/LabelEmptyText"/>
+            android:paddingEnd="16dp" />
 
     </RelativeLayout>
 </layout>

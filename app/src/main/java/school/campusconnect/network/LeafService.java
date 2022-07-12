@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.http.Url;
-import school.campusconnect.activities.StaffAttendanceActivity;
 import school.campusconnect.datamodel.ConstituencyRes;
 import school.campusconnect.datamodel.CoursePostResponse;
 import school.campusconnect.datamodel.LeaveReq;
@@ -17,6 +16,7 @@ import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
 import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.classs.AddClassReq;
+import school.campusconnect.datamodel.classs.AddCombinedClass;
 import school.campusconnect.datamodel.classs.ClassResV2;
 import school.campusconnect.datamodel.register.BoardsData;
 import school.campusconnect.datamodel.register.CampusMediumData;
@@ -37,7 +37,6 @@ import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.booths.SubBoothWorkerEventRes;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
-import school.campusconnect.datamodel.classs.StaffClassModelRes;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -54,7 +53,6 @@ import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.register.UniversitiesData;
 import school.campusconnect.datamodel.searchUser.SearchUserModel;
-import school.campusconnect.datamodel.staff.ApprovalStaffAttendanceRes;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
 import school.campusconnect.datamodel.staff.StaffAttendanceRes;
 import school.campusconnect.datamodel.staff.TakeAttendanceReq;
@@ -1240,6 +1238,7 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> editClassStudent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("user_id") String user_id,@Query("gruppieRollNumber") String gruppieRollNumber, @Body StudentRes.StudentData addStudentReq);
 
+
     @PUT("/api/v1/groups/{group_id}/student/{user_id}/phone/edit")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> editClassStudentPhone(@Path("group_id") String group_id, @Path("user_id") String user_id, @Body StudentRes.StudentData addStudentReq);
@@ -2096,7 +2095,13 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> assignSubject(@Path("group_id") String group_id, @Path("teams_id") String teams_id,@Body AddSubjectStaffReq req);
 
+
+
     // Registration API END
+    //AddCombinedClass
+    @POST("/api/v1/groups/{group_id}/class/add/extra")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> AddCombinedClass(@Path("group_id") String group_id,@Body AddCombinedClass req);
 
 
     @GET("api/v1/groups/{group_id}/get/class/list")

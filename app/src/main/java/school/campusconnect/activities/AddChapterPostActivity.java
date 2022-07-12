@@ -1238,7 +1238,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
             case R.id.imgAddChapter:
                 imgAddChapter.setVisibility(View.GONE);
-                btnCancel.setVisibility(View.VISIBLE);
+                btnCancel.setVisibility(View.GONE);
                 llTop.setVisibility(View.GONE);
                 edtTitle.setHint("");
                 cardChapterName.setVisibility(View.VISIBLE);

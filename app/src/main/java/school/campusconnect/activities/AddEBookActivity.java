@@ -409,7 +409,7 @@ public class AddEBookActivity extends BaseActivity implements LeafManager.OnAddU
     private void selectPdf() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            intent.putExtra(Intent.ACTION_GET_CONTENT, true);
         }
         intent.setType("application/pdf");
         startActivityForResult(intent, REQUEST_LOAD_PDF);

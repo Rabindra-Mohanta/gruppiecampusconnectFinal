@@ -105,6 +105,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/login_button_height"
                                 android:layout_marginTop="@dimen/padding_5dp"
+                                android:maxLength="10"
                                 android:inputType="phone" />
 
 
@@ -134,14 +135,14 @@
 
                 <Button
                     android:id="@+id/btnAddStudent"
-                    android:layout_width="@dimen/login_button_width"
                     style="@style/AddPostButton"
+                    android:layout_width="@dimen/login_button_width"
+                    android:layout_height="@dimen/login_button_height"
                     android:layout_below="@+id/frameMain"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="-40dp"
                     android:layout_marginBottom="@dimen/padding_20dp"
-                    android:text="@string/lbl_add"
-                    android:layout_height="@dimen/login_button_height" />
+                    android:text="@string/lbl_add" />
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
     </RelativeLayout>

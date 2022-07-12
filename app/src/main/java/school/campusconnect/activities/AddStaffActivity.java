@@ -403,13 +403,25 @@ public class AddStaffActivity extends BaseActivity {
                 finish();
                 break;
             case LeafManager.API_STAFF_EDIT:
-                StaffResponse.StaffData req = new StaffResponse.StaffData();
-                String[] str = getResources().getStringArray(R.array.array_country_values);
-                req.countryCode = str[currentCountry - 1];
-                req.phone = etPhone.getText().toString();
-                showLoadingBar(progressBar,false);
-             //   progressBar.setVisibility(View.VISIBLE);
-                leafManager.editStaffPhone(this, group_id, studentData.getUserId(), req);
+                String phone="";
+                phone=etPhone.getText().toString();
+                if(phone.equals(studentData.getPhone()))
+                {
+                    Toast.makeText(this, getResources().getString(R.string.toast_edit_staff_successfully), Toast.LENGTH_SHORT).show();
+                    finish();
+                    break;
+                }
+                else
+                {
+                    StaffResponse.StaffData req = new StaffResponse.StaffData();
+                    String[] str = getResources().getStringArray(R.array.array_country_values);
+                    req.countryCode = str[currentCountry - 1];
+                    req.phone = etPhone.getText().toString();
+                    showLoadingBar(progressBar,false);
+                    //   progressBar.setVisibility(View.VISIBLE);
+                    leafManager.editStaffPhone(this, group_id, studentData.getUserId(), req);
+                }
+
                 break;
 
             case LeafManager.UPDATE_PHONE_STAFF:

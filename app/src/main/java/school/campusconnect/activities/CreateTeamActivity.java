@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.CreateTeamRequest;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.GroupValidationError;
+import school.campusconnect.datamodel.classs.AddCombinedClass;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -37,12 +39,12 @@ import school.campusconnect.views.SMBDialogUtils;
 public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<GroupValidationError> {
 
     private static final String TAG = "CreateTeamActivity";
+    String combinedClass="";
     @Bind(R.id.etTeamName)
     EditText etTeamName;
 
     @Bind(R.id.btnCreateTeam)
     Button btnCreateTeam;
-
 
 
     @Bind(R.id.toolbar)
@@ -122,6 +124,15 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
         leafManager = new LeafManager();
         Bundle bundle = getIntent().getExtras();
 
+        if(getIntent().getStringExtra("combined Class")!= null)
+        {
+            combinedClass=getIntent().getStringExtra("combined Class");
+        }
+
+        Log.d("combain",combinedClass);
+
+
+
         if(bundle!=null)
         {
             isEdit=bundle.getBoolean("is_edit");
@@ -141,12 +152,30 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
         switch (view.getId()) {
             case R.id.btnCreateTeam:
                 if (isValid()) {
-
                     if(!isConnectionAvailable())
                     {
                         showNoNetworkMsg();
                         return;
                     }
+
+                    if(combinedClass.equals("combined Class Data"))
+                    {
+
+
+
+                        AddCombinedClass addCombinedClass=new AddCombinedClass(etTeamName.getText().toString(),imageFragment.mProfileImage);
+                        Log.d("AddCombined",addCombinedClass.toString());
+                        leafManager.AddCombinedClass(this,GroupDashboardActivityNew.groupId,addCombinedClass);
+
+
+                    }
+                    else
+                    {
+
+
+
+
+
                     if(isEdit)
                     {
                         CreateTeamRequest request = new CreateTeamRequest();
@@ -174,7 +203,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
                         leafManager.addTeam(this, GroupDashboardActivityNew.groupId, request);
                     }
 
-                }
+                }}
                 break;
         }
     }
@@ -195,7 +224,14 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
            // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
+
+            case LeafManager.API_COMBINED_CLASS:
+                Toast.makeText(this, getString(R.string.msg_creted_team), Toast.LENGTH_LONG).show();
+                finish();
+                break;
+
             case LeafManager.API_ID_CREATE_TEAM:
+
 
                 final AddTeamResponse addTeamResponse = (AddTeamResponse) response;
 
@@ -263,6 +299,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
                 }
                 break;
             case LeafManager.API_ID_EDIT_TEAM:
+            case LeafManager.API_ID_DELETE_TEAM:
 
                 hide_keyboard();
 
@@ -274,18 +311,7 @@ public class CreateTeamActivity extends BaseActivity implements LeafManager.OnAd
                 setResult(RESULT_OK,i);
                 finish();
                 break;
-            case LeafManager.API_ID_DELETE_TEAM:
 
-                hide_keyboard();
-
-                if ("subBooth".equalsIgnoreCase(myTeamData.category) || "booth".equalsIgnoreCase(myTeamData.category)) {
-                    LeafPreference.getInstance(this).setBoolean(LeafPreference.ISBOOTHUPDATED, true);
-                }
-                LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMUPDATED, true);
-                Intent intent= new Intent();
-                setResult(RESULT_OK,intent);
-                finish();
-                break;
         }
     }
 

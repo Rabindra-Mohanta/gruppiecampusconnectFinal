@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
     private static String TAG = "AddClassStudentV2Activity";
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
-
+    private boolean onceClick=true;
     private int currentCountry;
 
     LeafManager manager;
@@ -78,9 +79,9 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
                 {
                     Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
                 }
-                else if (studentAdapter.getList().size() > 0 && studentAdapter.getList().get(studentAdapter.getList().size()-1).getPhone().isEmpty())
+                else if (studentAdapter.getList().size() > 0 && studentAdapter.getList().get(studentAdapter.getList().size()-1).getPhone().length()<10)
                 {
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_phone),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.msg_valid_phone),Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -89,7 +90,9 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
             }
             else
             {
-                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_phone),Toast.LENGTH_SHORT).show();
+
+
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.msg_valid_phone),Toast.LENGTH_SHORT).show();
             }
         }
         else
@@ -136,7 +139,13 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
         binding.btnAddStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiAddStudent();
+
+
+
+
+                    ApiAddStudent();
+
+
             }
         });
     }
@@ -147,14 +156,15 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
 
         if (binding.etName.getText().toString().isEmpty())
         {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
+            if(isValueValid(binding.etName));
             return;
         }
-        else if (binding.etPhone.getText().toString().isEmpty())
+        else if (binding.etPhone.getText().toString().isEmpty()||binding.etPhone.getText().toString().length()<10)
         {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_phone),Toast.LENGTH_SHORT).show();
+            if(isValueValidPhone(binding.etPhone));
             return;
         }
+
         else
         {
             AddMultipleStudentReq req = new AddMultipleStudentReq();
@@ -169,9 +179,9 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
                         Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (studentAdapter.getList().get(i).getPhone().isEmpty())
+                    if (studentAdapter.getList().get(i).getPhone().isEmpty() || studentAdapter.getList().get(i).getPhone().length() <10)
                     {
-                        Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_phone),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),getResources().getString(R.string.msg_valid_phone),Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -211,9 +221,13 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
 
             Log.e(TAG,"new Student ReQ "+new Gson().toJson(req));
 
+
+            if(onceClick)
+            { onceClick=false;
+
             manager.addMultipleStudent(this,groupId,teamId,req);
 
-
+            }
         }
     }
 
@@ -281,7 +295,7 @@ public class AddClassStudentV2Activity extends BaseActivity implements LeafManag
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
             AddMultipleStudentReq.StudentData item = list.get(position);
 

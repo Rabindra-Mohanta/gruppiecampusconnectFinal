@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_version">Version 1.0</string>
     <string name="lbl_app_details">© 2016 Vivid Innovation Pvt Ltd</string>
@@ -5,7 +6,7 @@
     <string name="action_notify_all">MESSAGE ALL</string>
     <string name="action_mail_all">EMAIL ALL</string>
     <string name="action_change_pwd">Change Password</string>
-    <string name="action_add_school" translatable="false">Add School</string>
+    <string name="action_add_school">Add School</string>
     <string name="action_change_pin">Change Pin</string>
     <string name="action_change_nu">Change Number</string>
     <string name="action_set_wallpaper">Set Wallpaper</string>
@@ -113,7 +114,7 @@
     <string name="action_profile">My Profile</string>
     <string name="action_logout">Logout</string>
     <string name="action_creategroup">Create New Group</string>
-    <string name="please_wait">Please wait...</string>
+    <string name="please_wait">Please wait</string>
     <string name="lbl_select_img">Select Image</string>
     <string name="lbl_select_audio">Select Audio</string>
     <string name="lbl_select_video">Select Video</string>
@@ -134,7 +135,7 @@
     <string name="msg_no_users">No users found.</string>
     <string name="msg_no_contaacts">No contacts found.</string>
     <string name="msg_no_fav">No favourite posts found.</string>
-    <string name="msg_no_post">No Data found</string><!--No posts found-->
+    <string name="msg_no_post">No posts found</string><!--No posts found-->
     <string name="msg_no_que">No doubts found.</string>
     <string name="msg_no_noti">No notifications.</string>
     <string name="msg_no_groups">No Groups found.</string>
@@ -198,7 +199,7 @@
     <string name="lbl_replies">Replies</string>
     <string name="lbl_my_family">My Family</string>
     <string name="lbl_my_issue">My Issues</string>
-    <string name="lbl_Read_more">Read More...</string>
+    <string name="lbl_Read_more">Read More</string>
     <string name="lbl_answer">Answer</string>
     <string name="lbl_delete_doubt">Delete Doubt</string>
 
@@ -282,18 +283,18 @@
 
     <string name="hint_yttitle">Enter Title</string>
     <string name="hint_ytdesc">Enter Description</string>
-    <string name="hint_edit_comment">Edit your comment...</string>
+    <string name="hint_edit_comment">Edit your comment</string>
     <string name="hint_address_line_1">Address line 1</string>
     <string name="hint_address_line_2">Address line 2</string>
 
     <string name="hint_search">Search contacts</string>
     <string name="hint_search_issue">Search Issue</string>
     <string name="hint_search_booth">Search Booth</string>
-    <string name="hint_view_more">View More...</string>
-    <string name="hint_enter_your_question">Enter your question...</string>
-    <string name="hint_issue_not_found">Issue Not Found.......</string>
-    <string name="hint_caste_not_found">Caste Not Found.......</string>
-    <string name="hint_sub_caste_not_found">Sub Caste Not Found.......</string>
+    <string name="hint_view_more">View More</string>
+    <string name="hint_enter_your_question">Enter your question</string>
+    <string name="hint_issue_not_found">Issue Not Found</string>
+    <string name="hint_caste_not_found">Caste Not Found</string>
+    <string name="hint_sub_caste_not_found">Sub Caste Not Found</string>
 
 
     <string name="hint_search_address">Search Address</string>
@@ -425,7 +426,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     </string>
     <string name="opt_send_text">OTP has been sent.</string>
 
-    <string name="api_exception_msg">Your internet connection is slow, please wait..</string>
+    <string name="api_exception_msg">Your internet connection is slow, please wait</string>
 
     <string name="remember_me">Remember Me</string>
     <string name="tap_here_to_get_OPT">(You will receive OTP)</string>
@@ -533,7 +534,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_restore">RESTORE</string>
     <string name="lbl_ques_p_">Question paper will be\navailable after exam start</string>
     <string name="lbl_new_password_validation">Should be atleast 6 character</string>
-    <string name="msg_no_data_found">No data found.</string><!--No data found.-->
+    <string name="msg_no_data_found">No data found</string><!--No data found.-->
 
     <string name="lbl_time_table">Time Table</string>
     <string name="lbl_vendor">Vendor Name</string>
@@ -553,8 +554,11 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_no_user_found">No User Found</string><!--No User Found-->
     <string name="lbl_classes">All Classes</string>
     <string name="lbl_class_name">Class</string>
+
     <string name="lbl_addharCard">Aadhaar Card</string>
+    <string name="lbl_add_regular_class">Add Regular Class</string>
     <string name="lbl_add_class">Add Class</string>
+    <string name="lbl_add_combined_class">Add Combined/Other Class</string>
     <string name="lbl_add_group">Add Group</string>
 
     <string name="lbl_add_tikit">Add Ticket</string>
@@ -688,6 +692,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_total_balance">Total Balance Amount</string>
     <string name="lbl_total_amount_paid">Total Amount Paid</string>
     <string name="lbl_enter_chapter_name">Enter chapter name</string>
+    <string name="lbl_enter_topic_name">Enter Topic name</string>
     <string name="lbl_completed">Completed</string>
     <string name="lbl_clear">Clear</string>
     <string name="lbl_filter">Filter</string>
@@ -819,7 +824,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_day">Day</string>
     <string name="lbl_roll_No">Roll No</string>
     <string name="lbl_morning">Morning</string>
-    <string name="lbl_all_booth_member">All Booth Members...</string>
+    <string name="lbl_all_booth_member">All Booth Members</string>
     <string name="lbl_add_ticket">Add\nTicket</string>
     <string name="lbl_leave_req">Leave\nRequest</string>
     <string name="lbl_leave_request">Leave Request</string>
@@ -889,7 +894,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="menu_sync_contact">Sync Contacts</string>
     <string name="menu_zoom_meeting">Zoom Meeting</string>
     <string name="menu_close">Close</string>
-    <string name="menu_staff_attendance">Staff Attendance</string>
+    <string name="menu_staff_attendance" translatable="false">Staff Attendance</string>
     <string name="menu_leave_team">Leave Team</string>
     <string name="menu_edit_team">Edit Team</string>
     <string name="menu_add_team">Add Team</string>
@@ -958,7 +963,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_enter_subject">Please Enter Subject</string>
     <string name="toast_select_pdf">Please Select PDF</string>
     <string name="toast_add_topic_name">Please Add Topic Name</string>
-    <string name="toast_syllabus_add_successfully">Syllabus Add SuccessFully...</string>
+    <string name="toast_syllabus_add_successfully">Syllabus Add SuccessFully</string>
     <string name="toast_upload_failed">Upload Failed</string>
     <string name="toast_some_problem_occure">Some Problem Occurred Please try again</string>
     <string name="toast_post_delete_successfully">Post Deleted Succesfully</string>
@@ -969,7 +974,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_delete_coordinate">Delete Coordinate successfully</string>
     <string name="toast_mark_card_delete_successfully">Mark Card Deleted Successfully</string>
     <string name="toast_input_some_query">Input some query first</string>
-    <string name="toast_ticket_add_successfully">Ticket Added Successfully...</string>
+    <string name="toast_ticket_add_successfully">Ticket Added Successfully</string>
     <string name="toast_select_team">Please Select Team</string>
     <string name="toast_add_issue">Please Add Issue</string>
     <string name="toast_valid_issue">Please Enter Valid Issue</string>
@@ -977,7 +982,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_select_location">Please Select Location</string>
     <string name="toast_audio_permission_needed">Audio permission needed. Please allow in App Settings for additional functionality.</string>
     <string name="toast_valid_youtube_link">Not a valid youtube link</string>
-    <string name="toast_change_pin">Change Pin SuccessFully...</string>
+    <string name="toast_change_pin">Change Pin SuccessFully</string>
     <string name="toast_select_friend_first">Please select any friend first</string>
     <string name="toast_error_comression">Error In Compression : </string>
     <string name="toast_select_staff">Select Any Staff Member</string>
@@ -987,7 +992,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_add_student_sucess">Add Student successfully</string>
     <string name="toast_edit_student_sucess">Edit Student successfully</string>
     <string name="toast_delete_student_sucess">Delete Student successfully</string>
-    <string name="toast_stop_audio">Stop Audio Recording...</string>
+    <string name="toast_stop_audio">Stop Audio Recording</string>
     <string name="toast_enable_gps">Please Enable Gps</string>
     <string name="toast_add_to_group">Added to Group</string>
     <string name="toast_could_not_find_file">Could not find the filepath of the selected file</string>
@@ -1007,10 +1012,10 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_user_deleted">User Deleted</string>
     <string name="toast_admin_changed">Admin Changed</string>
     <string name="toast_attendance_report_save_successfully">Attendance Report Save successfully</string>
-    <string name="toast_notification_not_found">Notification Not Found...</string>
+    <string name="toast_notification_not_found">Notification Not Found</string>
     <string name="toast_please_select_student">Please Select Student</string>
     <string name="toast_shared_successfully">Shared successfully</string>
-    <string name="toast_select_any_group_first">Select any group first...</string>
+    <string name="toast_select_any_group_first">Select any group first</string>
     <string name="toast_you_can_not_leave_team">You can\'t leave team</string>
     <string name="toast_error_set_wallpaper">Error in set wallpaper</string>
     <string name="toast_update_successfully">Updated Successfully</string>
@@ -1063,8 +1068,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_select_test_time">Please Select Test Time</string>
     <string name="toast_select_test_date">Please Select Test Date</string>
     <string name="toast_enter_valid_email">Enter valid Email</string>
-    <string name="toast_voter_add_successfully">Voter Added SuccessFully...</string>
-    <string name="toast_voter_delete_successfully">Voter Delete SuccessFully...</string>
+    <string name="toast_voter_add_successfully">Voter Added SuccessFully</string>
+    <string name="toast_voter_delete_successfully">Voter Delete SuccessFully</string>
     <string name="toast_select_contact">Please select contact</string>
     <string name="toast_image_download">Image Downloaded.</string>
     <string name="toast_mark_card_uploaded">Marks Card Uploaded</string>
@@ -1074,7 +1079,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_select_subject_and_staff">Please Select Subject and Staff</string>
     <string name="toast_successfully_add_time_table">Successfully Added Time Table</string>
     <string name="toast_select_end_time_after_start_time">Select End Time After a Start Time</string>
-    <string name="toast_period_value_already_used">Period Value Already Used...</string>
+    <string name="toast_period_value_already_used">Period Value Already Used</string>
     <string name="toast_password_not_match">Password Not Match.!</string>
     <string name="toast_device_not_supported">This device is not supported.</string>
     <string name="toast_location_data_not_available">Location data not available</string>
@@ -1118,29 +1123,29 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_create_mark_card">Please Create Mark Card</string>
     <string name="toast_otp_send_to">OTP has been sent to </string>
     <string name="toast_no_data_found">No data found.</string>
-    <string name="toast_change_plan">Change Plan Successfully...</string>
-    <string name="toast_set_status_plan">Status Plan Set Successfully...</string>
+    <string name="toast_change_plan">Change Plan Successfully</string>
+    <string name="toast_set_status_plan">Status Plan Set Successfully</string>
     <string name="toast_please_select_chapter">Please Select Chapter</string>
 
 
-    <string name="txt_enter_old_pin">Enter Old Pin...</string>
-    <string name="txt_old_pin_wrong">Old Pin Wrong...</string>
-    <string name="txt_enter_new_pin">Enter New Pin...</string>
-    <string name="txt_confirm_pin_not_match">Confirm Pin Not Match...</string>
-    <string name="txt_enter_confirm_pin">Enter Confirm Pin...</string>
+    <string name="txt_enter_old_pin">Enter Old Pin</string>
+    <string name="txt_old_pin_wrong">Old Pin Wrong</string>
+    <string name="txt_enter_new_pin">Enter New Pin</string>
+    <string name="txt_confirm_pin_not_match">Confirm Pin Not Match</string>
+    <string name="txt_enter_confirm_pin">Enter Confirm Pi.</string>
     <string name="txt_my_groups">My Groups</string>
     <string name="txt_public_groups">Public Groups</string>
 
-    <string name="txt_no_time_table_found">No Time Table found.</string><!--No Time Table found.-->
+    <string name="txt_no_time_table_found">No Time Table found</string><!--No Time Table found.-->
     <string name="txt_no_mark_card_found">No MarkCard Found!</string><!--No MarkCard Found!-->
 
-    <string name="txt_no_booth_team_found">No Booths Teams found.</string><!--No Booths Teams found.-->
+    <string name="txt_no_booth_team_found">No Booths Teams found</string><!--No Booths Teams found.-->
     <string name="txt_roll_no_student">Roll No\n( Student )</string>
     <string name="txt_name_student">Name\n( Student )</string>
-    <string name="txt_no_street_found">No Streets found.</string><!--No Streets found.-->
+    <string name="txt_no_street_found">No Streets found</string><!--No Streets found.-->
 
     <string name="txt_no_bus_found">No Bus found</string><!--No Bus found.-->
-    <string name="txt_no_coordinate_found">No Coordinate found.</string><!--No Coordinate found.-->
+    <string name="txt_no_coordinate_found">No Coordinate found</string><!--No Coordinate found.-->
     <string name="txt_phone">Phone: </string>
     <string name="txt_no_booth_member_found">No Booth Member found</string><!--No Booth Member found-->
 
@@ -1158,7 +1163,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_to">" to "</string>
     <string name="txt_select_end_time">Select End Time</string>
     <string name="txt_select_language">Select Language</string>
-    <string name="txt_constituency_not_found">No Constituency found.</string><!--No Constituency found.-->
+    <string name="txt_constituency_not_found">No Constituency found</string><!--No Constituency found.-->
     <string name="txt_last_submission_date">Last Submission Date : </string>
     <string name="txt_comment">Comment</string>
     <string name="txt_empty_data">No Data Found</string>
@@ -1166,36 +1171,36 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_no_booth_found">No Booths found</string><!--No Booths found-->
     <string name="txt_no_voter_found">No Voters found</string><!--No Voters found-->
     <string name="txt_no_subject_found">No Subject found</string><!--No Subject found-->
-    <string name="txt_no_staff_found">No Staff found.</string><!--No Staff found.-->
-    <string name="txt_no_student_found">No Data found</string><!--No Student found.-->
-    <string name="txt_no_post_found">No Post found.</string><!--No Post found.-->
-    <string name="txt_no_worker_found">No Workers found.</string><!--No Workers found.-->
-    <string name="txt_no_assignment_found">No Assignment found.</string><!--No Assignment found.-->
+    <string name="txt_no_staff_found">No Staff founzd</string><!--No Staff founzd-->
+    <string name="txt_no_student_found">No Data Found</string><!--No Student found.-->
+    <string name="txt_no_post_found">No Post found</string><!--No Post found.-->
+    <string name="txt_no_worker_found">No Workers found</string><!--No Workers found.-->
+    <string name="txt_no_assignment_found">No Assignment found</string><!--No Assignment found.-->
     <string name="txt_no_class_found">No Class found</string><!--No Class found-->
     <string name="txt_no_committee_found">No Committee found</string><!--No Committee found.-->
-    <string name="txt_no_ebook_found">No E-Book found.</string><!--No E-Book found.-->
-    <string name="txt_no_family_member_found">No Family Member found.</string><!--No Family Member found.-->
-    <string name="txt_no_fee_created">No Fee Created.</string><!--No Fee Created..-->
+    <string name="txt_no_ebook_found">No E-Book found</string><!--No E-Book found.-->
+    <string name="txt_no_family_member_found">No Family Member found</string><!--No Family Member found.-->
+    <string name="txt_no_fee_created">No Fee Created</string><!--No Fee Created..-->
     <string name="txt_no_fee_found">No Fee Found</string><!--No Fee Found-->
-    <string name="txt_no_group_found">No Group found.</string><!--No Group found.-->
-    <string name="txt_no_issue_found">No Issue found.</string><!--No Issue found.-->
-    <string name="txt_no_syllabus_found">No Syllabus found.</string><!--No Syllabus found.-->
-    <string name="txt_no_notification_found">No Notification found.</string><!--No Notification found.-->
-    <string name="txt_no_hw_found">No HomeWork found.</string><!--No HomeWork found.-->
-    <string name="txt_no_test_exam_found">No Test/Exam Found.</string><!--No Test/Exam Found.-->
-    <string name="txt_no_kid_found">No Kids found.</string><!--No Kids found.-->
-    <string name="txt_no_people_found">No People found.</string><!--No People found.-->
-    <string name="txt_no_pdf_found">No Pdf Found.</string><!--No Pdf Found.-->
+    <string name="txt_no_group_found">No Group found</string><!--No Group found.-->
+    <string name="txt_no_issue_found">No Issue found</string><!--No Issue found.-->
+    <string name="txt_no_syllabus_found">No Syllabus found</string><!--No Syllabus found.-->
+    <string name="txt_no_notification_found">No Notification found</string><!--No Notification found.-->
+    <string name="txt_no_hw_found">No HomeWork found</string><!--No HomeWork found.-->
+    <string name="txt_no_test_exam_found">No Kids found</string><!--No Test/Exam Found.-->
+    <string name="txt_no_kid_found">No Kids found</string><!--No Kids found.-->
+    <string name="txt_no_people_found">No People found</string><!--No People found.-->
+    <string name="txt_no_pdf_found">No Pdf Found</string><!--No Pdf Found.-->
     <string name="txt_no_test_found">No Test found</string><!--No Test found-->
 
     <string name="txt_pin">Pin</string>
-    <string name="txt_confirm_pin_wrong">Confirm Pin Wrong...</string>
-    <string name="txt_enter_pin">Enter Pin...</string>
-    <string name="txt_enter_valid_pin">Enter Valid Pin...</string>
+    <string name="txt_confirm_pin_wrong">Confirm Pin Wrong</string>
+    <string name="txt_enter_pin">Enter Pin</string>
+    <string name="txt_enter_valid_pin">Enter Valid Pin</string>
     <string name="txt_basic_info">Basic Info</string>
     <string name="txt_other_info">Other Info</string>
-    <string name="txt_no_taluks_found">No Taluks found.</string><!--No Taluks found.-->
-    <string name="txt_no_test_paper_found">No Test Paper found.</string><!--No Test Paper found.-->
+    <string name="txt_no_taluks_found">No Taluks found</string><!--No Taluks found.-->
+    <string name="txt_no_test_paper_found">No Test Paper found</string><!--No Test Paper found.-->
     <string name="txt_open">Open</string>
     <string name="txt_constituency_issue">Constituency Issue </string>
     <string name="txt_no_ticket_found">No Tickets Found</string><!--No Tickets Found-->
@@ -1207,9 +1212,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
 
     <string name="hint_search_voter">Search Voter</string>
     <string name="hint_search_booths">Search Booths</string>
-    <string name="hint_write_comment">Write a comment...</string>
-    <string name="hint_write_post">Write a post...</string>
-    <string name="hint_write_reply">Write a reply...</string>
+    <string name="hint_write_comment">Write a comment</string>
+    <string name="hint_write_post">Write a post</string>
+    <string name="hint_write_reply">Write a reply</string>
     <string name="hint_search_booth_team">Search Booth Team</string>
     <string name="hint_search_sub_booth">Search Sub Booth</string>
 
@@ -1268,8 +1273,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="smb_add_jitsi_token">Are you sure you want to add jitsiToken.?</string>
     <string name="smb_attach_file">Attach Selected file?</string>
     <string name="smb_change_team_admin">Are you sure you want to change team admin</string>
-    <string name="smb_no_file_attached">No File Attached...</string>
-    <string name="smb_no_file_download">Please Download All Files...</string>
+    <string name="smb_no_file_attached">No File Attached</string>
+    <string name="smb_no_file_download">Please Download All Files</string>
 
     <string name="smb_logout">Are you sure you want to Logout ?</string>
 

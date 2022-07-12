@@ -241,7 +241,9 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISSYLLABUSUPDATED)) {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISSYLLABUSUPDATED, false);
-            syllabusDataList.clear();
+            //syllabusDataList.clear();
+
+
             SyllabusTBL.deleteAll(teamId,subjectId);
             adapter.add(syllabusDataList);
             apiCall();
@@ -348,7 +350,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             SyllabusListModelRes.SyllabusData data = list.get(position);
 
-            holder.txt_name.setText(data.getChapterName());
+            holder.txt_name.setText("Chapter Name:-  "+data.getChapterName());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -384,6 +386,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                     binding.txtEmpty.setText(getResources().getString(R.string.txt_no_syllabus_found));
                 }
                 else {
+
                     binding.txtEmpty.setText("");
                 }
 
@@ -391,6 +394,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
             }
             else
             {
+
                 binding.txtEmpty.setText(getResources().getString(R.string.txt_no_syllabus_found));
                 return 0;
             }
@@ -455,7 +459,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
         public void onBindViewHolder(@NonNull TopicAdapter.ViewHolder holder, int position) {
             SyllabusListModelRes.TopicData data = topicData.get(position);
 
-            holder.binding.txtName.setText(data.getTopicName());
+            holder.binding.txtName.setText("Topic Name:-  "+data.getTopicName());
 
 
             if (data.getToDate() != null && !data.getToDate().isEmpty())
