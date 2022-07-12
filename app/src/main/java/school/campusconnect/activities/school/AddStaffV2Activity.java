@@ -74,9 +74,9 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
                 {
                     Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
                 }
-                else if (staffAdapter.getList().size() > 0 && staffAdapter.getList().get(staffAdapter.getList().size()-1).getPhone().isEmpty())
+                else if (staffAdapter.getList().size() > 0 && staffAdapter.getList().get(staffAdapter.getList().size()-1).getPhone().length()<10)
                 {
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_phone),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.msg_valid_phone),Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -85,7 +85,7 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
             }
             else
             {
-                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_phone),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.msg_valid_phone),Toast.LENGTH_SHORT).show();
             }
         }
         else
@@ -131,10 +131,9 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
             @Override
             public void onClick(View view) {
 
-                if(onceClick)
-                { onceClick=false;
+
                     ApiAddStaff();
-                }
+
 
 
 
@@ -148,12 +147,12 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
 
         if (binding.etName.getText().toString().isEmpty())
         {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
+            if(isValueValid(binding.etName));
             return;
         }
-        else if (binding.etPhone.getText().toString().isEmpty())
+        else if (binding.etPhone.getText().toString().isEmpty() ||  binding.etPhone.getText().toString().length()<10)
         {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_phone),Toast.LENGTH_SHORT).show();
+            if(isValueValidPhone(binding.etPhone));
             return;
         }
         else
@@ -170,9 +169,9 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
                         Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (staffAdapter.getList().get(i).getPhone().isEmpty())
+                    if (staffAdapter.getList().get(i).getPhone().isEmpty()||staffAdapter.getList().get(i).getPhone().length()<10)
                     {
-                        Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_phone),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),getResources().getString(R.string.msg_valid_phone),Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -211,9 +210,10 @@ public class AddStaffV2Activity extends BaseActivity implements LeafManager.OnCo
             }
 
             Log.e(TAG,"new Student ReQ "+new Gson().toJson(req));
-
+            if(onceClick)
+            { onceClick=false;
             manager.addMultipleStaff(this, GroupDashboardActivityNew.groupId,req);
-
+            }
 
         }
     }

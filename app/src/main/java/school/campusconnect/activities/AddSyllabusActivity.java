@@ -1,10 +1,12 @@
 package school.campusconnect.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -35,6 +38,7 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.databinding.ActivityAddSyllabusBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
+
 import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
 import school.campusconnect.datamodel.syllabus.SyllabusTBL;
@@ -43,7 +47,7 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 
 public class AddSyllabusActivity extends BaseActivity implements View.OnClickListener, LeafManager.OnCommunicationListener {
-ActivityAddSyllabusBinding binding;
+    ActivityAddSyllabusBinding binding;
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
     public static final String TAG = "AddSyllabusActivity";
@@ -56,20 +60,23 @@ ActivityAddSyllabusBinding binding;
 
     String chapterID = null,TopicId = null;
     private boolean isEdit = true;
+    private AlertDialog alertDialog;
+    private boolean chapterClicked,topicClicked=false;
+
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_add_syllabus);
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle(getResources().getString(R.string.title_add_chapter_plan));
-
         inits();
 
-        bindChapter();
-
         setListner();
+        bindChapter();
 
 
     }
@@ -77,21 +84,30 @@ ActivityAddSyllabusBinding binding;
     private void inits() {
 
         topicAdapter = new TopicAdapter();
-        //binding.rvTopic.setAdapter(topicAdapter);
+
 
         teamId = getIntent().getStringExtra("team_id");
         subjectId = getIntent().getStringExtra("subject_id");
 
-        Log.e(TAG,"team ID"+teamId+"\nsubject Id"+subjectId);
+
         manager = new LeafManager();
+
+
+        String[] strChapter = new String[1];
+        strChapter[0]=getResources().getString(R.string.toast_please_select_chapter);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, strChapter);
+        binding.spChapter.setAdapter(adapter);
+
+
+
     }
     private void setListner()
     {
-       // binding.imgAdd.setOnClickListener(this);
+
         binding.btnAdd.setOnClickListener(this);
         binding.imgAddChapter.setOnClickListener(this);
-        binding.ImgRemoveChapter.setOnClickListener(this);
-
+        binding.imgAddTopic.setOnClickListener(this);
 
         binding.etFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +119,7 @@ ActivityAddSyllabusBinding binding;
                     @Override
                     public void onDateSelected(Calendar c) {
                         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                       binding.etFromDate.setText(format.format(c.getTime()));
+                        binding.etFromDate.setText(format.format(c.getTime()));
                     }
                 });
                 fragment.show(getSupportFragmentManager(), "datepicker");
@@ -121,7 +137,7 @@ ActivityAddSyllabusBinding binding;
                     @Override
                     public void onDateSelected(Calendar c) {
                         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                       binding.etToDate.setText(format.format(c.getTime()));
+                        binding.etToDate.setText(format.format(c.getTime()));
                     }
                 });
                 fragment.show(getSupportFragmentManager(), "datepicker");
@@ -155,36 +171,34 @@ ActivityAddSyllabusBinding binding;
             TopicId = null;
             selectedTopicData.clear();
 
-            binding.llTopicData.setVisibility(View.GONE);
-            binding.llChapterData.setVisibility(View.GONE);
-            binding.etcName.setVisibility(View.VISIBLE);
-            binding.etTopicName.setVisibility(View.VISIBLE);
         }
 
-        if (syllabusDataList != null && syllabusDataList.size() > 0) {
 
-            binding.llChapterData.setVisibility(View.VISIBLE);
-            binding.llTopicData.setVisibility(View.VISIBLE);
-            binding.etTopicName.setVisibility(View.GONE);
-            binding.etcName.setVisibility(View.GONE);
+        if(isEdit)
+        {
 
-            String[] strChapter = new String[syllabusDataList.size()];
-            for (int i = 0; i < strChapter.length; i++) {
-                strChapter[i] = syllabusDataList.get(i).getChapterName();
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, strChapter);
-            binding.spChapter.setAdapter(adapter);
 
-            binding.spChapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    AppLog.e(TAG, "onItemSelected : " + binding.spChapter.getSelectedItem().toString());
-                    AppLog.e(TAG, "onItemSelected ID: " + syllabusDataList.get(position).getChapterId());
-                    TopicId = null;
-                    selectedTopicData.clear();
 
-                    chapterID = syllabusDataList.get(position).getChapterId();
-                    setTopic(syllabusDataList.get(position).getTopicData());
+            if (syllabusDataList != null && syllabusDataList.size() > 0) {
+
+                String[] strChapter = new String[syllabusDataList.size()];
+
+                for (int i = 0; i < strChapter.length; i++) {
+                    strChapter[i] = syllabusDataList.get(i).getChapterName();
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_spinner, strChapter);
+                binding.spChapter.setAdapter(adapter);
+
+                binding.spChapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        AppLog.e(TAG, "onItemSelected : " + binding.spChapter.getSelectedItem().toString());
+                        AppLog.e(TAG, "onItemSelected ID: " + syllabusDataList.get(position).getChapterId());
+                        TopicId = null;
+                        selectedTopicData.clear();
+
+                        chapterID = syllabusDataList.get(position).getChapterId();
+                        setTopic(syllabusDataList.get(position).getTopicData());
 
 
                   /*  for (int i = 0;i<syllabusDataList.size();i++)
@@ -194,19 +208,19 @@ ActivityAddSyllabusBinding binding;
                             AppLog.e(TAG, "Compare Value " + syllabusDataList.get(i).getChapterId());
                         }
                     }*/
-                }
+                    }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
 
-                }
-            });
-
-
+                    }
+                });
 
 
+
+
+            }
         }
-
     }
 
     private void setTopic(ArrayList<SyllabusListModelRes.TopicData> topicData) {
@@ -250,160 +264,240 @@ ActivityAddSyllabusBinding binding;
 
         switch (v.getId())
         {
-//            case R.id.imgAdd:
-//                addTopic();
-//                break;
+
+
+
+            case R.id.imgAdd:
+                //addTopic();
+                break;
 
             case R.id.btnAdd:
                 hide_keyboard();
-                if (isValid())
+
+
+                if (isEdit)
+                {
+                    SyllabusPlanRequest request = new SyllabusPlanRequest();
+
+                    ArrayList<SyllabusPlanRequest.TopicData> list = new ArrayList<>();
+
+
+
+                    SyllabusPlanRequest.TopicData topicData = new SyllabusPlanRequest.TopicData();
+                    topicData.setTopicId(TopicId);
+                    topicData.setTopicName(binding.spTopic.getSelectedItem().toString());
+                    topicData.setToDate(binding.etToDate.getText().toString());
+                    topicData.setFromDate(binding.etFromDate.getText().toString());
+
+                    list.add(topicData);
+
+                    request.setTopicData(list);
+                    Log.e(TAG,"req is Update "+new Gson().toJson(request));
+                    showLoadingBar(binding.progressBar,false);
+                    manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,chapterID,request);
+                }
+                else
                 {
 
-                    if (isEdit)
+
+                    SyllabusModelReq req = new SyllabusModelReq();
+
+                    ArrayList<SyllabusModelReq.SyllabusModelData> syllabusModelData = new ArrayList<>();
+
+                    SyllabusModelReq.SyllabusModelData data = new SyllabusModelReq.SyllabusModelData();
+
+                    if(chapterClicked)
                     {
-                        SyllabusPlanRequest request = new SyllabusPlanRequest();
-
-                        ArrayList<SyllabusPlanRequest.TopicData> list = new ArrayList<>();
-
-                        for (int i = 0;i<topicData.size();i++)
-                        {
-                            if (!TopicId.equals(topicData.get(i).getTopicId()))
-                            {
-                                SyllabusPlanRequest.TopicData topicData1 = new SyllabusPlanRequest.TopicData();
-                                topicData1.setToDate(topicData.get(i).getToDate());
-                                topicData1.setFromDate(topicData.get(i).getFromDate());
-                                topicData1.setActualStartDate(topicData.get(i).getActualStartDate());
-                                topicData1.setActualEndDate(topicData.get(i).getActualEndDate());
-                                topicData1.setTopicId(topicData.get(i).getTopicId());
-                                topicData1.setTopicName(topicData.get(i).getTopicName());
-
-                                list.add(topicData1);
-                            }
-                        }
-
-                        SyllabusPlanRequest.TopicData topicData = new SyllabusPlanRequest.TopicData();
-                        topicData.setTopicId(TopicId);
-                        topicData.setTopicName(binding.spTopic.getSelectedItem().toString());
-                        topicData.setToDate(binding.etToDate.getText().toString());
-                        topicData.setFromDate(binding.etFromDate.getText().toString());
-
-                        list.add(topicData);
-
-                        request.setTopicData(list);
-                        Log.e(TAG,"req is Update "+new Gson().toJson(request));
-                        showLoadingBar(binding.progressBar,false);
-                        manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,chapterID,request);
+                        data.setChapterName(binding.txtChapter.getText().toString());
                     }
                     else
                     {
-                        SyllabusModelReq req = new SyllabusModelReq();
-
-                        ArrayList<SyllabusModelReq.SyllabusModelData> syllabusModelData = new ArrayList<>();
-
-                        SyllabusModelReq.SyllabusModelData data = new SyllabusModelReq.SyllabusModelData();
-                        data.setChapterName(binding.etcName.getText().toString());
-
-                        ArrayList<SyllabusModelReq.TopicModelData> arrayList = new ArrayList<>();
-                        SyllabusModelReq.TopicModelData modelData = new SyllabusModelReq.TopicModelData();
-                        modelData.setTopicName(binding.etTopicName.getText().toString());
-                        modelData.setToDate(binding.etToDate.getText().toString());
-                        modelData.setFromDate(binding.etFromDate.getText().toString());
-
-                        arrayList.add(modelData);
-
-                        if (topicAdapter.getList().size() > 0)
-                        {
-                            /*SyllabusModelReq.TopicModelData data2 = new SyllabusModelReq.TopicModelData();
-                            data2.setTopicName(binding.etTopicName.getText().toString());
-                            data2.setToDate(binding.etToDate.getText().toString());
-                            data2.setFromDate(binding.etFromDate.getText().toString());
-
-                            arrayList.add(data2);*/
-
-                            for (int i =0;i<topicAdapter.getList().size();i++)
-                            {
-                                Log.e(TAG,"topicAdapter data pos"+ i +" data "+topicAdapter.getList().get(i).getTopicName());
-                                if (topicAdapter.getList().get(i).getTopicName() == null || topicAdapter.getList().get(i).getTopicName().isEmpty())
-                                {
-                                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_add_topic_name)+ i,Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                            }
-
-                            for (int i =0;i<topicAdapter.getList().size();i++)
-                            {
-                                SyllabusModelReq.TopicModelData data1 = new SyllabusModelReq.TopicModelData();
-                                data1.setTopicName(topicAdapter.getList().get(i).getTopicName());
-                                data1.setToDate(topicAdapter.getList().get(i).getToDate());
-                                data1.setFromDate(topicAdapter.getList().get(i).getFromDate());
-                                arrayList.add(data1);
-                            }
-                        }
-
-                        data.setTopicsList(arrayList);
-                        syllabusModelData.add(data);
-
-                        List<SyllabusTBL> list = SyllabusTBL.getSyllabus(teamId,subjectId);
-
-//                        if (list.size() > 0)
-//                        {
-//                            for (int i = 0;i<list.size();i++)
-//                            {
-//                                SyllabusModelReq.SyllabusModelData modelData1 = new SyllabusModelReq.SyllabusModelData();
-//                                modelData1.setChapterName(list.get(i).chapterName);
-//                                modelData1.setTopicsList(new Gson().fromJson(list.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
-//                                syllabusModelData.add(modelData1);
-//                            }
-//                        }
-                        req.setSyllabusModelData(syllabusModelData);
-
-                        Log.e(TAG,"send Request "+new Gson().toJson(req));
-
-                        showLoadingBar(binding.progressBar,false);
-                        manager.addSyllabus(this,GroupDashboardActivityNew.groupId,teamId,subjectId,binding.etcName.getText().toString());
+                        data.setChapterName(binding.spChapter.getSelectedItem().toString());
                     }
 
+
+                    ArrayList<SyllabusModelReq.TopicModelData> arrayList = new ArrayList<>();
+                    SyllabusModelReq.TopicModelData modelData = new SyllabusModelReq.TopicModelData();
+
+
+                    if(topicClicked)
+                    {
+                        modelData.setTopicName(binding.txtTopic.getText().toString());
+                    }
+                    else
+                    {
+                        data.setChapterName(binding.spTopic.getSelectedItem().toString());
+                    }
+
+
+
+                    modelData.setToDate(binding.etToDate.getText().toString());
+                    modelData.setFromDate(binding.etFromDate.getText().toString());
+
+                    arrayList.add(modelData);
+
+
+                    data.setTopicsList(arrayList);
+                    syllabusModelData.add(data);
+
+                    List<SyllabusTBL> list = SyllabusTBL.getSyllabus(teamId,subjectId);
+
+//
+                    req.setSyllabusModelData(syllabusModelData);
+
+                    Log.e(TAG,"send Request "+new Gson().toJson(req));
+
+                    showLoadingBar(binding.progressBar,false);
+
+                    if(chapterClicked)
+                    {
+
+
+                        if(binding.etFromDate.getEditableText().toString().isEmpty()|| binding.etToDate.getEditableText().toString().isEmpty())
+
+                        {
+                            Toast.makeText(getApplicationContext(),"Plan date is required",Toast.LENGTH_LONG).show();
+
+
+                        }
+                        else
+                        {
+                            Log.d("TAG","binding.etFromDate"+binding.etFromDate.getText().toString());
+                            manager.addSyllabus(this,GroupDashboardActivityNew.groupId,teamId,subjectId,req);
+                        }
+
+                    }
+                    else
+                    {
+                        SyllabusPlanRequest request = new SyllabusPlanRequest();
+                        ArrayList<SyllabusPlanRequest.TopicData> list1 = new ArrayList<>();
+                        SyllabusPlanRequest.TopicData topicData = new SyllabusPlanRequest.TopicData();
+                        topicData.setTopicName(binding.txtTopic.getText().toString());
+
+                        if(binding.etFromDate.getEditableText().toString().isEmpty()|| binding.etToDate.getEditableText().toString().isEmpty())
+                        {
+                            Toast.makeText(getApplicationContext(),"Plan date is required",Toast.LENGTH_LONG).show();
+
+                        }
+
+                        else
+                        {
+                            list1.add(topicData);
+                            request.setTopicData(list1);
+
+
+                            manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,chapterID,request);
+
+                        }
+
+
+                    }
+
+
+
+
+
                 }
+
+
+
+
+
+
                 break;
+
 
             case R.id.imgAddChapter:
 
-                isEdit = false;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                View root=getLayoutInflater().inflate(R.layout.dialog_enter_chapter,null);
+                builder.setView(root);
+                builder.setCancelable(false);
+                ImageView btnCancel=root.findViewById(R.id.btnCancel);
+                EditText etName=root.findViewById(R.id.etName);
+                Button btnSubmit=root.findViewById(R.id.btnSubmit);
+                alertDialog= builder.create();
+                alertDialog.show();
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+                btnSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String chapterStr=etName.getText().toString();
+                        if(chapterStr.equals(""))
+                        {
+                            Toast.makeText(getApplicationContext(),"Plz Add Chapter Name",Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
 
-                binding.llChapterData.setVisibility(View.GONE);
-                binding.llTopicData.setVisibility(View.GONE);
-                binding.etcName.getText().clear();
-                binding.etTopicName.getText().clear();
-                binding.etToDate.getText().clear();
-                binding.etFromDate.getText().clear();
+                            isEdit=false;
+                            binding.spChapter.setVisibility(View.GONE);
+                            binding.txtChapter.setVisibility(View.VISIBLE);
+                            binding.txtChapter.setText(chapterStr);
+                            chapterClicked=true;
+                            binding.spTopic.setVisibility(View.GONE);
+                            binding.txtTopic.setVisibility(View.VISIBLE);
+                            binding.txtTopic.setText("");
+                            binding.etFromDate.setText("");
+                            binding.etToDate.setText("");
+                            alertDialog.dismiss();
+                        }
 
-                binding.ImgRemoveChapter.setVisibility(View.VISIBLE);
-                binding.etcName.setVisibility(View.VISIBLE);
-                binding.etTopicName.setVisibility(View.VISIBLE);
-               // binding.imgAdd.setVisibility(View.VISIBLE);
-                //binding.rvTopic.setVisibility(View.VISIBLE);
-                chapterID = null;
-                selectedTopicData.clear();
-                TopicId = null;
+
+                    }
+                });
+
                 break;
 
-            case R.id.ImgRemoveChapter:
+            case R.id.imgAddTopic:
 
-                isEdit = true;
-                binding.llChapterData.setVisibility(View.VISIBLE);
-                binding.llTopicData.setVisibility(View.VISIBLE);
-                binding.etTopicName.getText().clear();
-                binding.etToDate.getText().clear();
-                binding.etFromDate.getText().clear();
-                //binding.imgAdd.setVisibility(View.GONE);
-               // binding.rvTopic.setVisibility(View.GONE);
-                binding.etTopicName.setVisibility(View.GONE);
 
-                binding.etcName.getText().clear();
-                binding.ImgRemoveChapter.setVisibility(View.GONE);
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+                View root1=getLayoutInflater().inflate(R.layout.dialog_enter_topic,null);
+                builder1.setView(root1);
+                builder1.setCancelable(false);
+                ImageView btnCancel1=root1.findViewById(R.id.btnCancel);
+                EditText etName1=root1.findViewById(R.id.etName);
+                Button btnSubmit1=root1.findViewById(R.id.btnSubmit);
+                alertDialog= builder1.create();
+                alertDialog.show();
+                btnCancel1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+                btnSubmit1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String topicStr=etName1.getText().toString();
 
-                binding.etcName.setVisibility(View.GONE);
-                bindChapter();
+
+                        if(topicStr.equals(""))
+                        {
+                            Toast.makeText(getApplicationContext(),"Plz Add Topic Name",Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+
+                            binding.spTopic.setVisibility(View.GONE);
+                            binding.txtTopic.setVisibility(View.VISIBLE);
+                            binding.txtTopic.setText(topicStr);
+                            binding.etToDate.setText("");
+                            binding.etFromDate.setText("");
+                            topicClicked=true;
+                            isEdit=false;
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+
+
                 break;
 
         }
@@ -422,7 +516,8 @@ ActivityAddSyllabusBinding binding;
                 break;
 
             case LeafManager.API_STATUS_PLAN:
-             //   Toast.makeText(this, getResources().getString(R.string.toast_syllabus_add_successfully), Toast.LENGTH_SHORT).show();
+                binding.progressBar.setVisibility(View.GONE);
+                //   Toast.makeText(this, getResources().getString(R.string.toast_syllabus_add_successfully), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(getApplicationContext()).setBoolean(LeafPreference.ISSYLLABUSUPDATED, true);
                 finish();
                 break;
@@ -443,46 +538,7 @@ ActivityAddSyllabusBinding binding;
         hideLoadingBar();
     }
 
-    private boolean isValid()
-    {
-        if(!isEdit)
-        {
-            if (binding.etcName.getText().toString().isEmpty())
-            {
-                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_chapter_name),Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            if (binding.etTopicName.getText().toString().isEmpty())
-            {
-                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_add_topic_name),Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
 
-        return true;
-    }
-    private void addTopic() {
-
-
-        if (!binding.etTopicName.getText().toString().isEmpty())
-        {
-            Log.e(TAG,"topicAdapter" + topicAdapter.getList().size());
-
-            if (topicAdapter.getList().size() > 0 && topicAdapter.getList().get(topicAdapter.getList().size()-1).getTopicName().isEmpty())
-            {
-                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_add_topic_name),Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                topicAdapter.add("");
-            }
-
-        }
-        else
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_add_topic_name),Toast.LENGTH_SHORT).show();
-        }
-    }
 
     public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> {
         ArrayList<SyllabusModelReq.TopicModelData> list = new ArrayList<>();
@@ -500,7 +556,7 @@ ActivityAddSyllabusBinding binding;
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
             SyllabusModelReq.TopicModelData item = list.get(position);
 

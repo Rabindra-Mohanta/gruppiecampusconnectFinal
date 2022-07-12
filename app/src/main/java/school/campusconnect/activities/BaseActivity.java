@@ -1555,6 +1555,21 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             }
         }
     }
+    protected boolean isValueValidPhone(EditText phone) {
+        boolean isValid = true;
+
+        String enteredValue = phone.getEditableText().toString().trim();
+        if (enteredValue.length()<10) {
+            phone.setError(getString(R.string.msg_valid_phone));
+            phone.requestFocus();
+            isValid = false;
+        }
+
+
+
+
+        return isValid;
+    }
 
     public void hideKeyboard() {
         View view = getCurrentFocus();

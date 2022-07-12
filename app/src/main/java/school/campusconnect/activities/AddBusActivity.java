@@ -37,6 +37,7 @@ public class AddBusActivity extends BaseActivity implements LeafManager.OnAddUpd
     EditText etName;
     @Bind(R.id.etRouteName)
     EditText etRouteName;
+
     @Bind(R.id.etPhone)
     EditText etPhone;
     @Bind(R.id.tvCountry)

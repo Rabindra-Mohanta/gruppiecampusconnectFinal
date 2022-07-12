@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -35,13 +36,17 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ProfileConstituencyActivity;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.fragments.ProfileFragmentConst;
+import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.crop.Crop;
 
-public class UploadCircleImageFragment extends BaseUploadImageFragment implements View.OnClickListener {
+public class UploadCircleImageFragment extends BaseUploadImageFragment implements View.OnClickListener, LeafManager.OnCommunicationListener {
     public static final int REQUEST_LOAD_CAMERA_IMAGE = 101;
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
     CircleImageView imgService;
@@ -61,7 +66,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         isEditEnabled = editEnabled;
     }
 
-    boolean isEditEnabled  = true;
+    boolean isEditEnabled = true;
 
     public UploadCircleImageFragment() {
 
@@ -88,9 +93,9 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
 
     public void updateDefaultPhoto(boolean update) {
         if (update)
-            if(getActivity() instanceof ProfileActivity2)
+            if (getActivity() instanceof ProfileActivity2)
                 ((ProfileActivity2) getActivity()).callUpdateApi();
-            else if(getActivity() instanceof ProfileConstituencyActivity)
+            else if (getActivity() instanceof ProfileConstituencyActivity)
                 ((ProfileConstituencyActivity) getActivity()).callUpdateApi();
 
         getDefaultImageView().setVisibility(View.VISIBLE);
@@ -104,15 +109,19 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     }
 
     public void setInitialLatterImage(String name) {
+
+
        /* getDefaultImageView().setVisibility(View.VISIBLE);
         TextDrawable drawable = TextDrawable.builder()
                 .buildRect(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(1));
         getDefaultImageView().setImageDrawable(drawable);*/
+
+
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(ImageUtil.getTextLetter(name), ImageUtil.getRandomColor(1));
         imgDefault.setImageDrawable(drawable);
         imgDefault.setVisibility(View.VISIBLE);
-        
+
 
         // imgPlus.setImageResource(R.drawable.img);
 
@@ -142,7 +151,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_upload_circle_image, container, false);
-        AppLog.e(TAG,"onCreateView");
+        AppLog.e(TAG, "onCreateView");
         imgService = (CircleImageView) rootView.findViewById(R.id.img_service);
         //imgPlusLayout = (RelativeLayout) rootView.findViewById(R.id.upload_img);
         imgPlus = (CircleImageView) rootView.findViewById(R.id.img_plus);
@@ -153,7 +162,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         SELECTED_IMAGE_TYPE = COVER_IMAGE;
         String url = getArguments().getString(EXTRA_PHOTO_URL, "");
 
-        _finalUrl=url;
+        _finalUrl = url;
 
         isForUpload = getArguments().getBoolean(ISFORUPLOAD);
         isGroupOrProfile = getArguments().getBoolean(ISGROUP);
@@ -184,10 +193,9 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     public void onClick(View v) {
 
 
-                if(!isEditEnabled)
-                {
-                    return;
-                }
+        if (!isEditEnabled) {
+            return;
+        }
 
         switch (v.getId()) {
 
@@ -216,7 +224,8 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
 
                 if (ProfileActivity2.profileImage != null && !ProfileActivity2.profileImage.isEmpty()) {
                     Picasso.with(getActivity()).load(Constants.decodeUrlToBase64(ProfileActivity2.profileImage)).into(iv);
-                }if (ProfileFragmentConst.profileImage != null && !ProfileFragmentConst.profileImage.isEmpty()) {
+                }
+                if (ProfileFragmentConst.profileImage != null && !ProfileFragmentConst.profileImage.isEmpty()) {
                     Picasso.with(getActivity()).load(Constants.decodeUrlToBase64(ProfileFragmentConst.profileImage)).into(iv);
                 } else {
                     Picasso.with(getActivity()).load(R.drawable.icon_default_user).into(iv);
@@ -263,7 +272,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
             e.printStackTrace();
             outputFile = ImageUtil.getOutputMediaFile();
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                Uri destination = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID+ ".fileprovider", outputFile);
+                Uri destination = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", outputFile);
                 Crop.of(source, destination).withAspect(10, 10).start(getActivity(), code);
             } else {
                 Uri destination = Uri.fromFile(outputFile);
@@ -283,7 +292,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         //imgPlusLayout.setVisibility(View.VISIBLE);
         imgPlus.setVisibility(View.VISIBLE);
         imgDefault.setVisibility(View.VISIBLE);
-        _finalUrl="";
+        _finalUrl = "";
         updateDefaultPhoto(true);
     }
 
@@ -298,7 +307,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        AppLog.e(TAG , "onActivityResult");
+        AppLog.e(TAG, "onActivityResult");
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             boolean excludeCrop = getArguments().getBoolean("exclude_crop", false);
             if (excludeCrop) {
@@ -316,8 +325,7 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
                     }
                 });
                 imageCompressionAsyncTask.execute(uri.toString());
-            }
-            else {
+            } else {
                 onImageSelected(data, 109);
             }
 
@@ -360,9 +368,8 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         imgPlus.setVisibility(View.GONE);
         imgDefault.setVisibility(View.GONE);
         mProfileImage = profileImage.imageString;
-
         profileImage.imageString = mProfileImage;
-       // imgService.setImageBitmap(profileImage.image);
+        // imgService.setImageBitmap(profileImage.image);
         if (Constants.decodeUrlToBase64(profileImage.imageString).contains("http")) {
             updatePhotoFromUrl(profileImage.imageString);
         } else {
@@ -370,9 +377,20 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         }
 
         isImageChanged = true;
-        if(getActivity() instanceof ProfileActivity2)
+
+        if(getActivity() instanceof AddClassStudentActivity)
+        {
+            StudentRes.StudentData  studentData =new StudentRes.StudentData();
+                 studentData=AddClassStudentActivity.studentData;
+            studentData.image=profileImage.imageString;
+
+
+            AddClassStudentActivity.leafManager.editClassStudent(this,AddClassStudentActivity.group_id,AddClassStudentActivity.team_id,AddClassStudentActivity.userId,AddClassStudentActivity.gruppieRollNoNumber,studentData);
+        }
+
+        if (getActivity() instanceof ProfileActivity2)
             ((ProfileActivity2) getActivity()).callUpdateApi();
-        else if(getActivity() instanceof ProfileConstituencyActivity)
+        else if (getActivity() instanceof ProfileConstituencyActivity)
             ((ProfileConstituencyActivity) getActivity()).callUpdateApi();
 
     }
@@ -420,4 +438,19 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         }
     }
 
+    @Override
+    public void onSuccess(int apiId, BaseResponse response) {
+        Toast.makeText(getActivity(),"Profile pic Changed",Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onFailure(int apiId, String msg) {
+        Toast.makeText(getActivity(),"something went wrong try again",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onException(int apiId, String msg) {
+        Toast.makeText(getActivity(),"something went wrong try again",Toast.LENGTH_LONG).show();
+    }
 }

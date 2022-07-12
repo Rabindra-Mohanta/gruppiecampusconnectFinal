@@ -28,7 +28,6 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddClassStudentActivity;
 
 
-import school.campusconnect.activities.AddStudentActivity;
 import school.campusconnect.databinding.FragmentBasicInfoBinding;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
@@ -39,8 +38,7 @@ import school.campusconnect.network.LeafManager;
 
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
-import school.campusconnect.utils.UploadImageFragment;
-import school.campusconnect.views.SMBDialogUtils;
+import school.campusconnect.utils.UploadCircleImageFragment;
 
 
 public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCommunicationListener, SearchCastFragmentDialog.SelectListener, SearchSubCasteDialogFragment.SelectListener {
@@ -50,7 +48,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
     FragmentBasicInfoBinding basicInfoBinding;
     public static AddClassViewModel addClassViewModel;
     public static String currentPhoneNo;
-    private UploadImageFragment imageFragment;
+    private UploadCircleImageFragment imageFragment;
 
     private String[] str;
     String group_id, team_id, userId, gruppieRollNoNumber;
@@ -119,12 +117,10 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
         basicInfoBinding.btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onceClick)
-                {
-                    
+
                     onceClick=false;
                     updateData();
-                }
+
             }
         });
 
@@ -181,7 +177,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
 
         if (!isValueValid(basicInfoBinding.etName)) {
             return false;
-        } else if (!isValueValid(basicInfoBinding.etPhone)) {
+        } else if (!isValueValidPhone(basicInfoBinding.etPhone) ) {
             return false;
         }
 
@@ -196,6 +192,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
         switch (apiId) {
 
             case LeafManager.API_EDIT_STUDENTS:
+                basicInfoBinding.progressBar.setVisibility(View.GONE);
                 Toast.makeText(getContext(), getResources().getString(R.string.toast_edit_student_sucess), Toast.LENGTH_SHORT).show();
                 getActivity().finish();
                 break;
@@ -205,11 +202,15 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
+        basicInfoBinding.progressBar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), "something went wrong try again", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onException(int apiId, String msg) {
+        basicInfoBinding.progressBar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), "something went wrong try again", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -244,6 +245,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
 
 
             } else {
+                basicInfoBinding.progressBar.setVisibility(View.VISIBLE);
                 StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
                 String[] str = getResources().getStringArray(R.array.array_country_values);
                 addStudentReq.countryCode = str[currentCountry - 1];
@@ -257,6 +259,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
 
             basicInfoBinding.image.setText(imageFragment.getmProfileImage());
 
+            basicInfoBinding.progressBar.setVisibility(View.VISIBLE);
             AppLog.e("basic data", "basic sending Data " + new Gson().toJson(addClassViewModel.studentDataMutableLiveData.getValue()));
             leafManager.editClassStudent(this, group_id, team_id, studentData.getUserId(), gruppieRollNoNumber, addClassViewModel.studentDataMutableLiveData.getValue());
 

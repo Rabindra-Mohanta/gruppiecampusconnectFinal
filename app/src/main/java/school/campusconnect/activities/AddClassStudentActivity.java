@@ -26,7 +26,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.student.StudentRes;
 
 import school.campusconnect.network.LeafManager;
-import school.campusconnect.utils.UploadImageFragment;
+import school.campusconnect.utils.UploadCircleImageFragment;
 import school.campusconnect.utils.WrappingViewPager;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -39,15 +39,15 @@ public class AddClassStudentActivity extends BaseActivity implements  LeafManage
     WrappingViewPager viewPager2;
    public  FragmentManager fragmentManager;
     PagerAdapterOfAddStudent pagerAdapterOfAddStudent;
-
     Toolbar toolbar;
+    public static Boolean IfDpChanged=true;
 
    public static String group_id, team_id,userId,gruppieRollNoNumber;
     public static boolean isEdit=false;
    public static StudentRes.StudentData studentData;
    public static boolean submitted = false;
-    LeafManager leafManager;
-    public static UploadImageFragment imageFragment;
+   public static LeafManager leafManager;
+    public static UploadCircleImageFragment imageFragment;
 
 
 
@@ -119,13 +119,14 @@ public class AddClassStudentActivity extends BaseActivity implements  LeafManage
 
 
         if (isEdit) {
-            imageFragment = UploadImageFragment.newInstance(studentData.getImage(), true, true);
+            imageFragment = UploadCircleImageFragment.newInstance(studentData.getImage(), true, true);
 
             setTitle(getResources().getString(R.string.title_student_details)+" - ("+getIntent().getStringExtra("className")+")");
         }
 
         else {
-            imageFragment = UploadImageFragment.newInstance(null, true, true);
+            imageFragment = UploadCircleImageFragment.newInstance(null, true, true);
+            imageFragment.setInitialLatterImage(studentData.name);
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, imageFragment).commit();

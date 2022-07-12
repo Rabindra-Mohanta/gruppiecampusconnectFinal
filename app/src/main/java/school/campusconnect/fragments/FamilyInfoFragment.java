@@ -3,7 +3,6 @@ package school.campusconnect.fragments;
 import android.os.Bundle;
 
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
-import school.campusconnect.utils.UploadImageFragment;
+import school.campusconnect.utils.UploadCircleImageFragment;
 
 public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
 
@@ -37,9 +36,9 @@ public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCo
     public int currentCountry;
     LeafManager leafManager;
     String currentPhoneNo;
-    private boolean onceClick=true;
+    private boolean onceClick = true;
 
-    private UploadImageFragment imageFragment;
+    private UploadCircleImageFragment imageFragment;
 
     public FamilyInfoFragment() {
         // Required empty public constructor
@@ -93,10 +92,8 @@ public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCo
             public void onClick(View v) {
 
 
-                if(onceClick)
-                {onceClick=false;
-                    updateData();
-                }
+                updateData();
+
 
             }
         });
@@ -104,36 +101,70 @@ public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCo
 
     }
 
+    private boolean isValid() {
+
+        if (!isValueValidPhone(familyInfoBinding.etfatherNumber) || !isValueValidPhone(familyInfoBinding.etmotherNumber) || !isValueValid(familyInfoBinding.etfatherNumber) || !isValueValid(familyInfoBinding.etmotherNumber)) {
+            return false;
+        }
+
+        return true;
+
+
+    }
+
     private void updateData() {
 
 
-        String phone = "";
-
-
-            phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
 
 
 
-        if (currentPhoneNo.equals(phone)) {
 
 
-        } else {
-            StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
-            String[] str = getResources().getStringArray(R.array.array_country_values);
-            addStudentReq.countryCode = str[currentCountry - 1];
-            addStudentReq.phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
-
-            //progressBar.setVisibility(View.VISIBLE);
-            leafManager.editClassStudentPhone(this, group_id, studentData.getUserId(), addStudentReq);
-
-        }
 
 
-        familyInfoBinding.image.setText(imageFragment.getmProfileImage());
+                String phone = "";
 
-        AppLog.e("family data", "family sending Data " + new Gson().toJson(addClassViewModel.studentDataMutableLiveData.getValue()));
 
-        leafManager.editClassStudent(this, group_id, team_id, studentData.getUserId(), studentData.gruppieRollNumber, addClassViewModel.studentDataMutableLiveData.getValue());
+                phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
+
+            if(currentPhoneNo.length()<10 || phone.length()<10)
+            {
+                Toast.makeText(getContext(),"Enter valid phone number In Basic Info",Toast.LENGTH_LONG).show();
+            }
+               else if (currentPhoneNo.equals(phone)) {
+
+
+                } else {
+
+
+                        familyInfoBinding.progressBar.setVisibility(View.VISIBLE);
+                        StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
+                        String[] str = getResources().getStringArray(R.array.array_country_values);
+                        addStudentReq.countryCode = str[currentCountry - 1];
+                        addStudentReq.phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
+
+                        //progressBar.setVisibility(View.VISIBLE);
+                        leafManager.editClassStudentPhone(this, group_id, studentData.getUserId(), addStudentReq);
+
+                }
+
+            if(currentPhoneNo.length()<10 || phone.length()<10)
+            {
+
+            }
+            else
+            {
+
+                familyInfoBinding.image.setText(imageFragment.getmProfileImage());
+
+                AppLog.e("family data", "family sending Data " + new Gson().toJson(addClassViewModel.studentDataMutableLiveData.getValue()));
+
+                familyInfoBinding.progressBar.setVisibility(View.VISIBLE);
+                leafManager.editClassStudent(this, group_id, team_id, studentData.getUserId(), studentData.gruppieRollNumber, addClassViewModel.studentDataMutableLiveData.getValue());
+
+            }
+
+
 
 
     }
@@ -143,6 +174,7 @@ public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCo
         switch (apiId) {
 
             case LeafManager.API_EDIT_STUDENTS:
+                familyInfoBinding.progressBar.setVisibility(View.GONE);
                 Toast.makeText(getContext(), getResources().getString(R.string.toast_edit_student_sucess), Toast.LENGTH_SHORT).show();
                 getActivity().finish();
         }
@@ -150,11 +182,13 @@ public class FamilyInfoFragment extends BaseFragment implements LeafManager.OnCo
 
     @Override
     public void onFailure(int apiId, String msg) {
-
+        Toast.makeText(getContext(), "something went wrong try again", Toast.LENGTH_SHORT).show();
+        familyInfoBinding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-
+        Toast.makeText(getContext(), "something went wrong try again", Toast.LENGTH_SHORT).show();
+        familyInfoBinding.progressBar.setVisibility(View.GONE);
     }
 }

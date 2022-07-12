@@ -586,6 +586,7 @@
     <string name="lbl_total_balance">ಒಟ್ಟು ಬ್ಯಾಲೆನ್ಸ್ ಮೊತ್ತ</string>
     <string name="lbl_total_amount_paid">ಪಾವತಿಸಿದ ಒಟ್ಟು ಮೊತ್ತ</string>
     <string name="lbl_enter_chapter_name">ಅಧ್ಯಾಯದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="lbl_enter_topic_name">Enter Topic name</string>
     <string name="lbl_completed">ಪೂರ್ಣಗೊಂಡಿದೆ</string>
     <string name="lbl_clear">ಸ್ಪಷ್ಟ</string>
     <string name="lbl_filter">ಫಿಲ್ಟರ್</string>
@@ -1100,62 +1101,62 @@
     <string name="smb_attach_file">ಆಯ್ಕೆಮಾಡಿದ ಫೈಲ್ ಅನ್ನು ಲಗತ್ತಿಸುವುದೇ?</string>
     <string name="smb_change_team_admin">ತಂಡದ ನಿರ್ವಾಹಕರನ್ನು ಬದಲಾಯಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ</string>
 
-        <string-array name="publc_private_array">
-            <item>ಗುಂಪು ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</item>
-            <item>ಖಾಸಗಿ</item>
-            <item>ಸಾರ್ವಜನಿಕ</item>
-        </string-array>
+    <string-array name="publc_private_array">
+        <item>ಗುಂಪು ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</item>
+        <item>ಖಾಸಗಿ</item>
+        <item>ಸಾರ್ವಜನಿಕ</item>
+    </string-array>
 
-        <string-array name="blood_group">
-            <item>ಆಯ್ಕೆ ರಕ್ತದ ಗುಂಪು</item>
-            <item>ಎ+ </item>
-            <item>ಎ-</item>
-            <item>ಬಿ +</item>
-            <item>ಬಿ-</item>
-            <item>O+ </item>
-            <item>O-</item>
-            <item>AB+</item>
-            <item>AB-</item>
-        </string-array>
+    <string-array name="blood_group">
+        <item>ಆಯ್ಕೆ ರಕ್ತದ ಗುಂಪು</item>
+        <item>ಎ+ </item>
+        <item>ಎ-</item>
+        <item>ಬಿ +</item>
+        <item>ಬಿ-</item>
+        <item>O+ </item>
+        <item>O-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+    </string-array>
 
-        <string-array name="gender_array">
-            <item>ಲಿಂಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</item>
-            <item>ಪುರುಷ</item>
-            <item>ಸ್ತ್ರೀ</item>
-            <item>ಇತರೆ</item>
-        </string-array>
-        <string-array name="lastSubTime">
-            <item>1ನಿಮಿಷ</item>
-            <item>2ನಿಮಿಷ</item>
-            <item>3ನಿಮಿಷ</item>
-            <item>4ನಿಮಿಷ</item>
-            <item>5ನಿಮಿಷ</item>
-            <item>6ನಿಮಿಷ</item>
-            <item>7ನಿಮಿಷ</item>
-            <item>8ನಿಮಿಷ</item>
-            <item>9ನಿಮಿಷ</item>
-            <item>10ನಿಮಿಷ</item>
-            <item>11ನಿಮಿಷ</item>
-            <item>12ನಿಮಿಷ</item>
-            <item>13ನಿಮಿಷ</item>
-            <item>14ನಿಮಿಷ</item>
-            <item>15ನಿಮಿಷ</item>
-            <item>16ನಿಮಿಷ</item>
-            <item>17ನಿಮಿಷ</item>
-            <item>18ನಿಮಿಷ</item>
-            <item>19ನಿಮಿಷ</item>
-            <item>20ನಿಮಿಷ</item>
-            <item>21ನಿಮಿಷ</item>
-            <item>22ನಿಮಿಷ</item>
-            <item>23ನಿಮಿಷ</item>
-            <item>24ನಿಮಿಷ</item>
-            <item>25ನಿಮಿಷ</item>
-            <item>26ನಿಮಿಷ</item>
-            <item>27ನಿಮಿಷ</item>
-            <item>28ನಿಮಿಷ</item>
-            <item>29ನಿಮಿಷ</item>
-            <item>30ನಿಮಿಷ</item>
-        </string-array>
+    <string-array name="gender_array">
+        <item>ಲಿಂಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</item>
+        <item>ಪುರುಷ</item>
+        <item>ಸ್ತ್ರೀ</item>
+        <item>ಇತರೆ</item>
+    </string-array>
+    <string-array name="lastSubTime">
+        <item>1ನಿಮಿಷ</item>
+        <item>2ನಿಮಿಷ</item>
+        <item>3ನಿಮಿಷ</item>
+        <item>4ನಿಮಿಷ</item>
+        <item>5ನಿಮಿಷ</item>
+        <item>6ನಿಮಿಷ</item>
+        <item>7ನಿಮಿಷ</item>
+        <item>8ನಿಮಿಷ</item>
+        <item>9ನಿಮಿಷ</item>
+        <item>10ನಿಮಿಷ</item>
+        <item>11ನಿಮಿಷ</item>
+        <item>12ನಿಮಿಷ</item>
+        <item>13ನಿಮಿಷ</item>
+        <item>14ನಿಮಿಷ</item>
+        <item>15ನಿಮಿಷ</item>
+        <item>16ನಿಮಿಷ</item>
+        <item>17ನಿಮಿಷ</item>
+        <item>18ನಿಮಿಷ</item>
+        <item>19ನಿಮಿಷ</item>
+        <item>20ನಿಮಿಷ</item>
+        <item>21ನಿಮಿಷ</item>
+        <item>22ನಿಮಿಷ</item>
+        <item>23ನಿಮಿಷ</item>
+        <item>24ನಿಮಿಷ</item>
+        <item>25ನಿಮಿಷ</item>
+        <item>26ನಿಮಿಷ</item>
+        <item>27ನಿಮಿಷ</item>
+        <item>28ನಿಮಿಷ</item>
+        <item>29ನಿಮಿಷ</item>
+        <item>30ನಿಮಿಷ</item>
+    </string-array>
 
 
 

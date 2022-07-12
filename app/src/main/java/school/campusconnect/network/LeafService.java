@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.http.Url;
-import school.campusconnect.activities.StaffAttendanceActivity;
 import school.campusconnect.datamodel.ConstituencyRes;
 import school.campusconnect.datamodel.CoursePostResponse;
 import school.campusconnect.datamodel.LeaveReq;
@@ -38,7 +37,6 @@ import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.booths.SubBoothWorkerEventRes;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
-import school.campusconnect.datamodel.classs.StaffClassModelRes;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -55,7 +53,6 @@ import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.register.UniversitiesData;
 import school.campusconnect.datamodel.searchUser.SearchUserModel;
-import school.campusconnect.datamodel.staff.ApprovalStaffAttendanceRes;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
 import school.campusconnect.datamodel.staff.StaffAttendanceRes;
 import school.campusconnect.datamodel.staff.TakeAttendanceReq;
@@ -1999,7 +1996,7 @@ public interface LeafService {
 
     @PUT("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body String req);
+    Call<BaseResponse> addSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body SyllabusModelReq req);
 
     @GET("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

@@ -38,7 +38,6 @@ import school.campusconnect.datamodel.booths.SubBoothEventRes;
 import school.campusconnect.datamodel.booths.SubBoothWorkerEventRes;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.datamodel.booths.VoterProfileUpdate;
-import school.campusconnect.datamodel.classs.StaffClassModelRes;
 import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
 import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
 import school.campusconnect.datamodel.committee.AddCommitteeReq;
@@ -55,7 +54,6 @@ import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.register.UniversitiesData;
 import school.campusconnect.datamodel.searchUser.SearchUserModel;
-import school.campusconnect.datamodel.staff.ApprovalStaffAttendanceRes;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
 import school.campusconnect.datamodel.staff.StaffAttendanceRes;
 import school.campusconnect.datamodel.staff.TakeAttendanceReq;
@@ -12736,7 +12734,7 @@ public class LeafManager {
         }, serviceErrorType);
     }
 
-    public void addSyllabus(OnCommunicationListener listener, String group_id, String team_id, String subject_id, String req)
+    public void addSyllabus(OnCommunicationListener listener, String group_id, String team_id, String subject_id, SyllabusModelReq req)
     {
         mOnCommunicationListener = listener;
 

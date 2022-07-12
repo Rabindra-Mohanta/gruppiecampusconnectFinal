@@ -473,6 +473,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     mBinding.txtEmpty.setVisibility(View.VISIBLE);
                 }
 
+                    else
+                    {
+                        mBinding.txtEmpty.setVisibility(View.GONE);
+                    }
+
+
                 if (currentPage == 1) {
                     PostDataItem.deleteGeneralPosts(mGroupId + "");
                     PostList.clear();
@@ -491,6 +497,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 if(totalPages==0)
                 {
                     mBinding.txtEmpty.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    mBinding.txtEmpty.setVisibility(View.GONE);
                 }
                 mIsLoading = false;
 

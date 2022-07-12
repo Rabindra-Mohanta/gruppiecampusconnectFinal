@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_version">Version 1.0</string>
     <string name="lbl_app_details">© 2016 Vivid Innovation Pvt Ltd</string>
@@ -691,6 +692,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_total_balance">Total Balance Amount</string>
     <string name="lbl_total_amount_paid">Total Amount Paid</string>
     <string name="lbl_enter_chapter_name">Enter chapter name</string>
+    <string name="lbl_enter_topic_name">Enter Topic name</string>
     <string name="lbl_completed">Completed</string>
     <string name="lbl_clear">Clear</string>
     <string name="lbl_filter">Filter</string>

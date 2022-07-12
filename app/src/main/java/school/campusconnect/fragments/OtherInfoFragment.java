@@ -10,11 +10,7 @@ import android.view.ViewGroup;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -25,10 +21,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
 
-
-import butterknife.ButterKnife;
 import school.campusconnect.AddClassViewModel;
 import school.campusconnect.R;
 
@@ -40,13 +33,12 @@ import school.campusconnect.datamodel.profileCaste.CasteResponse;
 
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
-import school.campusconnect.datamodel.student.AddMultipleStudentReq;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.network.LeafManager;
 
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
-import school.campusconnect.utils.UploadImageFragment;
+import school.campusconnect.utils.UploadCircleImageFragment;
 
 
 public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCommunicationListener, SearchCastFragmentDialog.SelectListener, SearchSubCasteDialogFragment.SelectListener {
@@ -73,7 +65,7 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
 
     boolean submitted = false;
     LeafManager leafManager;
-    private UploadImageFragment imageFragment;
+    private UploadCircleImageFragment imageFragment;
 
     ArrayAdapter<String> religionAdapter;
     ArrayList<String> religionList = new ArrayList<>();
@@ -216,9 +208,9 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
             @Override
             public void onClick(View v) {
                 if(onceClick)
-                {onceClick=false;
+
                     UpdateData();
-                }
+
 
             }
         });
@@ -288,11 +280,24 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
             phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
 
 
+        if(currentPhoneNo.length()<10 || phone.length()<10)
+        {
+            Toast.makeText(getContext(),"Enter valid phone number In Basic Info",Toast.LENGTH_LONG).show();
+        }
+       else if (currentPhoneNo.equals(phone)) {
 
-        if (currentPhoneNo.equals(phone)) {
+
+        }
 
 
-        } else {
+        else {
+
+
+
+
+
+                  otherInfoBinding.progressBar.setVisibility(View.VISIBLE);
+
             StudentRes.StudentData addStudentReq = new StudentRes.StudentData();
             String[] str = getResources().getStringArray(R.array.array_country_values);
             addStudentReq.countryCode = str[currentCountry - 1];
@@ -300,14 +305,28 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
 
             //progressBar.setVisibility(View.VISIBLE);
             leafManager.editClassStudentPhone(this, group_id, studentData.getUserId(), addStudentReq);
+            }
+
+
+
+        if(currentPhoneNo.length()<10 || phone.length()<10)
+        {
+
+        }
+else
+        {
+
+            otherInfoBinding.image.setText(imageFragment.getmProfileImage());
+            AppLog.e("other data", "other sending Data " + new Gson().toJson(addClassViewModel.studentDataMutableLiveData.getValue()));
+
+            otherInfoBinding.progressBar.setVisibility(View.VISIBLE);
+            leafManager.editClassStudent(this, group_id, team_id, studentData.getUserId(), studentData.gruppieRollNumber, addClassViewModel.studentDataMutableLiveData.getValue());
+
 
         }
 
 
-        otherInfoBinding.image.setText(imageFragment.getmProfileImage());
-        AppLog.e("other data", "other sending Data " + new Gson().toJson(addClassViewModel.studentDataMutableLiveData.getValue()));
 
-        leafManager.editClassStudent(this, group_id, team_id, studentData.getUserId(), studentData.gruppieRollNumber, addClassViewModel.studentDataMutableLiveData.getValue());
 
 
     }
@@ -318,7 +337,7 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
         switch (apiId) {
             case LeafManager.API_RELIGION_GET: {
                 ReligionResponse res = (ReligionResponse) response;
-
+                otherInfoBinding.progressBar.setVisibility(View.GONE);
                 AppLog.e(TAG, "ReligionResponse" + res);
 
                 religionList.clear();
@@ -349,6 +368,7 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
 
             case LeafManager.API_CASTE_GET: {
                 CasteResponse res = (CasteResponse) response;
+                otherInfoBinding.progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "CasteResponse" + res);
 
@@ -411,6 +431,7 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
 
             case LeafManager.API_SUB_CASTE_GET: {
                 SubCasteResponse res = (SubCasteResponse) response;
+                otherInfoBinding.progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "SubCasteResponse" + res);
 
@@ -456,11 +477,15 @@ public class OtherInfoFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
+        otherInfoBinding.progressBar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), "something went wrong try again", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onException(int apiId, String msg) {
+        otherInfoBinding.progressBar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), "something went wrong try again", Toast.LENGTH_SHORT).show();
 
     }
 

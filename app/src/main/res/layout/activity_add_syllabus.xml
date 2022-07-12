@@ -46,43 +46,27 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                       <RelativeLayout
-                           android:layout_width="match_parent"
-                           android:layout_height="wrap_content"
-                           >
-
-                           <ImageView
-                               android:id="@+id/ImgRemoveChapter"
-                               android:visibility="gone"
-                               android:layout_width="@dimen/padding_30dp"
-                               android:layout_height="@dimen/padding_30dp"
-                               android:layout_alignParentRight="true"
-                               android:layout_centerVertical="true"
-                               android:padding="@dimen/padding_5dp"
-                               app:srcCompat="@drawable/ic_close"
-                               app:tint="@android:color/holo_red_dark" />
-                           <TextView
-                               style="@style/LabelNormal"
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content"
-                               android:layout_marginTop="@dimen/padding_20dp"
-                               android:paddingLeft="@dimen/padding_10dp"
-                               android:text="@string/lbl_chapter_name"
-                               android:textAllCaps="true"
-                               android:textColor="@color/colorPrimary" />
-                       </RelativeLayout>
-
-
-                        <EditText
-                            android:id="@+id/etcName"
-                            style="@style/RegEditText"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/login_button_height"
-                            android:layout_marginTop="@dimen/padding_5dp"
-                            android:inputType="text" />
+                            android:layout_height="wrap_content"
+                            >
+
+
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_20dp"
+                                android:paddingLeft="@dimen/padding_10dp"
+                                android:text="@string/lbl_chapter_name"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorPrimary" />
+                        </RelativeLayout>
+
+
 
                         <LinearLayout
-                            android:visibility="gone"
+
                             android:id="@+id/llChapterData"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -99,14 +83,22 @@
                                     android:layout_width="0dp"
                                     android:layout_weight="1"
                                     android:layout_height="wrap_content">
+                                    <EditText
+                                        android:visibility="gone"
+                                        android:id="@+id/txtChapter"
+                                        style="@style/RegEditText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/login_button_height" />
 
                                     <Spinner
+
                                         android:id="@+id/spChapter"
                                         style="@style/RegEditText"
                                         android:layout_width="match_parent"
                                         android:layout_height="@dimen/login_button_height" />
 
                                     <ImageView
+                                        android:id="@+id/spinnerIconimage"
                                         android:layout_width="25dp"
                                         android:src="@drawable/icon_down_white"
                                         android:layout_marginEnd="@dimen/padding_10dp"
@@ -135,6 +127,86 @@
                         </LinearLayout>
 
 
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_topic_name"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="2"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_weight="0.3"
+                                android:id="@+id/topicLayout"
+                                android:layout_width="match_parent"
+                                android:visibility="visible"
+                                android:layout_height="wrap_content">
+                                <FrameLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content">
+                                    <EditText
+                                        android:visibility="gone"
+                                        android:id="@+id/txtTopic"
+                                        style="@style/RegEditText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/login_button_height" />
+
+                                    <Spinner
+                                        android:id="@+id/spTopic"
+                                        style="@style/RegEditText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/login_button_height" />
+
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:src="@drawable/icon_down_white"
+                                        android:layout_marginEnd="@dimen/padding_10dp"
+                                        android:layout_gravity="right|center"
+                                        android:layout_height="25dp"/>
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_weight="1.7"
+                                android:layout_gravity="center_vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <ImageView
+
+                                    android:layout_marginLeft="@dimen/padding_5dp"
+                                    android:id="@+id/imgAddTopic"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:padding="@dimen/padding_5dp"
+                                    android:scaleType="centerCrop"
+                                    android:background="@drawable/round_primary_bg"
+                                    android:src="@drawable/ic_vector_add"
+                                    />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
                         <androidx.cardview.widget.CardView
                             android:layout_marginTop="@dimen/padding_5dp"
                             android:layout_width="match_parent"
@@ -147,64 +219,10 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
 
-                                <TextView
-                                    style="@style/LabelNormal"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/padding_10dp"
-                                    android:paddingLeft="@dimen/padding_10dp"
-                                    android:text="@string/lbl_topic_name"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/colorPrimary" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/padding_5dp"
-                                    android:orientation="horizontal">
-                                    <EditText
-                                        android:id="@+id/etTopicName"
-                                        style="@style/RegEditText"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="@dimen/login_button_height"
-                                        android:inputType="textPersonName|textCapWords" />
-                                </RelativeLayout>
-
-                                <LinearLayout
-                                    android:visibility="gone"
-                                    android:id="@+id/llTopicData"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="2"
-                                    android:layout_marginTop="@dimen/padding_5dp"
-                                    android:orientation="horizontal">
-                                    <LinearLayout
-                                        android:layout_weight="0.3"
-                                        android:layout_width="match_parent"
-                                        android:visibility="visible"
-                                        android:layout_height="wrap_content">
-                                        <FrameLayout
-                                            android:layout_width="0dp"
-                                            android:layout_weight="1"
-                                            android:layout_height="wrap_content">
-
-                                            <Spinner
-                                                android:id="@+id/spTopic"
-                                                style="@style/RegEditText"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="@dimen/login_button_height" />
-
-                                            <ImageView
-                                                android:layout_width="25dp"
-                                                android:src="@drawable/icon_down_white"
-                                                android:layout_marginEnd="@dimen/padding_10dp"
-                                                android:layout_gravity="right|center"
-                                                android:layout_height="25dp"/>
-                                        </FrameLayout>
-                                    </LinearLayout>
 
 
-                                </LinearLayout>
+
+
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -290,28 +308,7 @@
                         </androidx.cardview.widget.CardView>
 
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:visibility="gone"
-                            android:id="@+id/rvTopic"
-                            android:layout_marginTop="@dimen/padding_5dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            tools:listitem="@layout/item_add_topic"
-                            tools:itemCount="1"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-
-                        <ImageView
-                            android:visibility="gone"
-                            android:layout_marginTop="@dimen/padding_15dp"
-                            android:id="@+id/imgAdd"
-                            android:layout_marginRight="@dimen/padding_5dp"
-                            android:layout_width="@dimen/padding_35dp"
-                            android:layout_height="@dimen/padding_35dp"
-                            android:layout_gravity="right"
-                            app:srcCompat="@drawable/add_round"
-                            />
 
 
                     </LinearLayout>
@@ -319,12 +316,12 @@
                 </androidx.cardview.widget.CardView>
 
                 <Button
-                    android:layout_below="@id/llData"
                     android:id="@+id/btnAdd"
                     style="@style/AddPostButton"
-                    android:layout_centerHorizontal="true"
                     android:layout_width="@dimen/login_button_width"
                     android:layout_height="@dimen/login_button_height"
+                    android:layout_below="@id/llData"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginVertical="@dimen/padding_20dp"
                     android:text="@string/lbl_add" />
 

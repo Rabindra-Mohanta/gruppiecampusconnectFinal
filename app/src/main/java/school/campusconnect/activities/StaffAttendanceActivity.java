@@ -90,7 +90,8 @@ public static final String TAG = "StaffAttendanceActivity";
     {
         adapter = new StaffAttendance();
         binding.rvAttendance.setAdapter(adapter);
-        showLoadingBar(binding.progressBar,false);
+        //showLoadingBar(binding.progressBar,false);
+        binding.progressBar.setVisibility(View.VISIBLE);
         leafManager.getStaffAttendance(this,GroupDashboardActivityNew.groupId,day,month,year);
 
     }
@@ -136,13 +137,23 @@ public static final String TAG = "StaffAttendanceActivity";
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
 
         if (LeafManager.API_STAFF_ATTENDACNCE == apiId)
         {
             StaffAttendanceRes res = (StaffAttendanceRes) response;
             binding.rvAttendance.setItemViewCacheSize(res.getStaffAttendData().size());
             adapter.add(res.getStaffAttendData());
+
+            if(res.getStaffAttendData().size()==0)
+            {
+                binding.txtEmpty.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                binding.txtEmpty.setVisibility(View.GONE);
+            }
         }
 
         if (LeafManager.API_TAKE_STAFF_ATTENDACNCE == apiId)
@@ -171,14 +182,16 @@ public static final String TAG = "StaffAttendanceActivity";
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onFailure(apiId, msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
         super.onException(apiId, msg);
     }
@@ -249,6 +262,8 @@ public static final String TAG = "StaffAttendanceActivity";
             }
             else
             {
+
+
               /*  holder.binding.chAfterNoon.setEnabled(true);
                 holder.binding.chMorning.setEnabled(true);
                 holder.binding.chMorning.setChecked(false);
@@ -429,7 +444,8 @@ public static final String TAG = "StaffAttendanceActivity";
                 {
                     isEdit[0] = true;
 
-                    showLoadingBar(binding.progressBar,false);
+                    //showLoadingBar(binding.progressBar,false);
+                    binding.progressBar.setVisibility(View.VISIBLE);
                     ChangeStaffAttendanceReq req = new ChangeStaffAttendanceReq();
                     req.setDay(String.valueOf(day));
                     req.setMonth(String.valueOf(month));
@@ -508,7 +524,8 @@ public static final String TAG = "StaffAttendanceActivity";
                 {
                     isEdit[0] = true;
 
-                    showLoadingBar(binding.progressBar,false);
+                    //showLoadingBar(binding.progressBar,false);
+                    binding.progressBar.setVisibility(View.VISIBLE);
                     ChangeStaffAttendanceReq req = new ChangeStaffAttendanceReq();
                     req.setDay(String.valueOf(day));
                     req.setMonth(String.valueOf(month));
