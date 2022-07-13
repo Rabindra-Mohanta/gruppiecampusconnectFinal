@@ -269,7 +269,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             holder.imgLead_default.setImageDrawable(drawable);
         }
 
-        if (!TextUtils.isEmpty(item.fileType) && !item.type.equalsIgnoreCase("birthdaypost"))
+        if (item.type!= null && !TextUtils.isEmpty(item.fileType) && !item.type.equalsIgnoreCase("birthdaypost"))
         {
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null)
@@ -394,7 +394,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.recyclerView.setVisibility(View.GONE);
             }
         }
-        else if(item.type.equalsIgnoreCase("birthdaypost"))
+        else if(item.type!= null && item.type.equalsIgnoreCase("birthdaypost"))
         {
                 if (item.fileName != null) {
 
@@ -957,6 +957,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
+                        Picasso.with(mContext).load(R.drawable.icon_post_liked).into(ivLike);
                         listener.onLikeClick(item, getLayoutPosition());
                     } else {
                         showNoNetworkMsg();
@@ -966,6 +967,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
+
+
                         listener.onLikeListClick(item);
                     } else {
                         showNoNetworkMsg();
@@ -975,6 +978,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
+
+                        Picasso.with(mContext).load(R.drawable.icon_post_favd).into(txt_fav);
+
                         listener.onFavClick(item, getLayoutPosition());
                     } else {
                         showNoNetworkMsg();

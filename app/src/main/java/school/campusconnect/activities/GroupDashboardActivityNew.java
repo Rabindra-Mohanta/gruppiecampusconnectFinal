@@ -1,7 +1,6 @@
 package school.campusconnect.activities;
 
 import android.Manifest;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -47,12 +46,9 @@ import school.campusconnect.datamodel.VideoOfflineObject;
 import school.campusconnect.datamodel.banner.BannerTBL;
 import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
 import school.campusconnect.datamodel.booths.BoothsTBL;
-import school.campusconnect.datamodel.booths.EventSubBoothTBL;
-import school.campusconnect.datamodel.event.BoothPostEventTBL;
 import school.campusconnect.datamodel.event.HomeTeamDataTBL;
 import school.campusconnect.datamodel.event.UpdateDataEventRes;
 import school.campusconnect.datamodel.notificationList.NotificationTable;
-import school.campusconnect.datamodel.profile.ProfileTBL;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.fragments.BoothListMyTeamFragment;
@@ -95,7 +91,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -116,8 +111,6 @@ import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
-
-import static android.os.Build.ID;
 
 public class GroupDashboardActivityNew extends BaseActivity
         implements View.OnClickListener, LeafManager.OnCommunicationListener, LeafManager.OnAddUpdateListener<AddPostValidationError> {
@@ -157,8 +150,7 @@ public class GroupDashboardActivityNew extends BaseActivity
     @Bind(R.id.rlMore)
     RelativeLayout rlMore;
 
-    @Bind(R.id.llFavourite)
-    LinearLayout llFavourite;
+
 
     @Bind(R.id.llArchiveTeam)
     LinearLayout llArchiveTeam;
@@ -1255,7 +1247,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
     }*/
-    @OnClick({R.id.rlMore, R.id.llProfile, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers, R.id.llFavourite, R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin,R.id.llMyTeam,R.id.iv_toolbar_icon,R.id.iv_toolbar_default})
+    @OnClick({R.id.rlMore, R.id.llProfile,R.id.llBookmark, R.id.llPeople, R.id.llSubject,R.id.llBothRegister,R.id.llBothCoordinateRegister, R.id.llFamily,R.id.llIssueRegister, R.id.llSubject2, R.id.llDiscuss, R.id.llJoinGruppie, R.id.llAuthorizedUser, R.id.llAllUsers,  R.id.llDoubt, R.id.llAboutGroup, R.id.llAddFriend, R.id.llArchiveTeam, R.id.llNotification, R.id.llClass, R.id.llBusRegister, R.id.llAttendanceReport, R.id.llStaffReg,R.id.llMakeAdmin,R.id.llMyTeam,R.id.iv_toolbar_icon,R.id.iv_toolbar_default})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -1329,15 +1321,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 return;
 
 
-            case R.id.llFavourite:
-                if (isConnectionAvailable()) {
-                    Intent intent = new Intent(this, FavoritePostActivity.class);
-                    intent.putExtra("id", groupId);
-                    startActivity(intent);
-                } else {
-                    showNoNetworkMsg();
-                }
-                break;
+
             case R.id.llArchiveTeam:
                 if (isConnectionAvailable()) {
                     Intent intent = new Intent(this, ArchiveTeamActivity.class);
@@ -1438,6 +1422,17 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
+            case R.id.llBookmark:
+                if (isConnectionAvailable()) {
+                    Intent intent = new Intent(this, FavoritePostActivity.class);
+                    intent.putExtra("id", groupId);
+                    startActivity(intent);
+                } else {
+                    showNoNetworkMsg();
+                }
+                break;
+
+
             case R.id.llSubject2:
                 if (isConnectionAvailable()) {
                     startActivity(new Intent(this, ClassActivity2.class));
@@ -1494,7 +1489,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
         }
         rlMore.setVisibility(View.VISIBLE);
-        tabLayout.getTabAt(1).select();
+        //tabLayout.getTabAt(1).select();
     }
 
     private void createTabIcons() {

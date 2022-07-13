@@ -17,4 +17,5 @@ public class SignUpRequest implements Serializable {
     public String subCaste;
     public String category;
     public String dob;
+    public String gender;
 }
