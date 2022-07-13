@@ -62,14 +62,13 @@ public class StaffListActivity extends BaseActivity implements LeafManager.OnCom
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle(getResources().getString(R.string.lbl_chat));
-        getDataLocally();
-
 
         role =getIntent().getStringExtra("role");
 
         if ("teacher".equalsIgnoreCase(role)) {
             binding.allStaff.setVisibility(View.GONE);
         }
+        getDataLocally();
 
         binding.allStaff.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +129,8 @@ public class StaffListActivity extends BaseActivity implements LeafManager.OnCom
         {
             showLoadingBar(binding.progressBar,true);
             LeafManager leafManager = new LeafManager();
+
+
             if ("teacher".equalsIgnoreCase(role)) {
                 leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
             }
@@ -137,7 +138,6 @@ public class StaffListActivity extends BaseActivity implements LeafManager.OnCom
             {
                 leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
             }
-
         }
     }
     @Override

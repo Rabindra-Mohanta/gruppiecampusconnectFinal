@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.BuildConfig;
+import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.Media.ImagePathTBL;
 import school.campusconnect.datamodel.PostTeamDataItem;
@@ -75,7 +76,7 @@ import school.campusconnect.activities.AddFriendActivity;
 import school.campusconnect.activities.AddPostActivity;
 import school.campusconnect.activities.AddQuestionActivity;
 import school.campusconnect.activities.FullScreenActivity;
-import school.campusconnect.activities.GroupDashboardActivityNew;
+
 import school.campusconnect.activities.LikesListActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.SelectShareTypeActivity;
