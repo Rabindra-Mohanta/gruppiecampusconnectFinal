@@ -1,5 +1,6 @@
 package school.campusconnect.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -232,7 +233,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void onBindViewHolder(final ImageViewHolder holder, final int position) {
+    public void onBindViewHolder(final ImageViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final TeamPostGetData item = list.get(position);
         AppLog.e(TAG, "item[" + position + "] : " + item);
         AppLog.e(TAG, "Group Id : " + mGroupId);
@@ -247,6 +248,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
+        }
+        if (!GroupDashboardActivityNew.isPost){
+            holder.txt_fav.setVisibility(View.GONE);
+        }else {
+            holder.txt_fav.setVisibility(View.VISIBLE);
         }
         holder.txtName.setText(dispName);
 
@@ -881,8 +887,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
             if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
             {
-                linPush.setVisibility(View.GONE);
-                txt_fav.setVisibility(View.GONE);
+                //linPush.setVisibility(View.GONE);
+               // txt_fav.setVisibility(View.GONE);
             }
             else
             {
@@ -916,9 +922,12 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
 
                 case R.id.img_like:
+                    Picasso.with(mContext).load(R.drawable.icon_post_liked).into(ivLike);
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
+
+                      //  Picasso.with(mContext).load(R.drawable.icon_post_liked).into(ivLike);
                         listener.onLikeClick(item, getLayoutPosition());
                     } else {
                         showNoNetworkMsg();
@@ -934,9 +943,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                     }
                     break;
                 case R.id.txt_fav:
+                    Picasso.with(mContext).load(R.drawable.icon_post_favd).into(txt_fav);
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
+                      //  Picasso.with(mContext).load(R.drawable.icon_post_favd).into(txt_fav);
                         listener.onFavClick(item, getLayoutPosition());
                     } else {
                         showNoNetworkMsg();

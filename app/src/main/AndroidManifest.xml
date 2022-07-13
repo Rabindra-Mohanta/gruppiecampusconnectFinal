@@ -57,73 +57,59 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
+
         <activity
             android:name=".activities.SignupImageActivity"
             android:exported="false" />
+
         <activity
             android:name=".activities.school.AddClassStudentV2Activity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.school.AddStaffV2Activity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.AddClassV2Activity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.LiveTeacherClassActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.StudentActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.AllStaffListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.StaffListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.StaffAttendanceActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".utils.MultipleImageSwipeActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.UpdateTopicActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.ApplyLeaveActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.StaffClassListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.EditTopicActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.ZoomCallActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.VideoCallingActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.SearchUserActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
 
         <service
             android:name=".service.IncomingVideoCallService"
@@ -137,130 +123,96 @@
         <activity
             android:name=".activities.SyllabusDetailsActivity"
             android:exported="false"
-
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.AddSyllabusActivity"
             android:exported="false"
-
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.SyllabusListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.FingerPrintActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.ChangeLanguageActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.AboutBoothActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.RemoveBannerActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.VoterProfileActivity"
             android:exported="false"
-
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".utils.crop.CropDialogActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.ChangePinActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.VoterListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.AddVoterActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.StreetListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.WorkerListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.MasterListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:exported="false"
-
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".utils.RecordAudioActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.SelectRoleActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.AddCommiteeActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.LoginPinActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.CommitteeActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.TicketDetailsActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.TicketsActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".utils.address.AddressActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.AddTicketActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.TalukListActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".activities.Home"
-
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".activities.FullScreenVideoMultiActivity"
-            />
+        <activity android:name=".activities.FullScreenVideoMultiActivity" />
         <activity
             android:name=".activities.VideoPlayActivity"
             android:configChanges="orientation|screenSize" />
-        <activity
-            android:name=".activities.AttendancePareSchool"
-            />
-        <activity
-            android:name=".activities.TeamUsersActivity"
-            />
+        <activity android:name=".activities.AttendancePareSchool" />
+        <activity android:name=".activities.TeamUsersActivity" />
         <activity
             android:name=".activities.LeaveActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.ReadUnreadPostUsers" /> <!-- pass : Frenzin@2018 -->
         <!-- vividinnovations.in@gmail.com -->
@@ -304,8 +256,7 @@
 
         <activity
             android:name=".activities.SplashActivity"
-            android:label="@string/app_name"
-            >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -355,150 +306,77 @@
                 <data android:mimeType="application/pdf" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.Activity_Walkthrough"
-            />
+        <activity android:name=".activities.Activity_Walkthrough" />
         <activity
             android:name=".activities.UserExistActivity"
-
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.LoginActivity2"
-
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".utils.crop.CropImageActivity"
-
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.CreateAccountActivity"
-            />
+        <activity android:name=".activities.CreateAccountActivity" />
         <activity
             android:name=".activities.SignUpActivity2"
-
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.ViewPDFActivity" />
-        <activity
-            android:name=".activities.InviteFriendActivity"
-            />
+        <activity android:name=".activities.InviteFriendActivity" />
         <activity
             android:name=".activities.AddFriendActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.GroupDashboardActivityNew"
-
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity
-            android:name=".activities.LeadDetailActivity"
-            />
+        <activity android:name=".activities.LeadDetailActivity" />
         <activity
             android:name=".activities.GroupListActivityNew"
-
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".activities.ReadMoreActivity"
-            />
-        <activity
-            android:name=".activities.TreeListActivity"
-            />
+        <activity android:name=".activities.ReadMoreActivity" />
+        <activity android:name=".activities.TreeListActivity" />
         <activity
             android:name=".activities.LeadsListActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.LikesListActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.AllUserListActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.AllContactListActivity"
-
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".activities.UserDetailActivity"
-            />
-        <activity
-            android:name=".activities.ProfileActivity2"
-            />
-        <activity
-            android:name=".activities.AddPostActivity"
-            />
-        <activity
-            android:name=".activities.EditPostActivity"
-            />
+        <activity android:name=".activities.UserDetailActivity" />
+        <activity android:name=".activities.ProfileActivity2" />
+        <activity android:name=".activities.AddPostActivity" />
+        <activity android:name=".activities.EditPostActivity" />
         <activity android:name=".activities.FullScreenActivity" />
-        <activity
-            android:name=".activities.FullScreenAddPostActivity"
-            />
-        <activity
-            android:name=".activities.GroupsActivity"
-            />
-        <activity
-            android:name=".activities.CommentsActivity"
-            />
-        <activity
-            android:name=".activities.ReplyActivity"
-            />
-        <activity
-            android:name=".activities.ChangePasswordActivity"
-            />
+        <activity android:name=".activities.FullScreenAddPostActivity" />
+        <activity android:name=".activities.GroupsActivity" />
+        <activity android:name=".activities.CommentsActivity" />
+        <activity android:name=".activities.ReplyActivity" />
+        <activity android:name=".activities.ChangePasswordActivity" />
         <activity
             android:name=".activities.TestActivity"
-
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name=".activities.ChangeNumberActivity"
-            />
-        <activity
-            android:name=".activities.FavoritePostActivity"
-            />
-        <activity
-            android:name=".activities.AboutGroupActivity2"
-            />
-        <activity
-            android:name=".activities.AboutPublicGroupActivity"
-            />
-        <activity
-            android:name=".activities.PublicGroupJoinActivity"
-            />
-        <activity
-            android:name=".activities.ShareGroupListActivity"
-            />
-        <activity
-            android:name=".activities.ShareGroupTeamListActivity"
-            />
-        <activity
-            android:name=".activities.SelectShareTypeActivity"
-            />
-        <activity
-            android:name=".activities.ShareInPersonalActivity"
-            />
-        <activity
-            android:name=".activities.SharePersonalNameListActivity"
-            />
-        <activity
-            android:name=".activities.AuthorizedUserActivity"
-            />
-        <activity
-            android:name=".activities.QuestionListActivity"
-            />
-        <activity
-            android:name=".activities.AddQuestionActivity"
-            />
-        <activity
-            android:name=".activities.PushActivity"
-            />
-        <activity
-            android:name=".activities.SettingsActivity"
-            />
+        <activity android:name=".activities.ChangeNumberActivity" />
+        <activity android:name=".activities.FavoritePostActivity" />
+        <activity android:name=".activities.AboutGroupActivity2" />
+        <activity android:name=".activities.AboutPublicGroupActivity" />
+        <activity android:name=".activities.PublicGroupJoinActivity" />
+        <activity android:name=".activities.ShareGroupListActivity" />
+        <activity android:name=".activities.ShareGroupTeamListActivity" />
+        <activity android:name=".activities.SelectShareTypeActivity" />
+        <activity android:name=".activities.ShareInPersonalActivity" />
+        <activity android:name=".activities.SharePersonalNameListActivity" />
+        <activity android:name=".activities.AuthorizedUserActivity" />
+        <activity android:name=".activities.QuestionListActivity" />
+        <activity android:name=".activities.AddQuestionActivity" />
+        <activity android:name=".activities.PushActivity" />
+        <activity android:name=".activities.SettingsActivity" />
         <activity
             android:name=".activities.ProfileConstituencyActivity"
-
             android:windowSoftInputMode="adjustResize" />
 
         <service android:name=".utils.MyFirebaseMessagingService">
@@ -525,24 +403,17 @@
         <activity
             android:name=".utils.youtube.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
-            />
+            android:label="@string/app_name" />
         <activity
             android:name=".utils.youtube.PlayActivity"
             android:label="@string/title_activity_play"
-            android:parentActivityName=".utils.youtube.MainActivity"
-            />
+            android:parentActivityName=".utils.youtube.MainActivity" />
         <activity
             android:name=".utils.youtube.ReviewActivity"
             android:label="@string/title_activity_review"
-            android:parentActivityName=".utils.youtube.MainActivity"
-            />
-        <activity
-            android:name=".curl.CurlActivity"
-            />
-        <activity
-            android:name=".curl.AllPagesActivity"
-            />
+            android:parentActivityName=".utils.youtube.MainActivity" />
+        <activity android:name=".curl.CurlActivity" />
+        <activity android:name=".curl.AllPagesActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -572,23 +443,18 @@
 
         <activity
             android:name=".activities.FullScreenMultiActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.CreateTeamActivity"
-
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.TeamSettingsActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.PersonalSettingsActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.GpsActivity"
-
             android:windowSoftInputMode="stateHidden" />
 
         <service
@@ -596,198 +462,80 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity
-            android:name=".activities.AttendanceActivity"
-            />
-        <activity
-            android:name=".activities.EditAttendanceActivity"
-            />
-        <activity
-            android:name=".activities.ArchiveTeamActivity"
-            />
-        <activity
-            android:name=".activities.NestedTeamActivity"
-            />
-        <activity
-            android:name=".activities.AddStudentActivity"
-            />
-        <activity
-            android:name=".activities.GalleryActivity"
-            />
-        <activity
-            android:name=".activities.AddGalleryPostActivity"
-            />
-        <activity
-            android:name=".activities.TimeTableActivity"
-            />
-        <activity
-            android:name=".activities.AddTimeTablePostActivity"
-            />
-        <activity
-            android:name=".activities.VendorActivity"
-            />
-        <activity
-            android:name=".activities.AddVendorActivity"
-            />
-        <activity
-            android:name=".activities.CodeConductActivity"
-            />
-        <activity
-            android:name=".activities.AddCodeConductActivity"
-            />
-        <activity
-            android:name=".activities.VendorReadMoreActivity"
-            />
-        <activity
-            android:name=".activities.ChatActivity"
-            />
-        <activity
-            android:name=".activities.CalendarActivity"
-            />
-        <activity
-            android:name=".activities.TeamListActivity"
-            />
-        <activity
-            android:name=".activities.PeopleActivity"
-            />
-        <activity
-            android:name=".activities.NotificationListActivity"
-            />
-        <activity
-            android:name=".activities.NewPassActivity"
-            />
-        <activity
-            android:name=".activities.TimeTableTeamsActivity"
-            />
-        <activity
-            android:name=".activities.SubjectActivity"
-            />
-        <activity
-            android:name=".activities.SubjectActivity2"
-            />
-        <activity
-            android:name=".activities.AddSubjectActivity2"
-            />
-        <activity
-            android:name=".activities.ClassActivity2"
-            />
-        <activity
-            android:name=".activities.TimeTableClassActivity2"
-            />
-        <activity
-            android:name=".activities.TimeTabelActivity2"
-            />
-        <activity
-            android:name=".activities.AddTimeTable2"
-            />
-        <activity
-            android:name=".activities.ClassActivity"
-            />
+        <activity android:name=".activities.AttendanceActivity" />
+        <activity android:name=".activities.EditAttendanceActivity" />
+        <activity android:name=".activities.ArchiveTeamActivity" />
+        <activity android:name=".activities.NestedTeamActivity" />
+        <activity android:name=".activities.AddStudentActivity" />
+        <activity android:name=".activities.GalleryActivity" />
+        <activity android:name=".activities.AddGalleryPostActivity" />
+        <activity android:name=".activities.TimeTableActivity" />
+        <activity android:name=".activities.AddTimeTablePostActivity" />
+        <activity android:name=".activities.VendorActivity" />
+        <activity android:name=".activities.AddVendorActivity" />
+        <activity android:name=".activities.CodeConductActivity" />
+        <activity android:name=".activities.AddCodeConductActivity" />
+        <activity android:name=".activities.VendorReadMoreActivity" />
+        <activity android:name=".activities.ChatActivity" />
+        <activity android:name=".activities.CalendarActivity" />
+        <activity android:name=".activities.TeamListActivity" />
+        <activity android:name=".activities.PeopleActivity" />
+        <activity android:name=".activities.NotificationListActivity" />
+        <activity android:name=".activities.NewPassActivity" />
+        <activity android:name=".activities.TimeTableTeamsActivity" />
+        <activity android:name=".activities.SubjectActivity" />
+        <activity android:name=".activities.SubjectActivity2" />
+        <activity android:name=".activities.AddSubjectActivity2" />
+        <activity android:name=".activities.ClassActivity2" />
+        <activity android:name=".activities.TimeTableClassActivity2" />
+        <activity android:name=".activities.TimeTabelActivity2" />
+        <activity android:name=".activities.AddTimeTable2" />
+        <activity android:name=".activities.ClassActivity" />
         <activity
             android:name=".activities.AddSubjectActivity"
-
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.AddClassActivity"
-
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.ClassStudentActivity"
-            />
+        <activity android:name=".activities.ClassStudentActivity" />
         <activity
             android:name=".activities.AddClassStudentActivity"
-
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.AttendanceReportActivity"
-            />
-        <activity
-            android:name=".activities.AttendanceDetailActivity"
-            />
-        <activity
-            android:name=".activities.BusStudentActivity"
-            />
-        <activity
-            android:name=".activities.BusActivity"
-            />
+        <activity android:name=".activities.AttendanceReportActivity" />
+        <activity android:name=".activities.AttendanceDetailActivity" />
+        <activity android:name=".activities.BusStudentActivity" />
+        <activity android:name=".activities.BusActivity" />
         <activity
             android:name=".activities.AddBusStudentActivity"
-
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.AddBusActivity"
-
             android:windowSoftInputMode="stateVisible" />
-        <activity
-            android:name=".activities.StaffActivity"
-            />
+        <activity android:name=".activities.StaffActivity" />
         <activity
             android:name=".activities.AddStaffActivity"
-
             android:windowSoftInputMode="stateVisible" />
-        <activity
-            android:name=".activities.AddTeamStaffActivity"
-            />
-        <activity
-            android:name=".activities.AddTeamStudentActivity"
-            />
-        <activity
-            android:name=".activities.TeacherClassActivity"
-            />
-        <activity
-            android:name=".activities.ParentKidsActivity"
-            />
-        <activity
-            android:name=".activities.MarksheetActivity"
-            />
-        <activity
-            android:name=".activities.MarkSheetListActivity"
-            />
-        <activity
-            android:name=".activities.MarkCardReadMoreActivity"
-            />
-        <activity
-            android:name=".activities.GalleryDetailActivity"
-            />
-        <activity
-            android:name=".activities.MarkCardListActivity"
-            />
-        <activity
-            android:name=".activities.AddMarkCardActivity"
-            />
-        <activity
-            android:name=".activities.UpdateMarksheetActivity"
-            />
-        <activity
-            android:name=".activities.VideoClassActivity"
-            />
-        <activity
-            android:name=".activities.EBookActivity"
-            />
-        <activity
-            android:name=".activities.AddEBookActivity"
-            />
-        <activity
-            android:name=".activities.EBookPdfActivity"
-            />
-        <activity
-            android:name=".activities.SelectEBookActivity"
-            />
-        <activity
-            android:name=".activities.EBookPdfForTeamActivity"
-            />
-        <activity
-            android:name=".activities.ParentKidsForEBookActivity"
-            />
-        <activity
-            android:name=".activities.EBookReadMoreActivity"
-            />
-        <activity
-            android:name=".activities.EBookClassActivity"
-            />
-        <activity
-            android:name=".activities.NewShareActivity"
-            >
+        <activity android:name=".activities.AddTeamStaffActivity" />
+        <activity android:name=".activities.AddTeamStudentActivity" />
+        <activity android:name=".activities.TeacherClassActivity" />
+        <activity android:name=".activities.ParentKidsActivity" />
+        <activity android:name=".activities.MarksheetActivity" />
+        <activity android:name=".activities.MarkSheetListActivity" />
+        <activity android:name=".activities.MarkCardReadMoreActivity" />
+        <activity android:name=".activities.GalleryDetailActivity" />
+        <activity android:name=".activities.MarkCardListActivity" />
+        <activity android:name=".activities.AddMarkCardActivity" />
+        <activity android:name=".activities.UpdateMarksheetActivity" />
+        <activity android:name=".activities.VideoClassActivity" />
+        <activity android:name=".activities.EBookActivity" />
+        <activity android:name=".activities.AddEBookActivity" />
+        <activity android:name=".activities.EBookPdfActivity" />
+        <activity android:name=".activities.SelectEBookActivity" />
+        <activity android:name=".activities.EBookPdfForTeamActivity" />
+        <activity android:name=".activities.ParentKidsForEBookActivity" />
+        <activity android:name=".activities.EBookReadMoreActivity" />
+        <activity android:name=".activities.EBookClassActivity" />
+        <activity android:name=".activities.NewShareActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -796,66 +544,29 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.ClassAddTokenActivity"
-            />
-        <activity
-            android:name=".activities.RecordedClassActivity"
-            />
-        <activity
-            android:name=".activities.RecClassSubjectActivity"
-            />
-        <activity
-            android:name=".activities.ChapterActivity"
-            />
-        <activity
-            android:name=".activities.AddChapterPostActivity"
-            />
-        <activity
-            android:name=".activities.CompletedTopicUserActivity"
-            />
-        <activity
-            android:name=".activities.FeesClassActivity"
-            />
-        <activity
-            android:name=".activities.FeesListActivity"
-            />
-        <activity
-            android:name=".activities.AddFeesActivity"
-            />
-        <activity
-            android:name=".activities.UpdateStudentFeesActivity"
-            />
-        <activity
-            android:name=".activities.HWClassActivity"
-            />
-        <activity
-            android:name=".activities.HWClassSubjectActivity"
-            />
-        <activity
-            android:name=".activities.HWListActivity"
-            />
-        <activity
-            android:name=".activities.AddHwPostActivity"
-            />
-        <activity
-            android:name=".activities.HWParentActivity"
-            />
-        <activity
-            android:name=".activities.HWStudentActivity"
-            />
-        <activity
-            android:name=".activities.SubmitAssignmentActivity"
-            />
-        <activity
-            android:name=".activities.AttendanceReportOnlineActivity"
-            />
-        <activity
-            android:name=".activities.AddEBookActivity2"
-            />
-        <activity
-            android:name=".activities.HomeWorkEditActivity"
-            >
+        <activity android:name=".activities.ClassAddTokenActivity" />
+        <activity android:name=".activities.RecordedClassActivity" />
+        <activity android:name=".activities.RecClassSubjectActivity" />
+        <activity android:name=".activities.ChapterActivity" />
+        <activity android:name=".activities.AddChapterPostActivity" />
+        <activity android:name=".activities.CompletedTopicUserActivity" />
+        <activity android:name=".activities.FeesClassActivity" />
+        <activity android:name=".activities.FeesListActivity" />
+        <activity android:name=".activities.AddFeesActivity" />
+        <activity android:name=".activities.UpdateStudentFeesActivity" />
+        <activity android:name=".activities.HWClassActivity" />
+        <activity android:name=".activities.HWClassSubjectActivity" />
+        <activity android:name=".activities.HWListActivity" />
+        <activity android:name=".activities.AddHwPostActivity" />
+        <activity android:name=".activities.HWParentActivity" />
+        <activity android:name=".activities.HWStudentActivity" />
+        <activity android:name=".activities.SubmitAssignmentActivity" />
+        <activity android:name=".activities.AttendanceReportOnlineActivity" />
+        <activity android:name=".activities.AddEBookActivity2" />
+        <activity android:name=".activities.HomeWorkEditActivity"/>
+            <activity
+                android:name=".activities.GcmBookmarksActivity"
+                />
 
             <!--
                <intent-filter>
@@ -866,115 +577,62 @@
                       </intent-filter>
             -->
 
-        </activity>
-        <activity
-            android:name=".activities.TestClassActivity"
-            />
-        <activity
-            android:name=".activities.TestClassSubjectActivity"
-            />
-        <activity
-            android:name=".activities.TestExamActivity"
-            />
-        <activity
-            android:name=".activities.AddTestPostActivity"
-            />
-        <activity
-            android:name=".activities.TestParentActivity"
-            />
-        <activity
-            android:name=".activities.TestStudentActivity"
-            />
-        <activity
-            android:name=".activities.SubmitTestPaperActivity"
-            />
-        <activity
-            android:name=".activities.TestExamEditActivity"
-            />
-        <activity
-            android:name=".activities.StudentFeesActivity"
-            />
+        <activity android:name=".activities.TestClassActivity" />
+        <activity android:name=".activities.TestClassSubjectActivity" />
+        <activity android:name=".activities.TestExamActivity" />
+        <activity android:name=".activities.AddTestPostActivity" />
+        <activity android:name=".activities.TestParentActivity" />
+        <activity android:name=".activities.TestStudentActivity" />
+        <activity android:name=".activities.SubmitTestPaperActivity" />
+        <activity android:name=".activities.TestExamEditActivity" />
+        <activity android:name=".activities.StudentFeesActivity" />
         <activity
             android:name=".activities.StudentFeesPayActivity"
-
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.AdminStudentFeesActivity"
-            />
-        <activity
-            android:name=".activities.EditStudentFeesActivity"
-            />
+        <activity android:name=".activities.AdminStudentFeesActivity" />
+        <activity android:name=".activities.EditStudentFeesActivity" />
         <activity
             android:name=".activities.AddOfflineTestActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.EditOfflineTestActivity"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.MarksCardActivity2"
-
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.ConstituencyListActivity"
-
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".activities.BoothStudentActivity"
-            />
+        <activity android:name=".activities.BoothStudentActivity" />
         <activity
             android:name=".activities.AddBoothActivity"
-
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.AddBoothStudentActivity"
-
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.FamilyMemberActivity"
-            />
+        <activity android:name=".activities.FamilyMemberActivity" />
         <activity
             android:name=".activities.AddFamilyStudentActivity"
-
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.UpdateMemberActivity"
-
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.AddEditCoordinateMemberActivity"
-
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.IssueActivity"
-
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.AddIssueActivity"
-            />
-        <activity
-            android:name=".activities.BoothActivity"
-            />
-        <activity
-            android:name=".activities.BoothCoordinateActivity"
-            />
+        <activity android:name=".activities.AddIssueActivity" />
+        <activity android:name=".activities.BoothActivity" />
+        <activity android:name=".activities.BoothCoordinateActivity" />
         <activity
             android:name=".activities.EditIssueActivity"
-
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activities.SelectContactActivity"
-            />
-        <activity
-            android:name=".activities.CourseActivity"
-            />
-        <activity
-            android:name=".activities.AddCourseActivity"
-            />
-        <activity
-            android:name=".activities.EditCourseActivity"
-            />
+        <activity android:name=".activities.SelectContactActivity" />
+        <activity android:name=".activities.CourseActivity" />
+        <activity android:name=".activities.AddCourseActivity" />
+        <activity android:name=".activities.EditCourseActivity" />
 
         <service
             android:name=".service.FloatingWidgetService"
@@ -987,8 +645,7 @@
 
         <activity
             android:name=".activities.RegisterInstituteActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
     </application>
 
 </manifest>

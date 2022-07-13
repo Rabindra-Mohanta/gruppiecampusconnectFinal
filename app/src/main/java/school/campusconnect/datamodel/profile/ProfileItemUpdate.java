@@ -1,7 +1,7 @@
 package school.campusconnect.datamodel.profile;
 
 
-import school.campusconnect.datamodel.AddressItem;
+
 
 public class ProfileItemUpdate {
 

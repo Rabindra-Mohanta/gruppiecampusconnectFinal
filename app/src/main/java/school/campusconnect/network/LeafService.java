@@ -18,6 +18,7 @@ import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.classs.AddClassReq;
 import school.campusconnect.datamodel.classs.AddCombinedClass;
 import school.campusconnect.datamodel.classs.ClassResV2;
+import school.campusconnect.datamodel.profileCaste.ProfessionResponce;
 import school.campusconnect.datamodel.register.BoardsData;
 import school.campusconnect.datamodel.register.CampusMediumData;
 import school.campusconnect.datamodel.register.ClassesListData;
@@ -761,6 +762,7 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/posts/{post_id}/comments/{comment_id}/reply/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<GroupCommentResponse> getAllGroupCommentReplies(@Path("group_id") String group_id, @Path("post_id") String post_id, @Path("comment_id") String comment_id, @Query("page") int pagenumber);
+
 
     @PUT("/api/v2/groups/{id}/posts/{post_id}/comments/{comment_id}/edit")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1961,6 +1963,12 @@ public interface LeafService {
     @GET("/api/v1/caste/religions")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ReligionResponse> getReligion();
+
+
+
+    @GET("/api/v1/profession/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ProfessionResponce> getProfession();
 
     @GET("/api/v1/caste/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

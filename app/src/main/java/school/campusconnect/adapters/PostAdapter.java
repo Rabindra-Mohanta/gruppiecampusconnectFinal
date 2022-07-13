@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 
@@ -215,6 +217,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 e.printStackTrace();
             }
         }
+
+        if (!GroupDashboardActivityNew.isPost){
+            holder.txt_fav.setVisibility(View.GONE);
+        }else {
+            holder.txt_fav.setVisibility(View.VISIBLE);
+        }
+
         holder.txtName.setText(dispName);
         holder.txtDate.setText(MixOperations.getFormattedDate(item.createdAt, Constants.DATE_FORMAT));
         holder.txtLike.setText(Constants.coolFormat(item.likes, 0));
@@ -240,6 +249,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                         @Override
                         public void onSuccess() {
                             holder.imgLead_default.setVisibility(View.INVISIBLE);
+                            AppLog.e("Picasso", "onSuccess : ");
                         }
 
                         @Override
@@ -248,6 +258,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                                 @Override
                                 public void onSuccess() {
                                     holder.imgLead_default.setVisibility(View.INVISIBLE);
+
                                 }
 
                                 @Override
@@ -268,13 +279,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             holder.imgLead_default.setImageDrawable(drawable);
         }
 
-        if (!TextUtils.isEmpty(item.fileType) && !item.type.equalsIgnoreCase("birthdaypost"))
+
+
+        if (item.type!= null && !TextUtils.isEmpty(item.fileType) && !item.type.equalsIgnoreCase("birthdaypost"))
         {
             if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
                 if (item.fileName != null)
                 {
+                    AppLog.e("ChildAdapter", "onSuccess : ");
                     ChildAdapter adapter;
                     if (item.fileName.size() == 3) {
+
                         adapter = new ChildAdapter(list.get(position).createdById,2, item.fileName.size(), mContext, item.fileName);
                     } else {
                         adapter = new ChildAdapter(list.get(position).createdById,Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
@@ -393,7 +408,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                 holder.recyclerView.setVisibility(View.GONE);
             }
         }
-        else if(item.type.equalsIgnoreCase("birthdaypost"))
+        else if(item.type!= null && item.type.equalsIgnoreCase("birthdaypost"))
         {
                 if (item.fileName != null) {
 
@@ -609,7 +624,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     ImageView iv = (ImageView) newView.findViewById(R.id.img_popup);
 
                     if (!TextUtils.isEmpty(item.createdByImage)) {
-                        Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.createdByImage)).into(iv);
+                        Picasso.with(mContext)
+                                .load(Constants.decodeUrlToBase64(item.createdByImage))
+                                .into(iv);
                     } else {
                         TextDrawable drawable = TextDrawable.builder()
                                 .buildRect(name, ImageUtil.getRandomColor(position));
@@ -645,9 +662,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
         AppLog.e(TAG, "type : " + type);
         if (type.equals("group") || type.equals("favourite")) {
             holder.txtLike.setVisibility(View.VISIBLE);
-            holder.txt_fav.setVisibility(View.VISIBLE);
+            if (!GroupDashboardActivityNew.isPost){
+                holder.txt_fav.setVisibility(View.GONE);
+            }else {
+                holder.txt_fav.setVisibility(View.VISIBLE);
+            }
+
             holder.linLikes.setVisibility(View.VISIBLE);
-        } else {
+        }
+
+
+        else {
             holder.txtLike.setVisibility(View.GONE);
             holder.txt_fav.setVisibility(View.GONE);
             holder.linLikes.setVisibility(View.GONE);
@@ -953,9 +978,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     break;
 
                 case R.id.img_like:
+                    Picasso.with(mContext).load(R.drawable.icon_post_liked).into(ivLike);
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
+                      //  Picasso.with(mContext).load(R.drawable.icon_post_liked).into(ivLike);
                         listener.onLikeClick(item, getLayoutPosition());
                     } else {
                         showNoNetworkMsg();
@@ -965,15 +992,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
+
+
                         listener.onLikeListClick(item);
                     } else {
                         showNoNetworkMsg();
                     }
                     break;
                 case R.id.txt_fav:
+                    Picasso.with(mContext).load(R.drawable.icon_post_favd).into(txt_fav);
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
+
+                       // Picasso.with(mContext).load(R.drawable.icon_post_favd).into(txt_fav);
+
                         listener.onFavClick(item, getLayoutPosition());
                     } else {
                         showNoNetworkMsg();

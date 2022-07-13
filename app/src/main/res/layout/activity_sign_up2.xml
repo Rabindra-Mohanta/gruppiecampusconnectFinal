@@ -62,11 +62,12 @@
 
 
             <LinearLayout
+
                 android:id="@+id/llData"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                >
 
                 <TextView
 
@@ -102,18 +103,17 @@
                     android:textColor="@color/colorTextWhite"
                     android:textSize="@dimen/text_size_14sp" />
 
-                <EditText
-
-                    android:id="@+id/etDesig"
+                <Spinner
+                    android:id="@+id/etprofession"
                     style="@style/RegEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/login_button_height"
                     android:layout_marginLeft="@dimen/padding_30dp"
                     android:layout_marginTop="@dimen/padding_5dp"
-                    android:layout_marginRight="@dimen/padding_30dp"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:textSize="@dimen/text_size_16sp" />
+                    android:layout_marginRight="@dimen/padding_30dp">
+
+                </Spinner>
+
 
 
                 <TextView
@@ -139,6 +139,27 @@
                     android:inputType="text"
                     android:maxLines="1"
                     android:textSize="@dimen/text_size_16sp" />
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:layout_marginRight="@dimen/padding_30dp"
+                    android:text="@string/lbl_gender"
+                    android:textColor="@color/colorTextWhite"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <Spinner
+                    android:id="@+id/etgender"
+                    style="@style/RegEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_button_height"
+                    android:layout_marginLeft="@dimen/padding_30dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:layout_marginRight="@dimen/padding_30dp" />
 
 
                 <TextView

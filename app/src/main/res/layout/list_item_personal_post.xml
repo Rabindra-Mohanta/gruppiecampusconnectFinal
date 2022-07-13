@@ -430,7 +430,7 @@
                     android:layout_toRightOf="@+id/txt_like"
                     android:gravity="center"
                     android:scaleType="fitXY"
-                    android:src="@drawable/icon_post_fav"
+                    android:src="@drawable/icon_bookmark_fill"
                     android:textColor="@color/color_orange_hover" />
             </LinearLayout>
 
