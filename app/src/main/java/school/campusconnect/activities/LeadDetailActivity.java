@@ -259,6 +259,10 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         binding.etProfession.setEnabled(false);
       //  binding.etProfession.setTextColor(getResources().getColor(R.color.grey));
 
+        binding.etdob.setEnabled(false);
+        binding.etReligion.setEnabled(false);
+        binding.etCaste.setEnabled(false);
+        binding.etSubCaste.setEnabled(false);
 
    /*     binding.etCaste.setEnabled(false);
         binding.etCaste.setTextColor(getResources().getColor(R.color.grey));
@@ -277,6 +281,11 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     //    binding.etdob.setText(data.dob);
         binding.etEducation.setText(data.qualification);
         binding.etProfession.setText(data.occupation);
+
+        binding.etdob.setText(data.dob);
+      //  binding.etReligion.setText(data.);
+       // binding.etCaste.setText(data.);
+      //  binding.etSubCaste.setText(data.s);
 
 
 

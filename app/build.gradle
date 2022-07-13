@@ -87,7 +87,7 @@ android {
                           resValue "string", "app_name", '"GCM"'
                           buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
                           buildConfigField("String", "AppCategory", '"constituency"')
-                          buildConfigField("String", "APP_ID",  '"constituency"')*/
+                          buildConfigField("String", "APP_ID",  '"constituency"')
 
                  /*           applicationId "sudhakar.gruppie"
                             versionCode 5

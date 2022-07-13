@@ -250,6 +250,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                 e.printStackTrace();
             }
         }
+        if (!GroupDashboardActivityNew.isPost){
+            holder.txt_fav.setVisibility(View.GONE);
+        }else {
+            holder.txt_fav.setVisibility(View.VISIBLE);
+        }
         holder.txtName.setText(dispName);
 
         holder.txtDate.setText(MixOperations.getFormattedDate(item.createdAt, Constants.DATE_FORMAT));
