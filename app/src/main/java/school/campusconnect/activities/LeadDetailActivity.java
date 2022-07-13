@@ -283,9 +283,9 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         binding.etProfession.setText(data.occupation);
 
         binding.etdob.setText(data.dob);
-      //  binding.etReligion.setText(data.);
-       // binding.etCaste.setText(data.);
-      //  binding.etSubCaste.setText(data.s);
+        binding.etReligion.setText(data.religion);
+        binding.etCaste.setText(data.caste);
+        binding.etSubCaste.setText(data.subCaste);
 
 
 

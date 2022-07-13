@@ -35,6 +35,9 @@ public class LeadItem implements Parcelable {
     @SerializedName(value = "leadCount",alternate = "membersCount")
     public int leadCount;
     public String dob;
+    public String religion;
+    public String caste;
+    public String subCaste;
     public String qualification;
 
     @SerializedName(value = "designation")
