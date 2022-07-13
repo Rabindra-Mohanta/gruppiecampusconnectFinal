@@ -1486,6 +1486,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     showNoNetworkMsg();
                 }
                 break;
+
             case R.id.rlMore:
                 rlMore.setVisibility(View.GONE);
                 tabLayout.getTabAt(0).select();
