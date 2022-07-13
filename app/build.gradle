@@ -292,7 +292,7 @@ android {
          {
 
          //    buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV,St. Philomena's
-             buildConfigField "String", "BASE_URL", '"https://gcc.gruppie.in/"' // SCHOOL APP
+        //     buildConfigField "String", "BASE_URL", '"https://gcc.gruppie.in/"' // SCHOOL APP
 
          //    buildConfigField "String", "BASE_URL", '"https://gccc2.gruppie.in"'//mahantesh
 
@@ -303,7 +303,7 @@ android {
     //   buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
 
          //   buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
-     //    buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
+         buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
      //    buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'   /// PRODUCATION TEST SERVER...
 
 
