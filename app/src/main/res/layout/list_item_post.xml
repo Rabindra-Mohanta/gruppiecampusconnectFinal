@@ -85,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:src="@drawable/icon_post_fav"
-                       />
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/iv_delete"
