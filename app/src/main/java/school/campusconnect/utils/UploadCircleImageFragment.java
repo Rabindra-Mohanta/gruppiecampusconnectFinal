@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -41,12 +43,16 @@ import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.ProfileConstituencyActivity;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.ErrorResponseModel;
+import school.campusconnect.datamodel.ProfileValidationError;
+import school.campusconnect.datamodel.profile.ProfileItem;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.fragments.ProfileFragmentConst;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.crop.Crop;
 
-public class UploadCircleImageFragment extends BaseUploadImageFragment implements View.OnClickListener, LeafManager.OnCommunicationListener {
+public class UploadCircleImageFragment extends BaseUploadImageFragment implements View.OnClickListener, LeafManager.OnCommunicationListener, LeafManager.OnAddUpdateListener<ProfileValidationError> {
     public static final int REQUEST_LOAD_CAMERA_IMAGE = 101;
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
     CircleImageView imgService;
@@ -381,12 +387,42 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
         if(getActivity() instanceof AddClassStudentActivity)
         {
             StudentRes.StudentData  studentData =new StudentRes.StudentData();
-                 studentData=AddClassStudentActivity.studentData;
+            studentData=AddClassStudentActivity.studentData;
             studentData.image=profileImage.imageString;
 
 
             AddClassStudentActivity.leafManager.editClassStudent(this,AddClassStudentActivity.group_id,AddClassStudentActivity.team_id,AddClassStudentActivity.userId,AddClassStudentActivity.gruppieRollNoNumber,studentData);
         }
+
+
+
+        if(getActivity() instanceof ProfileConstituencyActivity)
+        {
+
+
+            ProfileItemUpdate profileItemUpdate = new ProfileItemUpdate();
+            ProfileItem Item=ProfileFragmentConst.item;
+            profileItemUpdate.name=Item.name;
+            profileItemUpdate.dob=Item.dob;
+            profileItemUpdate.email=Item.email;
+            profileItemUpdate.address=Item.occupation;
+            profileItemUpdate.qualification=Item.qualification;
+            profileItemUpdate.caste=Item.caste;
+            profileItemUpdate.subcaste=Item.subcaste;
+            profileItemUpdate.religion=Item.religion;
+            profileItemUpdate.gender=Item.gender;
+            profileItemUpdate.bloodGroup=Item.bloodGroup;
+            profileItemUpdate.voterId=Item.voterId;
+            profileItemUpdate.designation=Item.designation;
+            profileItemUpdate.image=profileImage.imageString;
+
+            ProfileFragmentConst.leafManager.updateProfileDetails(this,profileItemUpdate);
+
+
+
+        }
+
+
 
         if (getActivity() instanceof ProfileActivity2)
             ((ProfileActivity2) getActivity()).callUpdateApi();
@@ -442,6 +478,11 @@ public class UploadCircleImageFragment extends BaseUploadImageFragment implement
     public void onSuccess(int apiId, BaseResponse response) {
         Toast.makeText(getActivity(),"Profile pic Changed",Toast.LENGTH_LONG).show();
 
+    }
+
+    @Override
+    public void onFailure(int apiId, ErrorResponseModel<ProfileValidationError> error) {
+        Toast.makeText(getActivity(),"something went wrong try again",Toast.LENGTH_LONG).show();
     }
 
     @Override

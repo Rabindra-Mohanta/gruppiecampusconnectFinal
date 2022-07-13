@@ -1595,7 +1595,7 @@ public class GroupDashboardActivityNew extends BaseActivity
             llStaffReg.setVisibility(View.GONE);
             llBusRegister.setVisibility(View.GONE);
             llAttendanceReport.setVisibility(View.GONE);
-            llBookmark.setVisibility(View.VISIBLE);
+
             tvAbout.setText(getResources().getString(R.string.lbl_about_constituency));
 
          /*   if (mGroupItem.name !=null && mGroupItem.name.equalsIgnoreCase("Gruppie MLA"))
@@ -1645,6 +1645,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
                 llIssueRegister.setVisibility(View.VISIBLE);
                 llBothRegister.setVisibility(View.VISIBLE);
+                llBookmark.setVisibility(View.VISIBLE);
 
                 if (mGroupItem.isAdmin)
                 {

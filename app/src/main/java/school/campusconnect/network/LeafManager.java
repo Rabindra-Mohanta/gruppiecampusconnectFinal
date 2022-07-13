@@ -19,6 +19,7 @@ import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.classs.AddClassReq;
 import school.campusconnect.datamodel.classs.AddCombinedClass;
 import school.campusconnect.datamodel.classs.ClassResV2;
+import school.campusconnect.datamodel.profileCaste.ProfessionResponce;
 import school.campusconnect.datamodel.register.BoardsData;
 import school.campusconnect.datamodel.register.CampusMediumData;
 import school.campusconnect.datamodel.register.ClassesListData;
@@ -535,6 +536,7 @@ public class LeafManager {
     public static final int API_CASTE_GET = 328;
     public static final int API_SUB_CASTE_GET = 329;
     public static final int API_RELIGION_GET = 330;
+
     public static final int API_EVENT_SUB_BOOTH_GET = 331;
     public static final int API_EVENT_MY_BOOTH_GET = 332;
     public static final int API_EVENT_SUB_BOOTH_WORKER_GET = 333;
@@ -573,6 +575,7 @@ public class LeafManager {
 
     public static final int API_ADD_STUDENT_MULTIPLE = 367;
     public static final int API_ADD_STAFF_MULTIPLE = 368;
+    public static final int API_PROFESSION_GET = 369;
 
     public LeafManager() {
 
@@ -12385,6 +12388,51 @@ public class LeafManager {
             }
         }, serviceErrorType);
     }
+
+
+
+
+
+
+
+    public void getProfession(OnCommunicationListener listListener) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<ProfessionResponce> model = service.getProfession();
+        ResponseWrapper<ProfessionResponce> wrapper = new ResponseWrapper<>(model);
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+        wrapper.execute(API_PROFESSION_GET, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+    }
+
+
+
+
+
 
 
     public void getReligion(OnCommunicationListener listListener) {

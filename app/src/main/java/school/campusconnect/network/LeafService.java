@@ -18,6 +18,7 @@ import school.campusconnect.datamodel.TaluksRes;
 import school.campusconnect.datamodel.classs.AddClassReq;
 import school.campusconnect.datamodel.classs.AddCombinedClass;
 import school.campusconnect.datamodel.classs.ClassResV2;
+import school.campusconnect.datamodel.profileCaste.ProfessionResponce;
 import school.campusconnect.datamodel.register.BoardsData;
 import school.campusconnect.datamodel.register.CampusMediumData;
 import school.campusconnect.datamodel.register.ClassesListData;
@@ -1962,6 +1963,12 @@ public interface LeafService {
     @GET("/api/v1/caste/religions")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ReligionResponse> getReligion();
+
+
+
+    @GET("/api/v1/profession/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ProfessionResponce> getProfession();
 
     @GET("/api/v1/caste/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

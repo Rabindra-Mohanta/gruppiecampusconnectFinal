@@ -130,7 +130,7 @@ public class ProfileConstituencyActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    public void callUpdateApi() {
+    public   void callUpdateApi() {
         if(profileFragmentConst!=null){
             profileFragmentConst.callUpdateProfileApi();
         }

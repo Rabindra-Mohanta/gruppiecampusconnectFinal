@@ -143,19 +143,19 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
             }
         });
 
-        mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (isConnectionAvailable()) {
-                    currentPage = 1;
-                    getData();
-                    mBinding.swipeRefreshLayout.setRefreshing(false);
-                } else {
-                    showNoNetworkMsg();
-                    mBinding.swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
+//        mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (isConnectionAvailable()) {
+//                    currentPage = 1;
+//                    getData();
+//                    mBinding.swipeRefreshLayout.setRefreshing(false);
+//                } else {
+//                    showNoNetworkMsg();
+//                    mBinding.swipeRefreshLayout.setRefreshing(false);
+//                }
+//            }
+//        });
 
 
     }
@@ -167,7 +167,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
         mBinding.setSize(1);
         mBinding.setMessage(R.string.msg_no_post);
         mGroupId = getArguments().getString("id");
-
+        mBinding.swipeRefreshLayout.setVisibility(View.GONE);
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mBinding.recyclerView.setLayoutManager(layoutManager);
         mAdapter = new PostAdapter(PostList, this, "favourite",databaseHandler,count);

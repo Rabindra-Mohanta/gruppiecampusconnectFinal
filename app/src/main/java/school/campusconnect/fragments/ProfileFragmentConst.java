@@ -65,8 +65,8 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Bind(R.id.etPhone)
     public EditText etPhone;
 
-   /* @Bind(R.id.etRelationShip)
-    public EditText etRelationShip;*/
+    /* @Bind(R.id.etRelationShip)
+     public EditText etRelationShip;*/
     @Bind(R.id.etEmail)
     public EditText etEmail;
 
@@ -92,9 +92,9 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
     @Bind(R.id.etEducation)
     public EditText etEducation;
-
-    @Bind(R.id.etCategory)
-    public EditText etCategory;
+//
+//    @Bind(R.id.etCategory)
+//    public EditText etCategory;
 
     @Bind(R.id.etCaste)
     public TextView etCaste;
@@ -122,7 +122,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
-    LeafManager leafManager;
+   public static LeafManager leafManager;
 
 
     String[] bloodGrpArray;
@@ -152,7 +152,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     SearchCastFragmentDialog searchCastFragmentDialog;
     SearchSubCasteDialogFragment searchSubCasteDialogFragment;
 
-    public ProfileItem item = new ProfileItem();
+    public  static ProfileItem item = new ProfileItem();
 
     public static String profileImage;
 
@@ -216,16 +216,14 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     etProfession.setEnabled(true);
                     etProfession.setTextColor(getResources().getColor(R.color.white));
 
-                    etCategory.setTextColor(getResources().getColor(R.color.white));
+                    //etCategory.setTextColor(getResources().getColor(R.color.white));
                     etCaste.setTextColor(getResources().getColor(R.color.white));
                     etSubCaste.setTextColor(getResources().getColor(R.color.white));
 
                     /*binding.etCaste.setEnabled(true);
                     binding.etCaste.setTextColor(getResources().getColor(R.color.white));
-
                     binding.etSubCaste.setEnabled(true);
                     binding.etSubCaste.setTextColor(getResources().getColor(R.color.white));
-
                     binding.etReligion.setEnabled(true);
                     binding.etReligion.setTextColor(getResources().getColor(R.color.white));*/
 
@@ -316,7 +314,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     isCasteClickable = false;
                     etCaste.setText("");
                     etSubCaste.setText("");
-                    etCategory.setText("");
+                   // etCategory.setText("");
                 }
 
             }
@@ -342,7 +340,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             item.name = etName.getText().toString();
             item.dob = etdob.getText().toString();
             item.email = etEmail.getText().toString();
-           // item.address = this.item.address;
+            // item.address = this.item.address;
             item.occupation = this.item.occupation;
 
             item.qualification = etEducation.getText().toString();
@@ -364,7 +362,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             item.voterId = etVoterId.getText().toString();
             item.aadharNumber = etAadhar.getText().toString();
 
-          //  progressBar.setVisibility(View.VISIBLE);
+            //  progressBar.setVisibility(View.VISIBLE);
 
             showLoadingBar(progressBar);
 
@@ -387,7 +385,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                     AppLog.e(TAG, "Image Changed.." + new Gson().toJson(item));
                 }
                 item.image = imageFragment.getmProfileImage();
-                AppLog.e(TAG, "Image Not Changed.." + new Gson().toJson(item));
+
                 manager.updateProfileDetails(this, item);
             }
         }
@@ -494,7 +492,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
 
 
-        //    fillDetails(item);
+            //    fillDetails(item);
 
         } else if (LeafManager.API_ID_DELETE_PROPIC == apiId) {
             imageFragment.isImageChanged = false;
@@ -572,7 +570,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                         if (etCaste.getText().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
                         {
                             casteId = casteDataList.get(i).getCasteId();
-                            etCategory.setText(casteDataList.get(i).getCategoryName());
+                          //  etCategory.setText(casteDataList.get(i).getCategoryName());
                         }
                     }
 
@@ -591,7 +589,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
                 {
                     casteId = res.getCasteData().get(0).getCasteId();
                     etCaste.setText(res.getCasteData().get(0).getCasteName());
-                    etCategory.setText(res.getCasteData().get(0).getCategoryName());
+                  //  etCategory.setText(res.getCasteData().get(0).getCategoryName());
                 }
 
                 searchCastFragmentDialog.setData(res.getCasteData());
@@ -631,7 +629,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
 
                     if (subcaste != null)
                     {
-                       etSubCaste.setText(subcaste);
+                        etSubCaste.setText(subcaste);
                     }
                     else
                     {
@@ -659,7 +657,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
             }
         }
         else
-            {
+        {
             LeafPreference.getInstance(getContext()).setBoolean(LeafPreference.ISPROFILEUPDATED, true);
             Toast.makeText(getContext(), getString(R.string.msg_profile_update), Toast.LENGTH_LONG).show();
             imageFragment.isImageChanged = false;
@@ -746,7 +744,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
         etProfession.setEnabled(false);
         etProfession.setTextColor(getResources().getColor(R.color.grey));
 
-        etCategory.setTextColor(getResources().getColor(R.color.grey));
+        //etCategory.setTextColor(getResources().getColor(R.color.grey));
 
         religion = item.religion;
         caste = item.caste;
@@ -828,7 +826,7 @@ public class ProfileFragmentConst extends BaseFragment implements LeafManager.On
     public void onSelected(CasteResponse.CasteData casteData) {
 
         etCaste.setText(casteData.getCasteName());
-        etCategory.setText(casteData.getCategoryName());
+       // etCategory.setText(casteData.getCategoryName());
 
         casteId = casteData.getCasteId();
 

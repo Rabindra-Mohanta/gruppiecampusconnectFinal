@@ -1312,6 +1312,7 @@
     <string name="lbl_family_income">Family Income</string>
     <string name="lbl_sats_no">SATS NUMBER</string>
     <string name="toast_enter_desiganation">Please Enter Profession</string>
+    <string name="toast_select_profession">Please Select Profession</string>
     <string name="toast_enter_education">Please Enter Education</string>
     <string name="toast_enter_dob">Please Enter Date of Birth</string>
     <string name="toast_select_religion">Please Select Religion</string>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.datamodel.profileCaste.CasteResponse;
+import school.campusconnect.datamodel.profileCaste.ProfessionResponce;
 import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.fragments.DatePickerFragment;
@@ -71,8 +72,11 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
     @Bind(R.id.etdob)
     public EditText etdob;
 
-    @Bind(R.id.etDesig)
-    public EditText etDesig;
+//    @Bind(R.id.etDesig)
+//    public EditText etDesig;
+
+    @Bind(R.id.etprofession)
+    Spinner etprofession;
 
     @Bind(R.id.etCategory)
     public EditText etCategory;
@@ -102,7 +106,9 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
 
 
     ArrayAdapter<String> religionAdapter;
+    ArrayAdapter<String> professionAdapter;
     ArrayList<String> religionList = new ArrayList<>();
+    ArrayList<String> professionList = new ArrayList<>();
     ArrayList<String> casteList = new ArrayList<>();
     ArrayList<String> subCasteList = new ArrayList<>();
     ArrayList<CasteResponse.CasteData> casteDataList = new ArrayList<>();
@@ -290,6 +296,9 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
         {
             llData.setVisibility(View.VISIBLE);
             leafManager.getReligion(this);
+            leafManager.getProfession(this);
+
+
         }
     }
 
@@ -318,16 +327,23 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
     public boolean isValid() {
 
 
+
+
+
+        if (TextUtils.isEmpty(edtName.getText().toString()))
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
+            return false;
+        }
         if(etgender.getSelectedItem().toString().isEmpty())
         {
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.hint_lead_gender),Toast.LENGTH_LONG).show();
             return  false;
         }
 
-
-        if (TextUtils.isEmpty(edtName.getText().toString()))
+        if (TextUtils.isEmpty(etprofession.getSelectedItem().toString()))
         {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_profession),Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -339,11 +355,7 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
                 return false;
             }
 
-            if (TextUtils.isEmpty(etDesig.getText().toString()))
-            {
-                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_desiganation),Toast.LENGTH_SHORT).show();
-                return false;
-            }
+
 
             if (TextUtils.isEmpty(etdob.getText().toString()))
             {
@@ -390,13 +402,13 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
 
                 if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
                 {
-                    request.designation = etDesig.getText().toString();
+                    request.designation = etprofession.getSelectedItem().toString();
                     request.dob = etdob.getText().toString();
                     request.caste = etCaste.getText().toString();
                     request.subCaste = etSubCaste.getText().toString();
                     request.religion = etReligion.getSelectedItem().toString();
                     request.category = etCategory.getText().toString();
-                    request.education = etEducation.getText().toString();
+                    request.qualification = etEducation.getText().toString();
                     request.gender=etgender.getSelectedItem().toString();
 
 
@@ -476,6 +488,12 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
         if (progressBar != null)
             hideLoadingBar();
         //   progressBar.setVisibility(View.GONE);
+
+
+
+
+
+
 
         if (LeafManager.API_RELIGION_GET == apiId)
         {
@@ -617,6 +635,22 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
                 }
 
                 searchSubCasteDialogFragment.setData(res.getSubCasteData());
+            }
+        }
+
+
+
+       else  if(LeafManager.API_PROFESSION_GET==apiId)
+
+        {
+            ProfessionResponce res = (ProfessionResponce) response;
+            professionList.clear();
+            professionList.add(0,"select profession");
+            professionList.addAll(res.getProfessionDataList().get(0).getProfession());
+            if(res.getProfessionDataList().size() > 0)
+            {
+                professionAdapter=new ArrayAdapter<String>(this,R.layout.item_spinner,R.id.tvItem,professionList);
+                etprofession.setAdapter(professionAdapter);
             }
         }
         else

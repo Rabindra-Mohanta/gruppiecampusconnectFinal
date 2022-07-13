@@ -648,7 +648,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
             holder.txtLike.setVisibility(View.VISIBLE);
             holder.txt_fav.setVisibility(View.VISIBLE);
             holder.linLikes.setVisibility(View.VISIBLE);
-        } else {
+        }
+
+
+        else {
             holder.txtLike.setVisibility(View.GONE);
             holder.txt_fav.setVisibility(View.GONE);
             holder.linLikes.setVisibility(View.GONE);
