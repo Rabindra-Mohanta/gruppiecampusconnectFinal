@@ -321,7 +321,7 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ChildAdapter.ViewHolder
                 picasso.load(new File(uri)).placeholder(R.drawable.placeholder_image).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageView, new Callback() {
                     @Override
                     public void onSuccess() {
-
+                        Log.d(TAG, " Picasso onSuccess : ");
                     }
 
                     @Override

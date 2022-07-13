@@ -46,13 +46,13 @@ android {
 
 
                         // [COPY]
-//                        applicationId "school.campusconnect"
-//                        versionCode 13
-//                        versionName "1.4"
-//                        resValue "string", "app_name", '"GC2"'
-//                        buildConfigField("String", "AppName", '"GC2"')
-//                        buildConfigField("String", "AppCategory", '"CAMPUS"')
-//                        buildConfigField("String", "APP_ID",  '"school"')
+                       /* applicationId "school.campusconnect"
+                        versionCode 13
+                        versionName "1.4"
+                        resValue "string", "app_name", '"GC2"'
+                        buildConfigField("String", "AppName", '"GC2"')
+                        buildConfigField("String", "AppCategory", '"CAMPUS"')
+                        buildConfigField("String", "APP_ID",  '"school"')*/
 
                         // [ 1. Gruppie Campus ]
                   /*      applicationId "school.campusconnect"
