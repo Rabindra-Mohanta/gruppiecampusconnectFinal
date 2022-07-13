@@ -189,14 +189,15 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     }
 
     private void getData() {
-        showLoadingBar(mBinding.progressBar);
+        mBinding.progressBar.setVisibility(View.VISIBLE);
         mIsLoading = true;
         manager.getFavPosts(this, mGroupId+"", currentPage);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        mBinding.progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ID_FAV_POST:
@@ -282,12 +283,12 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        hideLoadingBar();
+        mBinding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        mBinding.progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {

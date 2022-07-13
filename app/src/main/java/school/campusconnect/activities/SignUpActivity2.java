@@ -92,6 +92,9 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
     @Bind(R.id.llData)
     public LinearLayout llData;
 
+    @Bind(R.id.etgender)
+    Spinner etgender;
+
     String pNumber;
     String countryCode;
     String countryName = "";
@@ -113,6 +116,7 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
     String religion = null;
     String caste = null;
     String subcaste = null;
+    String gender;
 
 
     SearchCastFragmentDialog searchCastFragmentDialog;
@@ -146,6 +150,10 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
         countryCode = "IN";
 
         Intent intent = getIntent();
+
+        String[] genderArray=getResources().getStringArray(R.array.gender_array);
+        ArrayAdapter<String> genderAdapter= new ArrayAdapter<String>(getApplicationContext(),R.layout.item_spinner,R.id.tvItem,genderArray);
+        etgender.setAdapter(genderAdapter);
 
         if (intent.getExtras() != null) {
             countryCode = intent.getExtras().getString("countryCode", "IN");
@@ -217,6 +225,32 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
             }
         });
 
+
+
+        etgender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position !=0 )
+                {
+                    gender = etgender.getSelectedItem().toString();
+                }
+                else
+                {
+
+                    gender=null;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
         etReligion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -282,6 +316,14 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
     }
 
     public boolean isValid() {
+
+
+        if(etgender.getSelectedItem().toString().isEmpty())
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.hint_lead_gender),Toast.LENGTH_LONG).show();
+            return  false;
+        }
+
 
         if (TextUtils.isEmpty(edtName.getText().toString()))
         {
@@ -355,6 +397,8 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
                     request.religion = etReligion.getSelectedItem().toString();
                     request.category = etCategory.getText().toString();
                     request.education = etEducation.getText().toString();
+                    request.gender=etgender.getSelectedItem().toString();
+
 
                     AppLog.e("TAG", new Gson().toJson(request));
 

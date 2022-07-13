@@ -279,25 +279,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/llFavourite"
-                        android:layout_width="match_parent"
-                        android:padding="@dimen/padding_10dp"
-                        android:layout_marginTop="@dimen/padding_5dp"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:src="@drawable/icon_bookmark_fill"
-                            android:layout_height="wrap_content"
-                            app:tint="@color/colorTextLight" />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_bookmarks"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/llArchiveTeam"
                         android:layout_width="match_parent"

@@ -51,21 +51,23 @@
 
 
         <ProgressBar
+
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
 
         <TextView
+
             android:id="@+id/txtEmpty"
+            style="@style/LabelEmptyText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:paddingEnd="16dp"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@{message}"
-            style="@style/LabelEmptyText"
             android:visibility="@{size &gt; 0 ? View.GONE : View.VISIBLE}" />
 
     </RelativeLayout>
