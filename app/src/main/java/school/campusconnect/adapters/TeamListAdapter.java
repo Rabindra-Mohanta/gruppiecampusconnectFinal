@@ -923,11 +923,12 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
 
 
                 case R.id.img_like:
+                    Picasso.with(mContext).load(R.drawable.icon_post_liked).into(ivLike);
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
 
-                        Picasso.with(mContext).load(R.drawable.icon_post_liked).into(ivLike);
+                      //  Picasso.with(mContext).load(R.drawable.icon_post_liked).into(ivLike);
                         listener.onLikeClick(item, getLayoutPosition());
                     } else {
                         showNoNetworkMsg();
@@ -943,10 +944,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.ImageV
                     }
                     break;
                 case R.id.txt_fav:
+                    Picasso.with(mContext).load(R.drawable.icon_post_favd).into(txt_fav);
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else if (isConnectionAvailable()) {
-                        Picasso.with(mContext).load(R.drawable.icon_post_favd).into(txt_fav);
+                      //  Picasso.with(mContext).load(R.drawable.icon_post_favd).into(txt_fav);
                         listener.onFavClick(item, getLayoutPosition());
                     } else {
                         showNoNetworkMsg();
