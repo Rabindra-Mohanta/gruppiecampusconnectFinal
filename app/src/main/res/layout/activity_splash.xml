@@ -12,17 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+       <!-- <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/padding_50dp"
-            android:src="@drawable/app_icon" />
-        <!--<ImageView
+            android:src="@drawable/app_icon" />-->
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/splash_background"
-            />-->
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

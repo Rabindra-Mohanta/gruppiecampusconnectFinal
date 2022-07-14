@@ -153,6 +153,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     private boolean allowedToAddTeamPost;
     private boolean allowedToAddTeamPostComment;
 
+    String voterId,caste,sub_caste,religion,blood_group;
     ItemOtherLeadBinding binding;
 
     @Override
@@ -182,9 +183,18 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         type = getIntent().getExtras().getString("type");
         teamId = getIntent().getStringExtra("team_id");
 
+        voterId = getIntent().getStringExtra("voterId");
+        caste = getIntent().getStringExtra("caste");
+        sub_caste = getIntent().getStringExtra("subCaste");
+        religion = getIntent().getStringExtra("religion");
+        blood_group = getIntent().getStringExtra("blood");
+
+
+        AppLog.e(TAG,"voterId  " +voterId + "\ncaste  " +caste + "\nsub_caste  " +sub_caste+ "\nreligion  " +religion+ "\nblood_group  " +blood_group);
+
+
         binding.txtName.setText(mLeadItem.getName());
         binding.txtPhone.setText(mLeadItem.getPhone());
-
 
         binding.txtEmail.setText(mLeadItem.getEmail());
 
@@ -221,6 +231,12 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
             binding.txtPhone.setVisibility(View.GONE);
            // binding..setVisibility(View.GONE);
         }
+
+        binding.etVoterId.setText(voterId);
+        binding.etReligion.setText(religion);
+        binding.etCaste.setText(caste);
+        binding.etSubCaste.setText(sub_caste);
+        binding.etBlood.setText(blood_group);
 
         fillDetails(mLeadItem);
     }
@@ -264,46 +280,42 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         binding.etCaste.setEnabled(false);
         binding.etSubCaste.setEnabled(false);
 
-   /*     binding.etCaste.setEnabled(false);
-        binding.etCaste.setTextColor(getResources().getColor(R.color.grey));
+        binding.etCaste.setEnabled(false);
+      //  binding.etCaste.setTextColor(getResources().getColor(R.color.grey));
 
         binding.etSubCaste.setEnabled(false);
-        binding.etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+      //  binding.etSubCaste.setTextColor(getResources().getColor(R.color.grey));
 
         binding.etReligion.setEnabled(false);
-        binding.etReligion.setTextColor(getResources().getColor(R.color.grey));*/
+      //  binding.etReligion.setTextColor(getResources().getColor(R.color.grey));
 
 
         binding.etName.setText(data.name);
         binding.etPhone.setText(data.phone);
-        binding.etVoterId.setText(data.voterId);
+
+
         binding.etEmail.setText(data.email);
     //    binding.etdob.setText(data.dob);
         binding.etEducation.setText(data.qualification);
         binding.etProfession.setText(data.occupation);
 
         binding.etdob.setText(data.dob);
-        binding.etReligion.setText(data.religion);
-        binding.etCaste.setText(data.caste);
-        binding.etSubCaste.setText(data.subCaste);
 
 
 
-      //  binding.etCaste.setText(data.caste);
-     //   binding.etSubCaste.setText(data.subcaste);
-     //   binding.etReligion.setText(data.religion);
+
+
 
 
         binding.etGender.setText(data.gender);
 
-        binding.etBlood.setText(data.bloodGroup);
+
 
         binding.etAadhar.setText(data.aadharNumber);
 
      //   binding.etReligion.setText(data.religion);
 
 
-       // binding.progressBar.setVisibility(View.VISIBLE);
        // manager.getReligion(this);
 
         binding.switchAllowPost.setOnClickListener(new View.OnClickListener() {

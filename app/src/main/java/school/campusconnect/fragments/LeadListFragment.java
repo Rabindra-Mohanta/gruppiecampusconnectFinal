@@ -586,6 +586,13 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             Bundle b = new Bundle();
             b.putParcelable(LeadDetailActivity.EXTRA_LEAD_ITEM, item);
             intent.putExtras(b);
+
+            intent.putExtra("voterId",item.voterId);
+            intent.putExtra("caste",item.caste);
+            intent.putExtra("subCaste",item.subCaste);
+            intent.putExtra("religion",item.religion);
+            intent.putExtra("blood",item.bloodGroup);
+
             intent.putExtra("post", item.getIsPost());
             intent.putExtra("allowedToAddUser", item.allowedToAddUser);
             intent.putExtra("allowedToAddTeamPost", item.allowedToAddTeamPost);
@@ -655,6 +662,10 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                     leadDataTBL.allowedToAddTeamPost = results.get(i).allowedToAddTeamPost;
                     leadDataTBL.aadharNumber = results.get(i).aadharNumber;
 
+                    leadDataTBL.caste = results.get(i).caste;
+                    leadDataTBL.subCaste = results.get(i).subCaste;
+                    leadDataTBL.religion = results.get(i).religion;
+
                     if (TeamEventDataTBL.getTeamEvent(teamId).size()>0)
                     {
                         List<TeamEventDataTBL> teamEvent= TeamEventDataTBL.getTeamEvent(teamId);
@@ -717,6 +728,9 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
                 leadItem.aadharNumber = leadDataTBL.get(i).aadharNumber;
                 leadItem.pushTokens = new Gson().fromJson(leadDataTBL.get(i).pushToken,new TypeToken<ArrayList<LeadItem.pushTokenData>>() {}.getType());
                 leadItem.isLive = leadDataTBL.get(i).isLive;
+                leadItem.caste = leadDataTBL.get(i).caste;
+                leadItem.subCaste = leadDataTBL.get(i).subCaste;
+                leadItem.religion = leadDataTBL.get(i).religion;
 
                 list.add(leadItem);
             }
