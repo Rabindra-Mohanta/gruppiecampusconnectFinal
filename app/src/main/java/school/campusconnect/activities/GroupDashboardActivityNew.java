@@ -297,7 +297,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_new);
         ButterKnife.bind(this);
-        progressBar.setVisibility(View.VISIBLE);
+     //   progressBar.setVisibility(View.VISIBLE);
 
         init();
 
@@ -342,7 +342,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
     public void callEventApi() {
 
-           progressBar.setVisibility(View.GONE);
+     //      progressBar.setVisibility(View.GONE);
 
        // new EventAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

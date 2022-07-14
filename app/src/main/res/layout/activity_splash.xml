@@ -15,10 +15,9 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/app_icon"
             android:padding="@dimen/padding_50dp"
-            />
-       <!-- <ImageView
+            android:src="@drawable/app_icon" />
+        <!--<ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"

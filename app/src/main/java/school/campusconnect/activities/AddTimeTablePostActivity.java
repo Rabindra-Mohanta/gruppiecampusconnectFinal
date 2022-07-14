@@ -7,6 +7,8 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,7 +45,9 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -306,11 +310,15 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
             },Constants.FILE_TYPE_PDF);
         } else {
             for (int i = 0; i < listImages.size(); i++) {
+                Bitmap bitmap = null;
                 try {
-                    File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
-                    listImages.set(i, newFile.getAbsolutePath());
-                } catch (IOException e) {
+                    InputStream is =  getContentResolver().openInputStream(Uri.parse(listImages.get(i)));
+                    bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                    listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, "test"));
+
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
                 }
             }
             AppLog.e(TAG, "Final PAth :: " + listImages.toString());

@@ -109,7 +109,6 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
     @Bind(R.id.tv_title_toolbar)
     TextView tvTitleToolbar;
 
-
     @Bind(R.id.tv_posts)
     TextView tvNumOfPosts;
 

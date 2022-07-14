@@ -236,17 +236,26 @@ public class MultiImageAdapter extends RecyclerView.Adapter<MultiImageAdapter.Im
                                 holder.llProgress.setVisibility(View.GONE);
                                 holder.progressBar.setVisibility(View.GONE);
                                 holder.progressBar1.setVisibility(View.GONE);
-                                Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(holder.ivImage, new Callback() {
-                                    @Override
-                                    public void onSuccess() {
 
-                                    }
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                    Picasso.with(mContext).load(file).placeholder(R.drawable.placeholder_image).fit().into(holder.ivImage, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
 
-                                    @Override
-                                    public void onError() {
+                                        }
 
-                                    }
-                                });
+                                        @Override
+                                        public void onError() {
+
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    Glide.with(mContext).load(file).placeholder(R.drawable.placeholder_image).into(holder.ivImage);
+                                }
+
+
                             }
 
                             @Override

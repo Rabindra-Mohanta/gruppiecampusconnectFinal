@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -50,6 +52,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -325,11 +328,14 @@ public class MarksheetActivity extends BaseActivity {
                     AddMarkSheetReq addMarkSheetReq = new AddMarkSheetReq();
                     addMarkSheetReq.title = etTitle.getText().toString();
                     if (!TextUtils.isEmpty(imgPath)) {
+                        Bitmap bitmap = null;
                         try {
-                            File newFile = new Compressor(MarksheetActivity.this).setMaxWidth(1000).setQuality(90).compressToFile(new File(imgPath));
-                            imgPath = newFile.getAbsolutePath();
-                        } catch (IOException e) {
+                            InputStream is =  getContentResolver().openInputStream(Uri.parse(imgPath));
+                            bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                            imgPath = ImageUtil.resizeImage(getApplicationContext(), bitmap, "test");
+                        } catch (FileNotFoundException e) {
                             e.printStackTrace();
+                            AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
                         }
                         ArrayList<String> aa = new ArrayList<>();
                         aa.add(imgPath);

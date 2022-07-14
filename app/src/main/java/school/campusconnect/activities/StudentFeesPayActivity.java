@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -47,7 +49,9 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -307,11 +311,15 @@ public class StudentFeesPayActivity extends BaseActivity {
 
     private void uploadToAmazone() {
         for (int i = 0; i < listImages.size(); i++) {
+            Bitmap bitmap = null;
             try {
-                File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
-                listImages.set(i, newFile.getAbsolutePath());
-            } catch (IOException e) {
+                InputStream is =  getContentResolver().openInputStream(Uri.parse(listImages.get(i)));
+                bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, "test"));
+
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
             }
         }
         AppLog.e(TAG, "Final PAth :: " + listImages.toString());

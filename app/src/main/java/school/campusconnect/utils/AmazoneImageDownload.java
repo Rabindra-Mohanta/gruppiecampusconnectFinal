@@ -137,48 +137,20 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 if (!TextUtils.isEmpty(url)) {
                     url = Constants.decodeUrlToBase64(url);
                     String key = url.replace(AmazoneHelper.BUCKET_NAME_URL, "");
-                    String fileName;
+                    File file;
                     if (key.contains("/")) {
                         String[] splitStr = key.split("/");
-                        fileName = splitStr[1];
+                        file = new File(getFile(), splitStr[1]);
                     } else {
-                        fileName = key;
+                        file = new File(getFile(), key);
                     }
-
-                    Log.e(TAG,"File isImageDownloaded Name"+fileName);
-                    Uri collection = null;
-
-                    collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-                    String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DISPLAY_NAME,
-                            MediaStore.MediaColumns.RELATIVE_PATH};
-
-                    String QUERY = MediaStore.Files.FileColumns.DISPLAY_NAME + " like ?";
-
-                    ContentResolver mContentResolver = context.getContentResolver();
-
-                    Cursor cursor = mContentResolver.query(collection, PROJECTION, QUERY , new String[]{fileName}, null);
-
-                    if (cursor != null) {
-
-                        if (cursor.getCount() > 0) {
-                            Log.e(TAG,"IS Image Downloaded");
-                            return true;
-                        } else {
-                            Log.e(TAG,"IS Image Downloaded false");
-                            return false;
-                        }
-                    }
-                    Log.e(TAG,"IS Image 1 Downloaded false");
-                    return false;
-
-                 //   return file.exists();
+                    return file.exists();
                 }
             }catch (Exception e){
-                AppLog.e(TAG,"Exception "+e.getMessage());
                 e.printStackTrace();
             }
+            return false;
         }
-        return false;
     }
 
     public static File getDownloadPath(String url) {
@@ -304,18 +276,17 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                         fileName = key;
                         file = new File(getDirForMedia(""), key);
                     }
-
                     file2 = new File(getFile(),fileName);
 
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                         ImagePathTBL imagePathTBL = new ImagePathTBL();
-                        imagePathTBL.fileName = file.getName();
+                        imagePathTBL.fileName = fileName;
                         imagePathTBL.url = file.getAbsolutePath();
                         imagePathTBL.save();
                         return  FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file2);
                     } else {
                         ImagePathTBL imagePathTBL = new ImagePathTBL();
-                        imagePathTBL.fileName = url;
+                        imagePathTBL.fileName = fileName;
                         imagePathTBL.url = file.getAbsolutePath();
                         imagePathTBL.save();
                         return Uri.fromFile(file2);
@@ -432,6 +403,12 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                 }
                 else
                 {
+
+                    if (file.exists())
+                    {
+                        file.delete();
+                    }
+
                     if (!file.exists()) {
 
                         InputStream input = null;
@@ -483,8 +460,10 @@ public class AmazoneImageDownload extends AsyncTask<Void, Integer, String> {
                                         outputStream.close();
 
                                 } catch (FileNotFoundException e) {
+                                    AppLog.e(TAG,"FileNotFoundException"+e.getMessage());
                                     e.printStackTrace();
                                 } catch (IOException e) {
+                                    AppLog.e(TAG,"IOException"+e.getMessage());
                                     e.printStackTrace();
                                 }
                             }catch (Exception e)

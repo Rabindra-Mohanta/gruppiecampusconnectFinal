@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.BuildConfig;
+import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.EventTBL;
 import school.campusconnect.datamodel.Media.ImagePathTBL;
 import school.campusconnect.datamodel.PostTeamDataItem;
@@ -75,7 +76,7 @@ import school.campusconnect.activities.AddFriendActivity;
 import school.campusconnect.activities.AddPostActivity;
 import school.campusconnect.activities.AddQuestionActivity;
 import school.campusconnect.activities.FullScreenActivity;
-import school.campusconnect.activities.GroupDashboardActivityNew;
+
 import school.campusconnect.activities.LikesListActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.SelectShareTypeActivity;
@@ -328,6 +329,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
         List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId + "");
         String lastId = null;
+
+
         if (dataItemList.size() != 0) {
             showLoadingBar(mBinding.progressBar);
             for (int i = 0; i < dataItemList.size(); i++) {
@@ -468,6 +471,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             case LeafManager.API_ID_GENERAL_POST:
                 PostResponse res = (PostResponse) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.getResults()));
+
                 if(res.totalNumberOfPages==0)
                 {
                     mBinding.txtEmpty.setVisibility(View.VISIBLE);
@@ -494,6 +498,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 mAdapter.notifyDataSetChanged();
 
                 totalPages = res.totalNumberOfPages;
+
                 if(totalPages==0)
                 {
                     mBinding.txtEmpty.setVisibility(View.VISIBLE);

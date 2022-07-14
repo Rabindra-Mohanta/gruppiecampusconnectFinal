@@ -48,6 +48,7 @@ public class StaffListActivity extends BaseActivity implements LeafManager.OnCom
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
 
+    String role;
     ActivityStaffListBinding binding;
     private ArrayList<StaffResponse.StaffData> result;
     ArrayList<ClassResponse.ClassData> resultClass = new ArrayList<>();
@@ -61,6 +62,12 @@ public class StaffListActivity extends BaseActivity implements LeafManager.OnCom
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         setTitle(getResources().getString(R.string.lbl_chat));
+
+        role =getIntent().getStringExtra("role");
+
+        if ("teacher".equalsIgnoreCase(role)) {
+            binding.allStaff.setVisibility(View.GONE);
+        }
         getDataLocally();
 
         binding.allStaff.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +129,15 @@ public class StaffListActivity extends BaseActivity implements LeafManager.OnCom
         {
             showLoadingBar(binding.progressBar,true);
             LeafManager leafManager = new LeafManager();
-            leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
+
+
+            if ("teacher".equalsIgnoreCase(role)) {
+                leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
+            }
+            else
+            {
+                leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
+            }
         }
     }
     @Override

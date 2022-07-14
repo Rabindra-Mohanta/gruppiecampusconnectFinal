@@ -86,15 +86,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
     PostItem item;
     int count;
     DatabaseHandler databaseHandler;
-
+    private Boolean isStart = false;
     AmazoneAudioDownload asyncTask;
     ImageViewHolder mholder;
 
 
+
     MediaPlayer mediaPlayer  = new MediaPlayer();
     private Handler mHandler = new Handler();
-
-    private Boolean isStart = false;
 
     Runnable myRunnable = new Runnable() {
         @Override
@@ -346,7 +345,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ImageViewHolde
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (!AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                         /*    if(LeafPreference.getInstance(mContext).getString(LeafPreference.LOGIN_ID).equals(list.get(position).createdById)){
 
