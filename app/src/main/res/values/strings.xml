@@ -1140,7 +1140,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_no_time_table_found">No Time Table found</string><!--No Time Table found.-->
     <string name="txt_no_mark_card_found">No MarkCard Found!</string><!--No MarkCard Found!-->
 
-    <string name="txt_no_booth_team_found">No Booths Teams found</string><!--No Booths Teams found.-->
+    <string name="txt_no_booth_team_found">No Booth Team found</string><!--No Booths Teams found.-->
     <string name="txt_roll_no_student">Roll No\n( Student )</string>
     <string name="txt_name_student">Name\n( Student )</string>
     <string name="txt_no_street_found">No Streets found</string><!--No Streets found.-->

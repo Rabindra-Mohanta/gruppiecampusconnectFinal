@@ -37,8 +37,8 @@
                         android:id="@+id/img_chat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingEnd="16dp"
                         android:layout_gravity="center"
+                        android:paddingEnd="16dp"
                         android:paddingRight="16dp"
                         android:visibility="gone"
                         app:srcCompat="@drawable/ic_chat" />
@@ -47,19 +47,19 @@
                         android:id="@+id/img_download"
                         android:layout_width="@dimen/padding_30dp"
                         android:layout_height="@dimen/padding_30dp"
-                        android:visibility="gone"
                         android:layout_marginRight="14dp"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/download" />
 
                     <View
                         android:id="@+id/line"
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
+                        android:layout_gravity="center"
                         android:layout_marginEnd="14dp"
                         android:layout_marginRight="14dp"
                         android:background="@color/color_grey_icon"
                         android:paddingStart="4dp"
-                        android:layout_gravity="center"
                         android:paddingLeft="4dp"
                         android:visibility="gone" />
 
@@ -67,12 +67,12 @@
                         android:id="@+id/img_tree"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingEnd="16dp"
                         android:layout_gravity="center"
+                        android:paddingEnd="16dp"
                         android:paddingRight="16dp"
                         android:src="@drawable/icon_right_arraw"
-                        android:tint="@color/colorTextDark"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        app:tint="@color/colorTextDark" />
 
                 </LinearLayout>
 
@@ -109,9 +109,11 @@
                         android:visibility="invisible" />
 
                     <LinearLayout
+                        android:id="@id/linearLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
                         android:layout_toEndOf="@id/img_lead"
                         android:layout_toRightOf="@id/img_lead"
                         android:orientation="vertical"

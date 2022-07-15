@@ -81,13 +81,13 @@ android {
                              buildConfigField("String", "APP_ID",  '"school"')
              */
                         // [1. Gruppie Campus constituency]
-                         /* applicationId "gcm.gruppie"
-                          versionCode 1
-                          versionName "1.0"
-                          resValue "string", "app_name", '"GCM"'
-                          buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
-                          buildConfigField("String", "AppCategory", '"constituency"')
-                          buildConfigField("String", "APP_ID",  '"constituency"')*/
+//                          applicationId "gcm.gruppie"
+//                          versionCode 1
+//                          versionName "1.0"
+//                          resValue "string", "app_name", '"GCM"'
+//                          buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
+//                          buildConfigField("String", "AppCategory", '"constituency"')
+//                          buildConfigField("String", "APP_ID",  '"constituency"')
 
                  /*           applicationId "sudhakar.gruppie"
                             versionCode 5

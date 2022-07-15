@@ -256,6 +256,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
         {
             showLoadingBar(binding.progressBar);
             manager.getSyllabus(this, GroupDashboardActivityNew.groupId,teamId,subjectId);
+
         }
         else
         {

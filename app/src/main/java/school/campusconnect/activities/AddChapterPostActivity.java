@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,7 +40,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +50,6 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -82,13 +79,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
@@ -98,13 +94,11 @@ import school.campusconnect.datamodel.AddGalleryPostRequest;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
-import school.campusconnect.datamodel.chapter.ChapterRes;
-import school.campusconnect.fragments.ChapterListFragment;
+import school.campusconnect.datamodel.syllabus.SyllabusListMaster;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BackgroundVideoUploadChapterService;
-import school.campusconnect.utils.BackgroundVideoUploadService;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
@@ -191,12 +185,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Bind(R.id.imgHome)
     public ImageView imgHome;
-
-
-
-
-
-    //audio
 
 
     @Bind(R.id.llAudioPreview)
@@ -286,11 +274,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private ProgressDialog progressDialog;
     private boolean isEdit = true;
     private String chapter_id;
-    private ArrayList<ChapterRes.ChapterData> chapterList;
+    private List<SyllabusListMaster.Datum> chapterList;
     private String sharePath;
 
 
-
+       // leafManager.getSyllabusMaster(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
 
     private Handler mHandler = new Handler();
     Runnable myRunnable = new Runnable() {
@@ -470,7 +458,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         showLoadingBar(progressBar,false);
       //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
+        leafManager.getSyllabusMaster(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
 
     private void setListener() {
@@ -1331,8 +1319,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 finish();
                 break;
 
-            case LeafManager.API_CHAPTER_LIST:
-                ChapterRes res = (ChapterRes) response;
+            case LeafManager.API_GET_SYLLABUS_MASTER:
+                SyllabusListMaster  res = (SyllabusListMaster) response;
                 chapterList = res.getData();
                 AppLog.e(TAG, "ChapterRes " + chapterList);
                 bindChapter();
@@ -1352,7 +1340,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
             String[] strChapter = new String[chapterList.size()];
             for (int i=0;i<chapterList.size();i++){
-                strChapter[i]=chapterList.get(i).chapterName;
+                strChapter[i]=chapterList.get(i).getChapterName();
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner,strChapter);
@@ -1373,7 +1361,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
 /*                    edtTitle.setText("");
                     edtTitle.setText(chapterList.get(position).chapterName);*/
-                    chapter_id = chapterList.get(position).chapterId;
+                    chapter_id = chapterList.get(position).getChapterId();
                    // cardChapterName.setVisibility(View.GONE);
 
                 }

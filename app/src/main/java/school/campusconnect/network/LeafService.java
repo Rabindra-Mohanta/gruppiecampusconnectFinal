@@ -64,6 +64,7 @@ import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
 import school.campusconnect.datamodel.syllabus.EditTopicModelReq;
 import school.campusconnect.datamodel.syllabus.StaffAnalysisRes;
+import school.campusconnect.datamodel.syllabus.SyllabusListMaster;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
@@ -2006,9 +2007,18 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body SyllabusModelReq req);
 
+
     @GET("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<SyllabusListModelRes> getSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
+
+
+    @GET("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/get//master")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SyllabusListMaster> getSyllabusMaster(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
+
+
+
 
     @GET("api/v1/groups/{group_id}/user/search")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

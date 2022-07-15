@@ -1,5 +1,6 @@
 package school.campusconnect.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -104,7 +106,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
     private void getDataLocally() {
 
         List<BoothsTBL> boothListTBl = BoothsTBL.getBoothList(GroupDashboardActivityNew.groupId);
-
+        txtEmpty.setVisibility(View.GONE);
         myTeamDataList.clear();
 
         if (boothListTBl != null && boothListTBl.size() > 0)
@@ -268,15 +270,16 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             return;
         }
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
-       // progressBar.setVisibility(View.VISIBLE);
+        //showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
-     //   progressBar.setVisibility(View.GONE);
+       // hideLoadingBar();
+       progressBar.setVisibility(View.GONE);
+        txtEmpty.setVisibility(View.VISIBLE);
         BoothResponse res = (BoothResponse) response;
         //result = res.getData();
 
@@ -340,14 +343,14 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        //   progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        //   progressBar.setVisibility(View.GONE);
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
     }
 
 
@@ -364,7 +367,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
             final MyTeamData item = list.get(position);
 
@@ -406,10 +409,17 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             holder.txt_count.setText("Member : "+String.valueOf(item.members));
 
 
-            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onTreeClick(list.get(position));
+                    if (GroupDashboardActivityNew.isAdmin)
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("name",item.name);
+                        i.putExtra("teamID",item.teamId);
+                        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
+                    }
                 }
             });
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
@@ -466,6 +476,8 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
 
             @Bind(R.id.txt_name)
             TextView txt_name;
+            @Bind(R.id.linearLayout)
+            LinearLayout linearLayout;
 
             @Bind(R.id.txt_count)
             TextView txt_count;
@@ -500,6 +512,7 @@ public class BoothListMyTeamFragment extends BaseFragment implements LeafManager
             if (resultCode == Activity.RESULT_OK)
             {
                 BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                txtEmpty.setVisibility(View.GONE);
                 myTeamDataList.clear();
                 adapter.add(myTeamDataList);
                 getDataLocally();
