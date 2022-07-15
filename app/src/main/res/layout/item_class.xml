@@ -62,8 +62,8 @@
                         android:paddingEnd="16dp"
                         android:paddingRight="16dp"
                         android:src="@drawable/icon_right_arraw"
-                        android:tint="@color/colorTextDark"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        app:tint="@color/colorTextDark" />
 
                 </LinearLayout>
 
@@ -100,6 +100,7 @@
                         android:visibility="invisible" />
 
                     <LinearLayout
+                        android:id="@id/linearLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"

@@ -101,7 +101,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
     private void getDataLocally() {
         AppLog.e(TAG ,"FLOW_getDataLocally");
         List<BoothsTBL> boothListTBl = BoothsTBL.getBoothList(GroupDashboardActivityNew.groupId);
-
+        txtEmpty.setVisibility(View.GONE);
         result.clear();
 
         if (boothListTBl != null && boothListTBl.size() > 0)
@@ -239,6 +239,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         etSearch.setText("");
         if(LeafPreference.getInstance(getActivity()).getBoolean("booth_add")){
             BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+            txtEmpty.setVisibility(View.GONE);
             result.clear();
             adapter.add(result);
             LeafPreference.getInstance(getActivity()).setBoolean("booth_add", false);
@@ -253,13 +254,14 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
             return;
         }
         LeafManager leafManager = new LeafManager();
-     //   progressBar.setVisibility(View.VISIBLE);
+       progressBar.setVisibility(View.VISIBLE);
         leafManager.getBooths(this,GroupDashboardActivityNew.groupId,"");
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-      //  progressBar.setVisibility(View.GONE);
+       progressBar.setVisibility(View.GONE);
+        txtEmpty.setVisibility(View.VISIBLE);
         BoothResponse res = (BoothResponse) response;
         //result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -327,12 +329,12 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
-      //  progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-      //  progressBar.setVisibility(View.GONE);
+     progressBar.setVisibility(View.GONE);
     }
 
 
@@ -360,7 +362,7 @@ public class BoothListFragment extends BaseFragment implements LeafManager.OnCom
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder,final int position) {
+        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             final MyTeamData team = list.get(position);
 
             //holder.tvTeamName.setText(transliterator.transliterate(team.name));

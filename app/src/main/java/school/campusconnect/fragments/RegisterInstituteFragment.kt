@@ -27,6 +27,7 @@ import com.vivid.gruppie.model.UniversityItem
 import com.vivid.gruppie.view.RegisterClassSectionAdapter
 import com.vivid.gruppie.view.RegisterUniversityAdapter
 import school.campusconnect.BuildConfig
+import school.campusconnect.activities.LoginActivity2
 import school.campusconnect.activities.LoginPinActivity
 import school.campusconnect.database.LeafPreference
 import school.campusconnect.datamodel.BaseResponse
@@ -130,6 +131,7 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
     lateinit var tvStep3: TextView
     lateinit var clStep3: ConstraintLayout
     lateinit var btnNext3: Button
+    lateinit var btnNext4: Button
 
     lateinit var etName: TextInputEditText
     lateinit var tilName: TextInputLayout
@@ -157,6 +159,7 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         tvStep3 = view.findViewById(R.id.tvStep3)
         clStep3 = view.findViewById(R.id.clStep3)
         btnNext3 = view.findViewById(R.id.btnNext3)
+        btnNext4 = view.findViewById(R.id.btnNext4)
 
         etName = view.findViewById(R.id.etName)
         tilName = view.findViewById(R.id.tilName)
@@ -539,6 +542,11 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         ivStep1.setOnClickListener { showStep1() }
 
         btnNext2.setOnClickListener { showStep3() }
+        btnNext4.setOnClickListener {
+            val intent: Intent = Intent(getActivity(), LoginActivity2::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
         tvStep2.setOnClickListener { if (clStep2.visibility == View.VISIBLE  || clStep3.visibility == View.VISIBLE) showStep2() }
         ivStep2.setOnClickListener { if (clStep2.visibility == View.VISIBLE || clStep3.visibility == View.VISIBLE) showStep2() }
 

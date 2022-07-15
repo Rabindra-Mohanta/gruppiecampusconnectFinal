@@ -1,5 +1,6 @@
 package school.campusconnect.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -93,7 +95,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     private void getLocally() {
 
         List<MyTeamVotersTBL> voterListTBLList = MyTeamVotersTBL.getBoothList(GroupDashboardActivityNew.groupId,boothID);
-
+        txtEmpty.setVisibility(View.GONE);
         myTeamDataList.clear();
 
         if (voterListTBLList != null && voterListTBLList.size() > 0)
@@ -191,8 +193,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             return;
         }
         LeafManager leafManager = new LeafManager();
-        showLoadingBar(progressBar);
-        // progressBar.setVisibility(View.VISIBLE);
+        //showLoadingBar(progressBar);
+         progressBar.setVisibility(View.VISIBLE);
         leafManager.getBoothVoterList(this, GroupDashboardActivityNew.groupId,boothID);
     }
 
@@ -249,9 +251,9 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
-        hideLoadingBar();
-    //    progressBar.setVisibility(View.GONE);
-
+       // hideLoadingBar();
+       progressBar.setVisibility(View.GONE);
+        txtEmpty.setVisibility(View.VISIBLE);
         if (apiId == LeafManager.API_BOOTH_VOTER_LIST)
         {
             BoothVotersListResponse res = (BoothVotersListResponse) response;
@@ -302,8 +304,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        //    progressBar.setVisibility(View.GONE);
+        //hideLoadingBar();
+            progressBar.setVisibility(View.GONE);
 
         Log.e(TAG,"onFailure"+msg);
 
@@ -311,8 +313,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        //    progressBar.setVisibility(View.GONE);
+       // hideLoadingBar();
+          progressBar.setVisibility(View.GONE);
 
         Log.e(TAG,"onException"+msg);
     }
@@ -332,7 +334,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
             final BoothVotersListResponse.VoterData item = list.get(position);
 
@@ -398,7 +400,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             });
 
 
-            holder.imgTeam.setOnClickListener(new View.OnClickListener() {
+            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -442,6 +444,8 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+            @Bind(R.id.linearLayout)
+            LinearLayout linearLayout;
             @Bind(R.id.img_lead)
             ImageView imgTeam;
 
@@ -495,6 +499,7 @@ public class MyTeamVoterListFragment extends BaseFragment implements LeafManager
             if (resultCode == Activity.RESULT_OK)
             {
                 MyTeamVotersTBL.deleteBooth(GroupDashboardActivityNew.groupId,boothID);
+                txtEmpty.setVisibility(View.GONE);
                 myTeamDataList.clear();
                 adapter.add(myTeamDataList);
                 getLocally();

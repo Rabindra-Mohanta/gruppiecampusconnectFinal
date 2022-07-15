@@ -47,6 +47,7 @@ import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class CalendarActivity extends BaseActivity {
+
     private static final String TAG = "CalendarActivity";
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -60,7 +61,6 @@ public class CalendarActivity extends BaseActivity {
     public CompactCalendarView calendarView;
     @Bind(R.id.rvEvents)
     public RecyclerView rvEvents;
-
 
     ArrayList<EventInDayRes.EventInDayData> dataDay = new ArrayList<>();
     ArrayList<EventListRes.EventData> dataMonth = new ArrayList<>();

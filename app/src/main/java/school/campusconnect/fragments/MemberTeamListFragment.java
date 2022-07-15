@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -161,7 +162,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
     private void getDataLocally() {
 
         List<MemberTeamTBL> boothListTBl = MemberTeamTBL.getMemeberBoothList(GroupDashboardActivityNew.groupId,team_id);
-
+        txtEmpty.setVisibility(View.GONE);
         myTeamDataList.clear();
 
         if (boothListTBl != null && boothListTBl.size() > 0)
@@ -217,8 +218,8 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     private void boothListApiCall() {
 
-       // progressBar.setVisibility(View.VISIBLE);
-        showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+        //showLoadingBar(progressBar);
         LeafManager leafManager = new LeafManager();
         leafManager.getBoothTeams(this,GroupDashboardActivityNew.groupId,team_id);
     }
@@ -332,8 +333,8 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-     //   progressBar.setVisibility(View.GONE);
-
+         progressBar.setVisibility(View.GONE);
+        txtEmpty.setVisibility(View.VISIBLE);
 
 
         BoothResponse res = (BoothResponse) response;
@@ -404,14 +405,14 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-    //    progressBar.setVisibility(View.GONE);
-        hideLoadingBar();
+       progressBar.setVisibility(View.GONE);
+        //hideLoadingBar();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-      //  progressBar.setVisibility(View.GONE);
-        hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        //hideLoadingBar();
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -427,7 +428,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             final MyTeamData item = list.get(position);
 
 
@@ -465,10 +466,18 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
-            holder.txt_name.setOnClickListener(new View.OnClickListener() {
+            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onTreeClick(item);
+
+                    if (GroupDashboardActivityNew.isAdmin || item.isTeamAdmin)
+                    {
+                        Intent i = new Intent(getActivity(), VoterProfileActivity.class);
+                        i.putExtra("userID",item.userId);
+                        i.putExtra("teamID",item.teamId);
+                        i.putExtra("name",item.name);
+                        startActivityForResult(i,REQUEST_UPDATE_PROFILE);
+                    }
                 }
             });
             holder.img_lead_default.setOnClickListener(new View.OnClickListener() {
@@ -526,6 +535,10 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
 
             @Bind(R.id.txt_name)
             TextView txt_name;
+
+            @Bind(R.id.linearLayout)
+            LinearLayout linearLayout;
+
 
             @Bind(R.id.txt_count)
             TextView txt_count;
@@ -613,6 +626,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                     if (needRefresh)
                     {
                         Log.e(TAG,"event Call");
+                        txtEmpty.setVisibility(View.GONE);
                         myTeamDataList.clear();
                         adapter.notifyDataSetChanged();
                         getDataLocally();
@@ -632,6 +646,7 @@ public class MemberTeamListFragment extends BaseFragment implements LeafManager.
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);*/
                 MemberTeamTBL.deleteMemberBooth(GroupDashboardActivityNew.groupId,team_id);
+                txtEmpty.setVisibility(View.GONE);
                 myTeamDataList.clear();
                 adapter.add(myTeamDataList);
                 getDataLocally();

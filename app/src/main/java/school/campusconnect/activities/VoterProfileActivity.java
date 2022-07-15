@@ -321,7 +321,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                     isCasteClickable = false;
                     binding.etCaste.setText("");
                     binding.etSubCaste.setText("");
-                    binding.etCategory.setText("");
+                  //  binding.etCategory.setText("");
                 }
             }
 
@@ -365,7 +365,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                     binding.etProfession.setEnabled(true);
                     binding.etProfession.setTextColor(getResources().getColor(R.color.white));
 
-                    binding.etCategory.setTextColor(getResources().getColor(R.color.white));
+                    //binding.etCategory.setTextColor(getResources().getColor(R.color.white));
                     binding.etCaste.setTextColor(getResources().getColor(R.color.white));
                     binding.etSubCaste.setTextColor(getResources().getColor(R.color.white));
 
@@ -556,7 +556,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                         if (binding.etCaste.getText().toString().toLowerCase().trim().equalsIgnoreCase(casteDataList.get(i).getCasteName().toLowerCase().trim()))
                         {
                             casteId = casteDataList.get(i).getCasteId();
-                            binding.etCategory.setText(casteDataList.get(i).getCategoryName());
+                           // binding.etCategory.setText(casteDataList.get(i).getCategoryName());
                         }
                     }
 
@@ -575,7 +575,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
                 {
                     casteId = res.getCasteData().get(0).getCasteId();
                     binding.etCaste.setText(res.getCasteData().get(0).getCasteName());
-                    binding.etCategory.setText(res.getCasteData().get(0).getCategoryName());
+                    //binding.etCategory.setText(res.getCasteData().get(0).getCategoryName());
                 }
 
                 searchCastFragmentDialog.setData(res.getCasteData());
@@ -692,7 +692,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
         binding.etProfession.setEnabled(false);
         binding.etProfession.setTextColor(getResources().getColor(R.color.grey));
 
-        binding.etCategory.setTextColor(getResources().getColor(R.color.grey));
+        //binding.etCategory.setTextColor(getResources().getColor(R.color.grey));
 
    /*     binding.etCaste.setEnabled(false);
         binding.etCaste.setTextColor(getResources().getColor(R.color.grey));
@@ -833,7 +833,7 @@ public class VoterProfileActivity extends BaseActivity implements LeafManager.On
     public void onSelected(CasteResponse.CasteData casteData) {
 
         binding.etCaste.setText(casteData.getCasteName());
-        binding.etCategory.setText(casteData.getCategoryName());
+       // binding.etCategory.setText(casteData.getCategoryName());
 
         casteId = casteData.getCasteId();
 

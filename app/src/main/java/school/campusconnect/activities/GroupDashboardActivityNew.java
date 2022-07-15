@@ -2364,6 +2364,23 @@ public class GroupDashboardActivityNew extends BaseActivity
             intent.putExtra("role", group.role);
             startActivity(intent);
         }
+        else if(group.type.equals("Staff Register"))
+        {
+            Intent intent=new Intent(this,StaffActivity.class);
+            intent.putExtra("isAdmin",group.isTeamAdmin);
+            startActivity(intent);
+        }
+        else if(group.type.equals("Subject Register"))
+        {
+            Intent intent=new Intent(this,ClassActivity2.class);
+            startActivity(intent);
+        }
+        else if(group.type.equals("Student Register"))
+        {
+            Intent intent=new Intent(this,ClassActivity.class);
+            startActivity(intent);
+        }
+
         else if (group.type.equals("Video Class")) {
             Intent intent = new Intent(this, VideoClassActivity.class);
             intent.putExtra("title", group.name);

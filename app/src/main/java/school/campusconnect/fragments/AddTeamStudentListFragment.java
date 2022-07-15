@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,7 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
         super.onCreate(savedInstanceState);
         groupId = getArguments().getString("id");
         teamId = getArguments().getString("team_id");
+
         classId = getArguments().getString("class_id");
     }
 
@@ -141,7 +143,8 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
             LeafManager leafManager = new LeafManager();
             showLoadingBar(progressBar);
           //  progressBar.setVisibility(View.VISIBLE);
-            leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
+
+            leafManager.addTeamStaffOrStudent1(this, groupId, teamId,"student", adapter.getSelectedIds(),adapter.getSelectedteamIds());
         } else {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
         }
@@ -153,7 +156,8 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
             LeafManager leafManager = new LeafManager();
             showLoadingBar(progressBar);
             //  progressBar.setVisibility(View.VISIBLE);
-            leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
+
+            leafManager.addTeamStaffOrStudent1(this, groupId, teamId, "student",adapter.getSelectedIds(),adapter.getSelectedteamIds());
         } else {
             Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
         }
@@ -277,6 +281,16 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).isSelected) {
                     stringBuffer.append(list.get(i).getUserId()).append(",");
+                }
+            }
+            return stringBuffer.length() > 0 ? stringBuffer.substring(0, stringBuffer.length() - 1) : "";
+        }
+
+        public String getSelectedteamIds() {
+            StringBuffer stringBuffer = new StringBuffer();
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).isSelected) {
+                    stringBuffer.append(list.get(i).getTeamId()).append(",");
                 }
             }
             return stringBuffer.length() > 0 ? stringBuffer.substring(0, stringBuffer.length() - 1) : "";

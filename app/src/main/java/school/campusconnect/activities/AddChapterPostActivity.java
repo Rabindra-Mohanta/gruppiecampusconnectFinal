@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,7 +40,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +50,6 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -82,13 +79,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
 import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
@@ -98,13 +94,11 @@ import school.campusconnect.datamodel.AddGalleryPostRequest;
 import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
-import school.campusconnect.datamodel.chapter.ChapterRes;
-import school.campusconnect.fragments.ChapterListFragment;
+import school.campusconnect.datamodel.syllabus.SyllabusListMaster;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BackgroundVideoUploadChapterService;
-import school.campusconnect.utils.BackgroundVideoUploadService;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
@@ -193,12 +187,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     public ImageView imgHome;
 
 
-
-
-
-    //audio
-
-
     @Bind(R.id.llAudioPreview)
     RelativeLayout llAudioPreview;
 
@@ -233,6 +221,13 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Bind(R.id.tvAudioTimer)
     TextView tvTimer;
+
+    @Bind(R.id.cardview_topicname)
+    CardView topicCardView;
+    @Bind(R.id.topic_layout)
+    LinearLayout topicLayout;
+    @Bind(R.id.sptopic)
+    Spinner sptopic;
 
     private String audioPath = "";
     MediaPlayer mediaPlayer  = new MediaPlayer();
@@ -286,7 +281,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private ProgressDialog progressDialog;
     private boolean isEdit = true;
     private String chapter_id;
-    private ArrayList<ChapterRes.ChapterData> chapterList;
+    private String topic_id;
+    private List<SyllabusListMaster.Datum> chapterList;
+    private List<SyllabusListMaster.Datum> topicList;
     private String sharePath;
 
 
@@ -468,9 +465,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void getChapters() {
 
         showLoadingBar(progressBar,false);
-      //  progressBar.setVisibility(View.VISIBLE);
+        //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
+        leafManager.getSyllabusMaster(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
 
     private void setListener() {
@@ -722,7 +719,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     private void init() {
 
-
+        topicCardView.setVisibility(View.GONE);
+        topicLayout.setVisibility(View.VISIBLE);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
@@ -785,7 +783,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
 
     private void shareButtonEnableDisable() {
-  //      btnShare.setEnabled(isValid(false));
+        //      btnShare.setEnabled(isValid(false));
     }
 
     @Override
@@ -801,14 +799,15 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 if (progressBar != null)
                     showLoadingBar(progressBar,false);
                 //  progressBar.setVisibility(View.VISIBLE);
-              //  btnShare.setEnabled(false);
+                //  btnShare.setEnabled(false);
 
                 btnShare.setEnabled(false);
                 btnShare.setTextColor(getResources().getColor(R.color.grey));
                 mainRequest = new AddGalleryPostRequest();
 
                 mainRequest.albumName = edtTitle.getText().toString();
-                mainRequest.topicName = edtDesc.getText().toString();
+               // mainRequest.topicName = edtDesc.getText().toString();
+                mainRequest.topicName = sptopic.getSelectedItem().toString();
 
                 if (!TextUtils.isEmpty(videoUrl)) {
                     mainRequest.video = videoUrl;
@@ -1053,7 +1052,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                         }
                         if (TransferState.FAILED.equals(state)) {
                             hideLoadingBar();
-                           // progressBar.setVisibility(View.GONE);
+                            // progressBar.setVisibility(View.GONE);
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
@@ -1206,11 +1205,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             }
         }
 
-        if (!isValueValidOnly(edtDesc)) {
-            if (showToast)
-                Toast.makeText(this, getResources().getString(R.string.toast_enter_topic_name), Toast.LENGTH_SHORT).show();
-            return false;
-        }
+//        if (!isValueValidOnly(edtDesc)) {
+//            if (showToast)
+//                Toast.makeText(this, getResources().getString(R.string.toast_enter_topic_name), Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
 
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath) && TextUtils.isEmpty(audioPath)) {
             if (showToast)
@@ -1331,18 +1330,55 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 finish();
                 break;
 
-            case LeafManager.API_CHAPTER_LIST:
-                ChapterRes res = (ChapterRes) response;
+            case LeafManager.API_GET_SYLLABUS_MASTER:
+                SyllabusListMaster  res = (SyllabusListMaster) response;
                 chapterList = res.getData();
+                topicList=res.getData();
                 AppLog.e(TAG, "ChapterRes " + chapterList);
                 bindChapter();
+                bindtopic();
                 break;
 
             case LeafManager.API_CHAPTER_REMOVE:
-                    LeafPreference.getInstance(this).setBoolean("is_chapter_added", true);
-                    finish();
-                    break;
+                LeafPreference.getInstance(this).setBoolean("is_chapter_added", true);
+                finish();
+                break;
         }
+
+    }
+
+
+    private void bindtopic()
+    {
+
+        if (topicList != null && topicList.size() > 0) {
+
+            String[] strTopic = new String[topicList.size()];
+            for (int i=0;i<topicList.size();i++){
+                strTopic[i]=topicList.get(i).getTopicsList().get(i).getTopicName();
+            }
+
+            ArrayAdapter<String> topicAdapter=new ArrayAdapter<String>(this,R.layout.item_spinner,strTopic);
+            sptopic.setAdapter(topicAdapter);
+
+
+
+            sptopic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    topic_id=topicList.get(position).getTopicsList().get(position).getTopicId();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+
+
+        }
+
 
     }
 
@@ -1352,7 +1388,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
             String[] strChapter = new String[chapterList.size()];
             for (int i=0;i<chapterList.size();i++){
-                strChapter[i]=chapterList.get(i).chapterName;
+                strChapter[i]=chapterList.get(i).getChapterName();
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner,strChapter);
@@ -1373,8 +1409,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
 /*                    edtTitle.setText("");
                     edtTitle.setText(chapterList.get(position).chapterName);*/
-                    chapter_id = chapterList.get(position).chapterId;
-                   // cardChapterName.setVisibility(View.GONE);
+                    chapter_id = chapterList.get(position).getChapterId();
+                    // cardChapterName.setVisibility(View.GONE);
 
                 }
 
@@ -1383,12 +1419,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                 }
             });
-        } else {
-            edtTitle.setHint("");
-            isEdit = false;
-            llTop.setVisibility(View.GONE);
-            cardChapterName.setVisibility(View.VISIBLE);
-            imgAddChapter.setVisibility(View.GONE);
         }
 
     }
@@ -1422,7 +1452,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onException(int apiId, String error) {
-       btnShare.setEnabled(true);
+        btnShare.setEnabled(true);
         btnShare.setTextColor(getResources().getColor(R.color.white));
         if (progressBar != null)
             hideLoadingBar();
@@ -1661,15 +1691,15 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                 isGalleryMultiple = false;
 //                String path = ImageUtil.getPath(this, selectedImage);
-              //  listImages.add(selectedImage.toString());
+                //  listImages.add(selectedImage.toString());
                 showCropDialog(selectedImage,false);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
 //                    String path = ImageUtil.getPath(this, uri1);
-                //    listImages.add(uri1.toString());
-               //     isGalleryMultiple = true;
+                    //    listImages.add(uri1.toString());
+                    //     isGalleryMultiple = true;
                     showCropDialog(uri1,false);
                 }
             }
@@ -1726,7 +1756,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             /*fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
 //            String path = cameraFile.getAbsolutePath();
             AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
-  //          listImages.add(imageCaptureFile.toString());
+            //          listImages.add(imageCaptureFile.toString());
             isGalleryMultiple = false;
 
          /*   showLastImage();
@@ -1809,7 +1839,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void removeAudio() {
 
         audioPath = "";
-     //   Picasso.with(this).load(R.drawable.icon_doc).into(imgDoc);
+        //   Picasso.with(this).load(R.drawable.icon_doc).into(imgDoc);
 
        /* listImages.clear();
         Picasso.with(this).load(R.drawable.icon_gallery).into(img_image);
