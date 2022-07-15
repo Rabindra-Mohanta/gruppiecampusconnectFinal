@@ -68,6 +68,15 @@ public class LeadDataTBL extends Model {
     @Column(name = "pushToken")
     public String pushToken;
 
+    @Column(name = "caste")
+    public String caste;
+
+    @Column(name = "subCaste")
+    public String subCaste;
+
+    @Column(name = "religion")
+    public String religion;
+
 
     public static List<LeadDataTBL> getLead(String groupID,String teamID,int page)
     {

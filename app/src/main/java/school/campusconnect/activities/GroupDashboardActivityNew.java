@@ -1593,6 +1593,7 @@ public class GroupDashboardActivityNew extends BaseActivity
         if ("constituency".equalsIgnoreCase(mGroupItem.category)) {
             llClass.setVisibility(View.GONE);
             llSubject2.setVisibility(View.GONE);
+            llIssueRegister.setVisibility(View.GONE);
             llStaffReg.setVisibility(View.GONE);
             llBusRegister.setVisibility(View.GONE);
             llAttendanceReport.setVisibility(View.GONE);
@@ -1644,7 +1645,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
             if (mGroupItem.canPost) {
 
-                llIssueRegister.setVisibility(View.VISIBLE);
+         //       llIssueRegister.setVisibility(View.VISIBLE);
                 llBothRegister.setVisibility(View.VISIBLE);
                 llBookmark.setVisibility(View.VISIBLE);
 
