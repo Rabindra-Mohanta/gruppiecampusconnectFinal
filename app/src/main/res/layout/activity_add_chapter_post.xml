@@ -152,7 +152,65 @@
                     android:text="@string/lbl_topic_name"
                     android:textColor="@color/colorPrimary"
                     android:layout_height="wrap_content" />
+
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/topic_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:layout_marginStart="@dimen/padding_5dp"
+                    android:layout_marginEnd="@dimen/padding_5dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_weight="0.3"
+
+                        android:layout_width="match_parent"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content">
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content">
+
+                            <Spinner
+                                android:id="@+id/sptopic"
+                                style="@style/RegEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/login_button_height" />
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:src="@drawable/icon_down_white"
+                                android:layout_marginEnd="@dimen/padding_10dp"
+                                android:layout_gravity="right|center"
+                                android:layout_height="25dp"/>
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1.7"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_marginLeft="@dimen/padding_5dp"
+                            android:id="@+id/imgAddTopic"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="@dimen/padding_5dp"
+                            android:scaleType="centerCrop"
+                            android:background="@drawable/round_primary_bg"
+                            android:src="@drawable/ic_vector_add"
+                            />
+                    </LinearLayout>
+
+
+                </LinearLayout>
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview_topicname"
                     android:layout_width="match_parent"
                     app:cardElevation="4dp"
                     android:layout_margin="@dimen/padding_5dp"
@@ -451,12 +509,11 @@
                     android:layout_height="@dimen/padding_40dp"
                     android:adjustViewBounds="true"
                     android:layout_centerVertical="true"
-                    android:tint="@color/white"
                     android:layout_margin="@dimen/padding_15dp"
                     android:src="@drawable/ic_delete_black"
                     android:background="@drawable/round_primary_bg"
                     android:padding="@dimen/padding_5dp"
-                    />
+                    app:tint="@color/white" />
 
 
             </RelativeLayout>
