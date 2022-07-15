@@ -45,7 +45,7 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:paddingBottom="4dp"
-                android:text="Institute Details"
+                android:text="Create your own School/College"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -99,7 +99,7 @@
                                 android:id="@+id/etName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Institute Name"
+                                android:hint="Enter School/College Name"
                                 android:importantForAutofill="no"
                                 android:inputType="textCapWords"
                                 android:maxLength="500"
@@ -217,7 +217,7 @@
                 android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:paddingBottom="4dp"
-                android:text="University Info"
+                android:text="Select Board/University"
                 android:textColor="@color/colorTextLight"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -364,6 +364,23 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rvClasses" />
+                    <Button
+                        android:id="@+id/btnNext4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="44dp"
+                        android:layout_marginBottom="16dp"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:paddingLeft="32dp"
+                        android:paddingTop="0dp"
+                        android:paddingRight="32dp"
+                        android:paddingBottom="0dp"
+                        android:text="Already Registred? sign in"
+                        android:textColor="@color/white"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/btnNext3" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
