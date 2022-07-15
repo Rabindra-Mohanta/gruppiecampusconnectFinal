@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_invite"
         android:icon="@drawable/ic_person_add_white"
-        android:title="Invite Friend"
+        android:title="@string/menu_invite_friend"
         android:visible="false"
         app:showAsAction="always" />
 
@@ -13,20 +13,20 @@
         android:icon="@drawable/icon_friend_list"
         app:showAsAction="always"
         android:visible="false"
-        android:title="Friend List"
+        android:title="@string/menu_friend_list"
         />
 
     <item
         android:id="@+id/menu_add_friend"
         android:icon="@drawable/addfriends"
-        android:title="Add Friends"
+        android:title="@string/menu_add_friend"
         android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_add_chat"
         android:icon="@drawable/icon_add_chat"
-        android:title="Add Friends"
+        android:title="@string/menu_add_friend"
         android:visible="false"
         app:showAsAction="ifRoom" />
 
@@ -48,7 +48,7 @@
 
     <item
         android:id="@+id/action_cart"
-        android:title="test"
+        android:title=""
         android:visible="false"
         app:actionLayout="@layout/layout_badge"
         app:showAsAction="always" />
@@ -61,7 +61,7 @@
 
     <item
         android:id="@+id/action_add_multi"
-        android:title="Add Friends"
+        android:title=""
         android:visible="false"
         android:enabled="true"
         app:actionLayout="@layout/layout_badge_tick"
@@ -70,19 +70,19 @@
     <item
         android:id="@+id/action_sync2"
         android:icon="@drawable/icon_sync"
-        android:title="Sync Contacts"
+        android:title="@string/menu_sync_contact"
         android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_sync"
-        android:title="Sync Contacts"
+        android:title="@string/menu_sync_contact"
         android:visible="false"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_notification_list"
-        android:title="Notification"
+        android:title="@string/action_notifications"
         android:icon="@drawable/icon_notification"
         android:visible="false"
         app:showAsAction="always" />
@@ -90,20 +90,20 @@
     <item
         android:id="@+id/menu_zoom"
         android:icon="@drawable/call_icon"
-        android:title="Zoom Meeting"
+        android:title="@string/menu_zoom_meeting"
         android:visible="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_add_post"
-        android:icon="@drawable/posticon"
-        android:title="Add Post"
+        android:icon="@drawable/ic_post_new"
+        android:title="@string/action_add_post"
         android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_ic_close"
         android:icon="@drawable/ic_close"
-        android:title="Close"
+        android:title="@string/menu_close"
         android:visible="false"
         app:showAsAction="ifRoom" />
 
@@ -117,37 +117,37 @@
             <item
                 android:id="@+id/action_settings"
                 android:icon="@drawable/icon_menu_setting"
-                android:title="Settings"
+                android:title="@string/action_setting"
                 app:showAsAction="ifRoom"
                 android:visible="false" />
 
             <item android:id="@+id/menu_leave_team"
                 android:visible="false"
                 app:showAsAction="ifRoom"
-                android:title="Leave Team"/>
+                android:title="@string/menu_leave_team"/>
 
             <item android:id="@+id/menu_edit_team"
                 android:visible="false"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/icon_menu_edit"
-                android:title="Edit Team"/>
+                android:title="@string/menu_edit_team"/>
             <item android:id="@+id/menu_change_admin"
                 android:visible="false"
                 app:showAsAction="ifRoom"
                 android:icon="@drawable/change_admin"
-                android:title="Change Admin"/>
+                android:title="@string/action_change_admin"/>
 
 
             <item android:id="@+id/menu_archive_team"
                 android:visible="false"
                 android:icon="@drawable/icon_menu_archive"
                 app:showAsAction="ifRoom"
-                android:title="Archive Team"/>
+                android:title="@string/lbl_archive_team"/>
             <item android:id="@+id/menu_add_time_table"
                 android:visible="false"
                 android:icon="@drawable/icon_time_table"
                 app:showAsAction="ifRoom"
-                android:title="Add Time Table"/>
+                android:title="@string/lbl_add_time_table"/>
             <item android:id="@+id/menu_get_attendance"
                 android:visible="false"
                 android:icon="@drawable/icon_attendance_report"
@@ -156,7 +156,7 @@
             <item android:id="@+id/menu_leave_request"
                 android:visible="false"
                 app:showAsAction="ifRoom"
-                android:title="Leave Request"/>
+                android:title="@string/leave_request"/>
 
 
         </menu>
@@ -164,26 +164,53 @@
 
     <item android:id="@+id/menu_add_team"
         android:visible="false"
-        android:title="Add Team"/>
+        android:title="@string/menu_add_team"/>
+
+    <item android:id="@+id/menu_add_class"
+        android:visible="false"
+        android:title="@string/lbl_add_class"/>
+
+    <item android:id="@+id/menu_add_group"
+        android:visible="false"
+        android:title="@string/lbl_add_group"/>
+
+    <item android:id="@+id/menu_profile"
+        android:visible="false"
+        android:title="@string/lbl_profile"/>
 
     <item android:id="@+id/menu_change_pass"
         android:visible="false"
-        android:title="Change Password"/>
+        android:title="@string/action_change_pwd"/>
 
+    <item android:id="@+id/menu_add_school"
+        android:visible="false"
+        android:title="@string/action_add_school"/>
 
     <item android:id="@+id/menu_set_wallpaper"
         android:visible="false"
-        android:title="Set Wallpaper"/>
+        android:title="@string/action_set_wallpaper"/>
     <item android:id="@+id/menu_remove_wallpaper"
         android:visible="false"
-        android:title="Remove Wallpaper"/>
+        android:title="@string/action_remove_wallpaper"/>
 
 
     <item android:id="@+id/menu_logout"
         android:visible="false"
-        android:title="Logout"/>
+        android:title="@string/action_logout"/>
 
 
+
+    <item android:id="@+id/menu_search"
+        app:showAsAction="always"
+        android:visible="false"
+        android:icon="@drawable/icon_search"
+        android:title="@string/hint_search_group"/>
+
+    <item android:id="@+id/menu_add_booth"
+        android:visible="false"
+        app:showAsAction="always"
+        android:icon="@drawable/posticon"
+        android:title="@string/lbl_add_booth"/>
 
 
 </menu>

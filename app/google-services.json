@@ -8,9 +8,53 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:a973ccc53b1b8a37",
+        "mobilesdk_app_id": "1:337951586049:android:1ef7701ceca14f5c340d00",
         "android_client_info": {
-          "package_name": "adarshvidyalaya.gruppie"
+          "package_name": "abm.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-ki80borlats272496gbout5r2inafvmj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "abm.gruppie",
+            "certificate_hash": "8bfa173529de19f169b850a29263db7f2d08a3c3"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:8c3761f568b2928a340d00",
+        "android_client_info": {
+          "package_name": "akanksha.gruppie"
         }
       },
       "oauth_client": [
@@ -32,10 +76,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -51,11 +95,47 @@
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-ar1i02qhpb46dht84gpaager8phlg2jd.apps.googleusercontent.com",
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:323e2503074d77e6340d00",
+        "android_client_info": {
+          "package_name": "doddagoudar.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-iuj3p3678a5qnrbkda0o3v59jk3ed4v6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "chikkatti.gruppie",
-            "certificate_hash": "f31fb345c58421b6ff8dd8b0f792a1c297a9eb45"
+            "package_name": "doddagoudar.gruppie",
+            "certificate_hash": "8e69b6080b65427b7d43368ceb2f4bfd0ad422f9"
           }
         },
         {
@@ -76,10 +156,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -88,9 +168,53 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:a196d67935ce2220",
+        "mobilesdk_app_id": "1:337951586049:android:0e80d9f21a3942d8340d00",
         "android_client_info": {
-          "package_name": "commerceforum.gruppie"
+          "package_name": "expert_puc.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-cdjejf1a9unff3p27256qufpg5etn3g3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "expert_puc.gruppie",
+            "certificate_hash": "fbcd8cf32e9092e7050c79989035f0f5227a5580"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:a77dc533dde84512340d00",
+        "android_client_info": {
+          "package_name": "gcm.gruppie"
         }
       },
       "oauth_client": [
@@ -112,98 +236,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:e4f1b7e08141d5c4",
-        "android_client_info": {
-          "package_name": "cuddles_aecs.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-62phpi4hf8b1t1fcr5odujabceutl002.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "cuddles_aecs.gruppie",
-            "certificate_hash": "294f106a107d0c8385d31385f7a8e4a99c4b99f6"
-          }
-        },
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "oms.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:2742a260c14cbff4",
-        "android_client_info": {
-          "package_name": "cuddles_greenage.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-0g4vsjlm5vuj4jnl8ot0nc1ave669pi6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "cuddles_greenage.gruppie",
-            "certificate_hash": "80c5aa70c307028d3c433c8ea2d8dbccfd8b19f6"
-          }
-        },
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -219,13 +255,41 @@
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-3ocel09kdikgdqkugkm148qcp84sjc0k.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ggv.gruppie",
-            "certificate_hash": "86455628d8e97122742213cc578c7280a975bfb2"
-          }
-        },
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:00afe458dfe16c91340d00",
+        "android_client_info": {
+          "package_name": "gruppie.gc2"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
@@ -244,10 +308,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -288,10 +352,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -307,14 +371,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-oarotsiujsqhmdbkgf9cndc8bgv38e6u.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "hes_kadur.gruppie",
-            "certificate_hash": "b94aef263cfe39be647789523aefde03e7ad70c7"
-          }
-        },
-        {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -332,10 +388,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -344,53 +400,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:d558dc66dff0cca9",
+        "mobilesdk_app_id": "1:337951586049:android:e71723f92b1e2e30340d00",
         "android_client_info": {
-          "package_name": "jdvsapp.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-6oeeh4t80gksaogtum104drf5685vra8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "jdvsapp.gruppie",
-            "certificate_hash": "84e4f23fdc50234cb395ca3d3f85298ff2798d81"
-          }
-        },
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "oms.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:e16be688abaf62fe",
-        "android_client_info": {
-          "package_name": "ksb.gruppie"
+          "package_name": "hoysala.gruppie"
         }
       },
       "oauth_client": [
@@ -412,10 +424,134 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:7a6ddba17f85abf3340d00",
+        "android_client_info": {
+          "package_name": "jnana.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-4039dmkdttotg5k731i9cv45m39oarra.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jnana.gruppie",
+            "certificate_hash": "c0886c3062d37992268e7f174ae264a32fc3ec3d"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:fbac63a5225eecdc340d00",
+        "android_client_info": {
+          "package_name": "kittur.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-vc7bnsnsqi64bijspcqnt5soqmunv86q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kittur.gruppie",
+            "certificate_hash": "f5bfeabf0b0a4b0d456fcf8092dbb456ba0852ce"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:0cdf803f8e3e78b8340d00",
+        "android_client_info": {
+          "package_name": "kreis.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -448,10 +584,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -460,18 +596,18 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:28dac5da7ccb0e16",
+        "mobilesdk_app_id": "1:337951586049:android:ccbaeaea88310e7c340d00",
         "android_client_info": {
-          "package_name": "littlejcs.gruppie"
+          "package_name": "ktsv.gruppie"
         }
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-90k8jjcf329lcn9k23n2n870ik26b2rv.apps.googleusercontent.com",
+          "client_id": "337951586049-ipi78hag105lij472hi09t0ff0ni6e1o.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "littlejcs.gruppie",
-            "certificate_hash": "be30b1c18f734d6e61830723cf2286c0d8791b01"
+            "package_name": "ktsv.gruppie",
+            "certificate_hash": "f5bfeabf0b0a4b0d456fcf8092dbb456ba0852ce"
           }
         },
         {
@@ -492,10 +628,54 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:1c697f5ae8878003340d00",
+        "android_client_info": {
+          "package_name": "ktsvapp.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-q8iu5fkgpaeiim008h7rq0g8t70cfivu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ktsvapp.gruppie",
+            "certificate_hash": "f5bfeabf0b0a4b0d456fcf8092dbb456ba0852ce"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -528,10 +708,54 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:d30eb0de47ebc308340d00",
+        "android_client_info": {
+          "package_name": "mahantesh.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-140v92um2m57sfth6bojqn202209jsj0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mahantesh.gruppie",
+            "certificate_hash": "f5bfeabf0b0a4b0d456fcf8092dbb456ba0852ce"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -572,10 +796,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -584,12 +808,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:4d55e56b87543437",
+        "mobilesdk_app_id": "1:337951586049:android:891604aaae671b5f340d00",
         "android_client_info": {
-          "package_name": "mogadlaser.gruppie"
+          "package_name": "mgv.gruppie"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "337951586049-58cnqrcrlahohq84legud997fi36sur5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mgv.gruppie",
+            "certificate_hash": "f5bfeabf0b0a4b0d456fcf8092dbb456ba0852ce"
+          }
+        },
         {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
@@ -608,10 +840,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -644,10 +876,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -656,18 +888,18 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:6c946dec01ec939e",
+        "mobilesdk_app_id": "1:337951586049:android:a1139a9f52343562340d00",
         "android_client_info": {
-          "package_name": "oms.gruppie"
+          "package_name": "nphps.gruppie"
         }
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-eh4mvv0nga49015pch6cq8o04e55r24k.apps.googleusercontent.com",
+          "client_id": "337951586049-v7qb7qbo0fsd212se8tmqeukvr1pcns6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "oms.gruppie",
-            "certificate_hash": "5d99371e93b095f55b7911bf00bdaf6e41921aa2"
+            "package_name": "nphps.gruppie",
+            "certificate_hash": "3e178d4b2b70931e164d01f27f4f39e42c510c24"
           }
         },
         {
@@ -688,10 +920,214 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:9c006d7b0ee1f7db340d00",
+        "android_client_info": {
+          "package_name": "philomena.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:2f3314ce7ca658fb340d00",
+        "android_client_info": {
+          "package_name": "rotary.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-jhg93svp9m8fgt24927oc0nhgudin123.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rotary.gruppie",
+            "certificate_hash": "abab16c15d44c3894123c0d1afdfadd530eb8f33"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:276108e12740e7e2340d00",
+        "android_client_info": {
+          "package_name": "rpa.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-2ht5tdckhv2l07he1ormlkq9vjv9k9an.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rpa.gruppie",
+            "certificate_hash": "250255a326a88231b7959d9127120786e32ece71"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:194a8932b0dedb2d340d00",
+        "android_client_info": {
+          "package_name": "rpadegree.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:3d7b1797c0934948340d00",
+        "android_client_info": {
+          "package_name": "rpes.campusconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-u8qla1n4gqkjbsdgjo69te25ma8qk0gq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rpes.campusconnect",
+            "certificate_hash": "2ed6031923bdc3368a7cc96e7a740d2115cb3e90"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -707,19 +1143,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-r68vmjq6u18iiqmdikuulq9igcmt42qb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "rpes_jsps.gruppie",
-            "certificate_hash": "6f01f5473eb3f1cd5d58bcc919b4283888cf6267"
-          }
-        },
-        {
           "client_id": "337951586049-3baghbl8a5ophv30u6kfqcqes9v943iq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "rpes_jsps.gruppie",
             "certificate_hash": "117a2f04d1c4a09c3c18007351c1c789a4d4fbad"
+          }
+        },
+        {
+          "client_id": "337951586049-r68vmjq6u18iiqmdikuulq9igcmt42qb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rpes_jsps.gruppie",
+            "certificate_hash": "6f01f5473eb3f1cd5d58bcc919b4283888cf6267"
           }
         },
         {
@@ -740,10 +1176,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -784,10 +1220,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -803,14 +1239,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-1jbc1uptmc0l8n3vumpe2vmpn2nk378i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "sccsl.gruppie",
-            "certificate_hash": "df317a803927217a95af95e7bb2f069832cad816"
-          }
-        },
-        {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -828,10 +1256,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -847,19 +1275,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-d1q55vjgheiu1ibjpthhvlk1dj37ft3i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "school.campusconnect",
-            "certificate_hash": "c0886c3062d37992268e7f174ae264a32fc3ec3d"
-          }
-        },
-        {
           "client_id": "337951586049-c1s4mrhteuab2isbkjitblu4884uodpl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "school.campusconnect",
             "certificate_hash": "35cfc63490c1af3cd118d4bacd9d2768403083cb"
+          }
+        },
+        {
+          "client_id": "337951586049-d1q55vjgheiu1ibjpthhvlk1dj37ft3i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "school.campusconnect",
+            "certificate_hash": "c0886c3062d37992268e7f174ae264a32fc3ec3d"
           }
         },
         {
@@ -880,10 +1308,46 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:0a3e174d8fd67a29340d00",
+        "android_client_info": {
+          "package_name": "school.campusconnectlite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -924,10 +1388,90 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:1e4248962d3ee6ca340d00",
+        "android_client_info": {
+          "package_name": "shahbaaz.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:c60eb9f7070c90c8340d00",
+        "android_client_info": {
+          "package_name": "smjes.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-bbk3kdedibhp3h7os21q8g5qvgeq4ch1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "smjes.gruppie",
+            "certificate_hash": "f5bfeabf0b0a4b0d456fcf8092dbb456ba0852ce"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -968,10 +1512,90 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:d376f701ec16b3cf340d00",
+        "android_client_info": {
+          "package_name": "srigandha.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:3bf04bc6e5de3e33340d00",
+        "android_client_info": {
+          "package_name": "sudhakar.gruppie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-q53m9cj2q6dfhdc54katdqdvfsda1v2r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sudhakar.gruppie",
+            "certificate_hash": "f5bfeabf0b0a4b0d456fcf8092dbb456ba0852ce"
+          }
+        },
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -1012,10 +1636,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -1048,10 +1672,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -1060,18 +1684,18 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:ba6ef4fcde44e7c7",
+        "mobilesdk_app_id": "1:337951586049:android:5b1a42c2e74aa810340d00",
         "android_client_info": {
-          "package_name": "tis_new.gruppie"
+          "package_name": "vidyaniketan.gruppie"
         }
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-uol3a269p736d0c1mv03qlmi9crpu5ue.apps.googleusercontent.com",
+          "client_id": "337951586049-m1hbetv4phv1s2or8iqe4nn4moui69da.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "tis_new.gruppie",
-            "certificate_hash": "92c74c3903c6251579a6c866ea628cf4e5502a39"
+            "package_name": "vidyaniketan.gruppie",
+            "certificate_hash": "7a1f404e72f243ccd7ac828c8c3fba6601c57e43"
           }
         },
         {
@@ -1092,90 +1716,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:d39916ea2469581c",
-        "android_client_info": {
-          "package_name": "tsws.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-8a5ql6aopammtv5ledh20ksupn5aopig.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "tsws.gruppie",
-            "certificate_hash": "4def88ea7fb58160e89264c91ba9eb73670d857d"
-          }
-        },
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "oms.gruppie"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:ae92c3c5db4460e6",
-        "android_client_info": {
-          "package_name": "vhrs.gruppie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]
@@ -1191,22 +1735,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "337951586049-7mp9pnm8lsqv3lgs9e4sck01h55kq6cv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "vivid.gruppie",
-            "certificate_hash": "f9807c028ac4daf8b6b51fcd2ce05216da1d53bd"
-          }
-        },
-        {
-          "client_id": "337951586049-o4h1kkvlmch8ks9vepgi9i8ub8ln0ijr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "vivid.gruppie",
-            "certificate_hash": "00404857c05ce1ce3167f9c7c7efe46356741f4c"
-          }
-        },
-        {
           "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -1224,10 +1752,10 @@
               "client_type": 3
             },
             {
-              "client_id": "337951586049-maou86im7esgrh6ogkntvfcmsqgiue25.apps.googleusercontent.com",
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "oms.gruppie"
+                "bundle_id": "school.gruppie"
               }
             }
           ]

@@ -6,7 +6,11 @@
     <color name="colorPrimary">#293f6e</color>
     <color name="colorPrimaryBg">#293f6e</color>
     <color name="colorPrimaryDark">#293f6e</color>
+    <color name="colorPrimaryLight">#6093FF</color>
     <color name="colorAccent">#293f6e</color>
+    <color name="black">#000000</color>
+    <color name="birthDayTextColor">#C44040</color>
+    <color name="mlaTextColor">#C44040</color>
 
 
     <color name="colorTextLight">#8D8D8D</color>
@@ -22,6 +26,8 @@
     <color name="color_orange_hover">#3b5998</color>
     <!--<color name="color_green">#68ae12</color>-->
     <color name="color_green">#68ae12</color>
+    <color name="color_yellow">#FFEB3B</color>
+    <color name="color_yellow_dark">#EDD500</color>
     <color name="color_green_light">#68ae12</color>
     <color name="color_label">#444444</color>
     <color name="color_white">#ffffff</color>
@@ -32,6 +38,7 @@
     <color name="color_header">#2c2c2c</color>
     <color name="white_pressed">#f1f1f1</color>
     <color name="pink">#e91e63</color>
+    <color name="red">#F44336</color>
     <color name="pink_pressed">#ec407a</color>
     <color name="black_semi_transparent">#B2000000</color>
     <color name="black_center_transparent">#60000000</color>
@@ -52,6 +59,17 @@
     <color name="colorEdittextBg">#707f9e</color>
 
     <color name="colorAddBookButton">#E4E4ED</color>
+
+    <color name="colorBrushBox">#FF0000</color>
+    <color name="colorTransparent">#0000</color>
+
+    <color name="colorYellow">#FFFFFF00</color>
+    <color name="colorGREEN">#FF00FF00</color>
+    <color name="colorRED">#FFFF0000</color>
+
+    <color name="colorFirstPie">#FF5F1F</color>
+    <color name="colorSecondPie">#98FF91</color>
+    <color name="colorThirdPie">#91CBFF</color>
 
 </resources>
 

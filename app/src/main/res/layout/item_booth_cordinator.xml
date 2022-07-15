@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true"
+            android:layout_marginBottom="@dimen/padding_10dp"
+        >
+        <LinearLayout
+        android:layout_margin="@dimen/padding_10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:id="@+id/ImgName"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_name_svg"
+                android:layout_width="@dimen/padding_20dp"
+                android:layout_height="@dimen/padding_20dp"
+                />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_toRightOf="@id/ImgName"
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_centerVertical="true"
+
+                android:textColor="@color/colorTextLight" />
+
+            <ImageView
+                android:id="@+id/imgCall"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_call_svg"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/padding_30dp"
+                app:tint="@color/colorPrimary"
+                />
+
+        </RelativeLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:src="@drawable/ic_description_svg"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/padding_20dp"
+                android:layout_height="@dimen/padding_20dp"/>
+
+
+            <TextView
+                android:id="@+id/tvDesg"
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_gravity="center"
+                android:lineSpacingExtra="2dp"
+
+                android:textColor="@color/colorTextLight" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</layout>

@@ -47,9 +47,9 @@ public class TimeTabelActivity2 extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if("admin".equals(role)){
-            getMenuInflater().inflate(R.menu.menu_tt_new,menu);
-        }
+       /* if("admin".equals(role)){
+            getMenuInflater().inflate(R.menu.menu_tt_updated,menu);
+        }*/
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -62,6 +62,7 @@ public class TimeTabelActivity2 extends BaseActivity {
                 intent.putExtra("team_name",getIntent().getStringExtra("team_name"));
                 startActivity(intent);
                 return true;
+
             case R.id.menu_delete:
                 ((TimeTableListFragment2)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).deleteTT();
                 return true;

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <include layout="@layout/layout_toolbar" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_below="@id/topbar"
+            android:layout_width="match_parent"
+            android:scrollbars="none"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".activities.AddSyllabusActivity">
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/llData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_10dp"
+                    app:cardCornerRadius="@dimen/padding_10dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_5dp"
+                        android:layout_marginRight="@dimen/padding_5dp"
+                        android:layout_marginBottom="@dimen/padding_10dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            >
+
+
+                            <TextView
+                                style="@style/LabelNormal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding_20dp"
+                                android:paddingLeft="@dimen/padding_10dp"
+                                android:text="@string/lbl_chapter_name"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorPrimary" />
+                        </RelativeLayout>
+
+
+
+                        <LinearLayout
+
+                            android:id="@+id/llChapterData"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="2"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_weight="0.3"
+                                android:id="@+id/llTop"
+                                android:layout_width="match_parent"
+                                android:visibility="visible"
+                                android:layout_height="wrap_content">
+                                <FrameLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content">
+                                    <EditText
+                                        android:visibility="gone"
+                                        android:id="@+id/txtChapter"
+                                        style="@style/RegEditText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/login_button_height" />
+
+                                    <Spinner
+
+                                        android:id="@+id/spChapter"
+                                        style="@style/RegEditText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/login_button_height" />
+
+                                    <ImageView
+                                        android:id="@+id/spinnerIconimage"
+                                        android:layout_width="25dp"
+                                        android:src="@drawable/icon_down_white"
+                                        android:layout_marginEnd="@dimen/padding_10dp"
+                                        android:layout_gravity="right|center"
+                                        android:layout_height="25dp"/>
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_weight="1.7"
+                                android:layout_gravity="center_vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:layout_marginLeft="@dimen/padding_5dp"
+                                    android:id="@+id/imgAddChapter"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:padding="@dimen/padding_5dp"
+                                    android:scaleType="centerCrop"
+                                    android:background="@drawable/round_primary_bg"
+                                    android:src="@drawable/ic_vector_add"
+                                    />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_topic_name"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="2"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_weight="0.3"
+                                android:id="@+id/topicLayout"
+                                android:layout_width="match_parent"
+                                android:visibility="visible"
+                                android:layout_height="wrap_content">
+                                <FrameLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content">
+                                    <EditText
+                                        android:visibility="gone"
+                                        android:id="@+id/txtTopic"
+                                        style="@style/RegEditText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/login_button_height" />
+
+                                    <Spinner
+                                        android:id="@+id/spTopic"
+                                        style="@style/RegEditText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/login_button_height" />
+
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:src="@drawable/icon_down_white"
+                                        android:layout_marginEnd="@dimen/padding_10dp"
+                                        android:layout_gravity="right|center"
+                                        android:layout_height="25dp"/>
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_weight="1.7"
+                                android:layout_gravity="center_vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <ImageView
+
+                                    android:layout_marginLeft="@dimen/padding_5dp"
+                                    android:id="@+id/imgAddTopic"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:padding="@dimen/padding_5dp"
+                                    android:scaleType="centerCrop"
+                                    android:background="@drawable/round_primary_bg"
+                                    android:src="@drawable/ic_vector_add"
+                                    />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:layout_width="match_parent"
+                            app:cardCornerRadius="@dimen/padding_5dp"
+                            android:layout_height="wrap_content"
+                            app:cardUseCompatPadding="true">
+                            <LinearLayout
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+
+
+
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:visibility="visible"
+                                    android:id="@+id/llExpand">
+
+                                    <TextView
+                                        style="@style/LabelNormal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/padding_10dp"
+                                        android:paddingLeft="@dimen/padding_10dp"
+                                        android:text="@string/lbl_plan"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/black" />
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:weightSum="2">
+
+                                        <LinearLayout
+                                            android:layout_marginRight="@dimen/padding_5dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                style="@style/LabelNormal"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="@dimen/padding_10dp"
+                                                android:paddingLeft="@dimen/padding_10dp"
+                                                android:text="@string/lbl_from_date"
+                                                android:textAllCaps="true"
+                                                android:textColor="@color/colorPrimary" />
+                                            <EditText
+                                                android:id="@+id/etFromDate"
+                                                style="@style/RegEditText"
+                                                android:layout_width="match_parent"
+                                                android:focusable="false"
+                                                android:focusableInTouchMode="false"
+                                                android:layout_height="@dimen/login_button_height"
+                                                android:inputType="datetime" />
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_marginLeft="@dimen/padding_5dp"
+                                            android:layout_weight="1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+                                            <TextView
+                                                style="@style/LabelNormal"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="@dimen/padding_10dp"
+                                                android:paddingLeft="@dimen/padding_10dp"
+                                                android:text="@string/lbl_to_date"
+                                                android:textAllCaps="true"
+                                                android:textColor="@color/colorPrimary" />
+                                            <EditText
+                                                android:id="@+id/etToDate"
+                                                style="@style/RegEditText"
+                                                android:layout_width="match_parent"
+                                                android:focusable="false"
+                                                android:focusableInTouchMode="false"
+                                                android:layout_height="@dimen/login_button_height"
+                                                android:inputType="datetime" />
+                                        </LinearLayout>
+
+                                    </LinearLayout>
+
+
+
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+
+
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <Button
+                    android:id="@+id/btnAdd"
+                    style="@style/AddPostButton"
+                    android:layout_width="@dimen/login_button_width"
+                    android:layout_height="@dimen/login_button_height"
+                    android:layout_below="@id/llData"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginVertical="@dimen/padding_20dp"
+                    android:text="@string/lbl_add" />
+
+
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+
+
+
+</layout>

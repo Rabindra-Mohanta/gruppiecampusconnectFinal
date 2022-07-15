@@ -8,7 +8,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+import school.campusconnect.LeafApplication;
+import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.network.LeafManager;
 
 public class VideoClassResponse extends BaseResponse {
     private ArrayList<ClassData> data;
@@ -31,18 +34,18 @@ public class VideoClassResponse extends BaseResponse {
         @SerializedName("phone")
         @Expose
         public String phone;
-        @SerializedName(value = "className",alternate = "name")
+        @SerializedName(value = "className", alternate = "name")
         @Expose
         public String className;
-        @SerializedName(value = "classImage",alternate = "image")
+        @SerializedName(value = "classImage", alternate = "image")
         @Expose
         public String classImage;
 
         @SerializedName("teamId")
         @Expose
-        private String id;
+        public String id;
 
-        @SerializedName(value = "members",alternate = "studentCount")
+        @SerializedName(value = "members", alternate = "studentCount")
         @Expose
         public String members;
 
@@ -61,6 +64,23 @@ public class VideoClassResponse extends BaseResponse {
         @SerializedName(value = "zoomPassword")
         @Expose
         public String zoomPassword;
+
+        @SerializedName(value = "meetingIdOnLive")
+        @Expose
+        public String meetingIdOnLive;
+
+        @SerializedName(value = "groupId")
+        @Expose
+        public String groupId;
+        @SerializedName(value = "createdByName")
+        @Expose
+        public String createdByName;
+        @SerializedName(value = "createdById")
+        @Expose
+        public String createdById;
+
+        public boolean isJoining;
+
 
         public String getZoomMeetingPassword() {
             return zoomMeetingPassword;
@@ -135,34 +155,16 @@ public class VideoClassResponse extends BaseResponse {
         @Expose
         public boolean canPost;
 
-
-        public boolean getMeetingCreatedBy() {
-            return meetingCreatedBy;
-        }
-
-        public void setMeetingCreatedBy(boolean meetingCreatedBy) {
-            this.meetingCreatedBy = meetingCreatedBy;
-        }
-
-        @SerializedName(value = "meetingCreatedBy")
-        @Expose
-        public boolean meetingCreatedBy;
-
-        public String getMeetingCreatedByName() {
-            return meetingCreatedByName;
-        }
-
-        public void setMeetingCreatedByName(String meetingCreatedByName) {
-            this.meetingCreatedByName = meetingCreatedByName;
-        }
-
-        @SerializedName(value = "meetingCreatedByName")
-        @Expose
-        public String meetingCreatedByName;
-
         @SerializedName(value = "alreadyOnJitsiLive")
         @Expose
         public boolean alreadyOnJitsiLive;
+
+        @SerializedName(value = "isLive")
+        @Expose
+        public boolean isLive;
+
+        public MeetingStatusModel firebaseLive;
+
 
         public String getJitsiToken() {
             return jitsiToken;
@@ -224,6 +226,13 @@ public class VideoClassResponse extends BaseResponse {
         @Override
         public String toString() {
             return new Gson().toJson(this);
+        }
+
+        public boolean isCreatedByMe() {
+            if ((createdById + "").equalsIgnoreCase(LeafPreference.getInstance(LeafApplication.getInstance()).getUserId())) {
+                return true;
+            }
+            return false;
         }
     }
 }

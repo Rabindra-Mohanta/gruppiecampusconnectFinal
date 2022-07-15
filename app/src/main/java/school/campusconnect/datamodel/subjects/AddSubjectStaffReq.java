@@ -9,9 +9,22 @@ public class AddSubjectStaffReq {
     @SerializedName("subjectName")
     @Expose
     private String subjectName;
+
+    @SerializedName("subjectId")
+    @Expose
+    private String subjectId;
+
     @SerializedName("staffId")
     @Expose
     private ArrayList<String> staffId;
+
+    public String getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId;
+    }
 
     public String getSubjectName() {
         return subjectName;

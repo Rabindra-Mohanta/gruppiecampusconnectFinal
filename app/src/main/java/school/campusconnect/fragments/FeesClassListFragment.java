@@ -21,6 +21,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -28,17 +29,21 @@ import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.FeesListActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.StudentFeesActivity;
 import school.campusconnect.activities.SubjectActivity2;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.ClassListTBL;
+import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.MixOperations;
 
 public class FeesClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "FeesClassListFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -58,36 +63,123 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
 
         role = getArguments().getString("role");
 
-        progressBar.setVisibility(View.VISIBLE);
+        getDataLocally();
 
         return view;
     }
+    private void getDataLocally() {
+        List<ClassListTBL> list = ClassListTBL.getAll(GroupDashboardActivityNew.groupId);
+        if (list.size() != 0) {
+            ArrayList<ClassResponse.ClassData> result = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                ClassListTBL currentItem = list.get(i);
+                ClassResponse.ClassData item = new ClassResponse.ClassData();
+                item.id = currentItem.teamId;
+                item.teacherName = currentItem.teacherName;
+                item.phone = currentItem.phone;
+                item.members = currentItem.members;
+                item.countryCode = currentItem.countryCode;
+                item.className = currentItem.name;
+                item.classImage = currentItem.image;
+                item.category = currentItem.category;
+                item.jitsiToken = currentItem.jitsiToken;
+                item.userId = currentItem.userId;
+                item.rollNumber = currentItem.rollNumber;
+                result.add(item);
+            }
+            rvClass.setAdapter(new ClassesAdapter(result));
 
-    @Override
-    public void onStart() {
-        super.onStart();
+            TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
+            if (dashboardCount != null) {
+                boolean apiCall = false;
+                if (dashboardCount.lastApiCalled != 0) {
+                    if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
+                        apiCall = true;
+                    }
+                }
+                if (dashboardCount.oldCount != dashboardCount.count) {
+                    dashboardCount.oldCount = dashboardCount.count;
+                    dashboardCount.save();
+                    apiCall = true;
+                }
+
+                if (apiCall) {
+                    apiCall(false);
+                }
+            }
+        } else {
+            apiCall(true);
+        }
+    }
+
+    private void apiCall(boolean isLoading) {
+        if(isLoading)
+            //showLoadingBar(progressBar,true);
+          progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
-        leafManager.getClasses(this,GroupDashboardActivityNew.groupId);
+        if ("teacher".equalsIgnoreCase(role)) {
+            leafManager.getTeacherClasses(this, GroupDashboardActivityNew.groupId);
+        }else if ("parent".equalsIgnoreCase(role)) {
+            leafManager.getParentKidsNew(this, GroupDashboardActivityNew.groupId);
+        } else {
+            leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
+        }
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+        //hideLoadingBar();
         progressBar.setVisibility(View.GONE);
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
 
         rvClass.setAdapter(new ClassesAdapter(result));
+
+
+        TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
+        if(dashboardCount!=null){
+            dashboardCount.lastApiCalled = System.currentTimeMillis();
+            dashboardCount.save();
+        }
+
+        saveToDB(result);
+    }
+    private void saveToDB(List<ClassResponse.ClassData> result) {
+        if (result == null)
+            return;
+
+        ClassListTBL.deleteAll(GroupDashboardActivityNew.groupId);
+        for (int i = 0; i < result.size(); i++) {
+            ClassResponse.ClassData currentItem = result.get(i);
+            ClassListTBL item = new ClassListTBL();
+            item.teamId = currentItem.id;
+            item.teacherName = currentItem.teacherName;
+            item.phone = currentItem.phone;
+            item.members = currentItem.members;
+            item.countryCode = currentItem.countryCode;
+            item.name = currentItem.className;
+            item.image = currentItem.classImage;
+            item.category = currentItem.category;
+            item.jitsiToken = currentItem.jitsiToken;
+            item.groupId = GroupDashboardActivityNew.groupId;
+            item.userId = currentItem.userId;
+            item.save();
+        }
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
+       // hideLoadingBar();
         progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
     @Override
     public void onException(int apiId, String msg) {
+        //hideLoadingBar();
         progressBar.setVisibility(View.GONE);
+        txtEmpty.setText("something went wrong please try again");
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -154,7 +246,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -164,7 +256,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 
@@ -208,10 +300,22 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
     }
 
     private void onTreeClick(ClassResponse.ClassData classData) {
-        Intent intent = new Intent(getActivity(), FeesListActivity.class);
-        intent.putExtra("title",classData.getName());
-        intent.putExtra("team_id",classData.getId());
-        intent.putExtra("role",role);
-        startActivity(intent);
+        if("parent".equalsIgnoreCase(role)){
+            // New Screen
+            Intent intent = new Intent(getActivity(), StudentFeesActivity.class);
+            intent.putExtra("title",classData.getName());
+            intent.putExtra("groupId",GroupDashboardActivityNew.groupId);
+            intent.putExtra("team_id",classData.getId());
+            intent.putExtra("user_id",classData.userId);
+            startActivity(intent);
+
+        }else {
+            Intent intent = new Intent(getActivity(), FeesListActivity.class);
+            intent.putExtra("title",classData.getName());
+            intent.putExtra("team_id",classData.getId());
+            intent.putExtra("role",role);
+            startActivity(intent);
+        }
+
     }
 }

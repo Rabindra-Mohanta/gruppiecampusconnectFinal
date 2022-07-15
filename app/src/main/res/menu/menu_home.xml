@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/menu_change_pass"
+        android:visible="false"
+        android:title="@string/action_change_pwd"/>
+
+    <item android:id="@+id/menu_add_school"
+        android:visible="false"
+        android:title="@string/action_add_school"/>
+
+    <item android:id="@+id/menu_change_pin"
+        android:visible="false"
+        android:title="@string/action_change_pin"/>
+
+    <item android:id="@+id/menu_change_mobile"
+        android:visible="false"
+        android:title="@string/action_change_nu"/>
+
+    <item android:id="@+id/menu_set_wallpaper"
+        android:visible="false"
+        android:title="@string/action_set_wallpaper"/>
+    <item android:id="@+id/menu_remove_wallpaper"
+        android:visible="false"
+        android:title="@string/action_remove_wallpaper"/>
+
+
+    <item android:id="@+id/menu_change_language"
+        android:visible="false"
+        android:title="@string/menu_change_language"/>
+
     <item android:id="@+id/menu_logout"
-        android:title="Logout"/>
+        android:title="@string/action_logout"/>
+
+    <item android:id="@+id/menu_search"
+        app:showAsAction="always"
+        android:icon="@drawable/icon_search"
+        android:title="@string/hint_search_group"/>
 </menu>

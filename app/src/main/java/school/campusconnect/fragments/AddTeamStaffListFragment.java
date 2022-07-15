@@ -28,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddTeamStaffActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
@@ -50,6 +51,9 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
 
     @Bind(R.id.tvCount)
     public TextView tvCount;
+
+    @Bind(R.id.btn_update_add)
+    public TextView updateButton;
 
 
     @Bind(R.id.progressBar)
@@ -79,7 +83,8 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     @Override
     public void onStart() {
         super.onStart();
-        progressBar.setVisibility(View.VISIBLE);
+       showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this, groupId+"", teamId+"",false);
 
     }
@@ -98,13 +103,15 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
             {
                 teamList.add(result.get(i).id);
             }
+            showLoadingBar(progressBar,true);
             leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
         }
         else if (apiId == LeafManager.API_STAFF_STUDENT_TEAM) {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED,true);
             getActivity().finish();
         } else {
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
             StaffResponse res = (StaffResponse) response;
             List<StaffResponse.StaffData> result = res.getData();
             AppLog.e(TAG, "ClassResponse " + result);
@@ -116,6 +123,15 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
                     it.remove();
                 }
             }
+
+            if (result.size() == 0)
+            {
+                ((AddTeamStaffActivity) getActivity()).chkAll.setVisibility(View.GONE);
+            }
+            else
+            {
+                ((AddTeamStaffActivity) getActivity()).chkAll.setVisibility(View.VISIBLE);
+            }
             adapter = new AddTeamStaffAdapter(result);
             rvClass.setAdapter(adapter);
         }
@@ -126,22 +142,31 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
     public void onClick(View view) {
         if (adapter != null && adapter.getSelectedCount() > 0) {
             LeafManager leafManager = new LeafManager();
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+         //   progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {
-            Toast.makeText(getActivity(), "Select Any Staff Member", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_select_staff), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         Toast.makeText(getActivity(), msg+"", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
+    }
+
+    public void selectAll(boolean checked) {
+        if(adapter!=null){
+            adapter.selectAll(checked);
+        }
     }
 
     public class AddTeamStaffAdapter extends RecyclerView.Adapter<AddTeamStaffAdapter.ViewHolder> {
@@ -217,14 +242,14 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Staff found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_staff_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Staff found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_staff_found));
                 return 0;
             }
 
@@ -248,6 +273,15 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
                 }
             }
             return stringBuffer.length() > 0 ? stringBuffer.substring(0, stringBuffer.length() - 1) : "";
+        }
+
+        public void selectAll(boolean checked) {
+            if(list!=null){
+                for (int i=0;i<list.size();i++){
+                    list.get(i).isSelected = checked;
+                }
+            }
+            notifyDataSetChanged();
         }
 
 
@@ -283,12 +317,30 @@ public class AddTeamStaffListFragment extends BaseFragment implements LeafManage
         }
     }
 
+    private String textValue = null;
+
+    @OnClick({R.id.btn_update_add})
+    public void btnOnClick(View view) {
+        if (adapter != null && adapter.getSelectedCount() > 0) {
+            LeafManager leafManager = new LeafManager();
+            showLoadingBar(progressBar);
+            //  progressBar.setVisibility(View.VISIBLE);
+            leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
+        } else {
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void addRemovedStaff() {
         int cnt = adapter.getSelectedCount();
         if (cnt > 0) {
-            tvCount.setText(cnt + "");
+            if (textValue == null){
+                textValue = updateButton.getText().toString();
+            }
+            updateButton.setText(textValue+ " ("+ cnt +")");
+            // tvCount.setText(cnt + "");
         } else {
-            tvCount.setText("");
+            //tvCount.setText("");
         }
     }
 }

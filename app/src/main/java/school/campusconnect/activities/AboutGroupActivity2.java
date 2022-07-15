@@ -41,6 +41,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.clevertap.android.sdk.CleverTapAPI;
@@ -81,6 +82,7 @@ import school.campusconnect.datamodel.gruppiecontacts.LeaveResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.BaseUploadImageFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.crop.Crop;
@@ -106,7 +108,6 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     @Bind(R.id.tv_title_toolbar)
     TextView tvTitleToolbar;
-
 
     @Bind(R.id.tv_posts)
     TextView tvNumOfPosts;
@@ -148,7 +149,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar,false);
+            //progressBar.setVisibility(View.VISIBLE);
             manager.getGroupDetail(this, id);
         } else {
             showNoNetworkMsg();
@@ -158,7 +160,6 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     private void setData() {
         tvGroupName.setText(title);
-        tvTitleToolbar.setText("About School");
         imgLogo_Default.setVisibility(View.VISIBLE);
         TextDrawable drawable = TextDrawable.builder()
                 .buildRound(ImageUtil.getTextLetter(title), ImageUtil.getRandomColor(1));
@@ -256,7 +257,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     private void showPasswordDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter Password");
+        builder.setTitle(getResources().getString(R.string.hint_pass));
 
 // Set up the input
         final EditText input = new EditText(this);
@@ -272,7 +273,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                     Intent intent = new Intent(AboutGroupActivity2.this, ClassAddTokenActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(AboutGroupActivity2.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutGroupActivity2.this, getResources().getString(R.string.toast_wrong_password), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -330,7 +331,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     private void removeImage() {
         if (progressBar != null)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar,false);
+        //progressBar.setVisibility(View.VISIBLE);
         manager.deleteGroupPic(this, id + "");
     }
 
@@ -361,7 +363,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }
@@ -433,7 +435,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            Toast.makeText(getApplicationContext(), "Image Downloaded.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_image_download), Toast.LENGTH_SHORT).show();
             super.onPostExecute(bitmap);
         }
     }
@@ -531,7 +533,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         if (LeafPreference.getInstance(this).getBoolean(LeafPreference.ISGROUPUPDATED)) {
             if (isConnectionAvailable()) {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                //     progressBar.setVisibility(View.VISIBLE);
                 manager.getGroupDetail(this, id);
             } else {
                 showNoNetworkMsg();
@@ -566,7 +569,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         if (resultCode == Activity.RESULT_OK) {
             final Uri output = Crop.getOutput(result);
 
-            galleryAddPic(output.getPath());
+            galleryAddPic(output.toString());
 
 
         } else if (resultCode == Crop.RESULT_ERROR) {
@@ -602,7 +605,7 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
     public void onImageSelected(Intent data, int reCode) {
         // When an Image is picked
         Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+       /* String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
         // Get the cursor
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -614,24 +617,13 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         cursor.close();
 
         Uri sourceImage = Uri.parse("file:////" + image);
-
-        beginCrop(sourceImage, reCode);
+*/
+        beginCrop(selectedImage, reCode);
     }
 
     public void galleryAddPic(String path) {
-        final File f = new File(path);
-
-        MediaScannerConnection.scanFile(this,
-                new String[]{f.toString()}, null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
-                        Log.e("ExternalStorage", "Scanned " + path.replaceAll("file:", "") + ":");
-                        Log.e("ExternalStorage", "Scanned file " + f.getPath().replaceAll("file:", "") + ":");
-                        Log.e("ExternalStorage", "-> uri=" + uri);
-                        key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_IMAGE);
-                        beginUpload(path.replaceAll("file:", ""), key);
-                    }
-                });
+        key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_IMAGE);
+        beginUpload(path, key);
     }
 
     /*
@@ -641,25 +633,34 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
         Log.e("KEYY", "key is " + key);
         if (filePath == null) {
             Log.e("UPLOADTEST", "filepath null");
-            Toast.makeText(this, "Could not find the filepath of the selected file",
+            Toast.makeText(this, getResources().getString(R.string.toast_could_not_find_file),
                     Toast.LENGTH_LONG).show();
             return;
         }
-        File file = new File(filePath);
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file , CannedAccessControlList.PublicRead);
+        TransferObserver observer ;
+        UploadOptions option = UploadOptions.
+                builder().bucket(AmazoneHelper.BUCKET_NAME).
+                cannedAcl(CannedAccessControlList.PublicRead).build();
+        try {
+            observer = transferUtility.upload(key,
+                    getContentResolver().openInputStream(Uri.parse(filePath)), option);
+
+            /*
+             * Note that usually we set the transfer listener after initializing the
+             * transfer. However it isn't required in this sample app. The flow is
+             * click upload button -> start an activity for image selection
+             * startActivityForResult -> onActivityResult -> beginUpload -> onResume
+             * -> set listeners to in progress transfers.
+             */
+
+            observer.setTransferListener(new UploadListener());
+            Log.e("UPLOADTEST", "observer started");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Log.e("UPLOADTEST", "upload started");
-        /*
-         * Note that usually we set the transfer listener after initializing the
-         * transfer. However it isn't required in this sample app. The flow is
-         * click upload button -> start an activity for image selection
-         * startActivityForResult -> onActivityResult -> beginUpload -> onResume
-         * -> set listeners to in progress transfers.
-         */
 
-        observer.setTransferListener(new UploadListener());
-        Log.e("UPLOADTEST", "observer started");
     }
 
     /*
@@ -716,7 +717,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
             request.subCategory = item.subCategory;
             Log.e(TAG, "Request Post Data :" + request);
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar,false);
+            //progressBar.setVisibility(View.VISIBLE);
             manager.editGroup(AboutGroupActivity2.this, request, id);
         }
     }
@@ -726,7 +728,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
     public void onSuccess(int apiId, BaseResponse response) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ID_LEAVE_GROUP: {
                 LeaveResponse res = (LeaveResponse) response;
@@ -752,9 +755,10 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 break;
             }
             case LeafManager.API_ID_EDIT_GROUP:
-                Toast.makeText(this, "Successfully updated group details.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                // progressBar.setVisibility(View.VISIBLE);
                 if (isConnectionAvailable()) {
                     manager.getGroupDetail(this, id + "");
                 } else {
@@ -763,10 +767,11 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 break;
             case LeafManager.API_ID_DELETE_GROUPPIC:
 
-                Toast.makeText(this, "Successfully updated group details", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
                 //  showLoadingDialog();
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                // progressBar.setVisibility(View.VISIBLE);
                 if (isConnectionAvailable()) {
                     manager.getGroupDetail(this, id + "");
                 } else {
@@ -807,16 +812,16 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                     try {
                         String name = databaseHandler.getNameFromNum(item.adminPhone.replaceAll(" ", ""));
                         if (!name.equals("")) {
-                            tvGroupCreator.setText("By " + name);
+                            tvGroupCreator.setText(getResources().getString(R.string.txt_by) + name);
                         } else {
-                            tvGroupCreator.setText("By " + res.data.get(0).adminName);
+                            tvGroupCreator.setText(getResources().getString(R.string.txt_by) + res.data.get(0).adminName);
                         }
                     } catch (NullPointerException e) {
                         tvGroupCreator.setText(/*"Created By: " + */res.data.get(0).adminName);
                     }
                 } else {
                     AppLog.e("CONTACTSS", "count is 0");
-                    tvGroupCreator.setText("By " + res.data.get(0).adminName);
+                    tvGroupCreator.setText(getResources().getString(R.string.txt_by) + res.data.get(0).adminName);
                 }
                 txtAbout.setText(res.data.get(0).aboutGroup);
 
@@ -839,6 +844,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
                 tvNumOfPosts.setText("" + res.data.get(0).getTotalPostsCount());
 
                 tvGroupName.setText(item.name);
+
+                tvTitleToolbar.setText(("constituency".equalsIgnoreCase(item.category))?getResources().getString(R.string.lbl_about_constituency):getResources().getString(R.string.action_about_group));
                 break;
             }
         }
@@ -875,7 +882,8 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
     public void onFailure(int apiId, String msg) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -889,7 +897,11 @@ public class AboutGroupActivity2 extends BaseActivity implements LeafManager.OnC
     public void onException(int apiId, String msg) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }
+
+
+

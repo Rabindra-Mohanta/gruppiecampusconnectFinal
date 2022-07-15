@@ -4,24 +4,37 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 public class GroupItem implements Parcelable {
 
+    @SerializedName(value = "id",alternate = "groupId")
     public String id;
     public String type;
     public int totalUsers;
     public int totalPostsCount;
+    public int subBoothCount;
+    public String subBoothName;
+    public String subBoothId;
     public int totalCommentsCount;
     public String subCategory;
+    @SerializedName(value = "name",alternate = "groupName")
     public String name;
     public boolean isPostShareAllowed;
     public boolean isAdminChangeAllowed;
     public boolean isAdmin;
+    public boolean isPartyTaskForce;
+    public boolean isDepartmentTaskForce;
+    public boolean isAuthorizedUser;
+    public boolean isBoothMember;
     public String image;
+    public boolean isBoothWorker;
     public int groupPostUnreadCount;
     public String category="";
     public boolean canPost;
     public boolean allowPostAll;
+    public int subBoothMembers;
+    public boolean isPublic;
     public String adminPhone;
     public String adminName;
     public String adminId;
@@ -33,18 +46,50 @@ public class GroupItem implements Parcelable {
     public int notificationUnseenCount;
     public int appVersion;
 
+    public String constituencyName;
+    public String categoryName;
+    public int groupCount;
+    public String boothId;
+    public String boothName;
+    public int boothCount;
+    public boolean isBoothPresident;
+
+    public String zoomSecret;
+    public String zoomPassword;
+    public String zoomMeetingPassword;
+    public String zoomMeetingId;
+    public String zoomMail;
+    public String zoomKey;
+
+
 
     protected GroupItem(Parcel in) {
         id = in.readString();
         type = in.readString();
+        subBoothName = in.readString();
+        subBoothId = in.readString();
+
+        zoomSecret = in.readString();
+        zoomPassword = in.readString();
+        zoomMeetingPassword = in.readString();
+        zoomMeetingId = in.readString();
+        zoomMail = in.readString();
+        zoomKey = in.readString();
+
         totalUsers = in.readInt();
+        subBoothMembers = in.readInt();
         totalPostsCount = in.readInt();
+        subBoothCount = in.readInt();
         totalCommentsCount = in.readInt();
         subCategory = in.readString();
         name = in.readString();
         isPostShareAllowed = in.readByte() != 0;
         isAdminChangeAllowed = in.readByte() != 0;
+        isAuthorizedUser= in.readByte() != 0;
         isAdmin = in.readByte() != 0;
+        isPartyTaskForce = in.readByte() != 0;
+        isBoothMember = in.readByte() != 0;
+        isDepartmentTaskForce = in.readByte() != 0;
         image = in.readString();
         groupPostUnreadCount = in.readInt();
         category = in.readString();
@@ -53,11 +98,22 @@ public class GroupItem implements Parcelable {
         adminPhone = in.readString();
         adminName = in.readString();
         adminId = in.readString();
+        isPublic = in.readByte() != 0;
         allowedToAddUser = in.readByte() != 0;
         allowPostQuestion = in.readByte() != 0;
         createdBy = in.readString();
         shortDescription = in.readString();
         aboutGroup = in.readString();
+        notificationUnseenCount = in.readInt();
+        appVersion = in.readInt();
+        constituencyName = in.readString();
+        categoryName = in.readString();
+        groupCount = in.readInt();
+        boothId = in.readString();
+        boothName = in.readString();
+        boothCount = in.readInt();
+        isBoothPresident = in.readByte() != 0;
+        isBoothWorker = in.readByte() != 0;
     }
 
     public static final Creator<GroupItem> CREATOR = new Creator<GroupItem>() {
@@ -116,6 +172,15 @@ public class GroupItem implements Parcelable {
         this.name = name;
     }
 
+    public GroupItem() {
+
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -123,17 +188,32 @@ public class GroupItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeString(id);
         dest.writeString(type);
+        dest.writeString(subBoothName);
+        dest.writeString(subBoothId);
         dest.writeInt(totalUsers);
+
+        dest.writeString(zoomSecret);
+        dest.writeString(zoomPassword);
+        dest.writeString(zoomMeetingPassword);
+        dest.writeString(zoomMeetingId);
+        dest.writeString(zoomMail);
+        dest.writeString(zoomKey);
+
+        dest.writeInt(subBoothMembers);
         dest.writeInt(totalPostsCount);
+        dest.writeInt(subBoothCount);
         dest.writeInt(totalCommentsCount);
         dest.writeString(subCategory);
         dest.writeString(name);
         dest.writeByte((byte) (isPostShareAllowed ? 1 : 0));
+        dest.writeByte((byte) (isAuthorizedUser ? 1 : 0));
+        dest.writeByte((byte) (isPublic ? 1 : 0));
         dest.writeByte((byte) (isAdminChangeAllowed ? 1 : 0));
         dest.writeByte((byte) (isAdmin ? 1 : 0));
+        dest.writeByte((byte) (isPartyTaskForce ? 1 : 0));
+        dest.writeByte((byte) (isDepartmentTaskForce ? 1 : 0));
         dest.writeString(image);
         dest.writeInt(groupPostUnreadCount);
         dest.writeString(category);
@@ -147,14 +227,16 @@ public class GroupItem implements Parcelable {
         dest.writeString(createdBy);
         dest.writeString(shortDescription);
         dest.writeString(aboutGroup);
-    }
-
-    public GroupItem() {
-
-    }
-
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
+        dest.writeInt(notificationUnseenCount);
+        dest.writeInt(appVersion);
+        dest.writeString(constituencyName);
+        dest.writeString(categoryName);
+        dest.writeInt(groupCount);
+        dest.writeString(boothId);
+        dest.writeString(boothName);
+        dest.writeInt(boothCount);
+        dest.writeInt((byte) (isBoothMember ? 1 : 0));
+        dest.writeInt((byte) (isBoothPresident ? 1 : 0));
+        dest.writeInt((byte) (isBoothWorker ? 1 : 0));
     }
 }

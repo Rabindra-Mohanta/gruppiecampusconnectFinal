@@ -7,13 +7,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,17 +21,19 @@ import androidx.core.app.NotificationCompat;
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
 import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
+
 
 
 import id.zelory.compressor.Compressor;
@@ -44,6 +44,7 @@ import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.network.LeafManager;
+
 
 public class BackgroundVideoUploadService extends Service implements LeafManager.OnAddUpdateListener<AddPostValidationError> {
 
@@ -86,7 +87,6 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
         currentTask = null;
         taskIntents = new ArrayList<>();
-
     }
 
     @Nullable
@@ -202,7 +202,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
         Intent intent = new Intent("postadded");
         sendBroadcast(intent);
-
+        currentTask = null;
         stopForeground(false);
     }
 
@@ -290,7 +290,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
         } catch (Exception e)
         {
-            Toast.makeText(context, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -315,12 +315,88 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
         long fileSizeInMB = fileSizeInKB / 1024;
 
+        File videoCompresed  = ImageUtil.getOutputVideoFile(context,finalI);
 
-        File videoCompresed  = ImageUtil.getOutputMediaVideo(finalI);
+
+        if(true)
+        {
+            compressedCounts++;
+            compressVideo(compressedCounts);
+            return;
+        }
 
 
         AppLog.e(TAG, "compression Started id : "+finalI+", output path : "+videoCompresed.getPath());
-        VideoCompressor.start(listImages.get(finalI), videoCompresed.getPath(), new CompressionListener()
+
+        String width = "";
+        String height = "";
+        try {
+            MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+            metaRetriever.setDataSource(getApplicationContext(), Uri.parse(listImages.get(finalI)));
+            height = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+            width = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+        }
+        catch(Exception ex)
+        {
+            compressedCounts++;
+            compressVideo(compressedCounts);
+        }
+
+        VideoCompressor.start(
+                getApplicationContext(), // => This is required if srcUri is provided. If not, pass null.
+                Uri.parse(listImages.get(finalI)), // => Source can be provided as content uri, it requires context.
+                null, // => This could be null if srcUri and context are provided.
+                videoCompresed.getPath(),
+                new CompressionListener() {
+                    @Override
+                    public void onStart() {
+                        // Compression start
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        // On Compression success
+
+                        AppLog.e(TAG, "Compression onSuccess id :  "+finalI + " & getPath  : "+videoCompresed.getPath());
+
+                        File file = new File(videoCompresed.getPath());
+                        // Get length of file in bytes
+                        long fileSizeInBytes = file.length();
+                        long fileSizeInKB = fileSizeInBytes / 1024;
+                        long fileSizeInMB = fileSizeInKB / 1024;
+
+                        AppLog.e(TAG, "onSuccess: with size :  "+fileSizeInMB + " compressCounts : "+compressedCounts);
+
+                        listImages.set(finalI, Uri.fromFile(file).toString());
+
+                        compressedCounts++;
+                        compressVideo(compressedCounts);
+                    }
+
+                    @Override
+                    public void onFailure(String failureMessage) {
+                        // On Failure
+                        AppLog.e(TAG , "onFailure called : "+failureMessage);
+                        compressedCounts++;
+
+                        compressVideo(compressedCounts);
+                    }
+
+                    @Override
+                    public void onProgress(float v) {
+                        // Update UI with progress value
+                        compressedVideoCount.set(finalI , (int) v) ;
+                        publishCompressProgress((int) v);
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                        // On Cancelled
+                    }
+                },new Configuration(VideoQuality.LOW , false , false , Double.parseDouble(height) ,Double.parseDouble(width) , 2500000)
+        );
+
+    /*    VideoCompressor.start(listImages.get(finalI), videoCompresed.getPath(), new CompressionListener()
         {
             @Override
             public void onStart()
@@ -372,7 +448,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
             public void onCancelled() {
                 // On Cancelled
             }
-        }, VideoQuality.LOW, true, true);
+        }, VideoQuality.LOW, true, true);*/
 
 
     }
@@ -430,7 +506,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
                     if (listThumbnails != null) {
                         uploadThumbnail(listThumbnails, 0);
                     } else {
-                        Toast.makeText(context, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -460,14 +536,18 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
         } else
             {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
-            File file = new File(listThumbnails.get(index));
+//            File file = new File(listThumbnails.get(index));
 
             TransferObserver observer = null;
-            if (file != null) {
-                AppLog.e(TAG, "file " + file.getName() + " , " + file.getAbsolutePath());
+            if (!TextUtils.isEmpty(listThumbnails.get(index))) {
+//                AppLog.e(TAG, "file " + file.getName() + " , " + file.getAbsolutePath());
                 try {
-                    observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                            file, CannedAccessControlList.PublicRead);
+
+                    UploadOptions option = UploadOptions.
+                            builder().bucket(AmazoneHelper.BUCKET_NAME).
+                            cannedAcl(CannedAccessControlList.PublicRead).build();
+                    observer = transferUtility.upload(key,
+                            getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
 
                     observer.setTransferListener(new TransferListener() {
                         @Override
@@ -494,7 +574,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
                                 if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
                                     //progressDialog.dismiss();
                                 }
-                                Toast.makeText(context, "Failed to upload", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -516,6 +596,7 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
                             Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                         }
                     });
+
                 } catch (Exception ex) {
                     Log.e("Thumbnail", "onStateChanged " + index);
 
@@ -570,51 +651,59 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
             AppLog.e(TAG , "addPost mainRequest : "+new Gson().toJson(mainRequest));
             manager.addPost(this, group_id, team_id, mainRequest, postType, friend_id, isFromChat);
-        } else {
+        }
+        else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
-            File file = new File(listImages.get(pos));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file, CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
-                        updateList(pos, key);
+            TransferObserver observer = null;
+            try {
+                UploadOptions option = UploadOptions.
+                        builder().bucket(AmazoneHelper.BUCKET_NAME).
+                        cannedAcl(CannedAccessControlList.PublicRead).build();
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
+
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                            updateList(pos, key);
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            //progressDialog.dismiss();
+                            Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        //progressDialog.dismiss();
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                            // progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                            uploadVideoPercentages.set(pos, percentDone);
+                            publishUploadProgress();
+                        }
+                        AppLog.d(TAG, "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        //progressBar.setVisibility(View.GONE);
+                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                            //progressDialog.dismiss();
+                        }
+                        AppLog.e(TAG, "Upload Error : " + ex);
                         Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-
                     }
-                }
-
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        // progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
-                        uploadVideoPercentages.set(pos , percentDone) ;
-                        publishUploadProgress();
-                    }
-                    AppLog.d(TAG, "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
-
-                @Override
-                public void onError(int id, Exception ex)
-                {
-                    //progressBar.setVisibility(View.GONE);
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        //progressDialog.dismiss();
-                    }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(context, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -632,4 +721,6 @@ public class BackgroundVideoUploadService extends Service implements LeafManager
 
         upLoadImageOnCloud(pos + 1);
     }
+
+
 }

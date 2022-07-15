@@ -148,7 +148,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:hint="Fees Type"
+                                    android:hint="@string/hint_fees_type"
                                     android:singleLine="true"
                                     android:textSize="@dimen/text_size_13sp" />
 
@@ -191,6 +191,7 @@
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/llPaid"
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/padding_10dp"
@@ -337,6 +338,7 @@
                 style="@style/AddPostButton"
                 android:layout_width="@dimen/login_button_width"
                 android:layout_height="@dimen/login_button_height"
+                android:visibility="gone"
                 android:layout_below="@+id/frameMain"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="-40dp"

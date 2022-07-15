@@ -45,8 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/iv_delete"
-                    android:layout_toLeftOf="@+id/iv_delete"
+
                     android:layout_toEndOf="@id/img_lead"
                     android:layout_toRightOf="@id/img_lead"
                     android:orientation="vertical"
@@ -68,7 +67,7 @@
                         style="@style/LabelSmall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="dd/MM/yyyy"
+                        android:text="@string/hint_date_format"
                         android:textColor="@color/colorTextLight" />
 
                 </LinearLayout>
@@ -80,24 +79,27 @@
                     android:layout_centerVertical="true">
 
                     <ImageView
+
                         android:id="@+id/txt_fav"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:padding="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
                         android:src="@drawable/icon_post_fav"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/iv_delete"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:padding="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
                         android:src="@drawable/icon_more"
                         android:visibility="visible" />
                 </LinearLayout>
 
 
             </RelativeLayout>
+
+
 
             <RelativeLayout
                 android:id="@+id/rl_container_title"
@@ -115,12 +117,135 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:autoLink="web"
+                    android:textIsSelectable="true"
                     android:ellipsize="end"
                     android:paddingLeft="@dimen/padding_5dp"
                     android:paddingRight="@dimen/padding_5dp"
                     android:textColor="@color/colorTextDark"
                     android:textColorLink="@color/colorPrimary"
                     android:textStyle="bold" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/llAudio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:id="@+id/llLeftAudioView"
+                    android:layout_width="@dimen/pdf_download_icon_size"
+                    android:layout_margin="@dimen/padding_15dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:layout_height="@dimen/pdf_download_icon_size"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:visibility="visible"
+                        android:id="@+id/imgDownloadAudio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/pdf_download_icon"
+                        />
+
+                    <ImageView
+                        android:id="@+id/imgPlayAudio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_play_audio"
+                        app:tint="@color/colorPrimary"
+                        android:visibility="gone"
+                        />
+
+                    <ImageView
+                        android:id="@+id/imgPauseAudio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic__stop_audio"
+                        app:tint="@color/colorPrimary"
+                        android:visibility="gone"
+                        />
+                    <FrameLayout
+                        android:id="@+id/llProgress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone">
+
+                        <ProgressBar
+                            android:id="@+id/progressBarAudioDownload"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:background="@drawable/circle_shape"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressDrawable="@drawable/circular_progress_bar" />
+
+
+
+                        <ImageView
+                            android:id="@+id/imgCancelDownloadAudio"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_close"
+                            app:tint="@color/colorPrimary" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/llLeftAudioView"
+                    android:orientation="vertical">
+                    <SeekBar
+                        android:id="@+id/seekBarAudio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:color="@color/colorPrimary"
+                        android:clickable="false"
+                        android:thumbTint="@color/colorPrimary"
+                        android:focusableInTouchMode="false"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_marginLeft="@dimen/padding_15dp"
+                            android:id="@+id/tvTimeAudio"
+                            style="@style/LabelSmall"
+                            android:layout_width="wrap_content"
+                            android:gravity="center"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textColor="@color/colorTextLight" />
+
+                        <TextView
+                            android:id="@+id/tvTimeTotalAudio"
+                            style="@style/LabelSmall"
+                            android:layout_marginRight="@dimen/padding_15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textColor="@color/colorTextLight" />
+                    </RelativeLayout>
+
+                </LinearLayout>
 
 
             </RelativeLayout>
@@ -227,6 +352,7 @@
                 android:autoLink="web"
                 android:ellipsize="end"
                 android:maxLength="200"
+                android:textIsSelectable="true"
                 android:paddingLeft="@dimen/padding_10dp"
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_10dp"
@@ -244,7 +370,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
                 android:gravity="center_vertical|end"
-                android:text="Read More..."
+                android:text="@string/lbl_Read_more"
                 android:textColor="@color/colorTextLight"
                 android:visibility="gone" />
 
@@ -256,7 +382,7 @@
                 android:layout_gravity="right"
                 android:gravity="center_vertical|end"
                 android:padding="@dimen/padding_5dp"
-                android:text="Read More..."
+                android:text="@string/lbl_Read_more"
                 android:textColor="@color/colorTextLight"
                 android:visibility="gone" />
 
@@ -302,7 +428,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:gravity="center_vertical"
-                        android:text="Likes"
+                        android:text="@string/lbl_likes"
                         android:textAppearance="@style/TextAppearance.Light"
                         android:textColor="@color/color_grey_icon"
                         android:textSize="12sp"
@@ -356,6 +482,22 @@
                         android:src="@drawable/icon_post_push" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linExternalPush"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_10dp"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/external_txt_push"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"
+                        android:gravity="center_vertical"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_share" />
+                </LinearLayout>
+
 
             </LinearLayout>
         </LinearLayout>
@@ -383,7 +525,7 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Share Post"
+                android:text="@string/share"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"
@@ -412,7 +554,35 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Delete Post"
+                android:text="@string/action_delete_post"
+                android:textAppearance="@style/TextAppearance.Regular"
+                android:textColor="@color/black_semi_transparent"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/viewDeleteVideo"
+                android:layout_width="120dp"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_marginRight="@dimen/padding_10dp"
+                android:background="@color/black_semi_transparent"
+                android:paddingLeft="@dimen/padding_20dp"
+                android:paddingRight="@dimen/padding_20dp"
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/txt_drop_deletevideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_5dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingLeft="@dimen/padding_20dp"
+                android:paddingTop="@dimen/padding_5dp"
+                android:paddingRight="@dimen/padding_20dp"
+                android:paddingBottom="@dimen/padding_5dp"
+                android:text="@string/lbl_delete_video"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"
@@ -430,7 +600,7 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Report Post"
+                android:text="@string/action_report_post"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"
@@ -459,7 +629,7 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Read/Unread Users"
+                android:text="@string/lbl_read_unread_user"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"
@@ -477,7 +647,7 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Ask Doubt"
+                android:text="@string/lbl_ask_doubt"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"

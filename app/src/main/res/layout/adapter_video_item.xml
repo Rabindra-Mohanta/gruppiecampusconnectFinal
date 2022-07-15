@@ -20,6 +20,39 @@
         android:layout_centerInParent="true"
         app:srcCompat="@drawable/ic_play"
         android:scaleType="fitXY" />
+
+
+    <FrameLayout
+        android:id="@+id/llProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/circular_progress_bar" />
+
+        <ImageView
+            android:id="@+id/imgCancel"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/colorPrimary" />
+
+
+    </FrameLayout>
+
     <ImageView
         android:id="@+id/imgDownloadVideo"
         android:layout_width="@dimen/pdf_download_icon_size"
@@ -27,6 +60,8 @@
         android:src="@drawable/video_download_icon"
         android:layout_centerInParent="true"
         android:layout_height="@dimen/pdf_download_icon_size"/>
+
+
     <TextView
         android:id="@+id/tvCount"
         android:layout_width="wrap_content"
@@ -40,4 +75,13 @@
         android:text="+6"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:visibility="gone" />
 </RelativeLayout>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +44,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Day"
+                android:text="@string/lbl_Date"
                 android:gravity="center"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold"
@@ -55,36 +56,66 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Morning"
+                android:text="@string/title_attendance"
                 android:gravity="center"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:layout_marginBottom="@dimen/padding_5dp"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold"
                 android:layout_height="wrap_content" />
-            <View
+           <!-- <View
                 android:layout_width="1px"
                 android:background="@color/color_divider"
                 android:layout_height="match_parent"/>
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Evening"
+                android:text="@string/lbl_evening"
                 android:gravity="center"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:layout_marginBottom="@dimen/padding_5dp"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content" />-->
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvStudents"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/padding_10dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/llLeaveReq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/padding_15dp"
+        android:layout_marginRight="@dimen/padding_15dp"
+        android:layout_alignParentBottom="true"
+        app:cardCornerRadius="@dimen/padding_50dp"
+        app:cardElevation="5dp">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                style="@style/LabelSmall"
+                android:background="@drawable/fab_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/lbl_leave_req"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -101,5 +132,5 @@
         android:gravity="center"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:textSize="18sp" />
+        style="@style/LabelEmptyText" />
 </RelativeLayout>

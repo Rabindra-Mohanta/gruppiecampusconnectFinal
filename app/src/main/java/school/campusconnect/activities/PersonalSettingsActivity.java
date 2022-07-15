@@ -40,7 +40,7 @@ public class PersonalSettingsActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Settings");
+        setTitle(getResources().getString(R.string.action_settings));
 
         groupId = getIntent().getExtras().getString("group_id");
         userId = getIntent().getExtras().getString("user_id");
@@ -51,7 +51,8 @@ public class PersonalSettingsActivity extends BaseActivity {
     private void getSettingData() {
         if(isConnectionAvailable())
         {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
             manager.getPersonalSettingsData(this,groupId,userId);
         }
         else
@@ -65,13 +66,15 @@ public class PersonalSettingsActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.switch_reply:
                 if(progressBar!=null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                // progressBar.setVisibility(View.VISIBLE);
                 manager.allowPersonalReply(this, groupId+"",userId);
                 break;
 
             case R.id.switch_comment:
                 if(progressBar!=null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                // progressBar.setVisibility(View.VISIBLE);
                 manager.allowPersonalComment(this, groupId+"",userId);
                 break;
 
@@ -82,7 +85,8 @@ public class PersonalSettingsActivity extends BaseActivity {
     public void onSuccess(int apiId, BaseResponse response) {
         // hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_PERSONAL_SETTING_DATA:
@@ -111,7 +115,8 @@ public class PersonalSettingsActivity extends BaseActivity {
     public void onFailure(int apiId, String msg) {
         //hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ALLOW_PERSONAL_REPLY:
                 if (switch_reply.isChecked()) {
@@ -136,7 +141,8 @@ public class PersonalSettingsActivity extends BaseActivity {
     public void onException(int apiId, String msg) {
         //hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ALLOW_PERSONAL_REPLY:
                 if (switch_reply.isChecked()) {

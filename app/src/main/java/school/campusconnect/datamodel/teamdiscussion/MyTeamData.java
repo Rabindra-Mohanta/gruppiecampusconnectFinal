@@ -12,13 +12,25 @@ import school.campusconnect.datamodel.BaseResponse;
 public class MyTeamData extends BaseResponse {
 
     public String teamId;
+
+    public String adminName;
+    public String userName;
+    public String userImage;
+    public String boothId;
+    public String userId;
     public int postUnseenCount;
     public String phone;
 
     @SerializedName(value = "name",alternate = {"teamName"})
     @Expose
     public String name;
+
+    @SerializedName("kanName")
+    @Expose
+    public String kanName;
+
     public int members;
+    public String boothNumber;
 
     @SerializedName(value = "image",alternate = {"teamImage"})
     @Expose
@@ -39,12 +51,25 @@ public class MyTeamData extends BaseResponse {
     public String category="";
     public String role="";
     public int count;
+    public String subCategory;
 
     // for view discussion
     public boolean allowedToAddTeamPost;
     public boolean leaveRequest;
 
     public TeamDetails details;
+
+    @SerializedName("boothPresidentName")
+    @Expose
+    public String boothPresidentName;
+
+    @SerializedName("countryCode")
+    @Expose
+    public String countryCode;
+
+    @SerializedName("lastCommitteeForBoothUpdatedEventAt")
+    @Expose
+    public String lastCommitteeForBoothUpdatedEventAt;
 
 
     @Override

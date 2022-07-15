@@ -62,13 +62,15 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         leafManager.myTeamListNew(this,GroupDashboardActivityNew.groupId);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         MyTeamsResponse res = (MyTeamsResponse) response;
         List<MyTeamData> result = res.getResults();
         AppLog.e(TAG, "Team name is " + result);
@@ -78,12 +80,14 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class TeamDiscussNew extends RecyclerView.Adapter<TeamDiscussNew.ViewHolder>
@@ -141,7 +145,7 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
             }
 
             holder.txt_name.setText(item.name);
-            holder.txt_count.setText("Members : "+item.members);
+            holder.txt_count.setText(getResources().getString(R.string.lbl_members)+" : "+item.members);
         }
 
         @Override
@@ -203,6 +207,7 @@ public class TeamDiscussFragment extends BaseFragment implements LeafManager.OnC
             Intent intent = new Intent(getActivity(), LeadsListActivity.class);
             intent.putExtra("id", GroupDashboardActivityNew.groupId);
             intent.putExtra("team_id", myTeamData.teamId);
+            intent.putExtra("apiCall", false);
             intent.putExtra("team_name", myTeamData.name);
             intent.putExtra("isAdmin", false);
             intent.putExtra("isNest", true);

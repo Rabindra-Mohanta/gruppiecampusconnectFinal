@@ -68,7 +68,7 @@ public class AddBusStudentActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Bus Student");
+        setTitle(getResources().getString(R.string.title_add_bus_student));
 
         init();
 
@@ -98,10 +98,11 @@ public class AddBusStudentActivity extends BaseActivity {
             if (studentData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this student.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_student), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                    // progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteBusStudent(AddBusStudentActivity.this, GroupDashboardActivityNew.groupId, team_id,studentData.getUserId());
                 }
             });
@@ -128,8 +129,8 @@ public class AddBusStudentActivity extends BaseActivity {
     private void setImageFragment() {
         if (isEdit) {
             imageFragment = UploadImageFragment.newInstance(studentData.getImage(), true, true);
-            btnAdd.setText("Update");
-            setTitle("Student Detail");
+            btnAdd.setText(getResources().getString(R.string.lbl_update));
+            setTitle(getResources().getString(R.string.title_student_details));
         } else {
             imageFragment = UploadImageFragment.newInstance(null, true, true);
         }
@@ -165,7 +166,8 @@ public class AddBusStudentActivity extends BaseActivity {
                         addStudentReq.phone = etPhone.getText().toString();
                         addStudentReq.image=imageFragment.getmProfileImage();
                         AppLog.e(TAG, "send data : " + addStudentReq);
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar,false);
+                        //progressBar.setVisibility(View.VISIBLE);
                         leafManager.addBusStudent(this, group_id, team_id, addStudentReq);
                     }
                 }
@@ -219,19 +221,20 @@ public class AddBusStudentActivity extends BaseActivity {
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_BUS_STUDENTS_ADD:
-                Toast.makeText(this, "Add Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_EDIT_STUDENTS:
-                Toast.makeText(this, "Edit Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_edit_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case LeafManager.API_BUS_STUDENTS_DELETE:
-                Toast.makeText(this, "Delete Student successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_delete_student_sucess), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
 
@@ -242,7 +245,8 @@ public class AddBusStudentActivity extends BaseActivity {
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
 
         if (msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -257,7 +261,8 @@ public class AddBusStudentActivity extends BaseActivity {
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,8 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
+
+import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.utils.AppLog;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +22,10 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -98,9 +107,10 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
             }
         }
         holder.txtName.setText(item.name+(item.staff?" (S)":""));
+
         if(isNest)
         {
-            holder.txtCount.setText("Teams : " + item.getTeamCount());
+            holder.txtCount.setText(mContext.getResources().getString(R.string.lbl_teams)+" : " + item.getTeamCount());
             holder.txtCount.setVisibility(View.VISIBLE);
         }
         else {
@@ -140,6 +150,13 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
             holder.imgLead_default.setImageDrawable(drawable);
         }
 
+        holder.call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         holder.imgLead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,6 +180,15 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                 settingsDialog.show();
             }
         });
+
+        if (item.pushTokens != null && item.pushTokens.size() > 0 && GroupDashboardActivityNew.isAdmin)
+        {
+            holder.imgStartMeeting.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.imgStartMeeting.setVisibility(View.GONE);
+        }
 
     }
 
@@ -203,6 +229,10 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
         @Bind(R.id.img_chat)
         ImageView chat;
         @Bind(R.id.img_tree)
+
+        ImageView call;
+        @Bind(R.id.imgCall)
+
         ImageView tree;
         @Bind(R.id.line)
         View line;
@@ -211,13 +241,17 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
         @Bind(R.id.relative_name)
         RelativeLayout relative_name;
 
+        @Bind(R.id.imgStartMeeting)
+        ImageView imgStartMeeting;
+
+
         public ImageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
             if(itemClick)
             {
-                chat.setVisibility(View.INVISIBLE);
+              //  chat.setVisibility(View.INVISIBLE);
                 relative.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -231,12 +265,12 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                     }
                 });
 
-                tree.setVisibility(View.GONE);
-                line.setVisibility(View.GONE);
+              //  tree.setVisibility(View.GONE);
+              //  line.setVisibility(View.GONE);
             }
             else
             {
-                chat.setVisibility(View.VISIBLE);
+                /*chat.setVisibility(View.VISIBLE);
                 tree.setVisibility(View.GONE);
                 line.setVisibility(View.GONE);
 
@@ -244,7 +278,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
                 {
                     tree.setVisibility(View.VISIBLE);
                     line.setVisibility(View.VISIBLE);
-                }
+                }*/
                 relative_name.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -257,18 +291,46 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
         }
 
 
-        @OnClick({ R.id.img_chat, R.id.img_tree})
+        @OnClick({ R.id.img_chat, R.id.img_tree, R.id.imgCall,R.id.imgStartMeeting} )
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.img_chat:
-                    listener.onSMSClick(list.get(getLayoutPosition()));
+
+                  //  listener.onSMSClick(list.get(getLayoutPosition()));
+                    Log.e(TAG,"phone number"+list.get(getAdapterPosition()).phone);
+
+
+                    String mobile =list.get(getAdapterPosition()).phone;
+                    String msg = "Please Download \n"+"https://play.google.com/store/apps/details?id="+mContext.getPackageName();
+                    Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + mobile + "&text=" + msg));
+                    sendIntent.setPackage("com.whatsapp");
+
+
+                    if (sendIntent.resolveActivity(mContext.getPackageManager()) != null) {
+                        mContext.startActivity(sendIntent);
+                    } else {
+                        Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_app_not_install), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+
+                case R.id.imgStartMeeting:
+                    AppLog.e(TAG,"data "+new Gson().toJson(list.get(getLayoutPosition())));
+                    listener.onStartMeeting(list.get(getLayoutPosition()));
                     break;
 
                 case R.id.img_tree:
                     listener.onMailClick(list.get(getLayoutPosition()));
                     break;
+
                 case R.id.relative_name:
                     listener.onNameClick(list.get(getLayoutPosition()));
+                    break;
+
+                case R.id.imgCall:
+                    Log.e(TAG,"click "+list.get(getLayoutPosition()).phone);
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + list.get(getLayoutPosition()).phone));
+                    mContext.startActivity(intent);
                     break;
             }
         }
@@ -308,6 +370,8 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
 
     public interface OnLeadSelectListener {
         void onCallClick(LeadItem item);
+
+        void onStartMeeting(LeadItem item);
 
         void onSMSClick(LeadItem item);
 

@@ -542,11 +542,26 @@
         <item>Choose from Library</item>
     </string-array>
 
+    <string-array name="array_image_banner">
+        <item>Take a Photo</item>
+        <item>Choose from Library</item>
+        <item>Remove Banner</item>
+    </string-array>
+
     <string-array name="array_video">
         <item>Record a Video</item>
         <item>Choose from Library</item>
     </string-array>
 
+    <string-array name="array_audio">
+        <item>Record a Audio</item>
+        <item>Choose from Library</item>
+    </string-array>
+
+    <string-array name="array_search">
+        <item>Search Voter</item>
+        <item>Search Booth</item>
+    </string-array>
 
     <string-array name="array_image_modify">
         <item>Take a Photo</item>
@@ -601,12 +616,49 @@
         <item>Select Your Country</item>
         <item>India +91</item>
         <item>US    +01</item>
-
     </string-array>
+
+    <string-array name="booth">
+        <item>Add Booth</item>
+        <item>Add Member</item>
+    </string-array>
+
+    <string-array name="array_isPartyTaskForce">
+        <item>Not Approved</item>
+        <item>Approved</item>
+        <item>Denied</item>
+        <item>Over Due</item>
+    </string-array>
+
+
+    <string-array name="array_isDepartmentTaskForce">
+        <item>Open</item>
+        <item>Close</item>
+        <item>Hold</item>
+        <item>Over Due</item>
+    </string-array>
+
+    <string-array name="array_isAdmin">
+        <item>Not Approved</item>
+        <item>Approved</item>
+        <item>Denied</item>
+        <item>Over Due</item>
+    </string-array>
+
+    <string-array name="array_other">
+        <item>Not Approved</item>
+        <item>Hold</item>
+        <item>Approved</item>
+        <item>Denied</item>
+        <item>Over Due</item>
+    </string-array>
+
 
     <string-array name="share">
         <item>Share Post</item>
         <item>Edit and Share Post</item>
+
+
 
     </string-array>
 </resources>

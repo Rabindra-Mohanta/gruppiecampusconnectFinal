@@ -27,16 +27,18 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
-public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.ViewHolder> {
+public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.ViewHolder> implements AttendanceItemAdapter.OnClick {
 
     private final ArrayList<AttendanceListRes.AttendanceData> listAttendance;
     private final String groupId;
     private final String teamId;
     private Context mContext;
-    public AttendanceAdapter(ArrayList<AttendanceListRes.AttendanceData> listAttendance, String groupId, String teamId) {
+    listener listener;
+    public AttendanceAdapter(ArrayList<AttendanceListRes.AttendanceData> listAttendance, String groupId, String teamId,listener listener) {
         this.listAttendance=listAttendance;
         this.groupId=groupId;
         this.teamId=teamId;
+        this.listener = listener;
     }
 
     @Override
@@ -50,9 +52,22 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final AttendanceListRes.AttendanceData item = listAttendance.get(position);
         holder.tvName.setText(item.name);
-        holder.tvNumber.setText("Roll No."+(TextUtils.isEmpty(item.rollNumber)?"":item.rollNumber));
+        holder.tvNumber.setText(mContext.getResources().getString(R.string.lbl_roll_No)+"."+(TextUtils.isEmpty(item.rollNumber)?"":item.rollNumber));
 
         holder.chkAttendance.setChecked(item.isChecked);
+
+        if (item.lastDaysAttendance !=null && item.lastDaysAttendance.size()>0)
+        {
+            holder.rvStudentAttendance.setVisibility(View.VISIBLE);
+            holder.rvStudentAttendance.setAdapter(new AttendanceItemAdapter(item.lastDaysAttendance,this,item.userId,item.name));
+        }
+        else
+        {
+            holder.rvStudentAttendance.setVisibility(View.GONE);
+            holder.rvStudentAttendance.setAdapter(null);
+        }
+
+
 
         if (!TextUtils.isEmpty(item.studentImage))
         {
@@ -83,6 +98,8 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
             holder.imgLead_default.setImageDrawable(drawable);
         }
 
+
+
     }
 
     @Override
@@ -90,6 +107,15 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         return listAttendance.size();
     }
 
+    @Override
+    public void add(AttendanceListRes.lastDayData lastDayData,String userID,String userName) {
+        listener.edit(lastDayData,userID,userName);
+    }
+
+    public interface listener
+    {
+        public void edit(AttendanceListRes.lastDayData attendance,String item,String userName);
+    }
     public class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.chkAttendance)
         CheckBox chkAttendance;
@@ -99,6 +125,9 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
 
         @Bind(R.id.tvNumber)
         TextView tvNumber;
+
+        @Bind(R.id.rvStudentAttendance)
+        RecyclerView rvStudentAttendance;
 
         @Bind(R.id.imgEdit)
         ImageView imgEdit;

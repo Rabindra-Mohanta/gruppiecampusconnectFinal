@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/padding_10dp"
+            app:cardElevation="@dimen/padding_5dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_20dp">
+
+                <TextView
+                    android:id="@+id/tvMsg"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    style="@style/TextAppearance.Bold"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_do_you_want_to_continue_class"
+                    android:textColor="@color/black" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMsg"
+                    android:layout_marginTop="@dimen/padding_20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMsg">
+
+                    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                        android:id="@+id/circularProgressBar"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:cpb_background_progressbar_color="@color/colorPrimaryBg"
+                        app:cpb_background_progressbar_width="5dp"
+                        app:cpb_progress="0"
+                        app:cpb_progress_direction="to_left"
+                        app:cpb_progress_max="100"
+                        app:cpb_progressbar_color="@color/black"
+                        app:cpb_progressbar_width="5dp"
+                        app:cpb_round_border="false" />
+
+                    <TextView
+                        android:id="@+id/tvTime"
+                        style="@style/testtitlesize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="00"
+                        android:textSize="@dimen/text_size_22sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMsg"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvYes"
+                        style="@style/TextAppearance.Bold"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/holo_green_dark"
+                        android:gravity="center"
+                        android:padding="@dimen/padding_10dp"
+                        android:text="@string/strYes"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_18sp" />
+                </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/tvNo"
+                android:layout_width="@dimen/padding_40dp"
+                android:layout_height="@dimen/padding_40dp"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:layout_marginEnd="@dimen/padding_5dp"
+                android:padding="@dimen/padding_5dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_close"
+                app:tint="@color/color_label" />
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+</layout>

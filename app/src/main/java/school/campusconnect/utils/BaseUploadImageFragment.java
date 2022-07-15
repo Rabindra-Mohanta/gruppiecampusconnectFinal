@@ -15,9 +15,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
@@ -39,6 +42,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,9 +98,15 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
     }
 
     public void updatePhotoFromUrl(String url) {
+
+        Log.e(TAG,"updatePhotoFromUrl");
+
         if (!TextUtils.isEmpty(url)) {
-            _finalUrl=url;
-            Picasso.with(getContext()).load(Constants.decodeUrlToBase64(url)).memoryPolicy(MemoryPolicy.NO_CACHE)
+            _finalUrl = url;
+
+            Picasso.with(getContext())
+                    .load(Constants.decodeUrlToBase64(url))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE).into(getImageView(), new Callback() {
                 @Override
                 public void onSuccess() {
@@ -109,6 +119,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
 
                 }
             });
+
         }
     }
 
@@ -160,7 +171,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
     private void startCamera(int requestCode) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            imageCaptureFile = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID+ ".fileprovider", ImageUtil.getOutputMediaFile());
+            imageCaptureFile = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", ImageUtil.getOutputMediaFile());
         } else {
             imageCaptureFile = Uri.fromFile(ImageUtil.getOutputMediaFile());
         }
@@ -178,7 +189,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            galleryIntent.putExtra(Intent.ACTION_GET_CONTENT, true);
         }
         if (getParentFragment() != null) {
             getParentFragment().startActivityForResult(galleryIntent, requestCode);
@@ -235,7 +246,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
                     myProfileImage = profileImage;
                     galleryAddPic(profileImage);
 
-//                    setImageToView(profileImage);
+//x                    setImageToView(profileImage);
 
 
                     Log.e("CROP_TRACK", "from profile setImageToView called " + profileImage.imageUrl);
@@ -263,27 +274,9 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
 
         showLoadingDialog(getString(R.string.please_wait));
 
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        final File f = new File(profileImage.imageUrl);
-        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "image.jpg");
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        getActivity().sendBroadcast(mediaScanIntent);
 
-        MediaScannerConnection.scanFile(getActivity(),
-                new String[]{f.toString()}, null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
-                        Log.e("ExternalStorage", "Scanned " + path.replaceAll("file:", "") + ":");
-                        Log.e("ExternalStorage", "Scanned file " + f.getPath().replaceAll("file:", "") + ":");
-                        Log.e("ExternalStorage", "-> uri=" + uri);
-                        key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_IMAGE);
-                        beginUpload(path.replaceAll("file:", ""), key);
-//                        beginUpload("/storage/emulated/0/IMG_20180101_1002101959265263.jpg", key);
-                    }
-                });
-
-        Log.e("ExternalStorage", "called");
+        key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_IMAGE);
+        beginUpload(profileImage.imageUrl, key);
 
         /*try {
             ContentResolver test = getActivity().getContentResolver();
@@ -346,82 +339,37 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
         Log.e("KEYY", "key is " + key);
         if (filePath == null) {
             Log.e("UPLOADTEST", "filepath null");
-            Toast.makeText(getActivity(), "Could not find the filepath of the selected file",
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_could_not_find_file),
                     Toast.LENGTH_LONG).show();
             return;
         }
-        File file = new File(filePath);
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file , CannedAccessControlList.PublicRead);
+        TransferObserver observer ;
+        UploadOptions option = UploadOptions.
+                builder().bucket(AmazoneHelper.BUCKET_NAME).
+                cannedAcl(CannedAccessControlList.PublicRead).build();
+        try {
+            observer = transferUtility.upload(key,
+                    getContext().getContentResolver().openInputStream(Uri.parse(filePath)), option);
+
+            /*
+             * Note that usually we set the transfer listener after initializing the
+             * transfer. However it isn't required in this sample app. The flow is
+             * click upload button -> start an activity for image selection
+             * startActivityForResult -> onActivityResult -> beginUpload -> onResume
+             * -> set listeners to in progress transfers.
+             */
+
+            observer.setTransferListener(new UploadListener());
+
+            Log.e("UPLOADTEST", "observer started");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Log.e("UPLOADTEST", "upload started");
-        /*
-         * Note that usually we set the transfer listener after initializing the
-         * transfer. However it isn't required in this sample app. The flow is
-         * click upload button -> start an activity for image selection
-         * startActivityForResult -> onActivityResult -> beginUpload -> onResume
-         * -> set listeners to in progress transfers.
-         */
 
-        observer.setTransferListener(new UploadListener());
-        Log.e("UPLOADTEST", "observer started");
     }
 
-    /*
-     * Gets the file path of the given Uri.
-     */
-    @SuppressLint("NewApi")
-    private String getPath(Uri uri) throws URISyntaxException {
-        final boolean needToCheckUri = Build.VERSION.SDK_INT >= 19;
-        String selection = null;
-        String[] selectionArgs = null;
-        // Uri is different in versions after KITKAT (Android 4.4), we need to
-        // deal with different Uris.
-        if (needToCheckUri && DocumentsContract.isDocumentUri(getActivity(), uri)) {
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                return Environment.getExternalStorageDirectory() + "/" + split[1];
-            } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                uri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-            } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                if ("image".equals(type)) {
-                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-                selection = "_id=?";
-                selectionArgs = new String[]{
-                        split[1]
-                };
-            }
-        }
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = {
-                    MediaStore.Images.Media.DATA
-            };
-            Cursor cursor = null;
-            try {
-                cursor = getActivity().getContentResolver()
-                        .query(uri, projection, selection, selectionArgs, null);
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                if (cursor.moveToFirst()) {
-                    return cursor.getString(column_index);
-                }
-            } catch (Exception e) {
-            }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-        return null;
-    }
 
     /**
      * @param uri The Uri to check.
@@ -518,7 +466,7 @@ public abstract class BaseUploadImageFragment extends BaseFragment {
             // transferRecordMaps which will display
             // as a single row in the UI
             HashMap<String, Object> map = new HashMap<String, Object>();
-           // Util.fillMap(map, observer, false);
+            // Util.fillMap(map, observer, false);
             transferRecordMaps.add(map);
 
             // Sets listeners to in progress transfers

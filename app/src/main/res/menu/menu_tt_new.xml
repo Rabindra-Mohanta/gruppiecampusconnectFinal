@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_add"
-        android:title="Add/Update Time Table"/>
+        android:title="@string/menu_add_update_time_table"/>
+
     <item android:id="@+id/menu_delete"
-        android:title="Delete Time Table"/>
+        android:title="@string/menu_delete_time_table"/>
 
 </menu>

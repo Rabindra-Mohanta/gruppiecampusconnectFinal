@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <RelativeLayout
+        android:paddingBottom="@dimen/padding_10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F9F6F4"
+        >
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- <FrameLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent">
+
+                     <ImageView
+                         android:id="@+id/imgBackground"
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:layout_gravity="center"
+                         android:adjustViewBounds="true"
+                         android:alpha="0.2"
+                         android:scaleType="centerCrop"
+                         android:src="@drawable/app_icon" />
+                 </FrameLayout>-->
+
+
+                <!--<FrameLayout
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:id="@+id/llVoterProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginHorizontal="@dimen/padding_10dp"
+                        android:layout_marginBottom="@dimen/padding_5dp"
+                        android:orientation="vertical"
+                        android:outlineSpotShadowColor="@color/colorPrimaryLight"
+                        android:outlineAmbientShadowColor="@color/colorPrimaryLight"
+                        app:cardElevation="4dp">
+
+
+                        <RelativeLayout
+                            android:background="@drawable/light_primary_border_bg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/llVoterImage"
+                                android:layout_centerVertical="true"
+                                android:layout_width="130dp"
+                                app:cardUseCompatPadding="false"
+                                app:cardCornerRadius="@dimen/padding_5dp"
+                                android:layout_height="130dp">
+                                <RelativeLayout
+                                    android:layout_width="130dp"
+                                    android:layout_height="130dp"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:id="@+id/imgVoter"
+                                        android:layout_width="130dp"
+                                        android:layout_height="130dp"
+                                        android:layout_centerHorizontal="true"
+                                        android:scaleType="centerCrop"
+                                        />
+
+                                    <ImageView
+                                        android:layout_alignParentRight="true"
+                                        android:id="@+id/imgEditVoter"
+                                        android:layout_width="@dimen/padding_25dp"
+                                        android:layout_height="@dimen/padding_25dp"
+                                        android:background="@drawable/round_primary_bg"
+                                        android:scaleType="centerCrop"
+                                        android:src="@drawable/ic_edit_white"
+                                        android:padding="@dimen/padding_5dp"
+                                        />
+                                </RelativeLayout>
+                            </androidx.cardview.widget.CardView>
+
+
+                            <RelativeLayout
+                                android:layout_marginVertical="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:layout_marginHorizontal="@dimen/padding_10dp"
+                                android:layout_toRightOf="@id/llVoterImage"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:layout_marginTop="@dimen/padding_10dp"
+                                    android:id="@+id/tvVoterName"
+                                    style="@style/LabelHeader1"
+                                    android:singleLine="true"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_centerHorizontal="true"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:layout_below="@id/tvVoterName"
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:id="@+id/tvVoterId"
+                                    style="@style/LabelNormal"
+                                    android:singleLine="true"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_centerHorizontal="true"
+                                    android:textColor="@color/black" />
+
+                                <LinearLayout
+                                    android:layout_below="@id/tvVoterId"
+                                    android:layout_width="match_parent"
+                                    android:weightSum="2"
+                                    android:gravity="bottom"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_weight="1"
+                                        android:id="@+id/llMyFamily"
+                                        app:cardUseCompatPadding="true"
+                                        app:cardCornerRadius="@dimen/padding_5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
+
+                                            <RelativeLayout
+                                                android:padding="@dimen/padding_10dp"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                >
+
+                                              &lt;!&ndash;  <ImageView
+                                                    android:layout_alignParentRight="true"
+                                                    android:id="@+id/imgMyFamily"
+                                                    android:layout_width="@dimen/padding_20dp"
+                                                    android:layout_height="@dimen/padding_20dp"
+                                                    android:src="@drawable/icon_right_arraw"
+                                                    app:tint="@color/colorPrimary" />
+&ndash;&gt;
+                                                <TextView
+                                                    android:id="@+id/tvMyFamily"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_centerInParent="true"
+                                                    android:text="@string/lbl_my_family"
+                                                    android:singleLine="true"
+                                                    android:textColor="@color/colorPrimary"
+                                                    style="@style/LabelNormal" />
+
+                                            </RelativeLayout>
+                                        </RelativeLayout>
+                                    </androidx.cardview.widget.CardView>
+                                    <androidx.cardview.widget.CardView
+                                        android:id="@+id/llMyIssue"
+                                        android:layout_weight="1"
+                                        app:cardUseCompatPadding="true"
+                                        app:cardCornerRadius="@dimen/padding_5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
+
+                                            <RelativeLayout
+                                                android:padding="@dimen/padding_10dp"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                >
+
+                                          &lt;!&ndash;      <ImageView
+                                                    android:layout_alignParentRight="true"
+                                                    android:id="@+id/imgMyIssue"
+                                                    android:layout_width="@dimen/padding_20dp"
+                                                    android:layout_height="@dimen/padding_20dp"
+                                                    android:src="@drawable/icon_right_arraw"
+                                                    app:tint="@color/colorPrimary" />
+&ndash;&gt;
+                                                <TextView
+                                                    android:id="@+id/tvMyIssue"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_centerInParent="true"
+                                                    android:text="@string/lbl_my_issue"
+                                                    android:singleLine="true"
+                                                    android:textColor="@color/colorPrimary"
+                                                    style="@style/LabelNormal" />
+
+                                            </RelativeLayout>
+                                        </RelativeLayout>
+                                    </androidx.cardview.widget.CardView>
+
+                                </LinearLayout>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+
+                       &lt;!&ndash; <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:weightSum="2"
+                            android:orientation="horizontal">
+
+
+                            <RelativeLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                >
+                                <RelativeLayout
+                                    android:layout_centerInParent="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:id="@+id/imgVoter"
+                                        android:layout_width="85dp"
+                                        android:layout_height="85dp"
+                                        android:layout_centerHorizontal="true"
+                                        android:src="@drawable/default_user"
+                                         />
+
+                                    <ImageView
+                                        android:layout_marginLeft="-20dp"
+                                        android:layout_toRightOf="@id/imgVoter"
+                                        android:id="@+id/imgEditVoter"
+                                        android:layout_width="@dimen/padding_20dp"
+                                        android:layout_height="@dimen/padding_20dp"
+                                        android:background="@drawable/round_primary_bg"
+                                        android:scaleType="centerCrop"
+                                        android:src="@drawable/ic_edit_white"
+                                        android:padding="@dimen/padding_5dp"
+                                        />
+                                    <TextView
+                                        android:layout_below="@id/imgVoter"
+                                        android:layout_marginTop="@dimen/padding_10dp"
+                                        android:id="@+id/tvVoterName"
+                                        style="@style/LabelNormal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Nishant"
+                                        android:layout_centerHorizontal="true"
+                                        android:textColor="@color/black" />
+
+                                </RelativeLayout>
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                >
+                                <LinearLayout
+                                    android:layout_marginRight="@dimen/padding_10dp"
+                                    android:layout_centerInParent="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <androidx.cardview.widget.CardView
+                                        android:id="@+id/llMyFamily"
+                                        app:cardUseCompatPadding="true"
+                                        app:cardCornerRadius="@dimen/padding_5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
+
+                                            <RelativeLayout
+                                                android:padding="@dimen/padding_10dp"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                >
+
+                                                <ImageView
+                                                    android:layout_alignParentRight="true"
+                                                    android:id="@+id/imgMyFamily"
+                                                    android:layout_width="@dimen/padding_20dp"
+                                                    android:layout_height="@dimen/padding_20dp"
+                                                    android:src="@drawable/icon_right_arraw"
+                                                    app:tint="@color/colorPrimary" />
+
+                                                <TextView
+                                                    android:id="@+id/tvMyFamily"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="@string/lbl_my_family"
+                                                    android:textColor="@color/colorPrimary"
+                                                    style="@style/LabelNormal" />
+
+                                            </RelativeLayout>
+                                        </RelativeLayout>
+                                    </androidx.cardview.widget.CardView>
+                                    <androidx.cardview.widget.CardView
+                                        android:id="@+id/llMyIssue"
+                                        app:cardUseCompatPadding="true"
+                                        app:cardCornerRadius="@dimen/padding_5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
+
+                                            <RelativeLayout
+                                                android:padding="@dimen/padding_10dp"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                >
+
+                                                <ImageView
+                                                    android:layout_alignParentRight="true"
+                                                    android:id="@+id/imgMyIssue"
+                                                    android:layout_width="@dimen/padding_20dp"
+                                                    android:layout_height="@dimen/padding_20dp"
+                                                    android:src="@drawable/icon_right_arraw"
+                                                    app:tint="@color/colorPrimary" />
+
+                                                <TextView
+                                                    android:id="@+id/tvMyIssue"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="@string/lbl_my_issue"
+                                                    android:textColor="@color/colorPrimary"
+                                                    style="@style/LabelNormal" />
+
+                                            </RelativeLayout>
+                                        </RelativeLayout>
+                                    </androidx.cardview.widget.CardView>
+
+                                </LinearLayout>
+                            </RelativeLayout>
+
+                        </LinearLayout>&ndash;&gt;
+
+
+                    </androidx.cardview.widget.CardView>
+                </FrameLayout>-->
+
+                <FrameLayout
+                    android:id="@+id/llBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_marginHorizontal="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:layout_marginBottom="@dimen/padding_5dp"
+                        android:orientation="vertical"
+                        android:outlineAmbientShadowColor="@color/colorPrimaryLight"
+                        android:outlineSpotShadowColor="@color/colorPrimaryLight"
+                        app:cardElevation="4dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/light_primary_border_bg">
+
+                            <ss.com.bannerslider.Slider
+                                android:id="@+id/rvSliderBanner"
+                                android:layout_width="match_parent"
+                                android:layout_height="130dp"
+                                app:slider_defaultBanner="1"
+                                app:slider_loopSlides="true" />
+
+
+                            <!--<androidx.recyclerview.widget.RecyclerView
+                                  android:visibility="gone"
+                                  android:id="@+id/rvSliderBanner"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="130dp"
+                                  android:orientation="horizontal"
+                                  />-->
+
+
+                            <ImageView
+                                android:id="@+id/imgSlider"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/default_banner"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/imgEditBanner"
+                                android:layout_width="@dimen/padding_25dp"
+                                android:layout_height="@dimen/padding_25dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="@dimen/padding_10dp"
+                                android:background="@drawable/round_primary_bg"
+                                android:padding="@dimen/padding_5dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_edit_white"
+                                android:visibility="gone" />
+
+
+                        </RelativeLayout>
+
+
+                    </androidx.cardview.widget.CardView>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/llFeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llBanner">
+
+                    <FrameLayout
+                        android:id="@+id/llNormalFeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginBottom="@dimen/padding_20dp"
+                            android:orientation="vertical"
+                            android:outlineAmbientShadowColor="@color/colorPrimaryLight"
+                            android:outlineSpotShadowColor="@color/colorPrimaryLight"
+                            app:cardElevation="4dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/light_primary_border_bg"
+                                android:orientation="vertical"
+                                android:paddingHorizontal="@dimen/padding_10dp"
+                                android:paddingTop="@dimen/padding_10dp"
+                                android:paddingBottom="@dimen/padding_10dp">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingHorizontal="@dimen/padding_10dp">
+
+                                    <TextView
+                                        style="@style/LabelHeader1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/lbl_feed"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textStyle="bold" />
+
+                                </RelativeLayout>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rvFeed"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="160dp"
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:orientation="vertical"
+                                    tools:listitem="@layout/item_feed" />
+
+                                <TextView
+                                    android:id="@+id/tvViewMoreFeed"
+                                    style="@style/LabelNormal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="right"
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/hint_view_more"
+                                    android:textColor="@color/colorPrimary"
+                                    android:visibility="gone" />
+
+
+                            </LinearLayout>
+
+
+                        </androidx.cardview.widget.CardView>
+
+                        <ImageView
+                            android:id="@+id/imgExpandFeedBefore"
+                            android:layout_width="34dp"
+                            android:layout_height="@dimen/padding_35dp"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/expand_down"
+                            android:elevation="@dimen/padding_5dp" />
+
+                        <ImageView
+                            android:id="@+id/imgExpandFeedAfter"
+                            android:layout_width="34dp"
+                            android:layout_height="@dimen/padding_35dp"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/expand_up"
+                            android:elevation="@dimen/padding_5dp"
+                            android:visibility="gone" />
+
+
+                        <!--  <androidx.cardview.widget.CardView
+                              android:id="@+id/expandFeed"
+                              android:layout_gravity="bottom|center_horizontal"
+                              android:layout_marginBottom="5dp"
+                              app:cardElevation="@dimen/padding_5dp"
+                              android:layout_width="@dimen/padding_30dp"
+                              android:layout_height="@dimen/padding_30dp"
+                              app:cardBackgroundColor="@color/white"
+                              app:cardCornerRadius="@dimen/padding_50dp"
+                              >
+                              <ImageView
+                                  android:id="@+id/imgExpandFeed"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  app:tint="@color/colorPrimary"
+                                  android:src="@drawable/ic_drop_down"
+                                  />
+                          </androidx.cardview.widget.CardView>-->
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/llAdminFeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginBottom="@dimen/padding_20dp"
+                            android:orientation="vertical"
+                            android:outlineAmbientShadowColor="@color/colorPrimaryLight"
+                            android:outlineSpotShadowColor="@color/colorPrimaryLight"
+                            app:cardElevation="4dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/light_primary_border_bg"
+                                android:orientation="vertical"
+                                android:paddingHorizontal="@dimen/padding_10dp"
+                                android:paddingTop="@dimen/padding_10dp"
+                                android:paddingBottom="@dimen/padding_10dp">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:paddingHorizontal="@dimen/padding_10dp">
+
+                                    <TextView
+                                        style="@style/LabelHeader1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/lbl_dashboard"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textStyle="bold" />
+
+                                </RelativeLayout>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rvAdminFeed"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:orientation="vertical"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    tools:itemCount="1"
+                                    tools:listitem="@layout/item_admin_feed" />
+
+
+                            </LinearLayout>
+
+
+                        </androidx.cardview.widget.CardView>
+
+                        <ImageView
+                            android:id="@+id/imgExpandAdminFeedBefore"
+                            android:layout_width="34dp"
+                            android:layout_height="@dimen/padding_35dp"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/expand_down"
+                            android:elevation="@dimen/padding_5dp" />
+
+                        <ImageView
+                            android:id="@+id/imgExpandAdminFeedAfter"
+                            android:layout_width="34dp"
+                            android:layout_height="@dimen/padding_35dp"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:background="@drawable/expand_up"
+                            android:elevation="@dimen/padding_5dp"
+                            android:visibility="gone" />
+
+
+                        <!--  <androidx.cardview.widget.CardView
+                              android:id="@+id/expandFeed"
+                              android:layout_gravity="bottom|center_horizontal"
+                              android:layout_marginBottom="5dp"
+                              app:cardElevation="@dimen/padding_5dp"
+                              android:layout_width="@dimen/padding_30dp"
+                              android:layout_height="@dimen/padding_30dp"
+                              app:cardBackgroundColor="@color/white"
+                              app:cardCornerRadius="@dimen/padding_50dp"
+                              >
+                              <ImageView
+                                  android:id="@+id/imgExpandFeed"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+                                  app:tint="@color/colorPrimary"
+                                  android:src="@drawable/ic_drop_down"
+                                  />
+                          </androidx.cardview.widget.CardView>-->
+                    </FrameLayout>
+
+
+                    <!--  <androidx.cardview.widget.CardView
+                          android:id="@+id/expandFeed"
+                          android:layout_gravity="bottom|center_horizontal"
+                          android:layout_marginBottom="5dp"
+                          app:cardElevation="@dimen/padding_5dp"
+                          android:layout_width="@dimen/padding_30dp"
+                          android:layout_height="@dimen/padding_30dp"
+                          app:cardBackgroundColor="@color/white"
+                          app:cardCornerRadius="@dimen/padding_50dp"
+                          >
+                          <ImageView
+                              android:id="@+id/imgExpandFeed"
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent"
+                              app:tint="@color/colorPrimary"
+                              android:src="@drawable/ic_drop_down"
+                              />
+                      </androidx.cardview.widget.CardView>-->
+                </FrameLayout>
+
+
+                <FrameLayout
+                    android:id="@+id/llGroups"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llFeed">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTeams"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="1"
+                        tools:listitem="@layout/item_team_list_v2" />
+
+                </FrameLayout>
+
+
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/llAdTicket"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/padding_5dp"
+            android:layout_marginRight="@dimen/padding_10dp"
+            android:layout_alignParentBottom="true"
+            app:cardCornerRadius="@dimen/padding_50dp"
+            app:cardElevation="5dp">
+        <FrameLayout
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+
+            <TextView
+                android:id="@+id/fabAddTicket"
+                style="@style/LabelSmall"
+                android:background="@drawable/fab_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/lbl_add_ticket"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+
+        <ProgressBar
+            android:id="@+id/progressBarBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</layout>

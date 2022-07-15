@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_delete_chapter"
-        android:title="Delete Chapter" />
+        android:title="@string/menu_delete_chapter" />
     <item
         android:id="@+id/menu_add_post"
         android:icon="@drawable/posticon"
-        android:title="Add Chapter"
+        android:title="@string/menu_add_chapter"
         app:showAsAction="always" />
 
 </menu>

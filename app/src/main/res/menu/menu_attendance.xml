@@ -3,4 +3,8 @@
     <item android:id="@+id/menu_add_class"
         android:icon="@drawable/icon_attendance_report"
         android:title="@string/lbl_attendance_report"/>
+    <item android:id="@+id/menu_generate_report_online"
+        android:icon="@drawable/icon_attendance_report"
+        android:title="@string/lbl_attendance_report_online"/>
+
 </menu>

@@ -1,10 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Gruppie Campus</string>
     <string name="app_version">Version 1.0</string>
+    <string name="lbl_app_details">© 2016 Vivid Innovation Pvt Ltd</string>
     <string name="action_create_acc">Create Group</string>
     <string name="action_notify_all">MESSAGE ALL</string>
     <string name="action_mail_all">EMAIL ALL</string>
     <string name="action_change_pwd">Change Password</string>
+    <string name="action_add_school">Add School</string>
+    <string name="action_change_pin">Change Pin</string>
+    <string name="action_change_nu">Change Number</string>
+    <string name="action_set_wallpaper">Set Wallpaper</string>
+    <string name="action_remove_wallpaper">Remove Wallpaper</string>
     <string name="action_all_contacts">Gruppie Contacts</string>
     <string name="action_change_number">Change Mobile Number</string>
     <string name="action_notification">Favourites</string>
@@ -23,9 +29,11 @@
     <string name="action_change_admin">Change Admin</string>
     <string name="action_edit_group">Edit Group</string>
     <string name="action_delete_group">Delete Group</string>
+
     <string name="action_mute">Mute</string>
     <string name="action_leave">Leave Group</string>
     <string name="action_setting">Settings</string>
+    <string name="action_favorite">Favorite</string>
     <string name="action_group_setting">Group Settings</string>
     <string name="action_about_group">About School</string>
 
@@ -42,16 +50,38 @@
     <string name="hint_number">Enter Mobile Number</string>
     <string name="hint_new_number">Enter new mobile</string>
     <string name="hint_confirm_number">Confirm new mobile</string>
-
+    <string name="hint_gpay_paytm">G-Pay / Paytm</string>
     <string name="lbl_no_account">Don\'t have a group?</string>
+    <string name="lbl_search_issue">Search Issue</string>
 
-    <string name="hint_group">Enter Group Name</string>
+    <string name="lbl_search_caste">Search Caste</string>
+    <string name="lbl_search_sub_caste">Search Sub Caste</string>
+    <string name="lbl_welcome">Welcome!</string>
+    <string name="lbl_walk_des">"Making friends is easy as waving your hand back and forth with ease.</string>
+
+
     <string name="hint_name">Enter Name</string>
+    <string name="name">name</string>
+
     <string name="hint_imp_name">Enter Name</string>
     <string name="hint_email">Enter Your Email Id</string>
+    <string name="search_contact">Search Contact</string>
     <string name="hint_contact_no">Enter Your Contact Number</string>
 
+    <string name="hint_isAdmin">Admin</string>
+    <string name="hint_isPartyTaskForce">Party Task Force</string>
+    <string name="hint_isDepartmentTaskForce">Department Task Force</string>
+    <string name="hint_isBoothPresident">Booth President</string>
+    <string name="hint_isBoothMember">Booth Member</string>
+    <string name="hint_enter_message">Enter message</string>
+    <string name="hint_view_comments">View Comments</string>
+
     <string name="hint_lead_name">Enter Friend Name</string>
+    <string name="hint_date_format">dd/MM/yyyy</string>
+    <string name="hint_date_format_">dd/MM/yyyy\nhh:mm</string>
+    <string name="hint_title_text">Title Text</string>
+    <string name="hint_fees_type">Fees Type</string>
+    <string name="hint_enter_subject_name">Enter Subject Name</string>
     <string name="hint_lead_email">Enter Friend Email Id</string>
     <string name="hint_lead_contact">Enter Friend Contact Number</string>
     <string name="hint_lead_gender">Choose The Gender</string>
@@ -84,11 +114,13 @@
     <string name="action_profile">My Profile</string>
     <string name="action_logout">Logout</string>
     <string name="action_creategroup">Create New Group</string>
-    <string name="please_wait">Please wait...</string>
+    <string name="please_wait">Please wait</string>
     <string name="lbl_select_img">Select Image</string>
+    <string name="lbl_select_audio">Select Audio</string>
     <string name="lbl_select_video">Select Video</string>
     <string name="lbl_share">Share</string>
     <string name="lbl_push">Push</string>
+    <string name="lbl_camera">Camera</string>
     <string name="no_internet">Please check your internet connection.</string>
     <string name="action_save">Save</string>
     <string name="msg_no_internet">no net</string>
@@ -96,30 +128,57 @@
     <string name="msg_unable_get_camera_image">Unable to get Camera image. Please try again.</string>
     <string name="msg_no_reply">No reply found.</string>
     <string name="msg_no_comments">No comments found.</string>
+    <string name="msg_no_report">No Report found.</string>
     <string name="msg_no_leads">No friends found.</string>
+    <string name="msg_leads"></string>
     <string name="msg_no_likes">No likes found.</string>
     <string name="msg_no_users">No users found.</string>
     <string name="msg_no_contaacts">No contacts found.</string>
     <string name="msg_no_fav">No favourite posts found.</string>
-    <string name="msg_no_post">No posts found.</string>
+    <string name="msg_no_post">No posts found</string><!--No posts found-->
     <string name="msg_no_que">No doubts found.</string>
     <string name="msg_no_noti">No notifications.</string>
     <string name="msg_no_groups">No Groups found.</string>
     <string name="crop__pick_error">No image sources available</string>
+    <string name="crop">Crop</string>
+    <string name="lbl_cancel">Cancel</string>
+    <string name="lbl_new_update_available">New update Available</string>
+    <string name="lbl_enter_url">Enter URL</string>
+    <string name="lbl_upload_video">Upload Video</string>
+    <string name="lbl_enter_youtube_link">Enter Youtube Link</string>
     <string name="lbl_lead_count">Friends Count</string>
     <string name="lbl_phone">Phone Number*</string>
+    <string name="lbl_booth_president_phone">PRESIDENT PHONE NUMBER*</string>
+    <string name="lbl_phone2">Phone Number</string>
+    <string name="lbl_father_name">Father Name</string>
+    <string name="lbl_husband_name">Husband Name</string>
     <string name="lbl_email">Email</string>
+    <string name="lbl_email_v2">Email*</string>
     <string name="lbl_other_leads">Other Friends</string>
     <string name="lbl_gender">Gender</string>
     <string name="lbl_dob">Date of Birth</string>
+    <string name="lbl_age">Age</string>
+    <string name="lbl_delete_assignment">Delete Assignment</string>
     <string name="lbl_roll">Roll</string>
     <string name="lbl_address">Address</string>
+    <string name="lbl_address_v2">Address*</string>
+    <string name="lbl_landmark">Landmark</string>
     <string name="lbl_lead_city">City</string>
     <string name="lbl_state">State</string>
     <string name="lbl_pincode">Pincode</string>
     <string name="lbl_id_num">Id Number</string>
+    <string name="lbl_setPin">Set Pin</string>
+    <string name="lbl_setFingerPrint">Register Fingerprint</string>
+    <string name="lbl_setOldPin">Old Pin</string>
+    <string name="lbl_setNewPin">New Pin</string>
+    <string name="lbl_conPin">Confirm Pin</string>
+    <string name="lbl_valPin">Validate Pin</string>
     <string name="lbl_leads">My Friends</string>
     <string name="lbl_likes">Likes</string>
+    <string name="lbl_add_image">Add Image</string>
+    <string name="lbl_join">Join</string>
+    <string name="lbl_delete_album">Delete Album</string>
+    <string name="lbl_delete_video">Delete Video</string>
     <string name="lbl_autho">Authorized Users</string>
     <string name="lbl_all_users">All Users</string>
     <string name="lbl_all_contact">Gruppie Contacts</string>
@@ -129,15 +188,45 @@
     <string name="lbl_join_group">Join With</string>
     <string name="lbl_select_friend">Select Friend</string>
     <string name="lbl_select_team">Select Team</string>
+    <string name="lbl_select_location">Select Location</string>
+    <string name="lbl_location">Location</string>
+    <string name="lbl_select_issue">Select Issue</string>
     <string name="lbl_select_type">Select Type</string>
     <string name="lbl_comments">Comments</string>
+
     <string name="lbl_chat">Messages</string>
     <string name="lbl_que">Doubts</string>
     <string name="lbl_replies">Replies</string>
+    <string name="lbl_my_family">My Family</string>
+    <string name="lbl_my_issue">My Issues</string>
+    <string name="lbl_Read_more">Read More</string>
+    <string name="lbl_answer">Answer</string>
+    <string name="lbl_delete_doubt">Delete Doubt</string>
+
+    <string name="lbl_open_tickets">Open Tickets</string>
+    <string name="lbl_announcements">Announcements</string>
+    <string name="lbl_booth_count">Booths Count</string>
+    <string name="lbl_booth_discussion">Booth Discussions</string>
+    <string name="lbl_public_street">Public Streets</string>
+    <string name="lbl_public_discussion">Public Discussions</string>
+
+    <string name="move_to_verified">Move to verified</string>
+    <string name="reassign">Re-assign</string>
+
     <string name="lbl_notifications">Favourite Posts</string>
     <string name="lbl_posts">Posts</string>
     <string name="lbl_search_contact"><u>Add from contacts</u></string>
+    <string name="lbl_add_contact">Add From Contact</string>
     <string name="lbl_or">OR</string>
+    <string name="lbl_finger_print">Fingerprint</string>
+    <string name="lbl_allow_post">Allow Post</string>
+    <string name="lbl_allow_comments">Allow Comments</string>
+    <string name="lbl_TotalOpenIssueTickets">Total Open Issues Tickets</string>
+    <string name="lbl_TotalAnnouncementsCount">Total Announcements Count</string>
+    <string name="lbl_TotalBoothsDiscussionCount">Total Booths Discussion Count</string>
+    <string name="lbl_TotalPublicStreetsCount">Total Public Streets Count</string>
+    <string name="lbl_TotalPublicDiscussionCount">Total Public Discussion Count</string>
+    <string name="lbl_TotalBoothCount">Total Booths Count</string>
     <string name="msg_required">Required</string>
     <string name="msg_invalid">Invalid</string>
     <string name="msg_invalid_credentials">Invalid Credentials !</string>
@@ -157,6 +246,7 @@
     <string name="msg_profile_update">Successfully updated profile.</string>
 
     <string name="lbl_forgot_pwd">Forgot Password</string>
+    <string name="lbl_forgot_pin">Forgot Pin?</string>
     <string name="lbl_forgot_pwd_q">Forgot Password?</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -176,12 +266,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="mapApi">AIzaSyBnPjheD0bIGUtTdZ9SZ4r9oiXBxLWBIMQ</string>
     <string name="msg_uploady">Please Upload A File Or Enter Video URL.</string>
     <string name="msg_upload2"> File And Video Can\'t Be Posted Same Time.</string>
     <string name="msg_termnotaccepted">Please Accept Terms And Conditions.</string>
+    <string name="msg_AddharValidate">Aadhar Card Number Length is 12 Digits.</string>
     <string name="msg_selectcountry">Please Select Country To Proceed.</string>
     <string name="msg_or">Or</string>
 
+
+    <string name="hint_for_post">For Post</string>
     <string name="hint_posttitle">Enter Title</string>
     <string name="hint_postque">Enter The Doubt For Post</string>
     <string name="hint_postans">Enter The Answer For Post</string>
@@ -189,9 +283,21 @@
 
     <string name="hint_yttitle">Enter Title</string>
     <string name="hint_ytdesc">Enter Description</string>
+    <string name="hint_edit_comment">Edit your comment</string>
+    <string name="hint_address_line_1">Address line 1</string>
+    <string name="hint_address_line_2">Address line 2</string>
 
     <string name="hint_search">Search contacts</string>
+    <string name="hint_search_issue">Search Issue</string>
+    <string name="hint_search_booth">Search Booth</string>
+    <string name="hint_view_more">View More</string>
+    <string name="hint_enter_your_question">Enter your question</string>
+    <string name="hint_issue_not_found">Issue Not Found</string>
+    <string name="hint_caste_not_found">Caste Not Found</string>
+    <string name="hint_sub_caste_not_found">Sub Caste Not Found</string>
 
+
+    <string name="hint_search_address">Search Address</string>
     <string name="action_register">New User ? Sign Up</string>
     <string name="action_login_new">Registered? Sign In</string>
     <string name="action_btnregister">Register</string>
@@ -212,14 +318,18 @@
     <string name="action_que">Add Doubt</string>
     <string name="action_edit_post">Edit Post</string>
     <string name="action_delete_post">Delete Post</string>
+    <string name="action_report_post">Report Post</string>
     <string name="action_edit_contact">Edit Contact</string>
     <string name="next">Next</string>
     <string name="done">Done</string>
+    <string name="deny">Deny</string>
     <string name="to_this_group">To This Group</string>
     <string name="to_groups">To Groups</string>
+    <string name="to_group">TO GROUP</string>
     <string name="to_teams">To Teams</string>
+    <string name="to_team">TO TEAMS</string>
     <string name="to_friends">To Friends</string>
-    <string name="register">register</string>
+    <string name="register">Register</string>
     <!--<string name="txt_terms">I Agree To <a href="https://www.gruppie.in"> Gruppie\'s Terms And Conditions </a> And Privacy Policy</string>-->
     <string name="copyright">© Vivid Innovations Private Limited</string>
     <string name="lbl_designation">Designation</string>
@@ -238,6 +348,8 @@
 
     // YOUTUBE STRINGS
 
+
+    <string name="hint_group">Enter Group Name</string>
 
     <string name="button_authorize">Authorize</string>
     <string name="button_record">RECORD</string>
@@ -312,9 +424,9 @@ Maecenas mattis, erat et viverra euismod, neque diam porttitor tellus, in fringi
 
 Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent vitae blandit sapien. Curabitur est sapien, lobortis sit amet facilisis vel, faucibus eu quam. Nam tempus libero at tellus tempor laoreet. Pellentesque quam lorem, tincidunt in molestie eget, dictum vel risus. Nunc gravida convallis mattis.
     </string>
-    <string name="opt_send_text">OPT has been sent.</string>
+    <string name="opt_send_text">OTP has been sent.</string>
 
-    <string name="api_exception_msg">Your internet connection is slow, please wait..</string>
+    <string name="api_exception_msg">Your internet connection is slow, please wait</string>
 
     <string name="remember_me">Remember Me</string>
     <string name="tap_here_to_get_OPT">(You will receive OTP)</string>
@@ -341,7 +453,11 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_team">Team</string>
     <string name="lbl_personal">Chat</string>
     <string name="lbl_more">More</string>
+    <string name="lbl_mark">Marks</string>
     <string name="lbl_profile">Profile</string>
+    <string name="lbl_make_app_admin">Make App Admin</string>
+    <string name="lbl_gruppie">Gruppie</string>
+    <string name="lbl_admin_change_des">All the privileges you have as a admin will be shifted to the new admin. Are You Sure you Want To Continue?</string>
     <string name="lbl_join_gruppie">Join Gruppie</string>
     <string name="lbl_friends">Friends</string>
     <string name="lbl_notification">Notification</string>
@@ -350,22 +466,42 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_authorized_user">Authorized Users</string>
     <string name="lbl_favourite">Favourites</string>
     <string name="lbl_doubts">Doubts</string>
+    <string name="lbl_doubt">Doubt</string>
     <string name="lbl_bookmarks">Bookmarks</string>
     <string name="lbl_faq">Doubts</string>
     <string name="lbl_group_text">Groups</string>
+    <string name="lbl_reply">Reply</string>
     <string name="lbl_teams">Teams</string>
     <string name="lbl_report">Report</string>
     <string name="lbl_remove">Remove</string>
     <string name="lbl_ask_doubt">Ask Doubt</string>
+    <string name="lbl_banners">Banners</string>
+    <string name="lbl_allow_post_question">Allow Post Question</string>
+    <string name="lbl_allow_post_all">Allow Post All</string>
+    <string name="lbl_enable_gps">Enable GPS</string>
+    <string name="lbl_allow_add_member">Allow Add Members</string>
+    <string name="lbl_allow_team_post_comment">Allow Team Post Comment</string>
+    <string name="lbl_enable_attendance">Enable Attendance</string>
+    <string name="lbl_allow_comment_all">Allow Comment All</string>
+    <string name="lbl_allow_share">Allow Share</string>
+    <string name="lbl_allow_everyone">Allow Everyone To Post</string>
+    <string name="lbl_allow_change_admin">Allow Change Admin</string>
     <string name="lbl_post_title">Post Title</string>
     <string name="lbl_post_desc">Description</string>
+    <string name="lbl_post_add_desc">Add Description</string>
     <string name="lbl_attechment">Attachments</string>
+    <string name="lbl_add_attechment">Add Attachment</string>
     <string name="lbl_image">Image</string>
     <string name="lbl_video">Video</string>
     <string name="lbl_documents">Doc</string>
+    <string name="lbl_audio">Audio</string>
     <string name="lbl_create_post">Create Post</string>
+    <string name="lbl_read_unread_user">Read/Unread Users</string>
 
     <string name="lbl_country">Country*</string>
+    <string name="lbl_country_">Country</string>
+    <string name="lbl_admin__">Admin : </string>
+    <string name="lbl_admin_name">Admin Name</string>
     <string name="lbl_enter_new_mobile">Enter New Mobile Number</string>
     <string name="lbl_update">Update</string>
     <string name="lbl_group_name">Group Name</string>
@@ -380,6 +516,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="image_upload_error">Error in Image Upload</string>
     <string name="upload_error">Error in Upload</string>
     <string name="lbl_team_name">Team Name</string>
+    <string name="lbl_member_details">Member Details</string>
+    <string name="lbl_president_details">President Details</string>
     <string name="lbl_create_team">Create Team</string>
     <string name="lbl_broadcast">Broadcast</string>
     <string name="hint_roll_no">Roll Number</string>
@@ -390,7 +528,14 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_add">Add</string>
     <string name="lbl_gallery">Gallery</string>
     <string name="lbl_album">Album Name</string>
-    <string name="msg_no_data_found">No data found.</string>
+    <string name="lbl_select_all">Select All</string>
+    <string name="lbl_issue_attachment">Issue Attachment</string>
+    <string name="lbl_mark_cardRESTORE">Mark Card ></string>
+    <string name="lbl_restore">RESTORE</string>
+    <string name="lbl_ques_p_">Question paper will be\navailable after exam start</string>
+    <string name="lbl_new_password_validation">Should be atleast 6 character</string>
+    <string name="msg_no_data_found">No data found</string><!--No data found.-->
+
     <string name="lbl_time_table">Time Table</string>
     <string name="lbl_vendor">Vendor Name</string>
     <string name="lbl_vendor_connect">Vendors</string>
@@ -406,15 +551,38 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_read_unread_users">Read Unread Users</string>
     <string name="lbl_read_users">Read Users</string>
     <string name="lbl_un_read_users">Unread Users</string>
-    <string name="lbl_no_user_found">No User Found</string>
+    <string name="lbl_no_user_found">No User Found</string><!--No User Found-->
     <string name="lbl_classes">All Classes</string>
     <string name="lbl_class_name">Class</string>
+
+    <string name="lbl_addharCard">Aadhaar Card</string>
+    <string name="lbl_add_regular_class">Add Regular Class</string>
     <string name="lbl_add_class">Add Class</string>
+    <string name="lbl_add_combined_class">Add Combined/Other Class</string>
+    <string name="lbl_add_group">Add Group</string>
+
+    <string name="lbl_add_tikit">Add Ticket</string>
+    <string name="lbl_tikit">Tickets</string>
+
+    <string name="lbl_select_role">Select Role</string>
+    <string name="lbl_tikit_details">Ticket Details</string>
+    <string name="lbl_task_force">Task Force</string>
+    <string name="lbl_feed">Feed</string>
+    <string name="lbl_dashboard">Dashboard</string>
+    <string name="lbl_daily_activity">Daily Activity</string>
+    <string name="lbl_communication_message">Communication Or Message</string>
+    <string name="lbl_other_activity">Other Activity</string>
     <string name="lbl_teacher_name">Class Teacher</string>
+    <string name="lbl_today_topics">Today\'s Topics</string>
+    <string name="lbl_overall_anylysis">Overall Analysis</string>
+    <string name="lbl_teacher">Teacher</string>
     <string name="lbl_students">Students</string>
+    <string name="lbl_class_register_student">Class/Student Register</string>
     <string name="lbl_register_student">Student Register</string>
     <string name="lbl_register_subject">Subject Register</string>
+    <string name="lbl_register_subject_assign">Assign</string>
     <string name="lbl_student_id">Student Id</string>
+    <string name="lbl_sats_no">SATS NUMBER</string>
     <string name="lbl_admition_number">Admission Number</string>
     <string name="lbl_section">Section</string>
     <string name="lbl_doj">Date Of Join</string>
@@ -422,12 +590,20 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_motherName">Mother\'s Name</string>
     <string name="lbl_fatherNumber">Contact Number - Father</string>
     <string name="lbl_motherNumber">Contact Number - Mother</string>
+    <string name="lbl_motherOccupation">Mother Occupation</string>
+    <string name="lbl_fatherOccupation">Father Occupation</string>
+    <string name="lbl_disability">Disability</string>
+    <string name="lbl_motherEducation">Mother Education</string>
+    <string name="lbl_fatherEducation">Father Education</string>
+    <string name="lbl_nationality">Nationality</string>
     <string name="lbl_attendance_report">Attendance Report</string>
     <string name="lbl_event">Event</string>
     <string name="lbl_holiday">Holiday</string>
     <string name="leave_request">Leave Request</string>
     <string name="lbl_reason">Reason</string>
     <string name="lbl_submit">Submit</string>
+    <string name="lbl_session">Session</string>
+
     <string name="msg_leave_request_success">Leave Request Send Successfully</string>
     <string name="lbl_select_Admin">Select Admin</string>
     <string name="lbl_select_kids">Select Kids</string>
@@ -437,13 +613,20 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_route_name">Route Name</string>
     <string name="lbl_staff_register">Staff Register</string>
     <string name="lbl_name">Name*</string>
+    <string name="lbl_name_">Name</string>
+    <string name="lbl_add_syllabus">Add Syllabus</string>
+    <string name="lbl_description">Description</string>
     <string name="lbl_staff_id">Staff Id</string>
+    <string name="lbl_members">Members</string>
+    <string name="lbl_delete_test">Delete Test</string>
     <string name="lbl_qualification">Qualification</string>
+
     <string name="lbl_religion">Religion</string>
     <string name="lbl_cast">Cast</string>
     <string name="lbl_bloodGroup">Blood Group</string>
     <string name="lbl_add_staff">Add Staff</string>
     <string name="lbl_add_students">Add Students</string>
+    <string name="lbl_add_events">Add Event</string>
     <string name="lbl_in">IN</string>
     <string name="lbl_out">OUT</string>
     <string name="lbl_title">Title</string>
@@ -452,19 +635,29 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_class_subject">Class Subject</string>
     <string name="lbl_add_subject">Add Subject</string>
     <string name="lbl_select_subject">Select Subject</string>
+    <string name="lbl_absent_student">Absent Students</string>
     <string name="lbl_select_mark_card">Mark Card</string>
     <string name="lbl_create_mark_card">Create Mark Card</string>
     <string name="lbl_create">Create</string>
     <string name="lbl_duration">Duration</string>
     <string name="hint_from">From</string>
     <string name="hint_to">To</string>
+    <string name="lbl_allow_team_post">Allow Team Post</string>
     <string name="lbl_subjects">Subjects</string>
+    <string name="lbl_obtained_mark">Obtained Marks</string>
     <string name="lbl_add_marks">Add Marks</string>
     <string name="lbl_add_subjects_marks">Add Subject Marks</string>
     <string name="hint_max_marks">Max Marks</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_profile_update_des">33% Profile updated</string>
+
     <string name="lbl_update_mark_card">Update Mark Card</string>
     <string name="hint_min_marks">Min Marks</string>
     <string name="lbl_youtube">Youtube</string>
+    <string name="lbl_pdf">Pdf</string>
+    <string name="lbl_delete_mark_card">Delete Mark Card</string>
+    <string name="lbl_remove_file">Remove File</string>
+    <string name="lbl_ok">ok</string>
     <string name="lbl_register_e_book">E-Books Register</string>
     <string name="lbl_add_ebook">Add E-Book</string>
     <string name="hint_select_Pdf_Book">Select Pdf Book</string>
@@ -479,6 +672,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="strAddNew">Add New</string>
     <string name="lbl_chapter_name">Chapter Name</string>
     <string name="lbl_topic_name">Topic Name</string>
+    <string name="lbl_delete_topic">Delete Topic</string>
     <string name="lbl_update_subject">Update Subject</string>
     <string name="lbl_completed_student">Completed Students</string>
     <string name="lbl_not_completed_student">Not Completed Topic Students</string>
@@ -490,13 +684,608 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_due_date">Due Dates</string>
     <string name="hint_min_amount">Minimum Amount</string>
     <string name="due_date">Due Date</string>
+    <string name="lbl_title_Text">Title Text</string>
+    <string name="lbl_gruppie_contact">Gruppie Contacts</string>
     <string name="lbl_PaidDates">Paid Dates</string>
     <string name="lbl_total_paid">Amount Paid</string>
     <string name="paid_date">Paid Date</string>
     <string name="lbl_total_balance">Total Balance Amount</string>
     <string name="lbl_total_amount_paid">Total Amount Paid</string>
     <string name="lbl_enter_chapter_name">Enter chapter name</string>
+    <string name="lbl_enter_topic_name">Enter Topic name</string>
     <string name="lbl_completed">Completed</string>
+    <string name="lbl_clear">Clear</string>
+    <string name="lbl_filter">Filter</string>
+    <string name="lbl_no_of_day">No. Of Days</string>
+
+    <string name="lbl_select_class">Select Class</string>
+    <string name="strYes">Yes</string>
+    <string name="strNo">No</string>
+    <string name="strDescription">Description</string>
+    <string name="lbl_last_submition_date">Last Submission Date</string>
+    <string name="hint_date">Select Date</string>
+    <string name="strDeleteHw">Delete Homework</string>
+    <string name="lbl_attendance_report_online">Attendance Report Online</string>
+    <string name="lbl_generate_report">Generate Report</string>
+    <string name="not_verified"><u>Not Verified</u></string>
+    <string name="reassigned"><u>Reassigned</u></string>
+    <string name="verified"><u>Verified</u></string>
+    <string name="lbl_subject_name">Enter Subject Name</string>
+    <string name="lbl_course_name">Enter Course Name</string>
+    <string name="lbl_period">Period</string>
+    <string name="student_attendance_report">Student Attendance Report</string>
+    <string name="download">Download</string>
+    <string name="share_">Share</string>
+    <string name="strDrawing">Drawing</string>
+    <string name="strText">Text</string>
+    <string name="strEraser">Eraser</string>
+    <string name="strZoom">Zoom</string>
+    <string name="lbl_enter_text">Enter Text</string>
+
+    <string name="strBox">Box</string>
+    <string name="hint_time">Select Time</string>
+    <string name="hint_enter_marks">Enter Marks</string>
+
+    <string name="select_start_end_time">Select Start &amp; End Time </string>
+    <string name="hint_test_date">Test Date</string>
+    <string name="hint_level">Level : </string>
+    <string name="hint_test_start_time">Start Time</string>
+    <string name="hint_test_end_time">End Time</string>
+    <string name="strLastSubTime">Last Submission Time</string>
+    <string name="strProctoring">Proctoring</string>
+    <string name="strScheduleTest">Schedule Test/Exam</string>
+    <string name="strGetQuestPaperLink">Get question paper link</string>
+    <string name="strSend">Send</string>
+    <string name="lbl_test_name">Test Name</string>
+    <string name="hint_search_group">Search</string>
+
+    <string name="lbl_paid_fees">Paid Fees</string>
+    <string name="lbl_from_date">From Date</string>
+    <string name="lbl_to_date">To Date</string>
+
+    <string name="lbl_plan">Planed</string>
+    <string name="lbl_actual">Actual</string>
+
+    <string name="lbl_class_fees">Class Fees</string>
+    <string name="due_amount">Amount Due</string>
+    <string name="lbl_pay">Pay</string>
+    <string name="lbl_delete_test_paper">Delete Test Paper</string>
+    <string name="lbl_paid_details">Paid Details</string>
+    <string name="lbl_amount_paid">Amount Paid : </string>
+    <string name="lbl_mode">MODE : </string>
+    <string name="lbl_attachment">Attachment : </string>
+    <string name="lbl_approve">Approve</string>
+    <string name="lbl_hold">Hold</string>
+    <string name="lbl_not_approve">Not Approve</string>
+    <string name="lbl_offline">OFFLINE</string>
+    <string name="lbl_online">ONLINE</string>
+    <string name="lbl_add_subject_mark">Add subject / marks</string>
+    <string name="lbl_Date">Date</string>
+    <string name="lbl_just_now">Just Now</string>
+    <string name="lbl_Start_Time">Start Time</string>
+    <string name="lbl_start">Start</string>
+    <string name="lbl_stop">Stop</string>
+    <string name="lbl_End_Time">End Time</string>
+    <string name="lbl_Time">Time</string>
+    <string name="lbl_Max_Marks">Max Marks</string>
+    <string name="lbl_Min_Marks">Min Marks</string>
+    <string name="lbl_ResultDate">Result Date</string>
+    <string name="strSelectDate">Select Date</string>
+    <string name="lbl_Max">Max</string>
+    <string name="lbl_min">Min</string>
+    <string name="lbl_obtain">Obtained</string>
+    <string name="lbl_about_constituency">About Constituency</string>
+    <string name="lbl_booth_register">Booth/Member Register</string>
+    <string name="lbl_booths_register">Booth Register</string>
+    <string name="lbl_committee">Committee</string>
+    <string name="strDeleteCommittee">Delete Committee</string>
+    <string name="strEditCommittee">Edit Committee</string>
+    <string name="lbl_family_register">Family Register</string>
+    <string name="lbl_booth_name">Booth Name*</string>
+    <string name="lbl_booth_president">Booth President Name*</string>
+    <string name="lbl_add_booth">Add Booth</string>
+    <string name="lbl_add_committee">Add Committee</string>
+
+    <string name="lbl_update_committee">Update Committee</string>
+    <string name="relationship">Relationship*</string>
+    <string name="lbl_voterId">Voter Id</string>
+    <string name="lbl_category">Category</string>
+    <string name="lbl_voterId_v2">Voter Id*</string>
+    <string name="lbl_education">Education</string>
+    <string name="lbl_profession">Profession</string>
+    <string name="lbl_caste">Caste</string>
+    <string name="lbl_sub_caste">Sub Caste</string>
+    <string name="lbl_voterId2">Voter Id*</string>
+    <string name="lbl_adharNumber">Aadhar Number</string>
+    <string name="lbl_role">Role</string>
+    <string name="lbl_Booths">Booths</string>
+    <string name="lbl_Workers">Workers List</string>
+    <string name="lbl_Street">Street List</string>
+    <string name="lbl_Voter">Voter List</string>
+    <string name="lbl_public_forum">Public Forum</string>
+    <string name="strMsgConst">Do you want to continue live meeting?</string>
+    <string name="lbl_my_profile">MY INFO</string>
+    <string name="lbl_info">INFO</string>
+    <string name="lbl_end">END</string>
+    <string name="lbl_family_income">Family Income</string>
+    <string name="lbl_family">FAMILY INFO</string>
+    <string name="lbl_save">Save</string>
+    <string name="lbl_RegisterIssue">Issue/TaskForce Register</string>
+    <string name="lbl_RecordAudio">Record Audio</string>
+    <string name="lbl_jurisdiction">Jurisdiction/Place*</string>
+    <string name="lbl_issue">Issue*</string>
+    <string name="lbl_V1_issue">Issue</string>
+    <string name="lbl_days">Days</string>
+    <string name="lbl_name__">Name : </string>
+    <string name="lbl_roll_no">Roll Number : </string>
+    <string name="lbl_exam_duration">Exam Duration : </string>
+    <string name="lbl_total_marks">Total Marks : </string>
+    <string name="lbl_mark_card">Mark Card ></string>
+    <string name="lbl_day">Day</string>
+    <string name="lbl_roll_No">Roll No</string>
+    <string name="lbl_morning">Morning</string>
+    <string name="lbl_all_booth_member">All Booth Members</string>
+    <string name="lbl_add_ticket">Add\nTicket</string>
+    <string name="lbl_leave_req">Leave\nRequest</string>
+    <string name="lbl_leave_request">Leave Request</string>
+    <string name="lbl_select_class_">Select Class ></string>
+    <string name="lbl_evening">Evening</string>
+    <string name="lbl_add_issue">Add Issue</string>
+    <string name="lbl_departmentMember">Department Member</string>
+    <string name="lbl_departmentTaskForce">Department Task Force</string>
+    <string name="lbl_partyMember">Party Member</string>
+    <string name="lbl_partyTaskForce">Party Task Force</string>
+    <string name="lbl_edit">Edit</string>
+    <string name="strDelete">Delete</string>
+    <string name="strTicket">Delete Ticket</string>
+    <string name="lbl_select_contact">Select Contacts</string>
+    <string name="strSelect">Select</string>
+    <string name="lbl_booth_coordinate_register">Booth Coordinator register</string>
+    <string name="lbl_booth_coordinate">Booth Coordinator</string>
+    <string name="lbl_booth_in_charge">Booth In Charge</string>
+    <string name="lbl_salary">Salary</string>
+    <string name="lbl_serial_number">Serial Number</string>
+    <string name="lbl_booth_number">Booth Number*</string>
+    <string name="lbl_booth_address">Booth Address*</string>
+    <string name="lbl_booth_ads">Booth Address</string>
+    <string name="lbl_booth_about">Booth About*</string>
+    <string name="lbl_about_booth">About Booth</string>
+    <string name="lbl_print_attendance_report">Print Attendance Report</string>
+    <string name="lbl_course">Course</string>
+    <string name="lbl_select_sticker">Select Sticker</string>
+    <string name="lbl_submit_attendance">Submit Attendance</string>
+    <string name="lbl_date_and_time">Date &amp; Time</string>
+
+    <string name="lbl_do_you_want_to_continue_class">Do you want to Continue Class?</string>
+    <string name="total_topic_count">Total Topics Count</string>
+    <string name="total_topic_pending">Total Topics Pending</string>
+    <string name="total_topic_completed">Total Topics Completed</string>
+    <string name="total_end_delay">Total End Delay</string>
+    <string name="total_com_on_time">Total Completed On-Time</string>
+
+    <string name="rb_write_properly">Write Properly</string>
+    <string name="rb_spelling_mistakes">Spelling Mistakes</string>
+    <string name="rb_improve_handwriting">Improve Handwriting</string>
+    <string name="rb_write_your_own">Write your own</string>
+    <string name="rb_open_within_app">Open Within App</string>
+    <string name="rb_open_with_jitsi">Open With Jitsi</string>
+
+
+    <string name="menu_import_students">Import Students</string>
+    <string name="add">Add</string>
+    <string name="menu_edit_topic">Edit Topic</string>
+    <string name="menu_invite">Invite</string>
+    <string name="menu_delete_chapter">Delete Chapter</string>
+    <string name="menu_add_chapter">Add Chapter</string>
+    <string name="menu_print_student_list">Print Student List</string>
+    <string name="menu_delete_time_table">Delete Time Table</string>
+    <string name="menu_add_ebooks">Add E-Books</string>
+    <string name="menu_allow_to_add_member">Allow to add member</string>
+    <string name="menu_allow_to_add_post">Allow to add post</string>
+    <string name="menu_allow_to_add_post_comment">Allow to add post comment</string>
+    <string name="menu_add_family_member">Add Family Member</string>
+    <string name="menu_add_update_fees">Add/Update Fees</string>
+    <string name="menu_print_fees">Print Fees List</string>
+    <string name="menu_edit_fees">Edit Fees</string>
+    <string name="menu_pervious">Previous</string>
+    <string name="menu_invite_friend">Invite Friend</string>
+    <string name="menu_friend_list">Friend List</string>
+    <string name="menu_add_friend">Add Friends</string>
+    <string name="menu_sync_contact">Sync Contacts</string>
+    <string name="menu_zoom_meeting">Zoom Meeting</string>
+    <string name="menu_close">Close</string>
+    <string name="menu_staff_attendance" translatable="false">Staff Attendance</string>
+    <string name="menu_leave_team">Leave Team</string>
+    <string name="menu_edit_team">Edit Team</string>
+    <string name="menu_add_team">Add Team</string>
+    <string name="menu_print_staff">Print Staff List</string>
+    <string name="menu_delete_staff">Delete Staff</string>
+    <string name="menu_make_admin">Make admin</string>
+    <string name="menu_text_exam">Add Test/Exam</string>
+    <string name="menu_staff_filter">Staffs</string>
+    <string name="menu_edit_test_exam">Edit Test/Exam</string>
+    <string name="menu_remove_test_exam">Remove Test/Exam</string>
+    <string name="menu_add_update_time_table">Add/Update Time Table</string>
+    <string name="menu_add_topic">Add Topic</string>
+    <string name="menu_delete_test_exam">Delete Test/Exam</string>
+    <string name="menu_change_language">Change Language</string>
+    <string name="lbl_submit_assignment">Submit Assignment</string>
+    <string name="menu_print_member">Print Member</string>
+    <string name="title_add_bus_student">Add Bus Student</string>
+    <string name="title_add_">Add </string>
+    <string name="title_booth_member">Booth Member</string>
+    <string name="title_add_cordinate">Add Coordinator</string>
+    <string name="title_cordinate_details">Coordinator Detail</string>
+    <string name="title_student_details">Student Detail</string>
+    <string name="title_add_file_to_album">Add File to album</string>
+    <string name="title_add_to_gallery">Add to Gallery</string>
+    <string name="title_add_code_of_conduct">Add Code Of Conduct</string>
+    <string name="title_add_student">Add Student</string>
+    <string name="title_update_family_member">Update Family Member</string>
+    <string name="title_add_family_member">Add Family Member</string>
+    <string name="title_add_post_to_team">Add Post To Team</string>
+    <string name="title_post_a_new_notice">Post a new notice</string>
+    <string name="title_post_to">Post to </string>
+    <string name="title_add_course">Add Course</string>
+    <string name="title_staff_details">Staff Detail</string>
+    <string name="title_add_doubt">Add Doubt</string>
+    <string name="title_add_answer">Add Answer</string>
+    <string name="title_add_vendor">Add Vendor</string>
+    <string name="title_attendance">Attendance</string>
+    <string name="title_coordinator">Coordinators</string>
+    <string name="title_edit_attendance">Edit Attendance</string>
+    <string name="title_add_voter">Add Voter</string>
+    <string name="title_gps_track">Gps Track</string>
+    <string name="title_marks_card">Marks Card</string>
+    <string name="post">Post</string>
+    <string name="title_details">Details</string>
+    <string name="title_member_details">Member Detail</string>
+    <string name="title_submit_answer_paper">Submit Answer Paper</string>
+    <string name="title_add_chapter_plan">Add Chapter Plan</string>
+
+    <string name="toast_file_download">File is Download In : </string>
+    <string name="toast_enter_name">Please Enter Name</string>
+    <string name="toast_enter_desiganation">Please Enter Profession</string>
+    <string name="toast_select_profession">Please Select Profession</string>
+    <string name="toast_enter_education">Please Enter Education</string>
+    <string name="toast_enter_dob">Please Enter Date of Birth</string>
+    <string name="toast_select_religion">Please Select Religion</string>
+    <string name="toast_select_caste">Please Select Caste</string>
+    <string name="toast_select_sub_caste">Please Select Sub Caste</string>
+
+
+    <string name="toast_enter_phone">Please Enter Phone</string>
+    <string name="toast_valid_phone">Please Enter Valid Phone Number</string>
+    <string name="toast_no_post">No posts available</string>
+    <string name="toast_already_reported">You have already reported this post</string>
+    <string name="toast_add_one_contact">Please Add at least one contact</string>
+    <string name="toast_add_member_successfully">Add Member successfully</string>
+    <string name="toast_storage_permission_needed">Storage permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="toast_enter_subject">Please Enter Subject</string>
+    <string name="toast_select_pdf">Please Select PDF</string>
+    <string name="toast_add_topic_name">Please Add Topic Name</string>
+    <string name="toast_syllabus_add_successfully">Syllabus Add SuccessFully</string>
+    <string name="toast_upload_failed">Upload Failed</string>
+    <string name="toast_some_problem_occure">Some Problem Occurred Please try again</string>
+    <string name="toast_post_delete_successfully">Post Deleted Succesfully</string>
+    <string name="toast_attendance_submit">Attendance Submitted</string>
+    <string name="toast_number_change_successfully">Number changed successfully , Please Login Again With New Number</string>
+    <string name="toast_edit_coordinate">Edit Coordinate successfully</string>
+    <string name="toast_add_coordinate">Add Coordinate successfully</string>
+    <string name="toast_delete_coordinate">Delete Coordinate successfully</string>
+    <string name="toast_mark_card_delete_successfully">Mark Card Deleted Successfully</string>
+    <string name="toast_input_some_query">Input some query first</string>
+    <string name="toast_ticket_add_successfully">Ticket Added Successfully</string>
+    <string name="toast_select_team">Please Select Team</string>
+    <string name="toast_add_issue">Please Add Issue</string>
+    <string name="toast_valid_issue">Please Enter Valid Issue</string>
+    <string name="toast_add_image_or_video_or_audio">Please Add Image or video or Audio</string>
+    <string name="toast_select_location">Please Select Location</string>
+    <string name="toast_audio_permission_needed">Audio permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="toast_valid_youtube_link">Not a valid youtube link</string>
+    <string name="toast_change_pin">Change Pin SuccessFully</string>
+    <string name="toast_select_friend_first">Please select any friend first</string>
+    <string name="toast_error_comression">Error In Compression : </string>
+    <string name="toast_select_staff">Select Any Staff Member</string>
+    <string name="toast_add_success">Added Successfully!</string>
+    <string name="toast_not_able_to_compress">Not able to compress selected image. Please verify</string>
+    <string name="toast_address_not_found">Address Not found</string>
+    <string name="toast_add_student_sucess">Add Student successfully</string>
+    <string name="toast_edit_student_sucess">Edit Student successfully</string>
+    <string name="toast_delete_student_sucess">Delete Student successfully</string>
+    <string name="toast_stop_audio">Stop Audio Recording</string>
+    <string name="toast_enable_gps">Please Enable Gps</string>
+    <string name="toast_add_to_group">Added to Group</string>
+    <string name="toast_could_not_find_file">Could not find the filepath of the selected file</string>
+    <string name="toast_app_not_install">APP Not Installed</string>
+    <string name="toast_video_upload_background">Video Uploading in background</string>
+    <string name="toast_enter_chapter_name">Please Enter Chapter Name</string>
+    <string name="toast_enter_topic_name">Please Enter Topic Name</string>
+    <string name="toast_posted_successfully">Posted Successfully</string>
+    <string name="toast_add_description">Please Add Description</string>
+    <string name="toast_add_description_image_or_video">Please Add Description Or Select Image Or Video</string>
+    <string name="toast_enter_msg">Please enter msg</string>
+    <string name="toast_draw_over_permission">Draw over permission not available.</string>
+    <string name="toast_message_send_success">Message send successfully</string>
+    <string name="toast_error_in_download">error in Download :</string>
+    <string name="toast_add_comment">Add Comment</string>
+    <string name="toast_post_reported_sucessfully">Post Reported Successfully</string>
+    <string name="toast_user_deleted">User Deleted</string>
+    <string name="toast_admin_changed">Admin Changed</string>
+    <string name="toast_attendance_report_save_successfully">Attendance Report Save successfully</string>
+    <string name="toast_notification_not_found">Notification Not Found</string>
+    <string name="toast_please_select_student">Please Select Student</string>
+    <string name="toast_shared_successfully">Shared successfully</string>
+    <string name="toast_select_any_group_first">Select any group first</string>
+    <string name="toast_you_can_not_leave_team">You can\'t leave team</string>
+    <string name="toast_error_set_wallpaper">Error in set wallpaper</string>
+    <string name="toast_update_successfully">Updated Successfully</string>
+    <string name="toast_ebook_add_successfully">E-Book Successfully Added</string>
+    <string name="toast_add_one_subject">Please add at least one subject</string>
+    <string name="toast_add_image_video_pdf">Please Add Image or video or pdf</string>
+    <string name="toast_successfully_submit">Successfully Submitted</string>
+    <string name="toast_select_date">Please Select Date</string>
+    <string name="toast_please_select_subject">Please Select Subject</string>
+    <string name="toast_please_select_start_time">Please Select Start Time</string>
+    <string name="toast_please_select_end_time">Please Select End Time</string>
+    <string name="toast_please_enter_max_mark">Please Enter Max Marks</string>
+    <string name="toast_please_enter_min_mark">Please Enter Min Marks</string>
+    <string name="toast_please_select_one_subject_mark">Please add at least one subject/marks</string>
+    <string name="toast_please_enter_title">Please Enter Title</string>
+    <string name="toast_please_add_subject">Please Add Subject</string>
+    <string name="toast_please_add_max_marks">Please Add Max Marks</string>
+    <string name="toast_please_add_min_marks">Please Add Min Marks</string>
+    <string name="toast_please_select_from_date">Please Select From Date</string>
+    <string name="toast_please_select_to_date">Please Select To Date</string>
+    <string name="toast_status_sucessfully_update">Status successfully updated</string>
+    <string name="toast_please_add_album_name">Please Add Album Name</string>
+    <string name="toast_please_add_image_or_video">Please Add Image or video</string>
+    <string name="toast_successfully_posted">Successfully Posted</string>
+    <string name="toast_add_file_successfully">Add File Successfully</string>
+    <string name="toast_select_group_type">Select Group Type</string>
+    <string name="toast_successfully_updated_group_details">Successfully updated group details</string>
+    <string name="toast_please_enter_post_first">Please enter post first</string>
+    <string name="toast_file_delete_successfully">File Deleted Successfully</string>
+    <string name="toast_input_some_query_first">Input some query first</string>
+    <string name="toast_select_any_team">Please select any team first</string>
+    <string name="toast_enter_fees_type">Please Enter Fees Type</string>
+    <string name="toast_enter_fees_amount">Please Enter Fees Amount</string>
+    <string name="toast_select_due_date">Please Select Due Date</string>
+    <string name="toast_enter_due_date_amount">Please Enter Due Date Amount</string>
+    <string name="toast_enter_due_amount">Please Enter Due Amount</string>
+    <string name="toast_select_paid_date">Please Select Paid Date</string>
+    <string name="toast_please_enter_paid_amount">Please Enter Paid Amount</string>
+    <string name="toast_please_select_paid_date">Please Select Paid Date</string>
+    <string name="toast_please_enter_due_paid_amount">Please Enter Due Paid Amount</string>
+    <string name="toast_please_enter_type">Please Enter Type</string>
+    <string name="toast_please_enter_amount">Please Enter Amount</string>
+    <string name="toast_fees_details_amount_should_not_be_greater">Fees Detail Amount should not be greater than total fees amount</string>
+    <string name="toast_paid_amount_should_not_more_than_total">Paid Amount should not more than Total Fees</string>
+    <string name="toast_please_add_total_fees">Please add total fees</string>
+    <string name="toast_enter_comment_first">Enter comment first</string>
+    <string name="toast_enter_reply_first">Please enter reply first</string>
+    <string name="toast_please_add_des_image_pdf">Please Add Description or Image or pdf</string>
+    <string name="toast_add_title">Please Add Title</string>
+    <string name="toast_select_test_time">Please Select Test Time</string>
+    <string name="toast_select_test_date">Please Select Test Date</string>
+    <string name="toast_enter_valid_email">Enter valid Email</string>
+    <string name="toast_voter_add_successfully">Voter Added SuccessFully</string>
+    <string name="toast_voter_delete_successfully">Voter Delete SuccessFully</string>
+    <string name="toast_select_contact">Please select contact</string>
+    <string name="toast_image_download">Image Downloaded.</string>
+    <string name="toast_mark_card_uploaded">Marks Card Uploaded</string>
+    <string name="toast_select_image_pdf">Please Select Image Or Pdf</string>
+    <string name="toast_microphone_permission_needed">Microphone permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="toast_select_start_and_date">Please Select Start and End Time</string>
+    <string name="toast_select_subject_and_staff">Please Select Subject and Staff</string>
+    <string name="toast_successfully_add_time_table">Successfully Added Time Table</string>
+    <string name="toast_select_end_time_after_start_time">Select End Time After a Start Time</string>
+    <string name="toast_period_value_already_used">Period Value Already Used</string>
+    <string name="toast_password_not_match">Password Not Match.!</string>
+    <string name="toast_device_not_supported">This device is not supported.</string>
+    <string name="toast_location_data_not_available">Location data not available</string>
+    <string name="toast_edit_member_success">Edit Member successfully</string>
+    <string name="toast_delete_member_success">Delete Member successfully</string>
+    <string name="toast_otp_sent_mobile_success">OTP Sent To Your Entered Mobile Successfully!!!</string>
+    <string name="toast_otp_send_email_success">OTP Sent To Your Email Successfully!!!</string>
+    <string name="toast_invalid_otp">Invalid OTP</string>
+    <string name="toast_invalid_otp_password">Invalid OTP/Password</string>
+    <string name="toast_add_at_least_one_due_date">Please add at least one due date</string>
+    <string name="toast_total_fees_and_due_date_amount_same">Total Fees and Due Dates Amounts should be same</string>
+    <string name="toast_student_added">Student added.</string>
+    <string name="toast_validation_error">validation Error</string>
+    <string name="toast_failed_save_image">Failed to save Image. </string>
+    <string name="toast_please_add_text">Please Add Text</string>
+    <string name="toast_add_one_teacher">Please add at least one teacher</string>
+    <string name="toast_add_staff_successfully">Add Staff successfully</string>
+    <string name="toast_edit_staff_successfully">Edit Staff successfully</string>
+    <string name="toast_delete_staff_successfully">Delete Staff successfully</string>
+    <string name="toast_no_kid_found">No Kids found.</string>
+    <string name="toast_enter_class_name">Please Enter Class Name</string>
+    <string name="toast_add_image_pdf">Please Add Image or pdf</string>
+    <string name="toast_add_title_description_image_video">Please Add Title and Description or Select Image Or Video</string>
+    <string name="toast_user_cannot_upload_image_video_same_time">User cannot upload image and video at the same time</string>
+    <string name="toast_add_one_subject_pdf">Please add at least one subject and pdf</string>
+    <string name="toast_paid_amount_should_not_grater_than_amount">Paid amount should not grater than Amount Due</string>
+    <string name="toast_please_add_attachment">Please Add Attachment</string>
+    <string name="toast_successfully_paid">Successfully Paid</string>
+    <string name="toast_wrong_password">Wrong Password</string>
+    <string name="toast_add_course_name">Please Add Course Name</string>
+    <string name="toast_enter_relationship">Please Enter Relationship</string>
+    <string name="toast_delete_family_member_successfully">Delete Family Member successfully</string>
+    <string name="toast_update_family_member_successfully">Update Family Member successfully</string>
+    <string name="toast_add_vendor_name">Please Add Vendor Name</string>
+    <string name="toast_success">Success</string>
+    <string name="toast_delete_success">Delete Success</string>
+    <string name="toast_course_update">Course Updated successfully</string>
+    <string name="toast_you_are_not_authorized">You are not authorized to access this App</string>
+    <string name="toast_please_disable_attendance">Please disable attendance</string>
+    <string name="toast_please_disable_gps">Please disable GPS</string>
+    <string name="toast_create_mark_card">Please Create Mark Card</string>
+    <string name="toast_otp_send_to">OTP has been sent to </string>
+    <string name="toast_no_data_found">No data found.</string>
+    <string name="toast_change_plan">Change Plan Successfully</string>
+    <string name="toast_set_status_plan">Status Plan Set Successfully</string>
+    <string name="toast_please_select_chapter">Please Select Chapter</string>
+
+
+    <string name="txt_enter_old_pin">Enter Old Pin</string>
+    <string name="txt_old_pin_wrong">Old Pin Wrong</string>
+    <string name="txt_enter_new_pin">Enter New Pin</string>
+    <string name="txt_confirm_pin_not_match">Confirm Pin Not Match</string>
+    <string name="txt_enter_confirm_pin">Enter Confirm Pi.</string>
+    <string name="txt_my_groups">My Groups</string>
+    <string name="txt_public_groups">Public Groups</string>
+
+    <string name="txt_no_time_table_found">No Time Table found</string><!--No Time Table found.-->
+    <string name="txt_no_mark_card_found">No MarkCard Found!</string><!--No MarkCard Found!-->
+
+    <string name="txt_no_booth_team_found">No Booths Teams found</string><!--No Booths Teams found.-->
+    <string name="txt_roll_no_student">Roll No\n( Student )</string>
+    <string name="txt_name_student">Name\n( Student )</string>
+    <string name="txt_no_street_found">No Streets found</string><!--No Streets found.-->
+
+    <string name="txt_no_bus_found">No Bus found</string><!--No Bus found.-->
+    <string name="txt_no_coordinate_found">No Coordinate found</string><!--No Coordinate found.-->
+    <string name="txt_phone">Phone: </string>
+    <string name="txt_no_booth_member_found">No Booth Member found</string><!--No Booth Member found-->
+
+    <string name="txt_by">By </string>
+    <string name="txt_multiple_group">Multiple Group</string>
+    <string name="txt_news_feed">News Feed</string>
+    <string name="txt_personal_chats">Personal Chats</string>
+    <string name="txt_group_chats">Group Chats</string>
+    <string name="txt_book_selected"> book selected</string>
+    <string name="txt_add_homework">Add Homework</string>
+    <string name="txt_remove_from_admin">Remove from admin</string>
+    <string name="txt_make_as_admin">Make as admin</string>
+    <string name="txt_no_staff">No Staff found.</string>
+    <string name="txt_select_start_time">Select Start Time</string>
+    <string name="txt_to">" to "</string>
+    <string name="txt_select_end_time">Select End Time</string>
+    <string name="txt_select_language">Select Language</string>
+    <string name="txt_constituency_not_found">No Constituency found</string><!--No Constituency found.-->
+    <string name="txt_last_submission_date">Last Submission Date : </string>
+    <string name="txt_comment">Comment</string>
+    <string name="txt_empty_data">No Data Found</string>
+    <string name="txt_failed_to_load">Could not load data. Please try again later.</string>
+    <string name="txt_no_booth_found">No Booths found</string><!--No Booths found-->
+    <string name="txt_no_voter_found">No Voters found</string><!--No Voters found-->
+    <string name="txt_no_subject_found">No Subject found</string><!--No Subject found-->
+    <string name="txt_no_staff_found">No Staff founzd</string><!--No Staff founzd-->
+    <string name="txt_no_student_found">No Data Found</string><!--No Student found.-->
+    <string name="txt_no_post_found">No Post found</string><!--No Post found.-->
+    <string name="txt_no_worker_found">No Workers found</string><!--No Workers found.-->
+    <string name="txt_no_assignment_found">No Assignment found</string><!--No Assignment found.-->
+    <string name="txt_no_class_found">No Class found</string><!--No Class found-->
+    <string name="txt_no_committee_found">No Committee found</string><!--No Committee found.-->
+    <string name="txt_no_ebook_found">No E-Book found</string><!--No E-Book found.-->
+    <string name="txt_no_family_member_found">No Family Member found</string><!--No Family Member found.-->
+    <string name="txt_no_fee_created">No Fee Created</string><!--No Fee Created..-->
+    <string name="txt_no_fee_found">No Fee Found</string><!--No Fee Found-->
+    <string name="txt_no_group_found">No Group found</string><!--No Group found.-->
+    <string name="txt_no_issue_found">No Issue found</string><!--No Issue found.-->
+    <string name="txt_no_syllabus_found">No Syllabus found</string><!--No Syllabus found.-->
+    <string name="txt_no_notification_found">No Notification found</string><!--No Notification found.-->
+    <string name="txt_no_hw_found">No HomeWork found</string><!--No HomeWork found.-->
+    <string name="txt_no_test_exam_found">No Kids found</string><!--No Test/Exam Found.-->
+    <string name="txt_no_kid_found">No Kids found</string><!--No Kids found.-->
+    <string name="txt_no_people_found">No People found</string><!--No People found.-->
+    <string name="txt_no_pdf_found">No Pdf Found</string><!--No Pdf Found.-->
+    <string name="txt_no_test_found">No Test found</string><!--No Test found-->
+
+    <string name="txt_pin">Pin</string>
+    <string name="txt_confirm_pin_wrong">Confirm Pin Wrong</string>
+    <string name="txt_enter_pin">Enter Pin</string>
+    <string name="txt_enter_valid_pin">Enter Valid Pin</string>
+    <string name="txt_basic_info">Basic Info</string>
+    <string name="txt_other_info">Other Info</string>
+    <string name="txt_no_taluks_found">No Taluks found</string><!--No Taluks found.-->
+    <string name="txt_no_test_paper_found">No Test Paper found</string><!--No Test Paper found.-->
+    <string name="txt_open">Open</string>
+    <string name="txt_constituency_issue">Constituency Issue </string>
+    <string name="txt_no_ticket_found">No Tickets Found</string><!--No Tickets Found-->
+    <string name="txt_please_provide_marks">Please Provide Marks</string>
+    <string name="txt_reply">Reply</string>
+
+    <string name="txt_english">English</string>
+    <string name="txt_kannada">ಕನ್ನಡ</string>
+
+    <string name="hint_search_voter">Search Voter</string>
+    <string name="hint_search_booths">Search Booths</string>
+    <string name="hint_write_comment">Write a comment</string>
+    <string name="hint_write_post">Write a post</string>
+    <string name="hint_write_reply">Write a reply</string>
+    <string name="hint_search_booth_team">Search Booth Team</string>
+    <string name="hint_search_sub_booth">Search Sub Booth</string>
+
+
+    <string name="dialog_new_version_available">New version is available. download new version from play store</string>
+    <string name="dialog_update_available">Update available!</string>
+    <string name="dialog_are_you_sure_you_want_to_approve">Are you sure you want to approve?</string>
+    <string name="dialog_are_you_sure_you_want_to_add_class">Are you sure you want to Add Class?</string>
+    <string name="dialog_are_you_sure_you_want_to_not_approve">Are you sure you want to Not approve?</string>
+    <string name="dialog_are_you_sure_you_want_to_hold">Are you sure you want to hold?</string>
+    <string name="dialog_are_you_want_to_delete">Are you sure you want to delete?</string>
+    <string name="dialog_are_you_sure_want_to_delete_user">Are you sure you want to Delete This User ?</string>
+    <string name="dialog_are_you_want_to_make_admin">Are you sure you want to Make this user as Admin ?</string>
+    <string name="dialog_share_live_class">Do you want to share this live class?</string>
+    <string name="dialog_remove_banner">Are You Sure You Want to Remove This Banner ?</string>
+    <string name="dialog_are_you_sure">Are You Sure You Want to </string>
+    <string name="dialog_are_you_sure_you_want_to_change_attend">Are You Sure You Want to Change Attendance ? </string>
+    <string name="dialog_ticket"> Ticket ?</string>
+
+
+    <string name="smb_dialog_this_will_schedule_new_test">This will schedule new test/exam, kindly remove old test/exam if you are not required</string>
+    <string name="smb_dialog_permission_change">Your Account permissions have been changed , Please logout and login again.</string>
+    <string name="smb_dialog_delete_class">Are you sure you want to permanently delete this class.?</string>
+    <string name="smb_dialog_delete_bus">Are you sure you want to permanently delete this Bus.?</string>
+    <string name="smb_delete_student">Are you sure you want to permanently delete this student.?</string>
+    <string name="smb_Delete_commitee">Are you sure you want to delete this Committee ?</string>
+    <string name="smb_delete_cordinate">Are you sure you want to permanently delete this coordinate.?</string>
+    <string name="smb_delete_staff">Are you sure you want to permanently delete this staff.?</string>
+    <string name="smb_remove_from_admin">Are you sure you want to remove this users from admin?</string>
+    <string name="smb_delete_subject">Are you sure you want to permanently delete this Subjects.?</string>
+    <string name="smb_delete_time_table">Are you sure you want to delete time-table day?</string>
+    <string name="smb_do_you_like_set_wallpaper">Do you like to set this as a wallpaper?</string>
+    <string name="smb_delete_group">Are you sure about deleting this group?</string>
+    <string name="smb_delete_topic">Are you sure you want to delete this topic?</string>
+    <string name="smb_delete_team">Are you sure you want to permanently delete this team.?</string>
+    <string name="smb_delete_test">Are you sure you want to permanently delete this Test.?</string>
+    <string name="smb_stop_gps_track">Are you sure you want to stop GPS Tracking.?</string>
+    <string name="smb_delete_home_work">Are You Sure Want To Delete This Homework?</string>
+    <string name="smb_delete_assignment">Are You Sure Want To Delete This Assignment?</string>
+    <string name="smb_want_to_move">Are You Sure Want To move </string>
+    <string name="smb_assignment_not_verified"> assignment to not verified?</string>
+    <string name="smb_delete">Are you sure you want to delete </string>
+    <string name="smb_from_team"> from team ?</string>
+    <string name="smb_share_in">Are you sure you want to share in </string>
+    <string name="smb_">.?</string>
+    <string name="smb_delete_test_exam">Are you sure you want to delete this Test/Exam?</string>
+    <string name="smb_delete_member">Are you sure you want to permanently delete this member.?</string>
+    <string name="smb_group">  group ?</string>
+    <string name="smb_complete_note">Have you completed your notes?</string>
+    <string name="smb_delete_chapter">Are you sure you want to delete this chapter?</string>
+    <string name="smb_delete_book">Are you sure you want to delete this Books.?</string>
+    <string name="smb_delete_ebook">Are you sure you want to delete this E-Books.?</string>
+    <string name="smb_leave_team">Are you sure you want to leave?</string>
+    <string name="smb_archive">Are you sure you want to archive </string>
+    <string name="smb_delete_time_table_">Are you sure you want to delete time-table?</string>
+    <string name="smb_add_jitsi_token">Are you sure you want to add jitsiToken.?</string>
+    <string name="smb_attach_file">Attach Selected file?</string>
+    <string name="smb_change_team_admin">Are you sure you want to change team admin</string>
+    <string name="smb_no_file_attached">No File Attached</string>
+    <string name="smb_no_file_download">Please Download All Files</string>
+
+    <string name="smb_logout">Are you sure you want to Logout ?</string>
+
+
+    <string-array name="disability">
+        <item>Select Disability</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
 
     <string-array name="publc_private_array">
         <item>Select Group Type</item>
@@ -519,6 +1308,44 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
         <item>Select Gender</item>
         <item>Male</item>
         <item>Female</item>
+        <item>Other</item>
     </string-array>
+
+    <string-array name="lastSubTime">
+        <item>1min</item>
+        <item>2min</item>
+        <item>3min</item>
+        <item>4min</item>
+        <item>5min</item>
+        <item>6min</item>
+        <item>7min</item>
+        <item>8min</item>
+        <item>9min</item>
+        <item>10min</item>
+        <item>11min</item>
+        <item>12min</item>
+        <item>13min</item>
+        <item>14min</item>
+        <item>15min</item>
+        <item>16min</item>
+        <item>17min</item>
+        <item>18min</item>
+        <item>19min</item>
+        <item>20min</item>
+        <item>21min</item>
+        <item>22min</item>
+        <item>23min</item>
+        <item>24min</item>
+        <item>25min</item>
+        <item>26min</item>
+        <item>27min</item>
+        <item>28min</item>
+        <item>29min</item>
+        <item>30min</item>
+    </string-array>
+
+    <string name="txt_contact_backend">Please contact sales@gruppie.in to enable live class</string>
+    <string name="no_notes_found">No notes found</string>
+
 
 </resources>

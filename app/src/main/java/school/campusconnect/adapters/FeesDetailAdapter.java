@@ -27,7 +27,7 @@ import school.campusconnect.utils.AppDialog;
 public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.ViewHolder> {
     private Context mContext;
     ArrayList<FeesDetailTemp> list = new ArrayList<>();
-    boolean isFromUpdate =false;
+    boolean isFromUpdate = false;
 
     public FeesDetailAdapter(boolean isFromUpdate) {
         this.isFromUpdate = isFromUpdate;
@@ -42,13 +42,14 @@ public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.Vi
     }
 
     public void addList(ArrayList<FeesDetailTemp> list) {
-        if(list==null)
+        if (list == null)
             return;
 
         this.list.clear();
         this.list.addAll(list);
         notifyDataSetChanged();
     }
+
     public void add(FeesDetailTemp feesDetailTemp) {
         list.add(feesDetailTemp);
         notifyDataSetChanged();
@@ -70,10 +71,10 @@ public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.Vi
     }
 
     public void addAll(HashMap<String, String> feeDetails) {
-        if(feeDetails!=null && feeDetails.size()>0){
+        if (feeDetails != null && feeDetails.size() > 0) {
             list = new ArrayList<>();
             for (Map.Entry<String, String> stringStringEntry : feeDetails.entrySet()) {
-                list.add(new FeesDetailTemp(stringStringEntry.getKey(),stringStringEntry.getValue()));
+                list.add(new FeesDetailTemp(stringStringEntry.getKey(), stringStringEntry.getValue()));
             }
             notifyDataSetChanged();
         }
@@ -94,8 +95,8 @@ public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.Vi
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(isFromUpdate){
-                        AppDialog.showConfirmDialog(mContext, "Are you sure you want to delete?", new AppDialog.AppDialogListener() {
+                    if (isFromUpdate) {
+                        AppDialog.showConfirmDialog(mContext, mContext.getResources().getString(R.string.dialog_are_you_want_to_delete), new AppDialog.AppDialogListener() {
                             @Override
                             public void okPositiveClick(DialogInterface dialog) {
                                 list.remove(getAdapterPosition());
@@ -107,7 +108,7 @@ public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.Vi
 
                             }
                         });
-                    }else {
+                    } else {
                         list.remove(getAdapterPosition());
                         notifyDataSetChanged();
                     }
@@ -115,38 +116,46 @@ public class FeesDetailAdapter extends RecyclerView.Adapter<FeesDetailAdapter.Vi
             });
 
 
-            etFeesType.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (isFromUpdate) {
+                etFeesType.setFocusable(true);
+                etFeesTypeVal.setFocusable(true);
+                etFeesType.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    list.get(getAdapterPosition()).setType(charSequence.toString());
-                }
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        list.get(getAdapterPosition()).setType(charSequence.toString());
+                    }
 
-                @Override
-                public void afterTextChanged(Editable editable) {
+                    @Override
+                    public void afterTextChanged(Editable editable) {
 
-                }
-            });
-            etFeesTypeVal.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+                });
+                etFeesTypeVal.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    list.get(getAdapterPosition()).setAmount(charSequence.toString());
-                }
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        list.get(getAdapterPosition()).setAmount(charSequence.toString());
+                    }
 
-                @Override
-                public void afterTextChanged(Editable editable) {
+                    @Override
+                    public void afterTextChanged(Editable editable) {
 
-                }
-            });
+                    }
+                });
+            }else {
+                etFeesType.setFocusable(false);
+                etFeesTypeVal.setFocusable(false);
+            }
+
         }
     }
 }

@@ -31,11 +31,13 @@ import school.campusconnect.utils.MixOperations;
 
 public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder> {
     private final ArrayList<VendorPostResponse.VendorPostData> listData;
+    private final String role;
     private Context mContext;
     VendorListener listener;
-    public VendorAdapter(ArrayList<VendorPostResponse.VendorPostData> listData, VendorListener listener) {
+    public VendorAdapter(ArrayList<VendorPostResponse.VendorPostData> listData, VendorListener listener, String role) {
         this.listData=listData;
         this.listener=listener;
+        this.role=role;
     }
 
     @Override
@@ -98,7 +100,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
 
                     }
                     if (item.fileName != null && item.fileName.size() > 0) {
-                        if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                        if (AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                             holder.imgDownloadPdf.setVisibility(View.GONE);
                         } else {
                             holder.imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -116,7 +118,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
             holder.imgPhoto.setImageResource(R.drawable.novender);
         }
 
-        if (item.canEdit) {
+        if ("admin".equalsIgnoreCase(role)) {
             holder.txt_drop_delete.setVisibility(View.VISIBLE);
             holder.iv_delete.setVisibility(View.VISIBLE);
         } else {

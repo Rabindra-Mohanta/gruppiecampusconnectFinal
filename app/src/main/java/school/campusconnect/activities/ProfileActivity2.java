@@ -33,9 +33,9 @@ import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddressItem;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
-import school.campusconnect.datamodel.ProfileItem;
-import school.campusconnect.datamodel.ProfileItemUpdate;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.profile.ProfileItem;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.ProfileValidationError;
 import school.campusconnect.fragments.ProfileBasicFragment;
 import school.campusconnect.fragments.ProfileOtherFragment;
@@ -111,6 +111,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         initviews();
 
         if(progressBar!=null)
+           // showLoadingBar(progressBar);
             progressBar.setVisibility(View.VISIBLE);
 
         LeafManager manager = new LeafManager();
@@ -138,13 +139,12 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         progressBar1.setProgress(30);
         progressBar1.setSecondaryProgress(99);
 
-
-        mTabLayout.addTab(mTabLayout.newTab().setText("Basic Info"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("Other Info"));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_basic_info)));
+    //    mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_other_info)));
 
         mPagerView = (WrappingViewPager) findViewById(R.id.tabViewPager);
 
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+/*        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -169,7 +169,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        });
+        });*/
 
     }
 
@@ -212,7 +212,8 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
     public void callUpdateApi() {
         if (isValid()) {
             if(progressBar!=null)
-            progressBar.setVisibility(View.VISIBLE);
+                // showLoadingBar(progressBar);
+                progressBar.setVisibility(View.VISIBLE);
 
             LeafManager manager = new LeafManager();
             ProfileItemUpdate item = new ProfileItemUpdate();
@@ -228,13 +229,15 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
             item.occupation = fragment1.edtOccupation.editText.getText().toString();
             item.qualification = fragment1.edtQualification.editText.getText().toString();
 
-            item.address = new AddressItem();
+
+            item.address = fragment1.address.editText.getText().toString();
+         /*
             item.address.line1 = fragment2.edtAddressOne.editText.getText().toString();
             item.address.line2 = fragment2.edtAddressTwo.editText.getText().toString();
             item.address.state = fragment2.edtState.editText.getText().toString();
             item.address.pin = fragment2.edtPincode.editText.getText().toString();
             item.address.city = fragment2.edtCity.editText.getText().toString();
-            item.address.country = fragment2.edtCountry.editText.getText().toString().toLowerCase();
+            item.address.country = fragment2.edtCountry.editText.getText().toString().toLowerCase();*/
             if (gender == 1) {
                 item.gender = "male";
 
@@ -242,6 +245,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
                 item.gender = "female";
             }
 
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE_NEW,imageFragment.getmProfileImage());
             if (imageFragment.isImageChanged && TextUtils.isEmpty(imageFragment.getmProfileImage())) {
                 manager.deleteProPic(this);
                 manager.updateProfileDetails(this, item);
@@ -274,15 +278,19 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
         fragment1.edtEmail.editText.setText(item.email);
         fragment1.edtQualification.editText.setText(item.qualification);
         fragment1.edtOccupation.editText.setText(item.occupation);
-        if (item.address != null) {
-            fragment2.edtState.editText.setText(item.address.state);
+        fragment1.address.editText.setText(item.address);
+
+      /*  if (item.address != null) {
+         *//*   fragment2.edtState.editText.setText(item.address.state);
             fragment2.edtPincode.editText.setText(item.address.pin);
             fragment2.edtCountry.editText.setText(item.address.country);
-            fragment2.edtCity.editText.setText(item.address.city);
-        }
+            fragment2.edtCity.editText.setText(item.address.city);*//*
+        }*/
 
         txtProgress.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
+
+        LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE_NEW,profileImage);
 
         if (item.gender != null && !item.gender.isEmpty()) {
             if (item.gender.equalsIgnoreCase("Male")) {
@@ -309,20 +317,23 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
             AppLog.e(TAG, "ProfileResponse" + res);
             if (res != null) {
                 fragment1 = new ProfileBasicFragment();
-                fragment2 = new ProfileOtherFragment();
+            //    fragment2 = new ProfileOtherFragment();
                 item = res.data;
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, res.data.name);
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
+                LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE_NEW,res.data.image);
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
                 LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.EMAIL, res.data.email);
                AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
                AppLog.e("PROFILE IMAGE", "image is " + res.data.image);
+
                 if (tabAdapter == null) {
                     tabAdapter = new ProfileTabAdapter(getSupportFragmentManager(), fragment1, fragment2);
                     mPagerView.setAdapter(tabAdapter);
                 }
                 mPagerView.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
                 mPagerView.setOffscreenPageLimit(0);
+
                 fillDetails(item);
             }
             imageFragment.isImageChanged = false;
@@ -337,11 +348,13 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
             imageFragment.isImageChanged = false;
             finish();
         }
+       // hideLoadingBar();
         progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<ProfileValidationError> error) {
+        // hideLoadingBar();
         progressBar.setVisibility(View.GONE);
         try {
             if(error.errors==null)
@@ -378,8 +391,12 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
                 fragment1.edtGender.editText.setError(fieldErrors.gender);
                 fragment1.edtGender.editText.requestFocus();
             }
+            if (fieldErrors.address != null ) {
+                fragment1.address.editText.setError(fieldErrors.address);
+                fragment1.address.editText.requestFocus();
+            }
 
-            if (fieldErrors.address != null) {
+           /* if (fieldErrors.address != null) {
                 if (fieldErrors.address.country != null) {
                     fragment2.edtCountry.editText.setError(fieldErrors.address.country);
                     fragment2.edtCountry.editText.requestFocus();
@@ -400,12 +417,12 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
                     fragment2.edtAddressTwo.editText.setError(fieldErrors.address.line2);
                     fragment2.edtAddressTwo.editText.requestFocus();
                 }
-            }
+            }*/
         } catch (Exception e) {
 
         }
 
-        Toast.makeText(this, "validation Error", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_validation_error), Toast.LENGTH_LONG).show();
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -432,6 +449,7 @@ public class ProfileActivity2 extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onException(int apiId, String msg) {
+        // hideLoadingBar();
         progressBar.setVisibility(View.GONE);
 
     }

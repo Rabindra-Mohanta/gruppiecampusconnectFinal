@@ -1,1 +1,5 @@
-include ':app', ':commonlib2', ':mobilertc2'/* ':mobilertc', ':commonlib'*/
+include ':app'
+include ':mobilertc'
+include ':commonlib'
+
+include ':appV2'

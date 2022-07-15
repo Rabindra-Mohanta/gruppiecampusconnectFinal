@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_10dp"
         android:layout_toStartOf="@+id/img_comment"
-        android:hint="New update Available"
+        android:hint="@string/lbl_new_update_available"
         android:paddingStart="@dimen/padding_10dp"
         android:singleLine="true" />
     <!--android:onTextChanged="@={data.addTextChangedListener}"-->
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:padding="@dimen/padding_20dp"
-            android:text="Cancel"
+            android:text="@string/lbl_cancel"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16sp" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:padding="@dimen/padding_20dp"
-            android:text="Update"
+            android:text="@string/lbl_update"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16sp" />
     </LinearLayout>

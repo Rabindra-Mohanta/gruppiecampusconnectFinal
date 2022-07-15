@@ -56,7 +56,7 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Settings");
+        setTitle(getResources().getString(R.string.action_setting));
         groupId = getIntent().getExtras().getString("id");
 
         if (getIntent().getExtras().getBoolean("created", false)) {
@@ -69,7 +69,8 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
 
     private void getSettingData() {
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar,false);
+            //progressBar.setVisibility(View.VISIBLE);
             manager.getSettingsData(this, groupId);
         } else {
             showNoNetworkMsg();
@@ -82,23 +83,27 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
 
             case R.id.switch_post_que:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                //progressBar.setVisibility(View.VISIBLE);
                 manager.allowPostQue(this, groupId + "");
                 break;
 
             case R.id.switch_share:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                // progressBar.setVisibility(View.VISIBLE);
                 manager.allowShare(this, groupId + "");
                 break;
             case R.id.switch_everyone:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                // progressBar.setVisibility(View.VISIBLE);
                 manager.allowPostToAll(this, groupId + "");
                 break;
             case R.id.switch_change_admin:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                   // progressBar.setVisibility(View.VISIBLE);
                 manager.allowChangeAdmin(this, groupId + "");
                 break;
 
@@ -119,7 +124,8 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
     public void onSuccess(int apiId, BaseResponse response) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGROUPUPDATED, true);
         switch (apiId) {
             case LeafManager.API_SETTING_DATA:
@@ -162,7 +168,8 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
     public void onFailure(int apiId, String msg) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ALLOW_POST_QUE:
                 if (switch_post_que.isChecked()) {
@@ -203,7 +210,8 @@ public class SettingsActivity extends BaseActivity implements LeafManager.OnComm
     public void onException(int apiId, String msg) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ALLOW_POST_QUE:
                 if (switch_post_que.isChecked()) {

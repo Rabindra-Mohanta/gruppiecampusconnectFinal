@@ -8,11 +8,15 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,6 +26,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -37,18 +42,34 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
+import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
+import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +78,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.adapters.UploadImageAdapter;
 import school.campusconnect.database.LeafPreference;
@@ -67,16 +89,22 @@ import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
+import school.campusconnect.utils.BackgroundVideoUploadChapterService;
+import school.campusconnect.utils.BackgroundVideoUploadGallery;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
+
+import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 
 public class AddGalleryPostActivity extends BaseActivity implements LeafManager.OnAddUpdateListener<AddPostValidationError>, View.OnClickListener, UploadImageAdapter.UploadImageListener {
 
-    private static final String TAG = "AddPostActivity";
+    private static final String TAG = "AddGalleryPostActivity";
     @Bind(R.id.toolbar)
     Toolbar mToolBar;
 
@@ -156,7 +184,6 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     private String pdfPath = "";
     private TransferUtility transferUtility;
     private AddGalleryPostRequest mainRequest;
-    private File cameraFile;
     private UploadImageAdapter imageAdapter;
     private String receiverToken = "";
     private String receiverDeviceType = "";
@@ -164,6 +191,10 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     String album_id;
     private String type;
     private ProgressDialog progressDialog;
+
+    private Boolean isGalleryMultiple = false;
+    private Boolean isClear = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,6 +205,30 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
         setListener();
 
+
+        ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
+        if (shareList != null && shareList.size() > 0) {
+            String fileType = LeafApplication.getInstance().getType();
+            if (Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)) {
+                return;
+            }
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+
+                    Log.e(TAG,"fileType"+ fileType);
+                    Log.e(TAG,"shareList"+ shareList);
+                    if (Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)
+                            || Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)) {
+                        listImages.addAll(shareList);
+                        fileTypeImageOrVideo = fileType;
+                        showLastImage();
+                    }
+                }
+            });
+        }
+
     }
 
     private void setListener() {
@@ -182,7 +237,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         llYoutubeLink.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        btnShare.setEnabled(false);
+       // btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -219,6 +274,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     }
 
     private void init() {
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
@@ -243,13 +299,12 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     llYoutubeLink.setEnabled(false);
                     img_youtube.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
                     img_video.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
-                }else if (Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(type)) {
+                } else if (Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(type)) {
                     llYoutubeLink.setEnabled(false);
                     img_youtube.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
                     llImage.setEnabled(false);
                     img_image.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
-                }
-                else {
+                } else {
                     llImage.setEnabled(false);
                     llVideo.setEnabled(false);
                     img_image.setColorFilter(ContextCompat.getColor(this, R.color.divider_post), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -261,21 +316,21 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         imageAdapter = new UploadImageAdapter(listImages, this);
         rvImages.setAdapter(imageAdapter);
 
-        if(isEdit){
-            setTitle("Add File to album");
-        }else {
-            setTitle("Add to Gallery");
+        if (isEdit) {
+            setTitle(getResources().getString(R.string.title_add_file_to_album));
+        } else {
+            setTitle(getResources().getString(R.string.title_add_to_gallery));
         }
 
 
     }
 
     private void shareButtonEnableDisable() {
-        if (isValid(false)) {
+     /*   if (isValid(false)) {
             btnShare.setEnabled(true);
         } else {
             btnShare.setEnabled(false);
-        }
+        }*/
     }
 
     @Override
@@ -288,8 +343,10 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                //    progressBar.setVisibility(View.VISIBLE);
                 btnShare.setEnabled(false);
+                btnShare.setTextColor(getResources().getColor(R.color.grey));
 
                 AddGalleryPostRequest request = new AddGalleryPostRequest();
                 request.albumName = edtTitle.getText().toString();
@@ -311,19 +368,23 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     }
 
                 } else if (!TextUtils.isEmpty(pdfPath)) {
-                     request.fileType = Constants.FILE_TYPE_PDF;
+                    request.fileType = Constants.FILE_TYPE_PDF;
                     //uploadToAmazone(request);
-                }
-                else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
+                } else if (listImages.size() > 0 && Constants.FILE_TYPE_VIDEO.equals(fileTypeImageOrVideo)) {
                     request.fileType = fileTypeImageOrVideo;
                     Log.e(TAG, "send data " + new Gson().toJson(request));
+                    mainRequest = request;
 //                    progressDialog.setMessage("Preparing Video...");
 //                    progressDialog.show();
 //                    compressVideo(request, 0);
-                    new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                    new VideoCompressor(request).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    startService();
+
                 }
                 else if (listImages.size() > 0) {
                     request.fileType = Constants.FILE_TYPE_IMAGE;
+                    progressDialog.setMessage("Uploading Image...");
+                    progressDialog.show();
                     uploadToAmazone(request);
                 } /*else {
                     Log.e(TAG, "send data " + new Gson().toJson(request));
@@ -337,22 +398,44 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         }
 
     }
+    public void startService() {
+
+        Intent serviceIntent = new Intent(this, BackgroundVideoUploadGallery.class);
+
+        serviceIntent.putExtra("videoUrl", videoUrl);
+        serviceIntent.putExtra("mainRequest", mainRequest);
+        serviceIntent.putExtra("listImages", listImages);
+        serviceIntent.putExtra("group_id", group_id);
+        serviceIntent.putExtra("album_id", album_id);
+        serviceIntent.putExtra("isEdit", isEdit);
+
+        ContextCompat.startForegroundService(this, serviceIntent);
+
+        Toast.makeText(this, getResources().getString(R.string.toast_video_upload_background), Toast.LENGTH_SHORT).show();
+       finish();
+
+    }
+
     public class VideoCompressor extends AsyncTask<Void, Integer, Boolean> {
         private AddGalleryPostRequest addPostRequest;
+
         public VideoCompressor(AddGalleryPostRequest addPostRequest) {
             this.addPostRequest = addPostRequest;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog.setMessage("Preparing Video...");
             progressDialog.show();
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            progressDialog.setMessage("Preparing Video... "+values[0]+" out of "+listImages.size()+", please wait...");
+            progressDialog.setMessage("Preparing Video... " + values[0] + " out of " + listImages.size() + ", please wait...");
         }
+
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
@@ -361,29 +444,72 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            onProgressUpdate((finalI +1));
+                            onProgressUpdate((finalI + 1));
                         }
                     });
-                    File file = new File(listImages.get(i));
-                    // Get length of file in bytes
-                    long fileSizeInBytes = file.length();
-                    // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
-                    long fileSizeInKB = fileSizeInBytes / 1024;
-                    // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
-                    long fileSizeInMB = fileSizeInKB / 1024;
-                    AppLog.e(TAG, "fileSizeInMB : " + fileSizeInMB);
-                    if (fileSizeInMB > 10) {
-                        listImages.set(i, SiliCompressor.with(AddGalleryPostActivity.this).compressVideo(listImages.get(i), getExternalCacheDir().getAbsolutePath()));
-                        Log.e(TAG, "compressPath : " + videoUrl);
-                    }
+
+                    File videoCompresed = ImageUtil.getOutputMediaVideo(finalI);
+
+                    AppLog.e(TAG, "compression Started id : " + finalI + ", output path : " + videoCompresed.getPath());
+
+                    String width = "";
+                    String height = "";
+
+                    MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+                    metaRetriever.setDataSource(getApplicationContext(), Uri.parse(listImages.get(finalI)));
+                    height = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+                    width = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+                    com.abedelazizshe.lightcompressorlibrary.VideoCompressor.start(
+                            getApplicationContext(), // => This is required if srcUri is provided. If not, pass null.
+                            Uri.parse(listImages.get(finalI)), // => Source can be provided as content uri, it requires context.
+                            null, // => This could be null if srcUri and context are provided.
+                            videoCompresed.getPath(),
+                            new CompressionListener() {
+                                @Override
+                                public void onStart() {
+                                    // Compression start
+                                }
+
+                                @Override
+                                public void onSuccess() {
+                                    // On Compression success
+
+                                    AppLog.e(TAG, "Compression onSuccess id :  " + finalI + " & getPath  : " + videoCompresed.getPath());
+
+                                    File file = new File(videoCompresed.getPath());
+                                    // Get length of file in bytes
+                                    listImages.set(finalI, Uri.fromFile(file).toString());
+
+                                }
+
+                                @Override
+                                public void onFailure(String failureMessage) {
+                                    // On Failure
+                                    AppLog.e(TAG, "onFailure called : " + failureMessage);
+
+                                }
+
+                                @Override
+                                public void onProgress(float v) {
+                                    // Update UI with progress value
+                                }
+
+                                @Override
+                                public void onCancelled() {
+                                    // On Cancelled
+                                }
+                            }, new Configuration(VideoQuality.LOW, false, false, Double.parseDouble(height), Double.parseDouble(width), 2500000)
+                    );
+
                 }
             } catch (Exception e) {
-                Toast.makeText(AddGalleryPostActivity.this, "Error In Compression :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_error_comression) + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return false;
             }
             return true;
         }
+
         @Override
         protected void onPostExecute(Boolean aVoid) {
             super.onPostExecute(aVoid);
@@ -409,97 +535,113 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
                 @Override
                 public void onThumbnail(ArrayList<String> listThumbnails) {
-                    if(listThumbnails!=null){
-                        uploadThumbnail(listThumbnails,0);
-                    }else {
-                        Toast.makeText(AddGalleryPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    if (listThumbnails != null) {
+                        uploadThumbnail(listThumbnails, 0);
+                    } else {
+                        Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
-            },Constants.FILE_TYPE_PDF);
+            }, Constants.FILE_TYPE_PDF);
         } else if (request.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
             AppLog.e(TAG, "Final videos :: " + listImages.toString());
             GetThumbnail.create(listImages, new GetThumbnail.GetThumbnailListener() {
                 @Override
                 public void onThumbnail(ArrayList<String> listThumbnails) {
-                    if(listThumbnails!=null){
-                        uploadThumbnail(listThumbnails,0);
-                    }else {
-                        Toast.makeText(AddGalleryPostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    if (listThumbnails != null) {
+                        uploadThumbnail(listThumbnails, 0);
+                    } else {
+                        Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
-            },Constants.FILE_TYPE_VIDEO);
+            }, Constants.FILE_TYPE_VIDEO);
         } else {
             for (int i = 0; i < listImages.size(); i++) {
+                Bitmap bitmap = null;
                 try {
-                    File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
-                    listImages.set(i, newFile.getAbsolutePath());
-                } catch (IOException e) {
+                    InputStream is =  getContentResolver().openInputStream(Uri.parse(listImages.get(i)));
+                    bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                    listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, String.valueOf(i)));
+                } catch (FileNotFoundException e) {
+                    AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
                     e.printStackTrace();
                 }
+
             }
-            AppLog.e(TAG, "Final PAth :: " + listImages.toString());
+            AppLog.e(TAG, "Final PAth :: " + new Gson().toJson(listImages));
             upLoadImageOnCloud(0);
         }
     }
+
     private void uploadThumbnail(ArrayList<String> listThumbnails, int index) {
         if (index == listThumbnails.size()) {
             mainRequest.thumbnailImage = listThumbnails;
             upLoadImageOnCloud(0);
-        }else {
+        } else {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
-            File file = new File(listThumbnails.get(index));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
+            TransferObserver observer;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("Thumbnail", "onStateChanged " + index);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("Thumbnail", "onStateChanged " + index);
 
-                        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+                            String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                        Log.e("FINALURL", "url is " + _finalUrl);
+                            Log.e("FINALURL", "url is " + _finalUrl);
 
-                        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+                            _finalUrl = Constants.encodeStringToBase64(_finalUrl);
 
-                        Log.e("FINALURL", "encoded url is " + _finalUrl);
+                            Log.e("FINALURL", "encoded url is " + _finalUrl);
 
-                        listThumbnails.set(index,_finalUrl);
+                            listThumbnails.set(index, _finalUrl);
 
-                        uploadThumbnail(listThumbnails,index+1);
+                            uploadThumbnail(listThumbnails, index + 1);
 
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            hideLoadingBar();
+                          //  progressBar.setVisibility(View.GONE);
+                            if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                                progressDialog.dismiss();
+                            }
+                            Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        progressBar.setVisibility(View.GONE);
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        hideLoadingBar();
+                        //  progressBar.setVisibility(View.GONE);
                         if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
                             progressDialog.dismiss();
                         }
-                        Toast.makeText(AddGalleryPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                     }
-                }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
 
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        progressDialog.dismiss();
-                    }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 
@@ -516,48 +658,68 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
             } else {
                 manager.addGalleryPost(this, group_id, mainRequest);
             }
-
         } else {
+
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
-            File file = new File(listImages.get(pos));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
-                        updateList(pos, key);
-                    }
-                    if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddGalleryPostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
-                }
+            TransferObserver observer;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Uploading Video... " + percentDone + "% " + (pos + 1) + " out of " + listImages.size()+", please wait...");
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                            updateList(pos, key);
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        }
                     }
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
 
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
-                        progressDialog.dismiss();
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+
+                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Video " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        } else if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        }else if (Constants.FILE_TYPE_AUDIO.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Audio " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        }
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
                     }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        hideLoadingBar();
+                        //  progressBar.setVisibility(View.GONE);
+                        if (Constants.FILE_TYPE_VIDEO.equals(mainRequest.fileType)) {
+                            progressDialog.dismiss();
+                        }
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (IOException e) {
+
+                AppLog.e(TAG,"IOException"+e.getMessage());
+                e.printStackTrace();
+            }
+
+
         }
 
 
@@ -589,7 +751,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         if (isEdit) {
             if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Add Image or video", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_add_image_video_pdf), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
             if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -601,12 +763,12 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         } else {
             if (!isValueValidOnly(edtTitle)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Add Album Name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_please_add_album_name), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
             if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl)) {
                 if (showToast)
-                    Toast.makeText(this, "Please Add Image or video", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_please_add_image_or_video), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
             if (!TextUtils.isEmpty(videoUrl) && listImages.size() > 0) {
@@ -632,7 +794,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                    /* if (listImages.size() > 0) {
                         showPhotoDialog(R.array.array_image_modify);
                     } else {*/
-                        showPhotoDialog(R.array.array_image);
+                    showPhotoDialog(R.array.array_image);
                     //}
 
                 } else {
@@ -665,9 +827,12 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
         }
     }
+
     private void selectVideoIntent() {
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         galleryIntent.setType("video/*");
+        galleryIntent.setFlags(FLAG_GRANT_READ_URI_PERMISSION|FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -677,22 +842,22 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         switch (apiId) {
 
             default:
-                Toast.makeText(AddGalleryPostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_posted_successfully), Toast.LENGTH_SHORT).show();
+                new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 LeafPreference.getInstance(AddGalleryPostActivity.this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
-
                 finish();
                 break;
             case LeafManager.API_GALLERY_FILE_ADD:
-                Toast.makeText(AddGalleryPostActivity.this, "Add File Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_add_file_successfully), Toast.LENGTH_SHORT).show();
 
                 LeafPreference.getInstance(AddGalleryPostActivity.this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
 
-                Intent intent = new Intent(this,GalleryActivity.class);
+                Intent intent = new Intent(this, GalleryActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
@@ -703,9 +868,12 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
+       // btnShare.setEnabled(true);
         btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -717,7 +885,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
             if (!TextUtils.isEmpty(error.message)) {
                 Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show();
-            }else if (error.errors.get(0).video != null) {
+            } else if (error.errors.get(0).video != null) {
                 Toast.makeText(this, error.errors.get(0).video, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, error.title, Toast.LENGTH_SHORT).show();
@@ -730,9 +898,14 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onException(int apiId, String error) {
+     //   btnShare.setEnabled(true);
+
         btnShare.setEnabled(true);
+        btnShare.setTextColor(getResources().getColor(R.color.white));
+
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         Toast.makeText(AddGalleryPostActivity.this, error, Toast.LENGTH_SHORT).show();
 
     }
@@ -763,6 +936,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
     private void startCamera(int requestCode) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File cameraFile;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             cameraFile = ImageUtil.getOutputMediaFile();
             imageCaptureFile = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
@@ -795,11 +969,22 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }
+    }
+
+    private void showCropDialog(Uri imageCapture,boolean isCamera) {
+
+        Log.e(TAG,"imageGEt "+imageCapture);
+        Intent i = new Intent(getApplicationContext(), CropDialogActivity.class);
+        i.putExtra("path",String.valueOf(imageCapture));
+        i.putExtra("isCamera",isCamera);
+        startActivityForResult(i,10);
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -809,69 +994,152 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         if (resultCode == Activity.RESULT_CANCELED) {
             return;
         }
-        if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            listImages.clear();
+        if (requestCode == 10)
+        {
+            String uri = data.getStringExtra("Data");
+            Log.e(TAG,"uri"+ uri);
+
+
             fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+            listImages.add(uri);
+
+            showLastImage();
+            removePdf();
+
+
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+
+            Log.e(TAG,"result Uri Crop Image "+result.getUri());
+
+            if (resultCode == RESULT_OK) {
+
+
+                Uri resultUri = result.getUri();
+                Log.e(TAG,"result Uri Crop Image "+resultUri);
+
+                if (isGalleryMultiple)
+                {
+                    if (isClear)
+                    {
+                        isClear = false;
+                        listImages.clear();
+
+                    }
+                    fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+                    listImages.add(resultUri.toString());
+                }
+                else
+                {
+                    listImages.clear();
+                    fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
+
+                    listImages.add(resultUri.toString());
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.e(TAG,"error"+error);
+            }
+
+            showLastImage();
+            removePdf();
+
+        }
+
+        else if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+
+
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
+
+            listImages.clear();
+
+            isClear = true;
+
             if (clipData == null) {
-                String path = ImageUtil.getPath(this, selectedImage);
-                listImages.add(path);
+
+                isGalleryMultiple = false;
+//                String path = ImageUtil.getPath(this, selectedImage);
+                //  listImages.add(selectedImage.toString());
+                showCropDialog(selectedImage,false);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
-                    String path = ImageUtil.getPath(this, uri1);
-                    listImages.add(path);
+//                    String path = ImageUtil.getPath(this, uri1);
+                    //    listImages.add(uri1.toString());
+                    isGalleryMultiple = true;
+                    showCropDialog(uri1,false);
                 }
             }
-            showLastImage();
+
+        }
+        else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
+           /* listImages.clear();
+            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
+//            String path = cameraFile.getAbsolutePath();
+            AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
+            //          listImages.add(imageCaptureFile.toString());
+            isGalleryMultiple = false;
+
+         /*   showLastImage();
             removePdf();
-        } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
+            removeAudio();*/
             listImages.clear();
-            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;
-            String path = cameraFile.getAbsolutePath();
-            AppLog.e(TAG, "path : " + path);
-            listImages.add(path);
-            showLastImage();
-            removePdf();
-        } else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
+            showCropDialog(imageCaptureFile,true);
+        }
+
+        else if (requestCode == REQUEST_LOAD_VIDEO && resultCode == Activity.RESULT_OK) {
             listImages.clear();
             fileTypeImageOrVideo = Constants.FILE_TYPE_VIDEO;
             final Uri selectedImage = data.getData();
+            AppLog.e(TAG, "selectedVideo : " + selectedImage);
             ClipData clipData = data.getClipData();
             if (clipData == null) {
-                String path = ImageUtil.getPath(this, selectedImage);
-                listImages.add(path);
+//                String path = ImageUtil.getPath(this, selectedImage);
+                listImages.add(selectedImage.toString());
+                AddGalleryPostActivity.this.getContentResolver().takePersistableUriPermission(
+                        selectedImage, FLAG_GRANT_READ_URI_PERMISSION);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
-                    String path = ImageUtil.getPath(this, uri1);
-                    listImages.add(path);
+
+                    AddGalleryPostActivity.this.getContentResolver().takePersistableUriPermission(
+                            uri1, FLAG_GRANT_READ_URI_PERMISSION);
+//                    String path = ImageUtil.getPath(this, uri1);
+                    listImages.add(uri1.toString());
                 }
             }
             showLastImage();
             removePdf();
         } else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
-                Uri selectedImageURI = data.getData();
-                Log.e("SelectedURI : ", selectedImageURI.toString());
-                if (selectedImageURI.toString().startsWith("content")) {
-                    pdfPath = ImageUtil.getPath(this, selectedImageURI);
+                pdfPath = data.getData().toString();
+                Log.e("pdfUri : ", pdfPath);
+               /* if (selectedImageURI.toString().startsWith("content")) {
+                    pdfUri = ImageUtil.getPath(this, selectedImageURI);
                 } else {
-                    pdfPath = selectedImageURI.getPath();
+                    pdfUri = selectedImageURI.getPath();
                 }
+*/
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 Log.e("PDF", "imgUrl is " + pdfPath);
+
                 if (!TextUtils.isEmpty(pdfPath))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
                 removeImage();
             }
         }
+
         shareButtonEnableDisable();
 
     }
@@ -967,14 +1235,14 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddGalleryPostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -1002,7 +1270,7 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddGalleryPostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddGalleryPostActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();
@@ -1180,4 +1448,114 @@ public class AddGalleryPostActivity extends BaseActivity implements LeafManager.
         }
     }
 */
+
+    private class SendNotification extends AsyncTask<String, String, String> {
+        String receiverToken;
+        private String server_response;
+
+        public SendNotification(String token) {
+            receiverToken = token;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String message = "";
+                    message = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.NAME) + " Has Posted in " + GroupDashboardActivityNew.group_name;
+                    topic = group_id;
+                    object.put("to", "/topics/" + topic);
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                    //   object.put("notification", notificationObj);
+
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", group_id);
+                    dataObj.put("createdById", LeafPreference.getInstance(AddGalleryPostActivity.this).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("postId", "");
+                    dataObj.put("title", title);
+                    dataObj.put("postType", "post");
+                    dataObj.put("Notification_type", "gallery");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+
+                    wr.writeBytes(object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
+    }
 }

@@ -147,7 +147,7 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
                     Picasso.with(this).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(imgPhoto);
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(getApplicationContext(),item.fileName.get(0))) {
                         imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -242,6 +242,7 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
         } else*/ if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.vendor);
             startActivity(i);
 
@@ -254,14 +255,15 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
     public void onDeleteClick(VendorPostResponse.VendorPostData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+         //   progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
             LeafManager manager = new LeafManager();
             manager.deleteVendorPost(this, GroupDashboardActivityNew.groupId+"",currentItem.vendorId);
         } else {
@@ -278,11 +280,11 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
-
+       // progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         switch (apiId) {
             case LeafManager.API_VENDOR_DELETE:
-                Toast.makeText(this, "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.IS_VENDOR_POST_UPDATED, true);
                 AmazoneRemove.remove(item.fileName);
                 finish();
@@ -292,16 +294,16 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
-
+       // progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         if (msg.contains("401:Unauthorized") || msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(this, "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(this, "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } else {
@@ -311,6 +313,7 @@ public class VendorReadMoreActivity extends BaseActivity implements DialogInterf
 
     @Override
     public void onException(int apiId, String msg) {
+        hideLoadingBar();
             Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

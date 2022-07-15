@@ -7,6 +7,8 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,13 +38,16 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,6 +56,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddPostValidationError;
@@ -151,6 +157,28 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
         setListener();
 
+        ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
+        if(shareList!=null && shareList.size()>0){
+            String fileType = LeafApplication.getInstance().getType();
+            if(Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)){
+                return;
+            }
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)
+                            || Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)){
+                        listImages.addAll(shareList);
+                        showLastImage();
+                    }else if(Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
+                        pdfPath = shareList.get(0);
+                        Picasso.with(AddTimeTablePostActivity.this).load(R.drawable.pdf_thumbnail).into(imgDoc);
+                    }
+                }
+            });
+        }
+
     }
 
     private void setListener() {
@@ -158,7 +186,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
         llVideo.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        btnShare.setEnabled(false);
+      //  btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -204,18 +232,18 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Time Table");
+        setTitle(getResources().getString(R.string.lbl_add_time_table));
 
         transferUtility = AmazoneHelper.getTransferUtility(this);
 
     }
 
     private void shareButtonEnableDisable() {
-        if (isValid(false)) {
+     /*   if (isValid(false)) {
             btnShare.setEnabled(true);
         } else {
             btnShare.setEnabled(false);
-        }
+        }*/
     }
 
     @Override
@@ -228,8 +256,9 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+                    showLoadingBar(progressBar,false);
+                  //  progressBar.setVisibility(View.VISIBLE);
+          //      btnShare.setEnabled(false);
 
                 AddTimeTableRequest request = new AddTimeTableRequest();
                 request.title = edtTitle.getText().toString();
@@ -275,17 +304,21 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
                     if(listThumbnails!=null){
                         uploadThumbnail(listThumbnails,0);
                     }else {
-                        Toast.makeText(AddTimeTablePostActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
                 }
             },Constants.FILE_TYPE_PDF);
         } else {
             for (int i = 0; i < listImages.size(); i++) {
+                Bitmap bitmap = null;
                 try {
-                    File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
-                    listImages.set(i, newFile.getAbsolutePath());
-                } catch (IOException e) {
+                    InputStream is =  getContentResolver().openInputStream(Uri.parse(listImages.get(i)));
+                    bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                    listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, "test"));
+
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
                 }
             }
             AppLog.e(TAG, "Final PAth :: " + listImages.toString());
@@ -298,51 +331,62 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
             upLoadImageOnCloud(0);
         }else {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
-            File file = new File(listThumbnails.get(index));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("Thumbnail", "onStateChanged " + index);
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("Thumbnail", "onStateChanged " + index);
 
-                        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+                            String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                        Log.e("FINALURL", "url is " + _finalUrl);
+                            Log.e("FINALURL", "url is " + _finalUrl);
 
-                        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+                            _finalUrl = Constants.encodeStringToBase64(_finalUrl);
 
-                        Log.e("FINALURL", "encoded url is " + _finalUrl);
+                            Log.e("FINALURL", "encoded url is " + _finalUrl);
 
-                        listThumbnails.set(index,_finalUrl);
+                            listThumbnails.set(index,_finalUrl);
 
-                        uploadThumbnail(listThumbnails,index+1);
+                            uploadThumbnail(listThumbnails,index+1);
 
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            hideLoadingBar();
+                           // progressBar.setVisibility(View.GONE);
+                            Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(AddTimeTablePostActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
                     }
-                }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        hideLoadingBar();
+                        // progressBar.setVisibility(View.GONE);
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
+
         }
     }
 
@@ -355,36 +399,46 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
             manager.addTimeTablePost(this, group_id,team_id, mainRequest);
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
-            File file = new File(listImages.get(pos));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
-                        updateList(pos, key);
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                            updateList(pos, key);
+                        }
                     }
-                }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
 
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
 
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        hideLoadingBar();
+                        // progressBar.setVisibility(View.GONE);
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         }
 
 
@@ -414,13 +468,13 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
         if (!isValueValidOnly(edtTitle)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Title",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_title),Toast.LENGTH_SHORT).show();
             valid = false;
         }
         if(listImages.size()==0 && TextUtils.isEmpty(pdfPath))
         {
             if(showToast)
-                Toast.makeText(this, "Please Add Image or pdf",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_image_pdf),Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -470,12 +524,13 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         switch (apiId)
         {
 
             default:
-                Toast.makeText(AddTimeTablePostActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTIME_TABLE_UPDATED, true);
                 //new SendNotification(mainRequest).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -488,9 +543,10 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+    //    btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -512,9 +568,10 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+      //  btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
         Toast.makeText(AddTimeTablePostActivity.this, error, Toast.LENGTH_SHORT).show();
 
     }
@@ -577,7 +634,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,  getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -588,44 +645,48 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            listImages.clear();
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
-
             if (clipData == null) {
-                listImages.clear();
-                String path = ImageUtil.getPath(this, selectedImage);
-                listImages.add(path);
+//                String path = ImageUtil.getPath(this, selectedImage);
+                listImages.add(selectedImage.toString());
             } else {
-                listImages.clear();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
-                    String path = ImageUtil.getPath(this, uri1);
-                    listImages.add(path);
+//                    String path = ImageUtil.getPath(this, uri1);
+                    listImages.add(uri1.toString());
                 }
             }
             showLastImage();
             removePdf();
 
-        } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            String path = cameraFile.getAbsolutePath();
-            AppLog.e(TAG, "path : " + path);
-            listImages.add(path);
+        }
+        else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
+            listImages.clear();
+//            String path = cameraFile.getAbsolutePath();
+            AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
+            listImages.add(imageCaptureFile.toString());
             showLastImage();
             removePdf();
-        } else if (resultCode == Activity.RESULT_OK) {
+        }  else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
-                Uri selectedImageURI = data.getData();
-                Log.e("SelectedURI : ", selectedImageURI.toString());
-                if (selectedImageURI.toString().startsWith("content")) {
-                    pdfPath = ImageUtil.getPath(this, selectedImageURI);
+                pdfPath = data.getData().toString();
+                Log.e("pdfUri : ", pdfPath);
+               /* if (selectedImageURI.toString().startsWith("content")) {
+                    pdfUri = ImageUtil.getPath(this, selectedImageURI);
                 } else {
-                    pdfPath = selectedImageURI.getPath();
+                    pdfUri = selectedImageURI.getPath();
                 }
-
+*/
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -633,7 +694,6 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
 
                 if (!TextUtils.isEmpty(pdfPath))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
-
                 removeImage();
             }
         }
@@ -733,14 +793,14 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddTimeTablePostActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTimeTablePostActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -768,7 +828,7 @@ public class AddTimeTablePostActivity extends BaseActivity implements LeafManage
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddTimeTablePostActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddTimeTablePostActivity.this,  getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

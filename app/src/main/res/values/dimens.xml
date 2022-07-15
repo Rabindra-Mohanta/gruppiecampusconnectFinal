@@ -28,6 +28,8 @@
     <dimen name="padding_30dp">30dp</dimen>
     <dimen name="padding_20dp">20dp</dimen>
     <dimen name="padding_60dp">60dp</dimen>
+    <dimen name="padding_70dp">70dp</dimen>
+    <dimen name="padding_80dp">80dp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
     <dimen name="padding_32dp">32dp</dimen>
     <dimen name="padding_8dp">8dp</dimen>
@@ -51,6 +53,8 @@
 
     <dimen name="snackbar_textsize">14sp</dimen>
 
+    <dimen name="padding_120dp">120dp</dimen>
+
     <dimen name="design_navigation_icon_size">32dp</dimen>
     <dimen tools:override="true" name="design_navigation_icon_padding">16dp</dimen>
 
@@ -67,7 +71,7 @@
 
 
     <dimen name="user_image_size">50dp</dimen>
-
+    <dimen name="user_image_size_v2">40dp</dimen>
     <dimen name="floating_button_size">56dp</dimen>
 
 
@@ -75,11 +79,19 @@
     <dimen name="login_button_width">160dp</dimen>
     <dimen name="login_button_height">45dp</dimen>
 
+    <dimen name="list_button_width">150dp</dimen>
+    <dimen name="list_button_height">40dp</dimen>
+
     <dimen name="list_image_size">40dp</dimen>
     <dimen name="comment_image_size">30dp</dimen>
     <dimen name="about_image_size">120dp</dimen>
     <dimen name="padding_3dp">3dp</dimen>
     <dimen name="home_image_size">60dp</dimen>
+    <dimen name="item_image_size">50dp</dimen>
+
+    <dimen name="erasersize">30dp</dimen>
+
+    <dimen name="size_img_trophy">60dp</dimen>
 
     <dimen name="pdf_download_icon_size">50dp</dimen>
 </resources>

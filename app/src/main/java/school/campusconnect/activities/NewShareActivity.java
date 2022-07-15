@@ -80,7 +80,8 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
         setTitle(R.string.lbl_share_post);
         final LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
 
         GroupItem mGroupItem = new Gson().fromJson(LeafPreference.getInstance(this).getString(Constants.GROUP_DATA), GroupItem.class);
         if(!TextUtils.isEmpty(mGroupItem.getGroupId())){
@@ -110,21 +111,22 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
             }
         }
         if(TextUtils.isEmpty(mText)){
-            Toast.makeText(pushActivity, "No Data Found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(pushActivity, getResources().getString(R.string.msg_no_data_found), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
     private void getData() {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         leafManager.myTeamList(this, mGroupId + "");
     }
 
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
-
+     //   progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         switch (apiId) {
             case LeafManager.API_MY_TEAM_LIST:
                 ArrayList<ShareGroupItemList> mData =new ArrayList<>();
@@ -147,7 +149,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
                 recyclerView.setAdapter(new ClassesAdapter(mData));
                 break;
             default:
-                Toast.makeText(this, "Shared successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_shared_successfully), Toast.LENGTH_SHORT).show();
                 Intent login = new Intent(this, GroupDashboardActivityNew.class);
                 login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(login);
@@ -159,18 +161,21 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         super.onFailure(apiId, error.message);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         super.onFailure(apiId, msg);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         super.onException(apiId, msg);
     }
 
@@ -244,7 +249,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -254,7 +259,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 
@@ -280,7 +285,7 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
                 super(itemView);
                 ButterKnife.bind(this,itemView);
                 txt_count.setVisibility(View.GONE);
-                img_tree.setVisibility(View.GONE);
+                //img_tree.setVisibility(View.GONE);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -300,10 +305,13 @@ public class NewShareActivity extends BaseActivity implements LeafManager.OnAddU
 
 
     public void addPost(ShareGroupItemList team) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to share in " + team.getName() + ".?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_share_in) + team.getName() + getResources().getString(R.string.smb_), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+
+                showLoadingBar(progressBar);
+
+            //    progressBar.setVisibility(View.VISIBLE);
                 AddPostRequest request = new AddPostRequest();
                 request.text = mText;
                 request.title = "";

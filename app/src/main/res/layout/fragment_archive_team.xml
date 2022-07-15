@@ -8,11 +8,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
         android:layout_height="wrap_content" />
+    <TextView
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:text="No data found"
+        android:id="@+id/txtEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

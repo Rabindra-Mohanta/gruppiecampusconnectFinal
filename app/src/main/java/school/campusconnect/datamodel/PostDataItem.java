@@ -5,6 +5,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 
 import java.util.List;
 
@@ -33,10 +34,12 @@ public class PostDataItem extends Model {
     public String fileType;
     @Column(name = "fileName")
     public String fileName;
+    @Column(name = "thumbnailImage")
+    public String thumbnailImage;
     @Column(name = "createdById")
-    public String  createdById;
+    public String createdById;
     @Column(name = "createdByImage")
-    public String  createdByImage;
+    public String createdByImage;
     @Column(name = "createdBy")
     public String createdBy;
     @Column(name = "createdAt")
@@ -58,11 +61,17 @@ public class PostDataItem extends Model {
     @Column(name = "friend_id")
     public String friend_id;
 
+
     @Column(name = "imageWidth")
     public int imageWidth;
-    @Column(name ="imageHeight")
+    @Column(name = "imageHeight")
     public int imageHeight;
 
+    @Column(name = "_now")
+    public String _now;
+
+    @Column(name = "page")
+    public int page;
 
     public PostDataItem() {
         super();
@@ -76,7 +85,7 @@ public class PostDataItem extends Model {
         List<PostDataItem> postDataItems = getAll();
 
         for (int i = 0; i < postDataItems.size(); i++) {
-            if (post_id == postDataItems.get(i).id) {
+            if (post_id.equals(postDataItems.get(i).id)) {
                 return true;
             }
         }
@@ -85,6 +94,15 @@ public class PostDataItem extends Model {
 
     public static List<PostDataItem> getGeneralPosts(String group_id) {
         return new Select().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).execute();
+    }
+
+    //Constituency  app (needed to pagination all genral post)
+    public static List<PostDataItem> getGeneralPosts(String group_id,int page) {
+        return new Select().from(PostDataItem.class).where("group_id = ?", group_id).where("page = ?", page).where("type = ? Or type = ?", "group","birthdayPost").execute();
+    }
+
+    public static List<PostDataItem> getLastGeneralPost() {
+        return new Select().from(PostDataItem.class).where("type = ?", "group").orderBy("(group_id) DESC").limit(1).execute();
     }
 
     public static List<PostDataItem> getTeamPosts(String group_id) {
@@ -103,7 +121,11 @@ public class PostDataItem extends Model {
         new Delete().from(PostDataItem.class).where("type = ?", "group").where("group_id = ?", group_id).execute();
     }
 
-    public static void deletePersonalChatPosts(String  group_id, String friend_id) {
+    public static void deleteGeneralPostsBirthday(String group_id) {
+        new Delete().from(PostDataItem.class).where("type = ?", "birthdayPost").where("group_id = ?", group_id).execute();
+    }
+
+    public static void deletePersonalChatPosts(String group_id, String friend_id) {
         new Delete().from(PostDataItem.class).where("type = ?", "personal").where("group_id = ?", group_id).where("friend_id = ?", friend_id).execute();
     }
 
@@ -111,8 +133,18 @@ public class PostDataItem extends Model {
         new Delete().from(PostDataItem.class).where("post_id = ?", post_id).execute();
     }
 
+
     public static void deleteAllPosts() {
         new Delete().from(PostDataItem.class).execute();
     }
+
+    public static void updateLike(String post_id, int isLiked,int likes) {
+        new Update(PostDataItem.class).set("isLiked = ?,likes = ?", isLiked,likes).where("post_id = ?", post_id).execute();
+    }
+
+    public static void updateFav(String post_id, int isFavourited) {
+        new Update(PostDataItem.class).set("isFavourited = ?", isFavourited).where("post_id = ?", post_id).execute();
+    }
+
 }
 

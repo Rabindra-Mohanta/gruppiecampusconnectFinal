@@ -51,8 +51,8 @@ public class EBookListFragment extends BaseFragment implements LeafManager.OnCom
             IsFromHome = getArguments().getBoolean("IsFromHome");
         }
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -66,7 +66,9 @@ public class EBookListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         EBooksResponse res = (EBooksResponse) response;
         List<EBooksResponse.EBookData> result = res.getData();
         AppLog.e(TAG, "response " + result);
@@ -76,12 +78,14 @@ public class EBookListFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -112,7 +116,7 @@ public class EBookListFragment extends BaseFragment implements LeafManager.OnCom
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No E-Book found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -122,7 +126,7 @@ public class EBookListFragment extends BaseFragment implements LeafManager.OnCom
             }
             else
             {
-                txtEmpty.setText("No E-Book found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 return 0;
             }
 

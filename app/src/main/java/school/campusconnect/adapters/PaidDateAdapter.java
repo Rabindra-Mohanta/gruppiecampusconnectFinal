@@ -1,33 +1,42 @@
 package school.campusconnect.adapters;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.FullScreenMultiActivity;
+import school.campusconnect.activities.HomeWorkEditActivity;
 import school.campusconnect.datamodel.fees.DueDates;
 import school.campusconnect.datamodel.fees.FeePaidDetails;
 import school.campusconnect.utils.AppDialog;
+import school.campusconnect.utils.Constants;
 
 public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHolder> {
     private Context mContext;
     ArrayList<FeePaidDetails> list = new ArrayList<>();
-    boolean isFromUpdate=false;
-
-    public PaidDateAdapter(boolean isFromUpdate) {
-        this.isFromUpdate = isFromUpdate;
-    }
 
     @NonNull
     @Override
@@ -56,8 +65,19 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-        holder.etDate.setText(list.get(i).getDate());
+        holder.etDate.setText(list.get(i).paidDate);
         holder.etDateAmount.setText(list.get(i).getAmountPaid());
+
+        if("onHold".equalsIgnoreCase(list.get(i).status)){
+            holder.imgStatus.setImageResource(R.drawable.hold);
+        }else if("approved".equalsIgnoreCase(list.get(i).status)){
+            holder.imgStatus.setImageResource(R.drawable.approve);
+        }else {
+            holder.imgStatus.setImageResource(R.drawable.pending);
+        }
+        if(list.get(i).attachment!=null && list.get(i).attachment.size()>0){
+            Picasso.with(mContext).load(Constants.decodeUrlToBase64(list.get(i).attachment.get(0))).resize(50,50).into(holder.imgDelete);
+        }
     }
 
     @Override
@@ -73,6 +93,8 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
         EditText etDateAmount;
         @Bind(R.id.imgDelete)
         ImageView imgDelete;
+        @Bind(R.id.imgStatus)
+        ImageView imgStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,26 +103,56 @@ public class PaidDateAdapter extends RecyclerView.Adapter<PaidDateAdapter.ViewHo
             imgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(isFromUpdate){
-                        AppDialog.showConfirmDialog(mContext, "Are you sure you want to delete?", new AppDialog.AppDialogListener() {
-                            @Override
-                            public void okPositiveClick(DialogInterface dialog) {
-                                list.remove(getAdapterPosition());
-                                notifyDataSetChanged();
-                            }
-
-                            @Override
-                            public void okCancelClick(DialogInterface dialog) {
-
-                            }
-                        });
-                    }else {
-                        list.remove(getAdapterPosition());
-                        notifyDataSetChanged();
-                    }
+                    Intent i = new Intent(mContext, FullScreenMultiActivity.class);
+                    i.putStringArrayListExtra("image_list", list.get(getAdapterPosition()).attachment);
+                    mContext.startActivity(i);
                 }
             });
 
+          /*  if(isFromUpdate){
+                etDateAmount.setFocusable(true);
+                etDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDateDialog(etDate,getAdapterPosition());
+                    }
+                });
+                etDateAmount.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        list.get(getAdapterPosition()).setAmountPaid(charSequence.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+            }else {*/
+                etDateAmount.setFocusable(false);
+//            }
+
         }
-    }
+    }/*
+    private void showDateDialog(EditText etDate, int adapterPosition){
+        final Calendar calendar = Calendar.getInstance();
+        DatePickerDialog fragment = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                etDate.setText(format.format(calendar.getTime()));
+                list.get(adapterPosition).setDate(format.format(calendar.getTime()));
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        fragment.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
+        fragment.show();
+    }*/
 }

@@ -71,8 +71,6 @@ import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 import us.zoom.sdk.ZoomSDKInitializeListener;
 
-import static school.campusconnect.network.LeafManager.API_JISTI_MEETING_START;
-import static school.campusconnect.network.LeafManager.API_JISTI_MEETING_STOP;
 
 public class RecordedClassListFragment extends BaseFragment implements LeafManager.OnCommunicationListener{
     private static final String TAG = "VideoClassListFragment";
@@ -98,8 +96,8 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
         ButterKnife.bind(this, view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar,true);
+        //progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -115,7 +113,8 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //  progressBar.setVisibility(View.GONE);
         VideoClassResponse res = (VideoClassResponse) response;
         List<VideoClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -125,12 +124,14 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
 
@@ -190,25 +191,25 @@ public class RecordedClassListFragment extends BaseFragment implements LeafManag
             holder.txt_name.setText(item.getName());
             holder.txt_count.setVisibility(View.GONE);
 
-            if(item.canPost || item.alreadyOnJitsiLive){
+//            if(item.canPost || item.isLive){
                 holder.img_tree.setVisibility(View.VISIBLE);
-            }else {
+            /*}else {
                 holder.img_tree.setVisibility(View.GONE);
-            }
+            }*/
         }
 
         @Override
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.activities.ChatActivity;
 import school.campusconnect.activities.PersonalSettingsActivity;
+import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
 
@@ -116,6 +117,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -183,13 +185,17 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         mAdapter2.notifyDataSetChanged();
     }
 
+
     private void getGroupPostLocaly() {
+
+
         List<PostDataItem> dataItemList = PostDataItem.getPersonalChatPosts(mGroupId + "", selectedFriend + "");
         AppLog.e(TAG, "posts are " + mGroupId + " frnd id " + selectedFriend);
         AppLog.e(TAG,"ListSize "+ String.valueOf(dataItemList.size()));
 
         if (dataItemList.size() != 0) {
-            showLoadingBar(progressBar2);
+            //showLoadingBar(progressBar2);
+            progressBar2.setVisibility(View.VISIBLE);
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 PostItem postItem = new PostItem();
@@ -201,6 +207,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
                 postItem.title = dataItemList.get(i).title;
                 postItem.fileType = dataItemList.get(i).fileType;
                 postItem.fileName = new Gson().fromJson(dataItemList.get(i).fileName, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                postItem.thumbnailImage = new Gson().fromJson(dataItemList.get(i).thumbnailImage, new TypeToken<ArrayList<String>>() {
                 }.getType());
                 postItem.updatedAt = dataItemList.get(i).updatedAt;
                 postItem.text = dataItemList.get(i).text;
@@ -218,7 +226,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
                 PostList.add(postItem);
             }
-            hideLoadingBar();
+            //hideLoadingBar();
+            progressBar2.setVisibility(View.GONE);
             AppLog.e(TAG, "DataFromLocal");
             mAdapter2.notifyDataSetChanged();
 
@@ -300,7 +309,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         swipeRefreshLayout2 = (PullRefreshLayout) view.findViewById(R.id.swipeRefreshLayout2);
 
         progressBar2 = (ProgressBar) view.findViewById(R.id.progressBar2);
-
+        progressBar2.setVisibility(View.VISIBLE);
         recyclerView2.setLayoutManager(layoutManager);
 
         mAdapter2 = new PersonalPostAdapter(PostList, this, "personal",databaseHandler, count,selectedFriend,personalData.allowPostComment);
@@ -310,7 +319,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     private void getData(String friend_id, boolean isBackground) {
         if (isBackground) {
-            showLoadingBar(progressBar2);
+            //showLoadingBar(progressBar2);
+            progressBar2.setVisibility(View.VISIBLE);
             mIsLoading2 = true;
         }
         manager.getPersonalChat(this, mGroupId + "", friend_id + "", currentPage2);
@@ -323,7 +333,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar2.setVisibility(View.GONE);;
         if (getActivity() != null)
             ((BaseActivity) getActivity()).hideLoadingDialog();
 
@@ -353,7 +364,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
                 break;
 
             case LeafManager.API_ID_DELETE_PERSONAL_POST:
-                Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 reloadData();
                 AmazoneRemove.remove(currentItem.fileName);
                 break;
@@ -393,6 +404,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
             postItem.fileType = item.fileType;
             if (item.fileName != null) {
                 postItem.fileName = new Gson().toJson(item.fileName);
+                postItem.thumbnailImage = new Gson().toJson(item.thumbnailImage);
             }
             postItem.updatedAt = item.updatedAt;
             postItem.text = item.text;
@@ -437,7 +449,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar2.setVisibility(View.GONE);
         mIsLoading2 = false;
         liked = false;
 
@@ -461,7 +474,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar2.setVisibility(View.GONE);
         mIsLoading2 = false;
         liked = false;
         currentPage2 = currentPage2 - 1;
@@ -483,7 +497,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar2.setVisibility(View.GONE);
         mIsLoading2 = false;
         liked = false;
         currentPage2 = currentPage2 - 1;
@@ -501,7 +516,8 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         if (!liked) {
             liked = true;
             this.position = position;
-            showLoadingBar(progressBar2);
+            //showLoadingBar(progressBar2);
+            progressBar2.setVisibility(View.VISIBLE);
             manager.setPersonalLike(this, mGroupId+"", item.id);
         }
     }
@@ -517,6 +533,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.title);
             startActivity(i);
 
@@ -540,7 +557,7 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
     @Override
     public void onDeleteClick(PostItem item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override
@@ -607,11 +624,21 @@ public class PersonalPostsFragmentNew extends BaseFragment implements LeafManage
         startActivity(intent);
     }
 
+    @Override
+    public void onDeleteVideoClick(PostItem item, int adapterPosition) {
+        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
+        if(item.fileName!=null && item.fileName.size()>0){
+            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+            mAdapter2.notifyItemChanged(adapterPosition);
+        }
+    }
+
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         AppLog.e("PersonalPostFrag", "DIalog Ok Clicked ");
-        showLoadingBar(progressBar2);
+        //showLoadingBar(progressBar2);
+        progressBar2.setVisibility(View.VISIBLE);
         LeafManager manager = new LeafManager();
         manager.deletePersonalPostChat(this, mGroupId + "", selectedFriend + "", currentItem.id);
     }

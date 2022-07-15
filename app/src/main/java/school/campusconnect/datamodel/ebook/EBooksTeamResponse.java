@@ -22,6 +22,9 @@ public class EBooksTeamResponse extends BaseResponse {
     }
 
     public static class SubjectBook {
+        @SerializedName(value = "ebookId")
+        @Expose
+        public String ebookId;
         @SerializedName(value = "subjectName")
         @Expose
         public String subjectName;

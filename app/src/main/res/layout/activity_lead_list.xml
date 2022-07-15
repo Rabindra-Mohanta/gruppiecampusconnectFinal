@@ -13,21 +13,39 @@
 
         <include layout="@layout/layout_toolbar" />
 
-        <EditText
-            android:id="@+id/edtSearch"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/search_edittext_background"
-            android:drawableLeft="@android:drawable/ic_menu_search"
-            android:drawablePadding="@dimen/padding_8dp"
-            android:hint="@string/hint_search"
-            android:imeOptions="actionSearch"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textColor="@color/color_grey_icon"
-            android:textColorHint="@color/color_label"
-            android:textSize="@dimen/text_size_14sp"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            android:layout_margin="@dimen/padding_10dp"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edtSearch"
+                android:layout_width="match_parent"
+
+                android:layout_height="50dp"
+                android:background="@drawable/search_edittext_background"
+                android:drawableLeft="@android:drawable/ic_menu_search"
+                android:drawablePadding="@dimen/padding_8dp"
+                android:hint="@string/hint_search"
+                android:imeOptions="actionSearch"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/color_grey_icon"
+                android:textColorHint="@color/color_label"
+                android:textSize="@dimen/text_size_14sp"
+                app:layout_scrollFlags="scroll|enterAlways" />
+
+<!--
+            <Button
+                android:id="@+id/btnSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                style="@style/AddPostButton"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/padding_5dp"
+                android:text="@string/hint_search_group"/>-->
+
+        </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -39,7 +57,7 @@
         <RelativeLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
 
         <ProgressBar

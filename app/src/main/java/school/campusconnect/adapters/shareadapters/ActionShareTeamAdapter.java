@@ -89,7 +89,7 @@ public class ActionShareTeamAdapter extends RecyclerView.Adapter<ActionShareTeam
 //               AppLog.e("CONTACTSS", "num is " + item.getPhone());
                 if (!name.equals("")) {
                     if (!item.getName().equalsIgnoreCase("My Team"))
-                        holder.txtName.setText(name + " Team");
+                        holder.txtName.setText(name +" "+mContext.getResources().getString(R.string.lbl_team));
                     else
                         holder.txtName.setText(item.getName());
 

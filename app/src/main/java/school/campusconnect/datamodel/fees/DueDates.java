@@ -48,6 +48,10 @@ public class DueDates {
         return status;
     }
 
+    public String getStatus1() {
+        return status!=null?status:"";
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }

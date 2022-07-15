@@ -23,7 +23,7 @@
             android:textSize="@dimen/text_size_18sp"
             android:layout_marginLeft="@dimen/padding_10dp"
             android:textColor="@color/colorPrimary"
-            android:text="Gruppie"/>
+            android:text="@string/lbl_gruppie"/>
 
     </LinearLayout>
 
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_10dp"
         android:layout_toStartOf="@+id/img_comment"
-        android:hint="All the privileges you have as a admin will be shifted to the new admin. Are You Sure you Want To Continue?"
+        android:hint="@string/lbl_admin_change_des"
         android:paddingStart="@dimen/padding_10dp" />
     <!--android:onTextChanged="@={data.addTextChangedListener}"-->
 
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:padding="@dimen/padding_20dp"
-            android:text="Cancel"
+            android:text="@string/lbl_cancel"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16sp" />
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:padding="@dimen/padding_20dp"
-            android:text="Ok"
+            android:text="@string/lbl_ok"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16sp" />
     </LinearLayout>

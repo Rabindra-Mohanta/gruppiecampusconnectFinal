@@ -112,10 +112,11 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
                 if (data == null)
                     return true;
 
-                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to delete this Books.?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_delete_book), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                    //    progressBar.setVisibility(View.VISIBLE);
                         LeafManager leafManager = new LeafManager();
                         leafManager.deleteEBook(EBookPdfFragment.this, GroupDashboardActivityNew.groupId, data.getBooksId());
                     }
@@ -139,18 +140,22 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
             }
         }
         AmazoneRemove.remove(list);
-        progressBar.setVisibility(View.GONE);
+
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         getActivity().finish();
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -188,7 +193,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
 
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(getContext(),item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -204,7 +209,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No E-Book Found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -214,7 +219,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
             }
             else
             {
-                txtEmpty.setText("No E-Book Found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_ebook_found));
                 return 0;
             }
 
@@ -254,6 +259,7 @@ public class EBookPdfFragment extends BaseFragment implements LeafManager.OnComm
                             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
                             i.putExtra("pdf", list.get(getAdapterPosition()).fileName.get(0));
                             i.putExtra("name", list.get(getAdapterPosition()).subjectName);
+                            i.putExtra("thumbnail", list.get(getAdapterPosition()).thumbnailImage.get(0));
                             startActivity(i);
                         }
                     }

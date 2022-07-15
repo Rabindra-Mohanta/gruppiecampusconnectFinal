@@ -7,6 +7,7 @@ public class LeafPreference {
 
     public static final String ADD_FRIEND = "ADD_FRIEND";
     public static final String ISTEAMUPDATED = "ISTEAMUPDATED";
+    public static final String ISBOOTHUPDATED = "ISBOOTHUPDATED";
     public static final String Replay_List_Changes = "Replay_List_Changes";
     public static final String PERSONAL_POST_ADDED_1 = "PERSONAL_POST_ADDED_1";
     public static final String PERSONAL_POST_ADDED_2 = "PERSONAL_POST_ADDED_2";
@@ -17,19 +18,40 @@ public class LeafPreference {
     public static final String IS_STUDENT_ADDED = "IS_STUDENT_ADDED";
     public static final String ISGALLERY_POST_UPDATED = "ISGALLERY_POST_UPDATED";
     public static final String IS_VENDOR_POST_UPDATED = "IS_VENDOR_POST_UPDATED";
+    public static final String IS_COURSE_UPDATED = "IS_COURSE_UPDATED";
     public static final String IS_CODE_CONDUCT_UPDATED = "IS_CODE_CONDUCT_UPDATED";
     public static final String ISTIME_TABLE_UPDATED = "ISTIME_TABLE_UPDATED";
     public static final String GROUP_COUNT = "GROUP_COUNT";
+    public static final String GROUP_ID = "GROUP_ID";
+    public static final String CONST_GROUP_COUNT = "CONST_GROUP_COUNT";
+    public static final String VIDEO_CLASS_LIST_OFFLINE = "VIDEO_CLASS_LIST_OFFLINE";
+    public static final String HOME_LIST_OFFLINE = "HOME_LIST_OFFLINE";
+    public static final String SCHOOL_LIST = "SCHOOL_LIST";
+    public static final String GROUP_ID_LIST = "GROUP_ID_LIST";
+    public static final String ROLE = "ROLE";
+    public static final String ADD_COMMITTEE = "ADD_COMMITTEE";
+
+    public static final String SECRET_KEY = "SECRET_KEY";
+    public static final String ACCESS_KEY = "ACCESS_KEY";
+
     private static LeafPreference sInstance;
     private static SharedPreferences sPref;
     private static SharedPreferences.Editor sEditor;
     public static final String LOGIN_ID = "login_id";
     public static final String TOKEN = "centerr_status";
+    public static final String FINGERPRINT = "finger_print";
+    public static final String SKIP_PIN = "skip_pin";
+    public static final String PIN = "pin";
     public static final String NAME = "name";
     public static final String NUM = "num";
     public static final String EMAIL = "email";
     public static final String PROFILE_COMPLETE = "profilecompletion";
     public static final String PROFILE_IMAGE = "profileimage";
+
+    public static final String PROFILE_NAME = "PROFILE_NAME";
+    public static final String PROFILE_VOTERID = "PROFILE_VOTERID";
+    public static final String PROFILE_IMAGE_NEW = "PROFILE_IMAGE_NEW";
+
     public static final String COUNTRY_CODE = "country_code";
     public static final String CALLING_CODE = "calling_code";
     public static final String GCM_TOKEN = "gcmtoken";
@@ -41,6 +63,7 @@ public class LeafPreference {
     public static final String ISFRIENDUPDATED = "isfriendsupdated";
     public static final String ISGENERALPOSTUPDATED = "isgeneralpostupdated";
     public static final String ISTEAMPOSTUPDATED = "isteampostupdated";
+    public static final String ISSYLLABUSUPDATED = "issyllabusupdated";
     public static final String ISPERSONALPOSTUPDATED = "ispersonalpostupdated";
     public static final String ISALLCONTACTSAVED = "isallcontactsaved";
     public static final String LOGOUT_FOR_212 = "logout_for_212";
@@ -48,6 +71,11 @@ public class LeafPreference {
     public static final String phoneNumber = "phone";
     public static final String ISWALKTHROUGHDONE = "walkthrough";
     public static String Subscribed_Teams="Subscribed_Teams";
+    public static final String OFFLINE_VIDEONAMES = "offlinevideonames";
+    public static final String TOTAL_PAGE_NOTIFICATION = "totalpagenotification";
+    public static final String VIDEO_CALL_START_TIME = "videocallstarttime";
+
+public static final String LOGIN_REQ = "loginreq";
 
     private LeafPreference(Context context) {
         sPref = context.getSharedPreferences("nnr.electionleaf", Context.MODE_PRIVATE);
@@ -109,4 +137,14 @@ public class LeafPreference {
     public String getString(String key) {
         return sPref.getString(key, "");
     }
+    public String getString(String key,String defVal) {
+        return sPref.getString(key, defVal);
+    }
+    public String getUserId(){
+        return getString(LeafPreference.LOGIN_ID);
+    }
+    public String getUserName(){
+        return getString(LeafPreference.NAME);
+    }
+
 }

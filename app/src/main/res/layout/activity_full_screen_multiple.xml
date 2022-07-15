@@ -3,12 +3,37 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/iconBack"
-        android:layout_width="wrap_content"
-        android:padding="@dimen/padding_15dp"
-        android:src="@drawable/icon_back_arrow"
-        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        >
+        <ImageView
+            android:id="@+id/iconBack"
+            android:layout_width="wrap_content"
+            android:padding="@dimen/padding_15dp"
+            android:src="@drawable/icon_back_arrow"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/iconAdd"
+            android:layout_width="?attr/actionBarSize"
+            android:padding="@dimen/padding_15dp"
+            android:src="@drawable/ic_add_post_new"
+            android:layout_toLeftOf="@id/iconShareExternal"
+            android:layout_height="?attr/actionBarSize" />
+
+        <ImageView
+            android:id="@+id/iconShareExternal"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:padding="@dimen/padding_15dp"
+            android:src="@drawable/ic_share"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout
+        android:id="@+id/item"
+        android:clickable="true"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/padding_10dp"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/llBottomLine"
+            android:layout_marginBottom="@dimen/padding_10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_divider"/>
+
+        <RelativeLayout
+            android:layout_below="@+id/llBottomLine"
+            android:id="@+id/llReaded"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/padding_20dp"
+            >
+            <View
+                android:visibility="invisible"
+                android:id="@+id/viewReaded"
+                android:layout_width="2dp"
+                android:layout_alignTop="@id/tvTime"
+                android:layout_alignBottom="@id/tvdesc"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"/>
+
+            <TextView
+                android:visibility="gone"
+                android:layout_toRightOf="@id/viewReaded"
+                android:layout_marginLeft="@dimen/padding_5dp"
+                android:id="@+id/tvTime"
+                style="@style/LabelNormal"
+                android:gravity="center_vertical"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/colorPrimary"
+                />
+
+            <View
+                android:id="@+id/view"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_toRightOf="@id/tvTime"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"/>
+
+            <TextView
+                android:gravity="center_vertical"
+                android:layout_marginLeft="@dimen/padding_10dp"
+                android:layout_toRightOf="@id/view"
+                android:id="@+id/tvdesc"
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/colorTextLight"
+                android:maxLines="1"
+                android:ellipsize="end"
+             />
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+</layout>

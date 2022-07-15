@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/flSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/spSubject"
+            style="@style/RegEditText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginStart="@dimen/padding_15dp"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_marginEnd="@dimen/padding_15dp"
+            android:layout_marginBottom="@dimen/padding_10dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/padding_25dp"
+            android:layout_height="@dimen/padding_25dp"
+            android:layout_gravity="end|center"
+            android:layout_marginEnd="@dimen/padding_30dp"
+            android:padding="@dimen/padding_5dp"
+            app:srcCompat="@drawable/arrow_down"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTeams"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/flSpinner"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/llStudent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/flSpinner"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_20dp"
+            android:layout_marginEnd="@dimen/padding_20dp">
+
+            <TextView
+                style="@style/LabelHeader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_name__"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tvName"
+                style="@style/LabelHeader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_20dp"
+            android:layout_marginEnd="@dimen/padding_20dp">
+
+            <TextView
+                style="@style/LabelHeader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_roll_no"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tvRollNo"
+                style="@style/LabelHeader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_20dp"
+            android:layout_marginEnd="@dimen/padding_20dp">
+
+            <TextView
+                style="@style/LabelHeader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_exam_duration"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tvDuration"
+                style="@style/LabelHeader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="@dimen/padding_10dp"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_marginEnd="@dimen/padding_10dp"
+            android:background="@color/color_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_button_height"
+            android:layout_marginStart="@dimen/padding_10dp"
+            android:layout_marginEnd="@dimen/padding_10dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/LabelHeader1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/lbl_subject" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/padding_10dp"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:background="@color/color_divider" />
+
+            <TextView
+                style="@style/LabelHeader1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/lbl_Max" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/padding_10dp"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:background="@color/color_divider" />
+
+            <TextView
+                style="@style/LabelHeader1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/lbl_min" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/padding_10dp"
+                android:layout_marginEnd="@dimen/padding_10dp"
+                android:background="@color/color_divider" />
+
+            <TextView
+                style="@style/LabelHeader1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/lbl_obtain" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMarks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_10dp"
+            android:layout_marginEnd="@dimen/padding_10dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_mark_detail" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="@dimen/padding_10dp"
+            android:layout_marginEnd="@dimen/padding_10dp"
+            android:background="@color/color_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_15dp"
+            android:layout_marginTop="@dimen/padding_10dp"
+            android:layout_marginEnd="@dimen/padding_15dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/LabelHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_total_marks"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tvTotalObt"
+                style="@style/LabelHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressBarZoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        style="@style/LabelEmptyText" />
+</RelativeLayout>

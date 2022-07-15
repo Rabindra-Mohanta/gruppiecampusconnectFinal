@@ -31,7 +31,7 @@ public class AttendancePareSchool extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Attendance");
+        setTitle(getResources().getString(R.string.title_attendance));
 
         setupViewPager();
     }

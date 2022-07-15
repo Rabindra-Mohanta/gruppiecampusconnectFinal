@@ -2,7 +2,6 @@ package school.campusconnect.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -21,17 +20,70 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import io.github.inflationx.viewpump.ViewPumpContextWrapper;
-import school.campusconnect.fragments.BaseTeamFragment;
+import school.campusconnect.BuildConfig;
+import school.campusconnect.datamodel.ChapterTBL;
+import school.campusconnect.datamodel.ClassListTBL;
+import school.campusconnect.datamodel.EBookClassItem;
+import school.campusconnect.datamodel.EBookItem;
+import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.HwItem;
+import school.campusconnect.datamodel.LiveClassListTBL;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
+import school.campusconnect.datamodel.StudAssignementItem;
+import school.campusconnect.datamodel.StudTestPaperItem;
+import school.campusconnect.datamodel.SubjectCountTBL;
+import school.campusconnect.datamodel.SubjectItem;
+import school.campusconnect.datamodel.TeamCountTBL;
+import school.campusconnect.datamodel.TestExamTBL;
+import school.campusconnect.datamodel.banner.BannerTBL;
+import school.campusconnect.datamodel.baseTeam.BaseTeamTableV2;
+import school.campusconnect.datamodel.booths.BoothPresidentTBL;
+import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.booths.EventSubBoothTBL;
+import school.campusconnect.datamodel.booths.MemberTeamTBL;
+import school.campusconnect.datamodel.booths.MyBoothEventTBL;
+import school.campusconnect.datamodel.booths.MyTeamSubBoothTBL;
+import school.campusconnect.datamodel.booths.MyTeamVotersTBL;
+import school.campusconnect.datamodel.booths.PublicFormBoothTBL;
+import school.campusconnect.datamodel.booths.SubBoothWorkerEventTBL;
+import school.campusconnect.datamodel.calendar.DayEventTBL;
+import school.campusconnect.datamodel.calendar.MonthEventTBL;
+import school.campusconnect.datamodel.committee.CommitteeTBL;
+import school.campusconnect.datamodel.event.BoothPostEventTBL;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
+import school.campusconnect.datamodel.event.TeamEventDataTBL;
+import school.campusconnect.datamodel.feed.AdminFeedTable;
+import school.campusconnect.datamodel.gallery.GalleryTable;
+import school.campusconnect.datamodel.lead.LeadDataTBL;
+import school.campusconnect.datamodel.masterList.MasterBoothListTBL;
+import school.campusconnect.datamodel.masterList.StreetListTBL;
+import school.campusconnect.datamodel.masterList.VoterListTBL;
+import school.campusconnect.datamodel.masterList.WorkerListTBL;
+import school.campusconnect.datamodel.notificationList.AllNotificationTable;
+import school.campusconnect.datamodel.notificationList.NotificationTable;
+import school.campusconnect.datamodel.profile.ProfileTBL;
+import school.campusconnect.datamodel.syllabus.SyllabusTBL;
+import school.campusconnect.datamodel.ticket.TicketTBL;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv2;
+import school.campusconnect.fragments.DashboardNewUi.BaseTeamFragmentv3;
+import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.utils.AppLog;
+
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,11 +93,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,14 +115,14 @@ import school.campusconnect.datamodel.GroupDataItem;
 import school.campusconnect.datamodel.PhoneContactsItems;
 import school.campusconnect.datamodel.PostDataItem;
 import school.campusconnect.datamodel.PostTeamDataItem;
-import school.campusconnect.datamodel.TeamListItem;
+import school.campusconnect.datamodel.BaseTeamTable;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactGroupIdModel;
 import school.campusconnect.datamodel.gruppiecontacts.GruppieContactsModel;
-import school.campusconnect.datamodel.notifications.NotificationModel;
 import school.campusconnect.datamodel.personalchat.PersonalContactsModel;
 import school.campusconnect.fragments.Fragment_GruppieContacts;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.LocaleHelper;
 import school.campusconnect.views.SMBDialogUtils;
 
 /**
@@ -76,13 +131,16 @@ import school.campusconnect.views.SMBDialogUtils;
 public abstract class BaseActivity extends AppCompatActivity implements LeafManager.OnCommunicationListener {
 
     private Dialog mProgressDialog;
-    private ProgressDialog mProgressBar;
+
+    private ProgressBar mProgressBar;
+
+    private ProgressDialog mProgressBarDialog;
     private int hot_number = 0;
     private TextView tv_noti;// = null;
     private TextView tv_select;// = null;
     private Menu menu;
     public final static int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 9;
-
+    public boolean isHide = false;
     public synchronized void showLoadingDialog() {
         try {
             if (mProgressDialog == null) {
@@ -103,6 +161,89 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
     }
 
+    public void showLoadingBar(ProgressBar v, boolean isShow) {
+        AppLog.e("PBAR showLoadingBar", "called");
+
+        isHide = isShow;
+
+        if (isShow)
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (mProgressBar != null)
+                    {
+                        hideLoadingBar();
+                    }
+                    if (mProgressBar == null)
+                    {
+                        mProgressBar = v;
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+
+
+            //        if (mProgressBar == null) {
+            // mProgressBar.setVisibility(View.VISIBLE);
+            // mProgressBar = v;
+//        } else {
+            //  mProgressBar.setVisibility(View.VISIBLE);
+//        }
+        }
+
+    }
+
+    public void hideLoadingBar() {
+
+        if (isHide)
+        {
+            if (mProgressBar == null) {
+            } else {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mProgressBar = null;
+            }
+        }
+        AppLog.e("PBAR hideLoadingBar", "called");
+
+    }
+    public void showLoadingBar(View v) {
+     //   showLoadingDialogText();
+        AppLog.e("PBAR showLoadingBar", "called");
+//        if (mProgressBar == null) {
+        // mProgressBar.setVisibility(View.VISIBLE);
+        // mProgressBar = v;
+//        } else {
+        //  mProgressBar.setVisibility(View.VISIBLE);
+//        }
+    }
+
+ /*   public void showLoadingBar(View v,boolean isLoading) {
+        showLoadingDialogText();
+        AppLog.e("PBAR showLoadingBar", "called");
+//        if (mProgressBar == null) {
+        // mProgressBar.setVisibility(View.VISIBLE);
+        // mProgressBar = v;
+//        } else {
+        //  mProgressBar.setVisibility(View.VISIBLE);
+//        }
+    }*/
+
+ /*   public void hideLoadingBar() {
+        hideLoadingDialogText();
+        AppLog.e("PBAR hideLoadingBar", "called");
+       *//* if (mProgressBar == null) {
+        } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar = null;
+        }*//*
+    }*/
     public void showKeyboard(View view)
     {
         InputMethodManager inputMethodManager =
@@ -113,29 +254,30 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     }
 
     public synchronized void showLoadingDialogText() {
-        try {
-            if (mProgressBar == null) {
-                mProgressBar = new ProgressDialog(this);
-                mProgressBar.setMessage("Initializing...");
-                mProgressBar.setCancelable(false);
-                mProgressBar.show();
+
+        /*try {
+            if (mProgressBarDialog == null) {
+                mProgressBarDialog = new ProgressDialog(this);
+                mProgressBarDialog.setMessage("Initializing...");
+                mProgressBarDialog.setCancelable(false);
+                mProgressBarDialog.show();
             } else {
-                if (!mProgressBar.isShowing()) {
-                    mProgressBar.show();
+                if (!mProgressBarDialog.isShowing()) {
+                    mProgressBarDialog.show();
                 }
             }
         }catch (Exception e)
         {
            AppLog.e("BaseActivity",e.toString());
-        }
+        }*/
 
     }
     public synchronized void hideLoadingDialogText() {
-        if (mProgressBar != null && mProgressBar.isShowing()) {
-            mProgressBar.hide();
-            mProgressBar.cancel();
-            mProgressBar = null;
-        }
+       /* if (mProgressBarDialog != null && mProgressBarDialog.isShowing()) {
+            mProgressBarDialog.hide();
+            mProgressBarDialog.cancel();
+            mProgressBarDialog = null;
+        }*/
     }
 
     public synchronized void hideLoadingDialog() {
@@ -148,7 +290,9 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+        //super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+        String f = PreferenceManager.getDefaultSharedPreferences(newBase).getString("Locale.Helper.Selected.Language","en");
+        super.attachBaseContext(LocaleHelper.onAttach(newBase,f));
     }
 
 
@@ -258,31 +402,8 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             hide_keyboard();
-            if (this instanceof NotificationsActivityNew) {
 
-                try {
-                    ActivityManager mngr = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-
-                    List<ActivityManager.RunningTaskInfo> taskList = mngr.getRunningTasks(10);
-
-                    if (taskList.get(0).numActivities == 1 &&
-                            taskList.get(0).topActivity.getClassName().equals(this.getClass().getName())) {
-                       AppLog.e("onOptionsItemSelected", "This is last activity in the stack");
-                        startActivity(new Intent(this, GroupListActivityNew.class));
-                    } else {
-                        finish();
-                    }
-                } catch (Exception e) {
-                   AppLog.e("RunningTaskInfo", "error is " + e.toString());
-                    finish();
-                }
-            } /*else if (this instanceof TeamListPersonalActivity) {
-                if (TeamPostFragment_New.isTeamPosts) {
-                    TeamPostFragment_New.getInstance().showContactList();
-                } else {
-                    finish();
-                }
-            }*/ else if (this instanceof GroupDashboardActivityNew) {
+            if (this instanceof GroupDashboardActivityNew) {
                 onBackPressed();
             } else {
                 finish();
@@ -294,8 +415,6 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             if(this instanceof GroupDashboardActivityNew){
                 ((GroupDashboardActivityNew)this).llNotification.performClick();
             }
-        }else if (item.getItemId() == R.id.action_notification) {
-            startActivity(new Intent(this, NotificationsActivityNew.class));
         } else if (item.getItemId() == R.id.action_sync) {
             getContactsWithPermission();
         } else if (item.getItemId() == R.id.action_add_multi) {
@@ -394,7 +513,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
         this.menu = menu;
 
-            getMenuInflater().inflate(R.menu.menu_save, menu);
+            getMenuInflater().inflate(R.menu.menu_save_v2, menu);
 
             menu.findItem(R.id.menu_add_friend).setVisible(false);
             menu.findItem(R.id.menu_add_post).setVisible(false);
@@ -422,7 +541,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
                 new MyMenuItemStuffListener(relNoti, "Notifications") {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(context, NotificationsActivityNew.class));
+
                     }
                 };
             } catch (NullPointerException e) {
@@ -434,12 +553,15 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             if (this instanceof GroupDashboardActivityNew) {
                 menu.findItem(R.id.action_add_multi).setVisible(false);
 //                menu.findItem(R.id.action_add_count).setVisible(false);
-                menu.findItem(R.id.action_notification).setVisible(false);
+//                menu.findItem(R.id.action_notification).setVisible(false);
 
 
                 Fragment fm = this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-                if(fm instanceof BaseTeamFragment){
+                if(fm instanceof BaseTeamFragmentv2){
+                    menu.findItem(R.id.action_notification_list).setVisible(true);
+                }
+                if(fm instanceof BaseTeamFragmentv3){
                     menu.findItem(R.id.action_notification_list).setVisible(true);
                 }else{
                     menu.findItem(R.id.action_notification_list).setVisible(false);
@@ -456,7 +578,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 //                menu.findItem(R.id.action_add_multi).setVisible(true);
                 menu.findItem(R.id.action_invite).setVisible(true);
 
-                if(!GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL))
+                if(!GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL) && !GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_CONSTITUENCY))
                 menu.findItem(R.id.action_sync).setVisible(true);
 
 //                menu.findItem(R.id.action_add_count).setVisible(true);
@@ -570,7 +692,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
 
         try {
             Snackbar snackbar = Snackbar.make(findViewById(R.id.toolbar), R.string.no_internet, Snackbar.LENGTH_LONG)
-                    .setAction("SETTINGS", new View.OnClickListener() {
+                    .setAction(getResources().getString(R.string.action_settings), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
 
@@ -598,25 +720,184 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
         }
     }
 
+    private void unsubcribe()
+    {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            AppLog.e("Firebase Topic", "unsubscribeFromTopic : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID) + " : Successful()");
+
+                        } else {
+                            AppLog.e("Firebase Topic", "unsubscribeFromTopic : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID) + " Fail()");
+                        }
+
+                    }
+                });
+    }
     public void logout() {
+
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            unsubcribe();
+        }
+
        AppLog.e("Logout", "onSuccessCalled");
         LeafPreference.getInstance(this).clearData();
         RememberPref.getInstance(this).clearData();
-       AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
+        this.getSharedPreferences("pref_noti_count", MODE_PRIVATE).edit().clear().commit();
+        AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
+
         GroupDataItem.deleteAll();
         PostDataItem.deleteAllPosts();
-        NotificationModel.deleteAll();
-        TeamListItem.deleteAll();
+        ImagePathTBL.deleteAll();
+//        NotificationModel.deleteAll();
+        SyllabusTBL.deleteAll();
+        BaseTeamTable.deleteAll();
+        BaseTeamTableV2.deleteAll();
+        TicketTBL.deleteAll();
+        MasterBoothListTBL.deleteAll();
+        BoothsTBL.deleteAll();
+        PublicFormBoothTBL.deleteAll();
+        GalleryTable.deleteGallery();
+        MemberTeamTBL.deleteAll();
+
+        WorkerListTBL.deleteAll();
+        SubBoothWorkerEventTBL.deleteAll();
+        MyBoothEventTBL.deleteAll();
+        VoterListTBL.deleteAll();
+        CommitteeTBL.deleteMember();
+        TeamEventDataTBL.deleteTeamEvent();
+        StreetListTBL.deleteAll();
+        NotificationTable.deleteAll();
+        AllNotificationTable.deleteAll();
+        LeadDataTBL.deleteAll();
+        DayEventTBL.deleteAllEvent();
+        MonthEventTBL.deleteAllEvent();
+        AdminFeedTable.deleteAll();
+        ProfileTBL.deleteAll();
         PostTeamDataItem.deleteAllPosts();
         PersonalContactsModel.deleteAll();
         GruppieContactsModel.deleteAll();
+        HwItem.deleteAll();
+        TestExamTBL.deleteAll();
+        ChapterTBL.deleteAll();
+        HomeTeamDataTBL.deleteAll();
+        EventTBL.deleteAll();
+        ClassListTBL.deleteAll();
+        LiveClassListTBL.deleteAll();
+        TeamCountTBL.deleteAll();
+        SubjectCountTBL.deleteAll();
+        StudAssignementItem.deleteAll();
+        StudTestPaperItem.deleteAll();
+        SubjectItem.deleteAll();
+        EBookItem.deleteAll();
+        EBookClassItem.deleteAll();
+        BoothPostEventTBL.deleteAll();
+        BannerTBL.deleteAll();
+        EventSubBoothTBL.deleteAll();
+        MyTeamVotersTBL.deleteAll();
+        MyTeamSubBoothTBL.deleteAll();
+        BoothPresidentTBL.deleteAll();
+
+//        GruppieContactAddressModel.deleteAll();
+        GruppieContactGroupIdModel.deleteAll();
+        new DatabaseHandler(this).deleteAll();
+
+   /*     Intent intent = new Intent(this, LoginActivity2.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);*/
+
+        updateViews("en");
+    }
+
+    private void updateViews(String languageCode) {
+
+        SharedPreferences preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Locale.Helper.Selected.Language", languageCode);
+        Log.e("LocaleHelper","language "+languageCode);
+        editor.apply();
+
+        Intent intent = new Intent(this, LoginActivity2.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    public void logoutWithoutEvents() {
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            unsubcribe();
+        }
+        AppLog.e("Logout", "onSuccessCalled");
+        LeafPreference.getInstance(this).clearData();
+        RememberPref.getInstance(this).clearData();
+        AppLog.e("GroupList", "Grouplist token : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.GCM_TOKEN));
+        GroupDataItem.deleteAll();
+        PostDataItem.deleteAllPosts();
+//        NotificationModel.deleteAll();
+        BaseTeamTable.deleteAll();
+        BannerTBL.deleteAll();
+        BaseTeamTableV2.deleteAll();
+        ImagePathTBL.deleteAll();
+        MasterBoothListTBL.deleteAll();
+        SyllabusTBL.deleteAll();
+        WorkerListTBL.deleteAll();
+        HomeTeamDataTBL.deleteAll();
+        StreetListTBL.deleteAll();
+        TicketTBL.deleteAll();
+        BoothPostEventTBL.deleteAll();
+        EventSubBoothTBL.deleteAll();
+        NotificationTable.deleteAll();
+        DayEventTBL.deleteAllEvent();
+        LeadDataTBL.deleteAll();
+        CommitteeTBL.deleteMember();
+        MonthEventTBL.deleteAllEvent();
+        VoterListTBL.deleteAll();
+        ProfileTBL.deleteAll();
+        MemberTeamTBL.deleteAll();
+        AllNotificationTable.deleteAll();
+        AdminFeedTable.deleteAll();
+        BoothsTBL.deleteAll();
+        SubBoothWorkerEventTBL.deleteAll();
+        MyBoothEventTBL.deleteAll();
+        TeamEventDataTBL.deleteTeamEvent();
+        PublicFormBoothTBL.deleteAll();
+        PostTeamDataItem.deleteAllPosts();
+        PersonalContactsModel.deleteAll();
+        GruppieContactsModel.deleteAll();
+        MyTeamVotersTBL.deleteAll();
+        GalleryTable.deleteGallery();
+        BoothPresidentTBL.deleteAll();
+
 //        GruppieContactAddressModel.deleteAll();
         GruppieContactGroupIdModel.deleteAll();
         this.getSharedPreferences("pref_noti_count", MODE_PRIVATE).edit().clear().commit();
         new DatabaseHandler(this).deleteAll();
-        Intent intent = new Intent(this, LoginActivity2.class);
+
+        HwItem.deleteAll();
+        TestExamTBL.deleteAll();
+        ChapterTBL.deleteAll();
+        //EventTBL.deleteAll();
+        ClassListTBL.deleteAll();
+        LiveClassListTBL.deleteAll();
+        TeamCountTBL.deleteAll();
+        SubjectCountTBL.deleteAll();
+        StudAssignementItem.deleteAll();
+        StudTestPaperItem.deleteAll();
+        SubjectItem.deleteAll();
+        EBookItem.deleteAll();
+        EBookClassItem.deleteAll();
+        MyTeamSubBoothTBL.deleteAll();
+
+      /*  Intent intent = new Intent(this, LoginActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        startActivity(intent);*/
+
+        updateViews("en");
     }
 
     // call the updating code on the main thread,
@@ -769,7 +1050,7 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
     @Override
     public void onException(int apiId, String msg) {
         hideLoadingDialog();
-        Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -1022,8 +1303,12 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             if(isConnectionAvailable())
             {
                 LeafManager mManager = new LeafManager();
-                mManager.getAllContactsList(BaseActivity.this/*, 1*/);
+//                mManager.getAllContactsList(BaseActivity.this/*, 1*/);
                 LeafPreference.getInstance(BaseActivity.this).setBoolean(LeafPreference.ISALLCONTACTSAVED, true);
+                hideLoadingDialog();
+                hideLoadingDialogText();
+                if(BaseActivity.this instanceof GroupDashboardActivityNew)
+                    ((GroupDashboardActivityNew)BaseActivity.this).reqPermission();
             }
             else {
                 showNoNetworkMsg();
@@ -1263,13 +1548,38 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
                 if(Fragment_GruppieContacts.synchFromAddFrend)
                 {
                     Fragment_GruppieContacts.synchFromAddFrend=false;
-                    Toast.makeText(BaseActivity.this, "Some Problem Occurred Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseActivity.this, getResources().getString(R.string.toast_some_problem_occure), Toast.LENGTH_SHORT).show();
                 }
 
             } else if (BaseActivity.this instanceof AllContactListActivity) {
                 Intent intent = new Intent(BaseActivity.this, AllContactListActivity.class);
                 startActivity(intent);
                 BaseActivity.this.finish();
+            }
+        }
+    }
+    protected boolean isValueValidPhone(EditText phone) {
+        boolean isValid = true;
+
+        String enteredValue = phone.getEditableText().toString().trim();
+        if (enteredValue.length()<10) {
+            phone.setError(getString(R.string.msg_valid_phone));
+            phone.requestFocus();
+            isValid = false;
+        }
+
+
+
+
+        return isValid;
+    }
+
+    public void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         }
     }
@@ -1280,5 +1590,14 @@ public abstract class BaseActivity extends AppCompatActivity implements LeafMana
             galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), requestCode);
+    }
+
+    void pickDate(long minDate, DatePickerFragment.OnDateSelectListener callback) {
+        DatePickerFragment customDatePicker = DatePickerFragment.newInstance();
+        customDatePicker.setOnDateSelectListener(callback);
+        if (minDate > 0) {
+            customDatePicker.setMinimum(minDate);
+        }
+        customDatePicker.show(this.getSupportFragmentManager(), "datepicker");
     }
 }

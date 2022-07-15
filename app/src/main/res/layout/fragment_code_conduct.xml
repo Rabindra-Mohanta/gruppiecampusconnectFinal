@@ -34,7 +34,7 @@
         android:paddingStart="16dp"
         android:visibility="gone"
         android:text="@string/msg_no_data_found"
-        android:textSize="18sp" />
+        style="@style/LabelEmptyText" />
 
     <ImageView
         android:id="@+id/img_top"

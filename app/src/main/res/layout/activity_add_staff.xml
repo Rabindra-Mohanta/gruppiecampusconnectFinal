@@ -86,12 +86,16 @@
                 android:textColor="@color/colorPrimary" />
 
             <EditText
+
                 android:id="@+id/etPhone"
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
+                android:maxLength="10"
                 android:inputType="phone" />
+
+
 
             <TextView
                 style="@style/LabelNormal"
@@ -211,7 +215,6 @@
                 android:layout_marginTop="@dimen/padding_15dp"
                 android:paddingLeft="@dimen/padding_10dp"
                 android:text="@string/lbl_dob"
-                android:visibility="gone"
                 android:textAllCaps="true"
                 android:textColor="@color/colorPrimary" />
 
@@ -220,7 +223,6 @@
                 style="@style/RegEditText"
                 android:layout_width="match_parent"
                 android:focusable="false"
-                android:visibility="gone"
                 android:layout_height="@dimen/login_button_height"
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:inputType="text" />
@@ -316,12 +318,32 @@
                 android:layout_marginTop="@dimen/padding_5dp"
                 android:inputType="textEmailAddress" />
 
+            <TextView
+                style="@style/LabelNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_15dp"
+                android:paddingLeft="@dimen/padding_10dp"
+                android:text="@string/lbl_adharNumber"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/etAadhar"
+                style="@style/RegEditText"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_marginTop="@dimen/padding_5dp"
+                android:inputType="number"
+                android:maxLength="12"
+                android:maxLines="1"/>
+
             <Switch
                 android:id="@+id/switchAllowPost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_5dp"
-                android:text="Allow Post"
+                android:text="@string/lbl_allow_post"
                 android:visibility="gone" />
 
 

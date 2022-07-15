@@ -36,7 +36,7 @@ public class AddEBookAdapter extends RecyclerView.Adapter<AddEBookAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
             holder.tvSubject.setText(list.get(i).subjectName);
             holder.etDesc.setText(list.get(i).description);
-            holder.etPdf.setText(list.get(i).fileName.size() + " book selected");
+            holder.etPdf.setText(list.get(i).fileName.size() + mContext.getResources().getString(R.string.txt_book_selected));
     }
 
     @Override

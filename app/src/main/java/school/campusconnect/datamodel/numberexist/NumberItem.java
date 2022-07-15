@@ -8,6 +8,8 @@ public class NumberItem {
 
     public String countryCode;
     public String phone;
+    public String secretKey;
+    public String accessKey;
     public boolean isUserExist;
     public boolean passwordChanged; // not used for single app always false
     public boolean isAllowedToAccessApp;

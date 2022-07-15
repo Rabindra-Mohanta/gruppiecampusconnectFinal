@@ -4,17 +4,28 @@ package school.campusconnect.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
+
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import school.campusconnect.BuildConfig;
 import school.campusconnect.activities.AddQuestionActivity;
 import school.campusconnect.activities.FullScreenActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.activities.ViewPDFActivity;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
+import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneHelper;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneRemove;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -28,6 +39,7 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import school.campusconnect.R;
@@ -51,6 +63,8 @@ import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.views.SMBDialogUtils;
+
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class FavouritePostFragment extends BaseFragment implements LeafManager.OnCommunicationListener, PostAdapter.OnItemClickListener, LeafManager.OnAddUpdateListener<AddPostValidationError>, DialogInterface.OnClickListener {
 
@@ -132,21 +146,17 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
         mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (isConnectionAvailable()) {
-                    currentPage = 1;
-                    getData();
-                    mBinding.swipeRefreshLayout.setRefreshing(false);
-                } else {
-                    showNoNetworkMsg();
+
                     mBinding.swipeRefreshLayout.setRefreshing(false);
                 }
-            }
+
         });
 
 
     }
 
     private void init() {
+
         databaseHandler = new DatabaseHandler(getActivity());
         count = databaseHandler.getCount();
 
@@ -175,14 +185,15 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     }
 
     private void getData() {
-        showLoadingBar(mBinding.progressBar);
+        mBinding.progressBar.setVisibility(View.VISIBLE);
         mIsLoading = true;
         manager.getFavPosts(this, mGroupId+"", currentPage);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        mBinding.progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ID_FAV_POST:
@@ -232,7 +243,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
 
             case LeafManager.API_ID_DELETE_POST:
                 try {
-                    Toast.makeText(getActivity(), "Post Deleted Succesfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                     getData();
                     AmazoneRemove.remove(currentItem.fileName);
                 }catch (Exception e){}
@@ -258,7 +269,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
             case LeafManager.API_REPORT:
                 hideLoadingBar();
                 try {
-                    Toast.makeText(getActivity(), "Post Reported Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.toast_post_reported_sucessfully), Toast.LENGTH_SHORT).show();
                 }catch (Exception e){}
 
                 break;
@@ -268,12 +279,12 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        hideLoadingBar();
+        mBinding.progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        mBinding.progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -284,7 +295,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
             logout();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {
@@ -337,6 +348,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.title);
             startActivity(i);
 
@@ -360,7 +372,7 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
     @Override
     public void onDeleteClick(PostItem item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", FavouritePostFragment.this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), FavouritePostFragment.this);
     }
 
     @Override
@@ -456,6 +468,286 @@ public class FavouritePostFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onMoreOptionClick(PostItem item) {
+
+    }
+
+    @Override
+    public void onExternalShareClick(PostItem item) {
+
+        boolean isDownloaded = true;
+
+        if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+
+
+            if (item.fileName.size()> 0)
+            {
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    String Filepath;
+
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        Filepath = splitStr[1];
+                    } else {
+                        Filepath = key;
+                    }
+
+                    if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
+
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneDownload.isPdfDownloaded(getContext(),item.fileName.get(i)))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<Uri> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneDownload.getDownloadPath(getContext(),item.fileName.get(i)));
+                    }
+
+                    /*ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+*/
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("application/pdf");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, item.video);
+            intent.setType("text/plain");
+            startActivity(intent);
+        }
+        else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneVideoDownload.isVideoDownloaded(getContext(),item.fileName.get(i)))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<Uri> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneVideoDownload.getDownloadPath(getContext(),item.fileName.get(i)));
+                    }
+
+                    /*ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }*/
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("video/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if(item.fileType.equalsIgnoreCase("birthdaypost")){
+
+            if (item.fileName.size()> 0)
+            {
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    String Filepath;
+
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        Filepath = splitStr[1];
+                    } else {
+                        Filepath = key;
+                    }
+
+                    if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
+
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onDeleteVideoClick(PostItem item, int adapterPosition) {
+        AppLog.e(TAG , "onDeleteVideoClick : "+item.fileName.get(0));
+        if(item.fileName!=null && item.fileName.size()>0){
+            AmazoneDownload.removeVideo(getActivity(),item.fileName.get(0));
+            mAdapter.notifyItemChanged(adapterPosition);
+        }
+    }
+
+    @Override
+    public void callBirthdayPostCreation(PostItem item, int position) {
 
     }
 

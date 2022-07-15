@@ -21,14 +21,14 @@
        <RadioButton
            android:id="@+id/rb_gruppie"
            android:layout_width="wrap_content"
-           android:text="Open Within App"
+           android:text="@string/rb_open_within_app"
            style="@style/LabelNormal"
            android:layout_height="wrap_content"/>
 
         <RadioButton
             android:id="@+id/rb_jitsi"
             android:layout_width="wrap_content"
-            android:text="Open With Jitsi"
+            android:text="@string/rb_open_with_jitsi"
             android:layout_marginTop="@dimen/padding_10dp"
             style="@style/LabelNormal"
             android:layout_height="wrap_content"/>

@@ -16,27 +16,46 @@
 
 package school.campusconnect.utils;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.RemoteViews;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.activeandroid.ActiveAndroid;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 
-import java.util.Map;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.VideoCallingActivity;
 import school.campusconnect.database.LeafPreference;
+import school.campusconnect.firebase.SendNotificationModel;
+import school.campusconnect.service.IncomingLiveClassService;
+import school.campusconnect.service.IncomingVideoCallService;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -50,57 +69,277 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // [START_EXCLUDE]
-        // There are two types of messages data messages and notification messages. Data messages are handled
-        // here in onMessageReceived whether the app is in the foreground or background. Data messages are the type
-        // traditionally used with GCM. Notification messages are only received here in onMessageReceived when the app
-        // is in the foreground. When the app is in the background an automatically generated notification is displayed.
-        // When the user taps on the notification they are returned to the app. Messages containing both notification
-        // and data payloads are treated as notification messages. The Firebase console always sends notification
-        // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
-        // [END_EXCLUDE]
 
         AppLog.e(TAG, "From: " + "onMessageReceived");
         AppLog.e(TAG, "From: " + remoteMessage.getFrom());
 
-        if (remoteMessage.getData().size() > 0) {
-            AppLog.e(TAG, "Message data payload: " + remoteMessage.getData());
+        if (LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.TOKEN).isEmpty()) {
+            return;
+        }
 
-            Map<String, String> data = remoteMessage.getData();
+        if (remoteMessage.getData().size() > 0) {
 
             ActiveAndroid.initialize(this);
 
-            AppLog.e(TAG, "Message Notification groupId: " + data.get("groupId"));
-            AppLog.e(TAG, "Message Notification createdById: " + data.get("createdById"));
-            AppLog.e(TAG, "Message Notification postId: " + data.get("postId"));
-            AppLog.e(TAG, "Message Notification dateTime: " + data.get("teamId"));
+            AppLog.e(TAG, "Message data payload: " + remoteMessage.getData());
+            try {
 
-            AppLog.e(TAG, "Message Notification Title: " + data.get("title"));
-            AppLog.e(TAG, "Message Notification Body: " + data.get("body"));
-            AppLog.e(TAG, "Message Notification postType: " + data.get("postType"));
-            AppLog.e(TAG, "Message Notification Notification_type: " + data.get("Notification_type"));
-
-           /* AppLog.e(TAG, "Message Notification icon: " + data.get("icon"));
-            AppLog.e(TAG, "Message Notification type: " + data.get("type"));
-            AppLog.e(TAG, "Message Notification dateTime: " + data.get("dateTime"));*/
-
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            SendNotificationModel.SendNotiData data = new Gson().fromJson(new JSONObject(remoteMessage.getData()).toString(), SendNotificationModel.SendNotiData.class);
+            AppLog.e(TAG, "Data Notification: " + data);
 
             String loginId = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID);
-            AppLog.e(TAG, "Login Id: " + loginId);
-            String createdId = data.get("createdById");
+
+            AppLog.e(TAG, "loginId " + loginId.equals(data.createdById));
+            AppLog.e(TAG, "loginId " + loginId);
+            if (!loginId.equals(data.createdById)) {
+
+                LeafPreference leafPreference = LeafPreference.getInstance(getApplicationContext());
+
+                AppLog.e(TAG, "switch Notification_type: " + data.Notification_type);
+
+                switch (data.Notification_type) {
 
 
-            if (!loginId.equals(createdId)) {
-                AppLog.e(TAG, "if...");
-                if (!LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.TOKEN).isEmpty()) {
-                    AppLog.e(TAG, "if...if...");
-                    sendNotification(data.get("body"), data.get("title"));
-                    if ("videoEnd".equals(data.get("Notification_type"))) {
-                        Intent intent = new Intent("SCHOOL_JISTI_MEETING");
-                        sendBroadcast(intent);
+                    case "videoCall": {
+                        Intent intent = new Intent("MEETING_END");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("createdByName", data.createdByName);
+                        intent.setAction("MEETING_END");
+                        break;
                     }
+
+                    case "AcceptVideoCall": {
+                        Intent intents= new Intent("call_accept");
+                        sendBroadcast(intents);
+                        break;
+                    }
+
+
+                    case "RejectVideoCall": {
+                        Intent intents= new Intent("call_decline");
+                        sendBroadcast(intents);
+                        break;
+                    }
+
+
+                    case "videoEnd": {
+                        Intent intent = new Intent("MEETING_END");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("createdByName", data.createdByName);
+                        intent.setAction("MEETING_END");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        leafPreference.remove(data.teamId + "_liveclass");
+                        break;
+                    }
+
+
+                    case "videoStart": {
+                        leafPreference.setString(data.teamId + "_liveclass", new Gson().toJson(data));
+                        AppLog.e(TAG , "onMessageReceived : videoStart "+new Gson().toJson(data));
+                        startStudentService(data.teamId, data.createdByName,data.createdByImage,data.body,data.className,data.zoomName);
+                     /*   Intent intent = new Intent("MEETING_START");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("createdByName", data.createdByName);
+                        intent.setAction("MEETING_START");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);*/
+                        break;
+                    }
+
+
+                    case "videoResume": {
+                        Intent intent = new Intent("MEETING_RESUME");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.setAction("MEETING_RESUME");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+
+
+                    case "examStart": {
+                        Intent intent = new Intent("PROCTORING_START");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("action", "PROCTORING_START");
+                        intent.setAction("PROCTORING_START");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+
+
+                    case "examEnd": {
+                        Intent intent = new Intent("PROCTORING_END");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("action", "PROCTORING_END");
+                        intent.setAction("PROCTORING_END");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+
+
+                    case "PROCTORING_RESTART": {
+                        Intent intent = new Intent("PROCTORING_RESTART");
+                        intent.putExtra("teamId", data.teamId);
+                        intent.putExtra("action", "PROCTORING_RESTART");
+                        intent.setAction("PROCTORING_RESTART");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+
+                    case "OFFLINE_TEST_EXAM":
+                    {
+                        leafPreference.setInt(data.groupId + "_TEST_EXAM_NOTI_COUNT", leafPreference.getInt(data.groupId + "_TEST_EXAM_NOTI_COUNT") + 1);
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+
+
+                    case "NOTES_VIDEO":{
+                        leafPreference.setInt(data.groupId + "_NOTES_VIDEO_NOTI_COUNT", leafPreference.getInt(data.groupId + "_NOTES_VIDEO_NOTI_COUNT") + 1);
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+                    case "ADD_TEST_EXAM":{
+                        leafPreference.setInt(data.groupId + "_TEST_EXAM_NOTI_COUNT", leafPreference.getInt(data.groupId + "_TEST_EXAM_NOTI_COUNT") + 1);
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+                    case "attendance":{
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+                    case "homework": {
+                        leafPreference.setInt(data.groupId + "_HOMEWORK_NOTI_COUNT", leafPreference.getInt(data.groupId + "_HOMEWORK_NOTI_COUNT") + 1);
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+
+
+                    case "gallery": {
+
+                        if ("post".equalsIgnoreCase(data.postType)) {
+
+                            leafPreference.setInt(data.groupId + "_gallerypost", leafPreference.getInt(data.groupId + "_gallerypost") + 1);
+                            //leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
+                        }
+                        break;
+                    }
+
+
+                    case "post": {
+
+                        AppLog.e(TAG, "post: ");
+
+                        if ("team".equalsIgnoreCase(data.postType)) {
+
+                            AppLog.e(TAG, "team: postType");
+
+                            leafPreference.setInt(data.teamId + "_post", leafPreference.getInt(data.teamId + "_post") + 1);
+
+                            Intent intent = new Intent("UPDATE_TEAM");
+                            intent.setAction("UPDATE_TEAM");
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
+                        }
+                        else if ("group".equalsIgnoreCase(data.postType)) {
+
+                            Log.e(TAG,"intent get action UPDATE_GROUP");
+
+                            leafPreference.setInt(data.groupId + "_post", leafPreference.getInt(data.groupId + "_post") + 1);
+                            Intent intent = new Intent("UPDATE_GROUP");
+                            intent.setAction("UPDATE_GROUP");
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        }
+                        leafPreference.setInt(data.groupId + "_notification_count", leafPreference.getInt(data.groupId + "_notification_count") + 1);
+                        Intent intent = new Intent("NOTIFICATION_COUNT_UPDATE");
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        break;
+                    }
+
+                    case "VendorAdd": {
+                        AppLog.e(TAG, "vendorAdd type notifcation .,, preference saving started.");
+                        leafPreference.setInt(data.groupId + "_vendorpush", leafPreference.getInt(data.groupId + "_vendorpush") + 1);
+                        break;
+                    }
+
+
+                    case "RuleAdd": {
+                        leafPreference.setInt(data.groupId + "_cocpush", leafPreference.getInt(data.groupId + "_cocpush") + 1);
+                        break;
+                    }
+
+
+                    case "EBookAdd": {
+                        leafPreference.setInt(data.teamId + "_ebookpush", leafPreference.getInt(data.teamId + "_ebookpush") + 1);
+                        break;
+                    }
+
+                    case "ASSIGNMENT_STATUS": {
+                        leafPreference.setInt(data.teamId + "_ass_count_noti", leafPreference.getInt(data.teamId + "_ass_count_noti") + 1);
+                    }
+                    case "TEST_PAPER_STATUS": {
+                        leafPreference.setInt(data.teamId + "_test_count_noti", leafPreference.getInt(data.teamId + "_test_count_noti") + 1);
+                    }
+                    break;
+
+                    case "DELETE_EBOOK": {
+                        leafPreference.setBoolean(data.teamId + "_ebook_delete", true);
+                    }
+                    break;
+                    case "DELETE_VENDOR": {
+                        leafPreference.setBoolean(data.groupId + "_vendor_delete", true);
+                    }
+                    break;
+                    case "DELETE_RULE": {
+                        leafPreference.setBoolean(data.groupId + "_rule_delete", true);
+                    }
+                    break;
+
+                    case "DELETE_POST": {
+                        if ("team".equalsIgnoreCase(data.postType)) {
+                            leafPreference.setBoolean(data.teamId + "_post_delete", true);
+                            Intent intent = new Intent("UPDATE_TEAM");
+                            intent.setAction("UPDATE_TEAM");
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
+                        } else if ("group".equalsIgnoreCase(data.postType)) {
+                            leafPreference.setBoolean(data.groupId + "_post_delete", true);
+                            Intent intent = new Intent("UPDATE_GROUP");
+                            intent.setAction("UPDATE_GROUP");
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                        }
+                    }
+                    break;
                 }
-//                BaseActivity.updateMyActivity(this);
+
+                if (!data.iSNotificationSilent) {
+                    sendNotification(data.body, data.title);
+                }
+
+                if (data.isVideoCall && data.Notification_type.equalsIgnoreCase("videoCallStart"))
+                {
+                    sendVideoCallNotification(data.body,data.meetingID,data.zoomName,data.className,data.createdByImage,data.createdByName,data.createdById,data.meetingPassword);
+                }
+
+                if (data.isVideoCall && data.Notification_type.equalsIgnoreCase("videoCallEnd"))
+                {
+                    Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.setAction(Constants.STOPFOREGROUND_ACTION);
+                    startService(intent);
+                }
+
             }
         }
 
@@ -108,6 +347,115 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             AppLog.e(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
+    }
+
+    private void sendVideoCallNotification(String s,String meetingId,String zoomName,String className,String image,String name,String createdID,String password)
+    {
+      /*  AppLog.e(TAG, "sendVideoCallNotification ");
+       String ACTION_STOP_LISTEN = "action_stop_listen";
+       Intent fullScreenIntent = new Intent(this, VideoCallingActivity.class);
+        fullScreenIntent.setAction(ACTION_STOP_LISTEN);
+
+        PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.layout_video_calling_notification);
+
+        mRemoteViews.setOnClickPendingIntent(R.id.btnStart, fullScreenPendingIntent);
+        mRemoteViews.setOnClickPendingIntent(R.id.btnStop, fullScreenPendingIntent);
+        mRemoteViews.setTextViewText(R.id.tvNotificationTitle,s);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, "1213")
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setContent(mRemoteViews)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setCategory(NotificationCompat.CATEGORY_CALL)
+                        .setChannelId("1213")
+                        .setAutoCancel(true)
+                        .setFullScreenIntent(fullScreenPendingIntent, true);
+
+        Notification incomingCallNotification = notificationBuilder.build();
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.app_name);// The user-visible name of the channel.
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel("1213", name, importance);
+            mChannel.setShowBadge(true);
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(mChannel);
+        }
+
+        startForeground(createID(), incomingCallNotification);*/
+        startCallService(s,meetingId,zoomName,className,image,name,createdID,password);
+    }
+
+    public void startCallService(String s,String meetingId,String zoomName,String className,String image,String name,String id,String password) {
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+            intent.putExtra("msg",s);
+            intent.putExtra("password",password);
+            intent.putExtra("meetingID",meetingId);
+            intent.putExtra("zoomName",zoomName);
+            intent.putExtra("className",className);
+            intent.putExtra("name",name);
+            intent.putExtra("createdID",id);
+            intent.putExtra("image",image);
+            intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startForegroundService(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(getApplicationContext(), IncomingVideoCallService.class);
+            intent.putExtra("msg",s);
+            intent.putExtra("password",password);
+            intent.putExtra("meetingID",meetingId);
+            intent.putExtra("zoomName",zoomName);
+            intent.putExtra("className",className);
+            intent.putExtra("name",name);
+            intent.putExtra("createdID",id);
+            intent.putExtra("image",image);
+            intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            ContextCompat.startForegroundService(getApplicationContext(),intent);
+        }
+    }
+
+
+    public void startStudentService(String teamId,String createdName,String createdImage,String msg,String title,String category) {
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent intent = new Intent(getApplicationContext(), IncomingLiveClassService.class);
+            intent.putExtra("msg",msg);
+            intent.putExtra("createdImage",createdImage);
+            intent.putExtra("createdName",createdName);
+            intent.putExtra("teamId",teamId);
+            intent.putExtra("title",title);
+            intent.putExtra("category",category);
+            intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            startForegroundService(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(getApplicationContext(), IncomingLiveClassService.class);
+            intent.putExtra("msg",msg);
+            intent.putExtra("createdImage",createdImage);
+            intent.putExtra("createdName",createdName);
+            intent.putExtra("teamId",teamId);
+            intent.putExtra("title",title);
+            intent.putExtra("category",category);
+            intent.setAction(Constants.STARTFOREGROUND_ACTION);
+            ContextCompat.startForegroundService(getApplicationContext(),intent);
+        }
+    }
+
+    public int createID(){
+        Date now = new Date();
+        return Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
     }
     // [END receive_message]
 

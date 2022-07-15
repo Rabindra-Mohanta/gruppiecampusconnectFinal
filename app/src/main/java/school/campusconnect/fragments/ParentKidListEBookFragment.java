@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -36,7 +37,7 @@ import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
 
 public class ParentKidListEBookFragment extends BaseFragment implements LeafManager.OnCommunicationListener {
-    private static final String TAG = "TeamDiscussFragment";
+    private static final String TAG = "ParentKidListEBookFragment";
     @Bind(R.id.rvTeams)
     public RecyclerView rvClass;
 
@@ -58,7 +59,8 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+       // progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -72,22 +74,25 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         ParentKidsResponse res = (ParentKidsResponse) response;
         List<ParentKidsResponse.ParentKidsData> result = res.getData();
-        AppLog.e(TAG, "ClassResponse " + result);
+        AppLog.e(TAG, "ClassResponse " + new Gson().toJson(result));
 
         rvClass.setAdapter(new ClassesAdapter(result));
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -144,7 +149,7 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
                 holder.img_lead_default.setImageDrawable(drawable);
             }
 
-            holder.txt_name.setText(item.className);
+            holder.txt_name.setText(item.name);
             holder.txt_count.setVisibility(View.GONE);
         }
 
@@ -154,7 +159,7 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Kids found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_kid_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -164,7 +169,7 @@ public class ParentKidListEBookFragment extends BaseFragment implements LeafMana
             }
             else
             {
-                txtEmpty.setText("No Kids found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_kid_found));
                 return 0;
             }
 

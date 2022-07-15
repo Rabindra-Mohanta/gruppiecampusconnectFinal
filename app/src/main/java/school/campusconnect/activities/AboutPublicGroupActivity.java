@@ -178,7 +178,7 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
             friends.setVisibility(View.GONE);
         }*/
 
-        tvGroupCreator.setText("By " + createdBy);
+        tvGroupCreator.setText(getResources().getString(R.string.txt_by) + createdBy);
 
 //            txtCreator.setText("Created By: " + res.data.createdBy);
 //            txtShort.setText("Description : " + res.data.shortDescription);
@@ -340,7 +340,8 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
     private void removeImage() {
         // showLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar,false);
+            //progressBar.setVisibility(View.VISIBLE);
         manager.deleteGroupPic(this, id+"");
     }
 
@@ -394,7 +395,7 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }
@@ -467,7 +468,7 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            Toast.makeText(getApplicationContext(), "Image Downloaded.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_image_download), Toast.LENGTH_SHORT).show();
             super.onPostExecute(bitmap);
         }
     }
@@ -679,7 +680,8 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
                         //showLoadingDialog();
                        AppLog.e(TAG, "Request Post Data :" + request);
                         if (progressBar != null)
-                            progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(progressBar,false);
+                        //progressBar.setVisibility(View.VISIBLE);
                         manager.editGroup(AboutPublicGroupActivity.this, request, id+"");
                     }
                 }
@@ -747,7 +749,8 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
     public void onSuccess(int apiId, BaseResponse response) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_ID_LEAVE_GROUP) {
             LeaveResponse res = (LeaveResponse) response;
             AllContactModel.deleteContact(res.data.get(0).groupId+"", res.data.get(0).userId+"");
@@ -771,9 +774,10 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
             startActivity(intent);
             finish();
         } else if (apiId == LeafManager.API_ID_EDIT_GROUP) {
-            Toast.makeText(this, "Successfully updated group details.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar,false);
+                //progressBar.setVisibility(View.VISIBLE);
             if (isConnectionAvailable()) {
                 manager.getGroupDetail(this, id+"");
             } else {
@@ -781,10 +785,11 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
             }
         } else if (apiId == LeafManager.API_ID_DELETE_GROUPPIC) {
 
-            Toast.makeText(this, "Successfully updated group details", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
             //  showLoadingDialog();
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar,false);
+              //  progressBar.setVisibility(View.VISIBLE);
             if (isConnectionAvailable()) {
                 manager.getGroupDetail(this, id+"");
             } else {
@@ -834,16 +839,16 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
 //                   AppLog.e("CONTACTSS", "name is " + name);
 //                   AppLog.e("CONTACTSS", "num is " + item.adminPhone);
                     if (!name.equals("")) {
-                        tvGroupCreator.setText("By " + name);
+                        tvGroupCreator.setText(getResources().getString(R.string.txt_by) + name);
                     } else {
-                        tvGroupCreator.setText("By " + res.data.get(0).adminName);
+                        tvGroupCreator.setText(getResources().getString(R.string.txt_by) + res.data.get(0).adminName);
                     }
                 } catch (NullPointerException e) {
                     tvGroupCreator.setText(/*"Created By: " + */res.data.get(0).adminName);
                 }
             } else {
                AppLog.e("CONTACTSS", "count is 0");
-                tvGroupCreator.setText("By " + res.data.get(0).adminName);
+                tvGroupCreator.setText(getResources().getString(R.string.txt_by) + res.data.get(0).adminName);
             }
 
 
@@ -909,7 +914,8 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
     public void onFailure(int apiId, String msg) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
         //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -923,7 +929,8 @@ public class AboutPublicGroupActivity extends BaseActivity implements LeafManage
     public void onException(int apiId, String msg) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+            //progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 

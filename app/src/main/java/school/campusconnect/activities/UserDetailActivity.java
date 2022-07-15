@@ -107,7 +107,7 @@ public class UserDetailActivity extends BaseActivity implements DialogInterface.
         userListItem = getIntent().getParcelableExtra("user_details");
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Details");
+        setTitle(getResources().getString(R.string.title_details));
 
         isPost = getIntent().getBooleanExtra("post", false);
         change = getIntent().getBooleanExtra("change", false);
@@ -228,7 +228,7 @@ public class UserDetailActivity extends BaseActivity implements DialogInterface.
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.nav_delete) {
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete "+userListItem.getName()+" from "+GroupDashboardActivityNew.group_name+"  group ?", this);
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete)+userListItem.getName()+" "+getResources().getString(R.string.hint_from)+" "+GroupDashboardActivityNew.group_name+getResources().getString(R.string.smb_group), this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -244,7 +244,7 @@ public class UserDetailActivity extends BaseActivity implements DialogInterface.
                 GruppieContactGroupIdModel.deleteRow(res.data.get(0).groupId+"", res.data.get(0).userId+"");
                 AllContactModel.deleteContact(res.data.get(0).groupId+"", res.data.get(0).userId+"");
 
-                Toast.makeText(getApplicationContext(), "User Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISUSERDELETED, true);
                 onBackPressed();
                 break;
@@ -257,7 +257,7 @@ public class UserDetailActivity extends BaseActivity implements DialogInterface.
 
                 break;
             case LeafManager.API_CHANGE_ADMIN:
-                Toast.makeText(getApplicationContext(), "Admin Changed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_admin_changed), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, SplashActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

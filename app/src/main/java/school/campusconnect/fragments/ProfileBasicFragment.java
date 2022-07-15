@@ -1,7 +1,6 @@
 package school.campusconnect.fragments;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -19,9 +18,8 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.activities.ChangeNumberActivity;
 import school.campusconnect.activities.ProfileActivity2;
-import school.campusconnect.datamodel.ProfileItem;
+import school.campusconnect.datamodel.profile.ProfileItem;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.views.DrawableEditText;
 import school.campusconnect.views.SMBDialogUtils;
@@ -52,6 +50,9 @@ public class ProfileBasicFragment extends BaseFragment implements View.OnClickLi
 
     @Bind(R.id.qualification)
     public DrawableEditText edtQualification;
+
+    @Bind(R.id.address)
+    public DrawableEditText address;
 
     @Nullable
     @Override
@@ -99,13 +100,13 @@ public class ProfileBasicFragment extends BaseFragment implements View.OnClickLi
             }
         });
 
-        edtPhone.editText.setOnClickListener(new View.OnClickListener() {
+       /* edtPhone.editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ChangeNumberActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
         fillDetails(((ProfileActivity2) getActivity()).item);
         return view;
     }

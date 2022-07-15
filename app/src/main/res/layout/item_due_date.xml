@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:focusable="false"
-                android:hint="Due Date"
+                android:hint="@string/due_date"
                 android:singleLine="true"
                 android:textSize="@dimen/text_size_13sp" />
 
@@ -35,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:digits="1234567890"
-                android:focusable="false"
                 android:gravity="center"
                 android:hint="@string/hint_amount"
                 android:inputType="numberDecimal"
@@ -54,6 +53,8 @@
             <CheckBox
                 android:id="@+id/chkCompleted"
                 android:layout_width="wrap_content"
+                android:checked="true"
+                android:clickable="false"
                 android:layout_height="wrap_content"
                 android:visibility="visible" />
         </LinearLayout>

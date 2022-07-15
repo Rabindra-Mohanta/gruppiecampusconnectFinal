@@ -1,9 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <EditText
+    android:layout_marginTop="@dimen/padding_5dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        app:cardElevation="4dp"
+        android:outlineSpotShadowColor="@color/colorPrimaryLight"
+        android:outlineAmbientShadowColor="@color/colorPrimaryLight"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:background="@drawable/light_primary_border_bg"
+            android:padding="@dimen/padding_10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgEdit"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/round_primary_bg"
+                android:src="@drawable/ic_edit_svg"
+                android:padding="@dimen/padding_5dp"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/padding_30dp"/>
+
+            <LinearLayout
+                android:layout_below="@id/imgEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:src="@drawable/ic_period"
+                        app:tint="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"/>
+
+                    <EditText
+                        android:layout_marginLeft="@dimen/padding_15dp"
+                        android:id="@+id/et_period"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding_30dp"
+                        android:singleLine="true"
+                        android:focusable="false"
+                        android:inputType="numberDecimal"
+                        android:digits="1234567890"
+                        android:background="@null"
+                        android:textStyle="bold"
+                        android:text=""
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_16sp"
+                        />
+
+                </LinearLayout>
+                <View
+                    android:layout_marginVertical="@dimen/padding_5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorTextLight"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:src="@drawable/ic_time"
+                        app:tint="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"/>
+
+                    <EditText
+                        android:layout_marginLeft="@dimen/padding_15dp"
+                        android:id="@+id/et_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding_30dp"
+                        android:singleLine="true"
+                        android:focusable="false"
+                        android:textStyle="bold"
+                        android:background="@null"
+                        android:hint="@string/select_start_end_time"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_16sp"
+                        />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_marginVertical="@dimen/padding_5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorTextLight"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:src="@drawable/ic_select_subject"
+                        app:tint="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"/>
+
+                    <EditText
+                        android:layout_marginLeft="@dimen/padding_15dp"
+                        android:id="@+id/et_subject"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding_30dp"
+                        android:singleLine="true"
+                        android:focusable="false"
+                        android:background="@null"
+                        android:textStyle="bold"
+                        android:text=""
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_16sp"
+                        />
+
+                    <!--<FrameLayout
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content">
+                        <Spinner
+                            style="@style/commonSpinnerWhite"
+                            android:id="@+id/spSubject"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/padding_30dp"
+                            />
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:src="@drawable/arrow_down"
+                            android:tint="@color/colorPrimary"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_gravity="right|center"
+                            android:layout_height="15dp"/>
+                    </FrameLayout>-->
+
+                </LinearLayout>
+
+                <View
+                    android:layout_marginVertical="@dimen/padding_5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorTextLight"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:src="@drawable/ic_select_staff"
+                        app:tint="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"/>
+
+                    <EditText
+                        android:layout_marginLeft="@dimen/padding_15dp"
+                        android:id="@+id/et_staff"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding_30dp"
+                        android:singleLine="true"
+                        android:focusable="false"
+                        android:background="@null"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_16sp"
+                        />
+
+                    <!--<FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <Spinner
+                            android:id="@+id/spStaff"
+                            style="@style/commonSpinnerWhite"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/padding_30dp" />
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:src="@drawable/arrow_down"
+                            android:tint="@color/colorPrimary"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_gravity="right|center"
+                            android:layout_height="15dp"/>
+                    </FrameLayout>-->
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
+
+   <!-- <EditText
         android:id="@+id/et_period"
         android:layout_width="0dp"
         android:layout_weight="0.5"
@@ -17,9 +211,23 @@
         android:digits="1234567890"
         android:textStyle="bold"
         android:textSize="@dimen/text_size_16sp"
-        style="@style/RegEditText" />
+        style="@style/RegEditText" />-->
+   <!-- <EditText
+        android:id="@+id/et_time"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:layout_marginBottom="@dimen/padding_5dp"
+        android:layout_height="@dimen/login_button_height"
+        android:gravity="center"
+        android:singleLine="true"
+        android:layout_marginStart="@dimen/padding_10dp"
+        android:focusable="false"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_16sp"
+        style="@style/RegEditText" />-->
 
-    <FrameLayout
+  <!--  <FrameLayout
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_marginTop="@dimen/padding_5dp"
@@ -39,9 +247,9 @@
             android:layout_marginEnd="@dimen/padding_10dp"
             android:layout_gravity="right|center"
             android:layout_height="15dp"/>
-    </FrameLayout>
+    </FrameLayout>-->
 
-    <FrameLayout
+  <!--  <FrameLayout
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_marginTop="@dimen/padding_5dp"
@@ -69,5 +277,5 @@
         android:layout_marginStart="@dimen/padding_10dp"
         android:layout_marginTop="@dimen/padding_5dp"
         android:layout_marginBottom="@dimen/padding_5dp"
-        android:layout_height="@dimen/padding_40dp"/>
+        android:layout_height="@dimen/padding_40dp"/>-->
 </LinearLayout>

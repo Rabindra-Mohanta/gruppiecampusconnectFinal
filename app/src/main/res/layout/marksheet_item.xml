@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="Subjects"
+                    android:text="@string/lbl_subjects"
                     android:textSize="@dimen/text_size_14sp"
                     android:textColor="@color/colorTextDark"
                     style="@style/LabelNormal" />
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="Max Marks"
+                    android:text="@string/hint_max_marks"
                     android:textSize="@dimen/text_size_14sp"
                     android:textColor="@color/colorTextDark"
                     style="@style/LabelNormal" />
@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="Min Marks"
+                    android:text="@string/hint_min_marks"
                     android:textSize="@dimen/text_size_14sp"
                     android:textColor="@color/colorTextDark"
                     style="@style/LabelNormal" />
@@ -60,7 +60,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Obtained Marks"
+                    android:text="@string/lbl_obtained_mark"
                     android:textSize="@dimen/text_size_14sp"
                     android:textColor="@color/colorTextDark"
                     style="@style/LabelNormal" />
@@ -118,7 +118,7 @@
                 android:paddingTop="@dimen/padding_5dp"
                 android:paddingRight="@dimen/padding_20dp"
                 android:paddingBottom="@dimen/padding_5dp"
-                android:text="Delete Mark Card"
+                android:text="@string/lbl_delete_mark_card"
                 android:textAppearance="@style/TextAppearance.Regular"
                 android:textColor="@color/black_semi_transparent"
                 android:textSize="@dimen/text_size_14sp"

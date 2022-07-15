@@ -59,7 +59,8 @@ public class PeopleFragment extends BaseFragment implements LeafManager.OnCommun
 
 
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //progressBar.setVisibility(View.VISIBLE);
 
         Bundle bundle=getArguments();
         if(bundle!=null)
@@ -70,12 +71,14 @@ public class PeopleFragment extends BaseFragment implements LeafManager.OnCommun
 
         if(!isNest)
         {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //progressBar.setVisibility(View.VISIBLE);
             leafManager.getMyPeople(this,GroupDashboardActivityNew.groupId);
         }
         else
         {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //progressBar.setVisibility(View.VISIBLE);
             leafManager.getNestPeople(this,GroupDashboardActivityNew.groupId,userId);
         }
         return view;
@@ -83,7 +86,8 @@ public class PeopleFragment extends BaseFragment implements LeafManager.OnCommun
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
         LeadResponse res = (LeadResponse) response;
         List<LeadItem> result = res.getResults();
         AppLog.e(TAG, "peopleResponse " + result);
@@ -93,12 +97,14 @@ public class PeopleFragment extends BaseFragment implements LeafManager.OnCommun
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder>
@@ -165,13 +171,13 @@ public class PeopleFragment extends BaseFragment implements LeafManager.OnCommun
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No People found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_people_found));
                 }
                 return list.size();
             }
             else
             {
-                txtEmpty.setText("No People found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_people_found));
                 return 0;
             }
 

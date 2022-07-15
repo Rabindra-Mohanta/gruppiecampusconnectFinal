@@ -118,6 +118,7 @@
                             android:layout_marginBottom="@dimen/padding_50dp"
                             android:layout_height="@dimen/login_button_height"
                             android:inputType="phone"
+                            android:maxLength="10"
                             android:imeOptions="actionDone"
                             style="@style/RegEditText" />
 

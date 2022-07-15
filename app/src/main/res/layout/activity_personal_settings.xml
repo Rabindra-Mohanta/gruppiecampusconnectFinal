@@ -29,7 +29,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_10dp"
                 android:gravity="center"
-                android:text="Allow Post" />
+                android:text="@string/lbl_allow_post" />
 
             <Switch
                 android:id="@+id/switch_reply"
@@ -54,7 +54,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/padding_10dp"
                 android:gravity="center"
-                android:text="Allow Comments" />
+                android:text="@string/lbl_allow_comments" />
 
             <Switch
                 android:id="@+id/switch_comment"

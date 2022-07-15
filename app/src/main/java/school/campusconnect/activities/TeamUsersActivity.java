@@ -68,15 +68,16 @@ public class TeamUsersActivity extends BaseActivity {
 
         teamId = getIntent().getStringExtra("team_id");
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+    //    progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this,GroupDashboardActivityNew.groupId,teamId,false);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         if(apiId== LeafManager.API_CHANGE_ADMIN_TEAM){
             gotoHomeScreen();
         }else {
@@ -100,13 +101,15 @@ public class TeamUsersActivity extends BaseActivity {
     @Override
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     public class TeamUserAdapter extends RecyclerView.Adapter<TeamUserAdapter.ViewHolder>
@@ -173,13 +176,13 @@ public class TeamUsersActivity extends BaseActivity {
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Users found.");
+                    txtEmpty.setText(getResources().getString(R.string.msg_no_users));
                 }
                 return list.size();
             }
             else
             {
-                txtEmpty.setText("No Users found.");
+                txtEmpty.setText(getResources().getString(R.string.msg_no_users));
                 return 0;
             }
 
@@ -218,10 +221,12 @@ public class TeamUsersActivity extends BaseActivity {
     }
 
     private void onUserClick(final LeadItem leadItem) {
-        SMBDialogUtils.showSMBDialogOKCancel_(this, "Are you sure you want to change team admin", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogOKCancel_(this, getResources().getString(R.string.smb_change_team_admin), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+
+                showLoadingBar(progressBar);
+               // progressBar.setVisibility(View.VISIBLE);
                 leafManager.changeTeamAdmin(TeamUsersActivity.this,GroupDashboardActivityNew.groupId,teamId,leadItem.getId());
             }
         });

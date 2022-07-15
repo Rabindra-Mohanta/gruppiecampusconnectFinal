@@ -21,6 +21,10 @@ public class PostItem {
     public String id;
     public String groupId="";
     public String fileType=""; // youtube,pdf,image
+    public String type; // post type , as we need to check for birthdaypost
+    public String bdayUserName;
+    public String bdayUserImage;
+
     public ArrayList<String> fileName; // Url Encoded in base 64
     public ArrayList<String> thumbnailImage; // Url Encoded in base 64
 

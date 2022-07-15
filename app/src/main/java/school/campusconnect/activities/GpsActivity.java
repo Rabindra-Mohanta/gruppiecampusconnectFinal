@@ -99,7 +99,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Gps Track");
+        setTitle(getResources().getString(R.string.title_gps_track));
 
         init();
     }
@@ -195,7 +195,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
                 }
 
                 if (leafPreference.getBoolean("is_start")) {
-                    SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to stop GPS Tracking.?", new DialogInterface.OnClickListener() {
+                    SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_stop_gps_track), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
@@ -242,8 +242,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         1).show();
             } else {
-                Toast.makeText(this,
-                        "This device is not supported.", Toast.LENGTH_LONG)
+                Toast.makeText(this, getResources().getString(R.string.toast_device_not_supported), Toast.LENGTH_LONG)
                         .show();
                 //finish();
             }
@@ -399,7 +398,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
                 }
                 else
                 {
-                    Toast.makeText(this, "Location data not available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,  getResources().getString(R.string.toast_location_data_not_available), Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -414,7 +413,7 @@ public class GpsActivity extends BaseActivity implements OnMapReadyCallback {
         }
         else if(msg.contains("400") || msg.contains("Bad Request"))
         {
-            Toast.makeText(this, "Location data not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_location_data_not_available), Toast.LENGTH_SHORT).show();
             handler.removeCallbacks(runnable);
         }
         else

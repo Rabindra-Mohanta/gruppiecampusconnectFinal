@@ -1,19 +1,83 @@
 
 package school.campusconnect.network;
 
+import com.vivid.gruppie.model.RegisterRequestData;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.http.Url;
+import school.campusconnect.datamodel.ConstituencyRes;
+import school.campusconnect.datamodel.CoursePostResponse;
 import school.campusconnect.datamodel.LeaveReq;
 import school.campusconnect.datamodel.MarkSheetListResponse;
 import school.campusconnect.datamodel.NewPassReq;
 import school.campusconnect.datamodel.OtpVerifyReq;
 import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.datamodel.ReadUnreadResponse;
+import school.campusconnect.datamodel.TaluksRes;
+import school.campusconnect.datamodel.classs.AddClassReq;
+import school.campusconnect.datamodel.classs.AddCombinedClass;
+import school.campusconnect.datamodel.classs.ClassResV2;
+import school.campusconnect.datamodel.profileCaste.ProfessionResponce;
+import school.campusconnect.datamodel.register.BoardsData;
+import school.campusconnect.datamodel.register.CampusMediumData;
+import school.campusconnect.datamodel.register.ClassesListData;
+import school.campusconnect.datamodel.register.TypeOfCampusData;
+import school.campusconnect.datamodel.attendance_report.ApplyLeaveReq;
+import school.campusconnect.datamodel.attendance_report.AttendanceReportParentRes;
+import school.campusconnect.datamodel.attendance_report.AttendanceReportResv2;
+import school.campusconnect.datamodel.attendance_report.AttendenceEditRequest;
+import school.campusconnect.datamodel.attendance_report.LeaveRes;
+import school.campusconnect.datamodel.banner.BannerAddReq;
+import school.campusconnect.datamodel.banner.BannerRes;
+import school.campusconnect.datamodel.baseTeam.BaseTeamv2Response;
+import school.campusconnect.datamodel.booths.BoothVotersListResponse;
+import school.campusconnect.datamodel.booths.MyBoothEventRes;
+import school.campusconnect.datamodel.booths.MyTeamSubBoothResponse;
+import school.campusconnect.datamodel.booths.SubBoothEventRes;
+import school.campusconnect.datamodel.booths.SubBoothWorkerEventRes;
+import school.campusconnect.datamodel.booths.VoterProfileResponse;
+import school.campusconnect.datamodel.booths.VoterProfileUpdate;
+import school.campusconnect.datamodel.comments.AddCommentTaskDetailsReq;
+import school.campusconnect.datamodel.comments.CommentTaskDetailsRes;
+import school.campusconnect.datamodel.committee.AddCommitteeReq;
+import school.campusconnect.datamodel.committee.committeeResponse;
+import school.campusconnect.datamodel.event.TeamEventModelRes;
+import school.campusconnect.datamodel.event.TeamPostEventModelRes;
+import school.campusconnect.datamodel.feed.AdminFeederResponse;
+import school.campusconnect.datamodel.masterList.BoothMasterListModelResponse;
+import school.campusconnect.datamodel.masterList.StreetListModelResponse;
+import school.campusconnect.datamodel.masterList.VoterListModelResponse;
+import school.campusconnect.datamodel.masterList.WorkerListResponse;
+import school.campusconnect.datamodel.profileCaste.CasteResponse;
+import school.campusconnect.datamodel.profileCaste.ReligionResponse;
+import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
+import school.campusconnect.datamodel.register.UniversitiesData;
+import school.campusconnect.datamodel.searchUser.SearchUserModel;
+import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
+import school.campusconnect.datamodel.staff.StaffAttendanceRes;
+import school.campusconnect.datamodel.staff.TakeAttendanceReq;
+import school.campusconnect.datamodel.student.AddMultipleStaffReq;
+import school.campusconnect.datamodel.student.AddMultipleStudentReq;
+import school.campusconnect.datamodel.subjects.AbsentStudentReq;
+import school.campusconnect.datamodel.subjects.SubjectResponsev1;
+import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
+import school.campusconnect.datamodel.syllabus.EditTopicModelReq;
+import school.campusconnect.datamodel.syllabus.StaffAnalysisRes;
+import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
+import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
+import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
+import school.campusconnect.datamodel.syllabus.TodaySyllabusPlanRes;
+import school.campusconnect.datamodel.ticket.AddTicketRequest;
 import school.campusconnect.datamodel.attendance_report.AttendanceDetailRes;
 import school.campusconnect.datamodel.attendance_report.AttendanceReportRes;
+import school.campusconnect.datamodel.attendance_report.OnlineAttendanceRes;
 import school.campusconnect.datamodel.attendance_report.PreSchoolStudentRes;
+import school.campusconnect.datamodel.booths.BoothData;
+import school.campusconnect.datamodel.booths.BoothMemberReq;
+import school.campusconnect.datamodel.booths.BoothMemberResponse;
+import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.booths.SubBoothResponse;
 import school.campusconnect.datamodel.bus.BusResponse;
 import school.campusconnect.datamodel.bus.BusStudentRes;
 import school.campusconnect.datamodel.calendar.AddEventReq;
@@ -24,11 +88,25 @@ import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.classs.ParentKidsResponse;
 import school.campusconnect.datamodel.ebook.AddEbookReq;
+import school.campusconnect.datamodel.ebook.AddEbookReq2;
 import school.campusconnect.datamodel.ebook.EBooksResponse;
 import school.campusconnect.datamodel.ebook.EBooksTeamResponse;
+import school.campusconnect.datamodel.event.UpdateDataEventRes;
+import school.campusconnect.datamodel.family.FamilyMemberResponse;
 import school.campusconnect.datamodel.fees.FeesRes;
+import school.campusconnect.datamodel.fees.PaidStudentFeesRes;
+import school.campusconnect.datamodel.fees.PayFeesRequest;
 import school.campusconnect.datamodel.fees.StudentFeesRes;
 import school.campusconnect.datamodel.fees.UpdateStudentFees;
+import school.campusconnect.datamodel.gruppiecontacts.SendMsgToStudentReq;
+import school.campusconnect.datamodel.homework.AddHwPostRequest;
+import school.campusconnect.datamodel.homework.AssignmentRes;
+import school.campusconnect.datamodel.homework.HwRes;
+import school.campusconnect.datamodel.homework.ReassignReq;
+import school.campusconnect.datamodel.issue.IssueListResponse;
+import school.campusconnect.datamodel.issue.RegisterIssueReq;
+import school.campusconnect.datamodel.markcard2.AddMarksReq;
+import school.campusconnect.datamodel.markcard2.MarkCardResponse2;
 import school.campusconnect.datamodel.marksheet.AddMarkCardReq;
 import school.campusconnect.datamodel.marksheet.MarkCardListResponse;
 import school.campusconnect.datamodel.marksheet.StudentMarkCardListResponse;
@@ -72,7 +150,7 @@ import school.campusconnect.datamodel.CreateGroupReguest;
 import school.campusconnect.datamodel.CreateTeamRequest;
 import school.campusconnect.datamodel.EditAttendanceReq;
 import school.campusconnect.datamodel.ForgotPasswordRequest;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.datamodel.GetLocationRes;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.GroupResponse;
@@ -82,11 +160,10 @@ import school.campusconnect.datamodel.LoginRequest;
 import school.campusconnect.datamodel.LoginResponse;
 import school.campusconnect.datamodel.PersonalSettingRes;
 import school.campusconnect.datamodel.PostResponse;
-import school.campusconnect.datamodel.ProfileItemUpdate;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.profile.ProfileItemUpdate;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.ReadGroupPostResponse;
 import school.campusconnect.datamodel.ReadTeamPostResponse;
-import school.campusconnect.datamodel.RegisterRequest;
 import school.campusconnect.datamodel.SettingRes;
 import school.campusconnect.datamodel.SignUpRequest;
 import school.campusconnect.datamodel.SignUpResponse;
@@ -119,11 +196,22 @@ import school.campusconnect.datamodel.subjects.SubjectResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
 import school.campusconnect.datamodel.teamdiscussion.TeamPostGetResponse;
+import school.campusconnect.datamodel.test_exam.AddTestExamPostRequest;
+import school.campusconnect.datamodel.test_exam.OfflineTestReq;
+import school.campusconnect.datamodel.test_exam.OfflineTestRes;
+import school.campusconnect.datamodel.test_exam.TestExamRes;
+import school.campusconnect.datamodel.test_exam.TestLiveEventRes;
+import school.campusconnect.datamodel.test_exam.TestPaperRes;
+import school.campusconnect.datamodel.ticket.TicketEventUpdateResponse;
+import school.campusconnect.datamodel.ticket.TicketListResponse;
 import school.campusconnect.datamodel.time_table.SubStaffTTReq;
 import school.campusconnect.datamodel.time_table.SubjectStaffTTResponse;
 import school.campusconnect.datamodel.time_table.TimeTableList2Response;
 import school.campusconnect.datamodel.versioncheck.VersionCheckResponse;
-import school.campusconnect.datamodel.videocall.StartMeetingRes;
+import school.campusconnect.datamodel.videocall.JoinLiveClassReq;
+import school.campusconnect.datamodel.videocall.LiveClassEventRes;
+import school.campusconnect.datamodel.videocall.MeetingStatusModelApi;
+import school.campusconnect.datamodel.videocall.StopMeetingReq;
 import school.campusconnect.datamodel.videocall.VideoClassResponse;
 import school.campusconnect.datamodel.youtubetoken.YoutubeTokenResponse;
 
@@ -133,35 +221,93 @@ public interface LeafService {
     @Headers({"Content-Type: application/json"})
     Call<NumberExistResponse> next(@Body NumberExistRequest request, @Query("category") String category);
 
+    @POST("/api/v1/user/exist/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<NumberExistResponse> nextConstituency(@Body NumberExistRequest request, @Query("constituencyName") String categoryName);
+
+    @POST("/api/v1/user/exist/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<NumberExistResponse> nextIndividual(@Body NumberExistRequest request, @Query("appId") String group_id);
+
+    @POST("/api/v1/login/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> login(@Body LoginRequest request, @Query("category") String category, @Query("appName") String appName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+
     @POST("/api/v1/login/category/app")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> login(@Body LoginRequest request, @Query("category") String category, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+
+    @POST("/api/v1/login/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> loginConstituency(@Body LoginRequest request, @Query("constituencyName") String categoryName, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
+
+    @POST("/api/v1/login/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> loginIndividual(@Body LoginRequest request, @Query("appId") String group_id, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
     @POST("/api/v1/verify/otp/category/app")
     @Headers({"Content-Type: application/json"})
     Call<OtpVerifyRes> otpVerify(@Body OtpVerifyReq request, @Query("category") String category);
 
+    @POST("/api/v1/verify/otp/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<OtpVerifyRes> otpVerifyConstituency(@Body OtpVerifyReq request, @Query("constituencyName") String categoryName);
+
+    @POST("/api/v1/verify/otp/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<OtpVerifyRes> otpVerifyIndividual(@Body OtpVerifyReq request, @Query("appId") String group_id);
+
     @PUT("/api/v1/create/password/category/app")
     @Headers({"Content-Type: application/json"})
     Call<LoginResponse> newPass(@Body NewPassReq request, @Query("category") String category);
+
+    @PUT("/api/v1/create/password/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> newPassConstituency(@Body NewPassReq request, @Query("constituencyName") String categoryName);
+
+    @PUT("/api/v1/create/password/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<LoginResponse> newPassIndividual(@Body NewPassReq request, @Query("appId") String group_id);
 
     @PUT("/api/v1/forgot/password/category/app")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> forgotPassword(@Body ForgotPasswordRequest request, @Query("category") String category, @Query("sms") int count);
 
+    @PUT("/api/v1/forgot/password/category/app")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> forgotPasswordConstituency(@Body ForgotPasswordRequest request, @Query("constituencyName") String categoryName, @Query("sms") int count);
+
+    @PUT("/api/v1/forgot/password/individual?")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> forgotPasswordIndividual(@Body ForgotPasswordRequest request, @Query("appId") String groupId, @Query("sms") int count);
+
     @PUT("/api/v1/password/change/category/app")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request, @Query("category") String category);
 
-    @PUT("/api/v1/number/change")
+    @PUT("/api/v1/password/change/category/app")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> changeNumber(@Body ChangeNumberRequest request);
+    Call<ChangePasswordResponse> changePasswordConstituency(@Body ChangePasswordRequest request, @Query("constituencyName") String categoryName);
 
+    @PUT("/api/v1/password/change/individual")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ChangePasswordResponse> changePasswordIndividual(@Body ChangePasswordRequest request, @Query("appId") String groupId);
 
     @POST("/api/v1/register/category/app")
     @Headers({"Content-Type: application/json"})
     Call<SignUpResponse> signup(@Body SignUpRequest request, @Query("category") String category);
 
+    @POST("/api/v1/register/category/app")
+    @Headers({"Content-Type: application/json"})
+    Call<SignUpResponse> signupConstituency(@Body SignUpRequest request, @Query("constituencyName") String categoryName);
+
+    @POST("/api/v1/register/individual?")
+    @Headers({"Content-Type: application/json"})
+    Call<SignUpResponse> signupIndividual(@Body SignUpRequest request, @Query("appId") String group_id);
+
+    @PUT("/api/v1/number/change")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> changeNumber(@Body ChangeNumberRequest request);
 
     @PUT("/api/v1/logout")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -425,6 +571,11 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<MyTeamsResponse> getMyTeams(@Path("id") String group_id);
 
+
+    @GET("/api/v1/groups/{group_id}/home")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseTeamv2Response> getMyTeamsv2(@Path("group_id") String group_id);
+
     @GET("/api/v1/groups/{group_id}/my/teams")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<MyTeamsResponse> getMyTeamsNew(@Path("group_id") String group_id);
@@ -437,17 +588,14 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ClassResponse> getClasses(@Path("group_id") String group_id);
 
+
     @GET("/api/v1/groups/{group_id}/class/video/conference")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<VideoClassResponse> getVideoClasses(@Path("group_id") String group_id);
 
-    @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/start")
+    @POST("/api/v1/groups/{groupId}/team/{teamId}/online/attendance/push")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<StartMeetingRes> startMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId);
-
-    @PUT("/api/v1/groups/{group_id}/team/{teamId}/jitsi/stop")
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<StartMeetingRes> stopMeeting(@Path("group_id") String group_id, @Path("teamId") String teamId);
+    Call<BaseResponse> attendancePush(@Path("groupId") String group_id, @Path("teamId") String teamId, @Body MeetingStatusModelApi req);
 
 
     @GET("/api/v1/groups/{group_id}/ebooks/get")
@@ -462,6 +610,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addEBook(@Path("group_id") String group_id, @Body AddEbookReq addEbookReq);
 
+    @POST("/api/v1/groups/{groupId}/team/{teamId}/ebooks/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addEBook2(@Path("groupId") String group_id, @Path("teamId") String teamId, @Body AddEbookReq2 addEbookReq);
+
     @POST("/api/v1/groups/{group_id}/team/{teamId}/jitsi/token/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addJitiToken(@Path("group_id") String group_id, @Path("teamId") String teamId);
@@ -470,6 +622,10 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/ebook/{book_id}/delete")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> deleteEBook(@Path("group_id") String group_id, @Path("book_id") String book_id);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/ebook/{ebook_id}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteEBookTeam(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("ebook_id") String ebook_id);
 
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/ebook/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -484,6 +640,11 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<SubjectStaffResponse> getSubjectStaff(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubjectStaffResponse> getSubjectStaffMore(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                                   @Query("option") String option);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -539,6 +700,10 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/my/kids")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<ParentKidsResponse> getParentKids(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/my/kids")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassResponse> getParentKidsNew(@Path("group_id") String group_id);
 
 
     @GET("/api/v1/groups/{group_id}/staff/get")
@@ -597,6 +762,7 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/posts/{post_id}/comments/{comment_id}/reply/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<GroupCommentResponse> getAllGroupCommentReplies(@Path("group_id") String group_id, @Path("post_id") String post_id, @Path("comment_id") String comment_id, @Query("page") int pagenumber);
+
 
     @PUT("/api/v2/groups/{id}/posts/{post_id}/comments/{comment_id}/edit")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -763,6 +929,9 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<LeadResponse> getTeamMemberFromChat(@Path("group_id") String group_id);
 
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothMemberResponse> getBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("committeeId") String committeeId);
 
     @GET("/api/v2/groups/{id}/team/{team_id}/members")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1013,6 +1182,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<SubjectResponse> getAttendanceSubject(@Path("group_id") String group_id, @Path("team_id") String team_id);
 
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubjectResponsev1> getAttendanceSubjectv2(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
     @GET("/api/v1/groups/{group_id}/team/{team_id}/attendance/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AttendanceListRes> getAttendance(@Path("group_id") String group_id, @Path("team_id") String team_id);
@@ -1033,6 +1206,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AbsentAttendanceRes> sendAbsenties(@Path("group_id") String group_id, @Path("team_id") String team_id,
                                             @Query(value = "userIds[]", encoded = true) ArrayList<String> userIds, @Body AbsentSubjectReq absentSubjectReq);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/attendance/take")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> sendAbsentiesv1(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body AbsentStudentReq absentStudentReq);
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/attendance/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1055,10 +1232,19 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> editStaff(@Path("group_id") String group_id, @Path("user_id") String user_id, @Body StaffResponse.StaffData staffData);
 
-
-    @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/edit")
+    @PUT("/api/v1/groups/{group_id}/staff/{user_id}/phone/edit")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> editClassStudent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("user_id") String user_id, @Body StudentRes.StudentData addStudentReq);
+    Call<BaseResponse> editStaffPhone(@Path("group_id") String group_id, @Path("user_id") String user_id, @Body StaffResponse.StaffData staffData);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/edit/profile")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editClassStudent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("user_id") String user_id,@Query("gruppieRollNumber") String gruppieRollNumber, @Body StudentRes.StudentData addStudentReq);
+
+
+    @PUT("/api/v1/groups/{group_id}/student/{user_id}/phone/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editClassStudentPhone(@Path("group_id") String group_id, @Path("user_id") String user_id, @Body StudentRes.StudentData addStudentReq);
+
 
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/delete")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1072,6 +1258,14 @@ public interface LeafService {
     @GET("/api/v1/groups/{group_id}/team/{team_id}/attendance/report/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<AttendanceReportRes> getAttendanceReport(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/offline/attendance/report/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<AttendanceReportResv2> getAttendanceReportOffline(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") String month, @Query("year") String year,@Query("startDate") String startDate, @Query("endDate") String endDate);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/online/attendance/report")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<OnlineAttendanceRes> getAttendanceReportOnline(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/user/{user_id}/attendance/report/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1122,6 +1316,24 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addVendorPost(@Path("group_id") String groupId, @Body AddVendorPostRequest addVendorPostRequest);
 
+
+    @GET("/api/v1/groups/{group_id}/get/courses/school")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<CoursePostResponse> getCourses(@Path("group_id") String group_id);
+
+    @PUT("/api/v1/groups/{group_id}/school/course/{course_id}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteCourse(@Path("group_id") String groupId, @Path("course_id") String course_id);
+
+    @POST("/api/v1/groups/{group_id}/add/courses/school")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addCourse(@Path("group_id") String groupId, @Body CoursePostResponse.CoursePostData addCourseRequest);
+
+    @PUT("/api/v1/groups/{group_id}/school/course/{course_id}/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editCourse(@Path("group_id") String groupId,@Path("course_id") String courseId, @Body CoursePostResponse.CoursePostData  addCourseRequest);
+
+
     @GET("/api/v1/groups/{group_id}/coc/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<CodeConductResponse> getCodeOfConductPost(@Path("group_id") String group_id, @Query("page") int page);
@@ -1140,7 +1352,7 @@ public interface LeafService {
 
     @GET("/api/v1/groups/{group_id}/notifications/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<NotificationListRes> getNotificationList(@Path("group_id") String groupId);
+    Call<NotificationListRes> getNotificationList(@Path("group_id") String groupId,@Query("page") String page);
 
     @GET("/api/v1/groups/{groupId}/post/{postId}/read")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1252,10 +1464,27 @@ public interface LeafService {
     @GET
     Call<ResponseBody> downloadFile(@Url String url);
 
+    @GET("/api/v1/groups")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<GroupResponse> getGroups(@Query("category") String category, @Query("appName") String appName);
+
 
     @GET("/api/v1/groups")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<GroupResponse> getGroups(@Query("category") String category);
+    Call<GroupResponse> getGroupsTaluks(@Query("category") String category, @Query("talukName") String talukName);
+
+    @GET("/api/v1/groups")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<GroupResponse> getGroupsConstituency(@Query("category") String category, @Query("categoryName") String categoryName);
+
+    @GET("/api/v1/taluks")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TaluksRes> getTaluks();
+
+    @GET("/api/v1/constituency/groups/category")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ConstituencyRes> getConstituencyList(@Query("constituencyName") String constituencyName);
+
 
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/posts/get")
@@ -1285,9 +1514,9 @@ public interface LeafService {
     @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/chapter/{chapter_id}/topic/{topic_id}/completed")
     @Headers({"Content-Type: application/json"})
     Call<BaseResponse> topicCompleteStatus(@Path("group_id") String group_id, @Path("team_id") String team_id,
-                                     @Path("subject_id") String subject_id,
-                                     @Path("chapter_id") String chapter_id,
-                                     @Path("topic_id") String topic_id);
+                                           @Path("subject_id") String subject_id,
+                                           @Path("chapter_id") String chapter_id,
+                                           @Path("topic_id") String topic_id);
 
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/remove")
     @Headers({"Content-Type: application/json"})
@@ -1295,7 +1524,7 @@ public interface LeafService {
 
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/remove")
     @Headers({"Content-Type: application/json"})
-    Call<BaseResponse> deleteTTNewByDay(@Path("group_id") String group_id, @Path("team_id") String team_id,@Query("day") String day);
+    Call<BaseResponse> deleteTTNewByDay(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("day") String day);
 
     @GET("/api/v1/groups/{group_id}/team/{team_id}/student/fee/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
@@ -1311,6 +1540,596 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/student/{student_id}/fee/paid/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addStudentPaidFees(@Path("group_id") String group_id, @Path("team_id") String team_id,@Path("student_id") String student_id, @Body UpdateStudentFees req);
+    Call<BaseResponse> addStudentPaidFees(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("student_id") String student_id, @Body UpdateStudentFees req);
+
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<HwRes> getHwList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/add")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> addHwPost(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body AddHwPostRequest request);
+
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/submit")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> submitAssignmentPost(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                            @Path("subject_id") String subject_id,
+                                            @Path("assignment_id") String assignment_id,
+                                            @Body AddHwPostRequest request);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/get")
+    @Headers({"Content-Type: application/json"})
+    Call<AssignmentRes> getAssignment(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                      @Path("subject_id") String subject_id,
+                                      @Path("assignment_id") String assignment_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/get")
+    @Headers({"Content-Type: application/json"})
+    Call<AssignmentRes> getAssignmentForTeacher(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                                @Path("subject_id") String subject_id,
+                                                @Path("assignment_id") String assignment_id,
+                                                @Query("list") String param);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/verify/{studentAssignment_id}")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> verifyAssignment(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                        @Path("subject_id") String subject_id,
+                                        @Path("assignment_id") String assignment_id,
+                                        @Path("studentAssignment_id") String studentAssignment_id,
+                                        @Query("verify") boolean verify,
+                                        @Body ReassignReq reassignReq);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/verify/{studentAssignment_id}")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> reassignAssignment(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                          @Path("subject_id") String subject_id,
+                                          @Path("assignment_id") String assignment_id,
+                                          @Path("studentAssignment_id") String studentAssignment_id,
+                                          @Query("reassign") boolean reassign,
+                                          @Body ReassignReq reassignReq);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/delete")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteAssignmentTeacher(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                               @Path("subject_id") String subject_id,
+                                               @Path("assignment_id") String assignment_id);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/assignment/{assignment_id}/delete/{studentAssignmentId}")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteAssignmentStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                               @Path("subject_id") String subject_id,
+                                               @Path("assignment_id") String assignment_id,
+                                               @Path("studentAssignmentId") String studentAssignmentId);
+
+    @GET("/api/v1/groups/{group_id}/events")
+    @Headers({"Content-Type: application/json"})
+    Call<UpdateDataEventRes> getUpdateEventList(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/events/constituency")
+    @Headers({"Content-Type: application/json"})
+    Call<UpdateDataEventRes> getUpdateEventListConstituency(@Path("group_id") String group_id);
+
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TestExamRes> getTestExamList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/add")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> addTestExam(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body AddTestExamPostRequest request);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/delete")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteTestExam(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                      @Path("subject_id") String subject_id,
+                                      @Path("testexam_id") String testexam_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/get")
+    @Headers({"Content-Type: application/json"})
+    Call<TestPaperRes> getTestPaper(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                    @Path("subject_id") String subject_id,
+                                    @Path("testexam_id") String testexam_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/get")
+    @Headers({"Content-Type: application/json"})
+    Call<TestPaperRes> getTestPaperForTeacher(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                              @Path("subject_id") String subject_id,
+                                              @Path("testexam_id") String testexam_id,
+                                              @Query("list") String param);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/delete/{studentTestExamId}")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> deleteTestPaperStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                              @Path("subject_id") String subject_id,
+                                              @Path("testexam_id") String testexam_id,
+                                              @Path("studentTestExamId") String studentTestExamId);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/verify/{studentTestExam_id}")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> verifyTestPaper(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                       @Path("subject_id") String subject_id,
+                                       @Path("testexam_id") String testexam_id,
+                                       @Path("studentTestExam_id") String studentTestExam_id,
+                                       @Query("verify") boolean verify,
+                                       @Body ReassignReq reassignReq);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testexam_id}/submit")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> submitTestPaperPost(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                           @Path("subject_id") String subject_id,
+                                           @Path("testexam_id") String testexam_id,
+                                           @Body AddHwPostRequest request);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testExam_id}/start/event")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> startTestPaperLive(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                          @Path("subject_id") String subject_id,
+                                          @Path("testExam_id") String testexam_id);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/testexam/{testExam_id}/end/event")
+    @Headers({"Content-Type: application/json"})
+    Call<BaseResponse> stopTestPaperLive(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                         @Path("subject_id") String subject_id,
+                                         @Path("testExam_id") String testexam_id);
+
+
+    @GET("/api/v1/groups/{group_id}/live/testexam/events")
+    @Headers({"Content-Type: application/json"})
+    Call<TestLiveEventRes> getLivePaperEvents(@Path("group_id") String group_id);
+
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/live/start")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> startLiveClass(@Path("group_id") String group_id, @Path("team_id") String teamId);
+
+    @GET("/api/v1/groups/{group_id}/live/class/events")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<LiveClassEventRes> getLiveClassEvents(@Path("group_id") String group_id);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/live/join")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> joinLiveClass(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body JoinLiveClassReq req);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/live/end")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> endLiveClass(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body StopMeetingReq req);
+
+    @POST("/api/v1/groups/{group_id}/multipleuser/post/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> sendMsgToNotSubmittedStudents(@Body SendMsgToStudentReq req, @Path("group_id") String group_id, @Query("userIds") String userIds);
+
+
+    @GET("/api/v1/groups/{group_id}/fee/status/list")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<PaidStudentFeesRes> getPaidStudentList(@Path("group_id") String group_id,
+                                                @Query("status") String status);
+
+    @GET("/api/v1/groups/{group_id}/fee/status/list")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<PaidStudentFeesRes> getPaidStudentList(@Path("group_id") String group_id,
+                                                @Query("status") String status,
+                                                @Query("teamId") String teamId);
+
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/fee/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StudentFeesRes> getStudentFees(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                        @Path("user_id") String user_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/fee/paid")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> payFeesByStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                        @Path("user_id") String user_id, @Body PayFeesRequest payFeesRequest);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{student_id}/fee/{payment_id}/approve")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> approveOrHoldFees(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                         @Path("student_id") String student_id,
+                                         @Path("payment_id") String payment_id,
+                                         @Query("status") String status);
+ /*   @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/duedate/update")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateStatusDueDate(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                        @Path("user_id") String user_id,
+                                        @Query("status") String status);*/
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/fee/update")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editStudentFees(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("user_id") String user_id, @Body FeesRes.Fees req);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/create")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> createOfflineTest(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                         @Body OfflineTestReq req);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<OfflineTestRes> getOfflineTestList(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/{offlineTestExamId}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteOfflineTestList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("offlineTestExamId") String offlineTestExamId);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/{offlineTestExamId}/student/markscard/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<MarkCardResponse2> getMarkCard2List(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                             @Path("offlineTestExamId") String offlineTestExamId);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/{offlineTestExamId}/student/markscard/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<MarkCardResponse2> getMarkCard2ListForStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                                       @Path("offlineTestExamId") String offlineTestExamId,
+                                                       @Query("userId") String userId);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/{offlineTestExamId}/student/{userId}/marks/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addObtainMark(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                     @Path("offlineTestExamId") String offlineTestExamId,
+                                     @Path("userId") String userId,
+                                     @Body AddMarksReq addMarksReq);
+
+
+    @GET("/api/v1/groups/{group_id}/all/booths/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothResponse> getBooths(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{booth_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothVotersListResponse> getBoothVoters(@Path("group_id") String group_id, @Path("booth_id") String booth_id);
+
+   /* @GET("/api/v1/groups/{group_id}/all/booths/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothResponse> getBoothsCoordinator(@Path("group_id") String group_id,@Query("boothCoordinator") String option);*/
+
+    @GET("/api/v1/groups/{group_id}/my/booth/teams")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothResponse> getMyBooths(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{booth_id}/booth/members/teams")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothResponse> getBoothTeams(@Path("group_id") String group_id,
+                                      @Path("booth_id") String booth_id);
+
+    @POST("/api/v1/groups/{group_id}/constituency/booths/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addBooths(@Path("group_id") String group_id, @Body BoothData boothData);
+
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/coordinator/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothMemberResponse> getCoordinateMember(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/user/add/booth")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addBoothsMember(@Path("group_id") String group_id,
+                                       @Path("team_id") String team_id,
+                                       @Query("category") String category,
+                                       @Body BoothMemberReq req);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/user/{user_id}/update/booth/member")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateBoothsMember(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("user_id") String user_id,
+                                       @Body BoothMemberResponse.BoothMemberData req);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/coordinator/add/booth")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addCoordinateBooth(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                       @Body BoothMemberResponse.BoothMemberData req);
+
+
+    @GET("/api/v1/groups/{group_id}//user/{userId}/family/voters/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<FamilyMemberResponse> getFamilyMember(@Path("group_id") String group_id, @Path("userId") String team_id);
+
+
+    @POST("/api/v1/groups/{group_id}/user/{userId}/register/family/voters")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addFamilyMember(@Path("group_id") String group_id, @Path("userId") String team_id,
+                                       @Body FamilyMemberResponse req);
+
+    @GET("/api/v1/groups/{group_id}/constituency/issues")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<IssueListResponse> getIssues(@Path("group_id") String group_id);
+
+    @POST("/api/v1/groups/{group_id}/constituency/issues/register")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addIssue(@Path("group_id") String group_id, @Body RegisterIssueReq req);
+
+    @POST("/api/v1/groups/{group_id}/issue/{issue_id}/department/user/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editIssue(@Path("group_id") String group_id,@Path("issue_id") String issue_id,@Body IssueListResponse.IssueData req);
+
+    @PUT("/api/v1/groups/{group_id}/issue/{issue_id}/delete")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteIssue(@Path("group_id") String group_id,@Path("issue_id") String issue_id);
+
+    @GET("/api/v1/groups/{group_id}/booth/subbooth/teams")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubBoothResponse> getMySubBooths(@Path("group_id") String group_id);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/issue/{issue_id}/ticket/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addTicket(@Path("group_id") String group_id, @Path("team_id") String teamId, @Path("issue_id") String issue_id, @Body AddTicketRequest ticketRequest);
+
+    @GET("/api/v1/groups/{group_id}/issues/tickets/get?")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TicketListResponse> getTickets(@Path("group_id") String group_id,@Query("role") String role,@Query("option") String option,@Query("page") String page);
+
+    @PUT("/api/v1/groups/{group_id}/issue/{issue_id}/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteTicket(@Path("group_id") String group_id,@Path("issue_id") String issue_id);
+
+
+    /* @GET("/api/v1/groups/{group_id}/issues/tickets/get?")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TicketListResponse> getTicketWithoutRole(@Path("group_id") String group_id,@Query("option") String option,@Query("page") String page);
+*/
+    @PUT("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/approve")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> ticketApproved(@Path("group_id") String group_id,@Path("issuePost_id") String issuePost_id,@Query("status") String status);
+
+    @PUT("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/admin/approve")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> ticketApprovedByAdmin(@Path("group_id") String group_id,@Path("issuePost_id") String issuePost_id,@Query("status") String status);
+
+
+    @POST("/api/v1/groups/{group_id}/issue/post/{post_id}/comment/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addCommentTaskDetails(@Path("group_id") String group_id, @Path("post_id") String postId, @Body AddCommentTaskDetailsReq addCommentTaskDetailsReq);
+
+    @GET("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/comments/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<CommentTaskDetailsRes> getCommentTaskDetails(@Path("group_id") String group_id, @Path("issuePost_id") String postId);
+
+
+    @POST("/api/v1/groups/{group_id}/booth/team/{team_id}/committee/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addCommittee(@Path("group_id") String group_id, @Path("team_id") String teamId, @Body AddCommitteeReq req);
+
+    @POST("/api/v1/groups/{group_id}/booth/team/{team_id}/committee/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateCommittee(@Path("group_id") String group_id, @Path("team_id") String teamId,@Query("committeeId") String committeeId, @Body AddCommitteeReq req);
+
+    @PUT("/api/v1/groups/{group_id}/booth/team/{team_id}/committee/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> removeCommittee(@Path("group_id") String group_id,@Path("team_id") String issuePost_id,@Query("committeeId") String committeeId);
+
+
+    @GET("/api/v1/groups/{group_id}/booth/team/{team_id}/committees/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<committeeResponse> getCommittee(@Path("group_id") String group_id, @Path("team_id") String teamId);
+
+    @GET("/api/v1/groups/{group_id}/issues/tickets/events")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TicketEventUpdateResponse> getUpdatedTickets(@Path("group_id") String group_id, @Query("role") String role, @Query("option") String option);
+
+    @GET("/api/v1/groups/{group_id}/constituency/feeder")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<AdminFeederResponse> getAdminFeed(@Path("group_id") String group_id, @Query("role") String role);
+
+
+    @GET("/api/v1/groups/{group_id}/all/booths/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoothMasterListModelResponse> getMasterListBooth(@Path("group_id") String group_id, @Query("type") String type);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<WorkerListResponse> getWorkerList(@Path("group_id") String group_id,@Path("team_id") String team_id, @Query("committeeId") String committeeId);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/booth/members")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StreetListModelResponse> getWorkerStreetList(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("type") String type);
+
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/add/voters/masterlist")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addVoter(@Path("group_id") String group_id, @Path("team_id") String team_id, @Body VoterListModelResponse.AddVoterReq req);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/voter/remove")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> deleteVoterMaster(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("voterId") String voterId);
+
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/get/voters/masterlist")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<VoterListModelResponse.VoterListRes> getVoterList(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @GET("/api/v1/groups/{group_id}/banner/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BannerRes> getBannerList(@Path("group_id") String group_id);
+
+    @POST("/api/v1/groups/{group_id}/banner/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addBannerList(@Path("group_id") String group_id,@Body BannerAddReq req);
+
+    @GET("/api/v1/groups/{group_id}/my/subbooth/teams")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<MyTeamSubBoothResponse> getMyTeamSubBooths(@Path("group_id") String group_id);
+
+    @GET("/api/v1/groups/{group_id}/user/{user_id}/profile/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<VoterProfileResponse> getVoterProfile(@Path("group_id") String group_id, @Path("user_id") String user_id);
+
+    @PUT("/api/v1/groups/{group_id}/user/{user_id}/profile/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> updateVoterProfile(@Path("group_id") String group_id, @Path("user_id") String user_id,@Body VoterProfileUpdate request);
+
+    @GET("/api/v1/caste/religions")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ReligionResponse> getReligion();
+
+
+
+    @GET("/api/v1/profession/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ProfessionResponce> getProfession();
+
+    @GET("/api/v1/caste/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<CasteResponse> getCaste(@Query("religion") String religion);
+
+    @GET("/api/v1/caste/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubCasteResponse> getSubCaste(@Query("casteId") String casteId);
+
+    @PUT("/api/v1/admin/groups/{group_id}/users/{user_id}/allow/post")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> makeAppAdmin(@Path("group_id") String group_id,@Path("user_id") String user_id);
+
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/events/subbooth")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubBoothEventRes> getSubBoothEvent(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @GET("api/v1/groups/{group_id}/events/my/booths")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<MyBoothEventRes> getMyBoothEvent(@Path("group_id") String group_id);
+
+    @GET("api/v1/groups/{group_id}/events/my/subbooths")  //if user is worker
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubBoothWorkerEventRes> getSubBoothWorkerEvent(@Path("group_id") String group_id);
+
+    @GET("api/v1/groups/{group_id}/team/{team_id}/events/team/post")  //Get team post events inside teams
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TeamPostEventModelRes> getTeamPostEvent(@Path("group_id") String group_id,@Path("team_id") String team_id);
+
+    @GET("api/v1/groups/{group_id}/team/{team_id}/events/team")  //Get team events inside all booth members
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TeamEventModelRes> getTeamEvent(@Path("group_id") String group_id, @Path("team_id") String team_id);
+
+    @PUT("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Body SyllabusModelReq req);
+
+    @GET("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SyllabusListModelRes> getSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id);
+
+    @GET("api/v1/groups/{group_id}/user/search")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SearchUserModel> getSearch(@Path("group_id") String group_id,@Query("filter") String text);
+
+    @POST("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/status")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> ChangeStatusPlan(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Query("topicId") String topicId, @Body ChangeStatusPlanModel.ChangeStatusModelReq changeStatusModelReq);
+
+    @POST("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/plan")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> SyllabusPlan(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Query("chapterId") String chapterId, @Body SyllabusPlanRequest planRequest);
+
+    @PUT("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> EditSyllabus(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Query("chapterId") String chapterId, @Body EditTopicModelReq editTopicModelReq);
+
+    @GET("/api/v1/groups/{group_id}/class/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassResponse> getClassesOfStaff(@Path("group_id") String group_id, @Query("staffId") String staffIf);
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/attendance/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> editAttendanceForSelectedStudent(@Path("group_id") String group_id, @Path("team_id") String team_id,@Body AttendenceEditRequest request);
+
+    @GET("api/v1/groups/{group_id}/team/{team_id}/offline/attendance/report/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<AttendanceReportParentRes> getOfflineAttendReportParent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("month") int month, @Query("year") int year, @Query("userId") String user_id);
+
+    @POST("api/v1/groups/{group_id}/team/{team_id}/student/leave/apply")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> applyForLeave(@Path("group_id") String group_id, @Path("team_id") String team_id,@Body ApplyLeaveReq req);
+
+    @GET("/api/v1/groups/{group_id}/today/staff/plan")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TodaySyllabusPlanRes> getTodayDateSyllabus(@Path("group_id") String group_id, @Query("date") String date);
+
+    @GET("api/v1/groups/{group_id}/staff/syllabus/analysis")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StaffAnalysisRes> getAnalysisOfStaff(@Path("group_id") String group_id, @Query("staffId") String staffId);
+
+    @GET("api/v1/groups/{group_id}/staff/attendance/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StaffAttendanceRes> getStaffAttendance(@Path("group_id") String group_id,@Query("day") int day, @Query("month") int month, @Query("year") int year);
+
+
+/*
+    @GET("api/v1/groups/{group_id}/staff/attendance/get/approval?")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ApprovalStaffAttendanceRes> getApprovalStaffAttendance(@Path("group_id") String group_id, @Query("day") String day, @Query("month") String month, @Query("year") String year);
+*/
+
+    // Registration API
+
+    @GET("api/v1/get/type/of/campus")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<TypeOfCampusData> getTypeOfCampus();
+
+    @GET("api/v1/get/board/db")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BoardsData> getBoardsListForCampus(@Query("campusType") String campusType);
+
+    @GET("api/v1/get/university/from/db")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<UniversitiesData> getUniversitiesForBoard(@Query("board") String board);
+
+    @GET("api/v1/get/medium/from/db")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<CampusMediumData> getCampusMedium();
+
+    @GET("api/v1/get/board/class/list/school")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassesListData> getClassesList(@Query("board") String board, @Query("subCategory") String subCategory);
+
+    @POST("api/v1/user/{user_id}/new/register")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassesListData> doRegister(@Path("user_id") String userId, @Body RegisterRequestData req);
+
+    @POST("api/v1/groups/{group_id}/staff/attendance/take")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> takeStaffAttendance(@Path("group_id") String group_id,@Body TakeAttendanceReq req);
+
+    @PUT("api/v1/groups/{group_id}//attendance/staff/edit")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> changeStaffAttendance(@Path("group_id") String group_id,@Body ChangeStaffAttendanceReq req);
+
+    @GET("api/v1/groups/{group_id}/team/{teams_id}/get/leaves/applied")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<LeaveRes> getLeave(@Path("group_id") String group_id, @Path("teams_id") String teams_id, @Query("userId") String userId, @Query("date") String date, @Query("year") int year);
+
+    @POST("api/v1/groups/{group_id}/team/{teams_id}/subject/staff/assign")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> assignSubject(@Path("group_id") String group_id, @Path("teams_id") String teams_id,@Body AddSubjectStaffReq req);
+
+
+
+    // Registration API END
+    //AddCombinedClass
+    @POST("/api/v1/groups/{group_id}/class/add/extra")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> AddCombinedClass(@Path("group_id") String group_id,@Body AddCombinedClass req);
+
+
+    @GET("api/v1/groups/{group_id}/get/class/list")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<ClassResV2> getClassesListV2(@Path("group_id") String groupId);
+
+
+    @POST("api/v1/groups/{group_id}/add/classes")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addClass(@Path("group_id") String groupId,@Body AddClassReq req);
+
+
+    @POST("api/v1/groups/{group_id}/team/{team_id}/multiple/student/register")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addMultipleStudent(@Path("group_id") String groupId,@Path("team_id") String team_id,@Body AddMultipleStudentReq req);
+
+    @POST("api/v1/groups/{group_id}/multiple/staff/register")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addMultipleStaff(@Path("group_id") String groupId,@Body AddMultipleStaffReq req);
+
+
 
 }

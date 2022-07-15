@@ -22,19 +22,27 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="Sunday"
+
                 android:paddingStart="@dimen/dimen_16"
                 android:paddingEnd="@dimen/dimen_16"
                 android:textSize="@dimen/text_size_20sp"
                 android:textColor="@color/colorTextDark"
                 style="@style/LabelNormal" />
-            <ImageView
+         <!--   <ImageView
                 android:id="@+id/imgRemove"
                 android:layout_width="@dimen/padding_30dp"
                 android:layout_gravity="center"
                 android:padding="5dp"
                 android:src="@drawable/ic_delete_black"
                 android:tint="@android:color/black"
+                android:layout_marginEnd="@dimen/dimen_16"
+                android:layout_height="@dimen/padding_30dp"/>-->
+            <ImageView
+                android:id="@+id/imgEdit"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_edit_black"
+                app:tint="@color/colorPrimary"
                 android:layout_marginEnd="@dimen/dimen_16"
                 android:layout_height="@dimen/padding_30dp"/>
             <ImageView

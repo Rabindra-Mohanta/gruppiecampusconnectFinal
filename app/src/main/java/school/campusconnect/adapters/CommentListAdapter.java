@@ -128,7 +128,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         holder.txt_comments.setText(item.text);
         holder.txtTime.setText(MixOperations.getFormattedDate(item.insertedAt, Constants.DATE_FORMAT));
 
-        holder.txt_reply.setText("Reply (" + item.replies + ")");
+        holder.txt_reply.setText(mContext.getResources().getString(R.string.txt_reply)+" (" + item.replies + ")");
         holder.edt_edit.setText(item.text);
 
         if (type.equals("personal")) {

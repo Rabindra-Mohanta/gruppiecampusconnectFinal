@@ -164,7 +164,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
     {
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             mIsLoading = true;
             manager.getTimeTablePost(this, mGroupId+"", currentPage);
         }
@@ -216,7 +217,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_TIMETABLE_POST:
@@ -224,9 +226,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
 
                 if (currentPage == 1) {
-                    PostDataItem.deleteGeneralPosts(mGroupId+"");
+                //    PostDataItem.deleteGeneralPosts(mGroupId+"");
                     listData.clear();
-
                     listData.addAll(res.data);
                     AppLog.e(TAG, "current page 1");
 
@@ -255,7 +256,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -278,7 +280,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -293,7 +296,8 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteTimeTablePost(this, mGroupId+"",currentItem.timeTableId);
 
@@ -316,6 +320,7 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.title);
             startActivity(i);
 
@@ -329,6 +334,6 @@ public class TimeTableFragment extends BaseFragment implements LeafManager.OnCom
     @Override
     public void onDeleteClick(TimeTableRes.TimeTableData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 }

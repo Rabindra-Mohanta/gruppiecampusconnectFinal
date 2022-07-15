@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_add_event"
-        android:icon="@drawable/add"
+        android:icon="@drawable/posticon"
         app:showAsAction="ifRoom"
-        android:title="Add Event"/>
+        android:title="@string/lbl_add_events"/>
 </menu>

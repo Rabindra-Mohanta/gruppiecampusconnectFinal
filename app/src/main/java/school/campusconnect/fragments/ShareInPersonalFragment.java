@@ -210,7 +210,7 @@ public class ShareInPersonalFragment extends BaseFragment implements LeafManager
 
             case LeafManager.API_SHARE:
                 hideLoadingBar();
-                Toast.makeText(getActivity(), "Shared successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_shared_successfully), Toast.LENGTH_SHORT).show();
                 getActivity().finish();
                 break;
         }

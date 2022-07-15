@@ -46,7 +46,7 @@
                     android:gravity="center_vertical"
                     android:paddingEnd="@dimen/padding_10dp"
                     android:paddingStart="@dimen/padding_10dp"
-                    android:text="View Comments"
+                    android:text="@string/hint_view_comments"
                     android:textColor="@color/colorTextDark"
                     style="@style/LabelNormal" />
 
@@ -58,7 +58,7 @@
                     android:gravity="center_vertical"
                     android:paddingEnd="@dimen/padding_10dp"
                     android:paddingStart="@dimen/padding_10dp"
-                    android:text="Time"
+                    android:text="@string/lbl_Time"
                     android:textColor="@color/colorTextLight"
                     style="@style/LabelSmall"/>
 
@@ -71,7 +71,7 @@
                     android:gravity="center_vertical"
                     android:paddingEnd="@dimen/padding_10dp"
                     android:layout_marginStart="@dimen/padding_20dp"
-                    android:text="View Comments"
+                    android:text="@string/hint_view_comments"
                     android:textColor="@color/color_grey_icon"
                     android:textAppearance="@style/TextAppearance.Light"
                     android:textSize="14sp"
@@ -89,7 +89,7 @@
                 android:paddingStart="@dimen/padding_10dp"
                 android:autoLink="web"
                 android:textColorLink="@color/colorPrimary"
-                android:text="View Comments"
+                android:text="@string/hint_view_comments"
                 style="@style/LabelNormal"
                 android:textColor="@color/colorTextNormal"
                 android:paddingLeft="@dimen/padding_10dp" />
@@ -114,7 +114,7 @@
             android:gravity="center_vertical"
             android:paddingEnd="@dimen/padding_10dp"
             android:paddingStart="@dimen/padding_10dp"
-            android:text="Reply"
+            android:text="@string/lbl_reply"
             android:textColor="@color/colorTextDark"
             style="@style/LabelNormal"
              />
@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/txt_like"
                     android:gravity="center_vertical"
-                    android:text="Likes"
+                    android:text="@string/lbl_likes"
                     android:layout_marginLeft="3dp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"

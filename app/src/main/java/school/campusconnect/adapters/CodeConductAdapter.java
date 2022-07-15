@@ -31,11 +31,13 @@ import school.campusconnect.utils.MixOperations;
 
 public class CodeConductAdapter extends RecyclerView.Adapter<CodeConductAdapter.ViewHolder> {
     private final ArrayList<CodeConductResponse.CodeConductData> listData;
+    private final String role;
     private Context mContext;
     CodeConductListener listener;
-    public CodeConductAdapter(ArrayList<CodeConductResponse.CodeConductData> listData, CodeConductListener listener) {
+    public CodeConductAdapter(ArrayList<CodeConductResponse.CodeConductData> listData, CodeConductListener listener, String role) {
         this.listData=listData;
         this.listener=listener;
+        this.role=role;
     }
 
     @Override
@@ -97,7 +99,7 @@ public class CodeConductAdapter extends RecyclerView.Adapter<CodeConductAdapter.
                     Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(holder.imageThumb);
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(mContext,item.fileName.get(0))) {
                         holder.imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         holder.imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -128,7 +130,7 @@ public class CodeConductAdapter extends RecyclerView.Adapter<CodeConductAdapter.
             holder.recyclerView.setVisibility(View.GONE);
         }
 
-        if (item.canEdit) {
+        if ("admin".equalsIgnoreCase(role)) {
             holder.txt_drop_delete.setVisibility(View.VISIBLE);
             holder.iv_delete.setVisibility(View.VISIBLE);
         } else {

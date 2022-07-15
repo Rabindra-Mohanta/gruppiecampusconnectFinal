@@ -11,33 +11,53 @@ import school.campusconnect.BuildConfig;
  */
 
 public class Constants {
-    public static String group_category="school";
-
     public static final String VIVID_GROUP_ID =  "";//  First Group Id
 
     public static final String APP_KEY = "NezBAck80EPh2KCsJ5RiynKm20dznUI2lVIk" ; //zoom key
     public static final String APP_SECRET = "IXvTUJTYKplPT7KNZWhpOAQO328fR6OwEeAB"; // zoom secret key
     public static final String WEB_DOMAIN = ""; //zooom domain name
 
+    public static final String STARTFOREGROUND_ACTION = "STARTFOREGROUND_ACTION";
+    public static final String STOPFOREGROUND_ACTION = "STOPFOREGROUND_ACTION";
+    public static final String ACCPET_ACTION = "ACCPET_ACTION";
+    public static final String DECLINE_ACTION = "DECLINE_ACTION";
+    public static final String ACCPET_ACTION_SCREEN = "ACCPET_ACTION_SCREEN";
+    public static final String DECLINE_ACTION_SCREEN = "DECLINE_ACTION_SCREEN";
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String FILE_TYPE_PDF = "pdf";
+    public static final String FILE_TYPE_AUDIO = "audio";
     public static final String FILE_TYPE_YOUTUBE = "youtube";
     public static final String FILE_TYPE_IMAGE = "image";
+    public static final String FILE_TYPE_BIRTHDAY = "birthday";
 
     public static final String GROUP_DATA = "GROUP_DATA";
+    public static final String TYPE = "TYPE";
     public static final String TOTAL_MEMBER = "TOTAL_MEMBER";
     public static final int MAX_IMAGE_NUM = 4;
 
     public static final long INTERVAL = 15000;
     public static final long INTERVAL_FAST = 14000;
     public static final String CATEGORY_SCHOOL = "school";
+    public static final String CATEGORY_CONSTITUENCY = "constituency";
     public static final String BACKGROUND_IMAGE = "BACKGROUND_IMAGE";
     public static final String FILE_TYPE_VIDEO = "video";
+
+    public static final int KEY_RESULT_ADDRESS = 123;
+    public static final String KEY_BUNDLE_LOCATION = "location";
+    public static final String KEY_BUNDLE_ADDRESS = "bundleaddress";
+    public static final String KEY_BUNDLE_LOCALITY = "bundlelocality";
+    public static final String KEY_BUNDLE_FLOOR = "bundleaddressfloor";
+    public static final String KEY_BUNDLE_POSTAL = "bundleaddresspostal";
+    public static final String KEY_BUNDLE_PAYTYPE = "payment_type";
+    public static final String KEY_BUNDLE_LONGITUDE = "key_longitude";
+    public static final String KEY_BUNDLE_LATITUDE =  "key_latitude";
 
 
     public static int image_width = 1800;
     public static int image_height = 1200;
+
+    public static int INTERVAL_EVENTAPI = 2000;
 
     public static int requestCode = -1;
     public static boolean finishActivity;

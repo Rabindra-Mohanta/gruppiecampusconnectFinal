@@ -105,7 +105,7 @@ public class EBookReadMoreActivity extends BaseActivity{
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(thumbnailImage.get(position))).into(holder.imageThumb);
             }
             if (list != null && list.size() > 0) {
-                if (AmazoneDownload.isPdfDownloaded(list.get(0))) {
+                if (AmazoneDownload.isPdfDownloaded(getApplicationContext(),list.get(0))) {
                     holder.imgDownloadPdf.setVisibility(View.GONE);
                 } else {
                     holder.imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -140,6 +140,7 @@ public class EBookReadMoreActivity extends BaseActivity{
                     public void onClick(View v) {
                         Intent i = new Intent(EBookReadMoreActivity.this, ViewPDFActivity.class);
                         i.putExtra("pdf", list.get(getAdapterPosition()));
+                        i.putExtra("thumbnail", thumbnailImage.get(getAdapterPosition()));
                         i.putExtra("name", subjectName);
                         startActivity(i);
                     }

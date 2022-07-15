@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_add_class"
-        android:title="Add Class"/>
+        android:title="@string/lbl_add_regular_class"/>
+    <item android:id="@+id/menu_add_combined_class"
+        android:title="@string/lbl_add_combined_class"/>
+
 </menu>

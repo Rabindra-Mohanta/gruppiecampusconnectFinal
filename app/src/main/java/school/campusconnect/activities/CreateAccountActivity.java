@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import school.campusconnect.BuildConfig;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -54,6 +56,9 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
     @Bind(R.id.group_name)
     public EditText edtName;
 
+    @Bind(R.id.tv_aboutgroup)
+    public TextView aboutGroup;
+
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
@@ -86,7 +91,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
             btn_create_acc.setText(getResources().getString(R.string.lbl_create_group));
         } else {
             groupItem=new Gson().fromJson(jsonGroup, GroupItem.class);
-            setTitle("Edit Group");
+            setTitle(getResources().getString(R.string.action_edit_group));
             imageFragment = UploadImageFragment.newInstance(groupItem.getImage(), true, true);
             edtName.setText(groupItem.getName());
             edtAbout.setText(groupItem.aboutGroup);
@@ -121,6 +126,17 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
 
             }
         });
+
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+            aboutGroup.setText(getResources().getString(R.string.lbl_about_constituency));
+        }
+        else
+        {
+
+            aboutGroup.setText(getResources().getString(R.string.lbl_about_group));
+        }
     }
 
     @Override
@@ -133,12 +149,13 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
                         Toast.makeText(CreateAccountActivity.this, getString(R.string.msg_group_delete), Toast.LENGTH_SHORT).show();
                         break;
                     }
-                    SMBDialogUtils.showSMBDialogOKCancel(CreateAccountActivity.this, "Are you sure about deleting this group?", new DialogInterface.OnClickListener() {
+                    SMBDialogUtils.showSMBDialogOKCancel(CreateAccountActivity.this, getResources().getString(R.string.smb_delete_group), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // showLoadingDialog();
                             if(progressBar!=null)
-                                progressBar.setVisibility(View.VISIBLE);
+                                showLoadingBar(progressBar,false);
+                                //progressBar.setVisibility(View.VISIBLE);
                             LeafManager manager=new LeafManager();
                             manager.deleteGroup(CreateAccountActivity.this,groupItem.getGroupId()+"");
                         }
@@ -186,7 +203,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
         {
             if(spType.getSelectedItemPosition()==-1 || spType.getSelectedItemPosition()==0)
             {
-                Toast.makeText(this, "Select Group Type", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_select_group_type), Toast.LENGTH_SHORT).show();
                 valid=false;
             }
         }
@@ -203,7 +220,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
                 if (isConnectionAvailable()) {
                     if (isValid()) {
                         if(progressBar!=null)
-                            progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(progressBar,false);
+                        //progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
 
                         CreateGroupReguest request = new CreateGroupReguest();
@@ -271,7 +289,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+            //progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_ID_CREATE_GROUP) {
             Toast.makeText(this, getString(R.string.msg_creted), Toast.LENGTH_LONG).show();
             LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGROUPUPDATED, true);
@@ -294,7 +313,7 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(this, "Successfully updated group details.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_successfully_updated_group_details), Toast.LENGTH_LONG).show();
             LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGROUPUPDATED, true);
         }
         setResult(RESULT_OK);
@@ -334,7 +353,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         //hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
 
        AppLog.e("CreateAccount", "onFailure  ,, msg : " + error);
         if (error.status.equals("401")) {
@@ -358,7 +378,8 @@ public class CreateAccountActivity extends BaseActivity implements LeafManager.O
     public void onException(int apiId, String msg) {
         //hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

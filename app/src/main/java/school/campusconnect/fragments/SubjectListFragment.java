@@ -47,8 +47,8 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar,true);
+     //   progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -62,7 +62,8 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
         SubjectResponse res = (SubjectResponse) response;
         List<SubjectResponse.SubjectData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -72,12 +73,14 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder>
@@ -109,7 +112,7 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Subject found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -119,7 +122,7 @@ public class SubjectListFragment extends BaseFragment implements LeafManager.OnC
             }
             else
             {
-                txtEmpty.setText("No Subject found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 return 0;
             }
 

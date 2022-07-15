@@ -1,6 +1,9 @@
 package school.campusconnect.activities;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -49,7 +52,6 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
-import school.campusconnect.adapters.PostAdapter;
 import school.campusconnect.adapters.ReportAdapter;
 import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
@@ -65,7 +67,7 @@ import school.campusconnect.utils.ImageUtil;
 import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
 
-public class ReadMoreActivity extends BaseActivity implements LeafManager.OnCommunicationListener, DialogInterface.OnClickListener, LeafManager.OnAddUpdateListener<AddPostValidationError>, PostAdapter.OnItemClickListener {
+public class ReadMoreActivity extends BaseActivity implements LeafManager.OnCommunicationListener, DialogInterface.OnClickListener, LeafManager.OnAddUpdateListener<AddPostValidationError>{
     private static final String TAG = "ReadMoreActivity";
     @Bind(R.id.view)
     View view;
@@ -198,13 +200,13 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     protected void onResume() {
         super.onResume();
 
-        if (item != null) {
+      /*  if (item != null) {
             AppLog.e(TAG, "Item Found-------------");
             getData();
         } else {
             AppLog.e(TAG, "Item Empty--------------");
         }
-
+*/
     }
 
     private void setData() {
@@ -306,7 +308,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
                     Picasso.with(this).load(Constants.decodeUrlToBase64(item.thumbnailImage.get(0))).into(imgPhoto);
                 }
                 if (item.fileName != null && item.fileName.size() > 0) {
-                    if (AmazoneDownload.isPdfDownloaded(item.fileName.get(0))) {
+                    if (AmazoneDownload.isPdfDownloaded(getApplicationContext(),item.fileName.get(0))) {
                         imgDownloadPdf.setVisibility(View.GONE);
                     } else {
                         imgDownloadPdf.setVisibility(View.VISIBLE);
@@ -421,10 +423,11 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     }
 
     private void init() {
+        mGroupId = GroupDashboardActivityNew.groupId;
         databaseHandler = new DatabaseHandler(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Post");
+        setTitle(getResources().getString(R.string.post));
         String data = getIntent().getStringExtra("data");
 
         if (data == null) {
@@ -441,12 +444,22 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         if (type.equals("personal"))
             userId = getIntent().getStringExtra("user_id");
 
-        mGroupId = GroupDashboardActivityNew.groupId;
+
 
         AppLog.e(TAG, "data : " + data);
         AppLog.e(TAG, "type : " + type);
         AppLog.e(TAG, "team_id : " + mTeamId);
         AppLog.e(TAG, "userId : " + userId);
+
+        txt_title.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager cManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData cData = ClipData.newPlainText("text", txt_title.getText());
+                cManager.setPrimaryClip(cData);
+                return true;
+            }
+        });
     }
 
     private void getData() {
@@ -459,17 +472,18 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         String userId = bundle.getString("userId", null);
         String postId = bundle.getString("postId", null);
 
-
         AppLog.e(TAG, "DATA-  TYPE: " + type + " GRP: " + mGroupId + " TEAM: " + mTeamId + " USR: " + userId + " POST: " + postId);
 
-
         this.type = type;
-        this.mGroupId = mGroupId;
+        if(mGroupId!=null){
+            this.mGroupId = mGroupId;
+        }
         this.mTeamId = mTeamId;
         this.userId = userId;
 
         if (progressBar != null)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+         //   progressBar.setVisibility(View.VISIBLE);
 
         if (type.equalsIgnoreCase("groupPost") || type.equalsIgnoreCase("groupPostComment")) {
             linComments.setVisibility(type.equalsIgnoreCase("groupPost") ? View.GONE : View.VISIBLE);
@@ -511,15 +525,6 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
                 showNoNetworkMsg();
             }
         }
-
-//        if(type.equalsIgnoreCase("teamPostComment"))
-//        {
-//            linComments.setVisibility(View.VISIBLE);
-//
-//            if(isConnectionAvailable()){manager.readMore_TeamPostComment(ReadMoreActivity.this,mGroupId,mTeamId,postId);}
-//            else { showNoNetworkMsg();}
-//
-//        }
 
 
     }
@@ -702,7 +707,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     public void onClick(DialogInterface dialog, int which) {
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+            //    progressBar.setVisibility(View.VISIBLE);
             if (type.equals("team")) {
                 manager.deleteTeamPost(ReadMoreActivity.this, mGroupId + "", mTeamId + "", item.id);
             } else {
@@ -718,7 +724,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     public void onSuccess(int apiId, BaseResponse response) {
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_ID_FAV:
                 if (response.status.equalsIgnoreCase("favourite")) {
@@ -768,7 +775,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
                 break;
 
             case LeafManager.API_ID_DELETE_POST:
-                Toast.makeText(getApplicationContext(), "Post Deleted Succesfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 if (type.equalsIgnoreCase("group"))
                     LeafPreference.getInstance(ReadMoreActivity.this).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, true);
                 else if (type.equalsIgnoreCase("team"))
@@ -779,7 +786,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
 
             case LeafManager.API_REPORT_LIST:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                 //   progressBar.setVisibility(View.GONE);
                 if (dialogProgressBar != null)
                     dialogProgressBar.setVisibility(View.GONE);
                 ReportResponse response1 = (ReportResponse) response;
@@ -800,13 +808,15 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
 
             case LeafManager.API_REPORT:
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
-                Toast.makeText(this, "Post Reported Successfully", Toast.LENGTH_SHORT).show();
+                    hideLoadingBar();
+                  //  progressBar.setVisibility(View.GONE);
+                Toast.makeText(this, getResources().getString(R.string.toast_post_reported_sucessfully), Toast.LENGTH_SHORT).show();
                 break;
 
             case LeafManager.API_READ_MORE_GROUP_POST: {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //  progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "API_READ_MORE_GROUP_POST: " + response.toString());
 
@@ -822,7 +832,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
             case LeafManager.API_READ_MORE_TEAM_POST: {
 
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //  progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "API_READ_MORE_TEAM_POST: " + response.toString());
 
@@ -838,7 +849,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
             case LeafManager.API_READ_MORE_INDIVIDUAL: {
 
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //  progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "API_READ_MORE_TEAM_POST_COMMENT: " + response.toString());
 
@@ -853,7 +865,8 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
             case LeafManager.API_READ_MORE_GALLERY: {
 
                 if (progressBar != null)
-                    progressBar.setVisibility(View.GONE);
+                    hideLoadingBar();
+                //  progressBar.setVisibility(View.GONE);
 
                 AppLog.e(TAG, "API_READ_MORE_TEAM_POST: " + response.toString());
 
@@ -890,6 +903,12 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         item.id = data.getId();
 
         txtName.setText(data.getCreatedBy());
+
+        imgLead_default.setVisibility(View.VISIBLE);
+        TextDrawable drawable = TextDrawable.builder()
+                .buildRound(ImageUtil.getTextLetter(data.getCreatedBy()), ImageUtil.getRandomColor(1));
+        imgLead_default.setImageDrawable(drawable);
+
         txtDate.setText(MixOperations.getFormattedDate(data.getUpdatedAt(), Constants.DATE_FORMAT));
         txtLike.setText(Constants.coolFormat(data.getLikes(), 0));
         txt_comments.setText(Constants.coolFormat(data.getComments(), 0) + "");
@@ -973,7 +992,9 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
         //hideLoadingDialog();
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
+
         AppLog.e("OnFailure", "OnFailure Called");
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -987,13 +1008,14 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     @Override
     public void onFailure(int apiId, String msg) {
         //hideLoadingDialog();
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         if (msg.contains("401:Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(this, "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } else {
@@ -1009,9 +1031,9 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         liked = false;
     }
 
-    @Override
     public void onFavClick(PostItem item, int pos) {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+     //   progressBar.setVisibility(View.VISIBLE);
         int fav = 0;
         if (item.isFavourited) {
             fav = 0;
@@ -1059,13 +1081,13 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     }
 
 
-    @Override
     public void onLikeClick(PostItem item, int pos) {
 
 
         if (!liked) {
             liked = true;
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //   progressBar.setVisibility(View.VISIBLE);
             if (type.equals("group") || type.equals("favourite"))
                 manager.setLikes(this, mGroupId + "", item.id);
             else if (type.equals("team") || type.equalsIgnoreCase("teamPost") || type.equalsIgnoreCase("teamPostComment"))
@@ -1084,7 +1106,6 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         }
     }
 
-    @Override
     public void onPostClick(PostItem item) {
         AppLog.e(TAG, "onPostClick() :" + item);
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
@@ -1096,6 +1117,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.title);
             startActivity(i);
 
@@ -1106,37 +1128,33 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         }
     }
 
-    @Override
     public void onReadMoreClick(PostItem item) {
 
     }
 
-    @Override
+
     public void onEditClick(PostItem item) {
 
     }
 
-    @Override
+
     public void onDeleteClick(PostItem item) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
-    @Override
+
     public void onReportClick(PostItem item) {
         showReportDialog();
     }
 
-    @Override
     public void onShareClick(PostItem item) {
 
     }
 
-    @Override
     public void onQueClick(PostItem item) {
 
     }
 
-    @Override
     public void onPushClick(PostItem item) {
         GroupDashboardActivityNew.is_share_edit = true;
         GroupDashboardActivityNew.share_type = type;
@@ -1168,12 +1186,11 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         startActivity(intent);
     }
 
-    @Override
+
     public void onNameClick(PostItem item) {
 
     }
 
-    @Override
     public void onLikeListClick(PostItem item) {
         if (type.equals("group")) {
             if (isConnectionAvailable()) {
@@ -1199,7 +1216,7 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
         }
     }
 
-    @Override
+
     public void onMoreOptionClick(PostItem item) {
 
     }
@@ -1242,14 +1259,16 @@ public class ReadMoreActivity extends BaseActivity implements LeafManager.OnComm
     private void getReportData() {
         LeafManager mManager = new LeafManager();
         //showLoadingDialog();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //   progressBar.setVisibility(View.VISIBLE);
         mManager.getReportList(this);
     }
 
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
         //showLoadingDialog();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //   progressBar.setVisibility(View.VISIBLE);
         mManager.reportPost(this, mGroupId + "", item.id, report_id);
     }
 

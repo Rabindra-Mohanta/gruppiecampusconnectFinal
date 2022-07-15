@@ -157,18 +157,18 @@ public class GroupListFragment extends BaseFragment implements GroupAdapter.OnGr
         }
 
 
-        mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (isConnectionAvailable()) {
-                    getData();
-                    mBinding.swipeRefreshLayout.setRefreshing(false);
-                } else {
-                    showNoNetworkMsg();
-                    mBinding.swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
+//        mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (isConnectionAvailable()) {
+//                    getData();
+//                    mBinding.swipeRefreshLayout.setRefreshing(false);
+//                } else {
+//                    showNoNetworkMsg();
+//                    mBinding.swipeRefreshLayout.setRefreshing(false);
+//                }
+//            }
+//        });
 
         DatabaseHandler databaseHandler = new DatabaseHandler(getActivity());
 //        if (!LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISTEAMPOSTUPDATED)) {

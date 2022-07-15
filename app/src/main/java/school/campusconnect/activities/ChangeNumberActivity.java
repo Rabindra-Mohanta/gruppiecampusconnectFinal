@@ -124,9 +124,10 @@ public class ChangeNumberActivity extends BaseActivity implements LeafManager.On
     public void onSuccess(int apiId, BaseResponse response) {
         // hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         edtNewNumber.editText.setText("");
-        Toast.makeText(this, "Number changed successffully , Please Login Again With New Number", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_number_change_successfully), Toast.LENGTH_LONG).show();
         logout();
     }
 
@@ -146,7 +147,8 @@ public class ChangeNumberActivity extends BaseActivity implements LeafManager.On
     public void onFailure(int apiId, ErrorResponseModel<NumberValidationError> error) {
         //   hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
 
         AppLog.e("ChangeNumberActivity", "onFailure  ,, msg : " + error);
         if (error.status.equals("401")) {
@@ -170,7 +172,8 @@ public class ChangeNumberActivity extends BaseActivity implements LeafManager.On
     public void onException(int apiId, String msg) {
         //hideLoadingDialog();
         if(progressBar!=null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 
@@ -184,7 +187,8 @@ public class ChangeNumberActivity extends BaseActivity implements LeafManager.On
                     if (isValid()) {
                         //  showLoadingDialog();
                         if(progressBar!=null)
-                            progressBar.setVisibility(View.VISIBLE);
+                            showLoadingBar(progressBar,false);
+                      //      progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
                         ChangeNumberRequest request = new ChangeNumberRequest();
                         request.phone = edtNewNumber.editText.getText().toString();

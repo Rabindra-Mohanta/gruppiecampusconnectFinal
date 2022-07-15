@@ -53,7 +53,16 @@ public class ClassActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_add_class:
-                startActivity(new Intent(this,AddClassActivity.class));
+
+               // startActivity(new Intent(this,AddClassActivity.class));
+                startActivity(new Intent(this,AddClassV2Activity.class));
+                return true;
+
+
+            case R.id.menu_add_combined_class:
+
+                // startActivity(new Intent(this,AddClassActivity.class));
+                startActivity(new Intent(this,CreateTeamActivity.class).putExtra("combined Class","combined Class Data"));
                 return true;
              default:
                  return super.onOptionsItemSelected(item);

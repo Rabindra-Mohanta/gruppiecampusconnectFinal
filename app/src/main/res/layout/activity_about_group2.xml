@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
-                    android:text="Name"
+                    android:text="@string/lbl_name_"
                     android:textColor="@color/colorPrimary" />
 
                 <TextView
@@ -82,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="Profile"
+                    android:text="@string/lbl_profile"
                     android:textAppearance="@style/TextAppearance.Regular"
                     android:textColor="@color/background_color"
                     android:textSize="@dimen/text_size_16sp" />
@@ -112,6 +112,7 @@
                 android:layout_marginLeft="@dimen/padding_8dp"
                 android:layout_marginRight="@dimen/padding_8dp"
                 app:cardElevation="4dp"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/padding_15dp">
 
                 <LinearLayout
@@ -133,7 +134,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="Posts"
+                            android:text="@string/lbl_posts"
                             android:textColor="@color/colorPrimary"
                             style="@style/LabelHeader1" />
 
@@ -162,7 +163,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:text="Comments"
+                            android:text="@string/lbl_comments"
                             android:textColor="@color/colorPrimary"
                             style="@style/LabelHeader1" />
 
@@ -182,8 +183,6 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -209,7 +208,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             style="@style/LabelHeader1"
-                            android:text="Description"
+                            android:text="@string/lbl_description"
                             android:textColor="@color/colorPrimary" />
 
                         <TextView

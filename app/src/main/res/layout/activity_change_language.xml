@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:context=".activities.ChangeLanguageActivity">
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar">
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_marginTop="@dimen/padding_10dp"
+                android:layout_width="@dimen/padding_40dp"
+                android:layout_height="@dimen/padding_30dp"
+                android:scaleType="fitCenter"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back_white"
+                />
+
+            <Button
+                android:id="@+id/btnNext"
+                android:layout_width="@dimen/login_button_width"
+                android:text="@string/next"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/padding_20dp"
+                style="@style/LoginButton_Top"
+                android:textStyle="bold"
+                android:gravity="right|center_vertical"
+                android:layout_height="@dimen/login_button_height" />
+        </RelativeLayout>
+
+
+
+        <ImageView
+            android:layout_below="@id/toolbar"
+            android:id="@+id/img_login"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginTop="@dimen/padding_40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_icon"
+            android:visibility="visible" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/llChangeLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblChangeLanguage"
+                    android:textColor="@color/color_white"
+                    style="@style/LabelHeader2"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="@dimen/padding_20dp"
+                    android:textSize="@dimen/text_size_22sp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_select_language"
+                    />
+
+
+
+                <RadioGroup
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:id="@+id/rgLanguage"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        style="@style/LabelHeader2"
+                        android:text="@string/txt_english"
+                        android:textSize="20sp"
+                        android:textColor="@color/color_white"
+                        android:buttonTint="@color/color_white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rbEnglish"/>
+
+                    <RadioButton
+                        style="@style/LabelHeader2"
+                        android:textColor="@color/color_white"
+                        android:buttonTint="@color/color_white"
+                        android:text="@string/txt_kannada"
+                        android:layout_marginTop="@dimen/padding_20dp"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rbKannada"/>
+                </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</layout>

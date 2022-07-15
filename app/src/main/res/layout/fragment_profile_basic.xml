@@ -23,7 +23,7 @@
             android:inputType="textCapSentences|textNoSuggestions"
             android:textAppearance="@style/TextAppearance.Light"
             app:leftDrawable="@drawable/ic_person"
-            app:textHint="Name" />
+            app:textHint="@string/name" />
 
 
         <school.campusconnect.views.DrawableEditText
@@ -34,7 +34,7 @@
             android:inputType="number"
             app:leftDrawable="@drawable/ic_phone"
             android:textAppearance="@style/TextAppearance.Light"
-            app:textHint="Phone number" />
+            app:textHint="@string/lbl_phone2" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/gender"
@@ -43,7 +43,7 @@
             android:layout_marginBottom="@dimen/padding_20dp"
             app:leftDrawable="@drawable/ic_gender"
             android:textAppearance="@style/TextAppearance.Light"
-            app:textHint="Gender" />
+            app:textHint="@string/lbl_gender" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/dob"
@@ -62,7 +62,7 @@
             android:inputType="textNoSuggestions"
             app:leftDrawable="@drawable/ic_email"
             android:textAppearance="@style/TextAppearance.Light"
-            app:textHint="Email ID" />
+            app:textHint="@string/lbl_email_id" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/occupation"
@@ -72,7 +72,7 @@
             android:inputType="textCapSentences|textNoSuggestions"
             android:textAppearance="@style/TextAppearance.Light"
             app:leftDrawable="@drawable/ic_occupation"
-            app:textHint="Occupation" />
+            app:textHint="@string/lbl_ocupation" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/qualification"
@@ -82,7 +82,18 @@
             android:inputType="textCapSentences|textNoSuggestions"
             android:textAppearance="@style/TextAppearance.Light"
             app:leftDrawable="@drawable/ic_qualification"
-            app:textHint="Qualification" />
+            app:textHint="@string/lbl_qualification" />
+
+        <school.campusconnect.views.DrawableEditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_20dp"
+            android:inputType="textNoSuggestions"
+            android:visibility="visible"
+            app:leftDrawable="@drawable/ic_contacts"
+            android:textAppearance="@style/TextAppearance.Light"
+            app:textHint="@string/hint_lead_address" />
 
         <school.campusconnect.views.DrawableEditText
             android:id="@+id/roll"

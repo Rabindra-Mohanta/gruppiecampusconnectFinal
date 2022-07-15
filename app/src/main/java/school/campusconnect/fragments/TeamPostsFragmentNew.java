@@ -1,21 +1,49 @@
 package school.campusconnect.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
+
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import school.campusconnect.BuildConfig;
+import school.campusconnect.activities.AboutBoothActivity;
+import school.campusconnect.activities.AddBoothActivity;
+import school.campusconnect.activities.AddBoothStudentActivity;
 import school.campusconnect.activities.AddTeamStaffActivity;
 import school.campusconnect.activities.AddTeamStudentActivity;
 import school.campusconnect.activities.AddTimeTablePostActivity;
 import school.campusconnect.activities.AttendanceActivity;
 import school.campusconnect.activities.AttendancePareSchool;
 import school.campusconnect.activities.AttendanceReportActivity;
+import school.campusconnect.activities.CommitteeActivity;
 import school.campusconnect.activities.CreateTeamActivity;
 import school.campusconnect.activities.GpsActivity;
 import school.campusconnect.activities.LeaveActivity;
@@ -23,28 +51,46 @@ import school.campusconnect.activities.LikesListActivity;
 import school.campusconnect.activities.TeamSettingsActivity;
 import school.campusconnect.activities.TeamUsersActivity;
 import school.campusconnect.adapters.ReportAdapter;
+import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
+import school.campusconnect.datamodel.booths.BoothResponse;
+import school.campusconnect.datamodel.booths.BoothsTBL;
+import school.campusconnect.datamodel.event.HomeTeamDataTBL;
+import school.campusconnect.datamodel.event.TeamPostEventModelRes;
 import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamData;
 import school.campusconnect.datamodel.teamdiscussion.MyTeamsResponse;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
+import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneHelper;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneRemove;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
-import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +119,11 @@ import school.campusconnect.datamodel.teamdiscussion.TeamPostGetResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
+
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 /**
  * Created by frenzin04 on 3/29/2017.
@@ -84,13 +134,21 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     private static final String TAG = "TeamPostsFragmentNew";
     private LayoutListTeamsBinding mBinding;
-    private TeamListAdapter mAdapter2;
+
+    TeamListAdapter mAdapter2;
     LeafManager manager = new LeafManager();
     String mGroupId = "";
     int position = -1;
+    ArrayList<Integer> birthdayPostCreationQueue ; /// QUEUE TO MAINTAIN BIRTHDAY POST TASKS... SO IT DOESNT REPEAT.
+
+    private int REQUEST_CODE_UPDATE_TEAM = 9;
     public boolean mIsLoading = false;
     public int totalPages2 = 1;
     public int currentPage2 = 1;
+    public int totalPagesBooth = 1;
+    public int totalPagesMember = 1;
+    public int totalPagesTeam = 1;
+
     public static String team_id;// = 1;
     int count;// = 1;
     public TeamPostGetData currentItem;
@@ -108,7 +166,12 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     private ReportAdapter mAdapter3;
     private boolean liked;
     private boolean isFromMain;
+    private String isBoothClick;
+    private String isMemberClick;
+    LeafPreference leafPreference;
+    private String type;
 
+    private Menu menu;
     public TeamPostsFragmentNew() {
 
     }
@@ -117,46 +180,55 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        AppLog.e(TAG, "TeamPostsFragmentNew");
+        leafPreference = LeafPreference.getInstance(TeamPostsFragmentNew.this.getActivity());
     }
+
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+
         super.onPrepareOptionsMenu(menu);
        /* if(teamType.equals(Constants.TEAM_TYPE_CREATED) && teamData.isTeamAdmin)
         {
             menu.findItem(R.id.menu_edit_team).setVisible(true);
         }
 */
-
+        this.menu = menu;
         menu.findItem(R.id.action_notification_list).setVisible(false);
 
-        if (isFromMain) {
-            menu.findItem(R.id.menu_more).setVisible(true);
-
+        if (isFromMain)
+        {
 
             if (teamData.isTeamAdmin || teamData.allowTeamPostAll) {
                 menu.findItem(R.id.menu_add_post).setVisible(true);
             }
+
+
+            menu.findItem(R.id.menu_more).setVisible(true);
+
+
             if (teamData.isTeamAdmin) {
                 //menu.findItem(R.id.action_settings).setVisible(true);
                 menu.findItem(R.id.menu_edit_team).setVisible(true);
-                menu.findItem(R.id.menu_change_admin).setVisible(true);
+                //menu.findItem(R.id.menu_change_admin).setVisible(true);
                 menu.findItem(R.id.menu_archive_team).setVisible(true);
-                if (GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL))
+                if (GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_SCHOOL) || GroupDashboardActivityNew.groupCategory.equals(Constants.CATEGORY_CONSTITUENCY))
                     menu.findItem(R.id.menu_add_time_table).setVisible(true);
-            }else {
-                if(teamData.isClass && !teamData.allowTeamPostAll){
+            } else {
+               /* if (teamData.isClass && !teamData.allowTeamPostAll) {
                     menu.findItem(R.id.menu_leave_team).setVisible(false);
-                }else {
+                } else {
                     menu.findItem(R.id.menu_leave_team).setVisible(true);
-                }
+                }*/
+                menu.findItem(R.id.menu_archive_team).setVisible(false);
             }
 
 
-
-            if (teamData.canAddUser || teamData.isTeamAdmin){
+            if (teamData.canAddUser || teamData.isTeamAdmin) {
                 menu.findItem(R.id.menu_add_friend).setVisible(true);
-            }else {
+            } else {
                 menu.findItem(R.id.menu_add_friend).setVisible(false);
             }
 
@@ -167,7 +239,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 menu.findItem(R.id.menu_leave_request).setVisible(false);
             }
 
-            if(!teamData.isTeamAdmin && teamData.isClass && !teamData.allowTeamPostAll && !teamData.leaveRequest){
+            if (!teamData.isTeamAdmin && teamData.isClass && /*!teamData.allowTeamPostAll &&*/ !teamData.leaveRequest) {
                 menu.findItem(R.id.menu_more).setVisible(false);
             }
            /* if (teamData.isTeamAdmin && teamData.enableAttendance) {
@@ -175,7 +247,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             }*/
 
 
-        } else {
+        }
+        else
+        {
+
             if (teamData.allowedToAddTeamPost) {
                 menu.findItem(R.id.menu_add_post).setVisible(true);
             }
@@ -184,6 +259,77 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         menu.findItem(R.id.menu_add_time_table).setVisible(false);
 
 
+        if (true)
+        {
+            if (type.equalsIgnoreCase("team"))
+            {
+                Log.e(TAG,"type"+type);
+                if (HomeTeamDataTBL.getAll().size()>0)
+                {
+                    List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getAll();
+
+                    for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                    {
+                        if (teamData.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                        {
+                            if (homeTeamDataTBLList.get(i).canPost)
+                            {
+                                menu.findItem(R.id.menu_add_post).setVisible(true);
+                            }
+                            else
+                            {
+                                menu.findItem(R.id.menu_add_post).setVisible(false);
+                            }
+                        }
+                    }
+
+
+                }
+
+                Log.e(TAG,"teamData "+new Gson().toJson(teamData));
+
+                if (!teamData.isTeamAdmin)
+                {
+                    menu.findItem(R.id.menu_more).setVisible(false);
+                }
+            }
+            else if (type.equalsIgnoreCase("member"))
+            {
+                if (!teamData.isTeamAdmin)
+                {
+                    menu.findItem(R.id.menu_more).setVisible(false);
+                }
+            }
+
+            if (type.equalsIgnoreCase("team"))
+            {
+                if (teamData.isTeamAdmin)
+                {
+                    menu.findItem(R.id.menu_archive_team).setVisible(true);
+                }
+                else
+                {
+                    menu.findItem(R.id.menu_archive_team).setVisible(false);
+                }
+            }
+            else
+            {
+                menu.findItem(R.id.menu_archive_team).setVisible(false);
+            }
+
+            if (type.equalsIgnoreCase("booth"))
+            {
+                menu.findItem(R.id.menu_add_friend).setVisible(false);
+                menu.findItem(R.id.menu_about_booth).setVisible(true);
+            }
+
+            if (teamData.category.equalsIgnoreCase("booth"))
+            {
+                menu.findItem(R.id.menu_add_friend).setVisible(false);
+                menu.findItem(R.id.menu_about_booth).setVisible(true);
+            }
+
+        }
 
     }
 
@@ -191,6 +337,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+
             case R.id.menu_add_post:
                 if (getActivity() != null) {
                     Intent intent = new Intent(getActivity(), AddPostActivity.class);
@@ -204,37 +351,64 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             case R.id.menu_zoom:
                 startMeeting();
                 break;
+
+
+            case R.id.menu_about_booth:
+                Intent i = new Intent(getActivity(), AboutBoothActivity.class);
+                i.putExtra("class_data",new Gson().toJson(teamData));
+                startActivity(i);
+                break;
+
             case R.id.menu_add_friend:
-                final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                CharSequence items[] = new CharSequence[] {"Add Staff", "Add Students"};
-                adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface d, int n) {
-                        AppLog.e(TAG,"ss : "+n);
-                        d.dismiss();
-                        if(n==0){
-                            Intent intent = new Intent(getActivity(), AddTeamStaffActivity.class);
-                            intent.putExtra("id", mGroupId);
-                            intent.putExtra("invite", true);
-                            intent.putExtra("from_team", true);
-                            intent.putExtra("team_id", team_id);
-                            startActivity(intent);
-                        }else {
-                            Intent intent = new Intent(getActivity(), AddTeamStudentActivity.class);
-                            intent.putExtra("id", mGroupId);
-                            intent.putExtra("invite", true);
-                            intent.putExtra("from_team", true);
-                            intent.putExtra("team_id", team_id);
-                            startActivity(intent);
-                        }
+                if ( teamData.subCategory!= null && teamData.subCategory.equalsIgnoreCase("boothPresidents"))
+                {
+                    show_Dialog(R.array.booth);
+                }
+                else
+                {
+                    if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category))
+                    {
+                        Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
+                        intent.putExtra("group_id", mGroupId);
+                        intent.putExtra("team_id", team_id);
+                        intent.putExtra("category", teamData.category);
+                        startActivity(intent);
                     }
+                    else {
+                        final AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                        CharSequence items[] = new CharSequence[]{"Add Staff", "Add Students"};
+                        adb.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 
-                });
-                adb.setNegativeButton("Cancel", null);
-                AlertDialog dialog = adb.create();
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
+                            @Override
+                            public void onClick(DialogInterface d, int n) {
+                                AppLog.e(TAG, "ss : " + n);
+                                d.dismiss();
+                                if (n == 0) {
+                                    Intent intent = new Intent(getActivity(), AddTeamStaffActivity.class);
+                                    intent.putExtra("id", mGroupId);
+                                    intent.putExtra("invite", true);
+                                    intent.putExtra("from_team", true);
+                                    intent.putExtra("team_id", team_id);
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent(getActivity(), AddTeamStudentActivity.class);
+                                    intent.putExtra("id", mGroupId);
+                                    intent.putExtra("invite", true);
+                                    intent.putExtra("from_team", true);
+                                    intent.putExtra("team_id", team_id);
+                                    startActivity(intent);
+                                }
+                            }
+
+                        });
+                        adb.setNegativeButton("Cancel", null);
+                        AlertDialog dialog = adb.create();
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.show();
+                    }
+                }
+
                 break;
             case R.id.action_settings:
                 Intent intent1 = new Intent(getActivity(), TeamSettingsActivity.class);
@@ -254,24 +428,24 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 Intent addTeamIntent = new Intent(getActivity(), CreateTeamActivity.class);
                 addTeamIntent.putExtra("is_edit", true);
                 addTeamIntent.putExtra("team_data", new Gson().toJson(teamData));
-                startActivity(addTeamIntent);
+                startActivityForResult(addTeamIntent,REQUEST_CODE_UPDATE_TEAM);
                 break;
             case R.id.menu_leave_team:
-                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to leave?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_leave_team), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showLoadingBar(mBinding.progressBar2);
+                        showLoadingBar(mBinding.progressBar2,true);
                         LeafManager manager = new LeafManager();
                         manager.leaveTeam(TeamPostsFragmentNew.this, mGroupId, team_id);
                     }
                 });
                 break;
             case R.id.menu_archive_team:
-                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are you sure you want to archive " + teamName + "?", new DialogInterface.OnClickListener() {
+                SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.smb_archive) + teamName + getResources().getString(R.string.smb_), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        showLoadingBar(mBinding.progressBar2);
+                        showLoadingBar(mBinding.progressBar2,true);
                         LeafManager manager = new LeafManager();
                         manager.archiveTeam(TeamPostsFragmentNew.this, mGroupId, team_id);
                     }
@@ -303,11 +477,38 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         return super.onOptionsItemSelected(item);
     }
 
-    public static TeamPostsFragmentNew newInstance(MyTeamData myTeamData, boolean isFromMain) {
+    public void show_Dialog(int resId) {
+        SMBDialogUtils.showSMBSingleChoiceDialog(getActivity() ,resId, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListView lw = ((AlertDialog) dialog).getListView();
+
+                switch (lw.getCheckedItemPosition()) {
+
+                    case 0:
+                        startActivity(new Intent(getContext(), AddBoothActivity.class));
+                        break;
+                    case 1:
+
+                        Intent intent = new Intent(getContext(), AddBoothStudentActivity.class);
+                        intent.putExtra("group_id", mGroupId);
+                        intent.putExtra("team_id", team_id);
+                        intent.putExtra("category", teamData.category);
+                        startActivity(intent);
+                        break;
+
+                }
+            }
+        });
+    }
+
+    public static TeamPostsFragmentNew newInstance(MyTeamData myTeamData, boolean isFromMain,String boothClick,String memberClick) {
         TeamPostsFragmentNew fragment = new TeamPostsFragmentNew();
         Bundle b = new Bundle();
         b.putString("team_data", new Gson().toJson(myTeamData));
         b.putBoolean("isFromMain", isFromMain);
+        b.putString("boothClick", boothClick);
+        b.putString("memberClick", memberClick);
         AppLog.e(TAG, "newInstance: myTeamData is " + myTeamData);
         fragment.setArguments(b);
         return fragment;
@@ -323,7 +524,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_teams, container, false);
 
         mBinding.setSize(1);
-        mBinding.setMessage(R.string.msg_no_post);
+        mBinding.setMessage(R.string.msg_no_data_found);
 
         ActiveAndroid.initialize(getActivity());
 
@@ -347,13 +548,14 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         mBinding.fabAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if("preschool".equalsIgnoreCase(teamData.category)){
+                if ("preschool".equalsIgnoreCase(teamData.category)) {
                     Intent intent = new Intent(getActivity(), AttendancePareSchool.class);
                     intent.putExtra("isTeamAdmin", teamData.isTeamAdmin);
                     intent.putExtra("team_id", teamData.teamId);
                     intent.putExtra("group_id", teamData.groupId);
                     startActivity(intent);
-                }else {
+                }
+                else {
                     Intent intent = new Intent(getActivity(), AttendanceActivity.class);
                     intent.putExtra("isTeamAdmin", teamData.isTeamAdmin);
                     intent.putExtra("team_id", teamData.teamId);
@@ -376,8 +578,30 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         return mBinding.getRoot();
     }
 
-    private void startMeeting()
-    {
+    private void callApi(boolean isInBackground) {
+        if (isConnectionAvailable()) {
+            getData2(team_id, isInBackground);
+            AppLog.e("TeamPostFrag", "DataFromAPI");
+        } else {
+            mBinding.setSize(0);
+            hideLoadingBar();
+
+            // mBinding.progressBar2.setVisibility(View.GONE);
+        }
+    }
+
+    private void firebaseListen(String lastIdFromDB, boolean apiEvent) {
+        AppLog.e(TAG, "firebaseListen called : " + lastIdFromDB);
+        //NOFIREBASEDATABASE
+        if (TextUtils.isEmpty(lastIdFromDB) || leafPreference.getInt(team_id + "_post") > 0
+                || leafPreference.getBoolean(team_id + "_post_delete") || apiEvent) {
+            leafPreference.setBoolean(team_id + "_post_delete", false);
+            callApi(true);
+        }
+
+    }
+
+    private void startMeeting() {
         /*ZoomSDK.getInstance().getMeetingSettingsHelper().setCustomizedMeetingUIEnabled(false);
 
         String number = "88529395648";
@@ -411,7 +635,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         if (!isFromMain)
             return;
 
-        if (teamData.teamType.equalsIgnoreCase(Constants.TEAM_TYPE_CREATED) && teamData.enableGps) {
+        //   if (teamData.teamType.equalsIgnoreCase(Constants.TEAM_TYPE_CREATED) && teamData.enableGps) // remove this 9-3-22 (client change)
+
+        if (teamData.enableGps)
+        {
             mBinding.fabTrack.setVisibility(View.VISIBLE);
         } else {
             mBinding.fabTrack.setVisibility(View.GONE);
@@ -424,15 +651,163 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }*/
     }
 
+    EventTBL eventTBL;
+
     private void getDataLocaly() {
-        final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "");
+
+        boolean apiEvent = false;
+
+        AppLog.e(TAG,"type"+type);
+
+        if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
+        {
+          /*  if (getArguments().getBoolean("isFromMain"))
+            {
+                if (type.equalsIgnoreCase("booth"))
+                {
+                    if (BoothPostEventTBL.getAll().size()>0)
+                    {
+                        List<BoothPostEventTBL> postEventTBLList= BoothPostEventTBL.getAll();
+
+                        List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type,currentPage2);
+
+                        if (dataItemList.size() > 0)
+                        {
+                            for (int i = 0;i<postEventTBLList.size();i++)
+                            {
+                                if (teamData.boothId.equalsIgnoreCase(postEventTBLList.get(i).boothId))
+                                {
+                                    if (MixOperations.isNewEventUpdate(postEventTBLList.get(i).lastBoothPostAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dataItemList.get(dataItemList.size()-1)._now))
+                                    {
+                                        PostTeamDataItem.deleteTeamPosts(team_id,type);
+                                        AppLog.e(TAG,"isNewEvent");
+                                        callApi(true);
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+                if (type.equalsIgnoreCase("member"))
+                {
+                    if (EventSubBoothTBL.getAll().size()>0)
+                    {
+                        List<EventSubBoothTBL> eventSubBoothTBLS= EventSubBoothTBL.getAll();
+
+                        List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type,currentPage2);
+
+                        if (dataItemList.size() > 0)
+                        {
+                            for (int i = 0;i<eventSubBoothTBLS.size();i++)
+                            {
+                                if (team_id.equalsIgnoreCase(eventSubBoothTBLS.get(i).teamId))
+                                {
+                                    if (MixOperations.isNewEventUpdate(eventSubBoothTBLS.get(i).lastTeamPostAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dataItemList.get(dataItemList.size()-1)._now))
+                                    {
+                                        PostTeamDataItem.deleteTeamPosts(team_id,type);
+                                        AppLog.e(TAG,"isNewEvent");
+                                        callApi(true);
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+                if (type.equalsIgnoreCase("team"))
+                {
+                    if (HomeTeamDataTBL.getAll().size()>0)
+                    {
+                        List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getAll();
+
+                        List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type,currentPage2);
+
+                        if (dataItemList.size() > 0)
+                        {
+                            for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                            {
+                                if (teamData.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                                {
+                                    if (MixOperations.isNewEventUpdate(homeTeamDataTBLList.get(i).lastTeamPostAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dataItemList.get(dataItemList.size()-1)._now))
+                                    {
+                                        PostTeamDataItem.deleteTeamPosts(team_id,type);
+                                        AppLog.e(TAG,"isNewEvent");
+                                        callApi(true);
+                                        break;
+                                    }
+
+                                }
+                            }
+                        }
+
+
+                    }
+                }
+
+
+            }*/
+
+            if (HomeTeamDataTBL.getAll().size()>0)
+            {
+                List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getAll();
+
+                List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type,currentPage2);
+
+                if (dataItemList.size() > 0)
+                {
+                    for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                    {
+                        if (teamData.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                        {
+                            if (MixOperations.isNewEventUpdate(homeTeamDataTBLList.get(i).lastTeamPostAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dataItemList.get(dataItemList.size()-1)._now))
+                            {
+                                PostTeamDataItem.deleteTeamPosts(team_id,type);
+                                AppLog.e(TAG,"isNewEvent");
+                                callApi(true);
+                                break;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            eventTBL = EventTBL.getTeamEvent(mGroupId, team_id);
+
+            if (eventTBL != null) {
+                if (eventTBL._now == 0) {
+                    apiEvent = true;
+                }
+                if (MixOperations.isNewEvent(eventTBL.eventAt, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", eventTBL._now)) {
+                    apiEvent = true;
+                }
+
+            }
+
+        }
+
+        final List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type,currentPage2);
         AppLog.e(TAG, "local list size is " + dataItemList.size());
-        showLoadingBar(mBinding.progressBar2);
+        String lastId = null;
+        showLoadingBar(mBinding.progressBar2,true);
         if (dataItemList.size() != 0) {
 
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 TeamPostGetData teamPostGetdata = new TeamPostGetData();
+
+                if (i == 0) {
+                    lastId = dataItemList.get(i).id;
+                }
 
                 teamPostGetdata.id = dataItemList.get(i).id;
                 teamPostGetdata.createdById = dataItemList.get(i).createdById;
@@ -442,6 +817,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 teamPostGetdata.title = dataItemList.get(i).title;
                 teamPostGetdata.fileType = dataItemList.get(i).fileType;
                 teamPostGetdata.fileName = new Gson().fromJson(dataItemList.get(i).fileName, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                teamPostGetdata.thumbnailImage = new Gson().fromJson(dataItemList.get(i).thumbnailImage, new TypeToken<ArrayList<String>>() {
                 }.getType());
                 teamPostGetdata.updatedAt = dataItemList.get(i).updatedAt;
                 teamPostGetdata.text = dataItemList.get(i).text;
@@ -455,28 +832,23 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 teamPostGetdata.canEdit = dataItemList.get(i).canEdit;
                 teamPostGetdata.phone = dataItemList.get(i).phone;
                 teamPostGetdata.thumbnail = dataItemList.get(i).thumbnail;
+                teamPostGetdata.isFavourited = dataItemList.get(i).isFavourited;
 
                 teamPostList.add(teamPostGetdata);
             }
             hideLoadingBar();
             AppLog.e(TAG, "DataFromLocal");
             mAdapter2.notifyDataSetChanged();
+            mBinding.setSize(mAdapter2.getItemCount());
 
-            if (isConnectionAvailable()) {
-                AppLog.e(TAG, "DataFromAPI BG");
-                getData2(team_id, true);
-            } else {
-                mBinding.setSize(mAdapter2.getItemCount());
 
-            }
+            firebaseListen(lastId, apiEvent);
+
+
         } else {
-            if (isConnectionAvailable()) {
-                getData2(team_id, false);
-                AppLog.e("TeamPostFrag", "DataFromAPI");
-            } else {
-                mBinding.setSize(0);
-                mBinding.progressBar2.setVisibility(View.GONE);
-            }
+
+
+            firebaseListen("", apiEvent);
         }
 
 
@@ -495,17 +867,17 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 //                AppLog.e("TeamFragment", "visibleItemCount,totalItemCount,firstVisibleItemPosition=" + visibleItemCount + "," + totalItemCount + "," + firstVisibleItemPosition);
 //                AppLog.e("TeamFragment", "mIsLoading,totalPages2,currentPage2=" + mIsLoading + "," + totalPages2 + "," + currentPage2);
                 if (!mIsLoading && totalPages2 > currentPage2) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0
-                    ) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
                         currentPage2 = currentPage2 + 1;
-                        getData2(team_id, false);
+                        getDataLocaly();
                     }
                 }
             }
         });
+        mBinding.swipeRefreshLayout2.setEnabled(false);
 
-        mBinding.swipeRefreshLayout2.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        //    mBinding.swipeRefreshLayout2.setEnabled(false);
+       /* mBinding.swipeRefreshLayout2.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -517,16 +889,58 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                     mBinding.swipeRefreshLayout2.setRefreshing(false);
                 }
             }
-        });
+        });*/
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mAdapter2.notifyDataSetChanged();
+
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateReceiver, new IntentFilter("UPDATE_TEAM"));
+        }
+        getContext().registerReceiver(updateReceiver,new IntentFilter("postadded"));
+    }
+
+    BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if("postadded".equalsIgnoreCase(intent.getAction())){
+                PostTeamDataItem.deleteTeamPosts(team_id,type);
+                AppLog.e(TAG," onPostExecute isNewEvent");
+                callApi(true);
+            }
+
+            if("UPDATE_TEAM".equalsIgnoreCase(intent.getAction())){
+                PostTeamDataItem.deleteTeamPosts(team_id,type);
+                AppLog.e(TAG," onPostExecute isNewEvent");
+                callApi(true);
+            }
+        }
+    };
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mAdapter2.RemoveAll();
+        //NOFIREBASEDATABASE
+     /*   if(query !=null)
+            query.removeEventListener(firebaseNewPostListener);*/
+
+    }
+
+    private void saveTotalPage(int totalPages2) {
+
+
+        if (totalPages2 != 0)
+        {
+            LeafPreference.getInstance(getContext()).setString(mGroupId+"_"+team_id+"_"+type,String.valueOf(totalPages2));
+        }
     }
 
     private void init() {
+
         DatabaseHandler databaseHandler = new DatabaseHandler(getActivity());
         count = databaseHandler.getCount();
 
@@ -535,10 +949,43 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
         teamData = new Gson().fromJson(getArguments().getString("team_data"), MyTeamData.class);
         isFromMain = getArguments().getBoolean("isFromMain", false);
+        isBoothClick = getArguments().getString("boothClick");
+        isMemberClick = getArguments().getString("memberClick");
+
+        if (isBoothClick != null && isBoothClick.equalsIgnoreCase("yes"))
+        {
+            type = "booth";
+        }
+        else if (isMemberClick != null && isMemberClick.equalsIgnoreCase("yes"))
+        {
+            type = "member";
+        }
+        else
+        {
+            type = "team";
+        }
+
+        AppLog.e(TAG, "isBoothClick : " + isBoothClick);
+        AppLog.e(TAG, "teamData : " + new Gson().fromJson(getArguments().getString("team_data"), MyTeamData.class));
+        AppLog.e(TAG, "type : " + type);
         AppLog.e(TAG, "isFromMain : " + isFromMain);
 
-        mGroupId = teamData.groupId;
-        team_id = teamData.teamId;
+        mGroupId = !TextUtils.isEmpty(teamData.groupId) ? teamData.groupId : GroupDashboardActivityNew.groupId;
+
+        if (type.equalsIgnoreCase("member"))
+        {
+            team_id = teamData.boothId;
+        }
+        else {
+            team_id = teamData.teamId;
+        }
+
+
+        if (!LeafPreference.getInstance(getContext()).getString(mGroupId+"_"+team_id+"_"+type).isEmpty())
+        {
+            totalPages2 = Integer.parseInt(LeafPreference.getInstance(getContext()).getString(mGroupId+"_"+team_id+"_"+type));
+        }
+
         teamName = teamData.name;
         teamType = teamData.teamType;
 
@@ -552,8 +999,21 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         mAdapter2 = new TeamListAdapter(teamPostList, this, "team", mGroupId, team_id, count, databaseHandler, teamData);
         mBinding.recyclerView2.setAdapter(mAdapter2);
 
+
+/*
+        CHANGES 2-6-22 (MEMBER COUNT PROBLEM)
+
+        if(!type.equalsIgnoreCase("team"))
+        {
+            callEventApiTeamPost();
+        }*/
+
+        callEventApiTeamPost();
+
+
         if (getActivity() instanceof GroupDashboardActivityNew) {
-            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setOnClickListener(new View.OnClickListener() {
+
+          /*  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
@@ -570,23 +1030,68 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         AppLog.e("floating", "error is " + e.toString());
                     }
                 }
-            });
+            });*/
+
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
-                        return;
 
-                    try {
-                        Intent intent = new Intent(getActivity(), LeadsListActivity.class);
-                        intent.putExtra("id", mGroupId);
-                        intent.putExtra("team_id", team_id);
-                        intent.putExtra("team_name", teamName);
-                        intent.putExtra("isAdmin", teamData.isTeamAdmin);
+                    int members = 0;
+
+                    if (HomeTeamDataTBL.getTeamPost(team_id).size()>0)
+                    {
+                        List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getTeamPost(team_id);
+
+                        for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                        {
+                            if (team_id.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                            {
+                                members = homeTeamDataTBLList.get(i).members;
+                            }
+                        }
+
+                    }
+
+                    if (isBoothClick != null && isBoothClick.equalsIgnoreCase("yes"))
+                    {
+                        Intent intent = new Intent(getContext(), CommitteeActivity.class);
+                        intent.putExtra("class_data",new Gson().toJson(teamData));
+                        intent.putExtra("title",teamData.name);
+                        intent.putExtra("team_count", members);
+                        intent.putExtra("isBoothClick","yes");
                         startActivity(intent);
-                        AppLog.e("Team id : ", team_id + "");
-                    } catch (Exception e) {
-                        AppLog.e("floating", "error is " + e.toString());
+                    }
+                    else
+                    {
+                        if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
+                            return;
+
+                        if (teamData.category.equalsIgnoreCase("booth"))
+                        {
+                            Intent intent = new Intent(getContext(), CommitteeActivity.class);
+                            intent.putExtra("class_data",new Gson().toJson(teamData));
+                            intent.putExtra("title",teamData.name);
+                            intent.putExtra("team_count", members);
+                            intent.putExtra("isBoothClick","yes");
+                            startActivity(intent);
+                        }
+                        else {
+                            try {
+                                Intent intent = new Intent(getContext(), LeadsListActivity.class);
+                                intent.putExtra("id", mGroupId);
+                                intent.putExtra("apiCall", true);
+                                intent.putExtra("team_id", team_id);
+                                intent.putExtra("class_data",new Gson().toJson(teamData));
+                                intent.putExtra("team_name", teamName);
+                                intent.putExtra("team_count", members);
+                                intent.putExtra("isAdmin", teamData.isTeamAdmin);
+                                startActivity(intent);
+                                AppLog.e("Team id : ", team_id + "");
+                            }
+                            catch (Exception e) {
+                                AppLog.e("floating", "error is " + e.toString());
+                            }
+                        }
                     }
                 }
             });
@@ -614,7 +1119,45 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             });
         }*/
 
+    }
 
+    public void callEventApiTeamPost() {
+        // new EventAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        LeafManager leafManager = new LeafManager();
+        leafManager.getTeamPostEvent(new LeafManager.OnCommunicationListener() {
+            @Override
+            public void onSuccess(int apiId, BaseResponse response) {
+
+                AppLog.e(TAG, "onSuccess : " + response);
+
+                TeamPostEventModelRes res = (TeamPostEventModelRes) response;
+
+                if(getActivity() != null)
+
+                {
+                    if (getActivity().getClass().getSimpleName().equalsIgnoreCase("GroupDashboardActivityNew"))
+                    {
+                        ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(res.getData().get(0).getMembers()));
+                    }
+                }
+                new EventAsync(res).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onFailure(int apiId, String msg) {
+                AppLog.e(TAG, "onFailure : " + msg);
+
+
+            }
+
+            @Override
+            public void onException(int apiId, String msg) {
+                AppLog.e(TAG, "onException : " + msg);
+
+
+            }
+        }, GroupDashboardActivityNew.groupId,team_id);
     }
 
 
@@ -632,7 +1175,15 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         }
 
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISTEAMUPDATED)) {
-            manager.myTeamList(this, GroupDashboardActivityNew.groupId);
+
+            if (GroupDashboardActivityNew.mGroupItem.canPost)
+            {
+                if ("subBooth".equalsIgnoreCase(teamData.category) || "booth".equalsIgnoreCase(teamData.category) || "constituency".equalsIgnoreCase(teamData.category)) {
+                    manager.getBooths(this, GroupDashboardActivityNew.groupId,"");
+                } else {
+                    manager.myTeamList(this, GroupDashboardActivityNew.groupId);
+                }
+            }
             //((GroupDashboardActivityNew)getActivity()).HomeClick();
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED, false);
         }
@@ -649,10 +1200,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 TeamPostGetResponse res2 = (TeamPostGetResponse) response;
 
                 totalPages2 = res2.totalNumberOfPages;
+
+                saveTotalPage(totalPages2);
+
                 mIsLoading = false;
 
                 if (currentPage2 == 1) {
-                    PostTeamDataItem.deleteTeamPosts(team_id);
+                    PostTeamDataItem.deleteTeamPosts(team_id,type);
                     teamPostList.clear();
                 }
                 teamPostList.addAll(res2.getResults());
@@ -661,9 +1215,26 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
                 saveTeamPost(res2.getResults());
 
+                if (eventTBL != null) {
+                    eventTBL._now = System.currentTimeMillis();
+                    eventTBL.save();
+                }
                 break;
 
+            case LeafManager.API_ID_FAV:
+                if (response.status.equalsIgnoreCase("favourite")) {
+                    teamPostList.get(position).isFavourited = true;
+                } else {
+                    teamPostList.get(position).isFavourited = false;
+                }
+                mAdapter2.notifyItemChanged(position);
+                TeamPostGetData select = teamPostList.get(position);
+                PostTeamDataItem.updateFav(select.id, select.isFavourited ? 1 : 0);
+                break;
+
+
             case LeafManager.API_ID_LIKE_TEAM:
+
                 if (response.status.equalsIgnoreCase("liked")) {
                     teamPostList.get(position).isLiked = true;
                     teamPostList.get(position).likes++;
@@ -673,6 +1244,10 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 }
                 mAdapter2.notifyItemChanged(position);
                 liked = false;
+
+                TeamPostGetData select2 = teamPostList.get(position);
+                PostTeamDataItem.updateLike(select2.id, select2.isLiked ? 1 : 0, select2.likes);
+
                 break;
 
             case LeafManager.API_ID_DELETE_POST:
@@ -680,6 +1255,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 currentPage2 = 1;
                 getData2(team_id, false);
                 AmazoneRemove.remove(currentItem.fileName);
+                sendNotification(currentItem);
                 break;
 
             case LeafManager.API_REPORT_LIST:
@@ -714,7 +1290,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 getActivity().onBackPressed();
                 break;
 
-            case LeafManager.API_MY_TEAM_LIST:
+            case LeafManager.API_MY_TEAM_LIST: {
                 MyTeamsResponse res = (MyTeamsResponse) response;
                 List<MyTeamData> result = res.getResults();
                 AppLog.e(TAG, "Team list Res :: " + new Gson().toJson(result));
@@ -728,29 +1304,61 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                         break;
                     }
                 }
-                if (!isFind)
-                    getActivity().onBackPressed();
-                break;
-            case LeafManager.API_ID_FAV:
-                if (response.status.equalsIgnoreCase("favourite")) {
-                    teamPostList.get(position).isFavourited = true;
-                } else {
-                    teamPostList.get(position).isFavourited = false;
+                /*if (!isFind)
+                    getActivity().onBackPressed();*/
+            }
+            break;
+            case LeafManager.API_GET_BOOTHS:
+                BoothResponse res = (BoothResponse) response;
+                List<MyTeamData> result = res.getData();
+                AppLog.e(TAG, "Team list Res :: " + new Gson().toJson(result));
+                boolean isFind = false;
+                for (MyTeamData myTeam : result) {
+                    if (team_id.equals(myTeam.teamId)) {
+                        teamData = myTeam;
+                        teamName = teamData.name;
+                        isFind = true;
+                        refreshData();
+                        break;
+                    }
                 }
-                mAdapter2.notifyItemChanged(position);
+               /* if (!isFind)
+                    getActivity().onBackPressed();*/
                 break;
+
 
         }
 
     }
 
+
+
     private void refreshData() {
         setFloatingButton();
         if (getActivity() != null) {
-            ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(teamData.name);
-            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(teamData.members + " users");
-        }
 
+            if (getActivity().getClass().getSimpleName().equalsIgnoreCase("GroupDashboardActivityNew"))
+            {
+                ((GroupDashboardActivityNew) getActivity()).tvToolbar.setText(teamData.name);
+            }
+            //  ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText("Members : " + teamData.members);
+        }
+    }
+
+    private void sendNotification(TeamPostGetData currentItem) {
+
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + mGroupId + "_" + team_id;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "Team Post deleted";
+        notificationModel.data.Notification_type = "DELETE_POST";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = mGroupId;
+        notificationModel.data.teamId = team_id;
+        notificationModel.data.createdById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = currentItem.id;
+        notificationModel.data.postType = "team";
+        SendNotificationGlobal.send(notificationModel);
     }
 
     private void saveTeamPost(List<TeamPostGetData> results) {
@@ -769,6 +1377,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             postItem.fileType = item.fileType;
             if (item.fileName != null) {
                 postItem.fileName = new Gson().toJson(item.fileName);
+                postItem.thumbnailImage = new Gson().toJson(item.thumbnailImage);
             }
             postItem.updatedAt = item.updatedAt;
             postItem.text = item.text;
@@ -784,11 +1393,102 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             postItem.group_id = mGroupId + "";
             postItem.team_id = team_id + "";
             postItem.thumbnail = item.thumbnail;
+            postItem.isFavourited = item.isFavourited;
+            postItem.type = type;
+            postItem.page = currentPage2;
+
+            AppLog.e(TAG,"type"+type);
+
+
+            if (true)
+            {
+                if (getArguments().getBoolean("isFromMain"))
+                {
+                   /* if (type.equalsIgnoreCase("booth"))
+                    {
+                        if (BoothPostEventTBL.getAll().size()>0)
+                        {
+                            List<BoothPostEventTBL> postEventTBLList= BoothPostEventTBL.getAll();
+
+                            for (int n = 0;n<postEventTBLList.size();n++)
+                            {
+                                if (teamData.boothId.equalsIgnoreCase(postEventTBLList.get(n).boothId))
+                                {
+                                    postItem._now = postEventTBLList.get(n).lastBoothPostAt;
+
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            postItem._now = DateTimeHelper.getCurrentTime();
+                        }
+                    }
+                    if (type.equalsIgnoreCase("member"))
+                    {
+                        if (EventSubBoothTBL.getAll().size()>0)
+                        {
+                            List<EventSubBoothTBL> eventSubBoothTBLS= EventSubBoothTBL.getAll();
+
+                            for (int j = 0;j<eventSubBoothTBLS.size();j++)
+                            {
+                                if (teamData.boothId.equalsIgnoreCase(eventSubBoothTBLS.get(j).teamId))
+                                {
+
+                                    postItem._now = eventSubBoothTBLS.get(j).lastTeamPostAt;
+                                }
+
+                            }
+
+                        }
+                        else
+                        {
+                            postItem._now = DateTimeHelper.getCurrentTime();
+                        }
+                    }
+                    if (type.equalsIgnoreCase("team"))
+                    {
+                        if (HomeTeamDataTBL.getAll().size()>0)
+                        {
+                            List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getAll();
+
+                            for (int m = 0;m<homeTeamDataTBLList.size();m++)
+                            {
+                                if (teamData.teamId.equalsIgnoreCase(homeTeamDataTBLList.get(m).teamId))
+                                {
+                                    postItem._now = homeTeamDataTBLList.get(m).lastTeamPostAt;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            postItem._now = DateTimeHelper.getCurrentTime();
+                        }
+                    }
+*/
+
+                    if (HomeTeamDataTBL.getAll().size()>0)
+                    {
+                        List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getAll();
+
+                        for (int m = 0;m<homeTeamDataTBLList.size();m++)
+                        {
+                            if (team_id.equalsIgnoreCase(homeTeamDataTBLList.get(m).teamId))
+                            {
+                                postItem._now = homeTeamDataTBLList.get(m).lastTeamPostAt;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        postItem._now = DateTimeHelper.getCurrentTime();
+                    }
+                }
+            }
 
             postItem.save();
         }
-
-
     }
 
     @Override
@@ -807,7 +1507,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
                 logout();
             } else if (error.status.equals("404")) {
-                Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), error.title, Toast.LENGTH_SHORT).show();
             }
@@ -863,10 +1563,11 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     private void getData2(String team_id, boolean isInBackground) {
         if (!isInBackground) {
-            showLoadingBar(mBinding.progressBar2);
+            showLoadingBar(mBinding.progressBar2,true);
             mIsLoading = true;
         }
         manager.teamPostGetApi(this, mGroupId + "", team_id + "", getActivity(), currentPage2);
+        leafPreference.remove(team_id + "_post");
 
     }
 
@@ -875,7 +1576,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
 
         if (isConnectionAvailable()) {
-            showLoadingBar(mBinding.progressBar2);
+            showLoadingBar(mBinding.progressBar2,true);
 
             LeafManager manager = new LeafManager();
             manager.deleteTeamPost(this, mGroupId + "", team_id + "", currentItem.id);
@@ -887,7 +1588,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     @Override
     public void onFavClick(TeamPostGetData item, int pos) {
-        showLoadingBar(mBinding.progressBar2);
+        showLoadingBar(mBinding.progressBar2,true);
         position = pos;
         manager.setFav(this, mGroupId + "", item.id);
 
@@ -898,10 +1599,38 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         if (!liked) {
             liked = true;
             this.position = pos;
-            showLoadingBar(mBinding.progressBar2);
-            manager.setTeamLike(this, mGroupId + "", team_id, item.id);
+
+            //calling api in background
+            //    showLoadingBar(mBinding.progressBar2);
+            //      manager.setTeamLike(this, mGroupId + "", team_id, item.id);
+
+            LeafManager leafManager = new LeafManager();
+            leafManager.setTeamLike(new LeafManager.OnCommunicationListener() {
+                @Override
+                public void onSuccess(int apiId, BaseResponse response) {
+
+                    new LikeAsync(response).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
+                }
+
+                @Override
+                public void onFailure(int apiId, String msg) {
+
+                }
+
+                @Override
+                public void onException(int apiId, String msg) {
+
+                }
+            },mGroupId + "", team_id, item.id);
+
+
+
         }
     }
+
+
 
     @Override
     public void onPostClick(TeamPostGetData item) {
@@ -914,6 +1643,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.title);
             startActivity(i);
 
@@ -945,13 +1675,340 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     @Override
     public void onDeleteClick(TeamPostGetData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override
     public void onReportClick(TeamPostGetData item) {
         currentItem = item;
         showReportDialog();
+    }
+
+    @Override
+    public void onExternalShareClick(TeamPostGetData item) {
+        //chanage share data Post share option to external applications
+
+        boolean isDownloaded = true;
+        String type;
+
+        if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+
+
+            if (item.fileName.size()> 0)
+            {
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    String Filepath;
+
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        Filepath = splitStr[1];
+                    } else {
+                        Filepath = key;
+                    }
+
+                    if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
+
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneDownload.isPdfDownloaded(getContext(),item.fileName.get(i)))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<Uri> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneDownload.getDownloadPath(getContext(),item.fileName.get(i)));
+                    }
+
+                   /* ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }*/
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("application/pdf");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, item.video);
+            intent.setType("text/plain");
+            startActivity(intent);
+        }
+        else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneVideoDownload.isVideoDownloaded(getContext(),item.fileName.get(i)))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<Uri> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneVideoDownload.getDownloadPath(getContext(),item.fileName.get(i)));
+                    }
+
+                  /*  ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }*/
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("video/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if(item.fileType.equalsIgnoreCase("birthdaypost")){
+
+            if (item.fileName.size()> 0)
+            {
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    String Filepath;
+
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        Filepath = splitStr[1];
+                    } else {
+                        Filepath = key;
+                    }
+
+                    if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
+
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+        }
+
+     /*   if (!item.fileType.equals(Constants.FILE_TYPE_YOUTUBE))
+        {
+            if (item.fileName != null && item.fileName.size() > 0)
+            {
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+
+                        if(item.fileType.equals(Constants.FILE_TYPE_IMAGE))
+                        {
+                            files.add(AmazoneImageDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+                        else if (item.fileType.equals(Constants.FILE_TYPE_PDF))
+                        {
+                            files.add(AmazoneDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+                        else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO))
+                        {
+                            files.add(AmazoneVideoDownload.getDownloadPath(item.fileName.get(i)));
+                        }
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("");
+                    intent.putExtra(Intent.EXTRA_TEXT,item.fileType);
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }*/
+
     }
 
     @Override
@@ -989,6 +2046,8 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     @Override
     public void onPushClick(TeamPostGetData item) {
 
+
+
         GroupDashboardActivityNew.is_share_edit = true;
         GroupDashboardActivityNew.share_type = "team";
         GroupDashboardActivityNew.share_title = item.title;
@@ -1015,14 +2074,15 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
         intent.putExtra("id", mGroupId);
         intent.putExtra("post_id", item.id);
         startActivity(intent);
+
     }
 
     @Override
     public void onNameClick(TeamPostGetData item) {
         if (item.createdById.equals(LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID))) {
             AppLog.e("onNameClick", "else if called");
-            Intent intent = new Intent(getActivity(), ProfileActivity2.class);
-            startActivity(intent);
+//            Intent intent = new Intent(getActivity(), ProfileActivity2.class);
+//            startActivity(intent);
         } else {
             AppLog.e("onNameClick", "else called");
         }
@@ -1030,6 +2090,7 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     @Override
     public void onLikeListClick(TeamPostGetData item) {
+
         if (isConnectionAvailable()) {
             Intent intent = new Intent(getActivity(), LikesListActivity.class);
             intent.putExtra("id", mGroupId);
@@ -1039,6 +2100,439 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
             startActivity(intent);
         } else {
             showNoNetworkMsg();
+        }
+    }
+
+    @Override
+    public void callBirthdayPostCreation(TeamPostGetData item, int position) {
+        Log.e(TAG,"callBirthdayPostCreation"+position);
+        if(birthdayPostCreationQueue == null)
+        {
+            birthdayPostCreationQueue = new ArrayList<>();
+        }
+
+        if(birthdayPostCreationQueue.contains(position))
+        {
+            Log.e(TAG,"callBirthdayPostCreation contains"+position);
+            return;
+        }
+
+        birthdayPostCreationQueue.add(position);
+        createBirthPostAndSave(item ,position);
+    }
+
+    Bitmap BirthdayTempleteBitmap = null;
+    Bitmap UserBitmap = null;
+    Bitmap MlaBitMap = null;
+    File fileSaveLocation = null;
+    private void createBirthPostAndSave(TeamPostGetData item , int position)
+    {
+
+        ArrayList<String> imageList = new ArrayList<>();
+        imageList.add(item.fileName.get(0));
+        imageList.add(item.bdayUserImage);
+        imageList.add(item.createdByImage);
+
+        if(getActivity() == null)
+        {
+            return;
+        }
+
+
+        AmazoneImageDownload.download(getActivity(), item.bdayUserImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+            @Override
+            public void onDownload(Uri file) {
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
+                if(file == null)
+                {
+                    return;
+                }
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+
+                try {
+                    UserBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                Log.e(TAG,"UserBitmap H "+ UserBitmap.getHeight());
+                Log.e(TAG,"UserBitmap W "+ UserBitmap.getWidth());
+
+                checkAllDownload(item.bdayUserName,item.createdBy,position,item.fileName.get(0));
+            }
+
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });
+
+        AmazoneImageDownload.download(getActivity(), item.createdByImage , new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+            @Override
+            public void onDownload(Uri file) {
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
+                if(file == null)
+                {
+                    return;
+                }
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                try {
+                    MlaBitMap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Log.e(TAG,"UserBitmap H "+ MlaBitMap.getHeight());
+                Log.e(TAG,"UserBitmap W "+ MlaBitMap.getWidth());
+
+                checkAllDownload(item.bdayUserName,item.createdBy,position,item.fileName.get(0));
+            }
+
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });
+
+
+
+        /* AmazoneMultiImageDownload.download(getActivity(), imageList, new AmazoneMultiImageDownload.AmazoneDownloadMultiListener() {
+            @Override
+            public void onDownload(ArrayList<File> file) {
+
+                Log.e(TAG,"onDownload "+position);
+
+                if(getActivity() == null)
+                {
+                    return;
+                }
+
+
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                Bitmap BirthdayTempleteBitmap = BitmapFactory.decodeFile(file.get(0).getAbsolutePath(),bmOptions);
+
+                Log.e(TAG,"BirthdayTempleteBitmap H "+BirthdayTempleteBitmap.getHeight());
+                Log.e(TAG,"BirthdayTempleteBitmap W "+BirthdayTempleteBitmap.getWidth());
+
+
+                Bitmap UserBitmap,MlaBitMap;
+
+                if(file.size()>1 && file.get(1)!=null )
+                {
+                    UserBitmap = BitmapFactory.decodeFile(file.get(1).getAbsolutePath(),bmOptions);
+                    Log.e(TAG,"UserBitmap if");
+                }
+                else
+                {
+                    UserBitmap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.user));
+                    Log.e(TAG,"UserBitmap else");
+                }
+
+                if(file.size()>2 && file.get(2)!=null )
+                {
+                    MlaBitMap = BitmapFactory.decodeFile(file.get(2).getAbsolutePath(),bmOptions);
+                    Log.e(TAG,"MlaBitMap if");
+                }
+                else
+                {
+                    MlaBitMap = drawableToBitmap(getActivity().getResources().getDrawable(R.drawable.mla));
+                    Log.e(TAG,"MlaBitMap else");
+                }
+
+                Log.e(TAG,"UserBitmap H "+UserBitmap.getHeight());
+                Log.e(TAG,"UserBitmap W "+UserBitmap.getWidth());
+
+                if(item.bdayUserName ==null || item.bdayUserName.equalsIgnoreCase(""))
+                {
+                    item.bdayUserName = "Username";
+                }
+
+                createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, item.bdayUserName,file.get(0),item.createdBy);
+                birthdayPostCreationQueue.remove(Integer.valueOf(position));
+                Log.e(TAG,"mAdapter notifyItemChanged"+position);
+                mAdapter.notifyItemChanged(position);
+
+                Log.e(TAG , "created Bitmap saved at : "+file.get(0));
+            }
+            @Override
+            public void error(String msg) {
+
+            }
+
+            @Override
+            public void progressUpdate(int progress, int max) {
+
+            }
+        });*/
+
+
+    }
+
+
+    public void checkAllDownload(String UserName,String mlaName,int position,String file)
+    {
+        if (UserBitmap != null && MlaBitMap != null)
+        {
+
+            AmazoneImageDownload.download(getActivity(), file, new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                @Override
+                public void onDownload(Uri file) {
+
+                    if(getActivity() == null)
+                    {
+                        return;
+
+                    }
+                    if(file == null)
+                    {
+                        return;
+                    }
+
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    try {
+                        BirthdayTempleteBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), file);
+                    }catch (Exception e)
+                    {}
+
+
+                    createBitmap(BirthdayTempleteBitmap,MlaBitMap,UserBitmap, UserName,file,mlaName);
+                    birthdayPostCreationQueue.remove(Integer.valueOf(position));
+                    Log.e(TAG,"mAdapter notifyItemChanged"+position);
+                    mAdapter2.notifyItemChanged(position);
+                    Log.e(TAG , "created Bitmap saved at : "+file);
+
+                }
+
+                @Override
+                public void error(String msg) {
+
+                }
+
+                @Override
+                public void progressUpdate(int progress, int max) {
+
+                }
+            });
+
+        }
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
+    private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, Uri file,String mlaName) {
+
+        Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
+
+        userBitmap = getResizedBitmap(userBitmap, (int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)));
+        mlaBitmap = getResizedBitmap(mlaBitmap,(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)));
+
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
+        Paint paint = new Paint();
+        paint.setColor(getActivity().getResources().getColor(R.color.birthDayTextColor));
+        paint.setTextSize(result.getHeight()*0.07f);
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        Rect rect = new Rect();
+
+        Log.e(TAG,"userBitmap w : "+userBitmap.getWidth()+" h : "+userBitmap.getHeight());
+        Log.e(TAG,"mlaBitmap w : "+mlaBitmap.getWidth()+" h : "+mlaBitmap.getHeight());
+
+        Log.e(TAG,"result w : "+result.getWidth()+" h : "+result.getHeight());
+
+        paint.getTextBounds(userName,0,userName.length(),rect);
+        canvas.drawText(userName,result.getWidth()*0.107f,result.getHeight()*0.52f,paint);
+
+
+        Paint paint2 = new Paint();
+        paint2.setColor(getActivity().getResources().getColor(R.color.mlaTextColor));
+
+        paint2.setTextAlign(Paint.Align.RIGHT);
+
+        Rect rect2 = new Rect();
+
+
+        paint2.setTextSize(result.getHeight()*0.05f);
+        paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);
+        canvas.drawText(mlaName,result.getWidth()*0.94f,result.getHeight()*0.95f,paint2);
+
+        canvas.drawBitmap(getRoundedCornerBitmap(mlaBitmap,mlaBitmap.getWidth()/2), (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.195), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.380), null);
+        canvas.drawBitmap(getRoundedCornerBitmap(userBitmap,userBitmap.getWidth()/2),userBitmap.getWidth()*0.107f , userBitmap.getWidth()*0.135f, null);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+        File file1 = new File(file.getPath());
+        try {
+            FileOutputStream out = new FileOutputStream(file1);
+            out.write(bytes.toByteArray());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException"+e.getMessage());
+        }
+
+        return file1;
+
+    }
+
+    //OLD BIRTHDAY POST
+    /*private File createBitmap(Bitmap birthdayTempleteBitmap, Bitmap mlaBitmap, Bitmap userBitmap , String userName, File file,String mlaName) {
+
+        Bitmap result = Bitmap.createBitmap(birthdayTempleteBitmap.getWidth(), birthdayTempleteBitmap.getHeight(), birthdayTempleteBitmap.getConfig());
+
+        userBitmap = getResizedBitmap(userBitmap, (int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (195*(birthdayTempleteBitmap.getWidth()/540.0f)));
+        mlaBitmap = getResizedBitmap(mlaBitmap,(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)),(int) (152*(birthdayTempleteBitmap.getWidth()/540.0f)));
+
+        String[] splitUserName = userName.split("\\s+");
+
+        String[] splitmlaName = mlaName.split("\\s+");
+
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(birthdayTempleteBitmap,0,0,null);
+        Paint paint = new Paint();
+        paint.setColor(getActivity().getResources().getColor(R.color.birthDayTextColor));
+        paint.setTextSize(result.getHeight()*0.07f);
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        Rect rect = new Rect();
+        Rect rect1 = new Rect();
+
+        if (splitUserName.length > 1)
+        {
+            paint.getTextBounds(splitUserName[0],0,splitUserName[0].length(),rect);
+            paint.getTextBounds(splitUserName[1],0,splitUserName[1].length(),rect1);
+
+            canvas.drawText(splitUserName[0],(result.getWidth()*0.74f),result.getHeight()*0.44f,paint);
+            canvas.drawText(splitUserName[1],(result.getWidth()*0.74f),result.getHeight()*0.46f+rect1.height(),paint);
+        }
+        else
+        {
+            paint.getTextBounds(userName,0,userName.length(),rect);
+            canvas.drawText(userName,result.getWidth()*0.8f,result.getHeight()*0.44f,paint);
+        }
+
+
+        Paint paint2 = new Paint();
+        paint2.setColor(getActivity().getResources().getColor(R.color.mlaTextColor));
+
+        paint2.setTextAlign(Paint.Align.CENTER);
+
+        Rect rect2 = new Rect();
+        Rect rect3 = new Rect();
+
+        if (splitmlaName.length > 1)
+        {
+            paint2.setTextSize(result.getHeight()*0.03f);
+            paint2.getTextBounds(splitmlaName[0],0,splitmlaName[0].length(),rect2);
+            paint2.getTextBounds(splitmlaName[1],0,splitmlaName[1].length(),rect3);
+
+            canvas.drawText(splitmlaName[0],result.getWidth()*0.81f,result.getHeight()*0.93f,paint2);
+            canvas.drawText(splitmlaName[1],result.getWidth()*0.81f,result.getHeight()*0.95f,paint2);
+        }
+        else
+        {
+            paint2.setTextSize(result.getHeight()*0.05f);
+            paint2.getTextBounds(mlaName,0,mlaName.length(),rect2);
+            canvas.drawText(mlaName,result.getWidth()*0.81f,result.getHeight()*0.95f,paint2);
+        }
+
+        canvas.drawBitmap(getRoundedCornerBitmap(mlaBitmap,mlaBitmap.getWidth()/2), (float) (birthdayTempleteBitmap.getWidth()-mlaBitmap.getWidth()*1.195), (float) (birthdayTempleteBitmap.getHeight()-mlaBitmap.getHeight()*1.380), null);
+        canvas.drawBitmap(getRoundedCornerBitmap(userBitmap,userBitmap.getWidth()/2),userBitmap.getWidth()*0.199f , userBitmap.getWidth()*0.342f, null);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        result.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(bytes.toByteArray());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG,"IOException"+e.getMessage());
+        }
+
+        return file;
+
+    }*/
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
+
+    }
+
+    public Bitmap drawableToBitmap(Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
+
+    @Override
+    public void onDeleteVideoClick(TeamPostGetData item, int position) {
+        AppLog.e(TAG, "onDeleteVideoClick : " + item.fileName.get(0));
+        if (item.fileName != null && item.fileName.size() > 0) {
+            AmazoneDownload.removeVideo(getActivity(), item.fileName.get(0));
+            mAdapter2.notifyItemChanged(position);
         }
     }
 
@@ -1086,13 +2580,13 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
 
     private void getReportData() {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(dialogProgressBar);
+        showLoadingBar(dialogProgressBar,true);
         mManager.getReportList(this);
     }
 
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
-        showLoadingBar(mBinding.progressBar2);
+        showLoadingBar(mBinding.progressBar2,true);
         mManager.reportPost(this, mGroupId + "", currentItem.id, report_id);
     }
 
@@ -1105,4 +2599,156 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
     public void onMeetingStatusChanged(MeetingStatus meetingStatus, int i, int i1) {
 
     }*/
+
+
+    class LikeAsync extends AsyncTask<Void, Void, Void> {
+        BaseResponse res;
+        private Boolean isChanged = false;
+
+        public LikeAsync(BaseResponse data) {
+            this.res = data;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            if (res.status.equalsIgnoreCase("liked")) {
+                teamPostList.get(position).isLiked = true;
+                teamPostList.get(position).likes++;
+            } else {
+                teamPostList.get(position).isLiked = false;
+                teamPostList.get(position).likes--;
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            mAdapter2.notifyItemChanged(position);
+            liked = false;
+
+            TeamPostGetData select2 = teamPostList.get(position);
+            PostTeamDataItem.updateLike(select2.id, select2.isLiked ? 1 : 0, select2.likes);
+
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_UPDATE_TEAM)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+
+                if (type.equalsIgnoreCase("team"))
+                {
+                    Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(login);
+                }
+                else if (type.equalsIgnoreCase("booth"))
+                {
+                    BoothsTBL.deleteBooth(GroupDashboardActivityNew.groupId);
+                    Intent login = new Intent(getActivity(), GroupDashboardActivityNew.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(login);
+                }
+
+
+            }
+        }
+    }
+
+
+    class EventAsync extends AsyncTask<Void, Void, Void> {
+        TeamPostEventModelRes res1;
+        private boolean needRefresh = false;
+
+        public EventAsync(TeamPostEventModelRes res1) {
+            this.res1 =res1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            if (res1.getData().size() > 0)
+            {
+
+//                ((GroupDashboardActivityNew) getActivity()).tv_Desc.setText(getResources().getString(R.string.lbl_members)+" : "+String.valueOf(res1.getData().get(0).getMembers()));
+
+                List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getTeamPost(team_id);
+
+                if (homeTeamDataTBLList.size() > 0)
+                {
+                    if (homeTeamDataTBLList.get(0).canPost != res1.getData().get(0).isCanPost())
+                    {
+                        if (res1.getData().get(0).isCanPost())
+                        {
+                            menu.findItem(R.id.menu_add_post).setVisible(true);
+                        }
+                        else
+                        {
+                            menu.findItem(R.id.menu_add_post).setVisible(false);
+                        }
+                    }
+                }
+
+                HomeTeamDataTBL.deleteTeamPost(team_id);
+
+                for (int i=0;i<res1.getData().size();i++)
+                {
+
+                    HomeTeamDataTBL homeTeamDataTBL = new HomeTeamDataTBL();
+                    homeTeamDataTBL.teamId = res1.getData().get(i).getTeamId();
+                    homeTeamDataTBL.members =  res1.getData().get(i).getMembers();
+                    homeTeamDataTBL.lastTeamPostAt =  res1.getData().get(i).getLastTeamPostAt();
+                    homeTeamDataTBL.canPost =  res1.getData().get(i).isCanPost();
+                    homeTeamDataTBL.canComment = res1.getData().get(i).isCanComment();
+
+                    homeTeamDataTBL.save();
+
+                }
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (HomeTeamDataTBL.getTeamPost(team_id).size()>0)
+            {
+                List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getTeamPost(team_id);
+
+                List<PostTeamDataItem> dataItemList = PostTeamDataItem.getTeamPosts(mGroupId + "", team_id + "",type,currentPage2);
+
+                if (dataItemList.size() > 0)
+                {
+                    for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                    {
+                        if (team_id.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                        {
+                            if (MixOperations.isNewEventUpdate(homeTeamDataTBLList.get(i).lastTeamPostAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dataItemList.get(dataItemList.size()-1)._now))
+                            {
+                                PostTeamDataItem.deleteTeamPosts(team_id,type);
+                                AppLog.e(TAG," onPostExecute isNewEvent");
+                                callApi(true);
+                            }
+
+                        }
+                    }
+                }
+
+            }
+        }
+    }
 }

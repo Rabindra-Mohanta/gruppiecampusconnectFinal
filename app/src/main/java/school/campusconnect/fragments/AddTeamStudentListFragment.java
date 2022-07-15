@@ -28,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddTeamStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
@@ -48,9 +49,11 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     @Bind(R.id.txtEmpty)
     public TextView txtEmpty;
 
-    @Bind(R.id.tvCount)
-    public TextView tvCount;
+    //@Bind(R.id.tvCount)
+    //public TextView tvCount;
 
+    @Bind(R.id.btn_update_add)
+    public TextView updateButton;
 
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
@@ -84,8 +87,13 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     @Override
     public void onStart() {
         super.onStart();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         leafManager.getTeamMember(this, groupId+"", teamId+"",false);
+
+        if(getActivity()!=null){
+            ((AddTeamStudentActivity)getActivity()).enableSelection(true);
+        }
     }
 
     @Override
@@ -108,7 +116,8 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISTEAMUPDATED,true);
             getActivity().finish();
         } else {
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
             StudentRes res = (StudentRes) response;
             List<StudentRes.StudentData> result = res.getData();
             AppLog.e(TAG, "ClassResponse " + result);
@@ -130,22 +139,42 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
     public void onClick(View view) {
         if (adapter != null && adapter.getSelectedCount() > 0) {
             LeafManager leafManager = new LeafManager();
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+          //  progressBar.setVisibility(View.VISIBLE);
             leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
         } else {
-            Toast.makeText(getActivity(), "Select Any Student", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick({R.id.btn_update_add})
+    public void btnOnClick(View view) {
+        if (adapter != null && adapter.getSelectedCount() > 0) {
+            LeafManager leafManager = new LeafManager();
+            showLoadingBar(progressBar);
+            //  progressBar.setVisibility(View.VISIBLE);
+            leafManager.addTeamStaffOrStudent(this, groupId, teamId, adapter.getSelectedIds());
+        } else {
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_select_student), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         Toast.makeText(getActivity(), msg+"", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
+    }
+    public void selectAll(boolean checked) {
+        if(adapter!=null){
+            adapter.selectAll(checked);
+        }
     }
 
     public class AddTeamStudentAdapter extends RecyclerView.Adapter<AddTeamStudentAdapter.ViewHolder> {
@@ -220,14 +249,14 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Students found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Students found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 return 0;
             }
 
@@ -251,6 +280,15 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
                 }
             }
             return stringBuffer.length() > 0 ? stringBuffer.substring(0, stringBuffer.length() - 1) : "";
+        }
+
+        public void selectAll(boolean checked) {
+            if(list!=null){
+                for (int i=0;i<list.size();i++){
+                    list.get(i).isSelected = checked;
+                }
+            }
+            notifyDataSetChanged();
         }
 
 
@@ -285,12 +323,18 @@ public class AddTeamStudentListFragment extends BaseFragment implements LeafMana
         }
     }
 
+    private String textValue = null;
+
     private void addRemovedStaff() {
         int cnt = adapter.getSelectedCount();
         if (cnt > 0) {
-            tvCount.setText(cnt + "");
+            if (textValue == null){
+                textValue = updateButton.getText().toString();
+            }
+            updateButton.setText(textValue+ " ("+ cnt +")");
+           // tvCount.setText(cnt + "");
         } else {
-            tvCount.setText("");
+            //tvCount.setText("");
         }
     }
 }

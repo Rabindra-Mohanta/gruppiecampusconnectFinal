@@ -1,0 +1,1322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_version">ಆವೃತ್ತಿ 1.0</string>
+    <string name="lbl_app_details">© 2016 ವಿವಿಡ್ ಇನ್ನೋವೇಶನ್ ಪ್ರೈವೇಟ್ ಲಿಮಿಟೆಡ್</string>
+    <string name="action_create_acc">ಗುಂಪು ರಚಿಸಿ</string>
+    <string name="action_notify_all">ಎಲ್ಲಾ ಸಂದೇಶ</string>
+    <string name="action_mail_all">ಎಲ್ಲರಿಗೂ ಇಮೇಲ್ ಮಾಡಿ</string>
+    <string name="action_change_pwd">ಪಾಸ್ವರ್ಡ್ ಬದಲಿಸಿ</string>
+    <string name="action_change_pin">ಪಿನ್ ಬದಲಾಯಿಸಿ</string>
+    <string name="action_change_nu"> ಸಂಖ್ಯೆಯನ್ನು ಬದಲಾಯಿಸಿ</string>
+    <string name="action_set_wallpaper">ವಾಲ್‌ಪೇಪರ್ ಹೊಂದಿಸಿ</string>
+    <string name="action_remove_wallpaper">ವಾಲ್‌ಪೇಪರ್ ತೆಗೆದುಹಾಕಿ</string>
+    <string name="action_all_contacts">ಗ್ರುಪ್ಪಿ ಸಂಪರ್ಕಗಳು</string>
+    <string name="action_change_number">ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಬದಲಾಯಿಸಿ</string>
+    <string name="action_notification">ಮೆಚ್ಚಿನವುಗಳು</string>
+    <string name="action_questions">ಅನುಮಾನಗಳು</string>
+    <string name="action_users">ಎಲ್ಲಾ ಬಳಕೆದಾರರು</string>
+    <string name="action_invite">ಸ್ನೇಹಿತರನ್ನು ಆಹ್ವಾನಿಸಿ</string>
+    <string name="action_recover_pwd">ಪಾಸ್ವರ್ಡ್ ಮರುಪಡೆಯಿರಿ</string>
+    <string name="action_update_profile">ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ನವೀಕರಿಸಿ</string>
+    <string name="action_myprofile">ಮೈ ಪ್ರೊಫೈಲ್</string>
+    <string name="action_edit">ತಿದ್ದು</string>
+    <string name="action_delete">ಅಳಿಸಿ</string>
+    <string name="action_update_language">ಭಾಷೆಯನ್ನು ನವೀಕರಿಸಿ</string>
+    <string name="action_login">ಲಾಗಿನ್ ಮಾಡಿ</string>
+    <string name="action_forgot_pwd"><u>Forgot your password?</u></string>
+    <string name="lbl_startmeeting">ಸಭೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿ</string>
+    <string name="action_change_admin">ನಿರ್ವಾಹಕರನ್ನು ಬದಲಾಯಿಸಿ</string>
+    <string name="action_edit_group">ಎಡಿಟ್ ಗ್ರೂಪ್</string>
+    <string name="action_delete_group">ಗುಂಪನ್ನು ಅಳಿಸಿ</string>
+
+    <string name="action_mute">ಮ್ಯೂಟ್ ಮಾಡಿ</string>
+    <string name="action_leave">ಗುಂಪನ್ನು ತೊರೆಯಿರಿ</string>
+    <string name="action_setting">ಸಂಯೋಜನೆಗಳು</string>
+    <string name="action_favorite">ನೆಚ್ಚಿನ</string>
+    <string name="action_group_setting">ಗುಂಪು ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
+    <string name="action_about_group">ಶಾಲೆಯ ಬಗ್ಗೆ</string>
+
+    <string name="hint_campagian">ಕ್ಯಾಂಪೇಜಿಯನ್ ಚಿಕ್ಕ ಹೆಸರು</string>
+    <string name="hint_reg_contact_no">ನೋಂದಾಯಿತ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_password">OTP ನಮೂದಿಸಿ</string>
+    <string name="hint_pass">ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ</string>
+    <string name="hint_pass_conf">ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ</string>
+    <string name="hint_new_password">ಹೊಸ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ</string>
+    <string name="hint_confirm_password">ಹೊಸ  ಪಾಸ್ವರ್ಡ್ ಖಚಿತಪಡಿಸಿ</string>
+
+    <string name="hint_create_pass">ಪಾಸ್ವರ್ಡ್ ರಚಿಸಿ</string>
+    <string name="hint_name">ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_number">ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_new_number">ಹೊಸ ಮೊಬೈಲ್ ನಮೂದಿಸಿ</string>
+    <string name="hint_confirm_number">ಹೊಸ ಮೊಬೈಲ್ ಅನ್ನು ದೃಢೀಕರಿಸಿ</string>
+    <string name="hint_gpay_paytm">ಜಿ-ಪೇ / ಪೇಟಿಎಂ</string>
+    <string name="lbl_no_account">ಗುಂಪನ್ನು ಹೊಂದಿಲ್ಲವೇ?</string>
+    <string name="lbl_search_issue">ಹುಡುಕಾಟ ಸಮಸ್ಯೆ</string>
+
+    <string name="lbl_search_caste">ಜಾತಿ ಹುಡುಕಿ</string>
+    <string name="lbl_search_sub_caste">ಉಪ ಜಾತಿಯನ್ನು ಹುಡುಕಿ</string>
+    <string name="lbl_welcome">ಸ್ವಾಗತ</string>
+    <string name="lbl_walk_des"></string>
+    <string name="name">ಹೆಸರು</string>
+    <string name="hint_imp_name">ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_email">ನಿಮ್ಮ ಇಮೇಲ್ ಐಡಿಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="search_contact">ಹುಡುಕಾಟ ಸಂಪರ್ಕ</string>
+    <string name="hint_contact_no">ನಿಮ್ಮ ಸಂಪರ್ಕ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+
+    <string name="hint_isAdmin">ನಿರ್ವಾಹಕ</string>
+    <string name="hint_isPartyTaskForce">ಪಕ್ಷದ ಕಾರ್ಯಪಡೆ</string>
+    <string name="hint_isDepartmentTaskForce">ಇಲಾಖೆ ಕಾರ್ಯಪಡೆ</string>
+    <string name="hint_isBoothPresident">ಬೂತ್ ಅಧ್ಯಕ್ಷರು</string>
+    <string name="hint_isBoothMember"> ಬೂತ್ ಸದಸ್ಯರು</string>
+    <string name="hint_enter_message">ಸಂದೇಶವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_view_comments">ಕಾಮೆಂಟ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸಿ</string>
+
+    <string name="hint_lead_name">ಸ್ನೇಹಿತರ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_date_format">dd/MM/yyyy</string>
+    <string name="hint_date_format_">dd/MM/yyyy\nhh:mm</string>
+    <string name="hint_title_text">ಶೀರ್ಷಿಕೆ ಪಠ್ಯ</string>
+    <string name="hint_fees_type">ಶುಲ್ಕದ ಪ್ರಕಾರ</string>
+    <string name="hint_enter_subject_name">ವಿಷಯದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_lead_email">ಸ್ನೇಹಿತರ ಇಮೇಲ್ ಐಡಿಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_lead_contact">ಸ್ನೇಹಿತರ ಸಂಪರ್ಕ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_lead_gender">ಲಿಂಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="hint_lead_dob">ಹುಟ್ಟಿದ ದಿನ</string>
+    <string name="hint_lead_roll">ರೋಲ್ ಸಂಖ್ಯೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="hint_lead_address">ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_lead_city">ಸ್ನೇಹಿತರ ಸಿಟಿಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_lead_state">ಸ್ನೇಹಿತರ ಸ್ಟೇಟ್ ಅನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_lead_pincode">ಸ್ನೇಹಿತರ ಪಿನ್‌ಕೋಡ್ ನಮೂದಿಸಿ</string>
+    <string name="hint_lead_id">ಸ್ನೇಹಿತರ ಐಡಿ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="lbl_kannada">ಕನ್ನಡ</string>
+    <string name="lbl_english">ಇಂಗ್ಲೀಷ್</string>
+    <string name="action_groups">ಗುಂಪುಗಳು</string>
+    <string name="action_add_post">ಪೋಸ್ಟ್ ಸೇರಿಸಿ</string>
+    <string name="lbl_lang">ನಿಮ್ಮ ಆದ್ಯತೆಯ ಭಾಷೆ</string>
+    <string name="action_add_lead">ಗೆಳೆಯನನ್ನು ಸೇರಿಸು</string>
+    <string name="action_add_invite_lead">ಸ್ನೇಹಿತರನ್ನು ಸೇರಿಸಿ/ಆಹ್ವಾನಿಸಿ</string>
+    <string name="action_invite_friend">ಸ್ನೇಹಿತರನ್ನು ಆಹ್ವಾನಿಸಿ</string>
+
+    <string name="action_add_contact">ಪ್ರಮುಖ ಸಂಪರ್ಕವನ್ನು ಸೇರಿಸಿ</string>
+
+    <string name="action_view_lead">ನನ್ನ ಗೆಳೆಯರು</string>
+    <string name="action_view_autho">ಅಧಿಕೃತ ಬಳಕೆದಾರರು</string>
+    <string name="action_my_lead">ನನ್ನ ಲೀಡ್ಸ್</string>
+    <string name="action_language">ಭಾಷೆಗಳು</string>
+    <string name="action_imp_contacts">ಪ್ರಮುಖ ಸಂಪರ್ಕಗಳು</string>
+    <string name="action_about_us">ಶಾಲೆಯ ಬಗ್ಗೆ</string>
+    <string name="action_notifications">ಅಧಿಸೂಚನೆಗಳು</string>
+    <string name="action_my_teams">ನನ್ನ ತಂಡಗಳು</string>
+    <string name="action_profile">ನನ್ನ ಪ್ರೊಫೈಲ್ </string>
+    <string name="action_logout">ಲಾಗ್ ಔಟ್</string>
+    <string name="action_creategroup">ಹೊಸ ಗುಂಪನ್ನು ರಚಿಸಿ</string>
+    <string name="please_wait">ದಯಮಾಡಿ ನಿರೀಕ್ಷಿಸಿ...</string>
+    <string name="lbl_select_img">ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_select_audio">ಆಡಿಯೋ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_select_video">ವೀಡಿಯೊ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_share">ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="lbl_push">ತಳ್ಳು</string>
+    <string name="lbl_camera">ಕ್ಯಾಮೆರಾ</string>
+    <string name="no_internet">ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ.</string>
+    <string name="action_save">ಉಳಿಸಿ</string>
+    <string name="msg_no_internet">ನೆಟ್ ಇಲ್ಲ</string>
+    <string name="msg_recover_pwd"></string>
+    <string name="msg_unable_get_camera_image">ಕ್ಯಾಮರಾ ಚಿತ್ರವನ್ನು ಪಡೆಯಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ಪುನಃ ಪ್ರಯತ್ನಿಸಿ.</string>
+    <string name="msg_no_reply">ಯಾವುದೇ ಉತ್ತರ ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="msg_no_comments">ಯಾವುದೇ ಕಾಮೆಂಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="msg_no_leads">ಯಾವುದೇ ಸ್ನೇಹಿತರು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="msg_leads"></string>
+    <string name="msg_no_likes">ಯಾವುದೇ ಇಷ್ಟಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="msg_no_users">ಯಾವುದೇ ಬಳಕೆದಾರರು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="msg_no_contaacts">ಯಾವುದೇ ಸಂಪರ್ಕಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="msg_no_fav">ಯಾವುದೇ ಮೆಚ್ಚಿನ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="msg_no_post">ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ</string> <!--ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ-->
+    <string name="msg_no_que">ಯಾವುದೇ ಸಂದೇಹಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="msg_no_noti">ಯಾವುದೇ ಅಧಿಸೂಚನೆಗಳಿಲ್ಲ.</string>
+    <string name="msg_no_groups">ಯಾವುದೇ ಗುಂಪುಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="crop__pick_error">ಯಾವುದೇ ಚಿತ್ರದ ಮೂಲಗಳು ಲಭ್ಯವಿಲ್ಲ</string>
+    <string name="crop">ಚಿತ್ರವನ್ನು ಕ್ರಾಪ್ ಮಾಡಿ</string>
+    <string name="lbl_cancel">ರದ್ದುಮಾಡು</string>
+    <string name="lbl_new_update_available">       ಹೊಸ  ಅಪ್ಡೇಟ್  ಲಭ್ಯವಿದೆ</string>
+    <string name="lbl_enter_url">URL ನಮೂದಿಸಿ</string>
+    <string name="lbl_upload_video">ವೀಡಿಯೊ ಅಪ್ಲೋಡ್ ಮಾಡಿ</string>
+    <string name="lbl_enter_youtube_link">ಯು ಟ್ಯೂಬ್ ಲಿಂಕ್ ಅನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="lbl_lead_count">ಸ್ನೇಹಿತರ ಸಂಖ್ಯೆ </string>
+    <string name="lbl_phone">ದೂರವಾಣಿ ಸಂಖ್ಯೆ*</string>
+    <string name="lbl_booth_president_phone">ಅಧ್ಯಕ್ಷರ ಫೋನ್ ಸಂಖ್ಯೆ*</string>
+    <string name="lbl_phone2">ದೂರವಾಣಿ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_father_name">ತಂದೆಯ ಹೆಸರು</string>
+    <string name="lbl_husband_name">ಗಂಡನ ಹೆಸರು</string>
+    <string name="lbl_email">ಇಮೇಲ್</string>
+    <string name="lbl_email_v2">ಇಮೇಲ್*</string>
+    <string name="lbl_other_leads">ಇತರೆ ಸ್ನೇಹಿತರು</string>
+    <string name="lbl_gender">ಲಿಂಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_dob">ಹುಟ್ಟಿದ ದಿನ</string>
+    <string name="lbl_age">ವಯಸ್ಸು</string>
+    <string name="lbl_delete_assignment">ನಿಯೋಜನೆಯನ್ನು ಅಳಿಸಿ</string>
+    <string name="lbl_roll">ಕ್ರಮ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_address">ವಿಳಾಸ</string>
+    <string name="lbl_address_v2">ವಿಳಾಸ*</string>
+    <string name="lbl_landmark">ಲ್ಯಾಂಡ್ಮಾರ್ಕ್</string>
+    <string name="lbl_lead_city">ನಗರ</string>
+    <string name="lbl_state">ರಾಜ್ಯ</string>
+    <string name="lbl_pincode">ಪಿನ್‌ಕೋಡ್</string>
+    <string name="lbl_id_num">ಐಡಿ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_setPin">ಪಿನ್ ಹೊಂದಿಸಿ</string>
+    <string name="lbl_setOldPin">ಹಳೆಯ ಪಿನ್</string>
+    <string name="lbl_setNewPin"> ಹೊಸ ಪಿನ್</string>
+    <string name="lbl_conPin">ಪಿನ್ ಅನ್ನು ದೃಢೀಕರಿಸಿ</string>
+    <string name="lbl_valPin">ಪಿನ್ ಮೌಲ್ಯೀಕರಿಸಿ</string>
+    <string name="lbl_leads">ನನ್ನ ಗೆಳೆಯರು</string>
+    <string name="lbl_likes">ಇಷ್ಟ</string>
+    <string name="lbl_join"> ಸೇರಿಕೊಳ್ಳಿ</string>
+    <string name="lbl_delete_album">ಆಲ್ಬಮ್ ಅಳಿಸಿ</string>
+    <string name="lbl_delete_video">ವೀಡಿಯೊ ಅಳಿಸಿ</string>
+    <string name="lbl_autho">ಅಧಿಕೃತ ಬಳಕೆದಾರರು</string>
+    <string name="lbl_all_users">ಎಲ್ಲಾ ಬಳಕೆದಾರರು</string>
+    <string name="lbl_all_contact">ಗ್ರುಪ್ಪಿ ಸಂಪರ್ಕಗಳು</string>
+    <string name="lbl_my_leads">ನನ್ನ ಲೀಡ್ಸ್</string>
+    <string name="lbl_my_teams">ನನ್ನ ತಂಡಗಳು</string>
+    <string name="lbl_select_group">ಗುಂಪನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_join_group">ಜೊತೆ ಸೇರಿ</string>
+    <string name="lbl_select_friend">ಸ್ನೇಹಿತನನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_select_team">ತಂಡವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_select_location"> ಸ್ಥಳವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_location">ಸ್ಥಳ</string>
+    <string name="lbl_select_issue"> ಸಮಸ್ಯೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_select_type">ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_comments"> ಕಾಮೆಂಟ್‌ಗಳು</string>
+
+    <string name="lbl_chat">ಸಂದೇಶಗಳು</string>
+    <string name="lbl_que">ಅನುಮಾನಗಳು</string>
+    <string name="lbl_replies">ಪ್ರತ್ಯುತ್ತರಗಳು</string>
+    <string name="lbl_my_family">ನನ್ನ ಕುಟುಂಬ</string>
+    <string name="lbl_my_issue">ನನ್ನ ಸಮಸ್ಯೆಗಳು</string>
+    <string name="lbl_Read_more">ಮತ್ತಷ್ಟು ಓದು..</string>
+    <string name="lbl_answer">ಉತ್ತರಗಳು</string>
+    <string name="lbl_delete_doubt">ಅನುಮಾನವನ್ನು ಅಳಿಸಿ</string>
+
+    <string name="lbl_open_tickets">ಓಪನ್ ಟಿಕೆಟ್ಸ್</string>
+    <string name="lbl_announcements">ಪ್ರಕಟಣೆಗಳು</string>
+    <string name="lbl_booth_count">ಬೂತ್ ಗಳು</string>
+    <string name="lbl_booth_discussion">ಬೂತ್ ಚರ್ಚೆಗಳು</string>
+    <string name="lbl_public_street">ಸಾರ್ವಜನಿಕ ವೇದಿಕೆಗಳು</string>
+    <string name="lbl_public_discussion">ಸಾರ್ವಜನಿಕ ಚರ್ಚೆಗಳು</string>
+
+    <string name="move_to_verified">ಪರಿಶೀಲನೆಗೆ ಸರಿಸಿ</string>
+    <string name="reassign">ಮರು ನಿಯೋಜಿಸಿ</string>
+
+    <string name="lbl_notifications">ಮೆಚ್ಚಿನ ಪೋಸ್ಟ್‌ಗಳು</string>
+    <string name="lbl_posts">ಪೋಸ್ಟ್‌ಗಳು</string>
+    <string name="lbl_search_contact"></string>
+    <string name="lbl_add_contact">ಸಂಪರ್ಕದಿಂದ ಸೇರಿಸಿ</string>
+    <string name="lbl_or"> ಅಥವಾ</string>
+    <string name="lbl_allow_post">ಪೋಸ್ಟ್ ಅನ್ನು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_allow_comments"> ಕಾಮೆಂಟ್‌ಗಳನ್ನು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_TotalOpenIssueTickets">ಒಟ್ಟು ಮುಕ್ತ ಸಮಸ್ಯೆಗಳ ಟಿಕೆಟ್‌ಗಳು</string>
+    <string name="lbl_TotalAnnouncementsCount">ಒಟ್ಟು ಪ್ರಕಟಣೆಗಳ ಎಣಿಕೆ</string>
+    <string name="lbl_TotalBoothsDiscussionCount">ಒಟ್ಟು ಬೂತ್‌ಗಳ ಚರ್ಚೆ ಎಣಿಕೆ</string>
+    <string name="lbl_TotalPublicStreetsCount">ಒಟ್ಟು ಸಾರ್ವಜನಿಕ ಬೀದಿಗಳ ಎಣಿಕೆ</string>
+    <string name="lbl_TotalPublicDiscussionCount">ಒಟ್ಟು ಸಾರ್ವಜನಿಕ ಚರ್ಚೆಯ ಎಣಿಕೆ</string>
+    <string name="lbl_TotalBoothCount">ಒಟ್ಟು ಬೂತ್‌ಗಳ ಎಣಿಕೆ</string>
+    <string name="msg_required">ಅಗತ್ಯವಿದೆ</string>
+    <string name="msg_invalid">ಅಮಾನ್ಯವಾಗಿದೆ</string>
+    <string name="msg_invalid_credentials"> ಅಮಾನ್ಯ ರುಜುವಾತುಗಳು!</string>
+    <string name="msg_valid_email">ಮಾನ್ಯವಾದ ಇಮೇಲ್ ಐಡಿ ಅಲ್ಲ</string>
+    <string name="msg_valid_phone">ಮಾನ್ಯವಾದ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="msg_mandatory_email">ಭಾರತದ ಹೊರಗಿನವರಿಗೆ ಇಮೇಲ್ ಕಡ್ಡಾಯವಾಗಿದೆ</string>
+    <string name="msg_group_delete">ಬಳಕೆದಾರರು ಇರುವಾಗ ನೀವು ಗುಂಪನ್ನು ಅಳಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ</string>
+    <string name="msg_group_leave">ಬಳಕೆದಾರರು ಇರುವಾಗ ನೀವು ಗುಂಪನ್ನು ಬಿಡುವಂತಿಲ್ಲ</string>
+
+    <string name="msg_valid_zipcode">ಮಾನ್ಯವಾದ ಪಿನ್‌ಕೋಡರ್ ಅಲ್ಲ</string>
+    <string name="msg_valid_pwd">ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳನ್ನು ಹೊಂದಿರಬೇಕು.</string>
+    <string name="msg_added_lead">ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ</string>
+    <string name="msg_does_not_match">ಪಾಸ್‌ವರ್ಡ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
+    <string name="msg_creted">ಗುಂಪನ್ನು ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ.</string>
+    <string name="msg_creted_team">ತಂಡವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ.</string>
+    <string name="msg_deleted_group">ಗುಂಪನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ.</string>
+    <string name="msg_profile_update">ಪ್ರೊಫೈಲ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ.</string>
+
+    <string name="lbl_forgot_pwd">ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ</string>
+    <string name="lbl_forgot_pin">ಪಿನ್ ಮರೆತಿರುವಿರಾ?</string>
+    <string name="lbl_forgot_pwd_q">ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ?</string>
+
+    <string name="navigation_drawer_open">ನ್ಯಾವಿಗೇಷನ್ ಡ್ರಾಯರ್ ತೆರೆಯಿರಿ</string>
+    <string name="navigation_drawer_close">ನ್ಯಾವಿಗೇಷನ್ ಡ್ರಾಯರ್ ಅನ್ನು ಮುಚ್ಚಿ</string>
+
+    <string name="action_settings">ಸಂಯೋಜನೆಗಳು</string>
+    <string name="hint_add_post">ಪೋಸ್ಟ್ ಸೇರಿಸಲು ಇಲ್ಲಿ ಬರೆಯಿರಿ!</string>
+    <string name="hint_add_notify">ಸಂದೇಶವನ್ನು ಕಳುಹಿಸಲು ಇಲ್ಲಿ ಬರೆಯಿರಿ!</string>
+    <string name="title_gender">ಲಿಂಗ ಆಯ್ಕೆ</string>
+    <string name="title_roll">ರೋಲ್ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="title_city">ನಗರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="title_state">ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="title_country">ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="title_post">ಪೋಸ್ಟ್ ಸೇರಿಸಿ</string>
+    <string name="title_notify">ಸಂದೇಶ ಕಳುಹಿಸಿ</string>
+
+
+    <string name="hello_blank_fragment">ಹಲೋ ಖಾಲಿ ತುಣುಕು</string>
+
+    <string name="mapApi">AIzaSyBnPjheD0bIGUtTdZ9SZ4r9oiXBxLWBIMQ</string>
+    <string name="msg_uploady">ದಯವಿಟ್ಟು ಫೈಲ್ ಅನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ವೀಡಿಯೊ URL ಅನ್ನು ನಮೂದಿಸಿ.</string>
+    <string name="msg_upload2">ಫೈಲ್ ಮತ್ತು ವೀಡಿಯೊವನ್ನು ಒಂದೇ ಸಮಯದಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡಲಾಗುವುದಿಲ್ಲ.</string>
+    <string name="msg_termnotaccepted">ದಯವಿಟ್ಟು ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳನ್ನು ಒಪ್ಪಿಕೊಳ್ಳಿ.</string>
+    <string name="msg_AddharValidate">ಆಧಾರ್ ಕಾರ್ಡ್ ಸಂಖ್ಯೆಯ ಉದ್ದವು 12 ಅಂಕೆಗಳು.</string>
+    <string name="msg_selectcountry">ದಯವಿಟ್ಟು ಮುಂದುವರೆಯಲು ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ.</string>
+    <string name="msg_or">ಅಥವಾ</string>
+
+    <string name="hint_for_post">ಪೋಸ್ಟ್‌ಗಾಗಿ</string>
+    <string name="hint_posttitle">ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_postque">ಪೋಸ್ಟ್‌ಗಾಗಿ ಅನುಮಾನವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_postans">ಪೋಸ್ಟ್‌ಗಾಗಿ ಉತ್ತರವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_postdesc">ಪಠ್ಯವನ್ನು ನಮೂದಿಸಿ</string>
+
+    <string name="hint_yttitle">ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_ytdesc">ವಿವರಣೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_edit_comment">ನಿಮ್ಮ ಕಾಮೆಂಟ್ ಎಡಿಟ್ ಮಾಡಿ</string>
+    <string name="hint_address_line_1">ವಿಳಾಸ ಸಾಲು 1</string>
+    <string name="hint_address_line_2">ವಿಳಾಸ ಸಾಲು 2</string>
+
+    <string name="hint_search">ಸಂಪರ್ಕಗಳನ್ನು ಹುಡುಕಿ</string>
+    <string name="hint_search_issue">ಹುಡುಕಾಟ ಸಮಸ್ಯೆ</string>
+    <string name="hint_search_booth">ಹುಡುಕಾಟ ಬೂತ್</string>
+    <string name="hint_view_more">ಇನ್ನಷ್ಟು ವೀಕ್ಷಿಸಿ</string>
+    <string name="hint_enter_your_question">ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_issue_not_found">ಸಮಸ್ಯೆ ಕಂಡುಬಂದಿಲ್ಲ</string>
+    <string name="hint_caste_not_found">ಜಾತಿ ಕಾಣಲಿಲ್ಲ</string>
+    <string name="hint_sub_caste_not_found">ಉಪ ಜಾತಿ ಕಂಡುಬಂದಿಲ್ಲ</string>
+
+    <string name="hint_search_address">ವಿಳಾಸವನ್ನು ಹುಡುಕಿ</string>
+    <string name="action_register">ಹೊಸ ಬಳಕೆದಾರ ? ಸೈನ್ ಅಪ್ ಮಾಡಿ</string>
+    <string name="action_login_new">ನೋಂದಾಯಿಸಲಾಗಿದೆಯೇ? ಸೈನ್ ಇನ್ ಮಾಡಿ</string>
+    <string name="action_btnregister">ನೋಂದಣಿ</string>
+    <string name="action_terms">ನಾನು ಒಪ್ಪುತ್ತೇನೆ</string>
+    <string name="hint_country">ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+
+    <string name="hint_designation">ಹುದ್ದೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_phone">ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_email_enter">ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="hint_more">ನಿಮ್ಮ ಬಗ್ಗೆ ಇನ್ನಷ್ಟು ನಮೂದಿಸಿ</string>
+
+    <string name="hint_uploadfile">ಚಿತ್ರ/ಪಿಡಿಎಫ್ ಅನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</string>
+    <string name="hint_uploadvideo">ಯು ಟ್ಯೂಬ್ ವೀಡಿಯೊ ಲಿಂಕ್ ಅನ್ನು ನಮೂದಿಸಿ</string>
+
+    <string name="share">ಪೋಸ್ಟ್ ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="push">ಪುಶ್ ಪೋಸ್ಟ್</string>
+    <string name="action_post">ಪೋಸ್ಟ್ ಸೇರಿಸಿ</string>
+    <string name="action_que">ಅನುಮಾನವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="action_edit_post">ಪೋಸ್ಟ್ ಸಂಪಾದಿಸಿ</string>
+    <string name="action_delete_post">ಡಿಲೀಟ್ ಪೋಸ್ಟ್</string>
+    <string name="action_report_post">ವರದಿ ಪೋಸ್ಟ್</string>
+    <string name="action_edit_contact">ಸಂಪರ್ಕವನ್ನು ಸಂಪಾದಿಸಿ</string>
+    <string name="next">ಮುಂದೆ</string>
+    <string name="done">ಮುಂದೆ</string>
+    <string name="deny">ನಿರಾಕರಿಸು</string>
+    <string name="to_this_group">ಈ ಗುಂಪಿಗೆ</string>
+    <string name="to_groups">ಗುಂಪುಗಳಿಗೆ</string>
+    <string name="to_group">ಗುಂಪಿಗೆ</string>
+    <string name="to_teams">ತಂಡಗಳಿಗೆ</string>
+    <string name="to_team">ತಂಡಗಳಿಗೆ</string>
+    <string name="to_friends">ಸ್ನೇಹಿತರಿಗೆ</string>
+    <string name="register">ನೋಂದಣಿ</string>
+
+
+    <string name="lorem">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula sem a malesuada rhoncus. Pellentesque ut dolor a dui porttitor porta lacinia non libero. Nunc volutpat arcu quis quam convallis molestie. Etiam ac tristique sem, id commodo justo. Phasellus congue tincidunt lectus, at dignissim ligula maximus eu. Quisque interdum nunc eget tellus bibendum suscipit. Phasellus feugiat ultricies posuere. Nullam porta accumsan velit, ut rutrum massa fermentum eu. Nunc ac bibendum nunc. Mauris eu ultricies ipsum. Ut id dolor dui. Pellentesque dictum dui vel tempus maximus. Vivamus non nisi quis libero scelerisque pretium. Ut eu tristique justo. Sed pellentesque placerat quam, ut ultricies turpis feugiat a. Aliquam a volutpat risus.
+
+    Praesent at lectus semper, suscipit elit in, facilisis massa. Phasellus sed vestibulum ante, a euismod sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Proin tincidunt orci augue, a porta odio lacinia eu. Nunc in congue risus. Maecenas commodo nibh ac enim fermentum, eu sagittis massa blandit. Vestibulum elementum massa nec dapibus mollis. Etiam porta, est sit amet aliquet porta, odio elit finibus risus, id rutrum purus mi non ipsum. Nulla viverra nec enim sed venenatis.
+
+    Maecenas mattis, erat et viverra euismod, neque diam porttitor tellus, in fringilla metus est id augue. Nunc at metus cursus, porttitor nisi vitae, congue diam. Curabitur ligula massa, ullamcorper eget scelerisque vel, pharetra ac sapien. Ut auctor luctus ultricies. Nullam semper tortor ac elementum luctus. In et tempus ex. Praesent sodales, dolor id volutpat elementum, ligula enim euismod odio, maximus sodales magna neque nec neque. Curabitur pretium nisl neque, consequat aliquet dui tincidunt ac. Vivamus augue nunc, aliquet eu ex a, ultrices aliquam lorem. Duis nibh lectus, ultricies vel iaculis sit amet, imperdiet id sapien. Duis scelerisque sodales metus eu rutrum. Suspendisse posuere nisi ac magna consequat, eu vestibulum ipsum venenatis. Suspendisse auctor nisi nec leo venenatis tristique.
+
+    Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent vitae blandit sapien. Curabitur est sapien, lobortis sit amet facilisis vel, faucibus eu quam. Nam tempus libero at tellus tempor laoreet. Pellentesque quam lorem, tincidunt in molestie eget, dictum vel risus. Nunc gravida convallis mattis.
+    </string>
+
+    <string name="quila_name">ಕ್ವಿಲಾ</string>
+    <string name="quila_tagline"></string>
+    <string name="quila_name2">ಕ್ವಿಲಾ!</string>
+    <string name="lorem_small">ಲೋರೆಮ್ ಇಪ್ಸಮ್ ಡೋಲರ್ ಸಿಟ್ ಅಮೆಟ್, ಕಾನ್ಸೆಕ್ಟೆಟರ್ ಅಡಿಪಿಸಿಂಗ್ ಎಲಿಟ್. ಡೊನೆಕ್ ವೆಹಿಕುಲಾ ಸೆಮ್ ಎ ಮಲೆಸುಡಾ ರೋಂಕಸ್. ಪೆಲ್ಲೆಂಟೆಸ್ಕ್ ಯುಟ್ ಡಾಲೋರ್ ಎ ಡುಯಿ ಪೋರ್ಟಿಟರ್ ಪೋರ್ಟಾ ಲಾಸಿನಿಯಾ ನಾನ್ ಲಿಬೆರೋ.</string>
+
+    <string name="opt_send_text">OTP ಕಳುಹಿಸಲಾಗಿದೆ.</string>
+
+    <string name="api_exception_msg">ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ನಿಧಾನವಾಗಿದೆ, ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ..</string>
+
+    <string name="remember_me">ನನ್ನನ್ನು ನೆನಪಿನಲ್ಲಿ ಇಡು</string>
+    <string name="tap_here_to_get_OPT">(ನೀವು OTP ಸ್ವೀಕರಿಸುತ್ತೀರಿ)</string>
+
+
+    <string name="menu_title_take_photo">ಫೋಟೋ ತೆಗೆಯಿರಿ</string>
+    <string name="menu_title_choose_library">ಲೈಬ್ರರಿಯಿಂದ ಆರಿಸಿ</string>
+    <string name="menu_title_choose_pdf">PDF ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="menu_title_choose_youtube">ಯು ಟ್ಯೂಬ್ ಲಿಂಕ್ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="menu_title_remove_file">ಈ ಫೈಲ್ ಅನ್ನು ತೆಗೆದುಹಾಕಿ</string>
+    <string name="txt_forgot_pass">ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ</string>
+    <string name="lbl_no_team_post">ಟೀಮ್ ಪೋಸ್ಟ್ ಇಲ್ಲ</string>
+    <string name="lbl_no_personal_chat">ವೈಯಕ್ತಿಕ ಚಾಟ್ ಇಲ್ಲ</string>
+
+
+    <string name="lbl_skip">ಬಿಟ್ಟುಬಿಡಿ</string>
+    <string name="txt_generate_otp">OTP ರಚಿಸಿ</string>
+    <string name="lbl_seconds">ಸೆಕೆಂಡುಗಳು</string>
+    <string name="lbl_otp_has_been_sent">ನಿಮ್ಮ ಸಂಖ್ಯೆಗೆ OTP ಕಳುಹಿಸಲಾಗಿದೆ</string>
+    <string name="lbl_generate_otp">OTP ಅನ್ನು ಮರುಕಳುಹಿಸಿ</string>
+    <string name="lbl_group">ಗುಂಪು</string>
+    <string name="lbl_team">ತಂಡ</string>
+    <string name="lbl_personal">ಚಾಟ್ ಮಾಡಿ</string>
+    <string name="lbl_more">ಇತರೆ</string>
+    <string name="lbl_mark">ಗುರುತುಗಳು</string>
+    <string name="lbl_profile">ಪ್ರೊಫೈಲ್</string>
+    <string name="lbl_make_app_admin">ಅಡ್ಮಿನ್ ಮಾಡಿ</string>
+    <string name="lbl_gruppie">ಗ್ರುಪ್ಪಿ</string>
+    <string name="lbl_admin_change_des">ನಿರ್ವಾಹಕರಾಗಿ ನೀವು ಹೊಂದಿರುವ ಎಲ್ಲಾ ಸವಲತ್ತುಗಳನ್ನು ಹೊಸ ನಿರ್ವಾಹಕರಿಗೆ ವರ್ಗಾಯಿಸಲಾಗುತ್ತದೆ. ನೀವು ಮುಂದುವರಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="lbl_join_gruppie">ಗ್ರುಪ್ಪಿ ಗೆ ಸೇರಿ</string>
+    <string name="lbl_friends">ಸ್ನೇಹಿತರು</string>
+    <string name="lbl_notification">ಅಧಿಸೂಚನೆ</string>
+    <string name="text_notifications">ಅಧಿಸೂಚನೆಗಳು</string>
+    <string name="lbl_about_group">ಶಾಲೆಯ ಬಗ್ಗೆ</string>
+    <string name="lbl_authorized_user">ಅಧಿಕೃತ ಬಳಕೆದಾರರು</string>
+    <string name="lbl_favourite">ಮೆಚ್ಚಿನವುಗಳು</string>
+    <string name="lbl_doubts">ಅನುಮಾನಗಳು</string>
+    <string name="lbl_doubt">ಅನುಮಾನ</string>
+    <string name="lbl_bookmarks">ಬುಕ್‌ಮಾರ್ಕ್‌ಗಳು</string>
+    <string name="lbl_faq">ಅನುಮಾನಗಳು</string>
+    <string name="lbl_group_text">ಗುಂಪುಗಳು</string>
+    <string name="lbl_reply">ಉತ್ತರಿಸು</string>
+    <string name="lbl_teams">ತಂಡಗಳು</string>
+    <string name="lbl_report">ವರದಿ</string>
+    <string name="lbl_remove">ತೆಗೆದುಹಾಕಿ</string>
+    <string name="lbl_ask_doubt">ಅನುಮಾನ ಕೇಳಿ</string>
+    <string name="lbl_banners">ಬ್ಯಾನರ್‌ಗಳು</string>
+    <string name="lbl_allow_post_question">ಪೋಸ್ಟ್ ಪ್ರಶ್ನೆಯನ್ನು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_allow_post_all">ಎಲ್ಲವನ್ನೂ ಪೋಸ್ಟ್ ಮಾಡಲು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_enable_gps">GPS ಅನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
+    <string name="lbl_allow_add_member">ಸದಸ್ಯರನ್ನು ಸೇರಿಸಲು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_allow_team_post_comment">ಟೀಮ್ ಪೋಸ್ಟ್ ಕಾಮೆಂಟ್ ಅನ್ನು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_enable_attendance">ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
+    <string name="lbl_allow_comment_all">ಎಲ್ಲವನ್ನೂ ಕಾಮೆಂಟ್ ಮಾಡಲು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_allow_share">ಹಂಚಿಕೆಯನ್ನು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_allow_everyone">ಪೋಸ್ಟ್ ಮಾಡಲು ಎಲ್ಲರಿಗೂ ಅನುಮತಿಸಿ</string>
+    <string name="lbl_allow_change_admin">ನಿರ್ವಾಹಕರನ್ನು ಬದಲಾಯಿಸಲು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_post_title">ಪೋಸ್ಟ್ ಶೀರ್ಷಿಕೆ</string>
+    <string name="lbl_post_desc">ವಿವರಣೆ</string>
+    <string name="lbl_post_add_desc">ವಿವರಣೆಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="lbl_attechment">ಲಗತ್ತುಗಳು</string>
+    <string name="lbl_add_attechment">ಲಗತ್ತನ್ನು ಸೇರಿಸಿ</string>
+    <string name="lbl_image">ಚಿತ್ರ</string>
+    <string name="lbl_video">ವೀಡಿಯೊ</string>
+    <string name="lbl_documents">ಡಾಕ್</string>
+    <string name="lbl_audio">ಆಡಿಯೋ</string>
+    <string name="lbl_create_post">ಪೋಸ್ಟ್ ರಚಿಸಿ</string>
+    <string name="lbl_read_unread_user">ಓದು/ಓದದ ಬಳಕೆದಾರರು</string>
+
+    <string name="lbl_country">ದೇಶ*</string>
+    <string name="lbl_country_">ದೇಶ</string>
+    <string name="lbl_admin__">ನಿರ್ವಾಹಕ:</string>
+    <string name="lbl_admin_name">ನಿರ್ವಾಹಕರ ಹೆಸರು</string>
+    <string name="lbl_enter_new_mobile">ಹೊಸ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="lbl_update">ನವೀಕರಿಸಿ</string>
+    <string name="lbl_group_name">ತಂಡದ ಹೆಸರು</string>
+    <string name="lbl_group_type">ಗುಂಪು ಪ್ರಕಾರ</string>
+    <string name="lbl_create_group">ಗುಂಪು ರಚಿಸಿ</string>
+    <string name="lbl_update_changes">ಬದಲಾವಣೆಗಳನ್ನು ನವೀಕರಿಸಿ</string>
+    <string name="lbl_add_friend">ಸ್ನೇಹಿತರನ್ನು ಸೇರಿಸಿ/ಆಹ್ವಾನಿಸಿ</string>
+    <string name="lbl_home">ಹೋಂ</string>
+    <string name="lbl_app_name_tab">ಮಾಗೋಡು</string>
+    <string name="msg_logged_out">ಯಾರೋ ನಿಮ್ಮ ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿದ್ದಾರೆ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಲಾಗಿನ್ ಮಾಡಿ.</string>
+    <string name="msg_app_exit">ನೀವು ಅಪ್ಲಿಕೇಶನ್‌ನಿಂದ ನಿರ್ಗಮಿಸಲು ಬಯಸುವಿರಾ</string>
+    <string name="image_upload_error">ಇಮೇಜ್ ಅಪ್‌ಲೋಡ್‌ನಲ್ಲಿ ದೋಷ</string>
+    <string name="upload_error">ಅಪ್‌ಲೋಡ್‌ನಲ್ಲಿ ದೋಷ</string>
+    <string name="lbl_team_name">ತಂಡದ ಹೆಸರು</string>
+    <string name="lbl_member_details">ಸದಸ್ಯರ ವಿವರಗಳು</string>
+    <string name="lbl_president_details">ಅಧ್ಯಕ್ಷತೆ ವಹಿಸಿದ್ದರು</string>
+    <string name="lbl_create_team">ತಂಡವನ್ನು ರಚಿಸಿ</string>
+    <string name="lbl_broadcast">ಪ್ರಸಾರ</string>
+    <string name="hint_roll_no">ಕ್ರಮ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_archive_team">ಆರ್ಕೈವ್ ತಂಡ</string>
+    <string name="lbl_student_name">ವಿದ್ಯಾರ್ಥಿಯ ಹೆಸರು</string>
+    <string name="lbl_parent_number">ಪೋಷಕ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_roll_number">ಕ್ರಮ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_add">ಸೇರಿಸಿ</string>
+    <string name="lbl_gallery">ಗ್ಯಾಲರಿ</string>
+    <string name="lbl_album">ಆಲ್ಬಮ್ ಹೆಸರು</string>
+    <string name="lbl_select_all">ಎಲ್ಲವನ್ನು ಆರಿಸು</string>
+    <string name="lbl_issue_attachment">ಸಂಚಿಕೆ ಲಗತ್ತು</string>
+    <string name="lbl_mark_cardRESTORE">ಗುರುತು ಕಾರ್ಡ್</string>
+    <string name="lbl_restore">ಮರುಸ್ಥಾಪಿಸಿ</string>
+    <string name="lbl_ques_p_">ಪರೀಕ್ಷೆ ಪ್ರಾರಂಭವಾದ ನಂತರ ಪ್ರಶ್ನೆ ಪತ್ರಿಕೆ ಲಭ್ಯವಿರುತ್ತದೆ</string>
+    <string name="lbl_new_password_validation">ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು</string>
+    <string name="msg_no_data_found">ಯಾವುದೇ ಡೇಟಾ ಕಂಡುಬಂದಿಲ್ಲ</string><!--ಯಾವುದೇ ಡೇಟಾ ಕಂಡುಬಂದಿಲ್ಲ-->
+    <string name="lbl_time_table">ಟೈಮ್ ಟೇಬಲ್</string>
+    <string name="lbl_vendor">ಮಾರಾಟಗಾರರ ಹೆಸರು</string>
+    <string name="lbl_vendor_connect">ಮಾರಾಟಗಾರರು</string>
+    <string name="lbl_code_of_conduct">ನಿಯಮಗಳು ಮತ್ತು ನಿಯಂತ್ರಣ</string>
+    <string name="lbl_share_post">ಪೋಸ್ಟ್ ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="calendar">ಕ್ಯಾಲೆಂಡರ್</string>
+    <string name="lbl_view_discuss">ಚರ್ಚೆಗಳನ್ನು ವೀಕ್ಷಿಸಿ</string>
+    <string name="lbl_my_people">ನನ್ನ ಜನ</string>
+    <string name="lbl_nest_people">ನೆಸ್ಟೆಡ್ ಜನರು</string>
+    <string name="lbl_add_time_table">ಟೈಮ್ ಟೇಬಲ್ ಸೇರಿಸಿ</string>
+    <string name="lbl_add_time_table_for">ಇದಕ್ಕಾಗಿ ಟೈಮ್ ಟೇಬಲ್ ಸೇರಿಸಿ</string>
+    <string name="hint_old_pass">ಹಳೆಯ ಪಾಸ್ವರ್ಡ್</string>
+    <string name="lbl_read_unread_users">ಓದದಿರುವ ಬಳಕೆದಾರರನ್ನು ಓದಿ</string>
+    <string name="lbl_read_users">ಬಳಕೆದಾರರನ್ನು ಓದಿ</string>
+    <string name="lbl_un_read_users">ಓದದ ಬಳಕೆದಾರರು</string>
+    <string name="lbl_no_user_found">ಯಾವುದೇ ಬಳಕೆದಾರ ಕಂಡುಬಂದಿಲ್ಲ</string><!--ಯಾವುದೇ ಬಳಕೆದಾರ ಕಂಡುಬಂದಿಲ್ಲ-->
+    <string name="lbl_classes">ಎಲ್ಲಾ ತರಗತಿಗಳು</string>
+    <string name="lbl_class_name">ವರ್ಗ</string>
+    <string name="lbl_addharCard">ಆಧಾರ್ ಕಾರ್ಡ್</string>
+    <string name="lbl_add_class">ವರ್ಗ ಸೇರಿಸಿ</string>
+    <string name="lbl_add_regular_class">Add Regular Class</string>
+    <string name="lbl_add_combined_class">Add Combined/Other Class</string>
+    <string name="lbl_add_tikit">ಟಿಕೆಟ್ ತೆರೆಯಿರಿ</string>
+
+    <string name="lbl_tikit">ಟಿಕೆಟ್‌ಗಳು</string>
+    <string name="lbl_select_role">ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_tikit_details">ಟಿಕೆಟ್ ವಿವರಗಳು</string>
+    <string name="lbl_task_force">ಕಾರ್ಯಪಡೆ</string>
+    <string name="lbl_feed">ಫೀಡ್</string>
+    <string name="lbl_dashboard">ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</string>
+    <string name="lbl_daily_activity">ದೈನಂದಿನ ಚಟುವಟಿಕೆ</string>
+    <string name="lbl_communication_message">ಸಂವಹನ ಅಥವಾ ಸಂದೇಶ</string>
+    <string name="lbl_other_activity">ಇತರೆ ಚಟುವಟಿಕೆ</string>
+    <string name="lbl_teacher_name">ವರ್ಗ ಶಿಕ್ಷಕ</string>
+    <string name="lbl_students">ವಿದ್ಯಾರ್ಥಿಗಳು</string>
+    <string name="lbl_class_register_student">ವರ್ಗ/ವಿದ್ಯಾರ್ಥಿ ನೋಂದಣಿ</string>
+    <string name="lbl_register_student">ವಿದ್ಯಾರ್ಥಿ ನೋಂದಣಿ</string>
+    <string name="lbl_register_subject">ವಿಷಯ ನೋಂದಣಿ</string>
+    <string name="lbl_register_subject_assign">ನಿಯೋಜಿಸಿ</string>
+    <string name="lbl_student_id">ವಿದ್ಯಾರ್ಥಿಯ ಐಡಿ</string>
+    <string name="lbl_admition_number">ಪ್ರವೇಶ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_section">ವಿಭಾಗ</string>
+    <string name="lbl_doj">ಸೇರ್ಪಡೆ ದಿನಾಂಕ</string>
+    <string name="lbl_fatherName">ತಂದೆಯ ಹೆಸರು</string>
+    <string name="lbl_motherName">ತಾಯಿಯ ಹೆಸರು</string>
+    <string name="lbl_fatherNumber">ಸಂಪರ್ಕ ಸಂಖ್ಯೆ - ತಂದೆ</string>
+    <string name="lbl_motherNumber">ಸಂಪರ್ಕ ಸಂಖ್ಯೆ - ತಾಯಿ</string>
+    <string name="lbl_attendance_report">ಹಾಜರಾತಿ ವರದಿ</string>
+    <string name="lbl_event">ಈವೆಂಟ್</string>
+    <string name="lbl_holiday">ರಜೆ</string>
+    <string name="leave_request">ವಿನಂತಿಯನ್ನು ಬಿಡಿ</string>
+    <string name="lbl_reason">ಕಾರಣ</string>
+    <string name="lbl_submit">ಸಲ್ಲಿಸು</string>
+
+    <string name="msg_leave_request_success">ಲೀವ್ ವಿನಂತಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಿ</string>
+    <string name="lbl_select_Admin">ನಿರ್ವಾಹಕರನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_select_kids">ಮಕ್ಕಳನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_bus_register">ಬಸ್ ನೋಂದಣಿ</string>
+    <string name="add_bus">ಬಸ್ ಸೇರಿಸಿ</string>
+    <string name="lbl_driver_name">ಚಾಲಕ ಹೆಸರು</string>
+    <string name="lbl_route_name">ರೂಟ್</string>
+    <string name="lbl_staff_register">ಸಿಬ್ಬಂದಿ ನೋಂದಣಿ</string>
+    <string name="lbl_name">ಹೆಸರು*</string>
+    <string name="lbl_name_">ಹೆಸರು</string>
+    <string name="lbl_description">ವಿವರಣೆ</string>
+    <string name="lbl_staff_id">ಸಿಬ್ಬಂದಿ ಐಡಿ</string>
+    <string name="lbl_members">ಸದಸ್ಯರು</string>
+    <string name="lbl_delete_test">ಪರೀಕ್ಷೆಯನ್ನು ಅಳಿಸಿ</string>
+    <string name="lbl_qualification">ಅರ್ಹತೆ</string>
+
+    <string name="lbl_religion">ಧರ್ಮ</string>
+    <string name="lbl_cast">ಜಾತಿ</string>
+    <string name="lbl_bloodGroup">ರಕ್ತದ ಗುಂಪು</string>
+    <string name="lbl_add_staff">ಸಿಬ್ಬಂದಿಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="lbl_add_students">ವಿದ್ಯಾರ್ಥಿಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="lbl_add_events">ಈವೆಂಟ್ ಸೇರಿಸಿ</string>
+    <string name="lbl_in">IN</string>
+    <string name="lbl_out">ಔಟ್</string>
+    <string name="lbl_title">ಶೀರ್ಷಿಕೆ</string>
+    <string name="lbl_class">ವರ್ಗ</string>
+    <string name="lbl_email_id">ಇಮೇಲ್ ಐಡಿ</string>
+    <string name="lbl_class_subject">ವರ್ಗ ವಿಷಯ</string>
+    <string name="lbl_add_subject">ವಿಷಯವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="lbl_select_subject">ವಿಷಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_absent_student">ಗೈರು ಹಾಜರಾದ ವಿದ್ಯಾರ್ಥಿಗಳು</string>
+    <string name="lbl_select_mark_card">ಗುರುತು ಕಾರ್ಡ್</string>
+    <string name="lbl_create_mark_card">ಮಾರ್ಕ್ ಕಾರ್ಡ್ ರಚಿಸಿ</string>
+    <string name="lbl_create">ರಚಿಸಿ</string>
+    <string name="lbl_duration">ಅವಧಿ</string>
+    <string name="hint_from">ಇಂದ</string>
+    <string name="hint_to">ಗೆ</string>
+    <string name="lbl_allow_team_post">ಟೀಮ್ ಪೋಸ್ಟ್ ಅನ್ನು ಅನುಮತಿಸಿ</string>
+    <string name="lbl_subjects">ವಿಷಯಗಳ</string>
+    <string name="lbl_obtained_mark">ಅಂಕಗಳನ್ನು ಪಡೆದರು</string>
+    <string name="lbl_add_marks">ಮಾರ್ಕ್ಸ್ ಸೇರಿಸಿ</string>
+    <string name="lbl_add_subjects_marks">ವಿಷಯದ ಅಂಕಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="hint_max_marks">ಗರಿಷ್ಠ ಅಂಕಗಳು</string>
+    <string name="hint_username">ಬಳಕೆದಾರ ಹೆಸರು</string>
+    <string name="hint_profile_update_des">33% ಪ್ರೊಫೈಲ್ ಅನ್ನು ನವೀಕರಿಸಲಾಗಿದೆ</string>
+
+    <string name="lbl_update_mark_card">ಮಾರ್ಕ್ ಕಾರ್ಡ್ ಅನ್ನು ನವೀಕರಿಸಿ</string>
+    <string name="hint_min_marks">ಕನಿಷ್ಠ ಗುರುತುಗಳು</string>
+    <string name="lbl_youtube">ಯು ಟ್ಯೂಬ್</string>
+    <string name="lbl_pdf">ಪಿಡಿಎಫ್</string>
+    <string name="lbl_delete_mark_card">ಮಾರ್ಕ್ ಕಾರ್ಡ್ ಅನ್ನು ಅಳಿಸಿ</string>
+    <string name="lbl_remove_file">ಫೈಲ್ ತೆಗೆದುಹಾಕಿ</string>
+    <string name="lbl_ok">ಸರಿ</string>
+    <string name="lbl_register_e_book">ಇ-ಪುಸ್ತಕಗಳ ನೋಂದಣಿ</string>
+    <string name="lbl_add_ebook">ಇ-ಪುಸ್ತಕವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="hint_select_Pdf_Book">ಪಿಡಿಎಫ್ ಪುಸ್ತಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_select_book">ಪುಸ್ತಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_select_ebook_class">ಇ-ಪುಸ್ತಕ ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="ebooks">ಇ-ಪುಸ್ತಕಗಳು</string>
+    <string name="lbl_select_page">ಪುಟವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_AddToken">ಟೋಕನ್ ಸೇರಿಸಿ</string>
+    <string name="lbl_select_staff">ಸಿಬ್ಬಂದಿ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_subject">ವಿಷಯ</string>
+    <string name="lbl_select_teacher">ಶಿಕ್ಷಕರನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="strAddNew">ಹೊಸದನ್ನು ಸೇರಿಸಿ</string>
+    <string name="lbl_chapter_name">ಅಧ್ಯಾಯದ ಹೆಸರು</string>
+    <string name="lbl_topic_name">ವಿಷಯದ ಹೆಸರು</string>
+    <string name="lbl_delete_topic">ವಿಷಯವನ್ನು ಅಳಿಸಿ</string>
+    <string name="lbl_update_subject">ವಿಷಯವನ್ನು ನವೀಕರಿಸಿ</string>
+    <string name="lbl_completed_student">ಪೂರ್ಣಗೊಳಿಸಿದ ವಿದ್ಯಾರ್ಥಿಗಳು</string>
+    <string name="lbl_not_completed_student">ಪೂರ್ಣಗೊಳಿಸದ ವಿಷಯ ವಿದ್ಯಾರ್ಥಿಗಳು</string>
+    <string name="lbl_completed_topic_student">ಪೂರ್ಣಗೊಂಡ ವಿಷಯ ವಿದ್ಯಾರ್ಥಿಗಳು</string>
+    <string name="lbl_fees_details">ಶುಲ್ಕದ ವಿವರಗಳು</string>
+    <string name="lbl_fees_title">ಶುಲ್ಕ ಶೀರ್ಷಿಕೆ</string>
+    <string name="lbl_total_fees">ಒಟ್ಟು ಶುಲ್ಕಗಳು</string>
+    <string name="hint_amount">ಮೊತ್ತ</string>
+    <string name="lbl_due_date">ನಿಗದಿತ ದಿನಾಂಕಗಳು</string>
+    <string name="hint_min_amount">ಕನಿಷ್ಠ ಮೊತ್ತ</string>
+    <string name="due_date">ಅಂತಿಮ ದಿನಾಂಕ</string>
+    <string name="lbl_title_Text">ಶೀರ್ಷಿಕೆ ಪಠ್ಯ</string>
+    <string name="lbl_gruppie_contact">ಗ್ರುಪ್ಪಿ ಸಂಪರ್ಕಗಳು</string>
+    <string name="lbl_PaidDates">ಪಾವತಿಸಿದ ದಿನಾಂಕಗಳು</string>
+    <string name="lbl_total_paid">ಪಾವತಿಸಿದ ಮೊತ್ತ</string>
+    <string name="paid_date">ಪಾವತಿಸಿದ ದಿನಾಂಕ</string>
+    <string name="lbl_total_balance">ಒಟ್ಟು ಬ್ಯಾಲೆನ್ಸ್ ಮೊತ್ತ</string>
+    <string name="lbl_total_amount_paid">ಪಾವತಿಸಿದ ಒಟ್ಟು ಮೊತ್ತ</string>
+    <string name="lbl_enter_chapter_name">ಅಧ್ಯಾಯದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="lbl_enter_topic_name">Enter Topic name</string>
+    <string name="lbl_completed">ಪೂರ್ಣಗೊಂಡಿದೆ</string>
+    <string name="lbl_clear">ಸ್ಪಷ್ಟ</string>
+    <string name="lbl_filter">ಫಿಲ್ಟರ್</string>
+
+    <string name="lbl_select_class">ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="strYes">ಹೌದು</string>
+    <string name="strNo"> ಇಲ್ಲ</string>
+    <string name="strDescription">ವಿವರಣೆ</string>
+    <string name="lbl_last_submition_date">ಕೊನೆಯ ಸಲ್ಲಿಕೆ ಡಾ</string>
+    <string name="hint_date">ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="strDeleteHw">ಮನೆಕೆಲಸವನ್ನು ಅಳಿಸಿ</string>
+    <string name="lbl_attendance_report_online">ಆನ್‌ಲೈನ್ ಹಾಜರಾತಿ ವರದಿ</string>
+    <string name="lbl_generate_report">ವರದಿಯನ್ನು ರಚಿಸಿ</string>
+    <string name="not_verified"></string>
+    <string name="reassigned"></string>
+    <string name="verified"></string>
+    <string name="lbl_subject_name">ವಿಷಯದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="lbl_course_name">ಕೋರ್ಸ್ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="lbl_period">ಅವಧಿ</string>
+    <string name="student_attendance_report">ವಿದ್ಯಾರ್ಥಿಗಳ ಹಾಜರಾತಿ ವರದಿ</string>
+    <string name="download">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+    <string name="share_">ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="strDrawing">ಚಿತ್ರ</string>
+    <string name="strText">ಪಠ್ಯ</string>
+    <string name="strEraser">ಎರೇಸರ್</string>
+    <string name="strZoom">ಜೂಮ್ ಮಾಡಿ</string>
+    <string name="lbl_enter_text">ಪಠ್ಯವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="strBox">ಬಾಕ್ಸ್</string>
+    <string name="hint_time">ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="hint_enter_marks">ಅಂಕಗಳನ್ನು ನಮೂದಿಸಿ</string>
+
+    <string name="select_start_end_time">ಪ್ರಾರಂಭವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="hint_test_date">ಪರೀಕ್ಷಾ ದಿನಾಂಕ</string>
+    <string name="hint_level">ಮಟ್ಟ:</string>
+    <string name="hint_test_start_time">ಆರಂಭವಾಗುವ</string>
+    <string name="hint_test_end_time">ಅಂತಿಮ ಸಮಯ</string>
+    <string name="strLastSubTime">ಕೊನೆಯ ಸಲ್ಲಿಕೆ ಸಮಯ</string>
+    <string name="strProctoring">ಪ್ರೊಕ್ಟರಿಂಗ್</string>
+    <string name="strScheduleTest">ವೇಳಾಪಟ್ಟಿ ಪರೀಕ್ಷೆ/ಪರೀಕ್ಷೆ</string>
+    <string name="strGetQuestPaperLink">ಪ್ರಶ್ನೆ ಪತ್ರಿಕೆಯ ಲಿಂಕ್ ಪಡೆಯಿರಿ</string>
+    <string name="strSend">ಕಳುಹಿಸು</string>
+    <string name="lbl_test_name">ಪರೀಕ್ಷೆಯ ಹೆಸರು</string>
+    <string name="hint_search_group">ಹುಡುಕಿ </string>
+
+    <string name="lbl_paid_fees">ಪಾವತಿಸಿದ ಶುಲ್ಕಗಳು</string>
+    <string name="lbl_class_fees">ವರ್ಗ ಶುಲ್ಕಗಳು</string>
+    <string name="due_amount">ಬಾಕಿ</string>
+    <string name="lbl_pay">ಪಾವತಿ</string>
+    <string name="lbl_delete_test_paper">ಪರೀಕ್ಷಾ ಪೇಪರ್ ಅಳಿಸಿ</string>
+    <string name="lbl_paid_details">ಪಾವತಿಸಿದ ವಿವರಗಳು</string>
+    <string name="lbl_amount_paid">ಪಾವತಿಸಿದ ಮೊತ್ತ:</string>
+    <string name="lbl_mode">ಮೋಡ್:</string>
+    <string name="lbl_attachment">ಲಗತ್ತು:</string>
+    <string name="lbl_approve">ಅನುಮೋದಿಸಿ</string>
+    <string name="lbl_hold">ಹಿಡಿದುಕೊಳ್ಳಿ</string>
+    <string name="lbl_not_approve">ಅನುಮೋದಿಸುವುದಿಲ್ಲ</string>
+    <string name="lbl_offline">ಆಫ್‌ಲೈನ್</string>
+    <string name="lbl_online">ಆನ್‌ಲೈನ್</string>
+    <string name="lbl_add_subject_mark">ವಿಷಯ / ಅಂಕಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="lbl_Date">ದಿನಾಂಕ</string>
+    <string name="lbl_just_now">ಈಗ ತಾನೆ</string>
+    <string name="lbl_Start_Time">ಆರಂಭವಾಗುವ</string>
+    <string name="lbl_start">ಪ್ರಾರಂಭಿಸಿ</string>
+    <string name="lbl_stop">ನಿಲ್ಲಿಸು</string>
+    <string name="lbl_End_Time">ಅಂತಿಮ ಸಮಯ</string>
+    <string name="lbl_Time">ಸಮಯ</string>
+    <string name="lbl_Max_Marks">ಗರಿಷ್ಠ ಅಂಕಗಳು</string>
+    <string name="lbl_Min_Marks">ಕನಿಷ್ಠ ಗುರುತುಗಳು</string>
+    <string name="lbl_ResultDate">ಫಲಿತಾಂಶ ದಿನಾಂಕ</string>
+    <string name="strSelectDate">ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_Max">ಗರಿಷ್ಠ</string>
+    <string name="lbl_min">ಕನಿಷ್ಠ</string>
+    <string name="lbl_obtain">ಪಡೆಯಲಾಗಿದೆ</string>
+    <string name="lbl_about_constituency">ಕ್ಷೇತ್ರದ ಬಗ್ಗೆ</string>
+    <string name="lbl_booth_register">ಬೂತ್/ಸದಸ್ಯರ ನೋಂದಣಿ</string>
+    <string name="lbl_booths_register">ಬೂತ್ ರಿಜಿಸ್ಟರ್</string>
+    <string name="lbl_committee">ಸಮಿತಿ</string>
+    <string name="strDeleteCommittee">ಸಮಿತಿಯನ್ನು ಅಳಿಸಿ</string>
+    <string name="strEditCommittee">ಸಂಪಾದನೆ ಸಮಿತಿ</string>
+    <string name="lbl_family_register">ಕುಟುಂಬ ನೋಂದಣಿ</string>
+    <string name="lbl_booth_name">ಮತಗಟ್ಟೆ ಹೆಸರು*</string>
+    <string name="lbl_booth_president">ಮತಗಟ್ಟೆ ಅಧ್ಯಕ್ಷರ ಹೆಸರು*</string>
+    <string name="lbl_add_booth">ಬೂತ್ ಸೇರಿಸಿ</string>
+    <string name="lbl_add_committee">ಸಮಿತಿಯನ್ನು ಸೇರಿಸಿ</string>
+
+    <string name="lbl_update_committee">ನವೀಕರಣ ಸಮಿತಿ</string>
+    <string name="relationship">ಸಂಬಂಧ*</string>
+    <string name="lbl_voterId">ವೋಟರ್ ಐಡಿ</string>
+    <string name="lbl_category">ವರ್ಗ</string>
+    <string name="lbl_voterId_v2">ವೋಟರ್ ಐಡಿ*</string>
+    <string name="lbl_education">ಶಿಕ್ಷಣ</string>
+    <string name="lbl_profession">ವೃತ್ತಿ</string>
+    <string name="lbl_caste">ಜಾತಿ</string>
+    <string name="lbl_sub_caste">ಉಪ ಜಾತಿ</string>
+    <string name="lbl_voterId2">ವೋಟರ್ ಐಡಿ*</string>
+    <string name="lbl_adharNumber">ಆಧಾರ್ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_role">ಪಾತ್ರ</string>
+    <string name="lbl_Booths">ಮತಗಟ್ಟೆಗಳು</string>
+    <string name="lbl_Workers">ಕಾರ್ಮಿಕರ ಪಟ್ಟಿ</string>
+    <string name="lbl_Street">ಬೀದಿ ಪಟ್ಟಿ</string>
+    <string name="lbl_Voter">ಮತದಾರರ ಪಟ್ಟಿ</string>
+    <string name="lbl_public_forum">ಸಾರ್ವಜನಿಕ ವೇದಿಕೆ</string>
+    <string name="strMsgConst">ನೀವು ನೇರ ಸಭೆಯನ್ನು ಮುಂದುವರಿಸಲು ಬಯಸುವಿರಾ?</string>
+    <string name="lbl_my_profile">ನನ್ನ ಮಾಹಿತಿ</string>
+    <string name="lbl_info">ಮಾಹಿತಿ</string>
+    <string name="lbl_end">ಅಂತ್ಯ</string>
+
+    <string name="lbl_family">ಕುಟುಂಬದ ಮಾಹಿತಿ</string>
+    <string name="lbl_save">ಉಳಿಸಿ</string>
+    <string name="lbl_RegisterIssue">ಸಂಚಿಕೆ/ಟಾಸ್ಕ್‌ಫೋರ್ಸ್ ರಿಜಿಸ್ಟರ್</string>
+    <string name="lbl_RecordAudio">ರೆಕಾರ್ಡ್ ಆಡಿಯೋ</string>
+    <string name="lbl_jurisdiction">ನ್ಯಾಯವ್ಯಾಪ್ತಿ/ಸ್ಥಳ*</string>
+    <string name="lbl_issue">ಸಮಸ್ಯೆ*</string>
+    <string name="lbl_V1_issue">ಸಮಸ್ಯೆ</string>
+    <string name="lbl_days">ದಿನಗಳು</string>
+    <string name="lbl_name__">ಹೆಸರು:</string>
+    <string name="lbl_roll_no">ಕ್ರಮ ಸಂಖ್ಯೆ :</string>
+    <string name="lbl_exam_duration">ಪರೀಕ್ಷೆಯ ಅವಧಿ:</string>
+    <string name="lbl_total_marks">ಒಟ್ಟು ಅಂಕಗಳು:</string>
+    <string name="lbl_mark_card">ಗುರುತು ಕಾರ್ಡ್</string>
+    <string name="lbl_day">ದಿನ</string>
+    <string name="lbl_roll_No">ರೋಲ್ ನಂ</string>
+    <string name="lbl_morning">ಬೆಳಗ್ಗೆ</string>
+    <string name="lbl_all_booth_member">ಎಲ್ಲಾ ಮತಗಟ್ಟೆ ಸದಸ್ಯರು</string>
+    <string name="lbl_add_ticket">ಹೊಸ ಟಿಕೆಟ್</string>
+    <string name="lbl_select_class_">ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_evening">ಸಂಜೆ</string>
+    <string name="lbl_add_issue">ಸಮಸ್ಯೆಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="lbl_departmentMember">ಇಲಾಖೆ ಸದಸ್ಯ</string>
+    <string name="lbl_departmentTaskForce">ಇಲಾಖೆ ಕಾರ್ಯಪಡೆ</string>
+    <string name="lbl_partyMember">ಪಕ್ಷದ ಸದಸ್ಯ</string>
+    <string name="lbl_partyTaskForce">ಪಕ್ಷದ ಕಾರ್ಯಪಡೆ</string>
+    <string name="lbl_edit">ತಿದ್ದು</string>
+    <string name="strDelete">ಅಳಿಸಿ</string>
+    <string name="strTicket">ಟಿಕೆಟ್ ಅಳಿಸಿ</string>
+    <string name="lbl_select_contact">ಸಂಪರ್ಕಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="strSelect">ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="lbl_booth_coordinate_register">ಮತಗಟ್ಟೆ ಸಂಯೋಜಕರ ನೋಂದಣಿ</string>
+    <string name="lbl_booth_coordinate">ಮತಗಟ್ಟೆ ಸಂಯೋಜಕರು</string>
+    <string name="lbl_booth_in_charge">ಮತಗಟ್ಟೆ ಉಸ್ತುವಾರಿ</string>
+    <string name="lbl_salary">ಸಂಬಳ</string>
+    <string name="lbl_serial_number">ಕ್ರಮ ಸಂಖ್ಯೆ</string>
+    <string name="lbl_booth_number">ಮತಗಟ್ಟೆ ಸಂಖ್ಯೆ*</string>
+    <string name="lbl_booth_address">ಬೂತ್ ವಿಳಾಸ*</string>
+    <string name="lbl_booth_ads">ಬೂತ್ ವಿಳಾಸ</string>
+    <string name="lbl_booth_about">ಬೂತ್ ಬಗ್ಗೆ*</string>
+    <string name="lbl_about_booth">ಬೂತ್ ಬಗ್ಗೆ</string>
+    <string name="lbl_print_attendance_report">ಹಾಜರಾತಿ ವರದಿಯನ್ನು ಮುದ್ರಿಸಿ</string>
+    <string name="lbl_course">ಕೋರ್ಸ್</string>
+    <string name="lbl_select_sticker">ಸ್ಟಿಕ್ಕರ್ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="lbl_submit_attendance">ಹಾಜರಾತಿ ಸಲ್ಲಿಸಿ</string>
+
+    <string name="lbl_do_you_want_to_continue_class">ನೀವು ತರಗತಿಯನ್ನು ಮುಂದುವರಿಸಲು ಬಯಸುವಿರಾ?</string>
+
+
+    <string name="rb_write_properly">ಸರಿಯಾಗಿ ಬರೆಯಿರಿ</string>
+    <string name="rb_spelling_mistakes">ಕಾಗುಣಿತ ತಪ್ಪುಗಳು</string>
+    <string name="rb_improve_handwriting">ಕೈಬರಹವನ್ನು ಸುಧಾರಿಸಿ</string>
+    <string name="rb_write_your_own">ನಿಮ್ಮದೇ ಆದದನ್ನು ಬರೆಯಿರಿ</string>
+    <string name="rb_open_within_app">ಅಪ್ಲಿಕೇಶನ್‌ನಲ್ಲಿ ತೆರೆಯಿರಿ</string>
+    <string name="rb_open_with_jitsi">ಜಿಟ್ಸಿಯೊಂದಿಗೆ ತೆರೆಯಿರಿ</string>
+
+    <string name="menu_import_students">ವಿದ್ಯಾರ್ಥಿಗಳನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಿ</string>
+    <string name="add">ಸೇರಿಸಿ</string>
+    <string name="menu_invite">ಆಹ್ವಾನಿಸಿ</string>
+    <string name="menu_delete_chapter">ಅಧ್ಯಾಯವನ್ನು ಅಳಿಸಿ</string>
+    <string name="menu_add_chapter">ಅಧ್ಯಾಯವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="menu_print_student_list">ವಿದ್ಯಾರ್ಥಿಗಳ ಪಟ್ಟಿಯನ್ನು ಮುದ್ರಿಸಿ</string>
+    <string name="menu_delete_time_table">ಟೈಮ್ ಟೇಬಲ್ ಅಳಿಸಿ</string>
+    <string name="menu_add_ebooks">ಇ-ಪುಸ್ತಕಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="menu_allow_to_add_member">ಸದಸ್ಯರನ್ನು ಸೇರಿಸಲು ಅನುಮತಿಸಿ</string>
+    <string name="menu_allow_to_add_post">ಪೋಸ್ಟ್ ಸೇರಿಸಲು ಅನುಮತಿಸಿ</string>
+    <string name="menu_allow_to_add_post_comment">ಪೋಸ್ಟ್ ಕಾಮೆಂಟ್ ಸೇರಿಸಲು ಅನುಮತಿಸಿ</string>
+    <string name="menu_add_family_member">ಕುಟುಂಬ ಸದಸ್ಯರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="menu_add_update_fees">ಶುಲ್ಕವನ್ನು ಸೇರಿಸಿ/ನವೀಕರಿಸಿ</string>
+    <string name="menu_print_fees">ಪ್ರಿಂಟ್ ಶುಲ್ಕ ಪಟ್ಟಿ</string>
+    <string name="menu_edit_fees">ಶುಲ್ಕವನ್ನು ಸಂಪಾದಿಸಿ</string>
+    <string name="menu_pervious">ಹಿಂದಿನ</string>
+    <string name="menu_invite_friend">ಸ್ನೇಹಿತರನ್ನು ಆಹ್ವಾನಿಸಿ</string>
+    <string name="menu_friend_list">ಗೆಳೆಯರ ಪಟ್ಟಿ</string>
+    <string name="menu_add_friend">ಸ್ನೇಹಿತರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="menu_sync_contact">ಸಂಪರ್ಕಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಿ</string>
+    <string name="menu_zoom_meeting">ಜೂಮ್ ಮೀಟಿಂಗ್</string>
+    <string name="menu_close">ಮುಚ್ಚಿ</string>
+    <string name="menu_leave_team">ತಂಡವನ್ನು ತೊರೆಯಿರಿ</string>
+    <string name="menu_edit_team">ತಂಡವನ್ನು ಸಂಪಾದಿಸಿ</string>
+    <string name="menu_add_team">ತಂಡವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="menu_print_staff">ಸಿಬ್ಬಂದಿ ಪಟ್ಟಿಯನ್ನು ಮುದ್ರಿಸಿ</string>
+    <string name="menu_delete_staff">ಸಿಬ್ಬಂದಿಯನ್ನು ಅಳಿಸಿ</string>
+    <string name="menu_make_admin">ಅಡ್ಮಿನ್ ಮಾಡಿ</string>
+    <string name="menu_text_exam">ಪರೀಕ್ಷೆ/ಪರೀಕ್ಷೆಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="menu_edit_test_exam">ಪರೀಕ್ಷೆ/ಪರೀಕ್ಷೆಯನ್ನು ಸಂಪಾದಿಸಿ</string>
+    <string name="menu_remove_test_exam">ಪರೀಕ್ಷೆ/ಪರೀಕ್ಷೆ ತೆಗೆದುಹಾಕಿ</string>
+    <string name="menu_add_update_time_table">ಟೈಮ್ ಟೇಬಲ್ ಸೇರಿಸಿ/ನವೀಕರಿಸಿ</string>
+    <string name="menu_add_topic">ವಿಷಯವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="menu_delete_test_exam">ಪರೀಕ್ಷೆ/ಪರೀಕ್ಷೆಯನ್ನು ಅಳಿಸಿ</string>
+    <string name="menu_change_language">ಭಾಷೆ ಬದಲಿಸಿ</string>
+    <string name="lbl_submit_assignment">ನಿಯೋಜನೆಯನ್ನು ಸಲ್ಲಿಸಿ</string>
+
+    <string name="title_add_bus_student">ಬಸ್ ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="title_add_">ಸೇರಿಸಿ</string>
+    <string name="title_booth_member">ಮತಗಟ್ಟೆ ಸದಸ್ಯ</string>
+    <string name="title_add_cordinate">ಸಂಯೋಜಕರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="title_cordinate_details">ಸಂಯೋಜಕರ ವಿವರ</string>
+    <string name="title_student_details">ವಿದ್ಯಾರ್ಥಿ ವಿವರ</string>
+    <string name="title_add_file_to_album">ಆಲ್ಬಮ್‌ಗೆ ಫೈಲ್ ಸೇರಿಸಿ</string>
+    <string name="title_add_to_gallery">ಗ್ಯಾಲರಿಗೆ ಸೇರಿಸಿ</string>
+    <string name="title_add_code_of_conduct">ನೀತಿ ಸಂಹಿತೆ ಸೇರಿಸಿ</string>
+    <string name="title_add_student">ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="title_update_family_member">ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ನವೀಕರಿಸಿ</string>
+    <string name="title_add_family_member">ಕುಟುಂಬ ಸದಸ್ಯರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="title_add_post_to_team">ತಂಡಕ್ಕೆ ಪೋಸ್ಟ್ ಸೇರಿಸಿ</string>
+    <string name="title_post_a_new_notice">ಹೊಸ ಸೂಚನೆಯನ್ನು ಪೋಸ್ಟ್ ಮಾಡಿ</string>
+    <string name="title_post_to">ಗೆ ಪೋಸ್ಟ್ ಮಾಡಿ</string>
+    <string name="title_add_course">ಕೋರ್ಸ್ ಸೇರಿಸಿ</string>
+    <string name="title_staff_details">ಸಿಬ್ಬಂದಿ ವಿವರ</string>
+    <string name="title_add_doubt">ಅನುಮಾನವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="title_add_answer">ಉತ್ತರವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="title_add_vendor">ಮಾರಾಟಗಾರರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="title_attendance">ಹಾಜರಾತಿ</string>
+    <string name="title_coordinator">ಸಂಯೋಜಕರು</string>
+    <string name="title_edit_attendance">ಹಾಜರಾತಿ ಸಂಪಾದಿಸಿ</string>
+    <string name="title_add_voter">ಮತದಾರರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="title_gps_track">ಜಿಪಿಎಸ್ ಟ್ರ್ಯಾಕ್</string>
+    <string name="title_marks_card">ಮಾರ್ಕ್ಸ್ ಕಾರ್ಡ್</string>
+    <string name="post">ಪೋಸ್ಟ್ ಮಾಡಿ</string>
+    <string name="title_details">ವಿವರಗಳು</string>
+    <string name="title_member_details">ಸದಸ್ಯರ ವಿವರ</string>
+    <string name="title_submit_answer_paper">ಉತ್ತರ ಪತ್ರಿಕೆಯನ್ನು ಸಲ್ಲಿಸಿ</string>
+
+    <string name="toast_enter_name">ದಯವಿಟ್ಟು ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_enter_phone">ದಯವಿಟ್ಟು ಫೋನ್ ನಮೂದಿಸಿ</string>
+    <string name="toast_valid_phone">ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_no_post">ಯಾವುದೇ ಪೋಸ್ಟ್‌ಗಳು ಲಭ್ಯವಿಲ್ಲ</string>
+    <string name="toast_already_reported">ನೀವು ಈಗಾಗಲೇ ಈ ಪೋಸ್ಟ್ ಅನ್ನು ವರದಿ ಮಾಡಿರುವಿರಿ</string>
+    <string name="toast_add_one_contact">ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಒಂದು ಸಂಪರ್ಕವನ್ನಾದರೂ ಸೇರಿಸಿ</string>
+    <string name="toast_add_member_successfully">ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಿ</string>
+    <string name="toast_storage_permission_needed">ಶೇಖರಣಾ ಅನುಮತಿ ಅಗತ್ಯವಿದೆ. ದಯವಿಟ್ಟು ಹೆಚ್ಚುವರಿ ಕಾರ್ಯಕ್ಕಾಗಿ ಅಪ್ಲಿಕೇಶನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಅನುಮತಿಸಿ.</string>
+    <string name="toast_enter_subject">ದಯವಿಟ್ಟು ವಿಷಯವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_select_pdf">ದಯವಿಟ್ಟು PDF ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_upload_failed">ಅಪ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ</string>
+    <string name="toast_some_problem_occure">ಕೆಲವು ಸಮಸ್ಯೆ ಸಂಭವಿಸಿದೆ ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ</string>
+    <string name="toast_post_delete_successfully">ಪೋಸ್ಟ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ</string>
+    <string name="toast_attendance_submit">ಹಾಜರಾತಿ ಸಲ್ಲಿಸಲಾಗಿದೆ</string>
+    <string name="toast_number_change_successfully">ಸಂಖ್ಯೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ, ದಯವಿಟ್ಟು ಹೊಸ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಮತ್ತೊಮ್ಮೆ ಲಾಗಿನ್ ಮಾಡಿ</string>
+    <string name="toast_edit_coordinate">ಸಮನ್ವಯವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಂಪಾದಿಸಿ</string>
+    <string name="toast_add_coordinate">ಯಶಸ್ವಿಯಾಗಿ ಸಮನ್ವಯವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_delete_coordinate">ನಿರ್ದೇಶಾಂಕವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಿ</string>
+    <string name="toast_mark_card_delete_successfully">ಕಾರ್ಡ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ ಎಂದು ಗುರುತಿಸಿ</string>
+    <string name="toast_input_some_query">ಮೊದಲು ಕೆಲವು ಪ್ರಶ್ನೆಗಳನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_ticket_add_successfully">ಟಿಕೆಟ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_select_team">ದಯವಿಟ್ಟು ತಂಡವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_add_issue">ದಯವಿಟ್ಟು ಸಮಸ್ಯೆಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_valid_issue">ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಸಮಸ್ಯೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_add_image_or_video_or_audio">ದಯವಿಟ್ಟು ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ ಅಥವಾ ಆಡಿಯೋ ಸೇರಿಸಿ</string>
+    <string name="toast_select_location">ದಯವಿಟ್ಟು ಸ್ಥಳವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_audio_permission_needed">ಆಡಿಯೋ ಅನುಮತಿ ಅಗತ್ಯವಿದೆ. ದಯವಿಟ್ಟು ಹೆಚ್ಚುವರಿ ಕಾರ್ಯಕ್ಕಾಗಿ ಅಪ್ಲಿಕೇಶನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಅನುಮತಿಸಿ</string>
+    <string name="toast_valid_youtube_link">ಮಾನ್ಯವಾದ YouTube ಲಿಂಕ್ ಅಲ್ಲ</string>
+    <string name="toast_change_pin">ಪಿನ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಬದಲಿಸಿ</string>
+    <string name="toast_select_friend_first">ದಯವಿಟ್ಟು ಮೊದಲು ಯಾವುದೇ ಸ್ನೇಹಿತರನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_error_comression">ಸಂಕೋಚನದಲ್ಲಿ ದೋಷ:</string>
+    <string name="toast_select_staff">ಯಾವುದೇ ಸಿಬ್ಬಂದಿ ಸದಸ್ಯರನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_add_success">ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ!</string>
+    <string name="toast_not_able_to_compress">ಆಯ್ಕೆಮಾಡಿದ ಚಿತ್ರವನ್ನು ಕುಗ್ಗಿಸಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ಪರಿಶೀಲಿಸಿ</string>
+    <string name="toast_address_not_found">ವಿಳಾಸ ಕಂಡುಬಂದಿಲ್ಲ</string>
+    <string name="toast_add_student_sucess">ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಿ</string>
+    <string name="toast_edit_student_sucess">ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಂಪಾದಿಸಿ</string>
+    <string name="toast_delete_student_sucess">ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಿ</string>
+    <string name="toast_stop_audio">ಆಡಿಯೋ ರೆಕಾರ್ಡಿಂಗ್ ನಿಲ್ಲಿಸಿ</string>
+    <string name="toast_enable_gps">ದಯವಿಟ್ಟು Gps ಅನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
+    <string name="toast_add_to_group">ಗುಂಪಿಗೆ ಸೇರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_could_not_find_file">ಆಯ್ಕೆಮಾಡಿದ ಫೈಲ್‌ನ ಫೈಲ್‌ಪಾತ್ ಅನ್ನು ಕಂಡುಹಿಡಿಯಲಾಗಲಿಲ್ಲ</string>
+    <string name="toast_app_not_install">APP ಅನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿಲ್ಲ</string>
+    <string name="toast_video_upload_background">ಹಿನ್ನೆಲೆಯಲ್ಲಿ ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ</string>
+    <string name="toast_enter_chapter_name">ದಯವಿಟ್ಟು ಅಧ್ಯಾಯದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_enter_topic_name">ದಯವಿಟ್ಟು ವಿಷಯದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_posted_successfully">ಯಶಸ್ವಿಯಾಗಿ ಪೋಸ್ಟ್ ಮಾಡಲಾಗಿದೆ</string>
+    <string name="toast_add_description">ದಯವಿಟ್ಟು ವಿವರಣೆಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_add_description_image_or_video">ದಯವಿಟ್ಟು ವಿವರಣೆಯನ್ನು ಸೇರಿಸಿ ಅಥವಾ ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_enter_msg">ದಯವಿಟ್ಟು ಸಂದೇಶವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_draw_over_permission">ಡ್ರಾ ಓವರ್ ಅನುಮತಿ ಲಭ್ಯವಿಲ್ಲ.</string>
+    <string name="toast_message_send_success">ಸಂದೇಶವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ</string>
+    <string name="toast_error_in_download">ಡೌನ್‌ಲೋಡ್‌ನಲ್ಲಿ ದೋಷ:</string>
+    <string name="toast_add_comment">ಅಭಿಪ್ರಾಯ ಸೇರಿಸು</string>
+    <string name="toast_post_reported_sucessfully">ಪೋಸ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ವರದಿಯಾಗಿದೆ</string>
+    <string name="toast_user_deleted">ಬಳಕೆದಾರರನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
+    <string name="toast_admin_changed">ನಿರ್ವಾಹಕರು ಬದಲಾಗಿದ್ದಾರೆ</string>
+    <string name="toast_attendance_report_save_successfully">ಹಾಜರಾತಿ ವರದಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಿ</string>
+    <string name="toast_notification_not_found">ಅಧಿಸೂಚನೆ ಕಂಡುಬಂದಿಲ್ಲ</string>
+    <string name="toast_please_select_student">ದಯವಿಟ್ಟು ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_shared_successfully">ಯಶಸ್ವಿಯಾಗಿ ಹಂಚಲಾಗಿದೆ</string>
+    <string name="toast_select_any_group_first">ಮೊದಲು ಯಾವುದಾದರೂ ಗುಂಪನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_you_can_not_leave_team">ನೀವು ತಂಡವನ್ನು ಬಿಡಲು ಸಾಧ್ಯವಿಲ್ಲ</string>
+    <string name="toast_error_set_wallpaper">ಸೆಟ್ ವಾಲ್‌ಪೇಪರ್‌ನಲ್ಲಿ ದೋಷ</string>
+    <string name="toast_update_successfully">ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_ebook_add_successfully">ಇ-ಪುಸ್ತಕವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_add_one_subject">ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಒಂದು ವಿಷಯವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_add_image_video_pdf">ದಯವಿಟ್ಟು ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ ಅಥವಾ ಪಿಡಿಎಫ್ ಸೇರಿಸಿ</string>
+    <string name="toast_successfully_submit">ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ</string>
+    <string name="toast_select_date">ದಯವಿಟ್ಟು ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_please_select_subject">ದಯವಿಟ್ಟು ವಿಷಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_please_select_start_time">ದಯವಿಟ್ಟು ಪ್ರಾರಂಭದ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_please_select_end_time">ದಯವಿಟ್ಟು ಮುಕ್ತಾಯ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_please_enter_max_mark">ದಯವಿಟ್ಟು ಗರಿಷ್ಠ ಅಂಕಗಳನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_please_enter_min_mark">ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಅಂಕಗಳನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_please_select_one_subject_mark">ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಒಂದು ವಿಷಯ/ಅಂಕಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_please_enter_title">ದಯವಿಟ್ಟು ಶೀರ್ಷಿಕೆಯನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_please_add_subject">ದಯವಿಟ್ಟು ವಿಷಯವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_please_add_max_marks">ದಯವಿಟ್ಟು ಗರಿಷ್ಠ ಅಂಕಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_please_add_min_marks">ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಅಂಕಗಳನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_please_select_from_date">ದಯವಿಟ್ಟು ದಿನಾಂಕದಿಂದ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_please_select_to_date">ದಯವಿಟ್ಟು ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_status_sucessfully_update">ಸ್ಥಿತಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_please_add_album_name">ದಯವಿಟ್ಟು ಆಲ್ಬಮ್ ಹೆಸರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_please_add_image_or_video">ದಯವಿಟ್ಟು ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ ಸೇರಿಸಿ</string>
+    <string name="toast_successfully_posted">ಯಶಸ್ವಿಯಾಗಿ ಪೋಸ್ಟ್ ಮಾಡಲಾಗಿದೆ</string>
+    <string name="toast_add_file_successfully">ಫೈಲ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಿ</string>
+    <string name="toast_select_group_type">ಗುಂಪು ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_successfully_updated_group_details">ಗುಂಪಿನ ವಿವರಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_please_enter_post_first">ದಯವಿಟ್ಟು ಮೊದಲು ಪೋಸ್ಟ್ ಅನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_file_delete_successfully">ಫೈಲ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಲಾಗಿದೆ</string>
+    <string name="toast_input_some_query_first">ಮೊದಲು ಕೆಲವು ಪ್ರಶ್ನೆಗಳನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_select_any_team">ದಯವಿಟ್ಟು ಯಾವುದೇ ತಂಡವನ್ನು ಮೊದಲು ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="toast_enter_fees_type">ದಯವಿಟ್ಟು ಶುಲ್ಕದ ಪ್ರಕಾರವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_enter_fees_amount">ದಯವಿಟ್ಟು ಶುಲ್ಕದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_select_due_date">ದಯವಿಟ್ಟು ಅಂತಿಮ ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_enter_due_date_amount">ದಯವಿಟ್ಟು ಅಂತಿಮ ದಿನಾಂಕದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_enter_due_amount">ದಯವಿಟ್ಟು ಬಾಕಿ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_select_paid_date">ದಯವಿಟ್ಟು ಪಾವತಿಸಿದ ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_please_enter_paid_amount">ದಯವಿಟ್ಟು ಪಾವತಿಸಿದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_please_select_paid_date">ದಯವಿಟ್ಟು ಪಾವತಿಸಿದ ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_please_enter_due_paid_amount">ದಯವಿಟ್ಟು ಪಾವತಿಸಿದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_please_enter_type">ದಯವಿಟ್ಟು ಪ್ರಕಾರವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_please_enter_amount">ದಯವಿಟ್ಟು ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_fees_details_amount_should_not_be_greater">ಶುಲ್ಕದ ವಿವರ ಮೊತ್ತವು ಒಟ್ಟು ಶುಲ್ಕದ ಮೊತ್ತಕ್ಕಿಂತ ಹೆಚ್ಚಿರಬಾರದು</string>
+    <string name="toast_paid_amount_should_not_more_than_total">ಪಾವತಿಸಿದ ಮೊತ್ತವು ಒಟ್ಟು ಶುಲ್ಕಕ್ಕಿಂತ ಹೆಚ್ಚಿರಬಾರದು</string>
+    <string name="toast_please_add_total_fees">ದಯವಿಟ್ಟು ಒಟ್ಟು ಶುಲ್ಕವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_enter_comment_first">ಮೊದಲು ಕಾಮೆಂಟ್ ನಮೂದಿಸಿ</string>
+    <string name="toast_enter_reply_first">ದಯವಿಟ್ಟು ಮೊದಲು ಉತ್ತರವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_please_add_des_image_pdf">ದಯವಿಟ್ಟು ವಿವರಣೆ ಅಥವಾ ಚಿತ್ರ ಅಥವಾ ಪಿಡಿಎಫ್ ಸೇರಿಸಿ</string>
+    <string name="toast_add_title">ದಯವಿಟ್ಟು ಶೀರ್ಷಿಕೆಯನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_select_test_time">ದಯವಿಟ್ಟು ಪರೀಕ್ಷಾ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_select_test_date">ದಯವಿಟ್ಟು ಪರೀಕ್ಷಾ ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_enter_valid_email">ಮಾನ್ಯ ಇಮೇಲ್ ನಮೂದಿಸಿ</string>
+    <string name="toast_voter_add_successfully">ಮತದಾರರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_select_contact">ದಯವಿಟ್ಟು ಸಂಪರ್ಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_image_download">ಚಿತ್ರವನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ.</string>
+    <string name="toast_mark_card_uploaded">ಮಾರ್ಕ್ಸ್ ಕಾರ್ಡ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ</string>
+    <string name="toast_select_image_pdf">ದಯವಿಟ್ಟು ಚಿತ್ರ ಅಥವಾ ಪಿಡಿಎಫ್ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_microphone_permission_needed">ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ಅಗತ್ಯವಿದೆ. ದಯವಿಟ್ಟು ಹೆಚ್ಚುವರಿ ಕಾರ್ಯಕ್ಕಾಗಿ ಅಪ್ಲಿಕೇಶನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಅನುಮತಿಸಿ.</string>
+    <string name="toast_select_start_and_date">ದಯವಿಟ್ಟು ಪ್ರಾರಂಭ ಮತ್ತು ಅಂತ್ಯದ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_select_subject_and_staff">ದಯವಿಟ್ಟು ವಿಷಯ ಮತ್ತು ಸಿಬ್ಬಂದಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_successfully_add_time_table">ಟೈಮ್ ಟೇಬಲ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_select_end_time_after_start_time">ಪ್ರಾರಂಭದ ಸಮಯದ ನಂತರ ಅಂತಿಮ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_period_value_already_used">ಅವಧಿಯ ಮೌಲ್ಯವನ್ನು ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ</string>
+    <string name="toast_password_not_match">ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ.!</string>
+    <string name="toast_device_not_supported">ಈ ಸಾಧನವು ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.</string>
+    <string name="toast_location_data_not_available">ಸ್ಥಳ ಡೇಟಾ ಲಭ್ಯವಿಲ್ಲ</string>
+    <string name="toast_edit_member_success">ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಂಪಾದಿಸಿ</string>
+    <string name="toast_delete_member_success">ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಿ</string>
+    <string name="toast_otp_sent_mobile_success">ನೀವು ನಮೂದಿಸಿದ ಮೊಬೈಲ್‌ಗೆ OTP ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ!!!</string>
+    <string name="toast_otp_send_email_success">ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ OTP ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ!!!</string>
+    <string name="toast_invalid_otp">ಅಮಾನ್ಯ OTP</string>
+    <string name="toast_invalid_otp_password">ಅಮಾನ್ಯ OTP/ಪಾಸ್‌ವರ್ಡ್</string>
+    <string name="toast_add_at_least_one_due_date">ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಒಂದು ಅಂತಿಮ ದಿನಾಂಕವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_total_fees_and_due_date_amount_same">ಒಟ್ಟು ಶುಲ್ಕಗಳು ಮತ್ತು ಅಂತಿಮ ದಿನಾಂಕಗಳ ಮೊತ್ತಗಳು ಒಂದೇ ಆಗಿರಬೇಕು</string>
+    <string name="toast_student_added">ವಿದ್ಯಾರ್ಥಿ ಸೇರಿಸಲಾಗಿದೆ.</string>
+    <string name="toast_validation_error">ಮೌಲ್ಯೀಕರಣ ದೋಷ</string>
+    <string name="toast_failed_save_image">ಚಿತ್ರವನ್ನು ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ.</string>
+    <string name="toast_please_add_text">ದಯವಿಟ್ಟು ಪಠ್ಯವನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_add_one_teacher">ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಒಬ್ಬ ಶಿಕ್ಷಕರನ್ನಾದರೂ ಸೇರಿಸಿ</string>
+    <string name="toast_add_staff_successfully">ಸಿಬ್ಬಂದಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಿ</string>
+    <string name="toast_edit_staff_successfully">ಸಿಬ್ಬಂದಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸಂಪಾದಿಸಿ</string>
+    <string name="toast_delete_staff_successfully">ಸಿಬ್ಬಂದಿಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಿ</string>
+    <string name="toast_no_kid_found">ಯಾವುದೇ ಮಕ್ಕಳು ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="toast_enter_class_name">ದಯವಿಟ್ಟು ವರ್ಗದ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_add_image_pdf">ದಯವಿಟ್ಟು ಚಿತ್ರ ಅಥವಾ ಪಿಡಿಎಫ್ ಸೇರಿಸಿ</string>
+    <string name="toast_add_title_description_image_video">ದಯವಿಟ್ಟು ಶೀರ್ಷಿಕೆ ಮತ್ತು ವಿವರಣೆಯನ್ನು ಸೇರಿಸಿ ಅಥವಾ ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="toast_user_cannot_upload_image_video_same_time">ಬಳಕೆದಾರರು ಒಂದೇ ಸಮಯದಲ್ಲಿ ಚಿತ್ರ ಮತ್ತು ವೀಡಿಯೊವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ</string>
+    <string name="toast_add_one_subject_pdf">ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಒಂದು ವಿಷಯ ಮತ್ತು ಪಿಡಿಎಫ್ ಅನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_paid_amount_should_not_grater_than_amount">ಪಾವತಿಸಿದ ಮೊತ್ತವು ಬಾಕಿ ಮೊತ್ತಕ್ಕಿಂತ ಹೆಚ್ಚಿರಬಾರದು</string>
+    <string name="toast_please_add_attachment">ದಯವಿಟ್ಟು ಲಗತ್ತನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_successfully_paid">ಯಶಸ್ವಿಯಾಗಿ ಪಾವತಿಸಲಾಗಿದೆ</string>
+    <string name="toast_wrong_password">ತಪ್ಪು ಪಾಸ್ವರ್ಡ್</string>
+    <string name="toast_add_course_name">ದಯವಿಟ್ಟು ಕೋರ್ಸ್ ಹೆಸರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_enter_relationship">ದಯವಿಟ್ಟು ಸಂಬಂಧವನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="toast_delete_family_member_successfully">ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಳಿಸಿ</string>
+    <string name="toast_update_family_member_successfully">ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಿ</string>
+    <string name="toast_add_vendor_name">ದಯವಿಟ್ಟು ಮಾರಾಟಗಾರರ ಹೆಸರನ್ನು ಸೇರಿಸಿ</string>
+    <string name="toast_success">ಯಶಸ್ಸು</string>
+    <string name="toast_delete_success">ಯಶಸ್ಸನ್ನು ಅಳಿಸಿ</string>
+    <string name="toast_course_update">ಕೋರ್ಸ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ</string>
+    <string name="toast_you_are_not_authorized">ಈ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಪ್ರವೇಶಿಸಲು ನಿಮಗೆ ಅಧಿಕಾರವಿಲ್ಲ</string>
+    <string name="toast_please_disable_attendance">ದಯವಿಟ್ಟು ಹಾಜರಾತಿಯನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ</string>
+    <string name="toast_please_disable_gps">ದಯವಿಟ್ಟು GPS ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ</string>
+    <string name="toast_create_mark_card">ದಯವಿಟ್ಟು ಮಾರ್ಕ್ ಕಾರ್ಡ್ ರಚಿಸಿ</string>
+    <string name="toast_otp_send_to">ಗೆ OTP ಕಳುಹಿಸಲಾಗಿದೆ</string>
+
+    <string name="txt_enter_old_pin">ಹಳೆಯ ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="txt_old_pin_wrong">ಹಳೆಯ ಪಿನ್ ತಪ್ಪಾಗಿದೆ</string>
+    <string name="txt_enter_new_pin">ಹೊಸ ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="txt_confirm_pin_not_match">ಪಿನ್ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ ಎಂದು ಖಚಿತಪಡಿಸಿ</string>
+    <string name="txt_enter_confirm_pin">ಪಿನ್ ಅನ್ನು ದೃಢೀಕರಿಸಿ ನಮೂದಿಸಿ</string>
+    <string name="txt_my_groups">ನನ್ನ ಗುಂಪುಗಳು</string>
+    <string name="txt_public_groups">ಸಾರ್ವಜನಿಕ ಗುಂಪುಗಳು</string>
+    <string name="txt_no_ebook_found">ಯಾವುದೇ ಇ-ಪುಸ್ತಕ ಕಂಡುಬಂದಿಲ್ಲ</string><!--ಯಾವುದೇ ಇ-ಪುಸ್ತಕ ಕಂಡುಬಂದಿಲ್ಲ-->
+    <string name="txt_no_time_table_found">ಯಾವುದೇ ಟೈಮ್ ಟೇಬಲ್ ಕಂಡುಬಂದಿಲ್ಲ</string><!--ಯಾವುದೇ ಟೈಮ್ ಟೇಬಲ್ ಕಂಡುಬಂದಿಲ್ಲ-->
+    <string name="txt_no_mark_card_found">ಯಾವುದೇ ಮಾರ್ಕ್‌ಕಾರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ</string><!--ಯಾವುದೇ ಮಾರ್ಕ್‌ಕಾರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ!-->
+    <string name="txt_no_student_found">ಯಾವುದೇ ವಿದ್ಯಾರ್ಥಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ವಿದ್ಯಾರ್ಥಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_no_booth_team_found">ಯಾವುದೇ ಬೂತ್ ತಂಡಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ಬೂತ್ ತಂಡಗಳು ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_roll_no_student">ರೋಲ್ ಸಂಖ್ಯೆ\n( ವಿದ್ಯಾರ್ಥಿ )</string>
+    <string name="txt_name_student">ಹೆಸರು\n( ವಿದ್ಯಾರ್ಥಿ )</string>
+    <string name="txt_no_street_found">ಯಾವುದೇ ಬೀದಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ಬೀದಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_no_class_found">ಯಾವುದೇ ವರ್ಗ ಕಂಡುಬಂದಿಲ್ಲ</string><!--ಯಾವುದೇ ವರ್ಗ ಕಂಡುಬಂದಿಲ್ಲ-->
+    <string name="txt_no_bus_found">ಯಾವುದೇ ಬಸ್ ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ಬಸ್ ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_no_coordinate_found">ಯಾವುದೇ ನಿರ್ದೇಶಾಂಕ ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ನಿರ್ದೇಶಾಂಕ ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_phone">ದೂರವಾಣಿ:</string>
+    <string name="txt_no_booth_member_found">ಮತಗಟ್ಟೆ ಸದಸ್ಯರು ಪತ್ತೆಯಾಗಿಲ್ಲ</string><!--ಮತಗಟ್ಟೆ ಸದಸ್ಯರು ಪತ್ತೆಯಾಗಿಲ್ಲ-->
+
+    <string name="txt_by">ಮೂಲಕ</string>
+    <string name="txt_multiple_group">ಬಹು ಗುಂಪು</string>
+    <string name="txt_news_feed">ಸುದ್ದಿ ಫೀಡ್</string>
+    <string name="txt_personal_chats">ವೈಯಕ್ತಿಕ ಚಾಟ್‌ಗಳು</string>
+    <string name="txt_group_chats">ಗುಂಪು ಚಾಟ್‌ಗಳು</string>
+    <string name="txt_book_selected"> ಪುಸ್ತಕವನ್ನು ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ</string>
+    <string name="txt_add_homework">ಹೋಮ್ವರ್ಕ್ ಸೇರಿಸಿ</string>
+    <string name="txt_remove_from_admin">ನಿರ್ವಾಹಕರಿಂದ ತೆಗೆದುಹಾಕಿ</string>
+    <string name="txt_make_as_admin">ನಿರ್ವಾಹಕರಾಗಿ ಮಾಡಿ</string>
+    <string name="txt_no_staff">ಯಾವುದೇ ಸಿಬ್ಬಂದಿ ಕಂಡುಬಂದಿಲ್ಲ.</string>
+    <string name="txt_select_start_time">ಪ್ರಾರಂಭ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="txt_to"> ಗೆ</string>
+    <string name="txt_select_end_time">ಅಂತಿಮ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="txt_select_language">ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="txt_constituency_not_found">ಯಾವುದೇ ಕ್ಷೇತ್ರ ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ಕ್ಷೇತ್ರ ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_last_submission_date">ಕೊನೆಯ ಸಲ್ಲಿಕೆ ದಿನಾಂಕ:</string>
+    <string name="txt_comment">ಕಾಮೆಂಟ್ ಮಾಡಿ</string>
+    <string name="txt_no_assignment_found">ಯಾವುದೇ ನಿಯೋಜನೆ ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ನಿಯೋಜನೆ ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_pin">ಪಿನ್</string>
+    <string name="txt_confirm_pin_wrong">ಪಿನ್ ತಪ್ಪಾಗಿದೆ ಎಂದು ದೃಢೀಕರಿಸಿ</string>
+    <string name="txt_enter_pin">ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="txt_enter_valid_pin">ಮಾನ್ಯವಾದ ಪಿನ್ ನಮೂದಿಸಿ</string>
+    <string name="txt_basic_info">ಮೂಲ ಮಾಹಿತಿ</string>
+    <string name="txt_other_info">ಇತರೆ ಮಾಹಿತಿ</string>
+    <string name="txt_no_taluks_found">ಯಾವುದೇ ತಾಲೂಕುಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ತಾಲೂಕುಗಳು ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_no_test_paper_found">ಯಾವುದೇ ಪರೀಕ್ಷಾ ಪೇಪರ್ ಕಂಡುಬಂದಿಲ್ಲ.</string><!--ಯಾವುದೇ ಪರೀಕ್ಷಾ ಪೇಪರ್ ಕಂಡುಬಂದಿಲ್ಲ.-->
+    <string name="txt_open">ತೆರೆಯಿರಿ</string>
+    <string name="txt_constituency_issue">ಕ್ಷೇತ್ರದ ಸಮಸ್ಯೆ</string>
+    <string name="txt_no_ticket_found">ಯಾವುದೇ ಟಿಕೆಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ</string><!--ಯಾವುದೇ ಟಿಕೆಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ-->
+    <string name="txt_please_provide_marks">ದಯವಿಟ್ಟು ಅಂಕಗಳನ್ನು ಒದಗಿಸಿ</string>
+    <string name="txt_reply">ಉತ್ತರಿಸು</string>
+
+    <string name="hint_search_voter">ಮತದಾರರನ್ನು ಹುಡುಕಿ</string>
+    <string name="hint_search_booths">ಬೂತ್‌ಗಳನ್ನು ಹುಡುಕಿ</string>
+    <string name="hint_write_comment">ಅನಿಸಿಕೆಯನ್ನು ಬರೆಯಿರಿ</string>
+    <string name="hint_write_post">ಪೋಸ್ಟ್ ಬರೆಯಿರಿ</string>
+    <string name="hint_write_reply">ಉತ್ತರ ಬರೆಯಿರಿ</string>
+    <string name="hint_search_booth_team">ಹುಡುಕಾಟ ಬೂತ್ ತಂಡ</string>
+    <string name="hint_search_sub_booth">ಉಪ ಬೂತ್ ಹುಡುಕಿ</string>
+
+
+
+
+    <string name="dialog_new_version_available">ಹೊಸ ಆವೃತ್ತಿ ಲಭ್ಯವಿದೆ. ಪ್ಲೇ ಸ್ಟೋರ್‌ನಿಂದ ಹೊಸ ಆವೃತ್ತಿಯನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+    <string name="dialog_update_available">ಅಪ್ಡೇಟ್ ಲಭ್ಯವಿದೆ!</string>
+    <string name="dialog_are_you_sure_you_want_to_approve">ನೀವು ಅನುಮೋದಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="dialog_are_you_sure_you_want_to_not_approve">ನೀವು ಅನುಮೋದಿಸದಿರಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="dialog_are_you_sure_you_want_to_hold">ನೀವು ಹಿಡಿದಿಡಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="dialog_are_you_want_to_delete">ನೀವು ಅಳಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="dialog_are_you_sure_want_to_delete_user">ಈ ಬಳಕೆದಾರರನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="dialog_are_you_want_to_make_admin">ಈ ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಾಹಕರನ್ನಾಗಿ ಮಾಡಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="dialog_share_live_class">ನೀವು ಈ ಲೈವ್ ತರಗತಿಯನ್ನು ಹಂಚಿಕೊಳ್ಳಲು ಬಯಸುವಿರಾ?</string>
+    <string name="dialog_remove_banner">ಈ ಬ್ಯಾನರ್ ಅನ್ನು ತೆಗೆದುಹಾಕಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="dialog_are_you_sure">ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ</string>
+    <string name="dialog_ticket"> ಟಿಕೆಟ್?</string>
+
+    <string name="smb_dialog_this_will_schedule_new_test">ಈ ವರ್ಗವನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_dialog_permission_change">ಈ ಬಸ್ ಅನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_dialog_delete_class">ಈ ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_dialog_delete_bus">ಈ ಸಮಿತಿಯನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_delete_student">ಈ ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_Delete_commitee">ಈ ಸಮಿತಿಯನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_delete_cordinate">ಈ ನಿರ್ದೇಶಾಂಕವನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_delete_staff">ಈ ಸಿಬ್ಬಂದಿಯನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_remove_from_admin">ಈ ಬಳಕೆದಾರರನ್ನು ನಿರ್ವಾಹಕರಿಂದ ತೆಗೆದುಹಾಕಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_delete_subject">ಈ ವಿಷಯಗಳನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_delete_time_table">ಟೈಮ್-ಟೇಬಲ್ ದಿನವನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_do_you_like_set_wallpaper">ನೀವು ಇದನ್ನು ವಾಲ್‌ಪೇಪರ್ ಆಗಿ ಹೊಂದಿಸಲು ಇಷ್ಟಪಡುತ್ತೀರಾ?</string>
+    <string name="smb_delete_group">ಈ ಗುಂಪನ್ನು ಅಳಿಸುವುದು ಖಚಿತವೇ?</string>
+    <string name="smb_delete_topic">ಈ ವಿಷಯವನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_delete_team">ಈ ತಂಡವನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_delete_test">ಈ ಪರೀಕ್ಷೆಯನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_stop_gps_track">GPS ಟ್ರ್ಯಾಕಿಂಗ್ ಅನ್ನು ನಿಲ್ಲಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_delete_home_work">ಈ ಹೋಮ್‌ವರ್ಕ್ ಅನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_delete_assignment">ಈ ನಿಯೋಜನೆಯನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_want_to_move">ನೀವು ಸರಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ</string>
+    <string name="smb_assignment_not_verified"> ನಿಯೋಜನೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗಿಲ್ಲವೇ?</string>
+    <string name="smb_delete">ನೀವು ಅಳಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ</string>
+    <string name="smb_from_team"> ತಂಡದಿಂದ?</string>
+    <string name="smb_share_in">ನೀವು ಹಂಚಿಕೊಳ್ಳಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ</string>
+    <string name="smb_">.?</string>
+    <string name="smb_delete_test_exam">ಈ ಪರೀಕ್ಷೆ/ಪರೀಕ್ಷೆಯನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_delete_member">ಈ ಸದಸ್ಯರನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_group">  ಗುಂಪು ?</string>
+    <string name="smb_complete_note">ನಿಮ್ಮ ಟಿಪ್ಪಣಿಗಳನ್ನು ನೀವು ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಾ?</string>
+    <string name="smb_delete_chapter">ಈ ಅಧ್ಯಾಯವನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_delete_book">ಈ ಪುಸ್ತಕಗಳನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_delete_ebook">ಈ ಇ-ಪುಸ್ತಕಗಳನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_leave_team">ನೀವು ತೊರೆಯಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_archive">ನೀವು ಆರ್ಕೈವ್ ಮಾಡಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ</string>
+    <string name="smb_delete_time_table_">ನೀವು ಟೈಮ್-ಟೇಬಲ್ ಅನ್ನು ಅಳಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+    <string name="smb_add_jitsi_token">ನೀವು jitsiToken ಸೇರಿಸಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ.?</string>
+    <string name="smb_attach_file">ಆಯ್ಕೆಮಾಡಿದ ಫೈಲ್ ಅನ್ನು ಲಗತ್ತಿಸುವುದೇ?</string>
+    <string name="smb_change_team_admin">ತಂಡದ ನಿರ್ವಾಹಕರನ್ನು ಬದಲಾಯಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ</string>
+
+    <string-array name="publc_private_array">
+        <item>ಗುಂಪು ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</item>
+        <item>ಖಾಸಗಿ</item>
+        <item>ಸಾರ್ವಜನಿಕ</item>
+    </string-array>
+
+    <string-array name="blood_group">
+        <item>ಆಯ್ಕೆ ರಕ್ತದ ಗುಂಪು</item>
+        <item>ಎ+ </item>
+        <item>ಎ-</item>
+        <item>ಬಿ +</item>
+        <item>ಬಿ-</item>
+        <item>O+ </item>
+        <item>O-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+    </string-array>
+
+    <string-array name="gender_array">
+        <item>ಲಿಂಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</item>
+        <item>ಪುರುಷ</item>
+        <item>ಸ್ತ್ರೀ</item>
+        <item>ಇತರೆ</item>
+    </string-array>
+    <string-array name="lastSubTime">
+        <item>1ನಿಮಿಷ</item>
+        <item>2ನಿಮಿಷ</item>
+        <item>3ನಿಮಿಷ</item>
+        <item>4ನಿಮಿಷ</item>
+        <item>5ನಿಮಿಷ</item>
+        <item>6ನಿಮಿಷ</item>
+        <item>7ನಿಮಿಷ</item>
+        <item>8ನಿಮಿಷ</item>
+        <item>9ನಿಮಿಷ</item>
+        <item>10ನಿಮಿಷ</item>
+        <item>11ನಿಮಿಷ</item>
+        <item>12ನಿಮಿಷ</item>
+        <item>13ನಿಮಿಷ</item>
+        <item>14ನಿಮಿಷ</item>
+        <item>15ನಿಮಿಷ</item>
+        <item>16ನಿಮಿಷ</item>
+        <item>17ನಿಮಿಷ</item>
+        <item>18ನಿಮಿಷ</item>
+        <item>19ನಿಮಿಷ</item>
+        <item>20ನಿಮಿಷ</item>
+        <item>21ನಿಮಿಷ</item>
+        <item>22ನಿಮಿಷ</item>
+        <item>23ನಿಮಿಷ</item>
+        <item>24ನಿಮಿಷ</item>
+        <item>25ನಿಮಿಷ</item>
+        <item>26ನಿಮಿಷ</item>
+        <item>27ನಿಮಿಷ</item>
+        <item>28ನಿಮಿಷ</item>
+        <item>29ನಿಮಿಷ</item>
+        <item>30ನಿಮಿಷ</item>
+    </string-array>
+
+
+
+
+
+    <string name="copyright">© Vivid Innovations Private Limited</string>
+    <string name="lbl_designation">Designation</string>
+    <string name="lbl_ocupation">Occupation</string>
+
+    <string name="key_youtube">AIzaSyDaQC18UKpkamS4h0oLYFGScsulsHN3Vl4</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="player_error">Error initializing YouTube player</string>
+    <string name="seek_to">Jump To</string>
+    <string name="seek_to_hint">Seconds</string>
+    <string name="lbl_others">Others:</string>
+    <string name="lbl_groupheading">Mutual Groups</string>
+
+    <string name="get_otp">Get OTP</string>
+
+    // YOUTUBE STRINGS
+
+
+    <string name="hint_group">Enter Group Name</string>
+
+    <string name="button_authorize">Authorize</string>
+    <string name="button_record">RECORD</string>
+    <string name="button_pick">GALLERY</string>
+    <string name="button_upload">UPLOAD TO YOUTUBE</string>
+    <string name="button_submit">SUBMIT TO YOUTUBE</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_display_message">My Message</string>
+    <string name="google_play_not_available">Google Play Services not available</string>
+    <string name="youtube_upload_started">YouTube upload started</string>
+    <string name="connection_to_google_play_failed">Connection to Play Services failed.</string>
+    <string name="youtube_upload">YouTube upload</string>
+    <string name="not_signed_in">Not signed in</string>
+    <string name="dev_setup_explanation">If you\'re seeing this screen, congratulations! You\'ve set up the dependencies for YouTube Direct Lite correctly. You just need to set up the following for the app to work correctly:</string>
+    <string name="error">Error</string>
+    <string name="error_format">[Error] %s</string>
+    <string name="refresh">Refresh</string>
+    <string name="accounts">Accounts</string>
+    <string name="initiation_started">Initiation Started</string>
+    <string name="initiation_completed">Initiation Completed</string>
+    <string name="upload_in_progress">Direct Lite upload in progress</string>
+    <string name="yt_upload_completed">YouTube Upload Completed</string>
+    <string name="upload_completed">Upload completed</string>
+    <string name="upload_not_started">Upload Not Started!</string>
+    <string name="yt_upload_failed">YouTube Upload Failed</string>
+    <string name="reauth_required">Re-login required</string>
+    <string name="please_try_again">Please try again</string>
+    <string name="cant_access_play">Can\'t access to Google Play services</string>
+    <string name="title_activity_play">Click below to submit</string>
+    <string name="send">Click send</string>
+    <string name="title_activity_review">Click below to upload</string>
+    <string name="pick_one_of_your_videos_to_submit">Submit an existing YouTube video or upload a new video using the options below</string>
+    <string name="no_videos_to_show_here_">No videos to show here.</string>
+    <string name="avatar">avatar</string>
+    <string name="pick_or_record_a_video_to_upload">Upload an existing video from your device or record a new one</string>
+    <string name="see_the_newly_uploaded_video">See the newly uploaded video</string>
+    <string name="watch_your_video">Watch your video</string>
+    <string name="video_submitted_to_ytdl">Video submitted to YouTube</string>
+    <string name="playing_uploaded_video">Playing uploaded video</string>
+    <string name="playing_the_video_in_upload_progress">Playing the video in upload progress</string>
+
+    <string name="txt_gruppie">Forgot your Password or New to Gruppie?</string>
+    <string name="txt_get_otp"><u>GET OTP </u></string>
+    <string name="txt_terms">By continuing, you agree to <a href="https://www.gruppie.in/terms"><b>Terms and Conditions</b></a> and <a href="https://www.gruppie.in/privacy/policy"><b>Privacy Policy</b></a></string>
+
+    <string name="txt_term_msg">By continuing, you agree to</string>
+    <string name="term_and_condition">Terms and Conditions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+
+    <string name="txt_english">English</string>
+    <string name="txt_kannada">ಕನ್ನಡ</string>
+
+    <string name="lbl_setFingerPrint">Register Fingerprint</string>
+    <string name="lbl_finger_print">Fingerprint</string>
+    <string name="menu_print_member">Print MemberList</string>
+    <string name="txt_no_booth_found">No Booths found</string><!--No Booths found-->
+    <string name="txt_no_voter_found">No Voters found</string><!--No Voters found-->
+    <string name="txt_no_subject_found">No Subject found</string><!--No Subject found-->
+    <string name="txt_no_staff_found">No Staff found.</string><!--No Staff found.-->
+    <string name="txt_no_worker_found">No Workers found.</string><!--No Workers found.-->
+    <string name="txt_no_post_found">No Post found.</string><!--No Post found.-->
+    <string name="txt_no_committee_found">No Committee found.</string><!--No Committee found.-->
+    <string name="txt_no_family_member_found">No Family Member found.</string><!--No Family Member found.-->
+    <string name="txt_no_fee_created">No Fee Created..</string><!--No Fee Created..-->
+    <string name="txt_no_fee_found">No Fee Found</string><!--No Fee Found-->
+    <string name="txt_no_group_found">No Group found.</string><!--No Group found.-->
+    <string name="txt_no_issue_found">No Issue found.</string><!--No Issue found.-->
+    <string name="txt_no_notification_found">No Notification found.</string><!--No Notification found.-->
+    <string name="txt_no_hw_found">No HomeWork found.</string><!--No HomeWork found.-->
+    <string name="txt_no_test_exam_found">No Test/Exam Found.</string><!--No Test/Exam Found.-->
+    <string name="txt_no_kid_found">No Kids found.</string><!--No Kids found.-->
+    <string name="txt_no_people_found">No People found.</string><!--No People found.-->
+    <string name="txt_no_pdf_found">No Pdf Found.</string><!--No Pdf Found.-->
+    <string name="txt_no_test_found">No Test found</string><!--No Test found-->
+    <string name="smb_no_file_attached">No File Attached</string>
+    <string name="smb_no_file_download">Please Download All Files</string>
+    <string name="lbl_add_syllabus">Add Syllabus</string>
+    <string name="toast_add_topic_name">Please Add Topic Name</string>
+    <string name="txt_no_syllabus_found">No Syllabus found</string><!--No Syllabus found.-->
+    <string name="toast_syllabus_add_successfully">Syllabus Add SuccessFully</string>
+    <string name="lbl_from_date">From Date</string>
+    <string name="lbl_to_date">To Date</string>
+    <string name="toast_voter_delete_successfully">Voter Delete SuccessFully</string>
+    <string name="toast_change_plan">Change Plan Successfully</string>
+    <string name="toast_set_status_plan">Status Plan Set Successfully</string>
+    <string name="dialog_are_you_sure_you_want_to_change_attend">Are You Sure You Want to Change Attendance ? </string>
+    <string name="title_add_chapter_plan">Add Chapter Plan</string>
+    <string name="lbl_plan">Planed</string>
+    <string name="lbl_actual">Actual</string>
+    <string name="menu_edit_topic">Edit Topic</string>
+    <string name="menu_staff_filter">Staffs</string>
+    <string name="lbl_date_and_time">Date &amp; Time</string>
+    <string name="toast_no_data_found">ಯಾವುದೇ ಡೇಟಾ ಕಂಡುಬಂದಿಲ್ಲ</string>
+    <string name="lbl_leave_req">Leave\nRequest</string>
+    <string name="lbl_leave_request">Leave Request</string>
+    <string name="lbl_no_of_day">No. Of Days</string>
+    <string name="lbl_today_topics">Today\'s Topics</string>
+    <string name="lbl_teacher">Teacher</string>
+    <string name="lbl_overall_anylysis">Overall Analysis</string>
+
+    <string name="total_topic_count">Total Topics Count</string>
+    <string name="total_topic_pending">Total Topics Pending</string>
+    <string name="total_topic_completed">Total Topics Completed</string>
+    <string name="total_end_delay">Total End Delay</string>
+    <string name="total_com_on_time">Total Completed On-Time</string>
+    <string name="lbl_add_image">Add Image</string>
+    <string name="toast_file_download">File is Download In : </string>
+    <string name="action_add_school">Add School</string>
+    <string name="toast_please_select_chapter">Please Select Chapter</string>
+    <string name="msg_no_report">No Report found.</string>
+    <string name="dialog_are_you_sure_you_want_to_add_class">Are you sure you want to Add Class?</string>
+    <string name="lbl_session">Session</string>
+
+    <string name="smb_logout">Are you sure you want to Logout ?</string>
+    <string name="lbl_add_group">Add Group</string>
+
+    <string name="lbl_motherOccupation">Mother Occupation</string>
+    <string name="lbl_fatherOccupation">Father Occupation</string>
+
+    <string name="lbl_motherEducation">Mother Education</string>
+    <string name="lbl_fatherEducation">Father Education</string>
+    <string name="txt_contact_backend">Please contact sales@gruppie.in to enable live class</string>
+    <string name="no_notes_found">No notes found</string>
+    <string name="txt_empty_data">No Data Found</string>
+    <string name="txt_failed_to_load">Could not load data. Please try again later.</string>
+    <string name="lbl_nationality">Nationality</string>
+    <string name="lbl_disability">Disability</string>
+    <string name="lbl_family_income">Family Income</string>
+    <string name="lbl_sats_no">SATS NUMBER</string>
+    <string name="toast_enter_desiganation">Please Enter Profession</string>
+    <string name="toast_select_profession">Please Select Profession</string>
+    <string name="toast_enter_education">Please Enter Education</string>
+    <string name="toast_enter_dob">Please Enter Date of Birth</string>
+    <string name="toast_select_religion">Please Select Religion</string>
+    <string name="toast_select_caste">Please Select Caste</string>
+    <string name="toast_select_sub_caste">Please Select Sub Caste</string>
+
+</resources>

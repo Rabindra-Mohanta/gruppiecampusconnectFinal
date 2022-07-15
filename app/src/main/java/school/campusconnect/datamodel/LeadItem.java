@@ -6,6 +6,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 
 public class LeadItem implements Parcelable {
 
@@ -32,15 +35,78 @@ public class LeadItem implements Parcelable {
     @SerializedName(value = "leadCount",alternate = "membersCount")
     public int leadCount;
     public String dob;
+    public String religion;
+    public String caste;
+    public String subCaste;
     public String qualification;
+
+    @SerializedName(value = "designation")
     public String occupation;
+
     public String[] otherLeads;
     public AddressItem address;
     public String gender;
 
+    public ArrayList<pushTokenData> pushTokens;
+
     public int teamCount;
 
     public boolean isSelected;
+
+    public boolean roleOnConstituency;
+    public String voterId;
+    public String bloodGroup;
+    public String aadharNumber;
+    public boolean isLive;
+
+
+    public ArrayList<pushTokenData> getPushTokens() {
+        return pushTokens;
+    }
+
+    public void setPushTokens(ArrayList<pushTokenData> pushTokens) {
+        this.pushTokens = pushTokens;
+    }
+
+    public boolean isLive() {
+        return isLive;
+    }
+
+    public void setLive(boolean live) {
+        isLive = live;
+    }
+
+    public boolean isRoleOnConstituency() {
+        return roleOnConstituency;
+    }
+
+    public void setRoleOnConstituency(boolean roleOnConstituency) {
+        this.roleOnConstituency = roleOnConstituency;
+    }
+
+    public String isVoterId() {
+        return voterId;
+    }
+
+    public void setVoterId(String voterId) {
+        this.voterId = voterId;
+    }
+
+    public String getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(String bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
+    public String getAadharNumber() {
+        return aadharNumber;
+    }
+
+    public void setAadharNumber(String aadharNumber) {
+        this.aadharNumber = aadharNumber;
+    }
 
     public boolean isPost() {
         return isPost;
@@ -231,6 +297,7 @@ public class LeadItem implements Parcelable {
 
 
 
+
     @Override
     public String toString() {
         return id+","+name;
@@ -260,5 +327,32 @@ public class LeadItem implements Parcelable {
         dest.writeParcelable(address, flags);
         dest.writeString(gender);
         dest.writeInt(teamCount);
+    }
+
+    public static class pushTokenData implements Serializable
+    {
+        @SerializedName("deviceType")
+        @Expose
+        private String deviceType;
+
+        @SerializedName("deviceToken")
+        @Expose
+        private String deviceToken;
+
+        public String getDeviceType() {
+            return deviceType;
+        }
+
+        public void setDeviceType(String deviceType) {
+            this.deviceType = deviceType;
+        }
+
+        public String getDeviceToken() {
+            return deviceToken;
+        }
+
+        public void setDeviceToken(String deviceToken) {
+            this.deviceToken = deviceToken;
+        }
     }
 }

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_add_staff"
-        android:title="Add Staff"/>
+        android:title="@string/lbl_add_staff"/>
+    <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/icon_search"
+        android:title="@string/hint_search_group"
+        app:showAsAction="always" />
+    <item android:id="@+id/menu_print_staff_list"
+        android:visible="false"
+        android:title="@string/menu_print_staff"/>
 </menu>

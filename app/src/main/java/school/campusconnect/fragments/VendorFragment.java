@@ -2,11 +2,13 @@ package school.campusconnect.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +21,24 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.AddVendorActivity;
 import school.campusconnect.activities.FullScreenMultiActivity;
@@ -33,6 +48,9 @@ import school.campusconnect.adapters.VendorAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.VendorPostResponse;
+import school.campusconnect.datamodel.videocall.VideoClassResponse;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -69,7 +87,10 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     private int currentPage=1;
     private LeafManager manager;
     private String mGroupId;
+    private String role;
     private VendorPostResponse.VendorPostData currentItem;
+
+    LeafPreference leafPreference;
 
     @Nullable
     @Override
@@ -77,13 +98,20 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
         view=inflater.inflate(R.layout.fragment_vendor,container,false);
         ButterKnife.bind(this,view);
 
+
+        if(getArguments()!=null){
+            role = getArguments().getString("role");
+        }
+
         manager=new LeafManager();
+
+        leafPreference = LeafPreference.getInstance(VendorFragment.this.getActivity());
 
         mGroupId=GroupDashboardActivityNew.groupId;
 
         layoutManager=new LinearLayoutManager(getActivity());
         rvGallery.setLayoutManager(layoutManager);
-        vendorAdapter=new VendorAdapter(listData,this);
+        vendorAdapter=new VendorAdapter(listData,this,role);
         rvGallery.setAdapter(vendorAdapter);
 
         scrollListener();
@@ -137,7 +165,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
                 if (!mIsLoading && totalPages > currentPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0
-                            ) {
+                    ) {
                         currentPage = currentPage + 1;
                         AppLog.e(TAG, "onScrollCalled " + currentPage);
                         getData();
@@ -146,9 +174,11 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
             }
         });
 
+        swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 if (isConnectionAvailable()) {
                     currentPage = 1;
                     getData();
@@ -160,20 +190,94 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
             }
         });
 
-
     }
+
     private void getData()
     {
+        //showLoadingBar(progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+        String re = LeafPreference.getInstance(getActivity()).getString( GroupDashboardActivityNew.groupId+"_vendor");
+
+        if (re != null && !TextUtils.isEmpty(re))
+        {
+            AppLog.e(TAG, "Api Calling::: if ");
+            VendorPostResponse response = new Gson().fromJson(re, new TypeToken<VendorPostResponse>()
+            {}.getType());
+            if (currentPage == 1)
+            {
+                listData.clear();
+
+                listData.addAll(response.data);
+                AppLog.e(TAG, "current page 1");
+            }
+            else
+            {
+                listData.addAll(response.data);
+                AppLog.e(TAG, "current page " + currentPage);
+            }
+
+            if(listData.size()==0)
+
+            {
+                progressBar.setVisibility(View.GONE);
+                txtEmpty.setVisibility(View.VISIBLE);
+            }
+
+            else
+                txtEmpty.setVisibility(View.GONE);
+
+            vendorAdapter.notifyDataSetChanged();
+
+            totalPages = response.totalNumberOfPages;
+
+            if (!isConnectionAvailable()) {
+                showNoNetworkMsg();
+            }
+            if ("admin".equalsIgnoreCase(role) || leafPreference.getInt(mGroupId + "_vendorpush") > 0
+                    || LeafPreference.getInstance(getContext()).getBoolean(mGroupId + "_vendor_delete")) {
+
+                LeafPreference.getInstance(getContext()).setBoolean(mGroupId + "_vendor_delete", false);
+
+                //showLoadingBar(progressBar);
+                //  progressBar.setVisibility(View.VISIBLE);
+                mIsLoading = true;
+                manager.getVendorPost(this, mGroupId+"", currentPage);
+
+            }
+        }
+        else
+        {
+            if(isConnectionAvailable())
+            {
+                //showLoadingBar(progressBar);
+                progressBar.setVisibility(View.VISIBLE);
+                mIsLoading = true;
+                manager.getVendorPost(this, mGroupId+"", currentPage);
+            }
+            else
+            {
+                showNoNetworkMsg();
+            }
+        }
+
+    }
+
+    private void getDataFromAPI()
+    {
+
         if(isConnectionAvailable())
         {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             mIsLoading = true;
             manager.getVendorPost(this, mGroupId+"", currentPage);
+            leafPreference.remove(mGroupId+"_vendorpush");
         }
         else
         {
             showNoNetworkMsg();
         }
+
 
     }
 
@@ -186,8 +290,11 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (GroupDashboardActivityNew.isPost)
+        if ("admin".equalsIgnoreCase(role))
+        {
+            menu.findItem(R.id.menu_add_post).setIcon(R.drawable.posticon);
             menu.findItem(R.id.menu_add_post).setVisible(true);
+        }
         else
             menu.findItem(R.id.menu_add_post).setVisible(false);
 
@@ -199,11 +306,13 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
         if(getActivity()==null)
             return;
 
+        AppLog.e(TAG , "onreSume called");
+
         if(LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.IS_VENDOR_POST_UPDATED))
         {
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.IS_VENDOR_POST_UPDATED, false);
             currentPage=1;
-            getData();
+            getDataFromAPI();
         }
     }
 
@@ -223,12 +332,15 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+        //   hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_VENDOR_POST:
                 VendorPostResponse res = (VendorPostResponse) response;
                 AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.data));
+
+                LeafPreference.getInstance(getActivity()).setString(GroupDashboardActivityNew.groupId+"_vendor", new Gson().toJson(res));
 
                 if (currentPage == 1) {
                     listData.clear();
@@ -241,8 +353,15 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
                     AppLog.e(TAG, "current page " + currentPage);
                 }
 
+                leafPreference.remove(mGroupId+"_vendorpush");
+
                 if(listData.size()==0)
+
+                {
+                    progressBar.setVisibility(View.GONE);
                     txtEmpty.setVisibility(View.VISIBLE);
+                }
+
                 else
                     txtEmpty.setVisibility(View.GONE);
 
@@ -252,17 +371,20 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
                 mIsLoading = false;
                 break;
             case LeafManager.API_VENDOR_DELETE:
-                Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 currentPage=1;
-                getData();
+                getDataFromAPI();
                 AmazoneRemove.remove(currentItem.fileName);
+                sendNotification();
                 break;
         }
     }
 
+
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        //   hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -272,10 +394,10 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {
@@ -285,7 +407,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        //   hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         mIsLoading = false;
         currentPage = currentPage - 1;
         if (currentPage < 0) {
@@ -299,7 +422,8 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+            //showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteVendorPost(this, mGroupId+"",currentItem.vendorId);
 
@@ -324,6 +448,7 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
         } else*/ if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.vendor);
             startActivity(i);
 
@@ -337,6 +462,20 @@ public class VendorFragment extends BaseFragment implements LeafManager.OnCommun
     @Override
     public void onDeleteClick(VendorPostResponse.VendorPostData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
+    }
+    private void sendNotification() {
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + GroupDashboardActivityNew.groupId;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "Vendor deleted";
+        notificationModel.data.Notification_type = "DELETE_VENDOR";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = GroupDashboardActivityNew.groupId;
+        notificationModel.data.teamId = "";
+        notificationModel.data.createdById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = "";
+        notificationModel.data.postType = "";
+        SendNotificationGlobal.send(notificationModel);
     }
 }

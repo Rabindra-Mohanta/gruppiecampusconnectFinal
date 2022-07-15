@@ -87,7 +87,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
                             notifyDataSetChanged();
                             hide_keyboard(v);
                         }else {
-                            Toast.makeText(mContext, "Please Add Subject", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_please_add_subject), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -115,7 +115,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
                     notifyDataSetChanged();
                     dialog.dismiss();
                 }else {
-                    Toast.makeText(mContext, "Please Add Subject", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext,  mContext.getResources().getString(R.string.toast_please_add_subject), Toast.LENGTH_SHORT).show();
                 }
             }
         });

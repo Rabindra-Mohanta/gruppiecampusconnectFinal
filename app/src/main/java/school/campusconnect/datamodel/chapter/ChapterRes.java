@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import school.campusconnect.datamodel.BaseResponse;
@@ -46,7 +47,7 @@ public class ChapterRes extends BaseResponse {
         }
     }
 
-    public static class TopicData {
+    public static class TopicData implements Serializable {
         @SerializedName("topicName")
         @Expose
         public String topicName;
@@ -85,7 +86,7 @@ public class ChapterRes extends BaseResponse {
 
 
 
-        public static class StudentTopicCompleted {
+        public static class StudentTopicCompleted implements Serializable{
             @SerializedName("userId")
             @Expose
             public String userId;

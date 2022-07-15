@@ -339,7 +339,7 @@ public class Fragment_GruppieContacts extends BaseFragment implements LeafManage
                     Toast.makeText(getActivity(), "Cannot add more than 20 friends", Toast.LENGTH_SHORT).show();
                 }*/
             } else
-                Toast.makeText(getActivity(), "Please select any friend first", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_select_friend_first), Toast.LENGTH_SHORT).show();
         } else {
             showNoNetworkMsg();
         }
@@ -442,7 +442,7 @@ public class Fragment_GruppieContacts extends BaseFragment implements LeafManage
             mIsLoading = false;
         } else if (apiId == LeafManager.API_ADD_FRIEND_TOGROUP) {
             try {
-                Toast.makeText(getActivity(), "Added Successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_add_success), Toast.LENGTH_SHORT).show();
 //            GruppieContactGroupIdModel.deleteRow(groupId, friendId);
 
                 if (getSelectedIds().contains(",")) {

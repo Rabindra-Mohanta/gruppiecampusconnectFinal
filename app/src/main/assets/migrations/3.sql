@@ -1,0 +1,3 @@
+ALTER TABLE LeadDataTBL ADD caste TEXT;
+ALTER TABLE LeadDataTBL ADD subCaste TEXT;
+ALTER TABLE LeadDataTBL ADD religion TEXT;

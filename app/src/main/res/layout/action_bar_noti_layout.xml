@@ -25,7 +25,6 @@
             android:gravity="center"
             android:layout_marginTop="@dimen/padding_5dp"
             android:padding="2dp"
-            android:text="99"
             android:textColor="@color/color_orange_hover"
             android:textSize="@dimen/text_size_9sp"
             android:textStyle="bold" />

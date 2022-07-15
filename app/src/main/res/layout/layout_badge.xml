@@ -22,7 +22,8 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/date_circle_background"
             android:padding="2dp"
-            android:text="99" android:gravity="center"
+            android:text="99"
+            android:gravity="center"
             android:textColor="@color/color_orange_hover"
             android:textSize="11sp"
             android:textStyle="bold" />

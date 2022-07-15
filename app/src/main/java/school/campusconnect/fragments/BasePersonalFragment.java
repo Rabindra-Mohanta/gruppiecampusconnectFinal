@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import school.campusconnect.activities.ChatActivity;
+import school.campusconnect.activities.StaffListActivity;
 import school.campusconnect.utils.AppLog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,7 +60,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     private void getPersonalList() {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
+           // showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             manager.getPersonalContacts(this, GroupDashboardActivityNew.groupId);
         } else {
             showNoNetworkMsg();
@@ -76,7 +78,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_notification).setVisible(false);
         menu.findItem(R.id.action_friend_list).setVisible(false);
-        if("teacher".equals(((ChatActivity)getActivity()).role) || "admin".equals(((ChatActivity)getActivity()).role)){
+
+        if("admin".equals(((ChatActivity)getActivity()).role) || "teacher".equals(((ChatActivity)getActivity()).role)){
             menu.findItem(R.id.menu_add_chat).setVisible(true);
         }
     }
@@ -88,11 +91,20 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
             default:
                 return super.onOptionsItemSelected(item);
             case R.id.menu_add_chat:
-                Intent intent2 = new Intent(getActivity(), LeadsListActivity.class);
+
+
+                Intent intent = new Intent(getActivity(), StaffListActivity.class);
+                intent.putExtra("role", ((ChatActivity)getActivity()).role);
+                startActivity(intent);
+
+           //    startActivity(new Intent(getContext(), StaffListActivity.class));
+
+               /* Intent intent2 = new Intent(getActivity(), LeadsListActivity.class);
                 intent2.putExtra("id",  GroupDashboardActivityNew.groupId);
+                intent2.putExtra("apiCall", false);
                 intent2.putExtra("team_id", LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID));
                 intent2.putExtra("item_click", true);
-                startActivity(intent2);
+                startActivity(intent2);*/
                 return true;
         }
 
@@ -114,7 +126,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+       // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         switch (apiId)
         {
             case LeafManager.API_PERSONAL_CONTACTS:
@@ -182,7 +195,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
 
         if (getActivity() != null) {
 
@@ -208,7 +222,8 @@ public class BasePersonalFragment extends BaseFragment implements PersonalListAd
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
+        // hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
         if (getActivity() != null)
             Toast.makeText(getActivity(), getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }

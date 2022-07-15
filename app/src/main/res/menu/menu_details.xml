@@ -2,15 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <item
         android:id="@+id/nav_edit"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_edit_white"/>
+        android:icon="@drawable/ic_edit_white"
+        android:title="@string/lbl_edit" />
 
     <item
         android:id="@+id/nav_delete"
         app:showAsAction="ifRoom"
+        android:title="@string/action_delete"
         android:icon="@drawable/ic_delete_black" />
 
 

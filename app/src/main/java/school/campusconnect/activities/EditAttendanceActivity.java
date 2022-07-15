@@ -55,8 +55,7 @@ public class EditAttendanceActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Edit Attendance");
-
+        setTitle(getResources().getString(R.string.title_edit_attendance));
         init_();
 
         edtRollNo.setText(attendanceData.rollNumber);
@@ -78,8 +77,8 @@ public class EditAttendanceActivity extends BaseActivity {
             }
             if (attendanceData == null)
                 return true;
-
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar,false);
+            //progressBar.setVisibility(View.VISIBLE);
             leafManager.removeAttendance(this, groupId, teamId, attendanceData.id);
             return true;
         }
@@ -114,7 +113,8 @@ public class EditAttendanceActivity extends BaseActivity {
             editReq.studentName = edtName.getText().toString();
 
             AppLog.e(TAG,"EditAttendanceReq :"+new Gson().toJson(editReq));
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar,false);
+           // progressBar.setVisibility(View.VISIBLE);
             leafManager.editAttendance(this, groupId, teamId, attendanceData.id, editReq);
         }
     }
@@ -122,7 +122,8 @@ public class EditAttendanceActivity extends BaseActivity {
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_EDIT_ATTENDANCE:
                 leafPreference.setBoolean(LeafPreference.EDIT_ATTENDANCE, true);
@@ -138,7 +139,8 @@ public class EditAttendanceActivity extends BaseActivity {
     @Override
     public void onFailure(int apiId, String msg) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
         AppLog.e("onFailure", "Failure");
         if (msg.contains("401") || msg.contains("Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();

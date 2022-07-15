@@ -50,7 +50,7 @@ import school.campusconnect.database.DatabaseHandler;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.PhoneContactsItems;
-import school.campusconnect.datamodel.ProfileResponse;
+import school.campusconnect.datamodel.profile.ProfileResponse;
 import school.campusconnect.datamodel.versioncheck.VersionCheckResponse;
 import school.campusconnect.fragments.GroupListFragment;
 import school.campusconnect.fragments.PublicGroupListFragment;
@@ -181,8 +181,8 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
 
 
         // only for gingerbread and newer versions
-        mTabLayout.addTab(mTabLayout.newTab().setText("My Groups"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("Public Groups"));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_my_groups)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getResources().getString(R.string.txt_public_groups)));
 
         mPagerView = (ViewPager) findViewById(R.id.tabViewPager);
 
@@ -210,7 +210,7 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
                    AppLog.e("TAB POS", "position is " + tabPosition);
                     View v2 = mTabLayout.getTabAt(1).getCustomView();
                     TextView tv2 = (TextView) v2.findViewById(R.id.tab_badge);
-                    tv2.setText("Public Groups");
+                    tv2.setText(getResources().getString(R.string.txt_public_groups));
                     ImageView img2 = (ImageView) v2.findViewById(R.id.tab_icon);
 
                     if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
@@ -224,7 +224,7 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
 
                     View v1 = mTabLayout.getTabAt(0).getCustomView();
                     TextView tv = (TextView) v1.findViewById(R.id.tab_badge);
-                    tv.setText("My Groups");
+                    tv.setText(getResources().getString(R.string.txt_my_groups));
                     ImageView img = (ImageView) v1.findViewById(R.id.tab_icon);
                     if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                         img.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_group_work_black_24dp));
@@ -237,7 +237,7 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
                 } else {
                     View v2 = mTabLayout.getTabAt(1).getCustomView();
                     TextView tv2 = (TextView) v2.findViewById(R.id.tab_badge);
-                    tv2.setText("Public Groups");
+                    tv2.setText(getResources().getString(R.string.txt_public_groups));
                     ImageView img2 = (ImageView) v2.findViewById(R.id.tab_icon);
 
                     if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
@@ -250,7 +250,7 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
 
                     View v1 = mTabLayout.getTabAt(0).getCustomView();
                     TextView tv1 = (TextView) v1.findViewById(R.id.tab_badge);
-                    tv1.setText("My Groups");
+                    tv1.setText(getResources().getString(R.string.txt_my_groups));
                     ImageView img = (ImageView) v1.findViewById(R.id.tab_icon);
                     if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                         img.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_group_work_black_24dp));
@@ -350,7 +350,7 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
 //        https://stackoverflow.com/questions/40896907/can-a-custom-view-be-used-as-a-tabitem
         View v1 = LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         TextView tv = (TextView) v1.findViewById(R.id.tab_badge);
-        tv.setText("My Groups");
+        tv.setText(getResources().getString(R.string.txt_my_groups));
         ImageView img = (ImageView) v1.findViewById(R.id.tab_icon);
         final int sdk = android.os.Build.VERSION.SDK_INT;
         if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
@@ -363,7 +363,7 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
 
         View v2 = LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         TextView tv2 = (TextView) v2.findViewById(R.id.tab_badge);
-        tv2.setText("Public Groups");
+        tv2.setText(getResources().getString(R.string.txt_public_groups));
         ImageView img2 = (ImageView) v2.findViewById(R.id.tab_icon);
         if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             img2.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_public_black_24dp));
@@ -387,6 +387,7 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
             Intent intent = new Intent(this, NotificationsActivity.class);
             startActivity(intent);
         } else*/
+
         if (item.getItemId() == R.id.nav_logout) {
             if (isConnectionAvailable()) {
                 logoutUser();
@@ -448,9 +449,11 @@ public class GroupListActivityNew extends BaseActivity implements LeafManager.On
             }
         } else if (apiId == LeafManager.API_ID_GET_PROFILE) {
             ProfileResponse res = (ProfileResponse) response;
+
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, res.data.name);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_COMPLETE, res.data.profileCompletion);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE, res.data.image);
+
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.EMAIL, res.data.email);
            AppLog.e("PROFILE EMAIL", "emails is " + res.data.email);
            AppLog.e("PROFILE IMAGE", "image is " + res.data.image);

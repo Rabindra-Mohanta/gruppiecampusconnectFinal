@@ -40,7 +40,7 @@ public class ClassResponse extends BaseResponse {
 
         @SerializedName("teamId")
         @Expose
-        private String id;
+        public String id;
 
         @SerializedName(value = "members",alternate = "studentCount")
         @Expose
@@ -61,6 +61,17 @@ public class ClassResponse extends BaseResponse {
         @SerializedName(value = "jitsiToken")
         @Expose
         public String jitsiToken;
+
+        // My Kids Api for
+        @SerializedName(value = "userId")
+        @Expose
+        public String userId;
+
+        @SerializedName(value = "rollNumber")
+        @Expose
+        public String rollNumber;
+
+
 
         public String getJitsiToken() {
             return jitsiToken;

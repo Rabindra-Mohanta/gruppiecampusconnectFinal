@@ -42,7 +42,7 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:background="@color/colorPrimary"
-            android:text="Submit"
+            android:text="@string/lbl_submit"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="14sp"
@@ -62,16 +62,16 @@
             android:visibility="gone" />
 
         <TextView
+            android:visibility="gone"
+            android:text="No data found"
             android:id="@+id/txtEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:text="@{message}"
-            android:textSize="18sp"
-            android:visibility="@{size &gt; 0 ? View.GONE : View.VISIBLE}" />
+            style="@style/LabelEmptyText"/>
 
         <!--style="?android:attr/progressBarStyleLarge"-->
 
@@ -238,7 +238,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:text="Camera" />
+                                android:text="@string/lbl_camera" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -259,7 +259,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:text="Gallery" />
+                                android:text="@string/lbl_gallery" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -280,7 +280,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:text="Youtube" />
+                                android:text="@string/lbl_youtube" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -310,7 +310,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:text="Pdf" />
+                                android:text="@string/lbl_pdf" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -331,7 +331,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:text="Remove File" />
+                                android:text="@string/lbl_remove_file" />
                         </LinearLayout>
 
                         <LinearLayout

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar_home_back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topbar"
+        app:refreshColor="@color/colorPrimary">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_15dp"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:layout_marginEnd="@dimen/padding_15dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txt_title"
+                            style="@style/LabelNormal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autoLink="web"
+                            android:ellipsize="end"
+                            android:text=""
+                            android:textColor="@color/colorTextDark"
+                            android:textColorLink="@color/colorPrimary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_teacher"
+                            style="@style/LabelSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=" "
+                            android:textColor="@color/colorTextLight" />
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/btnStart"
+                        android:layout_width="120dp"
+                        android:text="@string/lbl_start"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/padding_5dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/white"
+                        android:background="@drawable/start_button_bg"
+                        android:layout_height="35dp" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/padding_10dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:layout_marginBottom="@dimen/padding_10dp"
+                    android:paddingLeft="@dimen/padding_5dp"
+                    android:paddingRight="@dimen/padding_5dp">
+
+                    <ImageView
+                        android:id="@+id/imageLoading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/icon_loading"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:adjustViewBounds="true" />
+
+                    <ImageView
+                        android:id="@+id/img_play"
+                        android:layout_width="@dimen/pdf_download_icon_size"
+                        android:layout_height="@dimen/pdf_download_icon_size"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_play" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constThumb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@color/imgBg"
+                        android:padding="1dp"
+                        android:visibility="gone">
+
+                        <school.campusconnect.views.TopCropImageView
+                            android:id="@+id/imageThumb"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:src="@drawable/pdf_place_holder"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="H,1:1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/pdf_1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/imgDownloadPdf"
+                            android:layout_width="@dimen/pdf_download_icon_size"
+                            android:layout_height="@dimen/pdf_download_icon_size"
+                            android:layout_margin="@dimen/padding_15dp"
+                            android:layout_marginTop="@dimen/padding_10dp"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/pdf_download_icon"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <school.campusconnect.Assymetric.AsymmetricRecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:divider="@android:color/transparent"
+                        android:dividerHeight="3dp"
+                        android:fadingEdge="none"
+                        android:focusable="false"
+                        android:visibility="visible"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/tvQPaperHide"
+                        android:clickable="true"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:clickable="true"
+                            android:layout_width="0dp"
+                            android:text="@string/lbl_ques_p_"
+                            android:textColor="@color/colorPrimary"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="H,1:1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:paddingStart="@dimen/padding_20dp"
+                            android:paddingEnd="@dimen/padding_20dp"
+                            android:textSize="@dimen/text_size_20sp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_height="0dp"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/txt_content"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:ellipsize="end"
+                    android:maxLength="200"
+                    android:paddingLeft="@dimen/padding_15dp"
+                    android:paddingRight="@dimen/padding_15dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textColorLink="@color/colorPrimary"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/txt_readmore"
+                    style="@style/LabelSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="center_vertical|end"
+                    android:text="@string/lbl_Read_more"
+                    android:textColor="@color/colorTextLight"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/txt_readmore1"
+                    style="@style/LabelSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="center_vertical|end"
+                    android:padding="@dimen/padding_5dp"
+                    android:text="@string/lbl_Read_more"
+                    android:textColor="@color/colorTextLight"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/txt_lastDate"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:ellipsize="end"
+                    android:lineSpacingExtra="10dp"
+                    android:paddingLeft="@dimen/padding_15dp"
+                    android:paddingRight="@dimen/padding_15dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textColorLink="@color/colorPrimary"
+                    android:visibility="visible" />
+
+
+                <FrameLayout
+                    android:id="@+id/llSubmit"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/padding_20dp"
+                    android:layout_marginStart="@dimen/padding_15dp"
+                    android:layout_marginEnd="@dimen/padding_15dp"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tvTimer"
+                        android:layout_width="50dp"
+                        android:text="0m\n0s"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/timer_bg"
+                        android:layout_gravity="start|center"
+                        android:layout_height="50dp"/>
+                    <Button
+                        android:id="@+id/btnSubmit"
+                        android:layout_width="200dp"
+                        android:text="@string/lbl_submit"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:layout_marginBottom="@dimen/padding_5dp"
+                        android:layout_marginStart="@dimen/padding_5dp"
+                        android:layout_gravity="center|end"
+                        android:textColor="@color/white"
+                        android:background="@drawable/add_post_button_bg"
+                        android:layout_height="35dp" />
+                </FrameLayout>
+
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:background="@color/color_divider" />
+
+
+                <TextView
+                    android:id="@+id/txtEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/padding_15dp"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/msg_no_data_found"
+                    style="@style/LabelEmptyText"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAssignment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </com.baoyz.widget.PullRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/padding_15dp"
+        android:visibility="gone" />
+</RelativeLayout>

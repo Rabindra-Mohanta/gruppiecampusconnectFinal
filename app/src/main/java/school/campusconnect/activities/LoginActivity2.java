@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -23,14 +24,17 @@ import android.text.style.ClickableSpan;
 
 import school.campusconnect.utils.AppLog;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,11 +67,17 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     @Bind(R.id.layout_number)
     EditText edtNumber;
 
+   /* @Bind(R.id.rgLanguage)
+    RadioGroup rgLanguage;*/
+
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
     @Bind(R.id.btnNext)
     Button btnNext;
+
+    @Bind(R.id.imgBack)
+    ImageView imgBack;
 
     String countryCode;
     String countryName;
@@ -114,6 +124,27 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
         edtCountry.setText(countryName);
         edtCountry.setFocusable(false);
 
+
+        if (getIntent() != null && getIntent().getExtras() != null &&  getIntent().getExtras().getBoolean("enableBack"))
+        {
+            imgBack.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            imgBack.setVisibility(View.GONE);
+        }
+
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            /*    Intent intent = new Intent(LoginActivity2.this, ChangeLanguageActivity.class);
+                intent.putExtra("isSplash",true);
+                intent.putExtra("enableBack",true);
+                startActivity(intent);*/
+
+                onBackPressed();
+            }
+        });
         edtCountry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,6 +178,46 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
                 return handled;
             }
         });
+
+
+       /* rgLanguage.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i)
+                {
+                    case R.id.rbEnglish:
+                        updateViews("en");
+                        break;
+
+                    case R.id.rbKannada:
+                        updateViews("kn");
+                        break;
+                }
+            }
+        });*/
+    }
+
+    private void updateViews(String languageCode) {
+        Log.e(TAG,"language Code"+languageCode);
+        SharedPreferences preferences = android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Locale.Helper.Selected.Language", languageCode);
+        Log.e("LocaleHelper","language "+languageCode);
+        editor.apply();
+        gotoActivity(LoginActivity2.class,null,true);
+    }
+
+    public void gotoActivity(Class className, Bundle bundle, boolean isClearStack) {
+        Intent intent = new Intent(this, className);
+
+        if (bundle != null)
+            intent.putExtras(bundle);
+
+        if (isClearStack) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+
+        startActivity(intent);
     }
 
     private void setlinks() {
@@ -222,7 +293,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     private void loginApi() {
         btnNext.setEnabled(false);
         if (progressBar != null)
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar,true);
+         //   progressBar.setVisibility(View.VISIBLE);
 
         if (RememberPref.getInstance(this).contains(RememberPref.REMEMBER_USERNAME)) {
             String number = RememberPref.getInstance(this).getString(RememberPref.REMEMBER_USERNAME);
@@ -241,7 +313,7 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
         countryCode = str[currentCountry - 1];
 
         AppLog.e("Login2", "Post Data :" + new Gson().toJson(request));
-        manager.doNext(this, request, Constants.group_category);
+        manager.doNext(this, request);
     }
 
     private boolean permissionCheck() {
@@ -341,7 +413,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
         btnNext.setEnabled(true);
         // hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         if (apiId == LeafManager.API_VERSION) {
             VersionCheckResponse res = (VersionCheckResponse) response;
@@ -355,13 +428,28 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
 
             AppLog.e("TAG", "Response is : " + new Gson().toJson(response));
 
+            Boolean validateUser = false;
             if (!res.data.isAllowedToAccessApp) {
-                Toast.makeText(loginActivity2, "You are not authorized to access this App", Toast.LENGTH_SHORT).show();
-                return;
+
+                if (BuildConfig.AppName.equalsIgnoreCase("GC2"))
+                {
+                    validateUser = true;
+                }
+                else
+                {
+                    Toast.makeText(loginActivity2, getResources().getString(R.string.toast_you_are_not_authorized), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            //    Toast.makeText(loginActivity2, getResources().getString(R.string.toast_you_are_not_authorized), Toast.LENGTH_SHORT).show();
+                //return;
+                //validateUser = true;
             }
 
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.countryCode, res.data.countryCode);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.phoneNumber, res.data.phone);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.ACCESS_KEY, res.data.accessKey);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.SECRET_KEY, res.data.secretKey);
+
 
             if (res.data.isUserExist) {
 
@@ -371,8 +459,18 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
                 startActivity(i);
 
             } else {
-                startActivity(new Intent(this, SignUpActivity2.class).putExtra("Country", countryName).putExtra("countryCode", countryCode));
+
+                startActivity(new Intent(this, SignUpActivity2.class).putExtra("userFlag",validateUser).putExtra("Country", countryName).putExtra("countryCode", countryCode));
                 AppLog.e("TAG", "SignUpActivity2 Launched");
+               /* if (BuildConfig.AppName.equalsIgnoreCase("GC2"))
+                {
+
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"You Are Not Authorized",Toast.LENGTH_SHORT).show();
+                }
+               */
             }
         }
         btnNext.setEnabled(true);
@@ -382,7 +480,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     public void onFailure(int apiId, String msg) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
         btnNext.setEnabled(true);
     }
 
@@ -390,7 +489,8 @@ public class LoginActivity2 extends BaseActivity implements LeafManager.OnCommun
     public void onException(int apiId, String msg) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         btnNext.setEnabled(true);
     }
 

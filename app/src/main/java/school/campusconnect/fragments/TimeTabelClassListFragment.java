@@ -55,7 +55,6 @@ public class TimeTabelClassListFragment extends BaseFragment implements LeafMana
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         role = getArguments().getString("role");
-        progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -63,13 +62,16 @@ public class TimeTabelClassListFragment extends BaseFragment implements LeafMana
     @Override
     public void onStart() {
         super.onStart();
+        showLoadingBar(progressBar,true);
+       // progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getClasses(this,GroupDashboardActivityNew.groupId);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -79,12 +81,14 @@ public class TimeTabelClassListFragment extends BaseFragment implements LeafMana
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //   progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -151,7 +155,7 @@ public class TimeTabelClassListFragment extends BaseFragment implements LeafMana
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -161,7 +165,7 @@ public class TimeTabelClassListFragment extends BaseFragment implements LeafMana
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 

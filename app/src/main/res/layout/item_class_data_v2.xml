@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:background="@drawable/border_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvClassName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding_30dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_black"
+                android:gravity="center"
+                android:singleLine="true"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+               />
+
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding_30dp"
+                android:background="@drawable/border_black"
+                android:orientation="horizontal"
+               >
+
+
+                <TextView
+                    android:id="@+id/etSections"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:layout_marginHorizontal="10dp"
+                    android:maxLength="2"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"
+                    />
+
+                <ImageView
+                    android:id="@+id/imgMax1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/round_primary_bg"
+                    android:src="@drawable/ic_add"
+                    android:padding="5dp"/>
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

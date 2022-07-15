@@ -95,7 +95,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
         mComment.setCommentEditTextId(new ObservableInt(R.id.edt_comment));
         mComment.setCommentString(new ObservableField<>(""));
         mBinding.setPost(mComment);
-        mBinding.setHint("Write a post...");
+        mBinding.setHint(getResources().getString(R.string.hint_write_post));
         mGroupId = getArguments().getString("id");
         post_id = getArguments().getString("post_id");
         fromNotifications = getArguments().getBoolean("fromNotifications");
@@ -247,7 +247,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
                 Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
                 logout();
             } else if (error.status.equals("404")) {
-                Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity(), error.title, Toast.LENGTH_SHORT).show();
             }
@@ -269,7 +269,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
                 Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
                 logout();
             } else if (msg.contains("404")) {
-                Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
                 logout();
             } else {
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
@@ -357,6 +357,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.pdf);
             i.putExtra("name", item.questionFrom);
+            i.putExtra("thumbnail", item.image);
             startActivity(i);
         } else if (item.image != null) {
             Intent i = new Intent(getActivity(), FullScreenActivity.class);
@@ -382,7 +383,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
     @Override
     public void onDeleteClick(QuestionData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override
@@ -487,7 +488,7 @@ public class QuestionListFragment extends BaseFragment implements LeafManager.On
 //            addComment(mComment.getCommentString().get());
             Toast.makeText(getActivity(), mComment.getCommentString().get(), Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(getActivity(), "Please enter post first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_please_enter_post_first), Toast.LENGTH_SHORT).show();
     }
 
     public class DataBinding {

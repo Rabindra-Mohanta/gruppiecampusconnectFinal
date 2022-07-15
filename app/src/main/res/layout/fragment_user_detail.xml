@@ -2,10 +2,12 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background_color"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -20,6 +22,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
+            android:layout_margin="@dimen/padding_15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
@@ -28,41 +31,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
                     android:id="@+id/relative"
+                    app:cardElevation="3dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardCornerRadius="@dimen/padding_5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/list_divider"
-                    android:padding="10dp">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/img_lead"
-                        android:layout_width="@dimen/user_image_size"
-                        android:layout_height="@dimen/user_image_size"
-                        android:layout_alignParentStart="true"
-                        android:src="@drawable/icon_default_user" />
-
-                    <ImageView
-                        android:id="@+id/img_lead_default"
-                        android:layout_width="@dimen/user_image_size"
-                        android:layout_height="@dimen/user_image_size"
-                        android:layout_alignParentStart="true"
-                        android:visibility="invisible"
-                        />
-
-                    <TextView
-                        android:id="@+id/txt_name"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/img_lead"
-                        android:paddingEnd="@dimen/padding_16dp"
-                        android:paddingStart="16dp"
-                        android:text="ssd"
-                        android:textColor="@color/color_orange_hover"
-                        android:textSize="16sp" />
+                        android:background="@drawable/list_divider"
+                        android:padding="10dp">
 
-                </RelativeLayout>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/img_lead"
+                            android:layout_width="@dimen/user_image_size"
+                            android:layout_height="@dimen/user_image_size"
+                            android:layout_alignParentStart="true"
+                            android:src="@drawable/icon_default_user" />
+
+                        <ImageView
+                            android:id="@+id/img_lead_default"
+                            android:layout_width="@dimen/user_image_size"
+                            android:layout_height="@dimen/user_image_size"
+                            android:layout_alignParentStart="true"
+                            android:visibility="invisible"
+                            />
+
+                        <TextView
+                            android:id="@+id/txt_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/img_lead"
+                            android:paddingEnd="@dimen/padding_16dp"
+                            android:paddingStart="16dp"
+
+                            android:textColor="@color/color_orange_hover"
+                            android:textSize="16sp" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
 
                 <LinearLayout
                     android:id="@+id/linear"
@@ -857,7 +868,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_5dp"
-                android:text="Allow Post"
+                android:text="@string/lbl_allow_post"
                 android:visibility="gone" />
 
 
@@ -867,7 +878,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_5dp"
-                android:text="Change Admin"
+                android:text="@string/action_change_admin"
                 android:visibility="gone" />
 
         </LinearLayout>
@@ -878,7 +889,7 @@
             android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding_5dp"
-            android:text="Allow Add Members"
+            android:text="@string/lbl_allow_add_member"
             android:visibility="gone" />
     </LinearLayout>
 

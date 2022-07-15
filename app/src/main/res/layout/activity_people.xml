@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.PeopleActivity">
+
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topbar"
@@ -15,9 +18,67 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+
+
+
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardAll"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        app:cardElevation="@dimen/padding_10dp"
+        android:layout_marginTop="@dimen/padding_15dp"
+        android:layout_alignParentRight="true"
+        app:cardBackgroundColor="@android:color/transparent"
+        android:layout_marginEnd="@dimen/padding_10dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/imgAddStudent"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/padding_30dp"
+                android:src="@drawable/posticon"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="@string/lbl_select_all"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"/>
+            <CheckBox
+                android:id="@+id/chkAll"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_below="@id/topbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        style="@style/LabelEmptyText" />
 </RelativeLayout>

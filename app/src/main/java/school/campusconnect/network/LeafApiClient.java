@@ -68,6 +68,7 @@ public class LeafApiClient {
 
     private OkHttpClient getHttpClient(final Context context)
     {
+
         return new OkHttpClient().newBuilder().connectTimeout(60, TimeUnit.SECONDS).readTimeout(60,TimeUnit.SECONDS).addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

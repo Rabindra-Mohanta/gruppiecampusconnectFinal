@@ -38,7 +38,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="@dimen/padding_10dp"
                     android:gravity="center"
-                    android:text="Allow Post Question" />
+                    android:text="@string/lbl_allow_post_question" />
 
                 <Switch
                     android:id="@+id/switch_post_que"
@@ -64,7 +64,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="@dimen/padding_10dp"
                     android:gravity="center"
-                    android:text="Allow Share" />
+                    android:text="@string/lbl_allow_share" />
 
                 <Switch
                     android:id="@+id/switch_share"
@@ -89,7 +89,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="@dimen/padding_10dp"
                     android:gravity="center"
-                    android:text="Allow Everyone To Post" />
+                    android:text="@string/lbl_allow_everyone" />
 
                 <Switch
                     android:id="@+id/switch_everyone"
@@ -114,7 +114,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="@dimen/padding_10dp"
                     android:gravity="center"
-                    android:text="Allow Change Admin" />
+                    android:text="@string/lbl_allow_change_admin" />
 
                 <Switch
                     android:id="@+id/switch_change_admin"

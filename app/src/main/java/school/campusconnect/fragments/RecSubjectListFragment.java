@@ -3,6 +3,7 @@ package school.campusconnect.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddChapterPostActivity;
 import school.campusconnect.activities.ChapterActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
@@ -42,6 +44,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
 
     String team_id;
     String className;
+    String path;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,8 +54,10 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
 
         team_id=getArguments().getString("team_id");
         className=getArguments().getString("title");
+        path=getArguments().getString("path");
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar,true);
+      //  progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -61,12 +66,13 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
-        leafManager.getSubjectStaff(this,GroupDashboardActivityNew.groupId,team_id);
+        leafManager.getSubjectStaff(this,GroupDashboardActivityNew.groupId,team_id,"");
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+    //    progressBar.setVisibility(View.GONE);
         SubjectStaffResponse res = (SubjectStaffResponse) response;
         List<SubjectStaffResponse.SubjectData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -76,12 +82,14 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+     //   progressBar.setVisibility(View.GONE);
     }
 
     public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder>
@@ -113,7 +121,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Subject found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -123,7 +131,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No Subject found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_subject_found));
                 return 0;
             }
 
@@ -143,7 +151,7 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this,itemView);
-
+                img_tree.setVisibility(View.VISIBLE);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -160,15 +168,24 @@ public class RecSubjectListFragment extends BaseFragment implements LeafManager.
             }
         }
     }
-
     private void onTreeClick(SubjectStaffResponse.SubjectData classData) {
-        Intent intent = new Intent(getActivity(), ChapterActivity.class);
-        intent.putExtra("team_id",team_id);
-        intent.putExtra("className",className);
-        intent.putExtra("subject_id",classData.subjectId);
-        intent.putExtra("subject_name",classData.name);
-        intent.putExtra("canPost",classData.canPost);
-        intent.putExtra("title",classData.name);
-        startActivity(intent);
+        if(!TextUtils.isEmpty(path)){
+            Intent intent = new Intent(getActivity(), AddChapterPostActivity.class);
+            intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
+            intent.putExtra("team_id",team_id);
+            intent.putExtra("subject_id",classData.subjectId);
+            intent.putExtra("subject_name",classData.name);
+            intent.putExtra("path",path);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(getActivity(), ChapterActivity.class);
+            intent.putExtra("team_id",team_id);
+            intent.putExtra("className",className);
+            intent.putExtra("subject_id",classData.subjectId);
+            intent.putExtra("subject_name",classData.name);
+            intent.putExtra("canPost",classData.canPost);
+            intent.putExtra("title",classData.name);
+            startActivity(intent);
+        }
     }
 }

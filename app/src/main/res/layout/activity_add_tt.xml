@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F2F8FF"
     tools:context=".activities.CreateTeamActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -41,7 +42,7 @@
                         android:layout_marginBottom="@dimen/padding_10dp"
                         android:orientation="vertical">
 
-                        <FrameLayout
+                        <!--<FrameLayout
                             android:layout_width="220dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/padding_30dp"
@@ -58,8 +59,9 @@
                                 android:layout_marginEnd="@dimen/padding_15dp"
                                 android:layout_gravity="right|center"
                                 android:layout_height="20dp"/>
-                        </FrameLayout>
+                        </FrameLayout>-->
                         <LinearLayout
+                            android:visibility="gone"
                             android:id="@+id/llMain"
                             android:layout_marginTop="@dimen/dimen_16"
                             android:paddingEnd="@dimen/padding_40dp"
@@ -72,9 +74,22 @@
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="Period"
+                                android:text="@string/lbl_period"
                                 android:textStyle="bold"
-                                android:textSize="@dimen/text_size_16sp"
+                                android:textSize="@dimen/text_size_12sp"
+                                android:textColor="@color/colorTextDark"
+                                style="@style/LabelNormal" />
+
+                            <TextView
+                                android:id="@+id/txt_time"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.5"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="@string/lbl_Time"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_12sp"
                                 android:textColor="@color/colorTextDark"
                                 style="@style/LabelNormal" />
 
@@ -86,9 +101,9 @@
                                 android:layout_weight="1"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="Select Subject"
+                                android:text="@string/lbl_select_subject"
                                 android:textStyle="bold"
-                                android:textSize="@dimen/text_size_16sp"
+                                android:textSize="@dimen/text_size_12sp"
                                 android:textColor="@color/colorTextDark"
                                 style="@style/LabelNormal" />
 
@@ -97,10 +112,10 @@
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="match_parent"
-                                android:text="Select Staff"
+                                android:text="@string/lbl_select_staff"
                                 android:gravity="center"
                                 android:textStyle="bold"
-                                android:textSize="@dimen/text_size_16sp"
+                                android:textSize="@dimen/text_size_12sp"
                                 android:textColor="@color/colorTextDark"
                                 style="@style/LabelNormal" />
 
@@ -108,13 +123,175 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvTimeTable"
-                            tools:listitem="@layout/item_add_time_table"
                             android:layout_width="match_parent"
-                            tools:itemCount="3"
+                            android:layout_height="wrap_content"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            android:layout_height="wrap_content"/>
+                            tools:itemCount="3"
+                            tools:listitem="@layout/item_add_time_table" />
 
-                        <LinearLayout
+                        <androidx.cardview.widget.CardView
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:layout_width="match_parent"
+                            app:cardElevation="4dp"
+                            android:outlineSpotShadowColor="@color/colorPrimaryLight"
+                            android:outlineAmbientShadowColor="@color/colorPrimaryLight"
+                            android:layout_height="wrap_content">
+                            <RelativeLayout
+                                android:background="@drawable/light_primary_border_bg"
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:id="@+id/btnAdd"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/ic_add"
+                                    android:background="@drawable/round_primary_bg"
+                                    android:padding="@dimen/padding_5dp"
+                                    android:layout_width="@dimen/padding_30dp"
+                                    android:layout_height="@dimen/padding_30dp"/>
+
+                                <LinearLayout
+                                    android:layout_below="@id/btnAdd"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <androidx.appcompat.widget.AppCompatImageView
+                                            android:src="@drawable/ic_period"
+                                            app:tint="@color/colorPrimary"
+                                            android:layout_gravity="center"
+                                            android:layout_width="@dimen/padding_25dp"
+                                            android:layout_height="@dimen/padding_25dp"/>
+
+                                        <EditText
+                                            android:layout_marginLeft="@dimen/padding_15dp"
+                                            android:id="@+id/et_period"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="@dimen/padding_30dp"
+                                            android:singleLine="true"
+                                            android:focusable="false"
+                                            android:inputType="numberDecimal"
+                                            android:digits="1234567890"
+                                            android:background="@null"
+                                            android:textStyle="bold"
+
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="@dimen/text_size_16sp"
+                                            />
+
+                                    </LinearLayout>
+                                    <View
+                                        android:layout_marginVertical="@dimen/padding_5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="@color/colorTextLight"/>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <androidx.appcompat.widget.AppCompatImageView
+                                            android:src="@drawable/ic_time"
+                                            app:tint="@color/colorPrimary"
+                                            android:layout_gravity="center"
+                                            android:layout_width="@dimen/padding_25dp"
+                                            android:layout_height="@dimen/padding_25dp"/>
+
+                                        <EditText
+                                            android:layout_marginLeft="@dimen/padding_15dp"
+                                            android:id="@+id/etTimeAddNew"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="@dimen/padding_30dp"
+                                            android:singleLine="true"
+                                            android:focusable="false"
+                                            android:background="@null"
+                                            android:textStyle="bold"
+                                            android:hint="@string/select_start_end_time"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="@dimen/text_size_16sp"
+                                            />
+
+                                    </LinearLayout>
+
+                                    <View
+                                        android:layout_marginVertical="@dimen/padding_5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="@color/colorTextLight"/>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <androidx.appcompat.widget.AppCompatImageView
+                                            android:src="@drawable/ic_select_subject"
+                                            app:tint="@color/colorPrimary"
+                                            android:layout_gravity="center"
+                                            android:layout_width="@dimen/padding_25dp"
+                                            android:layout_height="@dimen/padding_25dp"/>
+
+                                        <FrameLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
+                                            <Spinner
+                                                style="@style/commonSpinnerWhite"
+                                                android:id="@+id/spSubject"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="@dimen/padding_30dp"
+                                                />
+                                            <ImageView
+                                                android:layout_width="15dp"
+                                                android:src="@drawable/arrow_down"
+                                                android:tint="@color/colorPrimary"
+                                                android:layout_marginEnd="@dimen/padding_10dp"
+                                                android:layout_gravity="right|center"
+                                                android:layout_height="15dp"/>
+                                        </FrameLayout>
+
+                                    </LinearLayout>
+
+                                    <View
+                                        android:layout_marginVertical="@dimen/padding_5dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="@color/colorTextLight"/>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <androidx.appcompat.widget.AppCompatImageView
+                                            android:src="@drawable/ic_select_staff"
+                                            app:tint="@color/colorPrimary"
+                                            android:layout_gravity="center"
+                                            android:layout_width="@dimen/padding_25dp"
+                                            android:layout_height="@dimen/padding_25dp"/>
+
+                                        <FrameLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
+                                            <Spinner
+                                                android:id="@+id/spStaff"
+                                                style="@style/commonSpinnerWhite"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="@dimen/padding_30dp" />
+                                            <ImageView
+                                                android:layout_width="15dp"
+                                                android:src="@drawable/arrow_down"
+                                                android:tint="@color/colorPrimary"
+                                                android:layout_marginEnd="@dimen/padding_10dp"
+                                                android:layout_gravity="right|center"
+                                                android:layout_height="15dp"/>
+                                        </FrameLayout>
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+                            </RelativeLayout>
+                        </androidx.cardview.widget.CardView>
+
+                       <!-- <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_marginTop="@dimen/padding_5dp"
                             android:layout_height="50dp">
@@ -128,6 +305,20 @@
                                 android:focusable="false"
                                 android:inputType="numberDecimal"
                                 android:digits="1234567890"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_16sp"
+                                style="@style/RegEditText" />
+
+                            <EditText
+                                android:id="@+id/etTimeAddNew"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.5"
+                                android:layout_marginBottom="@dimen/padding_5dp"
+                                android:layout_height="@dimen/login_button_height"
+                                android:gravity="center"
+                                android:layout_marginStart="@dimen/padding_10dp"
+                                android:focusable="false"
+                                android:singleLine="true"
                                 android:textStyle="bold"
                                 android:textSize="@dimen/text_size_16sp"
                                 style="@style/RegEditText" />
@@ -178,7 +369,7 @@
                                 android:layout_marginTop="@dimen/padding_5dp"
                                 android:layout_marginBottom="@dimen/padding_5dp"
                                 android:layout_height="@dimen/padding_40dp"/>
-                        </LinearLayout>
+                        </LinearLayout>-->
                     </LinearLayout>
                 </FrameLayout>
             </FrameLayout>

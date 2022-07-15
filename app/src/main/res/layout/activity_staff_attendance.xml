@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <include layout="@layout/layout_toolbar" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_margin="@dimen/padding_5dp"
+            android:layout_marginBottom="@dimen/padding_10dp"
+            android:layout_above="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_below="@id/topbar"
+            android:background="@drawable/border_bg"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/llTitle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_button_height"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvSubject"
+                    style="@style/LabelSmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:textAllCaps="true"
+                    android:text="@string/name" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/padding_10dp"
+                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:background="@color/black" />
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:visibility="gone"
+                        android:id="@+id/chMorning"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tvMax"
+                        style="@style/LabelSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/chMorning"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:layout_centerVertical="true"
+                        android:text="M" />
+
+                   <!-- <ImageView
+                        android:id="@+id/llMorning"
+                        android:visibility="gone"
+                        android:layout_width="@dimen/padding_25dp"
+                        android:layout_height="@dimen/padding_25dp"
+                        android:background="@drawable/round_primary_bg"
+                        android:src="@drawable/ic_edit_white"
+                        android:padding="@dimen/padding_5dp"
+                        android:layout_centerVertical="true"/>-->
+                </RelativeLayout>
+
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/padding_10dp"
+                    android:layout_marginEnd="@dimen/padding_10dp"
+                    android:background="@color/black" />
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/chAfterNoon"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tvMin"
+                        style="@style/LabelSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/chAfterNoon"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:layout_centerVertical="true"
+                        android:text="A"  />
+
+
+                </RelativeLayout>
+
+
+
+            </LinearLayout>
+            <View
+                android:id="@+id/view"
+                android:layout_below="@id/llTitle"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAttendance"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/view"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_staff_attendance" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="120dp"
+            android:text="@string/lbl_submit"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/add_post_button_bg"
+            android:layout_marginBottom="@dimen/padding_5dp"
+            android:layout_marginTop="@dimen/padding_5dp"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/txtEmpty"
+            android:text="No data Found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            style="@style/LabelEmptyText" />
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/padding_10dp"
+        android:layout_height="wrap_content">
+
+
+      <!--  <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalOpenIssueTickets"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                   />
+
+
+                <TextView
+                    android:id="@+id/tvTotalOpenIssue"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalAnnouncementsCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalAnnouncementCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalBoothCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalBoothCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalBoothsDiscussionCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalBoothsDiscussionCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llTotalPublicStreet"
+                android:weightSum="2"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalPublicStreetsCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalPublicStreetsCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llTotalDiscussionCount"
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                >
+
+                <TextView
+                    android:layout_weight="0.6"
+                    style="@style/LabelNormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/padding_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/lbl_TotalPublicDiscussionCount"/>
+
+
+                <TextView
+                    style="@style/LabelNormal"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="@dimen/padding_10dp"
+                    android:layout_width="wrap_content"
+                    android:text=":"
+                    android:layout_height="@dimen/padding_20dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/tvTotalPublicDiscussionCount"
+                    android:layout_weight="1.4"
+                    style="@style/LabelNormal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextLight"
+                    android:text="Count"/>
+
+            </LinearLayout>
+
+        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+                <RelativeLayout
+                    android:id="@+id/llOpenTickets"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <androidx.cardview.widget.CardView
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="@dimen/padding_50dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:cardBackgroundColor="#2C58F5"
+                            >
+                            <LinearLayout
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:id="@+id/tvTotalOpenIssue"
+                                    android:layout_width="match_parent"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:singleLine="true"
+                                    style="@style/LabelSmall"
+                                    android:textSize="@dimen/text_size_14sp"
+                                    android:textColor="@color/white"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_open_tickets"
+                                    android:layout_width="@dimen/padding_20dp"
+                                    android:layout_height="@dimen/padding_20dp"/>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            style="@style/LabelSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:gravity="center"
+                            android:text="@string/lbl_open_tickets"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/text_size_12sp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/llAnnouncement"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <androidx.cardview.widget.CardView
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="@dimen/padding_50dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:cardBackgroundColor="#F8BE03"
+                            >
+                            <LinearLayout
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:id="@+id/tvTotalAnnouncementCount"
+                                    android:layout_width="match_parent"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:singleLine="true"
+                                    style="@style/LabelSmall"
+                                    android:textSize="@dimen/text_size_14sp"
+                                    android:textColor="@color/white"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_announcements"
+                                    android:layout_width="@dimen/padding_20dp"
+                                    android:layout_height="@dimen/padding_20dp"/>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:text="@string/lbl_announcements"
+                            style="@style/LabelSmall"
+                            android:textSize="@dimen/text_size_12sp"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/llBoothCount"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <androidx.cardview.widget.CardView
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="@dimen/padding_50dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:cardBackgroundColor="#3BBAB6"
+                            >
+                            <LinearLayout
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:id="@+id/tvTotalBoothCount"
+                                    android:layout_width="match_parent"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:singleLine="true"
+                                    style="@style/LabelSmall"
+                                    android:textSize="@dimen/text_size_14sp"
+                                    android:textColor="@color/white"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_booths_count"
+                                    android:layout_width="@dimen/padding_20dp"
+                                    android:layout_height="@dimen/padding_20dp"/>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:text="@string/lbl_booth_count"
+                            style="@style/LabelSmall"
+                            android:textSize="@dimen/text_size_12sp"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/llDiscuss"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <androidx.cardview.widget.CardView
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="@dimen/padding_50dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:cardBackgroundColor="#FE6568"
+                            >
+                            <LinearLayout
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:id="@+id/tvTotalBoothsDiscussionCount"
+                                    android:layout_width="match_parent"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:singleLine="true"
+                                    style="@style/LabelSmall"
+                                    android:textSize="@dimen/text_size_14sp"
+                                    android:textColor="@color/white"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_discussion"
+                                    android:layout_width="@dimen/padding_20dp"
+                                    android:layout_height="@dimen/padding_20dp"/>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:text="@string/lbl_booth_discussion"
+                            style="@style/LabelSmall"
+                            android:textSize="@dimen/text_size_12sp"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/padding_10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/llPublicStreet"
+                        android:layout_centerInParent="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <androidx.cardview.widget.CardView
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="@dimen/padding_50dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:cardBackgroundColor="#732EF8"
+                            >
+                            <LinearLayout
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:id="@+id/tvTotalPublicStreetsCount"
+                                    android:layout_width="match_parent"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    android:singleLine="true"
+                                    style="@style/LabelSmall"
+                                    android:textSize="@dimen/text_size_14sp"
+                                    android:textColor="@color/white"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_pubilc_streets"
+                                    android:layout_width="@dimen/padding_20dp"
+                                    android:layout_height="@dimen/padding_20dp"/>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:text="@string/lbl_public_street"
+                            style="@style/LabelSmall"
+                            android:textSize="@dimen/text_size_12sp"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/llPublicDiscussion"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <androidx.cardview.widget.CardView
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="@dimen/padding_50dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:cardBackgroundColor="#1BA7F7"
+                            >
+                            <LinearLayout
+                                android:padding="@dimen/padding_10dp"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:id="@+id/tvTotalPublicDiscussionCount"
+                                    android:singleLine="true"
+                                    android:layout_width="match_parent"
+                                    android:gravity="center"
+                                    android:text="0"
+                                    android:textStyle="bold"
+                                    style="@style/LabelSmall"
+                                    android:textSize="@dimen/text_size_14sp"
+                                    android:textColor="@color/white"
+                                    android:layout_height="wrap_content" />
+
+                                <ImageView
+                                    android:layout_marginTop="@dimen/padding_5dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_pubilc_discussion"
+                                    android:layout_width="@dimen/padding_20dp"
+                                    android:layout_height="@dimen/padding_20dp"/>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:text="@string/lbl_public_discussion"
+                            style="@style/LabelSmall"
+                            android:textSize="@dimen/text_size_12sp"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

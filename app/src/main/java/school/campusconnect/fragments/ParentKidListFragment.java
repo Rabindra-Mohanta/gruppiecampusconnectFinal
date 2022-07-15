@@ -63,7 +63,8 @@ public class ParentKidListFragment extends BaseFragment implements LeafManager.O
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //   progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -77,7 +78,8 @@ public class ParentKidListFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         ParentKidsResponse res = (ParentKidsResponse) response;
         List<ParentKidsResponse.ParentKidsData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
@@ -87,12 +89,14 @@ public class ParentKidListFragment extends BaseFragment implements LeafManager.O
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -159,7 +163,7 @@ public class ParentKidListFragment extends BaseFragment implements LeafManager.O
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Kids found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_kid_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -169,7 +173,7 @@ public class ParentKidListFragment extends BaseFragment implements LeafManager.O
             }
             else
             {
-                txtEmpty.setText("No Kids found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_kid_found));
                 return 0;
             }
 

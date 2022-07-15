@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AlertDialog;
 import android.view.View;
@@ -14,12 +15,13 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import school.campusconnect.R;
+import school.campusconnect.activities.EditOfflineTestActivity;
 import school.campusconnect.views.SMBAlterDialog;
 
 public class DatePickerFragment extends DialogFragment {
-
+    SMBAlterDialog dialog;
     private OnDateSelectListener onDateSelectListener;
-
+    private int i = 0;
     public static DatePickerFragment newInstance() {
        return new DatePickerFragment();
     }
@@ -30,14 +32,30 @@ public class DatePickerFragment extends DialogFragment {
         onDateSelectListener = listener;
     }
 
+    public void setTitle(int title) {
+        this.i = title;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        SMBAlterDialog dialog = new SMBAlterDialog(getContext());
+        dialog  = new SMBAlterDialog(getContext());
 
-        dialog.setTitle(R.string.hint_lead_dob);
+        if (i == 0)
+        {
+            dialog.setTitle(R.string.hint_lead_dob);
+        }
+        else
+        {
+            dialog.setTitle(i);
+        }
+
         //bug in support lib http://stackoverflow.com/questions/32784009/styling-custom-dialog-fragment-not-working
         final View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_date, null);
+        DatePicker datePicker = (DatePicker) view.findViewById(R.id.datePicker1);
+        if (minDateMillis > 0) {
+            datePicker.setMinDate(minDateMillis);
+        }
 
         dialog.setView(view);
 
@@ -59,7 +77,10 @@ public class DatePickerFragment extends DialogFragment {
         return dd;
     }
 
-
+    private long minDateMillis = 0;
+    public void setMinimum(long timeInMillis) {
+        minDateMillis = timeInMillis;
+    }
 
     public interface OnDateSelectListener {
         void onDateSelected( Calendar c);

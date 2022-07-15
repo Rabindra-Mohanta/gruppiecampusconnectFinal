@@ -177,7 +177,7 @@ public class ReviewActivity extends BaseActivity {
         if (mService.getUploadProgress() == -2) {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
-                Toast.makeText(this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
 //                ReviewActivity.this.finish();
             }
             return false;

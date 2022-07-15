@@ -6,8 +6,10 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,8 +50,7 @@ public class MixOperations {
             date = inputFormat.parse(dt);
 
             Date now = Calendar.getInstance().getTime();
-           AppLog.e(TAG,"Now =>"+now.toString());
-           AppLog.e(TAG,"Date =>"+date.toString());
+
 
             long diff = now.getTime() - date.getTime();
             long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
@@ -90,6 +91,85 @@ public class MixOperations {
             return "";
         }
     }
+
+    public static String getFormattedDateOnly(String dt, String inputPattern,String of)
+    {
+        Date date;
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat outputFormat = new SimpleDateFormat(of);
+            date = inputFormat.parse(dt);
+            return outputFormat.format(date);
+        } catch (Exception e) {
+            AppLog.e(TAG,e.toString());
+            return "";
+        }
+    }
+    public static boolean isNewEvent(String eventAt, String inputPattern,long now)
+    {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            long eventAtMillisec = inputFormat.parse(eventAt).getTime();
+
+            if(now<eventAtMillisec){
+                return true;
+            }
+        } catch (Exception e) {
+            AppLog.e(TAG,e.toString());
+            return false;
+        }
+        return false;
+    }
+
+
+    public static boolean isNewEvent(String eventAt, String inputPattern,String now)
+    {
+
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            long eventAtMillisec = inputFormat.parse(eventAt).getTime();
+            long nowMillis = inputFormat.parse(now).getTime();
+            if(nowMillis<eventAtMillisec)
+            {
+                return true;
+            }
+        } catch (Exception e) {
+            AppLog.e(TAG,e.toString());
+            return false;
+        }
+        return false;
+    }
+
+
+    //change time compare format
+
+    public static boolean isNewEventUpdate(String eventAt, String inputPattern,String now)
+    {
+
+
+
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            long eventAtMillisec = inputFormat.parse(eventAt).getTime()/100;
+            long nowMillis = inputFormat.parse(now).getTime()/100;
+
+
+
+            if(nowMillis != eventAtMillisec)
+            {
+                return true;
+            }
+        } catch (Exception e) {
+            AppLog.e(TAG,e.toString());
+            return false;
+        }
+        return false;
+    }
+
     public static String convertBase64(Bitmap bitmap)
     {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -118,5 +198,27 @@ public class MixOperations {
     {
         SimpleDateFormat inputFormat = new SimpleDateFormat("MMM");
         return inputFormat.format(date);
+    }
+
+
+    public static void deleteVideoFile(String filepath)
+    {
+
+
+        if(filepath ==null)
+        {
+            return;
+        }
+
+        File file = new File(filepath);
+
+
+        if (file.exists())
+        {
+            file.delete();
+            // contentResolver.delete(filesUri, where, selectionArgs);
+        }
+
+
     }
 }

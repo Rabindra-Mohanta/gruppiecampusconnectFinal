@@ -203,7 +203,7 @@ public class Fragment_PhoneContacts extends BaseFragment implements MyContactLis
             dialog.setMessage("Syncing your contacts to Gruppie please wait...");
             dialog.setCancelable(false);
 
-            if(!GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_SCHOOL))
+            if(!GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_SCHOOL) && !GroupDashboardActivityNew.groupCategory.equalsIgnoreCase(Constants.CATEGORY_CONSTITUENCY))
                 dialog.show();
             else
                 showLoadingBar(mBinding.progressBar2);
@@ -406,8 +406,8 @@ public class Fragment_PhoneContacts extends BaseFragment implements MyContactLis
             try {
                 String body = "I have added you to " + GroupDashboardActivityNew.group_name + ", to login plz download the " + getResources().getString(R.string.app_name) + " app from\n" +
                         "\n" +
-                        "gruppie.in/android/campusconnect"+"\n" +
-                        "gruppie.in/ios/campusconnect"+"\n" +
+                        "gruppie.in/android/"+getResources().getString(R.string.app_name).replace(" ","")+"\n" +
+                        "gruppie.in/ios/"+getResources().getString(R.string.app_name).replace(" ","")+"\n" +
                         "Plz add your friends to this group";
                 try {
 

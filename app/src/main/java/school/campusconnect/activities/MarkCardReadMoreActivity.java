@@ -154,7 +154,7 @@ public class MarkCardReadMoreActivity extends BaseActivity implements DialogInte
         rollNo = bundle.getString("roll_no");
         role = bundle.getString("role");
 
-        setTitle(bundle.getString("name")+"  Mark Card");
+        setTitle(bundle.getString("name")+" "+getResources().getString(R.string.lbl_select_mark_card));
 
         String jsonData=bundle.getString("data");
         AppLog.e(TAG,"data : "+jsonData);
@@ -217,14 +217,15 @@ public class MarkCardReadMoreActivity extends BaseActivity implements DialogInte
 
     public void onDeleteClick(MarkSheetListResponse.MarkSheetData item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+            //progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             //manager.deleteMarkCart(this, mGroupId+"",teamId,userId,rollNo,currentItem.marksCardId);
 
@@ -241,11 +242,11 @@ public class MarkCardReadMoreActivity extends BaseActivity implements DialogInte
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
-
+      //  progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         switch (apiId) {
             case LeafManager.API_MARK_SHEET_DELETE:
-                Toast.makeText(this, "Mark Card Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_mark_card_delete_successfully), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }
@@ -253,16 +254,16 @@ public class MarkCardReadMoreActivity extends BaseActivity implements DialogInte
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
-
+       // progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
         if (msg.contains("401:Unauthorized") || msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(this, "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(this, "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } else {

@@ -12,7 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+        >
 
         <include layout="@layout/content_profile2" />
     </androidx.core.widget.NestedScrollView>
@@ -82,7 +84,7 @@
                             android:id="@+id/txt_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Gruppie Contacts"
+                            android:text="@string/lbl_gruppie_contact"
                             android:visibility="gone"
                             android:textAppearance="@style/TextAppearance.Light"
                             android:textColor="@color/color_grey_icon"
@@ -192,6 +194,20 @@
             >-->
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -209,6 +225,7 @@
             android:layout_marginRight="@dimen/padding_30dp"
             android:background="@drawable/comment_send_background"
             android:elevation="8dp"
+            android:visibility="gone"
             android:src="@drawable/ic_arrow_right" />
 
         <ImageView
@@ -223,7 +240,7 @@
             android:layout_marginRight="@dimen/padding_30dp"
             android:elevation="8dp"
             android:src="@drawable/icon_tick_green"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </RelativeLayout>
     <!--</RelativeLayout>-->

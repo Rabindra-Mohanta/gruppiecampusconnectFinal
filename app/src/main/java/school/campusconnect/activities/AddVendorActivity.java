@@ -8,7 +8,10 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -37,13 +41,28 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,6 +71,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import id.zelory.compressor.Compressor;
 import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.AddPostValidationError;
@@ -64,6 +84,7 @@ import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.GetThumbnail;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.crop.CropDialogActivity;
 import school.campusconnect.utils.youtube.MainActivity;
 import school.campusconnect.views.SMBDialogUtils;
 
@@ -122,7 +143,8 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
     String group_id;
 
     public Uri imageCaptureFile;
-
+    private Boolean isGalleryMultiple = false;
+    private Boolean isClear = true;
 
     public static final int REQUEST_LOAD_CAMERA_IMAGE = 101;
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
@@ -151,6 +173,29 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
         setListener();
 
+
+        ArrayList<String> shareList = LeafApplication.getInstance().getShareFileList();
+        if(shareList!=null && shareList.size()>0){
+            String fileType = LeafApplication.getInstance().getType();
+            if(Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)){
+                return;
+            }
+            SMBDialogUtils.showSMBDialogYesNoCancel(this, getResources().getString(R.string.smb_attach_file), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    if(Constants.FILE_TYPE_IMAGE.equalsIgnoreCase(fileType)
+                            || Constants.FILE_TYPE_VIDEO.equalsIgnoreCase(fileType)){
+                        listImages.addAll(shareList);
+                        showLastImage();
+                    }else if(Constants.FILE_TYPE_PDF.equalsIgnoreCase(fileType)){
+                        pdfPath = shareList.get(0);
+                        Picasso.with(AddVendorActivity.this).load(R.drawable.pdf_thumbnail).into(imgDoc);
+                    }
+                }
+            });
+        }
+
     }
 
     private void setListener() {
@@ -158,7 +203,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
         llVideo.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
-        btnShare.setEnabled(false);
+   //     btnShare.setEnabled(false);
 
         edtTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -204,18 +249,18 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Vendor");
+        setTitle(getResources().getString(R.string.title_add_vendor));
 
         transferUtility = AmazoneHelper.getTransferUtility(this);
 
     }
 
     private void shareButtonEnableDisable() {
-        if (isValid(false)) {
+       /* if (isValid(false)) {
             btnShare.setEnabled(true);
         } else {
-            btnShare.setEnabled(false);
-        }
+            btnShare.setEnabled(true);
+        }*/
     }
 
     @Override
@@ -228,8 +273,9 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
         if (isConnectionAvailable()) {
             if (isValid(true)) {
                 if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
-                btnShare.setEnabled(false);
+                    showLoadingBar(progressBar,false);
+                    //progressBar.setVisibility(View.VISIBLE);
+              //  btnShare.setEnabled(false);
 
                 AddVendorPostRequest request = new AddVendorPostRequest();
                 request.vendor = edtTitle.getText().toString();
@@ -281,18 +327,22 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
                     if(listThumbnails!=null){
                         uploadThumbnail(listThumbnails,0);
                     }else {
-                        Toast.makeText(AddVendorActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
                     }
 
                 }
             },Constants.FILE_TYPE_PDF);
         } else {
             for (int i = 0; i < listImages.size(); i++) {
+                Bitmap bitmap = null;
                 try {
-                    File newFile = new Compressor(this).setMaxWidth(1000).setQuality(90).compressToFile(new File(listImages.get(i)));
-                    listImages.set(i, newFile.getAbsolutePath());
-                } catch (IOException e) {
+                    InputStream is =  getContentResolver().openInputStream(Uri.parse(listImages.get(i)));
+                    bitmap =ImageUtil.scaleDown(BitmapFactory.decodeStream(is), 1200, false);
+                    listImages.set(i, ImageUtil.resizeImage(getApplicationContext(), bitmap, "test"));
+
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    AppLog.e(TAG , "Error Occurred : "+e.getLocalizedMessage());
                 }
             }
             AppLog.e(TAG, "Final PAth :: " + listImages.toString());
@@ -305,60 +355,70 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
             upLoadImageOnCloud(0);
         }else {
             final String key = AmazoneHelper.getAmazonS3KeyThumbnail(mainRequest.fileType);
-            File file = new File(listThumbnails.get(index));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listThumbnails.get(index))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("Thumbnail", "onStateChanged " + index);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("Thumbnail", "onStateChanged " + index);
+                            String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
 
-                        String _finalUrl = AmazoneHelper.BUCKET_NAME_URL + key;
+                            Log.e("FINALURL", "url is " + _finalUrl);
 
-                        Log.e("FINALURL", "url is " + _finalUrl);
+                            _finalUrl = Constants.encodeStringToBase64(_finalUrl);
 
-                        _finalUrl = Constants.encodeStringToBase64(_finalUrl);
+                            Log.e("FINALURL", "encoded url is " + _finalUrl);
 
-                        Log.e("FINALURL", "encoded url is " + _finalUrl);
+                            listThumbnails.set(index,_finalUrl);
 
-                        listThumbnails.set(index,_finalUrl);
+                            uploadThumbnail(listThumbnails,index+1);
 
-                        uploadThumbnail(listThumbnails,index+1);
-
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            hideLoadingBar();
+                            //progressBar.setVisibility(View.GONE);
+                            if (progressDialog!=null) {
+                                progressDialog.dismiss();
+                            }
+                            Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        progressBar.setVisibility(View.GONE);
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Preparing Pdf " + percentDone + "% " + (index + 1) + " out of " + listImages.size() + ", please wait...");
+                        }
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        hideLoadingBar();
+                        //progressBar.setVisibility(View.GONE);
                         if (progressDialog!=null) {
                             progressDialog.dismiss();
                         }
-                        Toast.makeText(AddVendorActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                     }
-                }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Preparing Pdf " + percentDone + "% " + (index + 1) + " out of " + listImages.size() + ", please wait...");
-                    }
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
 
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    if (progressDialog!=null) {
-                        progressDialog.dismiss();
-                    }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 
@@ -373,48 +433,58 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
             manager.addVendorPost(this, group_id, mainRequest);
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(mainRequest.fileType);
-            File file = new File(listImages.get(pos));
-            TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                    file , CannedAccessControlList.PublicRead);
 
-            observer.setTransferListener(new TransferListener() {
-                @Override
-                public void onStateChanged(int id, TransferState state) {
-                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                        Log.e("MULTI_IMAGE", "onStateChanged " + pos);
-                        updateList(pos, key);
+            TransferObserver observer ;
+            UploadOptions option = UploadOptions.
+                    builder().bucket(AmazoneHelper.BUCKET_NAME).
+                    cannedAcl(CannedAccessControlList.PublicRead).build();
+            try {
+                observer = transferUtility.upload(key,
+                        getContentResolver().openInputStream(Uri.parse(listImages.get(pos))), option);
+                observer.setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                        if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                            Log.e("MULTI_IMAGE", "onStateChanged " + pos);
+                            updateList(pos, key);
+                        }
+                        if (TransferState.FAILED.equals(state)) {
+                            Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.toast_upload_failed), Toast.LENGTH_SHORT).show();
+                            if(progressDialog!=null)
+                                progressDialog.dismiss();
+                        }
                     }
-                    if (TransferState.FAILED.equals(state)) {
-                        Toast.makeText(AddVendorActivity.this, "Failed to upload", Toast.LENGTH_SHORT).show();
-                        if(progressDialog!=null)
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                        int percentDone = (int) percentDonef;
+                        if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
+                            progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
+                        }
+                        AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                                + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                    }
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        hideLoadingBar();
+                        //progressBar.setVisibility(View.GONE);
+                        if (progressDialog != null) {
                             progressDialog.dismiss();
+                        }
+                        AppLog.e(TAG, "Upload Error : " + ex);
+                        Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
                     }
-                }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                @Override
-                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                    int percentDone = (int) percentDonef;
-                    if (Constants.FILE_TYPE_PDF.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Uploading Pdf " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
-                    } else if (Constants.FILE_TYPE_IMAGE.equals(mainRequest.fileType)) {
-                        progressDialog.setMessage("Uploading Image " + percentDone + "% " + (pos + 1) + " out of " + listImages.size() + ", please wait...");
-                    }
-                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-                }
 
-                @Override
-                public void onError(int id, Exception ex) {
-                    progressBar.setVisibility(View.GONE);
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    AppLog.e(TAG, "Upload Error : " + ex);
-                    Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
 
@@ -444,13 +514,13 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
         if (!isValueValidOnly(edtTitle)) {
             if (showToast)
-                Toast.makeText(this, "Please Add Vendor Name",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_add_vendor_name),Toast.LENGTH_SHORT).show();
             valid = false;
         }
         if(!isValueValidOnly(edtDesc) && TextUtils.isEmpty(pdfPath) && listImages.size()==0)
         {
             if(showToast)
-                Toast.makeText(this, "Please Add Description or Image or pdf",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_please_add_des_image_pdf),Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -492,22 +562,21 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
                 }
                 break;
 
-
-
         }
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         switch (apiId)
         {
 
             default:
-                Toast.makeText(AddVendorActivity.this, "Successfully Posted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.IS_VENDOR_POST_UPDATED, true);
-                //new SendNotification(mainRequest).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new SendNotification().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 finish();
 
@@ -518,9 +587,10 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
-        btnShare.setEnabled(true);
+     //   btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         Log.e("AddPostActivity", "OnFailure " + error.title + " , " + error.type);
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -542,12 +612,123 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Override
     public void onException(int apiId, String error) {
-        btnShare.setEnabled(true);
+  //      btnShare.setEnabled(true);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //progressBar.setVisibility(View.GONE);
         Toast.makeText(AddVendorActivity.this, error, Toast.LENGTH_SHORT).show();
 
     }
+
+    private class SendNotification extends AsyncTask<String, String, String> {
+        private String server_response;
+
+        public SendNotification()
+        {
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String name = LeafPreference.getInstance(AddVendorActivity.this).getString(LeafPreference.NAME);
+                    String message = name + " has added new vendor." ;
+                    topic = GroupDashboardActivityNew.groupId ;
+                    object.put("to", "/topics/" + topic);
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                   // object.put("notification", notificationObj);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", GroupDashboardActivityNew.groupId);
+                    dataObj.put("createdById", LeafPreference.getInstance(AddVendorActivity.this).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("teamId", group_id);
+                    dataObj.put("title", title);
+                    dataObj.put("Notification_type",  "VendorAdd");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+                    wr.writeBytes(object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
+    }
+
+
 
 
     public void showPhotoDialog(int resId) {
@@ -606,55 +787,152 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }
     }
+    private void showCropDialog(Uri imageCapture,boolean isCamera) {
 
+        Log.e(TAG,"imageGEt "+imageCapture);
+        Intent i = new Intent(getApplicationContext(), CropDialogActivity.class);
+        i.putExtra("path",String.valueOf(imageCapture));
+        i.putExtra("isCamera",isCamera);
+        startActivityForResult(i,10);
+
+
+    }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+
+
+        if (requestCode == 10)
+        {
+            String uri = data.getStringExtra("Data");
+            Log.e(TAG,"uri"+ uri);
+
+
+
+            listImages.add(uri);
+
+            showLastImage();
+            removePdf();
+
+
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+
+
+
+
+            Log.e(TAG,"result Uri Crop Image "+result.getUri());
+
+            if (resultCode == RESULT_OK) {
+
+
+
+
+                Uri resultUri = result.getUri();
+                Log.e(TAG,"result Uri Crop Image "+resultUri);
+
+                if (isGalleryMultiple)
+                {
+                    if (isClear)
+                    {
+                        isClear = false;
+                        listImages.clear();
+
+                    }
+
+                    listImages.add(resultUri.toString());
+                }
+                else
+                {
+                    listImages.clear();
+
+
+                    listImages.add(resultUri.toString());
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.e(TAG,"error"+error);
+            }
+
+            showLastImage();
+            removePdf();
+
+        }
+
+        else if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null)
+        {
+
+
             final Uri selectedImage = data.getData();
             ClipData clipData = data.getClipData();
 
+            isClear = true;
+
+            listImages.clear();
+
             if (clipData == null) {
-                listImages.clear();
-                String path = ImageUtil.getPath(this, selectedImage);
-                listImages.add(path);
+
+                isGalleryMultiple = false;
+//                String path = ImageUtil.getPath(this, selectedImage);
+                //  listImages.add(selectedImage.toString());
+                showCropDialog(selectedImage,false);
             } else {
-                listImages.clear();
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
-                    String path = ImageUtil.getPath(this, uri1);
-                    listImages.add(path);
+//                    String path = ImageUtil.getPath(this, uri1);
+                    //    listImages.add(uri1.toString());
+                    isGalleryMultiple = true;
+                    showCropDialog(uri1,false);
                 }
             }
-            showLastImage();
-            removePdf();
 
-        } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            String path = cameraFile.getAbsolutePath();
-            AppLog.e(TAG, "path : " + path);
-            listImages.add(path);
-            showLastImage();
+        }
+        else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
+           /* listImages.clear();
+            fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
+//            String path = cameraFile.getAbsolutePath();
+            AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
+            //          listImages.add(imageCaptureFile.toString());
+            isGalleryMultiple = false;
+
+         /*   showLastImage();
             removePdf();
-        } else if (resultCode == Activity.RESULT_OK) {
+            removeAudio();*/
+
+            listImages.clear();
+
+            showCropDialog(imageCaptureFile,true);
+
+        }
+
+        else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
-                Uri selectedImageURI = data.getData();
-                Log.e("SelectedURI : ", selectedImageURI.toString());
-                if (selectedImageURI.toString().startsWith("content")) {
-                    pdfPath = ImageUtil.getPath(this, selectedImageURI);
+                pdfPath = data.getData().toString();
+                Log.e("pdfUri : ", pdfPath);
+               /* if (selectedImageURI.toString().startsWith("content")) {
+                    pdfUri = ImageUtil.getPath(this, selectedImageURI);
                 } else {
-                    pdfPath = selectedImageURI.getPath();
+                    pdfUri = selectedImageURI.getPath();
                 }
-
+*/
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -662,7 +940,6 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
 
                 if (!TextUtils.isEmpty(pdfPath))
                     Picasso.with(this).load(R.drawable.pdf_thumbnail).into(imgDoc);
-
                 removeImage();
             }
         }
@@ -670,10 +947,22 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
         shareButtonEnableDisable();
 
     }
+    public static int dpToPx(DisplayMetrics displayMetrics, int dp) {
 
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
     private void showLastImage() {
+
         if (listImages.size() > 0) {
-            Picasso.with(this).load(new File(listImages.get(listImages.size() - 1))).resize(100, 100).into(img_image);
+
+            int size = dpToPx(getResources().getDisplayMetrics(), 80);
+
+            RequestOptions reqOption = new RequestOptions();
+            reqOption.override(size, size);
+
+            Glide.with(this).load(listImages.get(listImages.size() - 1)).apply(reqOption).diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true).into(img_image);
+           // Picasso.with(this).load(new File(listImages.get(listImages.size() - 1))).resize(100, 100).into(img_image);
         } else {
             Toast.makeText(this, getResources().getString(R.string.lbl_select_img), Toast.LENGTH_SHORT).show();
         }
@@ -762,14 +1051,14 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
         edt_link = (EditText) dialog.findViewById(R.id.edt_link);
 
         if (!videoUrl.equals(""))
-            btn_cancel.setText("Remove");
+            btn_cancel.setText(getResources().getString(R.string.lbl_remove));
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 videoUrl = edt_link.getText().toString();
                 if (videoUrl.equals(""))
-                    Toast.makeText(AddVendorActivity.this, "Enter youtube link", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.lbl_enter_youtube_link), Toast.LENGTH_SHORT).show();
                 else {
                     String videoId = "";
                     videoId = extractYoutubeId(videoUrl);
@@ -797,7 +1086,7 @@ public class AddVendorActivity extends BaseActivity implements LeafManager.OnAdd
                                 public void onError() {
                                     Log.e("onError is->", "onError");
                                     videoUrl = "";
-                                    Toast.makeText(AddVendorActivity.this, "Not a valid youtube link", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddVendorActivity.this, getResources().getString(R.string.toast_valid_youtube_link), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     dialog.dismiss();

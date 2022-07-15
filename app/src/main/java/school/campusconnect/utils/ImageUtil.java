@@ -20,6 +20,8 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -27,16 +29,20 @@ import android.util.TypedValue;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
 import id.zelory.compressor.Compressor;
+import school.campusconnect.BuildConfig;
+import school.campusconnect.LeafApplication;
 
 
 public class ImageUtil {
@@ -199,8 +205,6 @@ public class ImageUtil {
         if (maxHeight <= 0 && maxWidth <= 0) {
             throw new IllegalArgumentException("maxWidth and maxHeight should not be 0 or less");
         }
-
-
         float imgRatio = actualWidth / actualHeight;
         float maxRatio = maxWidth / maxHeight;
 
@@ -423,13 +427,59 @@ public class ImageUtil {
     /**
      * returning image / video
      */
+
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
+        float ratio = Math.min(
+                (float) maxImageSize / realImage.getWidth(),
+                (float) maxImageSize / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+        return newBitmap;
+    }
+
+    public static String resizeImage(Context context, Bitmap bitmap, String name) {
+
+        Uri path;
+
+        File cameraFile;
+
+        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss",
+                Locale.getDefault()).format(new Date());
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            cameraFile = new File( LeafApplication.getInstance().getCacheDir(),  File.separator
+                    + "Compressor_" +System.currentTimeMillis()+"_"+ timeStamp + ".jpg");
+            path = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
+        } else {
+            cameraFile =new File( LeafApplication.getInstance().getCacheDir(),  File.separator
+                    + "Compressor_" +System.currentTimeMillis()+"_" + timeStamp + ".jpg");
+            path = Uri.fromFile(cameraFile);
+        }
+        OutputStream os;
+        try {
+            os = new FileOutputStream(cameraFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e("TAG", "Error writing bitmap", e);
+        }
+
+        Log.e("TAG", "resize Image "+path.toString());
+        return path.toString();
+    }
+
     public static File getOutputMediaFile() {
 
         // External sdcard location
-        File mediaStorageDir = new File(
+       /* File mediaStorageDir = new File(
                 Environment
                         .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                IMAGE_DIRECTORY_NAME);
+                IMAGE_DIRECTORY_NAME);*/
+        File mediaStorageDir = new File(
+                LeafApplication.getInstance().getCacheDir(),"cache_image");
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -453,10 +503,8 @@ public class ImageUtil {
     public static File getOutputMediaVideo() {
 
         // External sdcard location
-        File mediaStorageDir = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                IMAGE_DIRECTORY_NAME);
+        File mediaStorageDir =new File(
+                LeafApplication.getInstance().getCacheDir(),"cache_image");
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -474,6 +522,33 @@ public class ImageUtil {
 
         mediaFile = new File(mediaStorageDir.getPath() + File.separator
                 + "VID_" + timeStamp + ".mp4");
+
+        return mediaFile;
+    }
+
+    public static File getOutputMediaAudio(Context context) {
+
+
+        // External sdcard location
+        File mediaStorageDir = new File( context.getCacheDir(),
+                IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                AppLog.d("Merchant", "Oops! Failed create "
+                        + IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile = null;
+
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "AUDIO_" + timeStamp + ".mp3");
 
         return mediaFile;
     }
@@ -505,6 +580,29 @@ public class ImageUtil {
                 + "VID_" + timeStamp +"_"+count+ ".mp4");
 
         return mediaFile;
+    }
+
+    public static File getOutputVideoFile(Context context,int count) {
+
+        // External sdcard location
+        File mediaStorageDir = new File(
+                context.getCacheDir(),
+                "cache_image");
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("Merchant", "Oops! Failed create "
+                        + "cache_image" + " directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.US).format(new Date());
+        File mediaFile = null;
+
+        return mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "VID_" + timeStamp +"_"+count+ ".mp4");
     }
 
     public String getRealPathFromURI(String contentURI) {
@@ -570,10 +668,17 @@ public class ImageUtil {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
+        AppLog.e(TAG , "getPath called : "+uri.toString());
+
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
+
+            AppLog.e(TAG , "isDocumentURI");
+
             if (isExternalStorageDocument(uri)) {
+
+                AppLog.e(TAG , "isExternalStorageDocument");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -589,12 +694,18 @@ public class ImageUtil {
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
 
+                AppLog.e(TAG , "isDownloadsDocument");
                 String id = DocumentsContract.getDocumentId(uri);
 
-                if (id != null && id.startsWith("raw:")) {
-                    return id.substring(4);
+                AppLog.e(TAG , "isDownloadsDocument id : "+id);
+
+                if (id != null && id.startsWith("raw:"))
+                {
+                    id= id.substring(4);
                 }
-                if(id!=null && id.startsWith("msf:")){
+
+                if(id!=null && id.startsWith("msf:"))
+                {
                     id = id.substring(4);
                 }
 
@@ -604,8 +715,8 @@ public class ImageUtil {
                 };
 
                 for (String contentUriPrefix : contentUriPrefixesToTry) {
-                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
                     try {
+                        Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
                         String path = getDataColumn(context, contentUri, null, null);
                         if (path != null) {
                             return path;
@@ -627,9 +738,14 @@ public class ImageUtil {
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
+
+                AppLog.e(TAG , "isMediaDocument");
+
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
+
+                AppLog.e(TAG , "isMediaDocument : type : "+type);
 
                 Uri contentUri = null;
                 if ("image".equals(type)) {
@@ -639,18 +755,44 @@ public class ImageUtil {
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
+                else {
+                    contentUri = MediaStore.Files.getContentUri("external");
+                }
+
+                AppLog.e(TAG , "isMediaDocument : contentUri : "+contentUri);
 
                 final String selection = "_id=?";
                 final String[] selectionArgs = new String[] {
                         split[1]
                 };
 
-                return getDataColumn(context, contentUri, selection, selectionArgs);
+                String retUrl = getDataColumn(context, contentUri, selection, selectionArgs);
+
+                if(retUrl !=null)
+                {
+                    return retUrl;
+                }
+                else
+                {
+                    // path could not be retrieved using ContentResolver, therefore copy file to accessible cache using streams
+                    String fileName = getFileName(context, uri);
+                    File cacheDir = getDocumentCacheDir(context);
+                    File file = generateFileName(fileName, cacheDir);
+                    String destinationPath = null;
+                    if (file != null) {
+                        destinationPath = file.getAbsolutePath();
+                        saveFileFromUri(context, uri, destinationPath);
+                    }
+
+                    return destinationPath;
+                }
             }
+
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
 
+            AppLog.e(TAG , "uri Scheme is Content : "+uri.getScheme());
             // Return the remote address
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
@@ -823,4 +965,20 @@ public class ImageUtil {
         }
     }
 
+    public static void writeDataToUri(Context context,File fileData, Uri uri) {
+        try (InputStream in = context.getContentResolver().openInputStream(uri)) {
+            try (OutputStream out = new FileOutputStream(fileData)) {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                in.close();
+                out.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_gravity="right|center"
                 android:background="@android:color/transparent"
-                android:text="Share"
+                android:text="@string/lbl_share"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:layout_height="wrap_content" />
@@ -172,6 +172,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:visibility="visible"
                             android:orientation="vertical"
                             android:layout_height="wrap_content" >
 
@@ -215,6 +216,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
+                            android:visibility="visible"
                             android:orientation="vertical"
                             android:layout_height="wrap_content" >
 
@@ -232,12 +234,175 @@
 
                         </LinearLayout>
 
+
+                        <LinearLayout
+                            android:id="@+id/llAudio"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content" >
+
+                            <ImageView
+                                android:id="@+id/imgAudio"
+                                android:layout_width="30dp"
+                                android:src="@drawable/ic_mic_audio"
+                                android:layout_height="30dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="@dimen/padding_5dp"
+                                android:text="@string/lbl_audio"
+                                style="@style/LabelNormal"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
+
+
+
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/llAudioTimer"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:layout_margin="@dimen/padding_5dp"
+                    app:cardCornerRadius="@dimen/padding_25dp"
+                    app:cardBackgroundColor="@color/white">
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/imgMic"
+                            android:layout_width="30dp"
+                            android:src="@drawable/ic_mic_red"
+                            android:layout_height="30dp" />
+
+                        <TextView
+                            android:layout_marginHorizontal="@dimen/padding_10dp"
+                            android:id="@+id/tvAudioTimer"
+                            android:layout_toRightOf="@id/imgMic"
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="@dimen/padding_5dp"
+                            android:text="00:00"
+                            style="@style/LabelNormal"
+                            android:layout_height="wrap_content" />
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/llAudioPreview"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:id="@+id/llLeftAudioView"
+                    android:layout_width="@dimen/pdf_download_icon_size"
+                    android:layout_margin="@dimen/padding_15dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:layout_height="@dimen/pdf_download_icon_size"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/imgPlayAudio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_play_audio"
+                        app:tint="@color/colorPrimary"
+                        android:visibility="visible"
+                        />
+
+                    <ImageView
+                        android:id="@+id/imgPauseAudio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic__stop_audio"
+                        app:tint="@color/colorPrimary"
+                        android:visibility="gone"
+                        />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/llLeftAudioView"
+                    android:layout_toLeftOf="@id/imgDeleteAudio"
+                    android:orientation="vertical">
+                    <SeekBar
+                        android:id="@+id/seekBarAudio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:color="@color/colorPrimary"
+                        android:clickable="false"
+                        android:thumbTint="@color/colorPrimary"
+                        android:focusableInTouchMode="false"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_marginLeft="@dimen/padding_15dp"
+                            android:id="@+id/tvTimeAudio"
+                            style="@style/LabelSmall"
+                            android:layout_width="wrap_content"
+                            android:gravity="center"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textColor="@color/colorTextLight" />
+
+                        <TextView
+                            android:id="@+id/tvTimeTotalAudio"
+                            style="@style/LabelSmall"
+                            android:layout_marginRight="@dimen/padding_15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textColor="@color/colorTextLight" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/imgDeleteAudio"
+                    android:layout_width="@dimen/padding_40dp"
+                    android:layout_height="@dimen/padding_40dp"
+                    android:adjustViewBounds="true"
+                    android:layout_centerVertical="true"
+                    android:tint="@color/white"
+                    android:layout_margin="@dimen/padding_15dp"
+                    android:src="@drawable/ic_delete_black"
+                    android:background="@drawable/round_primary_bg"
+                    android:padding="@dimen/padding_5dp"
+                    />
+
+
+            </RelativeLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvImages"
                 android:layout_width="match_parent"
@@ -262,7 +427,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_margin="@dimen/padding_10dp"
                         android:gravity="center"
-                        android:text="Allow Post" />
+                        android:text="@string/lbl_allow_post" />
 
                     <Switch
                         android:id="@+id/switch_reply"
@@ -288,7 +453,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_margin="@dimen/padding_10dp"
                         android:gravity="center"
-                        android:text="Allow Comments" />
+                        android:text="@string/lbl_allow_comments" />
 
                     <Switch
                         android:id="@+id/switch_comment"

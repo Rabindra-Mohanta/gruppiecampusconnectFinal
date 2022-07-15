@@ -1,15 +1,13 @@
 package school.campusconnect.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-
-import androidx.annotation.NonNull;
-
-import school.campusconnect.datamodel.OtpVerifyReq;
-import school.campusconnect.datamodel.OtpVerifyRes;
-import school.campusconnect.utils.AppLog;
-
+import android.provider.Settings;
+import android.provider.Settings.Secure;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -21,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
@@ -44,6 +44,7 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.database.RememberPref;
@@ -54,7 +55,10 @@ import school.campusconnect.datamodel.ForgotPasswordValidationError;
 import school.campusconnect.datamodel.GroupDetailResponse;
 import school.campusconnect.datamodel.LoginRequest;
 import school.campusconnect.datamodel.LoginResponse;
+import school.campusconnect.datamodel.OtpVerifyReq;
+import school.campusconnect.datamodel.OtpVerifyRes;
 import school.campusconnect.network.LeafManager;
+import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.AppSignatureHelper;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.PassWordMask;
@@ -108,6 +112,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     private boolean show = false;
     private boolean fromLogin;
     private ArrayList<String> listKey;
+    private Boolean validateUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +126,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
             fromLogin = intent.getBooleanExtra("fromLogin", false);
+            validateUser = intent.getBooleanExtra("userFlag",false);
         }
 
         AppLog.e("fromLogin", "is " + fromLogin);
@@ -132,7 +138,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
         phoneNumber = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.phoneNumber);
         countryCode = LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.countryCode);
 
-        tvOtpSendMsg.setText("OTP has been sent to " + phoneNumber);
+        tvOtpSendMsg.setText(getResources().getString(R.string.toast_otp_send_to) + phoneNumber);
 
         isIndia = countryCode.equals("IN");
 
@@ -208,19 +214,23 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     }
 
     private void verifyOtp() {
+
         if (isConnectionAvailable()) {
 
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar,true);
+            //    progressBar.setVisibility(View.VISIBLE);
+            btnLogin.setTextColor(getResources().getColor(R.color.grey));
+            btnLogin.setEnabled(false);
 
             LeafManager manager = new LeafManager();
             OtpVerifyReq otpVerifyReq = new OtpVerifyReq();
             otpVerifyReq.countryCode = countryCode;
             otpVerifyReq.phone = phoneNumber;
             otpVerifyReq.otp = edtPassword.getText().toString();
-            manager.otpVerify(this, otpVerifyReq, Constants.group_category);
+            manager.otpVerify(this, otpVerifyReq);
         } else {
             showNoNetworkMsg();
         }
@@ -289,22 +299,52 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (!isValueValid(edtPassword))
                 return;
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar,true);
+                //progressBar.setVisibility(View.VISIBLE);
+            btnLogin.setTextColor(getResources().getColor(R.color.grey));
+            btnLogin.setEnabled(false);
 
             LeafManager manager = new LeafManager();
             LoginRequest request = new LoginRequest();
             request.userName.countryCode = countryCode;
             request.userName.phone = phoneNumber;
             request.deviceType = "Android";
+            request.udid = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+
+            try {
+                PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                request.appVersion = pInfo.versionCode + "";
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            request.osVersion = Build.VERSION.SDK_INT + "";
+            request.deviceModel = Build.MODEL;
             request.deviceToken = LeafPreference.getInstance(UserExistActivity.this).getString(LeafPreference.GCM_TOKEN);
             request.password = edtPassword/*.editText*/.getText().toString();
             AppLog.e("Login..", "data is " + new Gson().toJson(request));
-            manager.doLogin(this, request, Constants.group_category);
+
+            LeafPreference.getInstance(this).setString(LeafPreference.LOGIN_REQ,new Gson().toJson(request));
+
+            manager.doLogin(this, request);
 
         } else {
 
             showNoNetworkMsg();
         }
+    }
+    private void subScribeUser() {
+      /*  FirebaseMessaging.getInstance().subscribeToTopic(LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            AppLog.e(TAG, "subscribeToTopic : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID)+ " : Successful()");
+                        } else {
+                            AppLog.e(TAG, "subscribeToTopic : " + LeafPreference.getInstance(getApplicationContext()).getString(LeafPreference.LOGIN_ID) + " Fail()");
+                        }
+
+                    }
+                });*/
     }
 
     @Override
@@ -347,7 +387,8 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             hide_keyboard();
             //showLoadingDialog();
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar,true);
+                //progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             ForgotPasswordRequest request = new ForgotPasswordRequest();
             request.countryCode = countryCode;
@@ -360,7 +401,7 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
             if (count == 4)
                 count = 1;
 
-            manager.forgetPassword(this, request, count, Constants.group_category);
+            manager.forgetPassword(this, request, count);
             txtGetOtp.setEnabled(false);
             txtGetOtp.setTextColor(getResources().getColor(R.color.colorTextLight));
         } else {
@@ -372,12 +413,15 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
 
+        btnLogin.setTextColor(getResources().getColor(R.color.white));
+        btnLogin.setEnabled(true);
 
         if (apiId == LeafManager.API_ID_FORGOT_PWD) {
 
             //hideLoadingDialog();
             if (progressBar != null)
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+            //    progressBar.setVisibility(View.GONE);
 
             if (isIndia) {
                 AppLog.e("TESTSUCC", "if");
@@ -389,13 +433,13 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
                 txtGetOtp.setEnabled(false);
                 txtGetOtp.setTextColor(getResources().getColor(R.color.colorTextLight));
                 llOtpSend.setVisibility(View.VISIBLE);
-                Toast.makeText(this, "OTP Sent To Your Entered Mobile Successfully!!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_otp_sent_mobile_success), Toast.LENGTH_LONG).show();
             } else {
                 AppLog.e("TESTSUCC", "else");
                 txtGetOtp.setEnabled(true);
                 txtGetOtp.setTextColor(getResources().getColor(R.color.colorTextWhite));
                 llOtpSend.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "OTP Sent To Your Email Successfully!!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_otp_send_email_success), Toast.LENGTH_LONG).show();
             }
             smsListener();
         } else if (apiId == LeafManager.API_ID_LOGIN) {
@@ -404,10 +448,15 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
                 progressBar.setVisibility(View.GONE);*/
             LoginResponse response1 = (LoginResponse) response;
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.LOGIN_ID, response1.userId);
-            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.ROLE, response1.role);
+           // LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NAME, response1.name);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.NUM, response1.phone);
-            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE, response1.image);
+
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_IMAGE_NEW, response1.image);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_NAME, response1.name);
+            LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.PROFILE_VOTERID, response1.voterId);
+
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.CALLING_CODE, response1.counryTelephoneCode);
             LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.COUNTRY_CODE, response1.countryAlpha2Code);
 
@@ -418,21 +467,84 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
             addCleverTapProfile(response1);
 
+            subScribeUser();
+
             hide_keyboard();
 
+            if (BuildConfig.AppCategory.equalsIgnoreCase("CAMPUS") && BuildConfig.AppName.equalsIgnoreCase("GC2"))
+            {
+                if (response1.groupCount == 0) {
+                    LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.TOKEN, response1.token);
+                    LeafPreference.getInstance(getApplicationContext()).setString(LeafPreference.GROUP_ID, response1.groupId);
+                    LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
 
-            AppLog.e("UserExist->", "join group api called");
-            hide_keyboard();
-            LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
-            if(response1.groupCount>1){
-                Intent login = new Intent(this, Home.class);
-                login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(login);
-                finish();
-            }else {
-                manager = new LeafManager();
-                manager.getGroupDetail(this, response1.groupId);
+                    Intent register = new Intent(this, RegisterInstituteActivity.class);
+                    startActivity(register);
+                    finish();
+                    return;
+                }
             }
+
+            Intent i = new Intent(getApplicationContext(),LoginPinActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.putExtra("Role",response1.role);
+            i.putExtra("token",response1.token);
+            i.putExtra("groupCount",String.valueOf(response1.groupCount));
+            i.putExtra("groupID",response1.groupId);
+            startActivity(i);
+            finish();
+
+
+
+          /*  if ("constituency".equalsIgnoreCase(BuildConfig.AppCategory)) {
+
+                LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.CONST_GROUP_COUNT, response1.groupCount);
+
+                if (LeafPreference.getInstance(getApplicationContext()).getInt(LeafPreference.CONST_GROUP_COUNT) > 1) {
+                    Intent login = new Intent(this, ConstituencyListActivity.class);
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+                    finish();
+                } else {
+                    manager = new LeafManager();
+                    manager.getGroupDetail(this, response1.groupId);
+                }
+            } else {
+                if ("CAMPUS".equalsIgnoreCase(BuildConfig.AppCategory)) {
+                    AppLog.e("UserExist->", "join group api called");
+                    LeafPreference.getInstance(getApplicationContext()).setInt(LeafPreference.GROUP_COUNT, response1.groupCount);
+                    if ("taluk".equalsIgnoreCase(response1.role)) {
+                        Intent login = new Intent(this, TalukListActivity.class);
+                        login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(login);
+                        finish();
+                    } else {
+                        if (response1.groupCount > 1) {
+                            Intent login = new Intent(this, Home.class);
+                            login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(login);
+                            finish();
+                        } else {
+                            manager = new LeafManager();
+                            manager.getGroupDetail(this, response1.groupId);
+                        }
+                    }
+                } else {
+                    AppLog.e("UserExist->", "join Direct group api called");
+                    manager = new LeafManager();
+
+                    manager.joinGroupDirect(this, BuildConfig.APP_ID);
+                }
+            }*/
+        }
+        if (apiId == LeafManager.API_JOIN_GROUP) {
+            AppLog.e("UserExist->", "join group api response");
+            if (progressBar != null)
+                hideLoadingBar();
+               // progressBar.setVisibility(View.GONE);
+
+            AppLog.e("UserExist->", "getGroupDetail api called");
+            manager.getGroupDetail(this, BuildConfig.APP_ID);
         }
         if (apiId == LeafManager.API_ID_GROUP_DETAIL) {
             AppLog.e("UserExist->", "getGroupDetail api response");
@@ -449,11 +561,9 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                AppLog.e(TAG,"subscribeToTopic : Successful()");
-                            }
-                            else
-                            {
-                                AppLog.e(TAG,"subscribeToTopic : Fail()");
+                                AppLog.e(TAG, "subscribeToTopic : Successful()");
+                            } else {
+                                AppLog.e(TAG, "subscribeToTopic : Fail()");
                             }
 
                         }
@@ -468,16 +578,20 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
 
         if (apiId == LeafManager.API_ID_OTP_VERIFY) {
             if (progressBar != null)
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+               // progressBar.setVisibility(View.GONE);
 
             OtpVerifyRes otpVerifyRes = (OtpVerifyRes) response;
             if (otpVerifyRes.data != null && otpVerifyRes.data.otpVerified) {
                 Intent intent = new Intent(this, NewPassActivity.class);
                 intent.putExtra("otp", edtPassword.getText().toString());
+                intent.putExtra("userFlag", validateUser);
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(userExistActivity, "Invalid OTP", Toast.LENGTH_SHORT).show();
+                edtPassword.setError(getResources().getString(R.string.toast_invalid_otp));
+                edtPassword.requestFocus();
+                //Toast.makeText(userExistActivity, getResources().getString(R.string.toast_invalid_otp), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -532,27 +646,46 @@ public class UserExistActivity extends BaseActivity implements LeafManager.OnAdd
     @Override
     public void onFailure(int apiId, String msg) {
 
+        btnLogin.setTextColor(getResources().getColor(R.color.white));
+        btnLogin.setEnabled(true);
+
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+            //progressBar.setVisibility(View.GONE);
 
-        Toast.makeText(this, "Invalid OTP/Password", Toast.LENGTH_LONG).show();
+        if (apiId == LeafManager.API_JOIN_GROUP) {
+            AppLog.e("UserExist-> on Failure", "join group api response");
+
+            AppLog.e("UserExist->", "getGroupDetail api called");
+            manager.getGroupDetail(this, BuildConfig.APP_ID);
+
+        } else {
+            edtPassword.setError(getResources().getString(R.string.toast_invalid_otp_password));
+            edtPassword.requestFocus();
+            //Toast.makeText(this, getResources().getString(R.string.toast_invalid_otp_password), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<ForgotPasswordValidationError> error) {
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         ForgotPasswordValidationError fieldErrors = error.errors.get(0);
     }
 
     @Override
     public void onException(int apiId, String error) {
 
+        btnLogin.setTextColor(getResources().getColor(R.color.white));
+        btnLogin.setEnabled(true);
+
         //hideLoadingDialog();
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

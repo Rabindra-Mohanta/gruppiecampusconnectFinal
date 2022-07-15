@@ -57,7 +57,7 @@ public class AddStudentActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Add Student");
+        setTitle(getResources().getString(R.string.title_add_student));
 
         group_id = getIntent().getStringExtra("group_id");
         team_id = getIntent().getStringExtra("team_id");
@@ -90,7 +90,8 @@ public class AddStudentActivity extends BaseActivity {
                     addStudentReq.countryCode = str[currentCountry - 1];
                     AppLog.e(TAG, "send data : " + addStudentReq);
 
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                    //progressBar.setVisibility(View.VISIBLE);
                     leafManager.addStudent(this, group_id, team_id, addStudentReq);
                 }
                 break;
@@ -116,7 +117,7 @@ public class AddStudentActivity extends BaseActivity {
         return true;
     }
 
-    public class SMBDailogClickListener implements DialogInterface.OnClickListener {
+    public static class SMBDailogClickListener implements DialogInterface.OnClickListener {
         private int DIALOG_ID = -1;
 
         @Override
@@ -125,14 +126,7 @@ public class AddStudentActivity extends BaseActivity {
             ListView lw = ((AlertDialog) dialog).getListView();
 
 
-            switch (DIALOG_ID) {
 
-                case R.id.layout_country:
-                    etCountry.setText(lw.getAdapter().getItem(lw.getCheckedItemPosition()).toString());
-                    currentCountry = lw.getCheckedItemPosition() + 1;
-                    break;
-
-            }
         }
 
         public SMBDailogClickListener(int id) {
@@ -144,11 +138,12 @@ public class AddStudentActivity extends BaseActivity {
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ADD_STUDENT:
-                Toast.makeText(this, "Student added.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_student_added), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.IS_STUDENT_ADDED,true);
                 finish();
                 break;
@@ -159,7 +154,8 @@ public class AddStudentActivity extends BaseActivity {
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+            //progressBar.setVisibility(View.GONE);
 
         if (msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -174,7 +170,8 @@ public class AddStudentActivity extends BaseActivity {
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 }

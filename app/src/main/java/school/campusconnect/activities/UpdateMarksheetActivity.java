@@ -43,6 +43,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.squareup.picasso.Callback;
@@ -113,7 +114,6 @@ public class UpdateMarksheetActivity extends BaseActivity {
     private ImageView img_image;
     private ProgressBar pbImgLoading;
     private ImageView imgDoc;
-    private File cameraFile;
     private Uri imageCaptureFile;
     private String pdfPath;
     private String imgPath;
@@ -132,7 +132,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
         init_();
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+        //   progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getMarkCardList(this, groupId, teamId);
     }
@@ -164,7 +165,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
                     AppLog.e(TAG, "getStudents : ");
                     list.clear();
                     adapter.notifyDataSetChanged();
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                    //   progressBar.setVisibility(View.VISIBLE);
                     leafManager.getMarkCardStudents(UpdateMarksheetActivity.this, GroupDashboardActivityNew.groupId, teamId, mark_card_id);
                 }
             }
@@ -184,7 +186,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_MARK_CARD_LIST: {
                 MarkCardListResponse res = (MarkCardListResponse) response;
@@ -199,7 +202,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
                 spMarkCard.setAdapter(adapter);
 
                 if (markCardList == null || markCardList.size() == 0) {
-                    Toast.makeText(this, "Please Create Mark Card", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.toast_create_mark_card), Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
@@ -211,7 +214,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
                 adapter.notifyDataSetChanged();
                 break;
             case LeafManager.API_MARK_SHEET:
-                Toast.makeText(this, "Marks Card Uploaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_mark_card_uploaded), Toast.LENGTH_SHORT).show();
                 AddPostResponse addPostResponse = (AddPostResponse) response;
                 AppLog.e(TAG, "addPostResponse : " + addPostResponse);
                 adapter.updateTrue(selectedPos);
@@ -223,13 +226,15 @@ public class UpdateMarksheetActivity extends BaseActivity {
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
         AppLog.e("onFailure", "Failure");
         if (msg.contains("401") || msg.contains("Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -259,7 +264,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final StudentMarkCardListResponse.SubjectDataTeam item = listAttendance.get(position);
             holder.tvName.setText(item.name);
-            holder.tvNumber.setText("Roll No." + (TextUtils.isEmpty(item.rollNumber) ? "" : item.rollNumber));
+            holder.tvNumber.setText(getResources().getString(R.string.lbl_roll_No)+". " + (TextUtils.isEmpty(item.rollNumber) ? "" : item.rollNumber));
 
             if (!TextUtils.isEmpty(item.image)) {
                 holder.imgLead_default.setVisibility(View.INVISIBLE);
@@ -491,10 +496,11 @@ public class UpdateMarksheetActivity extends BaseActivity {
                 if (isAllMark(subjectMarks)) {
                     dialog.dismiss();
                     AppLog.e(TAG, "Request : " + uploadMarkRequest);
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar);
+                  //  progressBar.setVisibility(View.VISIBLE);
                     leafManager.addMarksheet(UpdateMarksheetActivity.this, groupId, teamId, mark_card_id, studentData.getStudentId(), studentData.getRollNumber(), uploadMarkRequest);
                 } else {
-                    Toast.makeText(UpdateMarksheetActivity.this, "Please Provide Marks", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateMarksheetActivity.this, getResources().getString(R.string.txt_please_provide_marks), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -519,7 +525,8 @@ public class UpdateMarksheetActivity extends BaseActivity {
         hide_keyboard();
         if (isConnectionAvailable()) {
             if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+               // progressBar.setVisibility(View.VISIBLE);
             upLoadImageOnCloud(addMarkSheetReq);
         } else {
             showNoNetworkMsg();
@@ -529,36 +536,45 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
     private void upLoadImageOnCloud(final AddMarkSheetReq addMarkSheetReq) {
         final String key = AmazoneHelper.getAmazonS3Key(addMarkSheetReq.fileType);
-        File file = new File(addMarkSheetReq.fileName.get(0));
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file , CannedAccessControlList.PublicRead);
-
-        observer.setTransferListener(new TransferListener() {
-            @Override
-            public void onStateChanged(int id, TransferState state) {
-                AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
-                if (state.toString().equalsIgnoreCase("COMPLETED")) {
-                    Log.e("MULTI_IMAGE", "onStateChanged " + 0);
-                    updateList(addMarkSheetReq, key);
+        TransferObserver observer ;
+        UploadOptions option = UploadOptions.
+                builder().bucket(AmazoneHelper.BUCKET_NAME).
+                cannedAcl(CannedAccessControlList.PublicRead).build();
+        try {
+            observer = transferUtility.upload(key,
+                    getContentResolver().openInputStream(Uri.parse(addMarkSheetReq.fileName.get(0))), option);
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    AppLog.e(TAG, "onStateChanged: " + id + ", " + state.name());
+                    if (state.toString().equalsIgnoreCase("COMPLETED")) {
+                        Log.e("MULTI_IMAGE", "onStateChanged " + 0);
+                        updateList(addMarkSheetReq, key);
+                    }
                 }
-            }
 
-            @Override
-            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                int percentDone = (int) percentDonef;
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
 
-                AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
-                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
-            }
+                    AppLog.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                            + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+                }
 
-            @Override
-            public void onError(int id, Exception ex) {
-                progressBar.setVisibility(View.GONE);
-                AppLog.e(TAG, "Upload Error : " + ex);
-                Toast.makeText(UpdateMarksheetActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onError(int id, Exception ex) {
+                    hideLoadingBar();
+                //    progressBar.setVisibility(View.GONE);
+                    AppLog.e(TAG, "Upload Error : " + ex);
+                    Toast.makeText(UpdateMarksheetActivity.this, getResources().getString(R.string.image_upload_error), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void updateList(AddMarkSheetReq addMarkSheetReq, String key) {
@@ -578,11 +594,11 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
     private boolean isValid(EditText etTitle) {
         if (!isValueValidOnly(etTitle)) {
-            Toast.makeText(UpdateMarksheetActivity.this, "Please Enter Title", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateMarksheetActivity.this, getResources().getString(R.string.toast_please_enter_title), Toast.LENGTH_SHORT).show();
             return false;
         }
         if (TextUtils.isEmpty(imgPath) && TextUtils.isEmpty(pdfPath)) {
-            Toast.makeText(this, "Please Select Image Or Pdf", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_select_image_pdf), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -623,7 +639,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             AppLog.e(TAG, "requestPermissionForWriteExternal");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
@@ -664,6 +680,7 @@ public class UpdateMarksheetActivity extends BaseActivity {
 
     private void startCamera(int requestCode) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File cameraFile;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             cameraFile = ImageUtil.getOutputMediaFile();
             imageCaptureFile = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", cameraFile);
@@ -686,42 +703,44 @@ public class UpdateMarksheetActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOAD_GALLERY_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             final Uri selectedImage = data.getData();
-            String path = ImageUtil.getPath(this, selectedImage);
-            AppLog.e(TAG, "path : " + path);
+//            String path = ImageUtil.getPath(this, selectedImage);
+            AppLog.e(TAG, "path : " + selectedImage);
             try {
-                File file = new File(path);
-                Picasso.with(this).load(file).resize(80, 80).into(img_image);
+//                File file = new File(path);
+                Picasso.with(this).load(selectedImage).resize(80, 80).into(img_image);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            imgPath = path;
+            imgPath = selectedImage.toString();
             removePdf();
 
         } else if (requestCode == REQUEST_LOAD_CAMERA_IMAGE && resultCode == Activity.RESULT_OK) {
-            String path = cameraFile.getAbsolutePath();
-            AppLog.e(TAG, "path : " + path);
+//            String path = cameraFile.getAbsolutePath();
+            AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
             try {
-                File file = new File(path);
-                Picasso.with(this).load(file).resize(80, 80).into(img_image);
+//                File file = new File(path);
+                Picasso.with(this).load(imageCaptureFile).resize(80, 80).into(img_image);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            imgPath = path;
+            imgPath = imageCaptureFile.toString();
             removePdf();
         } else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOAD_PDF) {
                 Uri selectedImageURI = data.getData();
                 Log.e("SelectedURI : ", selectedImageURI.toString());
-                if (selectedImageURI.toString().startsWith("content")) {
+               /* if (selectedImageURI.toString().startsWith("content")) {
                     pdfPath = ImageUtil.getPath(this, selectedImageURI);
                 } else {
                     pdfPath = selectedImageURI.getPath();
-                }
+                }*/
+                pdfPath = selectedImageURI.toString();
 
                 if (TextUtils.isEmpty(pdfPath)) {
-                    Toast.makeText(getApplicationContext(), "Please select a pdf file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_select_pdf), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

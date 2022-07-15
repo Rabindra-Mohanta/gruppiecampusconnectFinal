@@ -1,8 +1,17 @@
 package school.campusconnect.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +19,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -23,16 +35,22 @@ import school.campusconnect.Assymetric.AsymmetricRecyclerViewAdapter;
 import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.activities.AddGalleryPostActivity;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
+import school.campusconnect.utils.AmazoneImageDownload;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.MixOperations;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
-    private final ArrayList<GalleryPostRes.GalleryData> listData;
+    public static final String TAG = "GalleryAdapter";
+    private  ArrayList<GalleryPostRes.GalleryData> listData;
     private Context mContext;
     GalleryListener listener;
-    public GalleryAdapter(ArrayList<GalleryPostRes.GalleryData> listData,GalleryListener listener) {
-        this.listData=listData;
+    Bitmap BirthdayTempleteBitmap,MlaBitmap,UserBitmap;
+    AmazoneImageDownload asyncTask;
+
+    public GalleryAdapter(GalleryListener listener) {
         this.listener=listener;
     }
 
@@ -42,6 +60,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_item,parent,false);
         return new ViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -58,14 +78,18 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 if (item.imageHeight != 0 && item.imageWidth != 0)
                     height = (Constants.screen_width * item.imageHeight) / item.imageWidth;*/
 
-                    GalleryChildAdapter adapter;
+                    ChildAdapter adapter = null;
                     if(item.fileName.size()==3)
                     {
-                        adapter = new GalleryChildAdapter(2, item.fileName.size(), mContext, item);
+                        adapter = new ChildAdapter(2, item.fileName.size(), mContext, item.fileName);
                     }
                     else
                     {
-                        adapter = new GalleryChildAdapter( Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item);
+                        adapter = new ChildAdapter( Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName);
+                        /*if (position == 0)
+                        {
+                            adapter.isBirthday(true);
+                        }*/
                     }
                     holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                     holder.recyclerView.setVisibility(View.VISIBLE);
@@ -73,17 +97,29 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.imgPhoto.setVisibility(View.GONE);
             }
+           /* else if (item.fileType.equals(Constants.FILE_TYPE_BIRTHDAY))
+            {
+                if (item.fileName!=null) {
+
+                    ChildAdapter adapter;
+                    adapter = new ChildAdapter( Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item.fileName,true);
+                    holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
+                    holder.recyclerView.setVisibility(View.VISIBLE);
+                }
+                holder.imgPlay.setVisibility(View.GONE);
+                holder.imgPhoto.setVisibility(View.GONE);
+            }*/
             else if (item.fileType.equals(Constants.FILE_TYPE_VIDEO)) {
                 if (item.fileName != null) {
                /* int height=0;
                 if (item.imageHeight != 0 && item.imageWidth != 0)
                     height = (Constants.screen_width * item.imageHeight) / item.imageWidth;*/
 
-                    GalleryVideoAdapter adapter;
+                    ChildVideoAdapter adapter;
                     if (item.fileName.size() == 3) {
-                        adapter = new GalleryVideoAdapter(2, item.fileName.size(), mContext, item);
+                        adapter = new ChildVideoAdapter(2, mContext, item.fileName, item.thumbnailImage);
                     } else {
-                        adapter = new GalleryVideoAdapter(Constants.MAX_IMAGE_NUM, item.fileName.size(), mContext, item);
+                        adapter = new ChildVideoAdapter(Constants.MAX_IMAGE_NUM, mContext, item.fileName, item.thumbnailImage);
                     }
                     holder.recyclerView.setAdapter(new AsymmetricRecyclerViewAdapter<>(mContext, holder.recyclerView, adapter));
                     holder.recyclerView.setVisibility(View.VISIBLE);
@@ -127,19 +163,115 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             holder.recyclerView.setVisibility(View.GONE);
         }
 
-        if (item.canEdit) {
+        holder.txt_drop_deletevideo.setVisibility(View.GONE);
+        holder.viewDeleteVideo.setVisibility(View.GONE);
+        holder.iv_delete.setVisibility(View.GONE);
+
+        if (item.canEdit)
+        {
             holder.txt_drop_delete.setVisibility(View.VISIBLE);
             holder.iv_delete.setVisibility(View.VISIBLE);
-        } else {
+
+            holder.txt_add_image.setVisibility(View.VISIBLE);
+            holder.viewAddImage.setVisibility(View.VISIBLE);
+
+
+            if (item.fileName != null && item.fileName.size() > 0) {
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.fileName.get(0)))
+                {
+                    holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+                    holder.viewDeleteVideo.setVisibility(View.VISIBLE);
+                    holder.iv_delete.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+        else
+            {
+                holder.txt_add_image.setVisibility(View.GONE);
+            holder.viewAddImage.setVisibility(View.GONE);
             holder.txt_drop_delete.setVisibility(View.GONE);
             holder.iv_delete.setVisibility(View.GONE);
+            if (item.fileName != null && item.fileName.size() > 0) {
+
+                if(new AmazoneVideoDownload(mContext).isVideoDownloaded(mContext,item.fileName.get(0)))
+                {
+                    holder.txt_drop_deletevideo.setVisibility(View.VISIBLE);
+                    holder.viewDeleteVideo.setVisibility(View.VISIBLE);
+                    holder.iv_delete.setVisibility(View.VISIBLE);
+                }
+            }
         }
 
+
+     /*   if (position == 0)
+        {
+            BirthdayTempleteBitmap = drawableToBitmap(mContext.getResources().getDrawable(R.drawable.birthday_templete));
+            MlaBitmap = drawableToBitmap(mContext.getResources().getDrawable(R.drawable.mla));
+
+            Log.e(TAG,"BirthdayTempleteBitmap H "+BirthdayTempleteBitmap.getHeight());
+            Log.e(TAG,"BirthdayTempleteBitmap W "+BirthdayTempleteBitmap.getWidth());
+
+            Log.e(TAG,"MlaBitmap H "+MlaBitmap.getHeight());
+            Log.e(TAG,"MlaBitmap W "+MlaBitmap.getWidth());
+
+            asyncTask = AmazoneImageDownload.download(mContext, item.getFileName().get(0), new AmazoneImageDownload.AmazoneDownloadSingleListener() {
+                @Override
+                public void onDownload(File file) {
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    UserBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+
+                    Log.e(TAG,"UserBitmap H "+UserBitmap.getHeight());
+                    Log.e(TAG,"UserBitmap W "+UserBitmap.getWidth());
+
+                }
+
+                @Override
+                public void error(String msg) {
+                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mContext, msg + "", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void progressUpdate(int progress, int max) {
+                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                           Log.e(TAG,"progress "+progress);
+                        }
+                    });
+                }
+            });
+        }
+*/
     }
 
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
+    public void add(ArrayList<GalleryPostRes.GalleryData> listData)
+    {
+        this.listData=listData;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
-        return listData.size();
+
+        return listData != null ? listData.size() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -160,6 +292,22 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
         @Bind(R.id.txt_drop_delete)
         TextView txt_drop_delete;
+
+        @Bind(R.id.txt_add_image)
+        TextView txt_add_image;
+
+        @Bind(R.id.viewAddImage)
+        View viewAddImage;
+
+        @Bind(R.id.txt_share)
+        TextView txt_share;
+
+        @Bind(R.id.txt_drop_deletevideo)
+        TextView txt_drop_deletevideo;
+
+
+        @Bind(R.id.viewDeleteVideo)
+        View viewDeleteVideo;
 
         @Bind(R.id.lin_drop)
         LinearLayout lin_drop;
@@ -184,11 +332,25 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     new SpacesItemDecoration(mContext.getResources().getDimensionPixelSize(R.dimen.padding_3dp)));
         }
 
-        @OnClick({R.id.iv_delete,R.id.txt_drop_delete,R.id.rel})
+        @OnClick({R.id.iv_delete,R.id.txt_drop_delete,R.id.rel,R.id.txt_drop_deletevideo,R.id.txt_share,R.id.txt_add_image})
         public void onClick(View view)
         {
             switch (view.getId())
             {
+                case R.id.txt_share:
+                    if (lin_drop.getVisibility() == View.VISIBLE)
+                        lin_drop.setVisibility(View.GONE);
+                    listener.onExternalShareClick(listData.get(getAdapterPosition()));
+                    break;
+
+                case R.id.txt_add_image:
+                    Intent intent = new Intent(mContext, AddGalleryPostActivity.class);
+                    intent.putExtra("isEdit", true);
+                    intent.putExtra("album_id", listData.get(getAdapterPosition()).getAlbumId());
+                    intent.putExtra("type", listData.get(getAdapterPosition()).getFileType());
+                    mContext.startActivity(intent);
+                    break;
+
                 case R.id.rel:
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
@@ -208,6 +370,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
                     lin_drop.setVisibility(View.GONE);
                     listener.onDeleteClick(listData.get(getAdapterPosition()));
                     break;
+                case R.id.txt_drop_deletevideo:
+                    lin_drop.setVisibility(View.GONE);
+                    listener.onDeleteVideoClick(listData.get(getAdapterPosition()) , getAdapterPosition());
+                    break;
             }
 
         }
@@ -217,5 +383,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     {
         public void onPostClick(GalleryPostRes.GalleryData galleryData);
         public void onDeleteClick(GalleryPostRes.GalleryData galleryData);
+        void onExternalShareClick(GalleryPostRes.GalleryData item);
+        void onDeleteVideoClick(GalleryPostRes.GalleryData galleryData, int adapterPosition);
     }
+
+
 }

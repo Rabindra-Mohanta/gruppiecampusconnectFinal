@@ -29,6 +29,7 @@ public class FeesListActivity extends BaseActivity {
     private String teamId;
     private String role;
     private Menu menu;
+    private FeesListFragment classListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class FeesListActivity extends BaseActivity {
             setTitle(getIntent().getStringExtra("title"));
         }
 
-        FeesListFragment classListFragment = new FeesListFragment();
+        classListFragment = new FeesListFragment();
         classListFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, classListFragment).commit();
 
@@ -89,13 +90,21 @@ public class FeesListActivity extends BaseActivity {
             startActivity(intent);
             return true;
         }
+        if(item.getItemId() == R.id.menuPrintFees){
+            if(classListFragment!=null){
+                classListFragment.exportDataToCSV();
+            }
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
 
     public void setOptionMenuName(String menuName) {
         if(menu!=null){
-            menu.findItem(R.id.menuAdd).setTitle(menuName);
+            if(menu.findItem(R.id.menuAdd)!=null){
+                menu.findItem(R.id.menuAdd).setTitle(menuName);
+            }
         }
     }
 }

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_10dp"
         android:layout_toStartOf="@+id/img_comment"
-        android:hint="Edit your comment..."
+        android:hint="@string/hint_edit_comment"
         android:paddingStart="@dimen/padding_10dp"
         android:singleLine="true" />
     <!--android:onTextChanged="@={data.addTextChangedListener}"-->
@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:paddingLeft="@dimen/padding_20dp"
             android:paddingRight="@dimen/padding_20dp"
-            android:text="Delete" />
+            android:text="@string/action_delete" />
 
         <Button
             android:id="@+id/btn_edit"
@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:paddingLeft="@dimen/padding_20dp"
             android:paddingRight="@dimen/padding_20dp"
-            android:text="Edit" />
+            android:text="@string/lbl_edit" />
     </LinearLayout>
 
 </LinearLayout>

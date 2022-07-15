@@ -81,7 +81,8 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
         AppLog.e(TAG, "group_id : " + group_id);
         AppLog.e(TAG, "team_id : " + team_id);
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar);
+      //  progressBar.setVisibility(View.VISIBLE);
         leafManager.leaveForm(this, group_id, team_id);
     }
 
@@ -94,7 +95,8 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
             }
 
             leaveReq = new LeaveReq(etReason.getText().toString());
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
             leafManager.leaveRequest(this, group_id, team_id, leaveReq,kidsAdapter.getSelectedKids());
         }
     }
@@ -105,12 +107,12 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
             valid = false;
         }
         else if (kidsAdapter == null) {
-            Toast.makeText(this, "Select Kids", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.lbl_select_kids), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         else {
             if (kidsAdapter.getSelectedKidsCount() ==0) {
-                Toast.makeText(this, "Select Kids", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.lbl_select_kids), Toast.LENGTH_SHORT).show();
                 valid = false;
             }
         }
@@ -142,11 +144,11 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    Toast.makeText(mContext, "No Kids found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, getResources().getString(R.string.toast_no_kid_found), Toast.LENGTH_SHORT).show();
                 }
                 return list.size();
             } else {
-                Toast.makeText(mContext, "No Kids found.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getResources().getString(R.string.toast_no_kid_found), Toast.LENGTH_SHORT).show();
                 return 0;
             }
 
@@ -200,7 +202,8 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+       //     progressBar.setVisibility(View.GONE);
         if (apiId == LeafManager.API_LEAVE_REQ_FORM) {
             LeadResponse res = (LeadResponse) response;
             List<LeadItem> result = res.getResults();
@@ -226,7 +229,8 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
     public void onFailure(int apiId, ErrorResponseModel error) {
         AppLog.e(TAG, "errors : " + error);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //     progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -241,7 +245,8 @@ public class LeaveActivity extends BaseActivity implements LeafManager.OnAddUpda
         AppLog.e(TAG, "msg : " + msg);
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+        //     progressBar.setVisibility(View.GONE);
     }
 
     private class SendNotification extends AsyncTask<String, String, String> {

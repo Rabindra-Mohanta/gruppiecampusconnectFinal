@@ -14,18 +14,23 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Environment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -51,6 +56,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
 import school.campusconnect.datamodel.BaseResponse;
+import school.campusconnect.datamodel.GroupItem;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.student.StudentRes;
 import school.campusconnect.network.LeafManager;
@@ -70,6 +76,13 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
 
+
+    @Bind(R.id.etSearch)
+    public EditText etSearch;
+
+    @Bind(R.id.swipeRefreshLayout)
+    public PullRefreshLayout refreshLayout;
+
     ClassResponse.ClassData classData;
     private String mGroupId;
     private String teamId;
@@ -78,30 +91,72 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team_discuss, container, false);
+        View view = inflater.inflate(R.layout.fragment_team_discuss_search, container, false);
         ButterKnife.bind(this, view);
 
         init();
 
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar,true);
+       // progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
+    public void showHideSearch(){
+        if(etSearch.getVisibility()==View.VISIBLE){
+            etSearch.setVisibility(View.GONE);
+        }else {
+            etSearch.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void init() {
+
+        refreshLayout.setEnabled(false);
+
         if (getArguments() != null) {
             classData = new Gson().fromJson(getArguments().getString("class_data"), ClassResponse.ClassData.class);
             AppLog.e(TAG, "classData : " + classData);
             mGroupId = GroupDashboardActivityNew.groupId;
             teamId = classData.getId();
         }
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(list!=null){
+                    if(!TextUtils.isEmpty(s.toString())){
+                        ArrayList<StudentRes.StudentData> newList = new ArrayList<>();
+                        for (int i=0;i<list.size();i++){
+                            if(list.get(i).name.toLowerCase().contains(s.toString().toLowerCase())){
+                                newList.add(list.get(i));
+                            }
+                        }
+                        rvClass.setAdapter(new ClassesStudentAdapter(newList));
+                    }else {
+                        rvClass.setAdapter(new ClassesStudentAdapter(list));
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        etSearch.setText("");
         LeafManager leafManager = new LeafManager();
         AppLog.e(TAG, "getStudents : ");
         leafManager.getStudents(this, GroupDashboardActivityNew.groupId, classData.getId());
@@ -109,7 +164,8 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+       // progressBar.setVisibility(View.GONE);
         StudentRes res = (StudentRes) response;
         list = res.getData();
         AppLog.e(TAG, "StudentRes " + list);
@@ -119,12 +175,14 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        // progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesStudentAdapter extends RecyclerView.Adapter<ClassesStudentAdapter.ViewHolder> {
@@ -182,20 +240,31 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
 
             holder.txt_name.setText(item.getName());
             holder.txt_count.setText(item.getClass_());
+            
+            if (item.userDownloadedApp)
+            {
+                holder.img_download.setVisibility(View.VISIBLE);
+                holder.line.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.img_download.setVisibility(View.GONE);
+                holder.line.setVisibility(View.GONE);
+            }
         }
 
         @Override
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Students found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Students found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_student_found));
                 return 0;
             }
 
@@ -208,12 +277,17 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
             @Bind(R.id.img_lead_default)
             ImageView img_lead_default;
 
+            @Bind(R.id.img_download)
+            ImageView img_download;
+
+            @Bind(R.id.line)
+            View line;
+
             @Bind(R.id.txt_name)
             TextView txt_name;
 
             @Bind(R.id.txt_count)
             TextView txt_count;
-
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -230,6 +304,8 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
     }
 
     private void editStudent(StudentRes.StudentData studentData) {
+
+
         Intent intent = new Intent(getActivity(), AddClassStudentActivity.class);
         intent.putExtra("group_id", mGroupId);
         intent.putExtra("team_id", teamId);
@@ -237,6 +313,8 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         intent.putExtra("isEdit", true);
         intent.putExtra("student_data", new Gson().toJson(studentData));
         startActivity(intent);
+
+
     }
 
     private boolean checkPermissionForWriteExternal() {
@@ -259,7 +337,7 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
             return;
         }
 
-        File mainFolder = new File(Environment.getExternalStorageDirectory(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
+        File mainFolder = new File(getActivity().getFilesDir(), LeafApplication.getInstance().getResources().getString(R.string.app_name));
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }
@@ -269,29 +347,27 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         }
         File file = new File(csvFolder, classData.className + ".xls");
 
-//        FileWriter fw = null;
-//        BufferedWriter bw = null;
         try {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            /*fw = new FileWriter(file.getAbsoluteFile());
-            bw = new BufferedWriter(fw);
-            bw.write("Name, Phone Number, Roll Number");
-            bw.newLine();
-            if(list!=null){
-                for(int i=0;i<list.size();i++){
-                    StudentRes.StudentData item = list.get(i);
-                    bw.write(item.getName()+", "+item.getPhone()+", "+item.getRollNumber());
-                    bw.newLine();
-                }
-            }*/
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet firstSheet = workbook.createSheet(classData.className);
             HSSFRow rowA = firstSheet.createRow(0);
             rowA.createCell(0).setCellValue("Name");
             rowA.createCell(1).setCellValue("Phone Number");
             rowA.createCell(2).setCellValue("Roll Number");
+            rowA.createCell(3).setCellValue("Student Id");
+            rowA.createCell(4).setCellValue("Admission Number");
+            rowA.createCell(5).setCellValue("Class");
+            rowA.createCell(6).setCellValue("Section");
+            rowA.createCell(7).setCellValue("Date of Birth");
+            rowA.createCell(8).setCellValue("Father Name");
+            rowA.createCell(9).setCellValue("Mother Name");
+            rowA.createCell(10).setCellValue("Father Number");
+            rowA.createCell(11).setCellValue("Mother Number");
+            rowA.createCell(12).setCellValue("Email");
+            rowA.createCell(13).setCellValue("Address");
 
             if(list!=null){
                 for(int i=0;i<list.size();i++){
@@ -300,6 +376,17 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
                     rowData.createCell(0).setCellValue(item.getName());
                     rowData.createCell(1).setCellValue(item.getPhone());
                     rowData.createCell(2).setCellValue(item.getRollNumber());
+                    rowData.createCell(3).setCellValue(item.studentDbId);
+                    rowData.createCell(4).setCellValue(item.admissionNumber);
+                    rowData.createCell(5).setCellValue(item._class);
+                    rowData.createCell(6).setCellValue(item.section);
+                    rowData.createCell(7).setCellValue(item.dob);
+                    rowData.createCell(8).setCellValue(item.fatherName);
+                    rowData.createCell(9).setCellValue(item.motherName);
+                    rowData.createCell(10).setCellValue(item.fatherNumber);
+                    rowData.createCell(11).setCellValue(item.motherNumber);
+                    rowData.createCell(12).setCellValue(item.email);
+                    rowData.createCell(13).setCellValue(item.address);
                 }
             }
             FileOutputStream fos = null;
@@ -322,18 +409,6 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*finally {
-            try {
-                if (fw != null) {
-                    fw.flush();
-                }
-                if (bw != null) {
-                    bw.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
     private void shareFile(File file) {

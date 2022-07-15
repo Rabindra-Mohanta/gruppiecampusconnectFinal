@@ -10,11 +10,16 @@
         <item name="android:editTextStyle">@style/AppTheme.EditText</item>
         <item name="android:typeface">serif</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
     </style>
     <style name="FragmentDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowMinWidthMajor">50%</item>
         <item name="android:windowMinWidthMinor">70%</item>
     </style>
+
+
+
+
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@android:color/white</item>
     </style>
@@ -191,6 +196,12 @@
         <item name="android:textSize">@dimen/text_size_18sp</item>
     </style>
 
+
+    <style name="LabelEmptyText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="LoginButton" parent="Base.Widget.AppCompat.Button">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:background">@drawable/login_button_bg</item>
@@ -212,6 +223,12 @@
     </style>
 
 
+    <style name="SeachEditText" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
     <style name="LoginEditText" parent="Base.Widget.AppCompat.EditText">
         <item name="android:textColor">@color/colorTextWhite</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
@@ -226,6 +243,29 @@
         <item name="android:background">@drawable/edittext_bg</item>
     </style>
 
+
+    <style name="commonSpinnerWhite" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/spinner_white_bg</item>
+    </style>
+
+    <style name="RegEditTextWhite" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:textColorHint">@color/colorTextLight</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="commonSpinner" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:background">@drawable/spinner_bg</item>
+    </style>
     <style name="CommentEditText">
         <item name="android:textColor">@color/colorTextDark</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
@@ -233,6 +273,7 @@
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:background">@drawable/comment_bg_new</item>
     </style>
+
 
 
     <style name="OTPEditText" parent="Base.Widget.AppCompat.EditText">
@@ -247,6 +288,11 @@
     <style name="ProgressWhite" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorAccent">@color/white</item>
         <item name="android:colorAccent" tools:targetApi="lollipop">@color/white</item>
+    </style>
+
+    <style name="ProgressPrimary" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorPrimary</item>
     </style>
 
 </resources>

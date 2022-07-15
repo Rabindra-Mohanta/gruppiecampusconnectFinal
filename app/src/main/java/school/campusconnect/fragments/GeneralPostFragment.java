@@ -2,18 +2,42 @@
 package school.campusconnect.fragments;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
+
+import android.content.IntentFilter;
+import android.icu.text.Transliterator;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import school.campusconnect.BuildConfig;
+import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.datamodel.EventTBL;
+import school.campusconnect.datamodel.Media.ImagePathTBL;
+import school.campusconnect.datamodel.PostTeamDataItem;
+import school.campusconnect.firebase.SendNotificationGlobal;
+import school.campusconnect.firebase.SendNotificationModel;
+import school.campusconnect.utils.AmazoneDownload;
+import school.campusconnect.utils.AmazoneHelper;
+import school.campusconnect.utils.AmazoneImageDownload;
 import school.campusconnect.utils.AmazoneRemove;
+import school.campusconnect.utils.AmazoneVideoDownload;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,13 +49,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
-import com.baoyz.widget.PullRefreshLayout;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +76,7 @@ import school.campusconnect.activities.AddFriendActivity;
 import school.campusconnect.activities.AddPostActivity;
 import school.campusconnect.activities.AddQuestionActivity;
 import school.campusconnect.activities.FullScreenActivity;
-import school.campusconnect.activities.GroupDashboardActivityNew;
+
 import school.campusconnect.activities.LikesListActivity;
 import school.campusconnect.activities.ProfileActivity2;
 import school.campusconnect.activities.SelectShareTypeActivity;
@@ -64,7 +98,11 @@ import school.campusconnect.datamodel.reportlist.ReportResponse;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.BaseFragment;
 import school.campusconnect.utils.Constants;
+import school.campusconnect.utils.DateTimeHelper;
+import school.campusconnect.utils.MixOperations;
 import school.campusconnect.views.SMBDialogUtils;
+
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 //import com.google.api.services.samples.youtube.cmdline.Auth;
 
@@ -93,14 +131,23 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     DatabaseHandler databaseHandler;
     private LinearLayoutManager layoutManager;
 
+    LeafPreference leafPreference;
+
+    EventTBL eventTBL;
+
+    String type;
+
+    //private Query query;
+
     public GeneralPostFragment() {
 
     }
 
-    public static GeneralPostFragment newInstance(String groupId) {
+    public static GeneralPostFragment newInstance(String groupId,String type) {
         GeneralPostFragment fragment = new GeneralPostFragment();
         Bundle b = new Bundle();
         b.putString("id", groupId);
+        b.putString("type", type);
         fragment.setArguments(b);
         return fragment;
     }
@@ -109,6 +156,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        leafPreference = LeafPreference.getInstance(GeneralPostFragment.this.getActivity());
     }
 
     @Override
@@ -117,10 +165,11 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         menu.findItem(R.id.action_notification).setVisible(false);
         menu.findItem(R.id.action_notification_list).setVisible(false);
         menu.findItem(R.id.action_notification1).setVisible(false);
+
         if (GroupDashboardActivityNew.isPost)
-           menu.findItem(R.id.menu_add_post).setVisible(true);
+            menu.findItem(R.id.menu_add_post).setVisible(true);
         else
-           menu.findItem(R.id.menu_add_post).setVisible(false);
+            menu.findItem(R.id.menu_add_post).setVisible(false);
 
         menu.findItem(R.id.menu_add_friend).setVisible(false);
     }
@@ -129,8 +178,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_post:
-                 if(getActivity()!=null)
-                {
+                if (getActivity() != null) {
                     Intent intent = new Intent(getActivity(), AddPostActivity.class);
                     intent.putExtra("id", mGroupId);
                     intent.putExtra("type", "group");
@@ -150,12 +198,14 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ActiveAndroid.initialize(getActivity());
         mBinding = DataBindingUtil.inflate(inflater, R.layout.layout_list_button, container, false);
+        mBinding.setSize(1);
 
         init();
 
         getGroupPostLocaly();
 
         scrollListener();
+
 
         return mBinding.getRoot();
 
@@ -185,7 +235,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
 
                 if (firstVisibleItemPosition != 0) {
-                   // AppLog.i(TAG, "RecyclerView scrolled: scroll up!");
+                    // AppLog.i(TAG, "RecyclerView scrolled: scroll up!");
                     mBinding.imgTop.setVisibility(View.VISIBLE);
                 } else {
 //                    AppLog.i(TAG, " RecyclerView scrolled: scroll down!");
@@ -199,16 +249,19 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 if (!mIsLoading && totalPages > currentPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0
-                            ) {
+                    ) {
                         currentPage = currentPage + 1;
                         AppLog.e(TAG, "onScrollCalled " + currentPage);
                         getData(false);
                     }
                 }
+
             }
         });
 
-        mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        mBinding.swipeRefreshLayout.setEnabled(false);
+
+       /* mBinding.swipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (isConnectionAvailable()) {
@@ -220,7 +273,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     mBinding.swipeRefreshLayout.setRefreshing(false);
                 }
             }
-        });
+        });*/
 
 
     }
@@ -229,24 +282,76 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public void onStart() {
         super.onStart();
         mAdapter.notifyDataSetChanged();
+
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateReceiver, new IntentFilter("UPDATE_GROUP"));
+        }
+    }
+
+    BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Log.e(TAG,"intent get action "+intent.getAction());
+
+            if("UPDATE_GROUP".equalsIgnoreCase(intent.getAction())){
+                mAdapter.clear();
+                currentPage = 1;
+                getData(true);
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        //NOFIREBASEDATABASE
+     /*   if(query !=null)
+            query.removeEventListener(firebaseNewPostListener);*/
+
     }
 
     private void getGroupPostLocaly() {
-        List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId+"");
-        if (dataItemList.size() != 0)
-        {
+
+
+        eventTBL = EventTBL.getGroupEvent(mGroupId);
+        boolean apiEvent = false;
+        if(eventTBL!=null){
+            if(eventTBL._now ==0){
+                apiEvent = true;
+            }
+            if(MixOperations.isNewEvent(eventTBL.eventAt,"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",eventTBL._now)){
+                apiEvent = true;
+            }
+
+        }
+
+        List<PostDataItem> dataItemList = PostDataItem.getGeneralPosts(mGroupId + "");
+        String lastId = null;
+
+
+        if (dataItemList.size() != 0) {
             showLoadingBar(mBinding.progressBar);
             for (int i = 0; i < dataItemList.size(); i++) {
 
                 PostItem postItem = new PostItem();
                 postItem.id = dataItemList.get(i).id;
+
+                if (i == 0) {
+                    lastId = dataItemList.get(i).id;
+                }
+
                 postItem.createdById = dataItemList.get(i).createdById;
                 postItem.createdBy = dataItemList.get(i).createdBy;
                 postItem.createdByImage = dataItemList.get(i).createdByImage;
                 postItem.createdAt = dataItemList.get(i).createdAt;
                 postItem.title = dataItemList.get(i).title;
                 postItem.fileType = dataItemList.get(i).fileType;
-                postItem.fileName = new Gson().fromJson(dataItemList.get(i).fileName,new TypeToken<ArrayList<String>>(){}.getType());
+                postItem.fileName = new Gson().fromJson(dataItemList.get(i).fileName, new TypeToken<ArrayList<String>>() {
+                }.getType());
+                postItem.thumbnailImage = new Gson().fromJson(dataItemList.get(i).thumbnailImage, new TypeToken<ArrayList<String>>() {
+                }.getType());
                 postItem.updatedAt = dataItemList.get(i).updatedAt;
                 postItem.text = dataItemList.get(i).text;
                 postItem.imageWidth = dataItemList.get(i).imageWidth;
@@ -259,20 +364,30 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 postItem.isFavourited = dataItemList.get(i).isFavourited;
                 postItem.canEdit = dataItemList.get(i).canEdit;
                 postItem.phone = dataItemList.get(i).phone;
-                postItem.thumbnail=dataItemList.get(i).thumbnail;
-
+                postItem.thumbnail = dataItemList.get(i).thumbnail;
+                postItem.type = dataItemList.get(i).type;
                 PostList.add(postItem);
             }
+            mBinding.progressBar.setVisibility(View.GONE);
             hideLoadingBar();
             AppLog.e(TAG, "DataFromLocal");
             mAdapter.notifyDataSetChanged();
 
-            if (isConnectionAvailable()) {
+            mBinding.setSize(mAdapter.getItemCount());
+            firebaseListen(lastId,apiEvent);
+
+        } else {
+            firebaseListen("", apiEvent);
+            mBinding.setSize(0);
+        }
+
+        /*    if (isConnectionAvailable()) {
                 AppLog.e(TAG, "DataFromAPI BG");
                 getData(true);
             } else {
                 mBinding.setSize(mAdapter.getItemCount());
             }
+
 
         } else {
             if (isConnectionAvailable()) {
@@ -281,17 +396,32 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             } else {
                 mBinding.setSize(0);
             }
+        }*/
+    }
+
+    private void firebaseListen(String lastIdFromDB, boolean apiEvent) {
+        AppLog.e(TAG, "firebaseListen called : " + lastIdFromDB);
+        if (TextUtils.isEmpty(lastIdFromDB)){
+            getData(false);
+        }else if (leafPreference.getInt(mGroupId + "_post") > 0
+                || leafPreference.getBoolean(mGroupId + "_post_delete") || apiEvent){
+            leafPreference.setBoolean(mGroupId + "_post_delete",false);
+            getData(true);
         }
     }
 
     private void init() {
         liked = false;
 
-        databaseHandler= new DatabaseHandler(getActivity());
+        databaseHandler = new DatabaseHandler(getActivity());
         count = databaseHandler.getCount();
+        type = getArguments().getString("type");
+
+        Log.e(TAG,"type"+type);
 
         mBinding.setSize(1);
-        mBinding.setMessage(R.string.msg_no_post);
+        mBinding.progressBar.setVisibility(View.VISIBLE);
+        //mBinding.setMessage(R.string.msg_no_post);
         mGroupId = getArguments().getString("id");
 
         mBinding.llBlankView.setOnClickListener(this);
@@ -304,6 +434,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         mBinding.recyclerView.setLayoutManager(layoutManager);
         mAdapter = new PostAdapter(PostList, this, "group", databaseHandler, count);
         mBinding.recyclerView.setAdapter(mAdapter);
+
     }
 
 
@@ -311,86 +442,115 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     public void onResume() {
         super.onResume();
 
-       AppLog.e(TAG, "onResume : " + LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED));
+        AppLog.e(TAG, "onResume : " + LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED));
         if (LeafPreference.getInstance(getActivity()).getBoolean(LeafPreference.ISGENERALPOSTUPDATED)) {
             mAdapter.clear();
             currentPage = 1;
             getData(false);
             LeafPreference.getInstance(getActivity()).setBoolean(LeafPreference.ISGENERALPOSTUPDATED, false);
         }
-
     }
+
     private void getData(boolean isInBackground) {
-        if(!isInBackground)
-        {
+        AppLog.e(TAG, "getData called");
+        if (!isInBackground) {
+            mBinding.progressBar.setVisibility(View.VISIBLE);
             showLoadingBar(mBinding.progressBar);
             mIsLoading = true;
         }
-        manager.getGeneralPosts(this, mGroupId+"", currentPage);
+
+        manager.getGeneralPosts(this, mGroupId + "", currentPage);
+        leafPreference.remove(mGroupId + "_post");
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+        mBinding.progressBar.setVisibility(View.GONE);
         hideLoadingBar();
         switch (apiId) {
             case LeafManager.API_ID_GENERAL_POST:
                 PostResponse res = (PostResponse) response;
-               AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.getResults()));
+                AppLog.e(TAG, "Post Res ; " + new Gson().toJson(res.getResults()));
+
+                if(res.totalNumberOfPages==0)
+                {
+                    mBinding.txtEmpty.setVisibility(View.VISIBLE);
+                }
+
+                    else
+                    {
+                        mBinding.txtEmpty.setVisibility(View.GONE);
+                    }
+
 
                 if (currentPage == 1) {
-                    PostDataItem.deleteGeneralPosts(mGroupId+"");
+                    PostDataItem.deleteGeneralPosts(mGroupId + "");
                     PostList.clear();
 
                     PostList.addAll(res.getResults());
-                   AppLog.e(TAG, "current page 1");
+                    AppLog.e(TAG, "current page 1");
 
                 } else {
                     PostList.addAll(res.getResults());
-                   AppLog.e(TAG, "current page " + currentPage);
+                    AppLog.e(TAG, "current page " + currentPage);
                 }
                 mBinding.setSize(mAdapter.getItemCount());
                 mAdapter.notifyDataSetChanged();
 
                 totalPages = res.totalNumberOfPages;
-                mIsLoading = false;
-                
-                savePostData(res.getResults());
 
-                break;
-
-            case LeafManager.API_ID_FAV:
-                if(response.status.equalsIgnoreCase("favourite"))
+                if(totalPages==0)
                 {
-                    PostList.get(position).isFavourited=true;
+                    mBinding.txtEmpty.setVisibility(View.VISIBLE);
                 }
                 else
                 {
-                    PostList.get(position).isFavourited=false;
+                    mBinding.txtEmpty.setVisibility(View.GONE);
+                }
+                mIsLoading = false;
+
+                savePostData(res.getResults());
+
+                if(eventTBL!=null){
+                    eventTBL._now = System.currentTimeMillis();
+                    eventTBL.save();
+                }
+                break;
+
+            case LeafManager.API_ID_FAV:
+                if (response.status.equalsIgnoreCase("favourite")) {
+                    PostList.get(position).isFavourited = true;
+                } else {
+                    PostList.get(position).isFavourited = false;
                 }
                 mAdapter.notifyItemChanged(position);
+                PostItem select = PostList.get(position);
+                PostDataItem.updateFav(select.id,select.isFavourited?1:0);
+
                 break;
 
             case LeafManager.API_ID_LIKE:
-                    if(response.status.equalsIgnoreCase("liked"))
-                    {
-                        PostList.get(position).isLiked=true;
-                        PostList.get(position).likes++;
-                    }
-                    else
-                    {
-                        PostList.get(position).isLiked=false;
-                        PostList.get(position).likes--;
-                    }
-                    mAdapter.notifyItemChanged(position);
-                    liked = false;
+                if (response.status.equalsIgnoreCase("liked")) {
+                    PostList.get(position).isLiked = true;
+                    PostList.get(position).likes++;
+                } else {
+                    PostList.get(position).isLiked = false;
+                    PostList.get(position).likes--;
+                }
+                mAdapter.notifyItemChanged(position);
+                liked = false;
+
+                PostItem select2 = PostList.get(position);
+                PostDataItem.updateLike(select2.id,select2.isLiked?1:0,select2.likes);
                 break;
 
             case LeafManager.API_ID_DELETE_POST:
-                Toast.makeText(getContext(), "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 PostList.clear();
-                currentPage=1;
+                currentPage = 1;
                 getData(false);
                 AmazoneRemove.remove(currentItem.fileName);
+                sendNotification(currentItem);
                 break;
 
             case LeafManager.API_REPORT_LIST:
@@ -405,17 +565,33 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 }
                 ReportAdapter.selected_position = -1;
                 mAdapter2 = new ReportAdapter(list);
-               AppLog.e("adas ", mAdapter2.getItemCount() + "");
-               AppLog.e("ReportResponse", "onSucces  ,, msg : " + ((ReportResponse) response).data.toString());
+                AppLog.e("adas ", mAdapter2.getItemCount() + "");
+                AppLog.e("ReportResponse", "onSucces  ,, msg : " + ((ReportResponse) response).data.toString());
                 dialogRecyclerView.setAdapter(mAdapter2);
                 break;
 
             case LeafManager.API_REPORT:
                 hideLoadingBar();
-                Toast.makeText(getContext(), "Post Reported Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_post_reported_sucessfully), Toast.LENGTH_SHORT).show();
                 break;
         }
 
+    }
+
+    private void sendNotification(PostItem currentItem) {
+
+        SendNotificationModel notificationModel = new SendNotificationModel();
+        notificationModel.to = "/topics/" + mGroupId;
+        notificationModel.data.title = getResources().getString(R.string.app_name);
+        notificationModel.data.body = "Group Post deleted";
+        notificationModel.data.Notification_type = "DELETE_POST";
+        notificationModel.data.iSNotificationSilent = true;
+        notificationModel.data.groupId = mGroupId;
+        notificationModel.data.teamId = "";
+        notificationModel.data.createdById = LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID);
+        notificationModel.data.postId = currentItem.id;
+        notificationModel.data.postType = "group";
+        SendNotificationGlobal.send(notificationModel);
     }
 
     private void savePostData(List<PostItem> results) {
@@ -434,6 +610,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             postItem.fileType = item.fileType;
             if (item.fileName != null) {
                 postItem.fileName = new Gson().toJson(item.fileName);
+                postItem.thumbnailImage = new Gson().toJson(item.thumbnailImage);
             }
             postItem.updatedAt = item.updatedAt;
             postItem.text = item.text;
@@ -448,8 +625,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             postItem.canEdit = item.canEdit;
             postItem.phone = item.phone;
             postItem.type = "group";
-            postItem.group_id = mGroupId+"";
-            postItem.thumbnail=item.thumbnail;
+            postItem.group_id = mGroupId + "";
+            postItem.thumbnail = item.thumbnail;
 
             postItem.save();
         }
@@ -458,6 +635,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, ErrorResponseModel<AddPostValidationError> error) {
+        mBinding.progressBar.setVisibility(View.GONE);
+        Toast.makeText(getActivity(), getResources().getString(R.string.txt_failed_to_load), Toast.LENGTH_SHORT).show();
         hideLoadingBar();
         mIsLoading = false;
         currentPage = currentPage - 1;
@@ -465,12 +644,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             currentPage = 1;
         }
 
-       AppLog.e("GeneralPostFragment", "onFailure  ,, msg : " + error);
+        AppLog.e("GeneralPostFragment", "onFailure  ,, msg : " + error);
         if (error.status.equals("401")) {
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (error.status.equals("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), error.title, Toast.LENGTH_SHORT).show();
         }
@@ -479,6 +658,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onFailure(int apiId, String msg) {
+
+        mBinding.progressBar.setVisibility(View.GONE);
         hideLoadingBar();
 
         mIsLoading = false;
@@ -492,10 +673,10 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             Toast.makeText(getActivity(), getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
             logout();
         } else if (msg.contains("404")) {
-            Toast.makeText(getActivity(), "No posts available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_post), Toast.LENGTH_SHORT).show();
         } else if (msg.contains("418")) {
             if (apiId == LeafManager.API_REPORT)
-                Toast.makeText(getActivity(), "You have already reported this post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.toast_already_reported), Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         } else {
@@ -507,6 +688,8 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onException(int apiId, String msg) {
+        mBinding.progressBar.setVisibility(View.GONE);
+        Toast.makeText(getActivity(), getResources().getString(R.string.txt_failed_to_load), Toast.LENGTH_SHORT).show();
         hideLoadingBar();
         mIsLoading = false;
         currentPage = currentPage - 1;
@@ -528,7 +711,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         } else {
             fav = 1;
         }
-        manager.setFav(this, mGroupId+"", item.id);
+        manager.setFav(this, mGroupId + "", item.id);
 
         cleverTapFav(item, fav);
     }
@@ -537,7 +720,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         if (isConnectionAvailable()) {
             try {
                 CleverTapAPI cleverTap = CleverTapAPI.getInstance(getActivity());
-               AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
+                AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
                 if (fav == 1) {
                     HashMap<String, Object> favAction = new HashMap<String, Object>();
                     favAction.put("id", mGroupId);
@@ -553,13 +736,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     favAction.put("post_title", item.title);
                     cleverTap.event.push("Remove Favorite", favAction);
                 }
-               AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
+                AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
 
             } catch (CleverTapMetaDataNotFoundException e) {
-               AppLog.e("GeneralPost", "CleverTapMetaDataNotFoundException=>" + e.toString());
+                AppLog.e("GeneralPost", "CleverTapMetaDataNotFoundException=>" + e.toString());
                 // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
             } catch (CleverTapPermissionsNotSatisfied e) {
-               AppLog.e("GeneralPost", "CleverTapPermissionsNotSatisfied=>" + e.toString());
+                AppLog.e("GeneralPost", "CleverTapPermissionsNotSatisfied=>" + e.toString());
                 // thrown if you haven’t requested the required permissions in your AndroidManifest.xml
             } catch (Exception ignored) {
             }
@@ -573,7 +756,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
             liked = true;
             this.position = position;
             showLoadingBar(mBinding.progressBar);
-            manager.setLikes(this, mGroupId+"", item.id);
+            manager.setLikes(this, mGroupId + "", item.id);
 
 
             int fav = 0;
@@ -590,7 +773,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         if (isConnectionAvailable()) {
             try {
                 CleverTapAPI cleverTap = CleverTapAPI.getInstance(getActivity());
-               AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
+                AppLog.e("GeneralPost", "Success to found cleverTap objects=>");
 
                 HashMap<String, Object> likeAction = new HashMap<String, Object>();
                 likeAction.put("id", mGroupId);
@@ -602,13 +785,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                     likeAction.put("isLiked", false);
                 }
                 cleverTap.event.push("Liked", likeAction);
-               AppLog.e("GeneralPost", "Success");
+                AppLog.e("GeneralPost", "Success");
 
             } catch (CleverTapMetaDataNotFoundException e) {
-               AppLog.e("GeneralPost", "CleverTapMetaDataNotFoundException=>" + e.toString());
+                AppLog.e("GeneralPost", "CleverTapMetaDataNotFoundException=>" + e.toString());
                 // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
             } catch (CleverTapPermissionsNotSatisfied e) {
-               AppLog.e("GeneralPost", "CleverTapPermissionsNotSatisfied=>" + e.toString());
+                AppLog.e("GeneralPost", "CleverTapPermissionsNotSatisfied=>" + e.toString());
                 // thrown if you haven’t requested the required permissions in your AndroidManifest.xml
             }
 
@@ -619,6 +802,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onPostClick(PostItem item) {
+
+        Log.e(TAG,"onPostClick"+item.fileType);
+
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
             Intent browserIntent = new Intent(getActivity(), TestActivity.class);
             browserIntent.putExtra("url", item.video);
@@ -627,6 +813,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(getActivity(), ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.title);
             startActivity(i);
 
@@ -649,7 +836,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onDeleteClick(PostItem item) {
         currentItem = item;
-        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(getActivity(), getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override
@@ -707,10 +894,9 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
         GroupDashboardActivityNew.share_image = item.image;
         GroupDashboardActivityNew.imageHeight = item.imageHeight;
         GroupDashboardActivityNew.imageWidth = item.imageWidth;
-        if(TextUtils.isEmpty(item.fileType)){
+        if (TextUtils.isEmpty(item.fileType)) {
             GroupDashboardActivityNew.share_image_type = 4;
-        }
-        else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+        } else if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
             GroupDashboardActivityNew.share_image_type = 1;
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             GroupDashboardActivityNew.share_image_type = 2;
@@ -728,12 +914,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onNameClick(PostItem item) {
-       if (item.createdById.equals(LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID))) {
-           AppLog.e("onNameClick", "else if called");
-            Intent intent = new Intent(getActivity(), ProfileActivity2.class);
-            startActivity(intent);
+        if (item.createdById.equals(LeafPreference.getInstance(getActivity()).getString(LeafPreference.LOGIN_ID))) {
+            AppLog.e("onNameClick", "else if called");
+//            Intent intent = new Intent(getActivity(), ProfileActivity2.class);
+//            startActivity(intent);
         } else {
-           AppLog.e("onNameClick", "else called");
+            AppLog.e("onNameClick", "else called");
         }
     }
 
@@ -752,19 +938,297 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onMoreOptionClick(PostItem item) {
-        currentItem=item;
+        currentItem = item;
         mBinding.rlPush.setVisibility(View.VISIBLE);
         mBinding.llReport.setVisibility(View.VISIBLE);
         mBinding.llRemovePost.setVisibility(View.VISIBLE);
         mBinding.llAskDoubt.setVisibility(View.VISIBLE);
-        if(!item.canEdit)
-        {
+        if (!item.canEdit) {
             mBinding.llRemovePost.setVisibility(View.GONE);
         }
 
         if (!GroupDashboardActivityNew.mAllowPostQuestion) {
             mBinding.llAskDoubt.setVisibility(View.GONE);
         }
+
+    }
+
+    @Override
+    public void onExternalShareClick(PostItem item) {
+
+        boolean isDownloaded = true;
+
+        if (item.fileType.equals(Constants.FILE_TYPE_IMAGE)) {
+
+
+            if (item.fileName.size()> 0)
+            {
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    String Filepath;
+
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        Filepath = splitStr[1];
+                    } else {
+                        Filepath = key;
+                    }
+
+                    if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
+
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneDownload.isPdfDownloaded(getContext(),item.fileName.get(i)))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<Uri> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneDownload.getDownloadPath(getContext(),item.fileName.get(i)));
+                    }
+
+                   /* ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }*/
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("application/pdf");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, item.video);
+            intent.setType("text/plain");
+            startActivity(intent);
+        }
+        else if(item.fileType.equals(Constants.FILE_TYPE_VIDEO)){
+
+            if (item.fileName.size()> 0)
+            {
+
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    if (!AmazoneVideoDownload.isVideoDownloaded(getContext(),item.fileName.get(i)))
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<Uri> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        AppLog.e(TAG, "URL DECODE"+Constants.decodeUrlToBase64(item.fileName.get(i)));
+
+                        files.add(AmazoneVideoDownload.getDownloadPath(getContext(),item.fileName.get(i)));
+                    }
+
+                   /* ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        AppLog.e(TAG, "URL "+file.getAbsolutePath());
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+*/
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("video/*");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else if(item.fileType.equalsIgnoreCase("birthdaypost")){
+
+            if (item.fileName.size()> 0)
+            {
+                for (int i = 0;i<item.fileName.size();i++)
+                {
+                    String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                    String Filepath;
+
+                    if (key.contains("/")) {
+                        String[] splitStr = key.split("/");
+                        Filepath = splitStr[1];
+                    } else {
+                        Filepath = key;
+                    }
+
+                    if (ImagePathTBL.getLastInserted(Filepath).size() == 0)
+                    {
+                        isDownloaded = false;
+                    }
+                }
+
+                if (isDownloaded)
+                {
+                    ArrayList<File> files =new ArrayList<>();
+
+                    for (int i = 0;i<item.fileName.size();i++)
+                    {
+                        String key =  Constants.decodeUrlToBase64(item.fileName.get(i)).replace(AmazoneHelper.BUCKET_NAME_URL, "");
+                        String Filepath;
+
+                        if (key.contains("/")) {
+                            String[] splitStr = key.split("/");
+                            Filepath = splitStr[1];
+                        } else {
+                            Filepath = key;
+                        }
+
+                        files.add(new File(ImagePathTBL.getLastInserted(Filepath).get(0).url));
+
+                    }
+
+                    ArrayList<Uri> uris = new ArrayList<>();
+
+                    for(File file: files){
+
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uris.add(FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", file));
+                        } else {
+                            uris.add(Uri.fromFile(file));
+                        }
+
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    intent.setType("image/");
+                    intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                    startActivity(Intent.createChooser(intent, "Share File"));
+                }
+                else
+                {
+                    Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_download),Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(),getResources().getString(R.string.smb_no_file_attached),Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onDeleteVideoClick(PostItem item, int adapterPosition) {
+        AppLog.e(TAG, "onDeleteVideoClick : " + item.fileName.get(0));
+        if (item.fileName != null && item.fileName.size() > 0) {
+            AmazoneDownload.removeVideo(getActivity(), item.fileName.get(0));
+            mAdapter.notifyItemChanged(adapterPosition);
+        }
+    }
+
+    @Override
+    public void callBirthdayPostCreation(PostItem item, int position) {
 
     }
 
@@ -782,12 +1246,12 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-       AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
+        AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
             showLoadingBar(mBinding.progressBar);
             LeafManager manager = new LeafManager();
-            manager.deletePost(this, mGroupId+"", currentItem.id, "group");
-
+            manager.deletePost(this, mGroupId + "", currentItem.id, "group");
+            new SendNotification("").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             showNoNetworkMsg();
         }
@@ -819,7 +1283,7 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
                 try {
                     sendReport(list.get(ReportAdapter.selected_position).type);
                 } catch (ArrayIndexOutOfBoundsException e) {
-                   AppLog.e("Report", "error is " + e.toString());
+                    AppLog.e("Report", "error is " + e.toString());
                 }
                 dialog.dismiss();
             }
@@ -841,12 +1305,13 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
     private void sendReport(int report_id) {
         LeafManager mManager = new LeafManager();
         showLoadingBar(mBinding.progressBar);
-        mManager.reportPost(this, mGroupId+"",  currentItem.id, report_id);
+        mManager.reportPost(this, mGroupId + "", currentItem.id, report_id);
     }
 
     @Override
     public void onClick(View v) {
     }
+
 
     private void showContextMenu(View view, boolean isModifyMenu) {
 
@@ -867,6 +1332,118 @@ public class GeneralPostFragment extends BaseFragment implements LeafManager.OnC
 
     }
 
+    private class SendNotification extends AsyncTask<String, String, String> {
+        String receiverToken;
+        private String server_response;
+
+        public SendNotification(String token) {
+            receiverToken = token;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("https://fcm.googleapis.com/fcm/send");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", BuildConfig.API_KEY_FIREBASE1 + BuildConfig.API_KEY_FIREBASE2);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+
+                DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+
+                try {
+                    JSONObject object = new JSONObject();
+
+                    String topic;
+                    String title = getResources().getString(R.string.app_name);
+                    String message = "";
+                    String userName = LeafPreference.getInstance(GeneralPostFragment.this.getActivity()).getString(LeafPreference.NAME);
+
+
+                    message = userName + " has deleted a post.";
+                    object.put("to", receiverToken);
+
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", title);
+                    notificationObj.put("body", message);
+                    //   object.put("notification", notificationObj);
+
+                    JSONObject dataObj = new JSONObject();
+                    dataObj.put("groupId", mGroupId);
+                    dataObj.put("createdById", LeafPreference.getInstance(GeneralPostFragment.this.getActivity()).getString(LeafPreference.LOGIN_ID));
+                    dataObj.put("postId", "");
+                    dataObj.put("teamId", mGroupId);
+                    dataObj.put("title", title);
+                    dataObj.put("postType", "group");
+                    dataObj.put("Notification_type", "post");
+                    dataObj.put("body", message);
+                    object.put("data", dataObj);
+
+                    wr.writeBytes(object.toString());
+                    Log.e(TAG, " JSON input : " + object.toString());
+                    wr.flush();
+                    wr.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+                AppLog.e(TAG, "responseCode :" + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    server_response = readStream(urlConnection.getInputStream());
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return server_response;
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader = null;
+            StringBuffer response = new StringBuffer();
+            try {
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            AppLog.e(TAG, "server_response :" + server_response);
+
+            if (!TextUtils.isEmpty(server_response)) {
+                AppLog.e(TAG, "Notification Sent");
+            } else {
+                AppLog.e(TAG, "Notification Send Fail");
+            }
+        }
+    }
 
 
 }

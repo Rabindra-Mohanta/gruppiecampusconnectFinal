@@ -38,7 +38,6 @@ import school.campusconnect.datamodel.staff.StaffResponse;
 import school.campusconnect.datamodel.subjects.AddSubjectStaffReq;
 import school.campusconnect.datamodel.subjects.SubjectResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
-import school.campusconnect.fragments.StaffListFragment;
 import school.campusconnect.fragments.SubjectListFragment2;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
@@ -74,6 +73,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
     private String team_id;
     StaffAdapter adapter;
     boolean isEdit;
+    boolean isAssign;
     private SubjectStaffResponse.SubjectData subjectData;
     private ArrayList<String> selectedStaffIds = new ArrayList<>();
 
@@ -85,7 +85,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         init();
 
         LeafManager leafManager = new LeafManager();
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar,true);
+       // progressBar.setVisibility(View.VISIBLE);
         leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
     }
 
@@ -110,10 +111,11 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
             if (subjectData == null)
                 return true;
 
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to permanently delete this Subjects.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete_subject), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    showLoadingBar(progressBar,false);
+                  //  progressBar.setVisibility(View.VISIBLE);
                     leafManager.deleteSubjectStaff(AddSubjectActivity2.this, GroupDashboardActivityNew.groupId,team_id, subjectData.getSubjectId());
                 }
             });
@@ -133,6 +135,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         if (bundle != null) {
             team_id = bundle.getString("team_id");
             isEdit = bundle.getBoolean("is_edit");
+            isAssign = bundle.getBoolean("isAssign");
             if (isEdit) {
                 setTitle(getResources().getString(R.string.lbl_update_subject)+" - ("+getIntent().getStringExtra("className")+")");
                 subjectData = new Gson().fromJson(bundle.getString("data"), SubjectStaffResponse.SubjectData.class);
@@ -158,17 +161,36 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                         return;
                     }
                     if (isEdit) {
+                        if (isAssign)
+                        {
+                            AddSubjectStaffReq request = new AddSubjectStaffReq();
+                            request.setSubjectName(etName.getText().toString());
+                            request.setStaffId(adapter.getSelectedList());
+                            request.setSubjectId(subjectData.subjectId);
+
+                            showLoadingBar(progressBar,false);
+                            // progressBar.setVisibility(View.VISIBLE);
+                            AppLog.e(TAG, "request :" + request);
+                            leafManager.assignTeacher(this, GroupDashboardActivityNew.groupId, team_id, request);
+                        }
+                        else
+                        {
+                            AddSubjectStaffReq request = new AddSubjectStaffReq();
+                            request.setSubjectName(etName.getText().toString());
+                            request.setStaffId(adapter.getSelectedList());
+                            showLoadingBar(progressBar,false);
+                            // progressBar.setVisibility(View.VISIBLE);
+                            AppLog.e(TAG, "request :" + request);
+                            leafManager.updateSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,subjectData.getSubjectId(), request);
+                        }
+                    }
+                    else
+                    {
                         AddSubjectStaffReq request = new AddSubjectStaffReq();
                         request.setSubjectName(etName.getText().toString());
                         request.setStaffId(adapter.getSelectedList());
-                        progressBar.setVisibility(View.VISIBLE);
-                        AppLog.e(TAG, "request :" + request);
-                        leafManager.updateSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id,subjectData.getSubjectId(), request);
-                    } else {
-                        AddSubjectStaffReq request = new AddSubjectStaffReq();
-                        request.setSubjectName(etName.getText().toString());
-                        request.setStaffId(adapter.getSelectedList());
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar,false);
+                        //progressBar.setVisibility(View.VISIBLE);
                         AppLog.e(TAG, "request :" + request);
                         leafManager.addSubjectStaff(this, GroupDashboardActivityNew.groupId, team_id, request);
                     }
@@ -182,7 +204,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         if (!isValueValid(etName)) {
             valid = false;
         } else if (adapter.getSelectedList().size() == 0) {
-            Toast.makeText(this, "Please add at least one teacher", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.toast_add_one_teacher), Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -192,16 +214,19 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_ADD_SUBJECT_STAFF:
             case LeafManager.API_UPDATE_SUBJECT_STAFF:
             case LeafManager.API_DELETE_SUBJECT_STAFF:
+            case LeafManager.API_ASSIGN_TEACHER:
                 finish();
                 break;
             case LeafManager.API_STAFF:
-                progressBar.setVisibility(View.GONE);
+                hideLoadingBar();
+               // progressBar.setVisibility(View.GONE);
                 StaffResponse res = (StaffResponse) response;
                 List<StaffResponse.StaffData> result = res.getData();
                 AppLog.e(TAG, "ClassResponse " + result);
@@ -223,7 +248,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
     @Override
     public void onFailure(int apiId, ErrorResponseModel<GroupValidationError> error) {
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+           // progressBar.setVisibility(View.GONE);
 
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -244,7 +270,8 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 
@@ -285,14 +312,14 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
         public int getItemCount() {
             if (list != null) {
                 if (list.size() == 0) {
-                    txtEmpty.setText("No Staff found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_staff));
                 } else {
                     txtEmpty.setText("");
                 }
 
                 return list.size();
             } else {
-                txtEmpty.setText("No Staff found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_staff));
                 return 0;
             }
 

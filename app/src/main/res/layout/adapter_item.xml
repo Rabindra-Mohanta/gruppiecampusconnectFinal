@@ -1,8 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlImages"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#99000000" >
+    android:background="#99000000">
 
     <ImageView
         android:id="@+id/mImageView"
@@ -10,6 +11,45 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop" />
+
+    <FrameLayout
+        android:id="@+id/llProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/circular_progress_bar" />
+
+        <ImageView
+            android:id="@+id/imgCancel"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/colorPrimary" />
+
+
+    </FrameLayout>
+    <ImageView
+        android:id="@+id/imgDownload"
+        android:visibility="gone"
+        android:layout_width="35dp"
+        android:src="@drawable/download"
+        android:layout_centerInParent="true"
+        android:background="@drawable/date_circle_background"
+        android:layout_height="35dp"/>
 
     <TextView
         android:id="@+id/tvCount"
@@ -24,4 +64,13 @@
         android:text="+5"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:visibility="gone" />
+
 </RelativeLayout>

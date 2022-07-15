@@ -32,12 +32,11 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:id="@+id/user_name"
-
-        android:text="Username"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_name"
+        android:text="@string/hint_username"
         android:layout_toRightOf="@+id/imageView"
         android:layout_alignTop="@+id/imageView"
-
         android:textSize="@dimen/text_size_16sp" />
 
     <TextView
@@ -47,7 +46,7 @@
         android:layout_alignLeft="@+id/user_name"
         android:layout_below="@+id/user_name"
         android:textSize="@dimen/text_size_14sp"
-        android:text="33% Profile updated" />
+        android:text="@string/hint_profile_update_des" />
 
     </LinearLayout>
 

@@ -132,7 +132,7 @@ public class AddFriendActivity extends BaseActivity
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     if (isConnectionAvailable()) {
                         if (edtSearch.getText().toString().isEmpty()) {
-                            Toast.makeText(AddFriendActivity.this, "Input some query first", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddFriendActivity.this, getResources().getString(R.string.toast_input_some_query), Toast.LENGTH_LONG).show();
                         } else {
                             getMyContactSearchData(edtSearch.getText().toString());
                         }

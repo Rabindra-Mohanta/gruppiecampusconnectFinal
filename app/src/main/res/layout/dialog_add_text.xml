@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/padding_10dp"
+    android:layout_height="wrap_content">
+    <RadioGroup
+        android:id="@+id/rbtGroup"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbt1"
+            android:text="@string/rb_write_properly"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbt2"
+            android:text="@string/rb_spelling_mistakes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbt3"
+            android:text="@string/rb_improve_handwriting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbt4"
+            android:text="@string/rb_write_your_own"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/etTitle"
+        android:visibility="gone"
+        android:maxLength="50"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/padding_5dp"
+        android:layout_height="@dimen/login_button_height"
+        android:inputType="textCapWords"
+        android:imeOptions="actionDone"
+        style="@style/RegEditText" />
+
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="@dimen/login_button_width"
+        style="@style/AddPostButton"
+        android:layout_marginTop="@dimen/padding_20dp"
+        android:text="@string/lbl_add"
+        android:layout_height="@dimen/login_button_height" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_select_sticker"
+        android:layout_marginTop="@dimen/padding_30dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        >
+
+    <ImageView
+        android:layout_width="@dimen/size_img_trophy"
+        android:layout_height="@dimen/size_img_trophy"
+        android:id="@+id/iv_trophy"
+        android:layout_marginEnd="@dimen/padding_30dp"
+        android:src="@drawable/icon_trophy"
+        />
+
+    <ImageView
+        android:layout_width="@dimen/size_img_trophy"
+        android:layout_height="@dimen/size_img_trophy"
+        android:id="@+id/iv_crown"
+        android:layout_marginStart="@dimen/padding_30dp"
+        android:src="@drawable/icon_crown"
+
+        />
+
+    </LinearLayout>
+
+</LinearLayout>

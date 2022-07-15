@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/colorTextWhiteDark"
+    android:background="@color/white"
     android:clipToPadding="false"
     android:layout_height="match_parent"
     tools:context=".activities.GroupDashboardActivityNew">
@@ -31,11 +31,11 @@
                 android:id="@+id/iv_toolbar_icon"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:layout_marginLeft="@dimen/padding_5dp"
                 android:layout_marginRight="@dimen/padding_5dp"
                 android:foregroundGravity="left"
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
+
 
             <ImageView
                 android:id="@+id/iv_toolbar_default"
@@ -46,6 +46,7 @@
                 android:foregroundGravity="left"
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
+
             <RelativeLayout
                 android:id="@+id/lin_toolbar"
                 android:layout_width="match_parent"
@@ -63,7 +64,7 @@
                         android:layout_height="match_parent"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Group Name"
+                        android:text="@string/lbl_group_name"
                         style="@style/LabelHeader2"
                         android:textColor="@color/colorTextWhite"
                         android:visibility="visible" />
@@ -73,10 +74,10 @@
                         android:layout_height="match_parent"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="0 users"
+                        android:text="@string/lbl_members"
                         style="@style/LabelSmall"
                         android:textColor="@color/colorTextWhiteLight"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -91,9 +92,8 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appBar"
         android:layout_above="@+id/flBottom"
-        />
+        android:layout_below="@id/appBar" />
 
     <View
         android:id="@+id/tapView1"
@@ -116,10 +116,11 @@
 
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/rlMore"
         android:layout_width="match_parent"
         android:layout_above="@+id/flBottom"
-        android:visibility="gone"
+
         android:layout_marginBottom="-5dp"
         android:layout_height="match_parent">
         <LinearLayout
@@ -142,6 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <LinearLayout
+
                     android:layout_width="match_parent"
                     android:padding="@dimen/padding_5dp"
                     android:background="@color/white"
@@ -157,14 +159,50 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:src="@drawable/icon_round_perso"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
                             android:text="@string/lbl_profile"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
+                    <LinearLayout android:id="@+id/llMakeAdmin"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/change_admin"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_make_app_admin"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout android:id="@+id/llMyTeam"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/icon_team"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_my_teams"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
                     <LinearLayout android:id="@+id/llJoinGruppie"
                         android:layout_width="match_parent"
                         android:padding="@dimen/padding_10dp"
@@ -175,8 +213,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:src="@drawable/icon_nav_join_gruppie"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -194,8 +232,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:src="@drawable/addfriends"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -208,12 +246,13 @@
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:src="@drawable/icon_authorized_user"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -226,13 +265,13 @@
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:gravity="center"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:src="@drawable/icon_nav_all"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -240,24 +279,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/llFavourite"
-                        android:layout_width="match_parent"
-                        android:padding="@dimen/padding_10dp"
-                        android:layout_marginTop="@dimen/padding_5dp"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:src="@drawable/icon_bookmark_fill"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_bookmarks"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/llArchiveTeam"
                         android:layout_width="match_parent"
@@ -268,8 +290,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:src="@drawable/icon_menu_archive"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -286,8 +308,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:src="@drawable/icon_nav_doubts"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -300,12 +322,13 @@
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:src="@drawable/icon_discussion"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -319,12 +342,13 @@
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
                             app:srcCompat="@drawable/ic_people"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -343,16 +367,16 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             app:srcCompat="@drawable/student"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_register_student"
+                            android:text="@string/lbl_class_register_student"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                     <LinearLayout
-                        android:id="@+id/llSubject2"
+                        android:id="@+id/llBothRegister"
                         android:layout_width="match_parent"
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_5dp"
@@ -361,9 +385,113 @@
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/subject"
-                            android:tint="@color/colorTextLight"
+                            app:srcCompat="@drawable/booth"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_booths_register"
                             android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/llBothCoordinateRegister"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            app:srcCompat="@drawable/icon_coordinator"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_booth_coordinate_register"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/llIssueRegister"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:gravity="center"
+
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            app:srcCompat="@drawable/issue_register_2"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_RegisterIssue"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+
+                        android:visibility="gone"
+                        android:id="@+id/llBookmark"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:gravity="center"
+
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            app:srcCompat="@drawable/icon_bookmark_fill"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_bookmarks"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llFamily"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            app:srcCompat="@drawable/family"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_family_register"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/llSubject2"
+                        android:layout_width="match_parent"
+                        android:padding="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            app:srcCompat="@drawable/subject"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -381,31 +509,12 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             app:srcCompat="@drawable/subject"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
                             android:text="@string/lbl_register_subject"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/llEBook"
-                        android:layout_width="match_parent"
-                        android:padding="@dimen/padding_10dp"
-                        android:layout_marginTop="@dimen/padding_5dp"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/ebook"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:paddingLeft="@dimen/padding_10dp"
-                            android:text="@string/lbl_register_e_book"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                     <LinearLayout
@@ -419,8 +528,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             app:srcCompat="@drawable/icon_register_staff"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -433,13 +542,13 @@
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:gravity="center"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
                             app:srcCompat="@drawable/icon_bus_register"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -452,13 +561,13 @@
                         android:padding="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_5dp"
                         android:gravity="center"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
                             app:srcCompat="@drawable/icon_attendance_report"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -478,8 +587,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             app:srcCompat="@drawable/icon_time_table"
-                            android:tint="@color/colorTextLight"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:tint="@color/colorTextLight" />
                         <TextView
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
@@ -518,6 +627,7 @@
                             android:src="@drawable/icon_about_group"
                             android:layout_height="wrap_content" />
                         <TextView
+                            android:id="@+id/tvAbout"
                             android:layout_width="match_parent"
                             android:paddingLeft="@dimen/padding_10dp"
                             android:text="@string/lbl_about_group"
@@ -531,6 +641,38 @@
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
 
+   <!-- <androidx.cardview.widget.CardView
+        android:id="@+id/llAdTicket"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/padding_15dp"
+        android:layout_above="@id/flBottom"
+        app:cardCornerRadius="@dimen/padding_50dp"
+        app:cardElevation="5dp">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+
+            <TextView
+                android:id="@+id/fabAddTicket"
+                style="@style/LabelSmall"
+                android:background="@drawable/fab_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Add\nTicket"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
+
+    </androidx.cardview.widget.CardView>-->
 
     <androidx.cardview.widget.CardView
         android:id="@+id/flBottom"

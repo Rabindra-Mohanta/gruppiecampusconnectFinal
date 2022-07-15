@@ -33,7 +33,7 @@ import school.campusconnect.R;
 import school.campusconnect.adapters.GalleryReadMoreAdapter;
 import school.campusconnect.database.LeafPreference;
 import school.campusconnect.datamodel.BaseResponse;
-import school.campusconnect.datamodel.GalleryPostRes;
+import school.campusconnect.datamodel.gallery.GalleryPostRes;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneRemove;
 import school.campusconnect.utils.AppLog;
@@ -155,7 +155,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_add_post).setIcon(R.drawable.add_team_icon);
+        menu.findItem(R.id.menu_add_post).setIcon(R.drawable.ic_post_new);
         if (item.canEdit)
             menu.findItem(R.id.menu_add_post).setVisible(true);
         else
@@ -231,7 +231,6 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
 
     public void onPostClick(GalleryPostRes.GalleryData item) {
         if (item.fileType.equals(Constants.FILE_TYPE_YOUTUBE)) {
-
             Intent browserIntent = new Intent(this, TestActivity.class);
             browserIntent.putExtra("url", item.video);
             startActivity(browserIntent);
@@ -239,6 +238,7 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
         } else if (item.fileType.equals(Constants.FILE_TYPE_PDF)) {
             Intent i = new Intent(this, ViewPDFActivity.class);
             i.putExtra("pdf", item.fileName.get(0));
+            i.putExtra("thumbnail", item.thumbnailImage.get(0));
             i.putExtra("name", item.albumName);
             startActivity(i);
 
@@ -250,14 +250,15 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     }
 
     public void onDeleteClick(GalleryPostRes.GalleryData item) {
-        SMBDialogUtils.showSMBDialogOKCancel(this, "Are You Sure Want To Delete ?", this);
+        SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), this);
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
         AppLog.e("TeamPostFrag", "DIalog Ok Clicked ");
         if (isConnectionAvailable()) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoadingBar(progressBar);
+           // progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.deleteGalleryPost(this, GroupDashboardActivityNew.groupId + "", item.getAlbumId());
 
@@ -271,18 +272,19 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+       //     progressBar.setVisibility(View.GONE);
 
         switch (apiId) {
             case LeafManager.API_GALLERY_DELETE:
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
-                Toast.makeText(this, "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_post_delete_successfully), Toast.LENGTH_SHORT).show();
                 AmazoneRemove.remove(item.fileName);
                 finish();
                 break;
             case LeafManager.API_GALLERY_FILE_DELETE:
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISGALLERY_POST_UPDATED, true);
-                Toast.makeText(this, "File Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_file_delete_successfully), Toast.LENGTH_SHORT).show();
                 AmazoneRemove.remove(itemFile);
                 finish();
                 break;
@@ -294,7 +296,8 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onFailure(int apiId, String msg) {
         super.onFailure(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+         //   progressBar.setVisibility(View.GONE);
 
         if (msg.contains("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -309,7 +312,8 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onException(int apiId, String msg) {
         super.onException(apiId, msg);
         if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+            hideLoadingBar();
+          //  progressBar.setVisibility(View.GONE);
         Toast.makeText(this, getResources().getString(R.string.api_exception_msg), Toast.LENGTH_SHORT).show();
     }
 
@@ -324,16 +328,23 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
             if (allImageList.size() == 1){
                 Intent i = new Intent(this, FullScreenActivity.class);
                 i.putExtra("image", allImageList.get(0));
+                i.putExtra("album_id", this.item.getAlbumId());
+                i.putExtra("type", this.item.getFileType());
+                i.putExtra("edit",this.item.canEdit);
                 this.startActivity(i);
             } else {
                 Intent i = new Intent(this, FullScreenMultiActivity.class);
                 i.putStringArrayListExtra("image_list", allImageList);
+                i.putExtra("album_id", this.item.getAlbumId());
+                i.putExtra("type", this.item.getFileType());
+                i.putExtra("edit",this.item.canEdit);
                 this.startActivity(i);
             }
         }else {
             if (allImageList.size() == 1){
                 Intent i = new Intent(this, VideoPlayActivity.class);
                 i.putExtra("video", allImageList.get(0));
+                i.putExtra("thumbnail", thumbnailImages.get(0));
                 this.startActivity(i);
             } else {
                 Intent i = new Intent(this, FullScreenVideoMultiActivity.class);
@@ -348,11 +359,12 @@ public class GalleryDetailActivity extends BaseActivity implements DialogInterfa
     public void onItemLongClick(final ItemImage itemImage) {
         this.itemFile = itemImage.getImagePath();
         if(item.canEdit){
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete.?", new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.dialog_are_you_want_to_delete), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {
-                        progressBar.setVisibility(View.VISIBLE);
+                        showLoadingBar(progressBar);
+                       // progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
                         manager.deleteGalleryFile(GalleryDetailActivity.this, GroupDashboardActivityNew.groupId + "", item.getAlbumId(), itemImage.getImagePath());
                     } else {

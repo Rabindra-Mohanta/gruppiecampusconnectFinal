@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTeams"
+
+    <EditText
+        android:id="@+id/etSearch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="50dp"
+        android:background="@drawable/search_edittext_background"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawablePadding="@dimen/padding_8dp"
+        android:hint="@string/hint_search_group"
+        android:imeOptions="actionSearch"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:textColor="@color/color_grey_icon"
+        android:textColorHint="@color/color_label"
+        android:textSize="@dimen/text_size_14sp"
+        app:layout_scrollFlags="scroll|enterAlways" />
+<!--    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="match_parent"
+        app:refreshColor="@color/colorPrimary">-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTeams"
+            android:layout_below="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+ <!--   </com.baoyz.widget.PullRefreshLayout>-->
+
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -23,5 +51,5 @@
         android:gravity="center"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:textSize="18sp" />
+        style="@style/LabelEmptyText" />
 </RelativeLayout>

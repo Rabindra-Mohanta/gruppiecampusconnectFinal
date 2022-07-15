@@ -54,8 +54,8 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingBar(progressBar,true);
+       // progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -72,7 +72,8 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+    //    progressBar.setVisibility(View.GONE);
         if(getActivity()==null){
             return;
         }
@@ -89,12 +90,14 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //    progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -152,7 +155,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
             }
 
             holder.txt_name.setText(item.getName());
-            holder.txt_count.setText("Students : "+item.members);
+            holder.txt_count.setText(getResources().getString(R.string.lbl_students)+" : "+item.members);
 
             if("false".equals(item.jitsiToken)){
                 holder.img_tree.setVisibility(View.VISIBLE);
@@ -167,7 +170,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -177,7 +180,7 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 
@@ -215,10 +218,11 @@ public class ClassListTokenFragment extends BaseFragment implements LeafManager.
 
     private void onTreeClick(ClassResponse.ClassData classData) {
 
-        SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), "Are you sure you want to add jitsiToken.?", new DialogInterface.OnClickListener() {
+        SMBDialogUtils.showSMBDialogConfirmCancel(getActivity(), getResources().getString(R.string.smb_add_jitsi_token), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressBar.setVisibility(View.VISIBLE);
+                showLoadingBar(progressBar);
+             //   progressBar.setVisibility(View.VISIBLE);
                 LeafManager leafManager = new LeafManager();
                 leafManager.addJitiToken(ClassListTokenFragment.this, GroupDashboardActivityNew.groupId, classData.getId());
             }

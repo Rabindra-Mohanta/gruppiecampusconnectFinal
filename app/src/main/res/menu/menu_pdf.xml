@@ -39,13 +39,13 @@
 
     <item
         android:id="@+id/pdf_pre"
-        android:title="Previous"
+        android:title="@string/menu_pervious"
         android:icon="@drawable/ic_skip_previous_black_24dp"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/pdf_next"
-        android:title="Next"
+        android:title="@string/next"
         android:icon="@drawable/ic_skip_next_black_24dp"
         app:showAsAction="always" />
 

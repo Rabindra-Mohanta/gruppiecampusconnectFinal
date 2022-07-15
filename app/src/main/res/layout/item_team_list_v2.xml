@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+
+            <androidx.cardview.widget.CardView
+                app:cardElevation="4dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginHorizontal="@dimen/padding_10dp"
+                android:layout_marginBottom="@dimen/padding_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:outlineSpotShadowColor="@color/colorPrimaryLight"
+                android:outlineAmbientShadowColor="@color/colorPrimaryLight"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:background="@drawable/light_primary_border_bg"
+                    android:paddingTop="@dimen/padding_10dp"
+                    android:paddingBottom="@dimen/padding_10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/padding_10dp"
+                    >
+
+                    <RelativeLayout
+                        android:paddingHorizontal="@dimen/padding_10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvActivityName"
+                            style="@style/LabelHeader1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lbl_daily_activity"
+                            android:textColor="@color/colorPrimary"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvActivityName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="4"
+                        tools:itemCount="6"
+                        tools:listitem="@layout/item_team_list" />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/imgExpandFeedBefore"
+                android:layout_gravity="bottom|center_horizontal"
+                android:background="@drawable/expand_down"
+                android:elevation="@dimen/padding_5dp"
+                android:visibility="gone"
+                android:layout_width="34dp"
+                android:layout_height="@dimen/padding_35dp"
+                />
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/imgExpandFeedAfter"
+                android:layout_gravity="bottom|center_horizontal"
+                android:background="@drawable/expand_up"
+                android:elevation="@dimen/padding_5dp"
+                android:layout_width="34dp"
+                android:layout_height="@dimen/padding_35dp"
+                />
+
+           <!-- <androidx.cardview.widget.CardView
+                android:id="@+id/llisExpand"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="5dp"
+                app:cardElevation="@dimen/padding_5dp"
+                android:layout_width="@dimen/padding_30dp"
+                android:layout_height="@dimen/padding_30dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/padding_50dp"
+                >
+                <ImageView
+                    android:id="@+id/imgExpand"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:tint="@color/colorPrimary"
+                    android:src="@drawable/ic_drop_down"
+                    />
+            </androidx.cardview.widget.CardView>-->
+
+        </FrameLayout>
+    </RelativeLayout>
+</layout>

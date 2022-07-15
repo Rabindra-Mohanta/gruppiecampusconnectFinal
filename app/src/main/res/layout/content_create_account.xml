@@ -66,6 +66,7 @@
                     style="@style/RegEditText" />
 
                 <TextView
+                    android:id="@+id/tv_aboutgroup"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/padding_10dp"
                     android:text="@string/lbl_about_group"

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.PeopleActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <EditText
+        android:id="@+id/edtSearch"
+        android:layout_below="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/search_edittext_background"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawablePadding="@dimen/padding_8dp"
+        android:imeOptions="actionSearch"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:layout_margin="@dimen/padding_15dp"
+        android:singleLine="true"
+        android:hint="@string/search_contact"
+        android:textColor="@color/color_grey_icon"
+        android:textColorHint="@color/color_label"
+        android:textAppearance="@style/TextAppearance.Light"
+        android:textSize="@dimen/text_size_14sp"
+        app:layout_scrollFlags="scroll|enterAlways" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginHorizontal="@dimen/padding_10dp"
+        android:id="@+id/rvTeams"
+        android:layout_below="@+id/edtSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        style="@style/LabelEmptyText" />
+</RelativeLayout>

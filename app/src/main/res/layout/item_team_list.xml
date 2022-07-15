@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginTop="@dimen/padding_10dp"
-    android:layout_marginBottom="@dimen/padding_10dp"
+    android:layout_marginTop="@dimen/padding_5dp"
+    android:layout_marginBottom="@dimen/padding_5dp"
     android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,21 +17,21 @@
             android:layout_height="wrap_content">
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/imgTeam"
-                android:layout_width="@dimen/home_image_size"
+                android:layout_width="@dimen/item_image_size"
                 app:siSquare="true"
                 app:siBorderWidth="0dp"
                 app:siBorderAlpha="0.0"
                 android:background="@android:color/transparent"
                 app:siRadius="10dp"
-                android:layout_height="@dimen/home_image_size" />
+                android:layout_height="@dimen/item_image_size" />
             <ImageView
                 android:id="@+id/imgDefault"
-                android:layout_width="@dimen/home_image_size"
-                android:layout_height="@dimen/home_image_size" />
+                android:layout_width="@dimen/item_image_size"
+                android:layout_height="@dimen/item_image_size" />
 
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/imgTeamAdd"
-                android:layout_width="@dimen/home_image_size"
+                android:layout_width="@dimen/item_image_size"
                 app:siSquare="true"
                 app:siRadius="10dp"
                 app:siBorderWidth="0dp"
@@ -39,15 +39,14 @@
                 android:layout_gravity="right"
                 android:visibility="gone"
                 android:src="@drawable/add"
-                android:layout_height="@dimen/home_image_size" />
+                android:layout_height="@dimen/item_image_size" />
         </FrameLayout>
 
         <TextView
             android:id="@+id/tvTeamName"
             android:layout_width="match_parent"
-            android:singleLine="true"
             android:gravity="center"
-            android:text="Team Name"
+            android:text="@string/lbl_team_name"
             android:layout_marginTop="@dimen/padding_5dp"
             style="@style/LabelSmall"
             android:textSize="@dimen/text_size_14sp"

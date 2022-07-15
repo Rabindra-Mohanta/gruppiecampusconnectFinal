@@ -18,12 +18,15 @@ package school.campusconnect.utils.crop;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.opengl.GLES10;
 import android.os.Build;
@@ -31,11 +34,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import school.campusconnect.utils.AppLog;
+
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -60,16 +69,20 @@ public class CropImageActivity extends MonitoredActivity {
     private int maxX;
     private int maxY;
     private int exifRotation;
+    private int exRotation;
 
     private Uri sourceUri;
     private Uri saveUri;
 
     private boolean isSaving;
-
+    private ImageView rotate,cancel;
+    private TextView save;
     private int sampleSize;
     private RotateBitmap rotateBitmap;
     private CropImageView imageView;
     private HighlightView cropView;
+
+    private int RotateValue;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -93,10 +106,42 @@ public class CropImageActivity extends MonitoredActivity {
         }
     }
 
+    private void adjustInputRotate(int rotate)
+    {
+        if (sourceUri != null) {
+
+            exRotation = rotate;
+            InputStream is = null;
+            try {
+                sampleSize = calculateBitmapSampleSize(sourceUri);
+                is = getContentResolver().openInputStream(sourceUri);
+                BitmapFactory.Options option = new BitmapFactory.Options();
+                option.inSampleSize = sampleSize;
+                rotateBitmap = new RotateBitmap(BitmapFactory.decodeStream(is, null, option), exifRotation+exRotation);
+            } catch (IOException e) {
+                AppLog.e("Error reading image: " + e.getMessage(), e.toString());
+                setResultException(e);
+            } catch (OutOfMemoryError e) {
+                AppLog.e("OOM reading image: " + e.getMessage(), e.toString());
+                setResultException(e);
+            } finally {
+                CropUtil.closeSilently(is);
+            }
+
+        }
+
+        imageView.setImageRotateBitmapResetBase(rotateBitmap, true);
+    }
+
     private void setupViews() {
         setContentView(R.layout.crop_activity_crop);
 
         imageView = (CropImageView) findViewById(R.id.crop_image);
+        save = (TextView) findViewById(R.id.done);
+        rotate = (ImageView) findViewById(R.id.rotate);
+        cancel = (ImageView) findViewById(R.id.cancel);
+
+
         imageView.context = this;
         imageView.setRecycler(new ImageViewTouchBase.Recycler() {
             @Override
@@ -106,14 +151,24 @@ public class CropImageActivity extends MonitoredActivity {
             }
         });
 
-        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+
+        cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
         });
 
-        findViewById(R.id.btn_done).setOnClickListener(new View.OnClickListener() {
+        rotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //imageView.setRotation(imageView.getRotation() + 90);
+                exRotation += 90;
+                adjustInputRotate(exRotation);
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onSaveClicked();
             }
@@ -183,6 +238,7 @@ public class CropImageActivity extends MonitoredActivity {
         }
     }
 
+
     private int getMaxTextureSize() {
         // The OpenGL texture size is the maximum size that can be drawn in an ImageView
         int[] maxSize = new int[1];
@@ -194,6 +250,7 @@ public class CropImageActivity extends MonitoredActivity {
         if (isFinishing()) {
             return;
         }
+
         imageView.setImageRotateBitmapResetBase(rotateBitmap, true);
         CropUtil.startBackgroundJob(this, null, getResources().getString(R.string.please_wait),
                 new Runnable() {
@@ -303,12 +360,16 @@ public class CropImageActivity extends MonitoredActivity {
             imageView.center();
             imageView.highlightViews.clear();
         }
+
         saveImage(croppedImage);
     }
 
     private void saveImage(Bitmap croppedImage) {
-        if (croppedImage != null) {
-            final Bitmap b = croppedImage;
+        if (croppedImage != null ) {
+            AppLog.e("CropImageActivity" , "imageview rotation : "+imageView.getRotation());
+            final Bitmap b =  rotateBitmap(croppedImage , exRotation);
+            imageView.setImageBitmap(b);
+
             CropUtil.startBackgroundJob(this, null, getResources().getString(R.string.please_wait),
                     new Runnable() {
                         public void run() {
@@ -319,6 +380,21 @@ public class CropImageActivity extends MonitoredActivity {
         } else {
             finish();
         }
+    }
+
+    public Bitmap rotateBitmap(Bitmap original, float degrees) {
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        Matrix matrix = new Matrix();
+        matrix.preRotate(degrees);
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(original, 0, 0, width, height, matrix, true);
+//        Canvas canvas = new Canvas(rotatedBitmap);
+     //   canvas.drawBitmap(original, 5.0f, 0.0f, null);
+
+
+        return rotatedBitmap;
     }
 
     private Bitmap decodeRegionCrop(Rect rect, int outWidth, int outHeight) {
@@ -334,6 +410,8 @@ public class CropImageActivity extends MonitoredActivity {
             final int height = decoder.getHeight();
 
             if (exifRotation != 0) {
+
+                AppLog.e("CropImageActivity","exifRotation" + exifRotation + "imageview rotation "+imageView.getRotation());
                 // Adjust crop area to account for image rotation
                 Matrix matrix = new Matrix();
                 matrix.setRotate(-exifRotation);
@@ -345,6 +423,24 @@ public class CropImageActivity extends MonitoredActivity {
                 adjusted.offset(adjusted.left < 0 ? width : 0, adjusted.top < 0 ? height : 0);
                 rect = new Rect((int) adjusted.left, (int) adjusted.top, (int) adjusted.right, (int) adjusted.bottom);
             }
+            /*else
+            {
+                AppLog.e("CropImageActivity","exifRotation e;" + exifRotation + "imageview rotation "+imageView.getRotation());
+                // Adjust crop area to account for image rotation
+                Matrix matrix = new Matrix();
+                matrix.setRotate(imageView.getRotation());
+
+                RectF adjusted = new RectF();
+                matrix.mapRect(adjusted, new RectF(rect));
+
+                // Adjust to account for origin at 0,0
+                Log.e("CropImageActivity","rect" + rect);
+                adjusted.offset(adjusted.left < 0 ? width : 0, adjusted.top < 0 ? height : 0);
+                rect = new Rect((int) adjusted.left, (int) adjusted.top, (int) adjusted.right, (int) adjusted.bottom);
+                Log.e("CropImageActivity","rect" + rect);
+
+            }*/
+
 
             try {
                 croppedImage = decoder.decodeRegion(rect, new BitmapFactory.Options());
@@ -380,6 +476,14 @@ public class CropImageActivity extends MonitoredActivity {
     }
 
     private void saveOutput(Bitmap croppedImage) {
+
+       /* try {
+            croppedImage =  getRotateImage(sourceUri.toString(),croppedImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("IOException","e "+e.getMessage());
+        }*/
+
         if (saveUri != null) {
             OutputStream outputStream = null;
             try {
@@ -388,8 +492,8 @@ public class CropImageActivity extends MonitoredActivity {
                     croppedImage.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
                 }
             } catch (IOException e) {
+               AppLog.e("CropImageActivity" + saveUri, e.toString());
                 setResultException(e);
-               AppLog.e("Cannot open file: " + saveUri, e.toString());
             } finally {
                 CropUtil.closeSilently(outputStream);
             }
@@ -399,10 +503,12 @@ public class CropImageActivity extends MonitoredActivity {
                     CropUtil.getFromMediaUri(this, getContentResolver(), saveUri)
             );
 
+
             setResultUri(saveUri);
         }
 
         final Bitmap b = croppedImage;
+
         handler.post(new Runnable() {
             public void run() {
                 imageView.clear();
@@ -412,6 +518,11 @@ public class CropImageActivity extends MonitoredActivity {
 
         finish();
     }
+
+
+
+
+
 
     @Override
     protected void onDestroy() {

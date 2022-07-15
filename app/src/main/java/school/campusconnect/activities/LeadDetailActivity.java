@@ -4,14 +4,20 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 
 import butterknife.OnClick;
+import school.campusconnect.databinding.ActivityVoterProfileBinding;
+import school.campusconnect.databinding.ItemOtherLeadBinding;
+import school.campusconnect.datamodel.booths.VoterProfileResponse;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -24,6 +30,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -42,9 +49,10 @@ import school.campusconnect.views.SMBDialogUtils;
 
 public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAddUpdateListener, DialogInterface.OnClickListener, LeafManager.OnCommunicationListener {
 
+    public static final String TAG = "LeadDetailActivity";
     public static final String EXTRA_LEAD_ITEM = "extra_lead_item";
     private LeadItem mLeadItem;
-    @Bind(R.id.txt_name)
+  /*  @Bind(R.id.txt_name)
     TextView txtName;
     @Bind(R.id.txt_phone)
     TextView txtPhone;
@@ -83,6 +91,37 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     @Bind(R.id.label_phone)
     TextView lblPhone;
 
+    @Bind(R.id.llEmail)
+    LinearLayout llEmail;
+
+    @Bind(R.id.llGender)
+    LinearLayout llGender;
+
+    @Bind(R.id.llDOB)
+    LinearLayout llDOB;
+
+    @Bind(R.id.llAddress)
+    LinearLayout llAddress;
+
+    @Bind(R.id.llCity)
+    LinearLayout llCity;
+
+    @Bind(R.id.llState)
+    LinearLayout llState;
+
+    @Bind(R.id.llPinCode)
+    LinearLayout llPinCode;
+
+    @Bind(R.id.llOtherFriend)
+    LinearLayout llOtherFriend;
+
+    @Bind(R.id.llDesignation)
+    LinearLayout llDesignation;
+
+    @Bind(R.id.llOcupation)
+    LinearLayout llOcupation;
+
+
     @Bind(R.id.switchAllowPost)
     public Switch switchAllowPost;
 
@@ -102,7 +141,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
 
 
     @Bind(R.id.progressBar)
-    ProgressBar progressBar;
+    ProgressBar progressBar;*/
     String mGroupId;
     String mFriendId;
     SharedPreferences prefs;
@@ -114,18 +153,27 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     private boolean allowedToAddTeamPost;
     private boolean allowedToAddTeamPostComment;
 
+    String voterId,caste,sub_caste,religion,blood_group;
+    ItemOtherLeadBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.item_other_lead);
-        ButterKnife.bind(this);
+
+        binding = DataBindingUtil.setContentView(this,R.layout.item_other_lead);
+       // setContentView(R.layout.item_other_lead);
+      //  ButterKnife.bind(this);
         mLeadItem = getIntent().getParcelableExtra(EXTRA_LEAD_ITEM);
+        AppLog.e(TAG,"mLeadItem Data" +new Gson().toJson(mLeadItem));
+        Toolbar mToolBar= binding.getRoot().findViewById(R.id.toolbar);
+
+
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Details");
+        setTitle(getResources().getString(R.string.title_details));
         ActiveAndroid.initialize(this);
 
-        llPhone.setVisibility(View.GONE);
+        binding.llPhone.setVisibility(View.GONE);
 
         isPost = getIntent().getBooleanExtra("post", false);
         isAdmin = getIntent().getBooleanExtra("isAdmin", false);
@@ -135,84 +183,192 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         type = getIntent().getExtras().getString("type");
         teamId = getIntent().getStringExtra("team_id");
 
+        voterId = getIntent().getStringExtra("voterId");
+        caste = getIntent().getStringExtra("caste");
+        sub_caste = getIntent().getStringExtra("subCaste");
+        religion = getIntent().getStringExtra("religion");
+        blood_group = getIntent().getStringExtra("blood");
 
-        txtName.setText(mLeadItem.getName());
-        txtPhone.setText(mLeadItem.getPhone());
-        txtEmail.setText(mLeadItem.getEmail());
-        txtDob.setText(mLeadItem.getDob());
-        txtLeadCount.setText(String.valueOf(mLeadItem.getLeadCount()));
-        txtGender.setText(mLeadItem.gender);
-        txtOcupation.setText(mLeadItem.getOccupation());
 
-        if (!TextUtils.isEmpty(mLeadItem.getImage())) {
-            Picasso.with(this).load(Constants.decodeUrlToBase64(mLeadItem.getImage())).into(imgLead);
-        } else {
-            imgLead_Default.setVisibility(View.VISIBLE);
-            TextDrawable drawable = TextDrawable.builder()
-                    .buildRound(ImageUtil.getTextLetter(mLeadItem.name), ImageUtil.getRandomColor(1));
-            imgLead_Default.setImageDrawable(drawable);
-        }
+        AppLog.e(TAG,"voterId  " +voterId + "\ncaste  " +caste + "\nsub_caste  " +sub_caste+ "\nreligion  " +religion+ "\nblood_group  " +blood_group);
 
-        if (mLeadItem.getAddress() != null) {
-            if (mLeadItem.getAddress().line1 != null) {
-                txtAddr.setText(mLeadItem.getAddress().line1);
-                if (mLeadItem.getAddress().line2 != null) {
-                    txtAddr.setText(txtAddr.getText() + "," + mLeadItem.getAddress().line2);
-                }
-            }
-            txtCity.setText(mLeadItem.getAddress().district);
-            txtState.setText(mLeadItem.getAddress().state);
-            txtPincode.setText(mLeadItem.getAddress().pin);
-        }
 
-        // txtOtherLeads.setText(TextUtils.join("\n", mLeadItem.getOtherLeads()));
+        binding.txtName.setText(mLeadItem.getName());
+        binding.txtPhone.setText(mLeadItem.getPhone());
+
+        binding.txtEmail.setText(mLeadItem.getEmail());
+
+        binding.txtDob.setText(mLeadItem.getDob());
+
+
+        binding.txtGender.setText(mLeadItem.gender);
+        binding.txtLeadCount.setText(String.valueOf(mLeadItem.getLeadCount()));
+
+        binding.txtOcupation.setText(mLeadItem.getOccupation());
+
+
         mGroupId = GroupDashboardActivityNew.groupId;
         if (isAdmin) {
-            switchAllowPost.setVisibility(View.VISIBLE);
-            switchAllowAddUser.setVisibility(View.VISIBLE);
-            switchAllowComment.setVisibility(View.VISIBLE);
+            binding.switchAllowPost.setVisibility(View.VISIBLE);
+            binding.switchAllowAddUser.setVisibility(View.VISIBLE);
+            binding.switchAllowComment.setVisibility(View.VISIBLE);
         } else {
-            switchAllowPost.setVisibility(View.GONE);
-            switchAllowAddUser.setVisibility(View.GONE);
-            switchAllowComment.setVisibility(View.GONE);
+            binding.switchAllowPost.setVisibility(View.GONE);
+            binding.switchAllowAddUser.setVisibility(View.GONE);
+            binding.switchAllowComment.setVisibility(View.GONE);
         }
 
         if (allowedToAddTeamPost)
-            switchAllowPost.setChecked(true);
+            binding.switchAllowPost.setChecked(true);
 
         if (allowedToAddUser)
-            switchAllowAddUser.setChecked(true);
+            binding.switchAllowAddUser.setChecked(true);
 
         if (allowedToAddTeamPostComment)
-            switchAllowComment.setChecked(true);
+            binding.switchAllowComment.setChecked(true);
 
         if (type.equalsIgnoreCase("nestedfriend")) {
-            txtPhone.setVisibility(View.GONE);
-            lblPhone.setVisibility(View.GONE);
+            binding.txtPhone.setVisibility(View.GONE);
+           // binding..setVisibility(View.GONE);
         }
+
+        binding.etVoterId.setText(voterId);
+        binding.etReligion.setText(religion);
+        binding.etCaste.setText(caste);
+        binding.etSubCaste.setText(sub_caste);
+        binding.etBlood.setText(blood_group);
+
+        fillDetails(mLeadItem);
     }
 
-    @OnClick({R.id.switchAllowAddUser, R.id.switchAllowPost, R.id.switchAllowComment})
+
+
+    private void fillDetails(LeadItem data) {
+
+
+        binding.etGender.setEnabled(false);
+      //  binding.etGender.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etBlood.setEnabled(false);
+       // binding.etBlood.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etName.setEnabled(false);
+       // binding.etName.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etRole.setEnabled(false);
+     //   binding.etRole.setTextColor(getResources().getColor(R.color.grey));
+
+     //   binding.etPhone.setEnabled(false);
+     //   binding.etPhone.setTextColor(getResources().getColor(R.color.grey));
+
+
+
+        binding.etEmail.setEnabled(false);
+       // binding.etEmail.setTextColor(getResources().getColor(R.color.grey));
+
+      //  binding.etdob.setEnabled(false);
+     //   binding.etdob.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etEducation.setEnabled(false);
+      //  binding.etEducation.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etProfession.setEnabled(false);
+      //  binding.etProfession.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etdob.setEnabled(false);
+        binding.etReligion.setEnabled(false);
+        binding.etCaste.setEnabled(false);
+        binding.etSubCaste.setEnabled(false);
+
+        binding.etCaste.setEnabled(false);
+      //  binding.etCaste.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etSubCaste.setEnabled(false);
+      //  binding.etSubCaste.setTextColor(getResources().getColor(R.color.grey));
+
+        binding.etReligion.setEnabled(false);
+      //  binding.etReligion.setTextColor(getResources().getColor(R.color.grey));
+
+
+        binding.etName.setText(data.name);
+        binding.etPhone.setText(data.phone);
+
+
+        binding.etEmail.setText(data.email);
+    //    binding.etdob.setText(data.dob);
+        binding.etEducation.setText(data.qualification);
+        binding.etProfession.setText(data.occupation);
+
+        binding.etdob.setText(data.dob);
+
+
+
+
+
+
+
+        binding.etGender.setText(data.gender);
+
+
+
+        binding.etAadhar.setText(data.aadharNumber);
+
+     //   binding.etReligion.setText(data.religion);
+
+
+       // manager.getReligion(this);
+
+        binding.switchAllowPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoadingBar(binding.progressBar);
+                //  binding.progressBar.setVisibility(View.VISIBLE);
+                manager.allowTeamPost(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+            }
+        });
+
+        binding.switchAllowAddUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoadingBar(binding.progressBar);
+                //  binding.progressBar.setVisibility(View.VISIBLE);
+                manager.allowAddOtherMember(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+            }
+        });
+
+        binding.switchAllowComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLoadingBar(binding.progressBar);
+                //  binding.progressBar.setVisibility(View.VISIBLE);
+                manager.allowTeamPostComment(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+            }
+        });
+
+    }
+
+  /*  @OnClick({R.id.switchAllowAddUser, R.id.switchAllowPost, R.id.switchAllowComment})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.switchAllowPost:
-                if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
-                manager.allowTeamPost(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+                if (binding.progressBar != null)
+
                 break;
             case R.id.switchAllowAddUser:
-                if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
-                manager.allowAddOtherMember(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+                if (binding.progressBar != null)
+                    showLoadingBar(binding.progressBar);
+                   // binding.progressBar.setVisibility(View.VISIBLE);
+                    manager.allowAddOtherMember(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
             case R.id.switchAllowComment:
-                if (progressBar != null)
-                    progressBar.setVisibility(View.VISIBLE);
-                manager.allowTeamPostComment(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
+                if (binding.progressBar != null)
+                    showLoadingBar(binding.progressBar);
+                   // binding.progressBar.setVisibility(View.VISIBLE);
+                    manager.allowTeamPostComment(LeadDetailActivity.this, mGroupId, teamId, mLeadItem.getId());
                 break;
 
         }
-    }
+    }*/
 
     private void cleverTapAllowPost(boolean isAllow) {
         if (isConnectionAvailable()) {
@@ -257,6 +413,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         MenuItem item = menu.findItem(R.id.nav_edit);
         item.setVisible(false);
         AppLog.e("LeadDetail", "OnCreateOption : " + type);
+
         if (type.equalsIgnoreCase("lead") || type.equalsIgnoreCase("nestedfriend")) {
             MenuItem item2 = menu.findItem(R.id.nav_delete);
             item2.setVisible(false);
@@ -268,7 +425,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.nav_edit) {
         } else if (item.getItemId() == R.id.nav_delete) {
-            SMBDialogUtils.showSMBDialogOKCancel(this, "Are you sure you want to delete "+mLeadItem.getName()+" from team ?", this);
+            SMBDialogUtils.showSMBDialogOKCancel(this, getResources().getString(R.string.smb_delete)+mLeadItem.getName()+getResources().getString(R.string.smb_from_team), this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -280,8 +437,9 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         if (isConnectionAvailable()) {
             mFriendId = mLeadItem.getId();
             //  showLoadingDialog();
-            if (progressBar != null)
-                progressBar.setVisibility(View.VISIBLE);
+            if (binding.progressBar != null)
+                showLoadingBar(binding.progressBar);
+               // binding.progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
             manager.removeTeamUser(this, mGroupId + "", teamId, mLeadItem.getId());
 
@@ -324,13 +482,14 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     public void onSuccess(int apiId, BaseResponse response) {
         LeafPreference.getInstance(this).setBoolean(LeafPreference.ISUSERDELETED, true);
         // hideLoadingDialog();
-        if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+        if (binding.progressBar != null)
+            hideLoadingBar();
+           // binding.progressBar.setVisibility(View.GONE);
         AppLog.e("UserDetail", "onSuccessCalled");
 
         switch (apiId) {
             case LeafManager.API_DELETE_MY_FRIEND:
-                Toast.makeText(getApplicationContext(), "User Deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show();
                 LeafPreference.getInstance(this).setBoolean(LeafPreference.ISTEAMUPDATED,true);
                 onBackPressed();
                 break;
@@ -359,24 +518,24 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
 
         switch (apiId) {
             case LeafManager.API_ALLOW_OTHER_TO_ADD:
-                if (switchAllowAddUser.isChecked()) {
-                    switchAllowAddUser.setChecked(false);
+                if (binding.switchAllowAddUser.isChecked()) {
+                    binding.switchAllowAddUser.setChecked(false);
                 } else {
-                    switchAllowAddUser.setChecked(true);
+                    binding.switchAllowAddUser.setChecked(true);
                 }
                 break;
             case LeafManager.API_ALLOW_ADD_TEAM_POST:
-                if (switchAllowPost.isChecked()) {
-                    switchAllowPost.setChecked(false);
+                if (binding.switchAllowPost.isChecked()) {
+                    binding.switchAllowPost.setChecked(false);
                 } else {
-                    switchAllowPost.setChecked(true);
+                    binding.switchAllowPost.setChecked(true);
                 }
                 break;
             case LeafManager.API_ALLOW_ADD_TEAM_POST_COMMENT:
-                if (switchAllowComment.isChecked()) {
-                    switchAllowComment.setChecked(false);
+                if (binding.switchAllowComment.isChecked()) {
+                    binding.switchAllowComment.setChecked(false);
                 } else {
-                    switchAllowComment.setChecked(true);
+                    binding.switchAllowComment.setChecked(true);
                 }
                 break;
 
@@ -388,8 +547,9 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     public void onFailure(int apiId, ErrorResponseModel error) {
         //hideLoadingDialog();
-        if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+        if (binding.progressBar != null)
+            hideLoadingBar();
+           // binding.progressBar.setVisibility(View.GONE);
         AppLog.e("LeadDetail", "onFailurecalled");
         if (error.status.equals("401")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -400,24 +560,24 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
 
         switch (apiId) {
             case LeafManager.API_ALLOW_OTHER_TO_ADD:
-                if (switchAllowAddUser.isChecked()) {
-                    switchAllowAddUser.setChecked(false);
+                if (binding.switchAllowAddUser.isChecked()) {
+                    binding.switchAllowAddUser.setChecked(false);
                 } else {
-                    switchAllowAddUser.setChecked(true);
+                    binding.switchAllowAddUser.setChecked(true);
                 }
                 break;
             case LeafManager.API_ALLOW_ADD_TEAM_POST:
-                if (switchAllowPost.isChecked()) {
-                    switchAllowPost.setChecked(false);
+                if (binding.switchAllowPost.isChecked()) {
+                    binding.switchAllowPost.setChecked(false);
                 } else {
-                    switchAllowPost.setChecked(true);
+                    binding.switchAllowPost.setChecked(true);
                 }
                 break;
             case LeafManager.API_ALLOW_ADD_TEAM_POST_COMMENT:
-                if (switchAllowComment.isChecked()) {
-                    switchAllowComment.setChecked(false);
+                if (binding.switchAllowComment.isChecked()) {
+                    binding.switchAllowComment.setChecked(false);
                 } else {
-                    switchAllowComment.setChecked(true);
+                    binding.switchAllowComment.setChecked(true);
                 }
                 break;
         }
@@ -427,30 +587,31 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     @Override
     public void onException(int apiId, String error) {
         //hideLoadingDialog();
-        if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
+        if (binding.progressBar != null)
+            hideLoadingBar();
+           // binding.progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
 
         switch (apiId) {
             case LeafManager.API_ALLOW_OTHER_TO_ADD:
-                if (switchAllowAddUser.isChecked()) {
-                    switchAllowAddUser.setChecked(false);
+                if (binding.switchAllowAddUser.isChecked()) {
+                    binding.switchAllowAddUser.setChecked(false);
                 } else {
-                    switchAllowAddUser.setChecked(true);
+                    binding.switchAllowAddUser.setChecked(true);
                 }
                 break;
             case LeafManager.API_ALLOW_ADD_TEAM_POST:
-                if (switchAllowPost.isChecked()) {
-                    switchAllowPost.setChecked(false);
+                if (binding.switchAllowPost.isChecked()) {
+                    binding. switchAllowPost.setChecked(false);
                 } else {
-                    switchAllowPost.setChecked(true);
+                    binding.switchAllowPost.setChecked(true);
                 }
                 break;
             case LeafManager.API_ALLOW_ADD_TEAM_POST_COMMENT:
-                if (switchAllowComment.isChecked()) {
-                    switchAllowComment.setChecked(false);
+                if (binding.switchAllowComment.isChecked()) {
+                    binding.switchAllowComment.setChecked(false);
                 } else {
-                    switchAllowComment.setChecked(true);
+                    binding.switchAllowComment.setChecked(true);
                 }
                 break;
         }

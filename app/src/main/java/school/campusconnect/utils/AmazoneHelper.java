@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import school.campusconnect.database.LeafPreference;
+
 public class AmazoneHelper {
     private static AmazonS3Client sS3Client;
 //    public static final String BUCKET_NAME_URL = "https://gruppie.sgp1.digitaloceanspaces.com/";
@@ -61,13 +63,15 @@ public class AmazoneHelper {
                 @Override
                 public String getAWSAccessKeyId() {
                     //return BuildConfig.AWSAccessKey1+BuildConfig.AWSAccessKey2;
-                    return "FAWMZVH2FHNS7BNKXXUD";
+                 //   return "FAWMZVH2FHNS7BNKXXUD";
+                    return LeafPreference.getInstance(context).getString(LeafPreference.ACCESS_KEY);
                 }
 
                 @Override
                 public String getAWSSecretKey() {
                     //return BuildConfig.AWSSecretKey1+BuildConfig.AWSSecretKey2;
-                    return "vI3HRV+G2xZXRXa8SWI26Od7XxdyWNbFXwNLbWy2C+Y";
+                   // return "vI3HRV+G2xZXRXa8SWI26Od7XxdyWNbFXwNLbWy2C+Y";
+                    return LeafPreference.getInstance(context).getString(LeafPreference.SECRET_KEY);
                 }
             }, cc);
             sS3Client.setEndpoint("sgp1.digitaloceanspaces.com");
@@ -79,11 +83,13 @@ public class AmazoneHelper {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss");
         String key;
         if (Constants.FILE_TYPE_VIDEO.equals(fileType)) {
-            key = "videos/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "videos/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) +".mp4";
         } else if (Constants.FILE_TYPE_PDF.equals(fileType)) {
-            key = "pdf/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
-        } else {
-            key = "images/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "pdf/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) +".pdf";
+        } else if (Constants.FILE_TYPE_AUDIO.equals(fileType)) {
+            key = "audio/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) +".mp3";
+        }else {
+            key = "images/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) + ".jpg";
         }
         return key;
         // "gruppie_" + simpleDateFormat.format(new Date())+new Random().nextInt(999);
@@ -92,11 +98,11 @@ public class AmazoneHelper {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss");
         String key;
         if (Constants.FILE_TYPE_VIDEO.equals(fileType)) {
-            key = "videos/thumbnail/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "videos/thumbnail/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) +".jpg";
         } else if (Constants.FILE_TYPE_PDF.equals(fileType)) {
-            key = "pdf/thumbnail/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "pdf/thumbnail/gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) + ".jpg";
         }else {
-            key = "gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999);
+            key = "gruppie_" + simpleDateFormat.format(new Date()) + new Random().nextInt(999) + ".jpg";
         }
         return key;
         // "gruppie_" + simpleDateFormat.format(new Date())+new Random().nextInt(999);

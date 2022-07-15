@@ -53,7 +53,7 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
+        //showLoadingBar(progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
         return view;
@@ -68,6 +68,7 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
+        // hideLoadingBar();
         progressBar.setVisibility(View.GONE);
         BusResponse res = (BusResponse) response;
         List<BusResponse.BusData> result = res.getData();
@@ -78,11 +79,13 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
 
     @Override
     public void onFailure(int apiId, String msg) {
+        //hideLoadingBar();
         progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
+        //hideLoadingBar();
         progressBar.setVisibility(View.GONE);
     }
 
@@ -141,7 +144,7 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
             }
 
             holder.txt_name.setText(item.getRouteName());
-            holder.txt_count.setText("Members : "+item.members);
+            holder.txt_count.setText(getResources().getString(R.string.lbl_members)+" : "+item.members);
         }
 
         @Override
@@ -150,7 +153,7 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Bus found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_bus_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -160,7 +163,7 @@ public class BusListFragment extends BaseFragment implements LeafManager.OnCommu
             }
             else
             {
-                txtEmpty.setText("No Bus found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_bus_found));
                 return 0;
             }
 

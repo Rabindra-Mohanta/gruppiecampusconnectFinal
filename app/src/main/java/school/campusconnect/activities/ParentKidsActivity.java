@@ -26,7 +26,7 @@ public class ParentKidsActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
-        setTitle("Select Kid");
+        setTitle(getResources().getString(R.string.lbl_select_kids));
 
 
         ParentKidListFragment classListFragment=new ParentKidListFragment();

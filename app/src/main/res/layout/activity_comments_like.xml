@@ -43,7 +43,7 @@
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:text="@string/msg_no_likes"
-        android:textSize="18sp"
+        style="@style/LabelEmptyText"
         android:visibility="gone"/>
 
     <ProgressBar

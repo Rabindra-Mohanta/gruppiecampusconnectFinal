@@ -45,6 +45,7 @@ import java.util.Locale;
 
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
+import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.utils.crop.Crop;
 
 public class UploadImageFragment extends BaseUploadImageFragment implements View.OnClickListener {
@@ -169,6 +170,7 @@ public class UploadImageFragment extends BaseUploadImageFragment implements View
             } else {
                 setImageFromString(url);
             }
+
             imgPlus.setVisibility(View.GONE);
             //imgPlusLayout.setVisibility(View.GONE);
         } else {
@@ -268,7 +270,7 @@ public class UploadImageFragment extends BaseUploadImageFragment implements View
                     @Override
                     public void onCompressedImage(ProfileImage profileImage) {
                         if (profileImage.imageString.isEmpty()) {
-                            Toast.makeText(getActivity(), "Not able to compress selected image. Please verify", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_not_able_to_compress), Toast.LENGTH_SHORT).show();
                         } else {
                             setImageToView(profileImage);
                         }
@@ -293,7 +295,7 @@ public class UploadImageFragment extends BaseUploadImageFragment implements View
                         @Override
                         public void onCompressedImage(ProfileImage profileImage) {
                             if (profileImage.imageString.isEmpty()) {
-                                Toast.makeText(getActivity(), "Not able to compress selected image. Please verify", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getResources().getString(R.string.toast_not_able_to_compress), Toast.LENGTH_SHORT).show();
                             } else {
                                 setImageToView(profileImage);
                             }
@@ -361,41 +363,13 @@ public class UploadImageFragment extends BaseUploadImageFragment implements View
 
     public void requestPermissionForWriteExternal(int code) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(getActivity(), "Storage permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.toast_storage_permission_needed), Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
         }
     }
 
     //===========================================================================
-
-    /*
-     * Begins to upload the file specified by the file path.
-     */
-    private void beginUpload(String filePath, String key) {
-        Log.e("KEYY", "key is " + key);
-        if (filePath == null) {
-            Log.e("UPLOADTEST", "filepath null");
-            Toast.makeText(getActivity(), "Could not find the filepath of the selected file",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-        File file = new File(filePath);
-        TransferObserver observer = transferUtility.upload(AmazoneHelper.BUCKET_NAME, key,
-                file , CannedAccessControlList.PublicRead);
-
-        Log.e("UPLOADTEST", "upload started");
-        /*
-         * Note that usually we set the transfer listener after initializing the
-         * transfer. However it isn't required in this sample app. The flow is
-         * click upload button -> start an activity for image selection
-         * startActivityForResult -> onActivityResult -> beginUpload -> onResume
-         * -> set listeners to in progress transfers.
-         */
-
-        observer.setTransferListener(new UploadListener());
-        Log.e("UPLOADTEST", "observer started");
-    }
 
     /*
      * Gets the file path of the given Uri.

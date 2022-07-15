@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/title"
-            android:text="Welcome!"
+            android:text="@string/lbl_welcome"
             style="@style/LabelHeader2"
             android:gravity="center_horizontal"
             android:textAppearance="@style/TextAppearance.Regular"
@@ -35,7 +35,7 @@
 
         <TextView
             android:id="@+id/description"
-            android:text="Making friends is easy as waving your hand back and forth with ease."
+            android:text="@string/lbl_walk_des"
             android:padding="8dp"
             style="@style/LabelHeader1"
             android:gravity="center_horizontal"

@@ -59,9 +59,9 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
         View view = inflater.inflate(R.layout.fragment_team_discuss,container,false);
         ButterKnife.bind(this,view);
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
+        showLoadingBar(progressBar,true);
 
-
-        progressBar.setVisibility(View.VISIBLE);
+      //  progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -70,27 +70,43 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
     public void onStart() {
         super.onStart();
         LeafManager leafManager = new LeafManager();
+
         leafManager.getClasses(this,GroupDashboardActivityNew.groupId);
+
+        if(getActivity()!=null){
+            ((AddTeamStudentActivity)getActivity()).enableSelection(false);
+        }
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+      //  progressBar.setVisibility(View.GONE);
         ClassResponse res = (ClassResponse) response;
         List<ClassResponse.ClassData> result = res.getData();
         AppLog.e(TAG, "ClassResponse " + result);
 
+        if (result.size() == 0)
+        {
+            ((AddTeamStudentActivity) getActivity()).chkAll.setVisibility(View.GONE);
+        }
+        else
+        {
+            ((AddTeamStudentActivity) getActivity()).chkAll.setVisibility(View.VISIBLE);
+        }
         rvClass.setAdapter(new ClassesAdapter(result));
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        progressBar.setVisibility(View.GONE);
+        hideLoadingBar();
+        //  progressBar.setVisibility(View.GONE);
     }
 
     public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ViewHolder>
@@ -157,7 +173,7 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
             {
                 if(list.size()==0)
                 {
-                    txtEmpty.setText("No Class found.");
+                    txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 }
                 else {
                     txtEmpty.setText("");
@@ -167,7 +183,7 @@ public class AddTeamClassListFragment extends BaseFragment implements LeafManage
             }
             else
             {
-                txtEmpty.setText("No Class found.");
+                txtEmpty.setText(getResources().getString(R.string.txt_no_class_found));
                 return 0;
             }
 
