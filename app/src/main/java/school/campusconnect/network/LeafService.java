@@ -1226,7 +1226,12 @@ public interface LeafService {
 
     @POST("/api/v1/groups/{group_id}/team/{team_id}/school/user/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addTeamStaffOrStudent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("userId") String userIds);
+    Call<BaseResponse> addTeamStaffOrStudent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("userId") String userIds,@Query("role") String role);
+
+    //copy
+    @POST("/api/v1/groups/{group_id}/team/{team_id}/school/user/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addTeamStaffOrStudent1(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("userId") String userIds ,@Query("role") String role, @Query("teamId") String teamId);
 
 
     @PUT("/api/v1/groups/{group_id}/staff/{user_id}/edit")
