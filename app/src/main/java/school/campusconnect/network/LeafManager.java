@@ -65,6 +65,7 @@ import school.campusconnect.datamodel.subjects.SubjectResponsev1;
 import school.campusconnect.datamodel.syllabus.ChangeStatusPlanModel;
 import school.campusconnect.datamodel.syllabus.EditTopicModelReq;
 import school.campusconnect.datamodel.syllabus.StaffAnalysisRes;
+import school.campusconnect.datamodel.syllabus.SyllabusListMaster;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.datamodel.syllabus.SyllabusModelReq;
 import school.campusconnect.datamodel.syllabus.SyllabusPlanRequest;
@@ -576,6 +577,7 @@ public class LeafManager {
     public static final int API_ADD_STUDENT_MULTIPLE = 367;
     public static final int API_ADD_STAFF_MULTIPLE = 368;
     public static final int API_PROFESSION_GET = 369;
+    public static final int API_GET_SYLLABUS_MASTER = 375;
 
     public LeafManager() {
 
@@ -7467,11 +7469,41 @@ public class LeafManager {
         }, ErrorResponse.class);
     }
 
-    public void addTeamStaffOrStudent(OnCommunicationListener listener, String groupId, String teamId, String selectedUserIds) {
+    public void addTeamStaffOrStudent(OnCommunicationListener listener, String groupId, String teamId,String role, String selectedUserIds) {
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BaseResponse> model = service.addTeamStaffOrStudent(groupId, teamId, selectedUserIds);
+        final Call<BaseResponse> model = service.addTeamStaffOrStudent(groupId, teamId, selectedUserIds,role);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_STAFF_STUDENT_TEAM, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.message);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+    public void addTeamStaffOrStudent1(OnCommunicationListener listener, String groupId, String teamId,String role, String selectedUserIds,String teamid) {
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addTeamStaffOrStudent1(groupId, teamId, selectedUserIds,role,teamid);
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_STAFF_STUDENT_TEAM, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
@@ -9086,6 +9118,45 @@ public class LeafManager {
         }, ErrorResponse.class);
 
     }
+
+
+    /*public void getChapter(final OnCommunicationListener listListener, String groupId, String teamId, String subjectId) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<SyllabusListRes> model = service.getChapter(groupId, teamId, subjectId);
+
+        ResponseWrapper<SyllabusListRes> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(API_CHAPTER_LIST, new ResponseWrapper.ResponseHandler<SyllabusListRes, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, SyllabusListRes response) {
+                AppLog.e("LeafManager", "SyllabusListRes123 : " + response);
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    AppLog.e("GroupList", "handle Error : " + error.status);
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                    // mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+
+    }*/
+
+
 
     public void addChapterPost(OnAddUpdateListener<AddPostValidationError> listListener, String groupId, String team_id, String subject_id, AddGalleryPostRequest request) {
         mListener = listListener;
@@ -12821,6 +12892,60 @@ public class LeafManager {
             }
         }, serviceErrorType);
     }
+
+
+
+
+
+
+    public void getSyllabusMaster(OnCommunicationListener listener, String group_id, String team_id, String subject_id)
+    {
+        mOnCommunicationListener = listener;
+
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+
+        final Call<SyllabusListMaster> model = service.getSyllabusMaster(group_id,team_id,subject_id);
+
+        ResponseWrapper<SyllabusListMaster> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnAddUpdateListener>>() {
+        }.getType();
+
+        wrapper.execute(API_GET_SYLLABUS_MASTER, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnAddUpdateListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+
+
+                Log.e("Leafmanger","====>"+response);
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnAddUpdateListener> error) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+    }
+
+
+
+
+
+
 
 
     public void getSyllabus(OnCommunicationListener listener, String group_id, String team_id, String subject_id)

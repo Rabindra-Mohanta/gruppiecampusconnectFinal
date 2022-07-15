@@ -40,13 +40,13 @@ android {
 
 
                         // [COPY]
-            /*            applicationId "school.campusconnect"
+                        applicationId "school.campusconnect"
                         versionCode 17
                         versionName "1.7"
                         resValue "string", "app_name", '"GC2"'
                         buildConfigField("String", "AppName", '"GC2"')
                         buildConfigField("String", "AppCategory", '"CAMPUS"')
-                        buildConfigField("String", "APP_ID",  '"school"')*/
+                        buildConfigField("String", "APP_ID",  '"school"')
 
                         // [ 1. Gruppie Campus ]
                   /*      applicationId "school.campusconnect"
@@ -210,13 +210,16 @@ android {
                          buildConfigField("String", "APP_ID",  '"school"')
          */
 
-//                            applicationId "ktsvapp.gruppie"   // /// GCC2
-//                            versionCode 12
-//                            versionName "7.5"
-//                            resValue "string", "app_name", '"K.T.S.V"'
-//                            buildConfigField("String", "AppName", '"K.T.S.V"')
-//                            buildConfigField("String", "AppCategory", '"CAMPUS"')
-//                            buildConfigField("String", "APP_ID",  '"school"')
+
+
+                          /*  applicationId "ktsvapp.gruppie"   // /// GCC2
+                            versionCode 12
+                            versionName "7.5"
+                            resValue "string", "app_name", '"K.T.S.V"'
+                            buildConfigField("String", "AppName", '"K.T.S.V"')
+                            buildConfigField("String", "AppCategory", '"CAMPUS"')
+                            buildConfigField("String", "APP_ID",  '"school"')*/
+
 
                         /*     applicationId "jnana.gruppie"   // /// GCC2
                              versionCode 2

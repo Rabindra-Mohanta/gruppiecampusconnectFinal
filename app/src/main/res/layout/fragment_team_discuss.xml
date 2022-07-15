@@ -125,6 +125,7 @@
         android:layout_below="@id/progressBar"/>
 
     <TextView
+
         android:id="@+id/txtEmpty"
         style="@style/LabelEmptyText"
         android:layout_width="match_parent"
