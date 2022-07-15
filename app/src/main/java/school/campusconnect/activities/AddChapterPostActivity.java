@@ -281,6 +281,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private ProgressDialog progressDialog;
     private boolean isEdit = true;
     private String chapter_id;
+    private String topic_id;
     private List<SyllabusListMaster.Datum> chapterList;
     private List<SyllabusListMaster.Datum> topicList;
     private String sharePath;
@@ -464,7 +465,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void getChapters() {
 
         showLoadingBar(progressBar,false);
-      //  progressBar.setVisibility(View.VISIBLE);
+        //  progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getSyllabusMaster(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
@@ -782,7 +783,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
 
     private void shareButtonEnableDisable() {
-  //      btnShare.setEnabled(isValid(false));
+        //      btnShare.setEnabled(isValid(false));
     }
 
     @Override
@@ -798,14 +799,15 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 if (progressBar != null)
                     showLoadingBar(progressBar,false);
                 //  progressBar.setVisibility(View.VISIBLE);
-              //  btnShare.setEnabled(false);
+                //  btnShare.setEnabled(false);
 
                 btnShare.setEnabled(false);
                 btnShare.setTextColor(getResources().getColor(R.color.grey));
                 mainRequest = new AddGalleryPostRequest();
 
                 mainRequest.albumName = edtTitle.getText().toString();
-                mainRequest.topicName = edtDesc.getText().toString();
+               // mainRequest.topicName = edtDesc.getText().toString();
+                mainRequest.topicName = sptopic.getSelectedItem().toString();
 
                 if (!TextUtils.isEmpty(videoUrl)) {
                     mainRequest.video = videoUrl;
@@ -1050,7 +1052,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                         }
                         if (TransferState.FAILED.equals(state)) {
                             hideLoadingBar();
-                           // progressBar.setVisibility(View.GONE);
+                            // progressBar.setVisibility(View.GONE);
                             if (progressDialog!=null) {
                                 progressDialog.dismiss();
                             }
@@ -1203,11 +1205,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             }
         }
 
-        if (!isValueValidOnly(edtDesc)) {
-            if (showToast)
-                Toast.makeText(this, getResources().getString(R.string.toast_enter_topic_name), Toast.LENGTH_SHORT).show();
-            return false;
-        }
+//        if (!isValueValidOnly(edtDesc)) {
+//            if (showToast)
+//                Toast.makeText(this, getResources().getString(R.string.toast_enter_topic_name), Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
 
         if (listImages.size() == 0 && TextUtils.isEmpty(videoUrl) && TextUtils.isEmpty(pdfPath) && TextUtils.isEmpty(audioPath)) {
             if (showToast)
@@ -1338,9 +1340,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 break;
 
             case LeafManager.API_CHAPTER_REMOVE:
-                    LeafPreference.getInstance(this).setBoolean("is_chapter_added", true);
-                    finish();
-                    break;
+                LeafPreference.getInstance(this).setBoolean("is_chapter_added", true);
+                finish();
+                break;
         }
 
     }
@@ -1349,7 +1351,33 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void bindtopic()
     {
 
+        if (topicList != null && topicList.size() > 0) {
 
+            String[] strTopic = new String[topicList.size()];
+            for (int i=0;i<topicList.size();i++){
+                strTopic[i]=topicList.get(i).getTopicsList().get(i).getTopicName();
+            }
+
+            ArrayAdapter<String> topicAdapter=new ArrayAdapter<String>(this,R.layout.item_spinner,strTopic);
+            sptopic.setAdapter(topicAdapter);
+
+
+
+            sptopic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    topic_id=topicList.get(position).getTopicsList().get(position).getTopicId();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+
+
+        }
 
 
     }
@@ -1382,7 +1410,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 /*                    edtTitle.setText("");
                     edtTitle.setText(chapterList.get(position).chapterName);*/
                     chapter_id = chapterList.get(position).getChapterId();
-                   // cardChapterName.setVisibility(View.GONE);
+                    // cardChapterName.setVisibility(View.GONE);
 
                 }
 
@@ -1391,12 +1419,6 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                 }
             });
-        } else {
-            edtTitle.setHint("");
-            isEdit = false;
-            llTop.setVisibility(View.GONE);
-            cardChapterName.setVisibility(View.VISIBLE);
-            imgAddChapter.setVisibility(View.GONE);
         }
 
     }
@@ -1430,7 +1452,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Override
     public void onException(int apiId, String error) {
-       btnShare.setEnabled(true);
+        btnShare.setEnabled(true);
         btnShare.setTextColor(getResources().getColor(R.color.white));
         if (progressBar != null)
             hideLoadingBar();
@@ -1669,15 +1691,15 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                 isGalleryMultiple = false;
 //                String path = ImageUtil.getPath(this, selectedImage);
-              //  listImages.add(selectedImage.toString());
+                //  listImages.add(selectedImage.toString());
                 showCropDialog(selectedImage,false);
             } else {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     final Uri uri1 = item.getUri();
 //                    String path = ImageUtil.getPath(this, uri1);
-                //    listImages.add(uri1.toString());
-               //     isGalleryMultiple = true;
+                    //    listImages.add(uri1.toString());
+                    //     isGalleryMultiple = true;
                     showCropDialog(uri1,false);
                 }
             }
@@ -1734,7 +1756,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             /*fileTypeImageOrVideo = Constants.FILE_TYPE_IMAGE;*/
 //            String path = cameraFile.getAbsolutePath();
             AppLog.e(TAG, "imageCaptureFile : " + imageCaptureFile);
-  //          listImages.add(imageCaptureFile.toString());
+            //          listImages.add(imageCaptureFile.toString());
             isGalleryMultiple = false;
 
          /*   showLastImage();
@@ -1817,7 +1839,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void removeAudio() {
 
         audioPath = "";
-     //   Picasso.with(this).load(R.drawable.icon_doc).into(imgDoc);
+        //   Picasso.with(this).load(R.drawable.icon_doc).into(imgDoc);
 
        /* listImages.clear();
         Picasso.with(this).load(R.drawable.icon_gallery).into(img_image);
