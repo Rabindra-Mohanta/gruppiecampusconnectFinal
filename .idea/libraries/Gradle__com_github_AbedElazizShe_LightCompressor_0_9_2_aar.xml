@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.AbedElazizShe:LightCompressor:0.9.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dfe0654da74081565f81dc9edf6f0911/jetified-LightCompressor-0.9.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dfe0654da74081565f81dc9edf6f0911/jetified-LightCompressor-0.9.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dfe0654da74081565f81dc9edf6f0911/jetified-LightCompressor-0.9.2/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.AbedElazizShe/LightCompressor/0.9.2/15a405e7cb9c25cbd78b308ee6109d0998f56ec4/LightCompressor-0.9.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

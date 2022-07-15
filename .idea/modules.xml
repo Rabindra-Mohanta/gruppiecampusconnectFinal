@@ -7,8 +7,12 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/commonlib2/gruppiecampusconnectFinal.commonlib2.iml" filepath="$PROJECT_DIR$/.idea/modules/commonlib2/gruppiecampusconnectFinal.commonlib2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobilertc2/gruppiecampusconnectFinal.mobilertc2.iml" filepath="$PROJECT_DIR$/.idea/modules/mobilertc2/gruppiecampusconnectFinal.mobilertc2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/appV2/gruppiecampusconnectFinal.appV2.iml" filepath="$PROJECT_DIR$/.idea/modules/appV2/gruppiecampusconnectFinal.appV2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/appV2/gruppiecampusconnectFinal.appV2.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/appV2/gruppiecampusconnectFinal.appV2.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/appV2/gruppiecampusconnectFinal.appV2.main.iml" filepath="$PROJECT_DIR$/.idea/modules/appV2/gruppiecampusconnectFinal.appV2.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/appV2/gruppiecampusconnectFinal.appV2.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/appV2/gruppiecampusconnectFinal.appV2.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/commonlib/gruppiecampusconnectFinal.commonlib.iml" filepath="$PROJECT_DIR$/.idea/modules/commonlib/gruppiecampusconnectFinal.commonlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobilertc/gruppiecampusconnectFinal.mobilertc.iml" filepath="$PROJECT_DIR$/.idea/modules/mobilertc/gruppiecampusconnectFinal.mobilertc.iml" />
     </modules>
   </component>
 </project>

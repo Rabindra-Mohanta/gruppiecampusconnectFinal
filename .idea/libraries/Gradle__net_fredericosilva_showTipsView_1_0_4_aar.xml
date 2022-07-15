@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: net.fredericosilva:showTipsView:1.0.4@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a5aaa1cc4736b97f481f70b980c85904/jetified-showTipsView-1.0.4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a5aaa1cc4736b97f481f70b980c85904/jetified-showTipsView-1.0.4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a5aaa1cc4736b97f481f70b980c85904/jetified-showTipsView-1.0.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c4c8c8ba95b339f340e76d2859b8730c/jetified-showTipsView-1.0.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c4c8c8ba95b339f340e76d2859b8730c/jetified-showTipsView-1.0.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c4c8c8ba95b339f340e76d2859b8730c/jetified-showTipsView-1.0.4/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.fredericosilva/showTipsView/1.0.4/3f9db3de2de6be1072fa7ded75f197b88a189fbf/showTipsView-1.0.4-javadoc.jar!/" />

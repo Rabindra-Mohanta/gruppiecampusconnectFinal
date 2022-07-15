@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.clevertap.android:clevertap-android-sdk:3.1.4@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/37391774fb7a372d67b75490d86a33cb/jetified-clevertap-android-sdk-3.1.4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/37391774fb7a372d67b75490d86a33cb/jetified-clevertap-android-sdk-3.1.4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/37391774fb7a372d67b75490d86a33cb/jetified-clevertap-android-sdk-3.1.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/120b0cef595d7c3f26f7dcb277b9b860/jetified-clevertap-android-sdk-3.1.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/120b0cef595d7c3f26f7dcb277b9b860/jetified-clevertap-android-sdk-3.1.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/120b0cef595d7c3f26f7dcb277b9b860/jetified-clevertap-android-sdk-3.1.4/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
