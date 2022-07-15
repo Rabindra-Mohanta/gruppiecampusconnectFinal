@@ -222,6 +222,13 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.tvAudioTimer)
     TextView tvTimer;
 
+    @Bind(R.id.cardview_topicname)
+    CardView topicCardView;
+    @Bind(R.id.topic_layout)
+    LinearLayout topicLayout;
+    @Bind(R.id.sptopic)
+    Spinner sptopic;
+
     private String audioPath = "";
     MediaPlayer mediaPlayer  = new MediaPlayer();
     public static final int REQUEST_LOAD_RECORD_AUDIO = 107;
@@ -275,10 +282,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private boolean isEdit = true;
     private String chapter_id;
     private List<SyllabusListMaster.Datum> chapterList;
+    private List<SyllabusListMaster.Datum> topicList;
     private String sharePath;
 
 
-       // leafManager.getSyllabusMaster(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
+
 
     private Handler mHandler = new Handler();
     Runnable myRunnable = new Runnable() {
@@ -710,7 +718,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     private void init() {
 
-
+        topicCardView.setVisibility(View.GONE);
+        topicLayout.setVisibility(View.VISIBLE);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
@@ -1322,8 +1331,10 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             case LeafManager.API_GET_SYLLABUS_MASTER:
                 SyllabusListMaster  res = (SyllabusListMaster) response;
                 chapterList = res.getData();
+                topicList=res.getData();
                 AppLog.e(TAG, "ChapterRes " + chapterList);
                 bindChapter();
+                bindtopic();
                 break;
 
             case LeafManager.API_CHAPTER_REMOVE:
@@ -1331,6 +1342,15 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                     finish();
                     break;
         }
+
+    }
+
+
+    private void bindtopic()
+    {
+
+
+
 
     }
 

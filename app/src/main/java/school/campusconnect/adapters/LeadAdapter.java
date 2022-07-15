@@ -190,8 +190,6 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
             holder.imgStartMeeting.setVisibility(View.GONE);
         }
 
-
-
     }
 
     private int dpToPx() {
