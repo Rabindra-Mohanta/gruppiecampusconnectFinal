@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.scopely:fontain:1.0.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8a6adaad4f54d4d6f52e9b6518deb5fa/jetified-fontain-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8a6adaad4f54d4d6f52e9b6518deb5fa/jetified-fontain-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8a6adaad4f54d4d6f52e9b6518deb5fa/jetified-fontain-1.0.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.scopely/fontain/1.0.0/b0658db5d5c995dd43164b36c425f6558002acbf/fontain-1.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.scopely/fontain/1.0.0/67d855eb2441fc44845328500c8a47f1b6b17a65/fontain-1.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

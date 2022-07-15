@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gruppiecampusconnectFinal.iml" filepath="$PROJECT_DIR$/.idea/modules/gruppiecampusconnectFinal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/gruppiecampusconnectFinal.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/commonlib2/gruppiecampusconnectFinal.commonlib2.iml" filepath="$PROJECT_DIR$/.idea/modules/commonlib2/gruppiecampusconnectFinal.commonlib2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobilertc2/gruppiecampusconnectFinal.mobilertc2.iml" filepath="$PROJECT_DIR$/.idea/modules/mobilertc2/gruppiecampusconnectFinal.mobilertc2.iml" />
+    </modules>
+  </component>
+</project>
