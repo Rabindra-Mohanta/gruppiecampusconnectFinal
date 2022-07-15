@@ -335,17 +335,8 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_enter_name),Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(etgender.getSelectedItem().toString().isEmpty())
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.hint_lead_gender),Toast.LENGTH_LONG).show();
-            return  false;
-        }
 
-        if (TextUtils.isEmpty(etprofession.getSelectedItem().toString()))
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_profession),Toast.LENGTH_SHORT).show();
-            return false;
-        }
+
 
         if (BuildConfig.AppCategory.equalsIgnoreCase("constituency"))
         {
@@ -355,7 +346,17 @@ public class SignUpActivity2 extends BaseActivity implements LeafManager.OnCommu
                 return false;
             }
 
+            if(etgender.getSelectedItem().toString().isEmpty())
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.hint_lead_gender),Toast.LENGTH_LONG).show();
+                return  false;
+            }
 
+            if (etprofession.getSelectedItem().toString().isEmpty())
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_select_profession),Toast.LENGTH_SHORT).show();
+                return false;
+            }
 
             if (TextUtils.isEmpty(etdob.getText().toString()))
             {
