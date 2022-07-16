@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_syllabus.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/fragment_syllabus_list.xml" value="0.16018518518518518" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/item_add_topic.xml" value="0.15989583333333332" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

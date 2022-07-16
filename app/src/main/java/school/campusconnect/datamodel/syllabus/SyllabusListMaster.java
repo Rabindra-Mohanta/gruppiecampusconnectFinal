@@ -6,53 +6,51 @@ package school.campusconnect.datamodel.syllabus;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 import school.campusconnect.datamodel.BaseResponse;
 
-public    class SyllabusListMaster extends BaseResponse {
+public   class SyllabusListMaster extends BaseResponse {
 
     @SerializedName("data")
     @Expose
-    private List<Datum> data = null;
+    private ArrayList<SyllabusData> syllabusData;
 
-    public List<Datum> getData() {
-        return data;
+    public ArrayList<SyllabusData> getSyllabusData() {
+        return syllabusData;
+
+
     }
 
-    public void setData(List<Datum> data) {
-        this.data = data;
+    public void setSyllabusData(ArrayList<SyllabusData> syllabusData) {
+        this.syllabusData = syllabusData;
     }
 
-    public class Datum {
+
+    public static class SyllabusData implements Serializable {
 
         @SerializedName("totalTopicsCount")
         @Expose
         private Integer totalTopicsCount;
         @SerializedName("topicsList")
         @Expose
-        private List<Topics> topicsList = null;
+        private ArrayList<SyllabusListModelRes.TopicData> TopicData;
+
         @SerializedName("chapterName")
         @Expose
         private String chapterName;
+
         @SerializedName("chapterId")
         @Expose
         private String chapterId;
 
-        public Integer getTotalTopicsCount() {
-            return totalTopicsCount;
+        public ArrayList<SyllabusListModelRes.TopicData> getTopicData() {
+            return TopicData;
         }
 
-        public void setTotalTopicsCount(Integer totalTopicsCount) {
-            this.totalTopicsCount = totalTopicsCount;
-        }
-
-        public List<Topics> getTopicsList() {
-            return topicsList;
-        }
-
-        public void setTopicsList(List<Topics> topicsList) {
-            this.topicsList = topicsList;
+        public void setTopicData(ArrayList<SyllabusListModelRes.TopicData> TopicData) {
+            this.TopicData = TopicData;
         }
 
         public String getChapterName() {
@@ -73,7 +71,7 @@ public    class SyllabusListMaster extends BaseResponse {
 
     }
 
-    public class Topics {
+    public static class TopicData implements Serializable {
 
         @SerializedName("topicName")
         @Expose
@@ -99,6 +97,7 @@ public    class SyllabusListMaster extends BaseResponse {
         }
 
     }
+
 
 
 }

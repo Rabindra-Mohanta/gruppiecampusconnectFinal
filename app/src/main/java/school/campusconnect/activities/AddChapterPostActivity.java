@@ -60,6 +60,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -79,6 +80,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,6 +97,9 @@ import school.campusconnect.datamodel.AddPostValidationError;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.syllabus.SyllabusListMaster;
+import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
+import school.campusconnect.datamodel.syllabus.SyllabusMasterTBL;
+import school.campusconnect.datamodel.syllabus.SyllabusTBL;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
@@ -282,8 +287,10 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private boolean isEdit = true;
     private String chapter_id;
     private String topic_id;
-    private List<SyllabusListMaster.Datum> chapterList;
-    private List<SyllabusListMaster.Datum> topicList;
+    private ArrayList<SyllabusListMaster.SyllabusData> chapterList=new ArrayList<SyllabusListMaster.SyllabusData>();
+    private ArrayList<SyllabusListModelRes.TopicData> topicList=new ArrayList<>();
+
+    ArrayList<SyllabusListMaster.SyllabusData> syllabusDataList = new ArrayList<SyllabusListMaster.SyllabusData>();
     private String sharePath;
 
 
@@ -1332,11 +1339,12 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
             case LeafManager.API_GET_SYLLABUS_MASTER:
                 SyllabusListMaster  res = (SyllabusListMaster) response;
-                chapterList = res.getData();
-                topicList=res.getData();
-                AppLog.e(TAG, "ChapterRes " + chapterList);
+
+                chapterList = res.getSyllabusData();
+                saveToLocally(res.getSyllabusData());
                 bindChapter();
-                bindtopic();
+           
+
                 break;
 
             case LeafManager.API_CHAPTER_REMOVE:
@@ -1351,33 +1359,28 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void bindtopic()
     {
 
-        if (topicList != null && topicList.size() > 0) {
+        List<SyllabusTBL> tblList = SyllabusTBL.getSyllabus(team_id,subject_id);
 
-            String[] strTopic = new String[topicList.size()];
-            for (int i=0;i<topicList.size();i++){
-                strTopic[i]=topicList.get(i).getTopicsList().get(i).getTopicName();
+        Log.e(TAG,"tblList "+tblList.size());
+
+        chapterList.clear();
+
+
+        if (tblList.size() > 0)
+        {
+
+
+            for (int i = 0;i<tblList.size();i++)
+            {
+                SyllabusListMaster.SyllabusData data = new SyllabusListMaster.SyllabusData();
+
+                data.setChapterName(tblList.get(i).chapterName);
+                data.setChapterId(tblList.get(i).chapterId);
+                data.setTopicData(new Gson().fromJson(tblList.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
+                chapterList.add(data);
             }
-
-            ArrayAdapter<String> topicAdapter=new ArrayAdapter<String>(this,R.layout.item_spinner,strTopic);
-            sptopic.setAdapter(topicAdapter);
-
-
-
-            sptopic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    topic_id=topicList.get(position).getTopicsList().get(position).getTopicId();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-
-
         }
+
 
 
     }
@@ -2276,6 +2279,30 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         } catch(RuntimeException stopException) {
             Log.e(TAG,"RuntimeException "+stopException.getMessage());
         }
+
+    }
+
+
+    private void saveToLocally(ArrayList<SyllabusListMaster.SyllabusData> syllabusData) {
+        syllabusDataList.clear();
+        //SyllabusMasterTBL.deleteAll();
+
+        if (syllabusData.size() > 0)
+        {
+            for (int i = 0;i<syllabusData.size();i++)
+            {
+                SyllabusTBL tbl = new SyllabusTBL();
+                tbl.teamID = team_id;
+                tbl.subjectID = subject_id;
+                tbl.chapterId = syllabusData.get(i).getChapterId();
+                tbl.chapterName = syllabusData.get(i).getChapterName();
+                tbl.topicsList = new Gson().toJson(syllabusData.get(i).getTopicData());
+                tbl.save();
+            }
+        }
+        syllabusDataList.addAll(syllabusData);
+        Collections.reverse(syllabusDataList);
+        bindtopic();
 
     }
 }

@@ -36,7 +36,13 @@ android {
                         buildConfigField("String", "AppCategory", '"CAMPUS"')
                         buildConfigField("String", "APP_ID",  '"school"')*/
 
-
+                        /* applicationId "gruppie.gc2"
+                         versionCode 1
+                         versionName "1.1"
+                         resValue "string", "app_name", '"GC2"'
+                         buildConfigField("String", "AppName", '"GC2"')
+                         buildConfigField("String", "AppCategory", '"CAMPUS"')
+                         buildConfigField("String", "APP_ID",  '"school"')*/
 
 
                         // [COPY]
@@ -75,13 +81,13 @@ android {
                              buildConfigField("String", "APP_ID",  '"school"')*/
 
                         // [1. Gruppie Campus constituency]
-                          applicationId "gcm.gruppie"
-                          versionCode 1
-                          versionName "1.0"
-                          resValue "string", "app_name", '"GCM"'
-                          buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
-                          buildConfigField("String", "AppCategory", '"constituency"')
-                          buildConfigField("String", "APP_ID",  '"constituency"')
+//                          applicationId "gcm.gruppie"
+//                          versionCode 1
+//                          versionName "1.0"
+//                          resValue "string", "app_name", '"GCM"'
+//                          buildConfigField("String", "AppName", '"Gruppie Constituency Management"')
+//                          buildConfigField("String", "AppCategory", '"constituency"')
+//                          buildConfigField("String", "APP_ID",  '"constituency"')
 
 /*
                             applicationId "sudhakar.gruppie"
@@ -292,7 +298,7 @@ android {
         debug
          {
 
-            buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV,St. Philomena's
+         //   buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV,St. Philomena's
     //      buildConfigField "String", "BASE_URL", '"https://gcc.gruppie.in/"' // SCHOOL APP
 
          //    buildConfigField "String", "BASE_URL", '"https://gccc2.gruppie.in"'//mahantesh
