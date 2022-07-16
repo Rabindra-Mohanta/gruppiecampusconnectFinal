@@ -69,6 +69,10 @@ public class ClassStudentActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_class_student, menu);
+
+
+
+        menu.findItem(R.id.menu_add_class_student).setVisible(false);
         menu.findItem(R.id.menu_print_student_list).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
