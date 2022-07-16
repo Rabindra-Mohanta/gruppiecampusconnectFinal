@@ -48,6 +48,7 @@ public class StaffActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_staff,menu);
+        menu.findItem(R.id.menu_add_staff).setVisible(false);
         menu.findItem(R.id.menu_print_staff_list).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
