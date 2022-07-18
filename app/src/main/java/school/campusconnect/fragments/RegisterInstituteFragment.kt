@@ -550,6 +550,7 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
 
         btnNext2.setOnClickListener { showStep3() }
         txt1.setOnClickListener {
+            logout()
             val intent: Intent = Intent(getActivity(), LoginActivity2::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -593,6 +594,8 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
             }
         }
     }
+
+
 
     private fun onRegistrationSuccess() {
 

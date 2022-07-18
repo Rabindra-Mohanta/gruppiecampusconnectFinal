@@ -74,13 +74,27 @@ public class ClassStudentActivity extends BaseActivity {
 
         menu.findItem(R.id.menu_add_class_student).setVisible(false);
         menu.findItem(R.id.menu_print_student_list).setVisible(true);
+        menu.findItem(R.id.menu_plus_friend).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add_class_student: {
+            case R.id.menu_add_friend: {
+
+                Intent intent = new Intent(this, AddClassStudentV2Activity.class);
+                intent.putExtra("group_id", mGroupId);
+                intent.putExtra("team_id", teamId);
+                startActivity(intent);
+
+               /* Intent intent = new Intent(this, AddClassStudentActivity.class);
+                intent.putExtra("group_id", mGroupId);
+                intent.putExtra("team_id", teamId);
+                startActivity(intent);*/
+                return true;
+            }
+            case R.id.menu_plus_friend: {
 
                 Intent intent = new Intent(this, AddClassStudentV2Activity.class);
                 intent.putExtra("group_id", mGroupId);
