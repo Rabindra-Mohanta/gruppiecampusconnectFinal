@@ -1,5 +1,6 @@
 package school.campusconnect.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,6 +57,7 @@ import school.campusconnect.Assymetric.SpacesItemDecoration;
 import school.campusconnect.Assymetric.Utils;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.chapter.ChapterRes;
+import school.campusconnect.fragments.ChapterListFragment;
 import school.campusconnect.utils.AmazoneAudioDownload;
 import school.campusconnect.utils.AmazoneDownload;
 import school.campusconnect.utils.AmazoneVideoDownload;
@@ -188,7 +190,7 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void onBindViewHolder(final ImageViewHolder holder, final int position) {
+    public void onBindViewHolder(final ImageViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final ChapterRes.TopicData item = list.get(position);
 
         holder.constThumb.setVisibility(View.GONE);
@@ -280,7 +282,6 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                 holder.imgPhoto.setVisibility(View.GONE);
                 holder.imgPlay.setVisibility(View.GONE);
                 holder.recyclerView.setVisibility(View.GONE);
-
                 if (AmazoneAudioDownload.isAudioDownloaded(item.fileName.get(0)))
                 {
                     holder.imgPlayAudio.setVisibility(View.VISIBLE);
@@ -589,17 +590,16 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
                       /*  if (!isStart)
                         {
                             isStart = true;
-
                         }*/
 
-                    //    Log.e(TAG,"media Player data"+mediaPlayer.getCurrentPosition()+"\n"+mediaPlayer.getDuration());
+                        //    Log.e(TAG,"media Player data"+mediaPlayer.getCurrentPosition()+"\n"+mediaPlayer.getDuration());
 
                     }
 
 
 
 
-                         }
+                }
                 catch(Exception e){e.printStackTrace();
                     Log.e(TAG,"Exception"+e.getMessage());}
             }
@@ -905,6 +905,10 @@ public class TopicPostAdapter extends RecyclerView.Adapter<TopicPostAdapter.Imag
             item = list.get(getLayoutPosition());
             switch (v.getId()) {
                 case R.id.iv_delete:
+                    if(ChapterListFragment.isPosition0)
+                    {
+                        txt_drop_delete.setVisibility(View.GONE);
+                    }
                     if (lin_drop.getVisibility() == View.VISIBLE)
                         lin_drop.setVisibility(View.GONE);
                     else

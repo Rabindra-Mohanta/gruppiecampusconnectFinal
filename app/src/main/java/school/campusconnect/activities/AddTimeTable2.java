@@ -279,10 +279,16 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                         return;
                     }
 
+
                     SubStaffTTReq request = new SubStaffTTReq(day, period,start_time_new,end_time_new);
                     start_time_new = "";
                     end_time_new = "";
                     AppLog.e(TAG, "request :" + request);
+
+                    if (subjStaffList.get(spSubject.getSelectedItemPosition()).getSubjectWithStaffId().isEmpty()){
+
+                    }
+
                     String subject_with_staff_id = subjStaffList.get(spSubject.getSelectedItemPosition()).getSubjectWithStaffId();
                     String staff_id = subjStaffList.get(spSubject.getSelectedItemPosition()).getSubjectWithStaffs().get(spStaff.getSelectedItemPosition()).getStaffId();
 
@@ -333,14 +339,19 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         boolean valid = true;
         if (!isValueValid(et_period)) {
             valid = false;
-        }
-        else if (etTimeAddNew.getText().toString().isEmpty()) {
-            Toast.makeText(this, getResources().getString(R.string.toast_select_start_and_date), Toast.LENGTH_SHORT).show();
-            valid = false;
-        }else if (subjStaffList == null) {
+        } else if (subjStaffList == null) {
             Toast.makeText(this, getResources().getString(R.string.toast_select_subject_and_staff), Toast.LENGTH_SHORT).show();
             valid = false;
+        }else if (subjStaffList.isEmpty()) {
+            Toast.makeText(this, "Please Register Subject and Staff", Toast.LENGTH_SHORT).show();
+            valid = false;
         }
+
+        /*else if (etTimeAddNew.getText().toString().isEmpty()) {
+            Toast.makeText(this, getResources().getString(R.string.toast_select_start_and_date), Toast.LENGTH_SHORT).show();
+            valid = false;
+        }*/
+
 
         return valid;
     }
@@ -471,8 +482,13 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         public void onBindViewHolder(final SessionAdapter.ViewHolder holder, final int position) {
             final TimeTableList2Response.SessionsTimeTable item = list.get(position);
             holder.et_period.setText(item.getPeriod());
+            if(item.getStartTime() == null || item.getStartTime().isEmpty()){
+                holder.et_time.setText("N/A"+getResources().getString(R.string.txt_to)+"N/A");
+            }else {
+                holder.et_time.setText(item.getStartTime()+getResources().getString(R.string.txt_to)+item.getEndTime());
+            }
 
-            holder.et_time.setText(item.getStartTime()+getResources().getString(R.string.txt_to)+item.getEndTime());
+
 
             holder.et_subject.setText(item.getSubjectName());
 
@@ -710,7 +726,13 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         et_period_dialog.setEnabled(false);
 
         et_time = dialog.findViewById(R.id.et_time);
-        et_time.setText(item.getStartTime()+getResources().getString(R.string.txt_to)+item.getEndTime());
+
+        if(item.getStartTime() == null || item.getStartTime().isEmpty()){
+           et_time.setText("N/A"+getResources().getString(R.string.txt_to)+"N/A");
+        }else {
+            et_time.setText(item.getStartTime()+getResources().getString(R.string.txt_to)+item.getEndTime());
+        }
+        
 
         spSubject_dialog = dialog.findViewById(R.id.spSubject);
         spStaff_dialog = dialog.findViewById(R.id.spStaff);
@@ -781,11 +803,11 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
                     return;
                 }*/
 
-                if (et_time.getText().toString().isEmpty())
+              /*  if (et_time.getText().toString().isEmpty())
                 {
                     Toast.makeText(AddTimeTable2.this, getResources().getString(R.string.toast_select_start_and_date), Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
 
                 if(spSubject_dialog.getSelectedItemPosition()==-1 || spStaff_dialog.getSelectedItemPosition()==-1){
                     Toast.makeText(AddTimeTable2.this, getResources().getString(R.string.toast_select_subject_and_staff), Toast.LENGTH_SHORT).show();
@@ -815,6 +837,7 @@ public class AddTimeTable2 extends BaseActivity implements LeafManager.OnAddUpda
         subStaffTTReq.setPeriod(item.getPeriod());
         subStaffTTReq.setStartTime(start_time);
         subStaffTTReq.setEndTime(end_time);
+
 
         getSubjectStaff(subStaffTTReq);
     }

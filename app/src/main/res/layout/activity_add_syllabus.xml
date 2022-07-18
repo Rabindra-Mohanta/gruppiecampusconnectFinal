@@ -165,7 +165,7 @@
                                         android:id="@+id/spTopic"
                                         style="@style/RegEditText"
                                         android:layout_width="match_parent"
-                                        android:layout_height="@dimen/login_button_height" />
+                                        android:layout_height="36dp" />
 
                                     <ImageView
                                         android:layout_width="25dp"

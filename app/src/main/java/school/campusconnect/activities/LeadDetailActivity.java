@@ -210,11 +210,11 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         mGroupId = GroupDashboardActivityNew.groupId;
         if (isAdmin) {
             binding.switchAllowPost.setVisibility(View.VISIBLE);
-            binding.switchAllowAddUser.setVisibility(View.VISIBLE);
+          //  binding.switchAllowAddUser.setVisibility(View.VISIBLE);
             binding.switchAllowComment.setVisibility(View.VISIBLE);
         } else {
             binding.switchAllowPost.setVisibility(View.GONE);
-            binding.switchAllowAddUser.setVisibility(View.GONE);
+           // binding.switchAllowAddUser.setVisibility(View.GONE);
             binding.switchAllowComment.setVisibility(View.GONE);
         }
 

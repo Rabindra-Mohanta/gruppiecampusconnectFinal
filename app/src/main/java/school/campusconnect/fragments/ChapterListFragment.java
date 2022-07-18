@@ -18,6 +18,7 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -72,6 +73,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     @Bind(R.id.spChapter)
     public Spinner spChapter;
+
+    public static boolean isPosition0=false;
 
 
     String team_id;
@@ -149,8 +152,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     public void getChapters(boolean isLoading) {
         if (isLoading)
-            showLoadingBar(progressBar,true);
-           // progressBar.setVisibility(View.VISIBLE);
+           // showLoadingBar(progressBar,true);
+         progressBar.setVisibility(View.VISIBLE);
         LeafManager leafManager = new LeafManager();
         leafManager.getChapterList(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
     }
@@ -181,8 +184,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
-       // progressBar.setVisibility(View.GONE);
+      //  hideLoadingBar();
+         progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_CHAPTER_REMOVE:
                /* chapterList.remove(spChapter.getSelectedItemPosition());
@@ -216,7 +219,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     }
 
     private void updateDb() {
-            ChapterTBL.update(chapterList.get(spChapter.getSelectedItemPosition()).chapterId,new Gson().toJson(chapterList.get(spChapter.getSelectedItemPosition()).topicList));
+        ChapterTBL.update(chapterList.get(spChapter.getSelectedItemPosition()).chapterId,new Gson().toJson(chapterList.get(spChapter.getSelectedItemPosition()).topicList));
     }
 
     private void saveToDB(ArrayList<ChapterRes.ChapterData> result) {
@@ -261,6 +264,7 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     AppLog.e(TAG, "onItemSelected : " + position);
+                         progressBar.setVisibility(View.VISIBLE);
                     setData(position);
                 }
 
@@ -281,31 +285,45 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
 
     private void setData(int position) {
         if (position == 0) {
+                progressBar.setVisibility(View.GONE);
+            isPosition0=true;
             adapter = new TopicPostAdapter(allTopics, this, canPost);
             rvClass.setAdapter(adapter);
+
+            if (allTopics != null && allTopics.size() > 0) {
+                txtEmpty.setVisibility(View.GONE);
+            } else {
+                txtEmpty.setVisibility(View.VISIBLE);
+            }
         } else {
+            progressBar.setVisibility(View.GONE);
+            isPosition0=false;
             ArrayList<ChapterRes.TopicData> topicList = chapterList.get(position-1).topicList;
             adapter = new TopicPostAdapter(topicList, this, canPost);
             rvClass.setAdapter(adapter);
+
 
             if (topicList != null && topicList.size() > 0) {
                 txtEmpty.setVisibility(View.GONE);
             } else {
                 txtEmpty.setVisibility(View.VISIBLE);
             }
+
         }
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
-        hideLoadingBar();
-        // progressBar.setVisibility(View.GONE);
+        //  hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(getContext(),"something went wrong try again",Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onException(int apiId, String msg) {
-        hideLoadingBar();
-        // progressBar.setVisibility(View.GONE);
+        //  hideLoadingBar();
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(getContext(),"something went wrong try again",Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -322,8 +340,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (isConnectionAvailable()) {
-                        showLoadingBar(progressBar);
-                     //   progressBar.setVisibility(View.VISIBLE);
+                       // showLoadingBar(progressBar);
+                         progressBar.setVisibility(View.VISIBLE);
                         LeafManager manager = new LeafManager();
                         manager.topicCompleteStatus(ChapterListFragment.this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, item.topicId);
                     } else {
@@ -342,8 +360,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             });
         } else {
             if (isConnectionAvailable()) {
-                showLoadingBar(progressBar);
-                //   progressBar.setVisibility(View.VISIBLE);
+               // showLoadingBar(progressBar);
+                progressBar.setVisibility(View.VISIBLE);
                 LeafManager manager = new LeafManager();
 
                 Log.e(TAG,"chapterList Size"+chapterList.size());
@@ -394,8 +412,8 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isConnectionAvailable()) {
-                    showLoadingBar(progressBar);
-                    //   progressBar.setVisibility(View.VISIBLE);
+                    // showLoadingBar(progressBar);
+                    progressBar.setVisibility(View.VISIBLE);
                     LeafManager manager = new LeafManager();
 
                     if (chapterList.size() != 0)
@@ -443,10 +461,18 @@ public class ChapterListFragment extends BaseFragment implements LeafManager.OnC
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (isConnectionAvailable()) {
-            showLoadingBar(progressBar);
-            //   progressBar.setVisibility(View.VISIBLE);
+            // showLoadingBar(progressBar);
+            progressBar.setVisibility(View.VISIBLE);
             LeafManager manager = new LeafManager();
-            manager.deleteTopic(this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()).chapterId, currentItem.topicId);
+            if(spChapter.getSelectedItemPosition()==0)
+            {
+
+            }
+            else
+            {
+                manager.deleteTopic(this, GroupDashboardActivityNew.groupId, team_id, subject_id, chapterList.get(spChapter.getSelectedItemPosition()-1).chapterId, currentItem.topicId);
+            }
+
 
         } else {
             showNoNetworkMsg();

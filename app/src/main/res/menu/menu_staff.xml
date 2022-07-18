@@ -8,6 +8,13 @@
         android:icon="@drawable/icon_search"
         android:title="@string/hint_search_group"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_plus_friend"
+        android:icon="@drawable/addfriends"
+        android:title="@string/menu_add_friend"
+        app:showAsAction="always"
+        android:visible="false"
+        />
     <item android:id="@+id/menu_print_staff_list"
         android:visible="false"
         android:title="@string/menu_print_staff"/>
