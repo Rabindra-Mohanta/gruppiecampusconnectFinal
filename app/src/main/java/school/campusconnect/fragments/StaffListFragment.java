@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -346,6 +347,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
                 if(list.size()==0)
                 {
 
+
                     txtEmpty.setText(getResources().getString(R.string.txt_no_staff_found));
                 }
                 else {
@@ -356,6 +358,7 @@ public class StaffListFragment extends BaseFragment implements LeafManager.OnCom
             }
             else
             {
+
                 txtEmpty.setText(getResources().getString(R.string.txt_no_staff_found));
                 return 0;
             }
