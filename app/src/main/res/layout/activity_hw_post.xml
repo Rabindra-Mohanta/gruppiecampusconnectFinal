@@ -44,16 +44,7 @@
             android:paddingTop="@dimen/padding_10dp"
             android:paddingLeft="@dimen/padding_10dp"
             android:paddingRight="@dimen/padding_10dp">
-            <TextView
-                android:id="@+id/tvLabelTitle"
-                android:layout_width="match_parent"
-                style="@style/LabelHeader1"
-                android:paddingStart="@dimen/padding_5dp"
-                android:layout_marginTop="@dimen/padding_10dp"
-                android:text="@string/lbl_topic_name"
-                android:visibility="visible"
-                android:textColor="@color/colorPrimary"
-                android:layout_height="wrap_content" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,27 +52,77 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardChapterName"
+                <TextView
+                    android:id="@+id/tvLabelTitle"
                     android:layout_width="match_parent"
-                    app:cardElevation="4dp"
-                    android:layout_margin="@dimen/padding_5dp"
-                    app:cardCornerRadius="@dimen/padding_5dp"
+                    style="@style/LabelHeader1"
+                    android:paddingStart="@dimen/padding_5dp"
+                    android:layout_marginTop="@dimen/padding_10dp"
+                    android:text="@string/lbl_chapter_name"
                     android:visibility="visible"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/et_title"
-                        style="@style/CommentEditText"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:layout_marginStart="@dimen/padding_5dp"
+                    android:layout_marginEnd="@dimen/padding_5dp"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_weight="0.3"
+                        android:id="@+id/llTop"
                         android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:layout_margin="@dimen/padding_5dp"
-                        android:background="@null"
-                        android:gravity="start|center"
-                        android:inputType="textMultiLine|textCapSentences"
-                        android:maxLength="200"
-                        android:scrollbars="vertical"
-                        android:visibility="visible" />
-                </androidx.cardview.widget.CardView>
+                        android:visibility="visible"
+                        android:layout_height="wrap_content">
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:visibility="gone"
+                                android:id="@+id/spChaptertxt"
+                                style="@style/RegEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/login_button_height" />
+
+                            <Spinner
+                                android:id="@+id/spChapter"
+                                style="@style/RegEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/login_button_height" />
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:src="@drawable/icon_down_white"
+                                android:layout_marginEnd="@dimen/padding_10dp"
+                                android:layout_gravity="right|center"
+                                android:layout_height="25dp"/>
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_weight="1.7"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_marginLeft="@dimen/padding_5dp"
+                            android:id="@+id/imgAddChapter"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="@dimen/padding_5dp"
+                            android:scaleType="centerCrop"
+                            android:background="@drawable/round_primary_bg"
+                            android:src="@drawable/ic_vector_add"
+                            />
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"

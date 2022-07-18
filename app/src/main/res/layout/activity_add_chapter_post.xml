@@ -21,16 +21,16 @@
             <include layout="@layout/layout_toolbar_home_back" />
 
             <Button
-                android:layout_alignParentRight="true"
                 android:id="@+id/btnShare"
                 android:layout_width="wrap_content"
-               android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/padding_40dp"
                 android:background="@android:color/transparent"
                 android:text="@string/lbl_share"
-                android:layout_marginRight="@dimen/padding_40dp"
                 android:textAllCaps="false"
-                android:textStyle="bold"
-                android:layout_height="wrap_content" />
+                android:textStyle="bold" />
         </RelativeLayout>
 
 
@@ -77,6 +77,13 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content">
+
+                        <EditText
+                            android:visibility="gone"
+                            android:id="@+id/spChaptertxt"
+                            style="@style/RegEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/login_button_height" />
 
                         <Spinner
                             android:id="@+id/spChapter"
@@ -175,7 +182,16 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content">
 
+
+                            <EditText
+                                android:visibility="gone"
+                                android:id="@+id/sptopictxt"
+                                style="@style/RegEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/login_button_height" />
+
                             <Spinner
+
                                 android:id="@+id/sptopic"
                                 style="@style/RegEditText"
                                 android:layout_width="match_parent"

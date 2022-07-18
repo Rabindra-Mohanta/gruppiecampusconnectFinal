@@ -48,7 +48,9 @@ public class StaffActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_staff,menu);
+        menu.findItem(R.id.menu_add_staff).setVisible(false);
         menu.findItem(R.id.menu_print_staff_list).setVisible(true);
+        menu.findItem(R.id.menu_plus_friend).setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -59,6 +61,11 @@ public class StaffActivity extends BaseActivity {
                 Intent intent = new Intent(this, AddStaffV2Activity.class);
                 intent.putExtra("group_id",GroupDashboardActivityNew.groupId);
                 startActivity(intent);
+                return true;
+            case R.id.menu_plus_friend:
+                Intent intent1 = new Intent(this, AddStaffV2Activity.class);
+                intent1.putExtra("group_id",GroupDashboardActivityNew.groupId);
+                startActivity(intent1);
                 return true;
             case R.id.menu_search:
                 ((StaffListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).showHideSearch();

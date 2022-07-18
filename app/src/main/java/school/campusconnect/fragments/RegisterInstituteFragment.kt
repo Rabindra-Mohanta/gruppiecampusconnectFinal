@@ -129,9 +129,10 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
 
     lateinit var ivStep3: ImageView
     lateinit var tvStep3: TextView
+    lateinit var txt1: TextView
     lateinit var clStep3: ConstraintLayout
     lateinit var btnNext3: Button
-    lateinit var btnNext4: Button
+
 
     lateinit var etName: TextInputEditText
     lateinit var tilName: TextInputLayout
@@ -159,7 +160,7 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         tvStep3 = view.findViewById(R.id.tvStep3)
         clStep3 = view.findViewById(R.id.clStep3)
         btnNext3 = view.findViewById(R.id.btnNext3)
-        btnNext4 = view.findViewById(R.id.btnNext4)
+        txt1 = view.findViewById(R.id.txt1)
 
         etName = view.findViewById(R.id.etName)
         tilName = view.findViewById(R.id.tilName)
@@ -248,6 +249,10 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         clStep1.visibility = View.GONE
         clStep2.visibility = View.GONE
         clStep3.visibility = View.VISIBLE
+
+        if(selectedUniversity.equals(null)){
+            selectedUniversity = mListUniversities[0].name
+        }
 
         activity?.let {
             tvStep3.setTextColor(resources.getColor(R.color.colorPrimary))
@@ -387,7 +392,9 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         rvUniversities.adapter = RegisterUniversityAdapter(mListUniversities, object :
                 RegisterCallback {
             override fun onUniversityClicked(universityName: String) {
-                selectedUniversity = universityName
+
+                    selectedUniversity = universityName
+
                 showStep3()
                 Toast.makeText(requireActivity(), "$selectedUniversity selected", Toast.LENGTH_SHORT).show()
             }
@@ -542,7 +549,8 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         ivStep1.setOnClickListener { showStep1() }
 
         btnNext2.setOnClickListener { showStep3() }
-        btnNext4.setOnClickListener {
+        txt1.setOnClickListener {
+            logout()
             val intent: Intent = Intent(getActivity(), LoginActivity2::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -551,16 +559,15 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         ivStep2.setOnClickListener { if (clStep2.visibility == View.VISIBLE || clStep3.visibility == View.VISIBLE) showStep2() }
 
         btnNext3.setOnClickListener {
+
             classSections.clear()
             val keys = sectionsMap.keys
             for (key in keys) {
                 classSections[key] = sectionsMap[key] ?: 0
             }
-
             selectedCategory?.let { category ->
                 selectedBoard?.let { board ->
                     selectedUniversity?.let { university ->
-
                         val sections = ArrayList<ClassInputData>()
                         for (name in classSections.keys) {
                             val noOfSections = classSections[name]
@@ -580,12 +587,15 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
                         apiDoRegister(
                                 LeafPreference.getInstance(requireActivity()).getString(LeafPreference.LOGIN_ID),
                                 registerRequest
+
                         )
                     }
                 }
             }
         }
     }
+
+
 
     private fun onRegistrationSuccess() {
 

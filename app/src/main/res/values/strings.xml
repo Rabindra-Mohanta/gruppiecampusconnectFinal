@@ -1172,7 +1172,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_no_booth_found">No Booths found</string><!--No Booths found-->
     <string name="txt_no_voter_found">No Voters found</string><!--No Voters found-->
     <string name="txt_no_subject_found">No Subject found</string><!--No Subject found-->
-    <string name="txt_no_staff_found">No Staff founzd</string><!--No Staff founzd-->
+    <string name="txt_no_staff_found">No Staff found</string><!--No Staff founzd-->
     <string name="txt_no_student_found">No Data Found</string><!--No Student found.-->
     <string name="txt_no_post_found">No Post found</string><!--No Post found.-->
     <string name="txt_no_worker_found">No Workers found</string><!--No Workers found.-->

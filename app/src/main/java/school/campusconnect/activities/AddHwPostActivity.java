@@ -22,6 +22,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -34,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -98,6 +100,7 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.chapter.ChapterRes;
 import school.campusconnect.datamodel.homework.AddHwPostRequest;
+import school.campusconnect.datamodel.syllabus.SyllabusListMaster;
 import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
@@ -119,8 +122,8 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
     @Bind(R.id.toolbar)
     Toolbar mToolBar;
 
-    @Bind(R.id.et_title)
-    EditText edtTitle;
+    @Bind(R.id.spChapter)
+    Spinner spChapter;
 
     @Bind(R.id.et_description)
     EditText edtDesc;
@@ -169,6 +172,8 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Bind(R.id.et_time)
     EditText et_time;
+    @Bind(R.id.spChaptertxt)
+    EditText spChaptertxt;
 
     @Bind(R.id.cardDate)
     CardView cardDate;
@@ -187,6 +192,8 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
     @Bind(R.id.imgHome)
     public ImageView imgHome;
+    @Bind(R.id.imgAddChapter)
+    public ImageView imgAddChapter;
 
     TextView btn_ok;
     TextView btn_cancel;
@@ -204,6 +211,8 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
     public Uri imageCaptureFile;
 
+    public boolean  isChapterEditClicked=false;
+
 
     public static final int REQUEST_LOAD_CAMERA_IMAGE = 101;
     public static final int REQUEST_LOAD_GALLERY_IMAGE = 102;
@@ -217,6 +226,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
     private Boolean isClear = true;
 
     LeafManager manager = new LeafManager();
+    AlertDialog alertDialog;
 
     ArrayList<String> listAmazonS3Url = new ArrayList<>();
     ArrayList<String> listImages = new ArrayList<>();
@@ -228,6 +238,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
     private String receiverToken = "";
     private String receiverDeviceType = "";
     private ProgressDialog progressDialog;
+    private ArrayList<SyllabusListMaster.SyllabusData> chapterList=new ArrayList<SyllabusListMaster.SyllabusData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,6 +247,7 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         ButterKnife.bind(this);
 
         init();
+        getChapters();
 
         setListener();
 
@@ -263,15 +275,25 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         }
     }
 
+    private void getChapters() {
+
+        showLoadingBar(progressBar,false);
+        //  progressBar.setVisibility(View.VISIBLE);
+        LeafManager leafManager = new LeafManager();
+        leafManager.getSyllabusMaster(this, GroupDashboardActivityNew.groupId, team_id, subject_id);
+    }
+
     private void setListener() {
         llImage.setOnClickListener(this);
         llVideo.setOnClickListener(this);
         llYoutubeLink.setOnClickListener(this);
         llDoc.setOnClickListener(this);
         btnShare.setOnClickListener(this);
+        imgAddChapter.setOnClickListener(this);
+
         //btnShare.setEnabled(false);
 
-        edtTitle.addTextChangedListener(new TextWatcher() {
+        spChaptertxt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -403,6 +425,11 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
         rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new UploadImageAdapter(listImages, this);
         rvImages.setAdapter(imageAdapter);
+
+
+
+
+
     }
 
 
@@ -426,7 +453,16 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
 
                 mainRequest = new AddHwPostRequest();
 
-                mainRequest.title = edtTitle.getText().toString();
+                if(isChapterEditClicked)
+                {
+                    mainRequest.title = spChaptertxt.getText().toString();
+                }
+                else
+                {
+                    mainRequest.title = spChapter.getSelectedItem().toString();
+                }
+
+
                 mainRequest.text = edtDesc.getText().toString();
                 mainRequest.lastSubmissionDate = et_date.getText().toString();
                 mainRequest.lastSubmissionTime = et_date.getText().toString();
@@ -793,16 +829,12 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
     public boolean isValid(boolean showToast) {
         boolean valid = true;
 
-        Log.e("edtDesc : ", edtTitle.getText().toString());
+        Log.e("edtDesc : ", spChaptertxt.getText().toString());
         Log.e("videoUrl : ", videoUrl);
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
 
-        if (!isValueValidOnly(edtTitle)) {
-            if (showToast)
-                Toast.makeText(this, getResources().getString(R.string.toast_enter_topic_name), Toast.LENGTH_SHORT).show();
-            return false;
-        }
+
       /*  if (!isValueValidOnly(edtDesc)) {
             if (showToast)
                 Toast.makeText(this, "Please Enter Description", Toast.LENGTH_SHORT).show();
@@ -835,6 +867,57 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
             case R.id.btnShare:
                     addPost();
                 break;
+
+            case R.id.imgAddChapter:
+
+                AlertDialog.Builder builder=new AlertDialog.Builder(this);
+
+                View root=getLayoutInflater().inflate(R.layout.dialog_enter_chapter,null);
+                builder.setView(root);
+                builder.setCancelable(false);
+                ImageView cancelBtn=root.findViewById(R.id.btnCancel);
+                Button btnSubmit=root.findViewById(R.id.btnSubmit);
+                EditText etName=root.findViewById(R.id.etName);
+                alertDialog=builder.create();
+
+                alertDialog.show();
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+
+
+                        alertDialog.dismiss();
+
+                    }
+                });
+                btnSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(etName.getText().toString().isEmpty())
+                        {
+                            etName.setError("Enter the chapter Name");
+                        }
+
+                        else
+                        {
+                            spChapter.setVisibility(View.GONE);
+                            spChaptertxt.setVisibility(View.VISIBLE);
+                            String strName=etName.getText().toString();
+                            spChaptertxt.setText(strName);
+                            isChapterEditClicked=true;
+
+
+
+                            alertDialog.dismiss();
+
+                        }
+
+                    }
+                });
+
+break;
 
             case R.id.llImage:
                 if (checkPermissionForWriteExternal()) {
@@ -890,6 +973,13 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
             hideLoadingBar();
         //       progressBar.setVisibility(View.GONE);
         switch (apiId) {
+            case LeafManager.API_GET_SYLLABUS_MASTER:
+                SyllabusListMaster res = (SyllabusListMaster) response;
+
+                chapterList = res.getSyllabusData();
+
+                bindChapter();
+                break;
 
             case LeafManager.API_HW_ADD:
                 Toast.makeText(AddHwPostActivity.this, getResources().getString(R.string.toast_successfully_posted), Toast.LENGTH_SHORT).show();
@@ -941,6 +1031,39 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
             hideLoadingBar();
         //       progressBar.setVisibility(View.GONE);
         Toast.makeText(AddHwPostActivity.this, error, Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void bindChapter() {
+
+        if (chapterList != null && chapterList.size() > 0) {
+
+            String[] strChapter = new String[chapterList.size()];
+            for (int i=0;i<chapterList.size();i++){
+                strChapter[i]=chapterList.get(i).getChapterName();
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner,strChapter);
+            spChapter.setAdapter(adapter);
+
+            spChapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    AppLog.e(TAG, "onItemSelected : " + position);
+
+//                    chapter_id = chapterList.get(position).getChapterId();
+//                    topicList=chapterList.get(position).getTopicData();
+
+
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
 
     }
 
@@ -1320,15 +1443,20 @@ public class AddHwPostActivity extends BaseActivity implements LeafManager.OnAdd
             @Override
             public void onClick(View v) {
 
-                if (!isValueValid(edtTitle)) {
-                    dialog.dismiss();
-                    return;
-                }
+
                 if (!isValueValid(edtDesc)) {
                     dialog.dismiss();
                     return;
                 }
-                GroupDashboardActivityNew.enteredTitle = edtTitle.getText().toString();
+                if(isChapterEditClicked)
+                {
+                    GroupDashboardActivityNew.enteredTitle = spChaptertxt.getText().toString();
+                }
+                else
+                {
+                    GroupDashboardActivityNew.enteredTitle = spChapter.getSelectedItem().toString();
+                }
+
                 GroupDashboardActivityNew.enteredDesc = edtDesc.getText().toString();
 
                 startActivity(new Intent(AddHwPostActivity.this, MainActivity.class));
