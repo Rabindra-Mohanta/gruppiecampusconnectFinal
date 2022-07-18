@@ -32,18 +32,18 @@ public   class SyllabusListMaster extends BaseResponse {
 
         @SerializedName("totalTopicsCount")
         @Expose
-        private Integer totalTopicsCount;
+        public Integer totalTopicsCount;
         @SerializedName("topicsList")
         @Expose
-        private ArrayList<SyllabusListModelRes.TopicData> TopicData;
+        public ArrayList<SyllabusListModelRes.TopicData> TopicData;
 
         @SerializedName("chapterName")
         @Expose
-        private String chapterName;
+        public String chapterName;
 
         @SerializedName("chapterId")
         @Expose
-        private String chapterId;
+        public String chapterId;
 
         public ArrayList<SyllabusListModelRes.TopicData> getTopicData() {
             return TopicData;
@@ -75,10 +75,10 @@ public   class SyllabusListMaster extends BaseResponse {
 
         @SerializedName("topicName")
         @Expose
-        private String topicName;
+        public String topicName;
         @SerializedName("topicId")
         @Expose
-        private String topicId;
+        public String topicId;
 
         public String getTopicName() {
             return topicName;

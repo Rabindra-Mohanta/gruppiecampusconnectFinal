@@ -3,9 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_chapter_post.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_post.xml" value="0.15677083333333333" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_syllabus.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_hw_post.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/dialog_enter_chapter.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/dialog_enter_topic.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/fragment_chapter_list.xml" value="0.17135416666666667" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/fragment_syllabus_list.xml" value="0.16018518518518518" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/item_add_topic.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/item_topic_post.xml" value="0.17552083333333332" />
       </map>
     </option>
   </component>

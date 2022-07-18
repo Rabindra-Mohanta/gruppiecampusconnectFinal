@@ -60,7 +60,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.mobileconnectors.s3.transferutility.UploadOptions;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -80,8 +79,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,8 +95,6 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ErrorResponseModel;
 import school.campusconnect.datamodel.syllabus.SyllabusListMaster;
 import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
-import school.campusconnect.datamodel.syllabus.SyllabusMasterTBL;
-import school.campusconnect.datamodel.syllabus.SyllabusTBL;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AmazoneHelper;
 import school.campusconnect.utils.AppLog;
@@ -122,11 +117,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.toolbar)
     Toolbar mToolBar;
 
-    @Bind(R.id.et_title)
-    EditText edtTitle;
 
-    @Bind(R.id.et_description)
-    EditText edtDesc;
+
 
     @Bind(R.id.llImage)
     LinearLayout llImage;
@@ -145,6 +137,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Bind(R.id.imgAddChapter)
     ImageView imgAddChapter;
+
+    @Bind(R.id.imgAddTopic)
+    ImageView imgAddTopic;
 
     @Bind(R.id.img_youtube)
     ImageView img_youtube;
@@ -176,8 +171,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     @Bind(R.id.spChapter)
     Spinner spChapter;
 
-    @Bind(R.id.cardChapterName)
-    CardView cardChapterName;
+
 
     @Bind(R.id.llTop)
     LinearLayout llTop;
@@ -229,10 +223,25 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
     @Bind(R.id.cardview_topicname)
     CardView topicCardView;
+
     @Bind(R.id.topic_layout)
     LinearLayout topicLayout;
+
     @Bind(R.id.sptopic)
     Spinner sptopic;
+
+    @Bind(R.id.spChaptertxt)
+    EditText spChaptertxt;
+
+
+    @Bind(R.id.sptopictxt)
+    EditText sptopictxt;
+
+    public Boolean isChapterEditClicked=false;
+    public Boolean isTopicEditClicked=false;
+
+
+    AlertDialog alertDialog;
 
     private String audioPath = "";
     MediaPlayer mediaPlayer  = new MediaPlayer();
@@ -487,6 +496,9 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         btnCancel.setOnClickListener(this);
         imgAddChapter.setOnClickListener(this);
 
+        imgAddTopic.setOnClickListener(this);
+
+
         //btnShare.setEnabled(false);
 
         if (checkPermissionForWriteExternal()) {
@@ -506,7 +518,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
         }
 
 
-        edtTitle.addTextChangedListener(new TextWatcher() {
+        spChaptertxt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -522,7 +534,7 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
             }
         });
-        edtDesc.addTextChangedListener(new TextWatcher() {
+        sptopictxt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -811,10 +823,25 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 btnShare.setEnabled(false);
                 btnShare.setTextColor(getResources().getColor(R.color.grey));
                 mainRequest = new AddGalleryPostRequest();
+                if(isChapterEditClicked)
+                {
+                    mainRequest.albumName = spChaptertxt.getText().toString();
+                }
+                else
+                {
+                    mainRequest.albumName = spChapter.getSelectedItem().toString();
+                }
 
-                mainRequest.albumName = edtTitle.getText().toString();
-               // mainRequest.topicName = edtDesc.getText().toString();
-                mainRequest.topicName = sptopic.getSelectedItem().toString();
+                // mainRequest.topicName = edtDesc.getText().toString();
+                if(isTopicEditClicked)
+                {
+                    mainRequest.topicName=sptopictxt.getText().toString();
+                }
+                else
+                {
+                    mainRequest.topicName = sptopic.getSelectedItem().toString();
+                }
+
 
                 if (!TextUtils.isEmpty(videoUrl)) {
                     mainRequest.video = videoUrl;
@@ -830,6 +857,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
 
                         manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
                     } else {
+
+
                         manager.addChapterPost(this, group_id, team_id, subject_id, mainRequest);
                     }
 
@@ -1106,10 +1135,12 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 progressDialog.dismiss();
             }
             mainRequest.fileName = listAmazonS3Url;
-            AppLog.e(TAG, "send data : " + new Gson().toJson(mainRequest));
+
             if (isEdit) {
+                AppLog.d(TAG, "send data : " + new Gson().toJson(mainRequest));
                 manager.addChapterTopicPost(this, group_id, team_id, subject_id, chapter_id, mainRequest);
             } else {
+                AppLog.d(TAG, "send data1 : " + new Gson().toJson(mainRequest));
                 manager.addChapterPost(this, group_id, team_id, subject_id, mainRequest);
             }
 
@@ -1197,20 +1228,13 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     public boolean isValid(boolean showToast) {
         boolean valid = true;
 
-        Log.e("edtDesc : ", edtTitle.getText().toString());
+        Log.e("edtDesc : ", spChaptertxt.getText().toString());
         Log.e("videoUrl : ", videoUrl);
         Log.e("audioUrl : ", audioPath);
         Log.e("image paths : ", listImages.toString());
         Log.e("videoType : ", fileTypeImageOrVideo + "");
 
-        if (cardChapterName.getVisibility() == View.VISIBLE)
-        {
-            if (!isValueValidOnly(edtTitle)) {
-                if (showToast)
-                    Toast.makeText(this, getResources().getString(R.string.toast_enter_chapter_name), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
+
 
 //        if (!isValueValidOnly(edtDesc)) {
 //            if (showToast)
@@ -1242,13 +1266,106 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 addPost();
                 break;
 
+            case R.id.imgAddTopic:
+                AlertDialog.Builder builder1=new AlertDialog.Builder(this);
+                View root1=getLayoutInflater().inflate(R.layout.dialog_enter_topic,null);
+                builder1.setView(root1);
+                builder1.setCancelable(false);
+                ImageView cancelBtn1=root1.findViewById(R.id.btnCancel);
+                Button btnSubmit1=root1.findViewById(R.id.btnSubmit);
+                EditText etName1=root1.findViewById(R.id.etName);
+
+                alertDialog=builder1.create();
+
+                alertDialog.show();
+
+
+                cancelBtn1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                btnSubmit1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(etName1.getText().toString().isEmpty())
+                        {
+                            etName1.setError("Add Topic Name");
+                        }
+                        else
+                        {
+                            String strTopic=etName1.getText().toString();
+                            sptopic.setVisibility(View.GONE);
+                            sptopictxt.setVisibility(View.VISIBLE);
+                            sptopictxt.setText(strTopic);
+                            isTopicEditClicked=true;
+
+                            alertDialog.dismiss();
+
+                        }
+
+
+                    }
+                });
+
+                break;
+
+
             case R.id.imgAddChapter:
-                imgAddChapter.setVisibility(View.GONE);
-                btnCancel.setVisibility(View.GONE);
-                llTop.setVisibility(View.GONE);
-                edtTitle.setHint("");
-                cardChapterName.setVisibility(View.VISIBLE);
-                isEdit = false;
+
+                AlertDialog.Builder builder=new AlertDialog.Builder(this);
+
+                View root=getLayoutInflater().inflate(R.layout.dialog_enter_chapter,null);
+                builder.setView(root);
+                builder.setCancelable(false);
+                ImageView cancelBtn=root.findViewById(R.id.btnCancel);
+                Button btnSubmit=root.findViewById(R.id.btnSubmit);
+                EditText etName=root.findViewById(R.id.etName);
+                alertDialog=builder.create();
+
+                alertDialog.show();
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+
+
+                        alertDialog.dismiss();
+
+                    }
+                });
+                btnSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(etName.getText().toString().isEmpty())
+                        {
+                            etName.setError("Enter the chapter Name");
+                        }
+
+                        else
+                        {
+                            spChapter.setVisibility(View.GONE);
+                            spChaptertxt.setVisibility(View.VISIBLE);
+                            String strName=etName.getText().toString();
+                            spChaptertxt.setText(strName);
+                            isChapterEditClicked=true;
+                            isTopicEditClicked=true;
+                            sptopic.setVisibility(View.GONE);
+                            sptopictxt.setVisibility(View.VISIBLE);
+                            sptopictxt.setText(null);
+                            isEdit = false;
+                            alertDialog.dismiss();
+
+                        }
+
+                    }
+                });
+
+
                 break;
 
             case R.id.btnCancel:
@@ -1256,7 +1373,8 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 btnCancel.setVisibility(View.GONE);
                 isEdit = true;
                 llTop.setVisibility(View.VISIBLE);
-                cardChapterName.setVisibility(View.GONE);
+
+
                 break;
 
             case R.id.llImage:
@@ -1329,22 +1447,22 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 Toast.makeText(AddChapterPostActivity.this, getResources().getString(R.string.toast_posted_successfully), Toast.LENGTH_SHORT).show();
                 if (isEdit) {
                     LeafPreference.getInstance(AddChapterPostActivity.this).setBoolean("is_topic_added", true);
-                    new SendNotification(edtTitle.getText().toString(), false).execute();
+                    new SendNotification(spChapter.getSelectedItem().toString(), false).execute();
                 } else {
                     LeafPreference.getInstance(AddChapterPostActivity.this).setBoolean("is_chapter_added", true);
-                    new SendNotification(edtTitle.getText().toString(), true).execute();
+                    new SendNotification(spChaptertxt.getText().toString(), true).execute();
                 }
                 finish();
+
+
                 break;
 
             case LeafManager.API_GET_SYLLABUS_MASTER:
                 SyllabusListMaster  res = (SyllabusListMaster) response;
 
                 chapterList = res.getSyllabusData();
-                saveToLocally(res.getSyllabusData());
-                bindChapter();
-           
 
+                bindChapter();
                 break;
 
             case LeafManager.API_CHAPTER_REMOVE:
@@ -1359,28 +1477,33 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     private void bindtopic()
     {
 
-        List<SyllabusTBL> tblList = SyllabusTBL.getSyllabus(team_id,subject_id);
 
-        Log.e(TAG,"tblList "+tblList.size());
+        if (topicList != null && topicList.size() > 0) {
 
-        chapterList.clear();
-
-
-        if (tblList.size() > 0)
-        {
-
-
-            for (int i = 0;i<tblList.size();i++)
-            {
-                SyllabusListMaster.SyllabusData data = new SyllabusListMaster.SyllabusData();
-
-                data.setChapterName(tblList.get(i).chapterName);
-                data.setChapterId(tblList.get(i).chapterId);
-                data.setTopicData(new Gson().fromJson(tblList.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
-                chapterList.add(data);
+            String[] strTopic = new String[topicList.size()];
+            for (int i=0;i<topicList.size();i++){
+                strTopic[i]=topicList.get(i).getTopicName();
             }
-        }
 
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spinner,strTopic);
+            sptopic.setAdapter(adapter);
+
+            sptopic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    AppLog.e(TAG, "onItemSelected : " + position);
+
+                    topic_id = topicList.get(position).getTopicId();
+
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
 
 
     }
@@ -1401,19 +1524,11 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     AppLog.e(TAG, "onItemSelected : " + position);
-                    /*if(position==strChapter.length-1){
-                        cardChapterName.setVisibility(View.VISIBLE);
-                        edtTitle.setText("");
-                        isEdit = false;
-                    }else {
 
-
-                    }*/
-
-/*                    edtTitle.setText("");
-                    edtTitle.setText(chapterList.get(position).chapterName);*/
                     chapter_id = chapterList.get(position).getChapterId();
-                    // cardChapterName.setVisibility(View.GONE);
+                    topicList=chapterList.get(position).getTopicData();
+                    bindtopic();
+
 
                 }
 
@@ -2021,16 +2136,16 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
             @Override
             public void onClick(View v) {
 
-                if (!isValueValid(edtTitle)) {
+                if (!isValueValid(spChaptertxt)) {
                     dialog.dismiss();
                     return;
                 }
-                if (!isValueValid(edtDesc)) {
+                if (!isValueValid(sptopictxt)) {
                     dialog.dismiss();
                     return;
                 }
-                GroupDashboardActivityNew.enteredTitle = edtTitle.getText().toString();
-                GroupDashboardActivityNew.enteredDesc = edtDesc.getText().toString();
+                GroupDashboardActivityNew.enteredTitle = spChaptertxt.getText().toString();
+                GroupDashboardActivityNew.enteredDesc = sptopictxt.getText().toString();
 
                 startActivity(new Intent(AddChapterPostActivity.this, MainActivity.class));
             }
@@ -2283,26 +2398,5 @@ public class AddChapterPostActivity extends BaseActivity implements LeafManager.
     }
 
 
-    private void saveToLocally(ArrayList<SyllabusListMaster.SyllabusData> syllabusData) {
-        syllabusDataList.clear();
-        //SyllabusMasterTBL.deleteAll();
 
-        if (syllabusData.size() > 0)
-        {
-            for (int i = 0;i<syllabusData.size();i++)
-            {
-                SyllabusTBL tbl = new SyllabusTBL();
-                tbl.teamID = team_id;
-                tbl.subjectID = subject_id;
-                tbl.chapterId = syllabusData.get(i).getChapterId();
-                tbl.chapterName = syllabusData.get(i).getChapterName();
-                tbl.topicsList = new Gson().toJson(syllabusData.get(i).getTopicData());
-                tbl.save();
-            }
-        }
-        syllabusDataList.addAll(syllabusData);
-        Collections.reverse(syllabusDataList);
-        bindtopic();
-
-    }
 }

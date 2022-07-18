@@ -10,7 +10,6 @@ import com.activeandroid.query.Update;
 import java.util.ArrayList;
 import java.util.List;
 
-import school.campusconnect.datamodel.chapter.ChapterRes;
 
 @Table(name = "ChapterTBL")
 public class ChapterTBL extends Model {
