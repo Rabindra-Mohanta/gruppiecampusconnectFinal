@@ -124,23 +124,6 @@
                             android:layout_marginTop="4dp"
                             app:layout_constraintTop_toBottomOf="@id/tvCategory" />
 
-                        <TextView
-                            android:id="@+id/tvMedium"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginTop="20dp"
-                            android:text="Medium"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="12sp"
-                            app:layout_constraintTop_toBottomOf="@id/spinnerCategory" />
-
-                        <androidx.appcompat.widget.AppCompatSpinner
-                            android:id="@+id/spinnerMedium"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            app:layout_constraintTop_toBottomOf="@id/tvMedium" />
 
                         <TextView
                             android:id="@+id/tvBoard"
@@ -151,7 +134,7 @@
                             android:text="Board"
                             android:textColor="@color/colorPrimary"
                             android:textSize="12sp"
-                            app:layout_constraintTop_toBottomOf="@id/spinnerMedium" />
+                            app:layout_constraintTop_toBottomOf="@id/spinnerCategory" />
 
                         <androidx.appcompat.widget.AppCompatSpinner
                             android:id="@+id/spinnerBoard"
@@ -159,6 +142,24 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             app:layout_constraintTop_toBottomOf="@id/tvBoard" />
+
+                        <TextView
+                            android:id="@+id/tvMedium"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginTop="20dp"
+                            android:text="Medium"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="12sp"
+                            app:layout_constraintTop_toBottomOf="@id/spinnerBoard" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spinnerMedium"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            app:layout_constraintTop_toBottomOf="@id/tvMedium" />
 
                         <TextView
                             android:id="@+id/tvYear"
@@ -169,7 +170,7 @@
                             android:text="Academic Year"
                             android:textColor="@color/colorPrimary"
                             android:textSize="12sp"
-                            app:layout_constraintTop_toBottomOf="@id/spinnerBoard" />
+                            app:layout_constraintTop_toBottomOf="@id/spinnerMedium" />
 
                         <androidx.appcompat.widget.AppCompatSpinner
                             android:id="@+id/spinnerYear"

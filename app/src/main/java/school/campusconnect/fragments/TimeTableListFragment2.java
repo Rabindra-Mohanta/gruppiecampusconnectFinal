@@ -371,7 +371,13 @@ public class TimeTableListFragment2 extends BaseFragment implements LeafManager.
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final TimeTableList2Response.SessionsTimeTable item = list.get(position);
             holder.txt_period.setText(item.getPeriod());
-            holder.txt_time.setText(item.getStartTime()+"\n"+item.getEndTime());
+            if (item.getStartTime() == null || item.getStartTime().isEmpty()){
+                holder.txt_time.setVisibility(View.GONE);
+            }else {
+                holder.txt_time.setVisibility(View.VISIBLE);
+                holder.txt_time.setText(item.getStartTime()+"\n"+item.getEndTime());
+            }
+
             holder.txt_subject_staff.setText(item.getSubjectName() + " (" + item.getTeacherName() + ")");
 
           /*  holder.txt_subject.setText(item.getSubjectName());
