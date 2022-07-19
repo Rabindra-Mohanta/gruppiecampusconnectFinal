@@ -43,6 +43,9 @@ public class BaseTeamTable extends Model {
     @Column(name = "isTeamAdmin")
     public boolean isTeamAdmin;
 
+    @Column(name = "accountant")
+    public boolean isaccountant;
+
     @Column(name = "allowTeamPostCommentAll")
     public boolean allowTeamPostCommentAll;
 

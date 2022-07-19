@@ -50,6 +50,7 @@ public class MyTeamData extends BaseResponse {
     public String type="";
     public String category="";
     public String role="";
+    public Boolean accountant;
     public int count;
     public String subCategory;
 
@@ -79,6 +80,7 @@ public class MyTeamData extends BaseResponse {
 
 
     public class TeamDetails{
+
         public String userId;
         public String teamName;
         public String teamImage;
@@ -87,5 +89,6 @@ public class MyTeamData extends BaseResponse {
         public String category;
         public String rollNumber;
         public String studentName;
+
     }
 }

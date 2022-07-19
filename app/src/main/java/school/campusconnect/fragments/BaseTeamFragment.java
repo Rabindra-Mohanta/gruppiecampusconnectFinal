@@ -339,7 +339,9 @@ public class BaseTeamFragment extends BaseFragment implements TeamListAdapterNew
             teamList.clear();
             for (int i = 0; i < dataItemList.size(); i++) {
                 MyTeamData myTeamData = new MyTeamData();
+
                 myTeamData.teamId = dataItemList.get(i).team_id;
+                myTeamData.accountant = dataItemList.get(i).isaccountant;
                 myTeamData.isClass = dataItemList.get(i).isClass;
                 myTeamData.name = dataItemList.get(i).name;
                 myTeamData.phone = dataItemList.get(i).phone;

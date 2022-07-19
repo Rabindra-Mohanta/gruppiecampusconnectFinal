@@ -1318,5 +1318,6 @@
     <string name="toast_select_religion">Please Select Religion</string>
     <string name="toast_select_caste">Please Select Caste</string>
     <string name="toast_select_sub_caste">Please Select Sub Caste</string>
+    <string name="add_accountant">Add Accountant</string>
 
 </resources>

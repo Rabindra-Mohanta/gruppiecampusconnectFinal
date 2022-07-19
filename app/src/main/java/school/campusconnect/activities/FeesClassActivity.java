@@ -45,13 +45,16 @@ public class FeesClassActivity extends BaseActivity {
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
+
     @Bind(R.id.tabLayout)
     public TabLayout tabLayout;
+
     ArrayList<ClassResponse.ClassData> result = new ArrayList<>();
     PaidFeesFragment paidFeesFragment;
     String role;
     private Menu menu;
     String selectedClassId="";
+    private  Boolean isaccountant=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class FeesClassActivity extends BaseActivity {
         setTitle(getIntent().getStringExtra("title"));
 
         role  = getIntent().getStringExtra("role");
+        isaccountant=getIntent().getBooleanExtra("accountant",false);
 
         if("admin".equalsIgnoreCase(role)){
             tabLayout.setVisibility(View.VISIBLE);
@@ -81,13 +85,13 @@ public class FeesClassActivity extends BaseActivity {
                 public void onTabSelected(TabLayout.Tab tab) {
                     if(tab.getPosition()==0){
                         if(menu!=null){
-                            menu.findItem(R.id.menu_filter).setVisible(true);
+                            menu.findItem(R.id.add_accountant).setVisible(true);
                         }
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,paidFeesFragment).commit();
                     }else{
 
                         if(menu!=null){
-                            menu.findItem(R.id.menu_filter).setVisible(false);
+                            menu.findItem(R.id.add_accountant).setVisible(false);
                         }
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,classListFragment).commit();
                     }
@@ -115,8 +119,10 @@ public class FeesClassActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if("admin".equalsIgnoreCase(role)){
-            getMenuInflater().inflate(R.menu.menu_admin_fees,menu);
+        if("admin".equalsIgnoreCase(role) &&  isaccountant==true ){
+            getMenuInflater().inflate(R.menu.add_accountant,menu);
+
+
             this.menu = menu;
         }
         return super.onCreateOptionsMenu(menu);
@@ -124,7 +130,7 @@ public class FeesClassActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.menu_filter){
+        if(item.getItemId()==R.id.add_accountant){
             if(result!=null){
                 showClassSelectDialog();
             }
@@ -141,6 +147,9 @@ public class FeesClassActivity extends BaseActivity {
         dialog.setContentView(R.layout.dialog_select_class);
         Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
         RecyclerView rvSubject = dialog.findViewById(R.id.rvSubjects);
+        TextView title=dialog.findViewById(R.id.title);
+        title.setText(getResources().getString(R.string.lbl_select_teacher));
+
 
         AttendanceSubjectAdapter subjectAdapter = new AttendanceSubjectAdapter(result);
         rvSubject.setAdapter(subjectAdapter);

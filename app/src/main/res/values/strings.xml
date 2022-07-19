@@ -625,6 +625,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_cast">Cast</string>
     <string name="lbl_bloodGroup">Blood Group</string>
     <string name="lbl_add_staff">Add Staff</string>
+    <string name="add_accountant">Add Accountant</string>
     <string name="lbl_add_students">Add Students</string>
     <string name="lbl_add_events">Add Event</string>
     <string name="lbl_in">IN</string>

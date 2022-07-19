@@ -2533,6 +2533,10 @@ public class GroupDashboardActivityNew extends BaseActivity
                 Intent intent = new Intent(this, FeesClassActivity.class);
                 intent.putExtra("title", group.name);
                 intent.putExtra("role", group.role);
+                intent.putExtra("accountant",group.accountant);
+
+
+
                 startActivity(intent);
             } else {
                 if (group.count == 1) {
