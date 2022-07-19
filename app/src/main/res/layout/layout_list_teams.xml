@@ -40,7 +40,6 @@
             </com.baoyz.widget.PullRefreshLayout>
 
 
-
             <TextView
                 android:id="@+id/txtEmpty2"
                 style="@style/LabelEmptyText"
@@ -48,8 +47,8 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:paddingEnd="16dp"
                 android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:text="@{message}"
                 android:visibility="@{size &gt; 0 ? View.GONE : View.VISIBLE}" />
 

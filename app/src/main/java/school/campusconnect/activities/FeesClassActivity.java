@@ -148,7 +148,7 @@ public class FeesClassActivity extends BaseActivity {
         Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
         RecyclerView rvSubject = dialog.findViewById(R.id.rvSubjects);
         TextView title=dialog.findViewById(R.id.title);
-        title.setText(getResources().getString(R.string.lbl_select_teacher));
+        title.setText(getResources().getString(R.string.lbl_select_accountant));
 
 
         AttendanceSubjectAdapter subjectAdapter = new AttendanceSubjectAdapter(result);

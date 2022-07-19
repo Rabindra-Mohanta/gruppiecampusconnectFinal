@@ -80,7 +80,7 @@ android {
                              buildConfigField("String", "AppCategory", '"CAMPUS"')
                              buildConfigField("String", "APP_ID",  '"school"')*/
 
-                        // [1. Gruppie Campus constituency]
+                     //    [1. Gruppie Campus constituency]
 //                          applicationId "gcm.gruppie"
 //                          versionCode 1
 //                          versionName "1.0"
