@@ -21,28 +21,27 @@
             android:textSize="@dimen/text_size_16sp"
             android:textColor="@color/colorTextDark"
             style="@style/LabelNormal" />
-
-        <TextView
-            android:id="@+id/txt_time"
-            android:layout_width="0dp"
-            android:layout_weight="1.5"
-            android:layout_height="wrap_content"
-            android:gravity="left|center"
-            android:textSize="@dimen/text_size_16sp"
-            android:textColor="@color/colorTextDark"
-            style="@style/LabelNormal" />
-
         <TextView
             android:id="@+id/txt_subject_staff"
             android:layout_width="0dp"
             android:layout_weight="2.5"
             android:layout_height="match_parent"
-            android:gravity="center"
-
+            android:gravity="left|center"
             android:singleLine="true"
             android:textSize="@dimen/text_size_16sp"
             android:textColor="@color/colorTextDark"
             style="@style/LabelNormal" />
+        <TextView
+            android:id="@+id/txt_time"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_16sp"
+            android:textColor="@color/colorTextDark"
+            style="@style/LabelNormal" />
+
+
 
     <!--    <TextView
             android:id="@+id/txt_staff"

@@ -2092,7 +2092,7 @@ public interface LeafService {
 
     @GET("api/v1/get/medium/from/db")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<CampusMediumData> getCampusMedium();
+    Call<CampusMediumData> getCampusMedium(@Query("board") String board);
 
     @GET("api/v1/get/board/class/list/school")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

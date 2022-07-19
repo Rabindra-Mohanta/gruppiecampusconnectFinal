@@ -100,7 +100,7 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
 
 
         apiGetCategories()
-        apiGetCampusMedium()
+
         /*val universityItem1 = UniversityItem(name = "Karnataka State Board", image = "https://gruppiemedia.sgp1.cdn.digitaloceanspaces.com/university.jpeg")
         val universityItem2 = UniversityItem(name = "Tamil State Board", image = "https://gruppiemedia.sgp1.cdn.digitaloceanspaces.com/university.jpeg")
 
@@ -318,8 +318,8 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
         }
     }
 
-    private fun apiGetCampusMedium() {
-        leafManager.getCampusMedium(this)
+    private fun apiGetCampusMedium(selectedBoard: String) {
+        leafManager.getCampusMedium(this.selectedBoard,this)
     }
 
     private fun onResponseMedium(response: BaseResponse?) {
@@ -505,10 +505,11 @@ open class RegisterInstituteFragment : BaseFragment(), OnCommunicationListener {
                     mListBoards[position].let {
                         apiGetUniversities(it)
                         selectedBoard = it
-
+                        apiGetCampusMedium(selectedBoard!!)
                         selectedCategory?.let { category ->
                             selectedBoard?.let { board ->
                                 apiGetClasses(category, board)
+
                             }
                         }
                     }

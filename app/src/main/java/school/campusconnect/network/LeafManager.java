@@ -13675,13 +13675,13 @@ public class LeafManager {
 
     }
 
-    public void getCampusMedium(OnCommunicationListener listListener) {
+    public void getCampusMedium(String board, OnCommunicationListener listListener) {
         mOnCommunicationListener = listListener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
         final Call<CampusMediumData> model;
 
-        model = service.getCampusMedium();
+        model = service.getCampusMedium(board);
 
         ResponseWrapper<CampusMediumData> wrapper = new ResponseWrapper<>(model);
 
