@@ -54,7 +54,7 @@
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="100dp"
-            android:text="Submit"
+            android:text="@string/lbl_update"
             android:layout_marginStart="@dimen/padding_5dp"
             android:layout_gravity="center"
             android:textColor="@color/white"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
     public ProgressBar progressBar;
 
     String role;
+    boolean accountant=false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
         rvClass.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         role = getArguments().getString("role");
+        accountant = getArguments().getBoolean("accountant",false);
 
         getDataLocally();
 
@@ -314,6 +317,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
             intent.putExtra("title",classData.getName());
             intent.putExtra("team_id",classData.getId());
             intent.putExtra("role",role);
+            intent.putExtra("accountant",accountant);
             startActivity(intent);
         }
 

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,11 +58,12 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
     ArrayList<StaffResponse.StaffData> result = new ArrayList<>();
 
     PaidFeesFragment paidFeesFragment;
+    AttendanceSubjectAdapter adapter;
+    RecyclerView rvSubject;
     String role;
     private Menu menu;
     String selectedClassId="";
     private  Boolean isaccountant=false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +116,7 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
 
                 }
             });
-           // getDataLocally();
+            // getDataLocally();
             apiCall(true);
         }else {
             tabLayout.setVisibility(View.GONE);
@@ -155,25 +157,29 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
         dialog.setContentView(R.layout.dialog_select_class);
         Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
 
-        RecyclerView rvSubject = dialog.findViewById(R.id.rvSubjects);
+        rvSubject = dialog.findViewById(R.id.rvSubjects);
         TextView title=dialog.findViewById(R.id.title);
         title.setText(getResources().getString(R.string.lbl_select_accountant));
 
 
-        AttendanceSubjectAdapter subjectAdapter = new AttendanceSubjectAdapter(result);
-        rvSubject.setAdapter(subjectAdapter);
+        adapter = new AttendanceSubjectAdapter(result);
+        rvSubject.setAdapter(adapter);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(selectedClassId)) {
 
-                   callAccountantApi();
+                if (adapter.getSelectedList().isEmpty() || adapter.getItemCount()==0){
+
+                    Toast.makeText(dialog.getContext(),"Add Accountant",Toast.LENGTH_LONG).show();
+                }else{
+                    callAccountantApi();
                     dialog.dismiss();
-
-                } else {
-                    Toast.makeText(FeesClassActivity.this, getResources().getString(R.string.lbl_select_staff), Toast.LENGTH_SHORT).show();
                 }
+
+
+
+
             }
         });
 
@@ -183,16 +189,29 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
 
     private void callAccountantApi() {
 
-        LeafManager leafManager=new LeafManager();
-        //leafManager.addSchoolStaffRole(this,GroupDashboardActivityNew.groupId,"accountant",addStaffRoles);
+
+        if (adapter != null) {
+
+
+            AddStaffRole addStaffRoles = new AddStaffRole();
+            addStaffRoles.setStaffId(adapter.getSelectedList());
+            LeafManager leafManager = new LeafManager();
+
+
+            AppLog.e("TAG", "request :" + addStaffRoles);
+            leafManager.addSchoolStaffRole(this, GroupDashboardActivityNew.groupId, "accountant", addStaffRoles);
+
+        }
     }
 
+
     public class AttendanceSubjectAdapter extends RecyclerView.Adapter<AttendanceSubjectAdapter.ViewHolder> {
-        private ArrayList<StaffResponse.StaffData> listSubject;
+        List<StaffResponse.StaffData> list;
+        private ArrayList<String> staffArray ;
         private Context mContext;
 
-        public AttendanceSubjectAdapter(ArrayList<StaffResponse.StaffData> listSubject) {
-            this.listSubject = listSubject;
+        public AttendanceSubjectAdapter(ArrayList<StaffResponse.StaffData> list) {
+            this.list = list;
         }
 
         @Override
@@ -204,19 +223,39 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
 
         @Override
         public void onBindViewHolder(final AttendanceSubjectAdapter.ViewHolder holder, final int position) {
-            StaffResponse.StaffData itemList = listSubject.get(position);
+            StaffResponse.StaffData itemList = list.get(position);
             holder.tvName.setText(itemList.getName());
             holder.tvStaff.setVisibility(View.GONE);
-            if(itemList.isSelected){
+            if (itemList.isSelected) {
                 holder.chkAttendance.setChecked(true);
-            }else {
+            } else {
                 holder.chkAttendance.setChecked(false);
             }
+            holder.chkAttendance.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemList.isSelected = holder.chkAttendance.isChecked();
+                    notifyItemChanged(position);
+                }
+            });
         }
+        public ArrayList<String> getSelectedList() {
+            ArrayList<String> selected = new ArrayList<>();
+            if (list == null) {
+                return selected;
+            }
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).isSelected)
+                    selected.add(list.get(i).getStaffId());
+            }
+            return selected;
+        }
+
 
         @Override
         public int getItemCount() {
-            return listSubject != null ? listSubject.size() : 0;
+            Log.d("TAG","===>getItemCount--"+list.size());
+            return list != null ? list.size() : 0;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -232,29 +271,14 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
-                chkAttendance.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        chkAttendance.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                               listSubject.get(getAdapterPosition()).isSelected = chkAttendance.isChecked();
-
-
-
-                            }
-                        });
-
-
-
-
-                    }
-                });
             }
+
+
         }
 
+
     }
+
 
 
     private void apiCall(boolean isLoading) {
@@ -289,9 +313,10 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
                 StaffResponse res = (StaffResponse) response;
                 result = res.getData();
                 AppLog.e("FeesClassActivity", "ClassResponse " + result);
-                     break;
+                break;
 
             case LeafManager.ADD_SCHOOL_ACCOUNTANT:
+                Toast.makeText(getApplicationContext(),"Add Success",Toast.LENGTH_LONG).show();
 
                 break;
         }
