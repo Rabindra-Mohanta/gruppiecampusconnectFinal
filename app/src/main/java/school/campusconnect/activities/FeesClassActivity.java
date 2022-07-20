@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -166,14 +167,12 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(selectedClassId)) {
+
 
                    callAccountantApi();
                     dialog.dismiss();
 
-                } else {
-                    Toast.makeText(FeesClassActivity.this, getResources().getString(R.string.lbl_select_staff), Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
 
@@ -182,9 +181,10 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
 
 
     private void callAccountantApi() {
-
+        AddStaffRole addStaffRoles=new AddStaffRole(StaffIdList);
         LeafManager leafManager=new LeafManager();
-        //leafManager.addSchoolStaffRole(this,GroupDashboardActivityNew.groupId,"accountant",addStaffRoles);
+
+        leafManager.addSchoolStaffRole(this,GroupDashboardActivityNew.groupId,"accountant",addStaffRoles);
     }
 
     public class AttendanceSubjectAdapter extends RecyclerView.Adapter<AttendanceSubjectAdapter.ViewHolder> {
@@ -240,7 +240,7 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
                             @Override
                             public void onClick(View v) {
                                listSubject.get(getAdapterPosition()).isSelected = chkAttendance.isChecked();
-
+                                StaffIdList.add(  listSubject.get(getAdapterPosition()).staffId);
 
 
                             }
@@ -292,6 +292,7 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
                      break;
 
             case LeafManager.ADD_SCHOOL_ACCOUNTANT:
+                Toast.makeText(getApplicationContext(),"Add Success",Toast.LENGTH_LONG).show();
 
                 break;
         }

@@ -41,6 +41,8 @@ public class DatePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         dialog  = new SMBAlterDialog(getContext());
 
+
+
         if (i == 0)
         {
             dialog.setTitle(R.string.hint_lead_dob);

@@ -1319,5 +1319,8 @@
     <string name="toast_select_caste">Please Select Caste</string>
     <string name="toast_select_sub_caste">Please Select Sub Caste</string>
     <string name="add_accountant">Add Accountant</string>
+    <string name="menu_staff_attendance">Staff Attendance</string>
+    <string name="select_date">Select Date</string>
+    <string name="toast_something_went_wrong">something went wrong try again</string>
 
 </resources>

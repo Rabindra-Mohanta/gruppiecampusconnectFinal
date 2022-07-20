@@ -734,6 +734,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="hint_test_start_time">Start Time</string>
     <string name="hint_test_end_time">End Time</string>
     <string name="strLastSubTime">Last Submission Time</string>
+    <string name="select_date">Select Date</string>
     <string name="strProctoring">Proctoring</string>
     <string name="strScheduleTest">Schedule Test/Exam</string>
     <string name="strGetQuestPaperLink">Get question paper link</string>
@@ -896,7 +897,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="menu_sync_contact">Sync Contacts</string>
     <string name="menu_zoom_meeting">Zoom Meeting</string>
     <string name="menu_close">Close</string>
-    <string name="menu_staff_attendance" translatable="false">Staff Attendance</string>
+    <string name="menu_staff_attendance">Staff Attendance</string>
     <string name="menu_leave_team">Leave Team</string>
     <string name="menu_edit_team">Edit Team</string>
     <string name="menu_add_team">Add Team</string>
@@ -954,6 +955,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_select_religion">Please Select Religion</string>
     <string name="toast_select_caste">Please Select Caste</string>
     <string name="toast_select_sub_caste">Please Select Sub Caste</string>
+    <string name="toast_something_went_wrong">something went wrong try again</string>
 
 
     <string name="toast_enter_phone">Please Enter Phone</string>

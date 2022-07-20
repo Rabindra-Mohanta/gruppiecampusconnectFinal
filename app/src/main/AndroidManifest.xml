@@ -57,11 +57,12 @@
         android:usesCleartextTraffic="true"
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
-
+        <activity
+            android:name=".activities.StaffAttendanceReport"
+            android:exported="false" />
         <activity
             android:name=".activities.SignupImageActivity"
             android:exported="false" />
-
         <activity
             android:name=".activities.school.AddClassStudentV2Activity"
             android:exported="false" />
@@ -563,20 +564,16 @@
         <activity android:name=".activities.SubmitAssignmentActivity" />
         <activity android:name=".activities.AttendanceReportOnlineActivity" />
         <activity android:name=".activities.AddEBookActivity2" />
-        <activity android:name=".activities.HomeWorkEditActivity"/>
-            <activity
-                android:name=".activities.GcmBookmarksActivity"
-                />
-
-            <!--
+        <activity android:name=".activities.HomeWorkEditActivity" />
+        <activity android:name=".activities.GcmBookmarksActivity" />
+        <!--
                <intent-filter>
                           <action android:name="android.intent.action.MAIN" />
                           <action android:name="android.intent.action.VIEW" />
                </activity>
                           <category android:name="android.intent.category.LAUNCHER" />
                       </intent-filter>
-            -->
-
+        -->
         <activity android:name=".activities.TestClassActivity" />
         <activity android:name=".activities.TestClassSubjectActivity" />
         <activity android:name=".activities.TestExamActivity" />

@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -114,6 +115,7 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
 
     private void init() {
 
+
         refreshLayout.setEnabled(false);
 
         if (getArguments() != null) {
@@ -201,7 +203,7 @@ public class ClassStudentListFragment extends BaseFragment implements LeafManage
         }
 
         @Override
-        public void onBindViewHolder(final ClassesStudentAdapter.ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ClassesStudentAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             final StudentRes.StudentData item = list.get(position);
 
             if (!TextUtils.isEmpty(item.getImage())) {

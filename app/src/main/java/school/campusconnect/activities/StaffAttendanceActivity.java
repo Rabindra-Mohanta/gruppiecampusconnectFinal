@@ -7,9 +7,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -61,6 +64,33 @@ public static final String TAG = "StaffAttendanceActivity";
         setTitle(getResources().getString(R.string.menu_staff_attendance));
 
         inits();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_staff_attendance_report, menu);
+
+        return super.onCreateOptionsMenu(menu);
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.attendance_report:
+            {
+
+                Intent intent=new Intent(this,StaffAttendanceReport.class);
+                startActivity(intent);
+            }
+            break;
+            default:
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void inits()
