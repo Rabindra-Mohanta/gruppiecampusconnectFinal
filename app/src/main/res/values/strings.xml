@@ -626,6 +626,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_bloodGroup">Blood Group</string>
     <string name="lbl_add_staff">Add Staff</string>
     <string name="add_accountant">Add Accountant</string>
+    <string name="add_examiner">Add Examiner</string>
     <string name="lbl_add_students">Add Students</string>
     <string name="lbl_add_events">Add Event</string>
     <string name="lbl_in">IN</string>
@@ -671,6 +672,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_subject">Subject</string>
     <string name="lbl_select_teacher">Select Teacher</string>
     <string name="lbl_select_accountant">Select Accountant</string>
+    <string name="lbl_select_examiner">Select Examiner</string>
     <string name="strAddNew">Add New</string>
     <string name="lbl_chapter_name">Chapter Name</string>
     <string name="lbl_topic_name">Topic Name</string>

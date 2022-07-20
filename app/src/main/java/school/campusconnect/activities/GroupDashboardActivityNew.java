@@ -2424,6 +2424,8 @@ public class GroupDashboardActivityNew extends BaseActivity
             if ("admin".equalsIgnoreCase(group.role)) {
                 intent = new Intent(this, HWClassActivity.class);
                 intent.putExtra("title", group.name);
+                intent.putExtra("examiner", group.examiner);
+                intent.putExtra("role", group.role);
             }
             else {
                 if (group.count == 1) {

@@ -8,10 +8,6 @@ import java.util.ArrayList;
 public class AddStaffRole {
 
 
-    public AddStaffRole(ArrayList<String> staffId) {
-        this.staffId = staffId;
-    }
-
     @SerializedName("staffIds")
     @Expose
     private ArrayList<String> staffId;

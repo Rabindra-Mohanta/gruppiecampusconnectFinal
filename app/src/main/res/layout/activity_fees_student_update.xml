@@ -17,9 +17,11 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topbar">
+        android:layout_below="@+id/topbar"
+        android:layout_above="@+id/btnPay">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -345,8 +347,22 @@
                 android:layout_marginBottom="@dimen/padding_20dp"
                 android:text="@string/lbl_update" />
         </RelativeLayout>
+
     </androidx.core.widget.NestedScrollView>
 
+    <Button
+        android:id="@+id/btnPay"
+        style="@style/AddPostButton"
+        android:layout_width="@dimen/login_button_width"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/padding_15dp"
+        android:layout_marginBottom="@dimen/padding_20dp"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:text="@string/lbl_pay"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

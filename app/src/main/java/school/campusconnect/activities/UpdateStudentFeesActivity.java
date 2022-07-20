@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,11 +110,15 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
+    @Bind(R.id.btnPay)
+    Button btnPay;
+
     LeafManager leafManager;
 
     private String groupId;
     private String teamId;
     private String role;
+    private boolean accountant;
     private String title;
 
     FeesDetailAdapter feesAdapter = new FeesDetailAdapter(true);
@@ -164,6 +169,11 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         title=getIntent().getStringExtra("title");
+        accountant=getIntent().getBooleanExtra("accountant",false);
+        Log.d(TAG,"accountant==>"+accountant);
+        if (accountant) {
+          btnPay.setVisibility(View.VISIBLE);
+        }
         setTitle(title);
         leafManager = new LeafManager();
         Bundle bundle = getIntent().getExtras();
@@ -254,9 +264,12 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    @OnClick({R.id.btnCreate, R.id.etDate,R.id.etDatePaid})
+    @OnClick({R.id.btnCreate, R.id.etDate,R.id.etDatePaid,R.id.btnPay})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.btnPay:
+                break;
+
             case R.id.btnCreate:
                 if (isValid()) {
 

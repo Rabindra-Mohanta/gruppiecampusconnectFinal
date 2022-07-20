@@ -2,6 +2,7 @@ package school.campusconnect.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class FeesListActivity extends BaseActivity {
     private String mGroupId;
     private String teamId;
     private String role;
+    private boolean accountant;
     private Menu menu;
     private FeesListFragment classListFragment;
 
@@ -57,6 +59,8 @@ public class FeesListActivity extends BaseActivity {
             mGroupId = GroupDashboardActivityNew.groupId;
             teamId = getIntent().getStringExtra("team_id");
             role = getIntent().getStringExtra("role");
+            accountant = getIntent().getBooleanExtra("accountant",false);
+            Log.d("FEESLISTACTIVITY","accountant==>"+accountant);
         }
 
     }
